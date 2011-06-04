@@ -1,3 +1,10 @@
+Sections in this document, some of them should be migrated to some .sql file in the future.
+
+- db, current databases
+- tables on dbs: table distribution
+- tables: table lising, and sql commands
+- truncate commands: devel shortcut
+
 ================================
 db
 ================================
@@ -43,7 +50,7 @@ subscription_log
 view_log
 
 ================================
-Tables
+tables
 ================================
 CREATE TABLE `category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -293,6 +300,8 @@ CREATE TABLE `view_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+===================================
+truncate commands
 ===================================
 truncate category;                    
 truncate category_channel;            
