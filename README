@@ -8,7 +8,7 @@ Steps to run the app for the first time
 
 - Start MySql server
 - Start RabbitMQ server
-- mvn datanucleus:enhance (only for the first time)
+- mvn datanucleus:enhance (it might not be necessary)
 - mvn jetty:run
 - run nnqueue client
 - go to http://localhost:8888/admin/index, click on initialize link
