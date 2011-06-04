@@ -1,0 +1,66 @@
+=====================================================
+Devel environment and tool
+=====================================================
+================================
+Setup
+================================
+Steps to run the app for the first time
+
+- Start MySql server
+- Start RabbitMQ server
+- mvn datanucleus:enhance (only for the first time)
+- mvn jetty:run
+- run nnqueue client
+- go to http://localhost:8888/admin/index, click on initialize link
+
+================================
+mvn 
+================================
+- Download 3.0.3
+http://maven.apache.org/download.html 
+
+================================
+Datanucleus tool
+================================
+datanucleus command:
+
+- enhance
+mvn datanucleus:enhance
+
+- Schema tool
+mvn datanucleus:schema-create
+
+Note: 
+1. depending on the db you are going to initiate, change datanucleus.properties file datanucleus plugin.
+2. You might run into command length limitation error if running on Windows. Remove everything under java except model folder if it's the case.
+3. Currently there is four databases need to be initiated. 
+4. alternatively, use MySql file
+
+================================
+Jetty
+================================
+- Run jetty 
+mvn jetty:run
+
+================================
+RabbitMQ
+================================
+- Windows download
+http://www.rabbitmq.com/releases/bundles/v2.4.1/complete-rabbitmq-bundle-2.4.1.zip
+
+- commands examples:
+cd C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-2.4.1\sbin
+rabbitmqctl list_exchanges
+rabbitmqctl list_queues
+
+================================
+MySql
+================================
+MySQL Server 5.5
+
+- commands examples on Windows: 
+> cd c:\Program Files\MySQL\MySQL Server 5.5\bin
+> mysqld
+
+- please reference MySql file
+ 
