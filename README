@@ -1,3 +1,8 @@
+Sections in this document,
+
+- Devel environment and tool, more for Windows
+- Production environment, i.e. Ubuntu on EC2
+
 =====================================================
 Devel environment and tool
 =====================================================
@@ -6,12 +11,19 @@ Setup
 ================================
 Steps to run the app for the first time
 
+- Download JDK 1.6.0, MySql, RabbitMQ, Maven (Details can be found in the following sections)  
 - Start MySql server
 - Start RabbitMQ server
+- Create databases and tables (Please reference MySql file)
+- Modify datanucleus.properties files, there are four, make sure db connection is setup correctly
 - mvn datanucleus:enhance (it might not be necessary)
 - mvn jetty:run
 - run nnqueue client
-- go to http://localhost:8888/admin/index, click on initialize link
+- basic test,
+http://localhost:8888/hello (hello)
+http://localhost:8888/pdr (write a db record) 
+- ready to go,
+go to http://localhost:8888/admin/index, click on initialize link
 
 ================================
 mvn 
@@ -63,3 +75,61 @@ MySQL Server 5.5
 
 - please reference MySql file
  
+=====================================================
+AWS environment
+=====================================================
+================================
+Jetty 
+================================
+- installation
+> apt-get install jetty
+> apt-get install libjetty-extra
+> apt-get install openjdk-6-jdk
+
+- configuration
+> modify /etc/default/jetty
+> change "NO_START"
+> change "JETTY_HOST"
+
+- start/stop jetty
+> service jetty start
+> service jetty stop
+
+- jetty version
+> cd /usr/share/jetty 
+> java -jar start.jar --version
+null 6.1.22
+
+- deploy app: deploy your wars to webapps under jetty 
+> /usr/share/jetty/webapps
+
+================================
+MySql
+================================
+- commands
+> service mysql start
+
+================================
+RabbitMQ
+================================
+- installation
+> apt-cache search rabbitmq
+> apt-get install rabbitmq-server
+
+- commands: 
+rabbitmqctl status    
+
+================================
+Testing
+================================
+- upload the war: use SCP with your private key, and upload to the server
+- commands: 
+service jetty stop
+rm root.jar
+mv /home/ubuntu/tmp/nncloudtv-0.0.1-SNAPSHOT.war .
+mv nncloudtv-0.0.1-SNAPSHOT.war root.war
+service jetty start
+
+- testing servers 
+java01, http://ec2-50-17-2-234.compute-1.amazonaws.com:8080/hello
+
