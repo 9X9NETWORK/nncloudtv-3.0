@@ -11,7 +11,7 @@ import javax.jdo.annotations.*;
  * @author louis
  *
  */
-@PersistenceCapable(detachable = "true")
+@PersistenceCapable(table="content_ownership", detachable = "true")
 public class ContentOwnership implements Serializable {
 	
 	protected static final long serialVersionUID = 1L;

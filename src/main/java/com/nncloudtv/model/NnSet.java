@@ -34,7 +34,7 @@ public class NnSet implements Serializable {
 	private String intro;
 	
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=255)
+	@Column(name="image_url", jdbcType="VARCHAR", length=255)
 	private String imageUrl;
 	
 	@Persistent

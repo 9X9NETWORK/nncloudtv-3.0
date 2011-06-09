@@ -12,7 +12,7 @@ import javax.jdo.annotations.PrimaryKey;
 /** 
  * Category is created by MSO. Each channel belongs to at least a category. 
  */
-@PersistenceCapable(detachable="true")
+@PersistenceCapable(table="category", detachable="true")
 public class Category implements Serializable {
 
 	private static final long serialVersionUID = -3641562781732198821L;

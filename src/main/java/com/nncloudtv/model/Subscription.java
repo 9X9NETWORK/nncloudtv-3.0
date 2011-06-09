@@ -12,7 +12,7 @@ import javax.jdo.annotations.PrimaryKey;
 /**
  * User's channel subscriptions. 
  */
-@PersistenceCapable(detachable="true")
+@PersistenceCapable(table="subscription", detachable="true")
 public class Subscription implements Serializable {
 
 	private static final long serialVersionUID = -8947021127329404786L;

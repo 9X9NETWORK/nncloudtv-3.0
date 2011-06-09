@@ -26,7 +26,7 @@ import javax.jdo.annotations.PrimaryKey;
  * Represents a counter in the datastore and stores the number of shards.
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable(table="counter", identityType = IdentityType.APPLICATION)
 public class Counter {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

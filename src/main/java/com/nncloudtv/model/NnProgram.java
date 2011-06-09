@@ -72,6 +72,7 @@ public class NnProgram implements Serializable {
 	private String duration;
 		
 	@Persistent
+	@Column(name="is_public")
 	private boolean isPublic; 
 	
 	@Persistent

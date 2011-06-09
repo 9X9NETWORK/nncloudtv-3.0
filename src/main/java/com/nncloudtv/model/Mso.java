@@ -5,7 +5,7 @@ import java.util.Date;
 
 import javax.jdo.annotations.*;
 
-@PersistenceCapable(detachable="true")
+@PersistenceCapable(table="mso", detachable="true")
 public class Mso implements Serializable {
 
 	private static final long serialVersionUID = 352047930355952392L;

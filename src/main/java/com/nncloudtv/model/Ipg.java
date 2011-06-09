@@ -14,7 +14,7 @@ import javax.jdo.annotations.PrimaryKey;
 /** 
  * User's IPG. Currently is used for FB.
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
+@PersistenceCapable(table="ipg", identityType = IdentityType.APPLICATION, detachable = "true")
 public class Ipg implements Serializable {	
 	private static final long serialVersionUID = 104915710055479694L;
 
