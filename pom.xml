@@ -5,23 +5,32 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>nncloudtv</name>
   <packaging>war</packaging>
+  <!-- 
+    packaging commands 
+    packaging:
+    	mvn datanucleus:enhance 
+    	mvn war:war    
+    test the packaged war with jetty plugin: 
+    	mvn jetty:deploy-war
+    packaging and run jetty with jetty plugin: 
+    	mvn jetty:run-war 
+  -->
   <build>
-     <!-- 
-     <directory>target</directory>
-     <outputDirectory>${basedir}/target/${artifactId}-${version}</outputDirectory>
-     <sourceDirectory>${basedir}/src/main/webapp</sourceDirectory>
-      -->
+     <!-- ====================================================================== -->
+     <!-- Plugins                                                                -->
+     <!-- ====================================================================== -->       
      <plugins>
-        <!-- mvn jetty:run -->
+        <!-- command: mvn jetty:run -->
         <plugin>        
            <groupId>org.mortbay.jetty</groupId>
            <artifactId>maven-jetty-plugin</artifactId>
            <version>6.1.22</version>
            <configuration>
+             <!-- <webApp>${basedir}/target/nncloudtv.war</webApp>  -->
              <connectors>
                 <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                    <port>8888</port>
-                </connector>             
+                </connector>
              </connectors>
 	         <webAppConfig>
                 <contextPath>/</contextPath>
@@ -30,15 +39,23 @@
            </configuration>
         </plugin>
 		<plugin>
-		   <!-- http://repo1.maven.org/maven2/org/datanucleus/maven-datanucleus-plugin/3.0.0-m1/ -->
-		   <!-- http://www.datanucleus.org/products/accessplatform_3_0/guides/maven2/index.html -->
+		   <!-- 
+		     commands: 
+		     mvn datanucleus:enhance
+		     mvn datanucleus:schema-create
+		   -->     
+		   <!-- 
+		     Reference
+		     http://repo1.maven.org/maven2/org/datanucleus/maven-datanucleus-plugin/3.0.0-m1/
+		     http://www.datanucleus.org/products/accessplatform_3_0/guides/maven2/index.html 
+		   -->
 		   <groupId>org.datanucleus</groupId>		   
 		   <artifactId>maven-datanucleus-plugin</artifactId>
 		   <version>3.0.0-m1</version>
 		   <configuration>
 		      <verbose>true</verbose>
 		      <fork>false</fork>
-		      <!-- the last one akes effect -->
+		      <!-- the last props takes effect, this section is for schema-create -->
 		      <!-- 
 		      <props>${basedir}/src/main/resources/datanucleus_nnuser1.properties</props>
 		      <props>${basedir}/src/main/resources/datanucleus_analytics.properties</props>
@@ -46,6 +63,7 @@
 		      <props>${basedir}/src/main/resources/datanucleus_content.properties</props>
 		      <log4jConfiguration>${basedir}/src/main/resources/log4j.properties</log4jConfiguration>
 			</configuration>	
+			<!-- define dependency specifically here otherwise it'll always pick up the latest version -->
             <dependencies>
                <dependency>
 		          <groupId>org.datanucleus</groupId>
@@ -77,10 +95,10 @@
 			   </execution>			
 			</executions>
 		</plugin>
-     </plugins>
+     </plugins>     
      <pluginManagement>
      	<plugins>
-     		<!--TODO TEXT. This plugin's configuration is used in m2e only.-->
+     		<!-- For eclipse to ignore datanucleus enhance checking -->
      		<plugin>
      			<groupId>org.eclipse.m2e</groupId>
      			<artifactId>lifecycle-mapping</artifactId>
@@ -113,6 +131,9 @@
      </pluginManagement>
   </build>
   
+  <!-- ====================================================================== -->
+  <!-- Dependencies                                                           -->
+  <!-- ====================================================================== -->    
   <properties>
      <!-- versions -->
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -120,9 +141,10 @@
      <servlet.version>2.5</servlet.version>               
   </properties>
    
-  <!-- Repository: 
-       mvn repository: http://mvnrepository.com
-       local on windows, it's default at to C:\Users\{user name}\.m2\repository 
+  <!-- 
+    Repository: 
+    mvn repository: http://mvnrepository.com
+    local on windows, it's default at to C:\Users\{user name}\.m2\repository 
   --> 
   <dependencies>
      <!--
@@ -139,6 +161,11 @@
         <artifactId>spring-tx</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>      
       <!-- logging -->         
       <dependency>
         <groupId>log4j</groupId>
@@ -157,6 +184,11 @@
         <version>${servlet.version}</version>
         <scope>provided</scope>
       </dependency>      
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.2</version>
+      </dependency>
       <!-- jackson -->      
 	  <dependency>
         <groupId>org.codehaus.jackson</groupId>
@@ -231,11 +263,19 @@
         <version>0.9.1.2</version>
       </dependency>
       <!-- RabbitMQ -->
+      <!-- 
 	  <dependency>
 	     <groupId>com.rabbitmq</groupId>
 		 <artifactId>amqp-client</artifactId>
 		 <version>2.4.1</version>
-	  </dependency>	  
+	  </dependency>
+	   -->
+<dependency>
+    <groupId>com.rabbitmq</groupId>
+    <artifactId>amqp-client</artifactId>
+    <version>1.8.0</version>
+</dependency>
+	   	  
 	  <!-- Others -->
       <dependency>
          <groupId>commons-lang</groupId>
@@ -286,7 +326,7 @@
        <artifactId>spymemcached</artifactId>
        <version>2.6</version>
        <scope>provided</scope>
-    </dependency>          	        
+    </dependency>        
   </dependencies>
   
   <!-- ====================================================================== -->
