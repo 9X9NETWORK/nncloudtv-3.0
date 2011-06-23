@@ -1,17 +1,16 @@
-Sections in this document,
+About this document,
 
-- Devel environment and tool, more for Windows
-- Production environment, i.e. Ubuntu on EC2
+Two sections,
+- Devel environment and tool: more for Windows
+- EC2: i.e. Ubuntu on EC2
 
-=====================================================
+=============================================================================================================
 Devel environment and tool
-=====================================================
+=============================================================================================================
 ================================
-Setup
+First time setup
 ================================
-Steps to run the app for the first time
-
-- Download JDK 1.6.0, MySql, RabbitMQ, Maven (Details can be found in the following sections)  
+- Download JDK 1.6.0, MySql 5.5.10, RabbitMQ 1.8, Maven 3.0.3 (Details can be found in the following sections)  
 - Start MySql server
 - Start RabbitMQ server
 - Create databases and tables (Please reference MySql file)
@@ -21,7 +20,9 @@ Steps to run the app for the first time
 - run nnqueue client
 - basic test,
 http://localhost:8888/hello (hello)
-http://localhost:8888/pdr (write a db record) 
+http://localhost:8888/pdr (write a db record)
+http://localhost:8888/fanout?exchange_name=hello (test queue component, see if queue client receives it)
+ 
 - ready to go,
 go to http://localhost:8888/admin/index, click on initialize link
 
@@ -57,12 +58,19 @@ mvn jetty:run
 RabbitMQ
 ================================
 - Windows download
-http://www.rabbitmq.com/releases/bundles/v2.4.1/complete-rabbitmq-bundle-2.4.1.zip
+http://www.rabbitmq.com/releases/bundles/v1.7.2/
 
-- commands examples:
-cd C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-2.4.1\sbin
-rabbitmqctl list_exchanges 
-rabbitmqctl list_queues
+- installation quick guide 
+> unzip the package
+> install erlang 5.7.4 using otp_win32_R13B03.exe
+> set ERLANG_HOME in environment variable
+> (move folder rabbitmq-server-windows-1.7.2 to program files)
+
+- commands examples: 
+> cd C:\Program Files (x86)\RabbitMQ\rabbitmq_server-1.7.2\sbin
+> double click "rabbitmq-server.bat" to start the server
+> rabbitmqctl list_exchanges 
+> rabbitmqctl list_queues
 
 ================================
 MySql
@@ -72,12 +80,23 @@ MySQL Server 5.5
 - commands on Windows: 
 > cd c:\Program Files\MySQL\MySQL Server 5.5\bin
 > mysqld
+> mysql nncloudtv_analytics -h localhost -u root -p
+> mysql nncloudtv_content -h localhost -u root -p
+> mysql nncloudtv_nnuser1 -h localhost -u root -p
+> mysql nncloudtv_nnuser2 -h localhost -u root -p
 
 - please reference MySql file
  
-=====================================================
-AWS environment
-=====================================================
+================================
+In the pipeline
+================================
+- YouTube lib rewrite, the original lib is not maven friendly. replace with com.google.api.client lib
+- Admin portal
+- CMS portal
+
+=============================================================================================================
+EC2
+=============================================================================================================
 ================================
 Jetty 
 ================================
@@ -88,8 +107,8 @@ Jetty
 
 - configuration
 > modify /etc/default/jetty
-> change "NO_START"
-> change "JETTY_HOST"
+> change value of "NO_START" to "NO_START=0" 
+> change value of "JETTY_HOST" TO "JETTY_HOST=0.0.0.0"
 
 - start/stop jetty
 > service jetty start
@@ -106,8 +125,11 @@ null 6.1.22
 ================================
 MySql
 ================================
+- installation 
+apt-get install mysql-server-5.1
+
 - commands
-> service mysql start
+> service mysql start ??
 
 ================================
 RabbitMQ
@@ -117,13 +139,15 @@ RabbitMQ
 > apt-get install rabbitmq-server
 
 - commands: 
-rabbitmqctl status    
+rabbitmqctl status
 
 ================================
 Testing
 ================================
 - upload the war: use SCP with your private key, and upload to the server
 - commands: 
+
+cd /usr/share/jetty/webapps
 service jetty stop
 rm root.jar
 mv /home/ubuntu/tmp/nncloudtv-0.0.1-SNAPSHOT.war .
@@ -132,4 +156,8 @@ service jetty start
 
 - testing servers 
 java01, http://ec2-50-17-2-234.compute-1.amazonaws.com:8080/hello
+java02, 
+http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/hello
+http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/pdr
+http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/fanout?exchange_name=hello
 
