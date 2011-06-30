@@ -18,8 +18,8 @@ First time setup
 - mvn datanucleus:enhance (it might not be necessary)
 - mvn jetty:run
 - run nnqueue client (Please reference README in nnqueue project)
-- basic test,
-http://localhost:8888/hello (test your servlet)
+- basic tests,
+http://localhost:8888/hello (test your servlet and spring dispatcher)
 http://localhost:8888/pdr (write a db record)
 http://localhost:8888/fanout?exchange_name=hello (test your queue component, see if nnqueue client receives the hello message) 
 - ready to go,
@@ -150,6 +150,11 @@ RabbitMQ
 
 - commands: 
 rabbitmqctl status
+
+================================
+Memcached
+================================
+> apt-get install memcached
 
 ================================
 Testing
