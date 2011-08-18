@@ -10,7 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /** 
- * Mso's default IPG
+ * Mso's default IPG, defining what channel is shown on the ipg
  */
 @PersistenceCapable(table="mso_ipg", detachable="true")
 public class MsoIpg  implements Serializable {

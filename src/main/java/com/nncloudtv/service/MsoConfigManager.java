@@ -25,5 +25,9 @@ public class MsoConfigManager {
 		return configDao.findByMsoIdAndItem(msoId, item);
 	}
 	
+	public MsoConfig findByItem(String item) {
+		return configDao.findByItem(item);
+	}
+	
 }
 

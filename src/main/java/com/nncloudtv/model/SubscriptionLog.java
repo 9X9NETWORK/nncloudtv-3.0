@@ -26,6 +26,10 @@ public class SubscriptionLog implements Serializable {
 	@Persistent
 	@Column(name="channel_id")
 	private long channelId;
+
+	@Persistent
+	@Column(name="set_id")
+	private long setId;
 	
 	@Persistent
 	private int count;
@@ -67,5 +71,12 @@ public class SubscriptionLog implements Serializable {
 	public void setCount(int count) {
 		this.count = count;
 	}
-		
+
+	public long getSetId() {
+		return setId;
+	}
+
+	public void setSetId(long setId) {
+		this.setId = setId;
+	}		
 }

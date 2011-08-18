@@ -14,6 +14,7 @@ import com.rabbitmq.client.ConnectionFactory;
 public class QueueMessage {
 	protected static final Logger log = Logger.getLogger(QueueMessage.class.getName());
 	
+	public final static String HELLO = "hello";
 	public final static String BRAND_COUNTER = "brand_counter";
 	public final static String CATEGORY_CREATE = "category_create";
 	public final static String CHANNEL_CREATE_RELATED = "channel_create_related";	
@@ -21,12 +22,11 @@ public class QueueMessage {
 	
 	public static void send(String host, String queue, String message) throws IOException {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(host);
-		Connection connection = factory.newConnection();
+		Connection connection = factory.newConnection(host);
 		
 		//send message
-		Channel channel = connection.createChannel();
-		channel.queueDeclare(queue, false, false, false, null);
+		Channel channel = connection.createChannel();		
+		channel.queueDeclare(queue, false, false, false, false, null);
 	    channel.basicPublish("", queue, null, message.getBytes());
 	    log.info(" [x] Sent '" + message + "'");		 
 	    channel.close();
@@ -65,11 +65,11 @@ public class QueueMessage {
 	//!!!
 	public void fanout(String host, String exchange_name, Object msg) {
 	   ConnectionFactory factory = new ConnectionFactory();
-       factory.setHost("localhost");
        Connection connection;
        Channel channel;
 		try {
-		   connection = factory.newConnection();
+		   //connection = factory.newConnection();
+			connection = factory.newConnection(host);
 	       channel = connection.createChannel();
 	       channel.exchangeDeclare(exchange_name, "fanout");
 	       channel.basicPublish(exchange_name, "", null, this.toByteArray(msg));	       
@@ -83,15 +83,13 @@ public class QueueMessage {
 	}
 	
 	public void fanout(String host, String exchange_name, String msg) throws IOException {
-		   ConnectionFactory factory = new ConnectionFactory();
-	       factory.setHost("localhost");
-	       Connection connection = factory.newConnection();
-	       Channel channel = connection.createChannel();
-	       channel.exchangeDeclare(exchange_name, "fanout");
-	       channel.basicPublish(exchange_name, "", null, msg.getBytes());	       
-	       //System.out.println(" [x] Sent '" + message + "'");
-	       channel.close();
-	       connection.close();		
+	   ConnectionFactory factory = new ConnectionFactory();
+	   Connection connection = factory.newConnection(host);
+       Channel channel = connection.createChannel();
+       channel.exchangeDeclare(exchange_name, "fanout");
+       channel.basicPublish(exchange_name, "", null, msg.getBytes());	       
+       channel.close();
+       connection.close();		
 	}
 	
 }

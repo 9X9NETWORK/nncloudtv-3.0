@@ -24,7 +24,7 @@ public class SubscriptionDao{
 	*/
 
 	private PersistenceManager getPersistenceManager(NnUser user) {
-		if (user.getSharing() == 1) {
+		if (user.getShard() == 1) {
 			return PMF.getNnUser1().getPersistenceManager();
 		} else {
 			return PMF.getNnUser2().getPersistenceManager();
@@ -35,7 +35,6 @@ public class SubscriptionDao{
 		if (sub == null) {return null;}
 		PersistenceManager pm = this.getPersistenceManager(user);
 		try {
-			System.out.println("<<<<<<<<<<< make all my way here????? ");
 			pm.makePersistent(sub);
 			sub = pm.detachCopy(sub);
 		} finally {

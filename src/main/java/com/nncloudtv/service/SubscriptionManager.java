@@ -13,8 +13,8 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.Subscription;
+import com.nncloudtv.model.SubscriptionGroup;
 import com.nncloudtv.model.SubscriptionLog;
-import com.nncloudtv.model.SubscriptionSet;
 
 @Service
 public class SubscriptionManager {		
@@ -28,34 +28,20 @@ public class SubscriptionManager {
 	}
 	
 	//make sure your channel has seq and type set
+	//@@@ counter work throw to queue
 	public boolean subscribeChannel(NnUser user, NnChannel channel) {
-		// !!! if channel does not have seq and type set, return error, 
-		Subscription existed = subDao.findByUserAndChannelId(user, channel.getId());
-		if (existed != null) {
-			log.info("user trying to subscribe a channel that has been subscribed." + channel.getId());
-			return false;
-		}
 		Subscription s = new Subscription(user.getId(), channel.getId(), channel.getSeq(), channel.getType());
 		Date now = new Date();
 		s.setCreateDate(now);
 		s.setUpdateDate(now);
 		subDao.save(user, s);
-		//!!!! move out, don't care
-		SubscriptionLogManager sublogMngr = new SubscriptionLogManager();
-		SubscriptionLog sublog = sublogMngr.findByMsoIdAndChannelId(user.getMsoId(), channel.getId());
-		if (sublog == null) {
-			sublog = new SubscriptionLog(user.getMsoId(), channel.getId());
-		} else {
-			sublog.setCount(sublog.getCount()+1);
-		}
-		sublogMngr.save(sublog);		
 		return true;
 	}
 	
 	@Transactional
-	public boolean subscribeSet(NnUser user, SubscriptionSet subSet, List<NnChannel> channels) {
+	public boolean subscribeSet(NnUser user, SubscriptionGroup subSet, List<NnChannel> channels) {
 
-		SubscriptionSetManager subSetMngr = new SubscriptionSetManager();
+		SubscriptionGroupManager subSetMngr = new SubscriptionGroupManager();
 		subSetMngr.create(user, subSet);
 		
 		for (NnChannel c : channels) {

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import net.spy.memcached.MemcachedClient;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,10 +35,10 @@ public class MsoManager {
 	}
 
 	public void create(Mso mso) {
-		//if (this.findByName(mso.getName()) == null) {
+		if (this.findByName(mso.getName()) == null) {
 			mso.setCreateDate(new Date());
 			this.save(mso);			
-		//}
+		}
 	}
 	
 	public Mso save(Mso mso) {
@@ -54,7 +53,7 @@ public class MsoManager {
 	
 	public Mso findNNMso() {
 		List<Mso> msos = this.findByType(Mso.TYPE_NN);
-		if (msos.size() > 0) { return msos.get(0); }					
+		if (msos.size() > 0) { return msos.get(0); }
 		return null;
 	}
 

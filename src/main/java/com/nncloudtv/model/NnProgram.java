@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.jdo.annotations.*;
 
 /**
- * Programs(shows) under a MsoChannel.
+ * Programs(shows) under a NnChannel.
  */
 @PersistenceCapable(table="nnprogram", detachable="true")
 public class NnProgram implements Serializable {

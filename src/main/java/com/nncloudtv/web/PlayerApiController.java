@@ -135,9 +135,11 @@ public class PlayerApiController {
 		MsoManager msoMngr = new MsoManager();
 		Mso mso = msoMngr.findMsoViaHttpReq(req);
 		Locale locale = Locale.ENGLISH;
+		/*
 		if (mso.getPreferredLangCode().equals(Mso.LANG_ZH_TW)){
 			locale = Locale.TRADITIONAL_CHINESE;
 		}
+		*/
 		playerApiService.setLocale(locale);
 		playerApiService.setMso(mso);
 		this.locale = locale;
@@ -284,14 +286,15 @@ public class PlayerApiController {
 	 *         Category info has category id, category name, channel count.<br/>
 	 */		
 	@RequestMapping(value="categoryBrowse")
-	public ResponseEntity<String> categoryBrowse(HttpServletRequest req) {
+	public ResponseEntity<String> categoryBrowse(@RequestParam(value="lang", required=false) String lang,
+											     HttpServletRequest req) {
 		this.prepService(req);
 		String output = NnStatusMsg.getMsg(NnStatusCode.ERROR, locale);		
 		try {
-			output = playerApiService.findCategoriesByMso();
+			output = playerApiService.findCategories(lang);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
-		}	
+		}
 		return NnNetUtil.textReturn(output);
 	}
 
@@ -379,13 +382,15 @@ public class PlayerApiController {
 	 *         0	1217	System	http://s3.amazonaws.com/9x9chthumb/b.gif	1	2 <br/>        
 	 */		
 	@RequestMapping(value="channelBrowse")
-	public ResponseEntity<String> channelBrowse(@RequestParam(value="category", required=false) String categoryIds, 
+	public ResponseEntity<String> channelBrowse(@RequestParam(value="category", required=false) String categoryIds,
+			                                    @RequestParam(value="lang", required=false) String lang,
 			                                    HttpServletRequest req) {
+			                                    
 		this.prepService(req);
 		log.info(categoryIds);		
 		String output = NnStatusMsg.getMsg(NnStatusCode.ERROR, locale);
-		try {	
-			output = playerApiService.findPublicChannelsByCategory(categoryIds);
+		try {
+			output = playerApiService.findChannelsByCategory(categoryIds, lang);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
 		}
@@ -393,7 +398,8 @@ public class PlayerApiController {
 	}	
 
 	/**
-	 * User subscribes a channel on a designated grid location.
+	 * User subscribes a channel on a designated grid location. 
+	 * Or, user changes 3x3 categorization. 
 	 * 
 	 * <p>Example: http://host:port/playerAPI/subscribe?user=QQl0l208W2C4F008980F&channel=51&grid=2</p>
 	 * 
@@ -411,7 +417,7 @@ public class PlayerApiController {
 			                                @RequestParam(value="set", required=false) String setId,
 			                                @RequestParam(value="grid", required=false) String gridIds, 
 			                                @RequestParam(value="pos", required=false) String pos,
-			                                HttpServletRequest req ) {		
+			                                HttpServletRequest req ) {
 		log.info("subscribe: userToken=" + userToken+ "; channel=" + channelIds + "; grid=" + gridIds + "; set=" + setId + ";pos=" + pos);
 		this.prepService(req);
 		String output = NnStatusMsg.getMsg(NnStatusCode.ERROR, locale);
@@ -434,14 +440,14 @@ public class PlayerApiController {
 	 * @return status code and status message 
 	 */			
 	@RequestMapping(value="unsubscribe")
-	public ResponseEntity<String> unsubscribe(@RequestParam(value="user") String userToken, 
-								              @RequestParam(value="channel") String channelId,
-								              HttpServletRequest req) {			
+	public ResponseEntity<String> unsubscribe(@RequestParam(required=false, value="user") String userToken, 
+								              @RequestParam(required=false, value="channel") String channelId,
+								              HttpServletRequest req) {
 		this.prepService(req);
 		log.info("userToken=" + userToken + "; channel=" + channelId);
 		String output = NnStatusMsg.getMsg(NnStatusCode.ERROR, locale);
 		try {
-			output = playerApiService.unsubscribeChannel(userToken, channelId);
+			output = playerApiService.unsubscribe(userToken, channelId);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		}
@@ -455,7 +461,10 @@ public class PlayerApiController {
 	 * @param user user's unique identifier
 	 * @param userInfo true or false. Whether to return user information as login. If asked, it will be returned after status code.
 	 * @param channel channel id, optional, can be one or multiple;  example, channel=1 or channel=1,2,3
-	 * @param setInfo true or false. Whether to return set information.  
+	 * @param setInfo true or false. Whether to return set information.
+	 * @param required used with channel; 
+	 *                 if required is set to true and channel id is not found in the system, error will be returned in the general status. 
+	 *                 if required is set to false, and channel id is not found in the system, success will be returned in the general status, only the channel section is empty.   
 	 * @return A string of all of the user's subscribed channels' information.
 	 *         <p>
 	 *         First block: status. Second block: set information. This block will show only when setInfo is true. 
@@ -489,14 +498,16 @@ public class PlayerApiController {
 												@RequestParam(value="userInfo", required=false) String userInfo,
 												@RequestParam(value="channel", required=false) String channelIds,
 												@RequestParam(value="setInfo", required=false) String setInfo,
+										        @RequestParam(value="required", required=false) String required,												
 											    HttpServletRequest req) {
 		this.prepService(req);
 		log.info("userToken=" + userToken + ";isUserInfo:" + userInfo);				
 		boolean isUserInfo = Boolean.parseBoolean(userInfo);
 		boolean isSetInfo = Boolean.parseBoolean(setInfo);
+		boolean isRequired = Boolean.parseBoolean(required);		
 		String output = NnStatusMsg.getMsg(NnStatusCode.ERROR, locale);
 		try {
-			output = playerApiService.findChannelInfo(userToken, isUserInfo, channelIds, isSetInfo);
+			output = playerApiService.findChannelInfo(userToken, isUserInfo, channelIds, isSetInfo, isRequired);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
 		}

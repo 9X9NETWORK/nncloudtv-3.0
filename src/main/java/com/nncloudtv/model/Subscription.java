@@ -30,7 +30,7 @@ public class Subscription implements Serializable {
 	private long channelId;
 	
 	@Persistent
-	private int seq;
+	private int seq; //from 1-81
 	
 	@Persistent
 	private short type; //The value derived from msoIpg

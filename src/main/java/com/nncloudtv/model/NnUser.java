@@ -22,7 +22,7 @@ public class NnUser implements Serializable {
 	private String token;
 	
 	@Persistent
-	private int sharding;
+	private short shard;
 	
 	@Persistent
 	@Column(name="mso_id")
@@ -219,12 +219,12 @@ public class NnUser implements Serializable {
 		this.facebookToken = facebookToken;
 	}
 
-	public int getSharing() {
-		return sharding;
+	public short getShard() {
+		return shard;
 	}
 
-	public void setSharing(int sharing) {
-		this.sharding = sharing;
+	public void setShard(short shard) {
+		this.shard = shard;
 	}
 	
 }

@@ -10,7 +10,8 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /** 
- * Category is created by MSO. Each channel belongs to at least a category. 
+ * Each MSO has his own category.
+ * Each channel should belong to at least one category
  */
 @PersistenceCapable(table="category", detachable="true")
 public class Category implements Serializable {
@@ -39,7 +40,21 @@ public class Category implements Serializable {
 	
 	@Persistent
 	@Column(name="channel_count")
-	private int channelCount;
+	private int channelCount; 	//channel count in each category
+	
+	@Persistent
+	@Column(name="is_Ipg")
+	private boolean isIpg; //categories 
+	
+	@Persistent	
+	private short type;
+	public static final short TYPE_FREE = 0;
+	public static final short TYPE_RESTRICTED = 1;	
+	public static final short TYPE_PERSONAL = 2;
+	public static final short TYPE_YOUTUBE = 3;
+
+	@Persistent
+	private short seq; //seq shown on the ipg
 	
 	@Persistent
 	@Column(name="create_date")
@@ -49,13 +64,15 @@ public class Category implements Serializable {
 	@Column(name="update_date")
 	private Date updateDate;
 	
+	public Category() {}	
+	
 	public Category(String name, boolean isPublic, long msoId) {
 		this.name = name;
 		this.isPublic = isPublic;
 		this.msoId= msoId;
-	}	
-	
-	public Category() {}	
+		this.isIpg = false;
+		this.type = TYPE_FREE;
+	}
 	
 	public long getId() {
 		return id;
@@ -120,6 +137,30 @@ public class Category implements Serializable {
 
 	public long getParentId() {
 		return parentId;
+	}
+
+	public boolean isIpg() {
+		return isIpg;
+	}
+
+	public void setIpg(boolean isIpg) {
+		this.isIpg = isIpg;
+	}
+
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	public short getSeq() {
+		return seq;
+	}
+
+	public void setSeq(short seq) {
+		this.seq = seq;
 	}
 	
 }

@@ -46,15 +46,13 @@ public class Mso implements Serializable {
 	public static final short TYPE_MSO = 2;
 		
 	@Persistent
-	@Column(name="preferred_lang_code", jdbcType="VARCHAR", length=255)
-	private String preferredLangCode;
-	public static final String LANG_EN = "en"; 
-	public static final String LANG_ZH = "zh";	
-	public static final String LANG_ZH_TW = "zh-tw";	
-	
+	@Column(name="lang_code", jdbcType="VARCHAR", length=4)
+	public String langCode;
+		
 	@Persistent
-	private int sharding;
-	
+	private int shard; //what shard it goes to, mainly for user partition
+	                   //currently user partition is determined mainly by ip since we keep one mso for now.
+	                   //default is 1, asia tw, cn, hk is 2
 	@Persistent
 	@Column(name="create_date")
 	private Date createDate;
@@ -141,14 +139,6 @@ public class Mso implements Serializable {
 	public void setJingleUrl(String jingleUrl) {
 		this.jingleUrl = jingleUrl;
 	}
-
-	public String getPreferredLangCode() {
-		return preferredLangCode;
-	}
-
-	public void setPreferredLangCode(String preferredLangCode) {
-		this.preferredLangCode = preferredLangCode;
-	}
 	
 	public String getTitle() {
 		return title;
@@ -158,12 +148,19 @@ public class Mso implements Serializable {
 		this.title = title;
 	}
 
-	public int getSharding() {
-		return sharding;
+	public String getLangCode() {
+		return langCode;
 	}
 
-	public void setSharding(int sharding) {
-		this.sharding = sharding;
+	public void setLangCode(String langCode) {
+		this.langCode = langCode;
 	}
-		
+
+	public int getShard() {
+		return shard;
+	}
+
+	public void setShard(int shard) {
+		this.shard = shard;
+	}	
 }

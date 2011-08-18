@@ -50,7 +50,24 @@ public class CategoryDao extends GenericDao<Category> {
 		}
 		return detached;
 	}
-		
+
+	public List<Category> findIpgCategoryByMsoId(long msoId) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<Category> detached = new ArrayList<Category>();
+		try {
+			Query q = pm.newQuery(Category.class);
+			q.setFilter("msoId == msoIdParam && isIpg == isIpgParam");
+			q.declareParameters("long msoIdParam, boolean isIpgParam");
+			q.setOrdering("name");
+			@SuppressWarnings("unchecked")
+			List<Category> categories = (List<Category>)q.execute(msoId, true);
+			detached = (List<Category>)pm.detachCopyAll(categories);
+		} finally {
+			pm.close();			
+		}
+		return detached;
+	}
+	
 	public List<Category> findAllByMsoId(long msoId) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<Category> detached = new ArrayList<Category>();
@@ -93,6 +110,23 @@ public class CategoryDao extends GenericDao<Category> {
 			pm.close();
 		}
 		return category;		
+	}
+
+	public List<Category> findAllInIpg(long msoId) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<Category> detached = new ArrayList<Category>();
+		try {
+			Query q = pm.newQuery(Category.class);
+			q.setFilter("msoId == msoIdParam && isIpg == isIpgParam");
+			q.declareParameters("long msoIdParam, boolean isIpgParam");
+			q.setOrdering("seq asc");
+			@SuppressWarnings("unchecked")
+			List<Category> categories = (List<Category>)q.execute(msoId, true);
+			detached = (List<Category>)pm.detachCopyAll(categories);
+		} finally {
+			pm.close();			
+		}
+		return detached;		
 	}
 	
 	//!!! contains query

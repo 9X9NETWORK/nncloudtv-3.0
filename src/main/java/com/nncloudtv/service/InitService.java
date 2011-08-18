@@ -8,21 +8,22 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryChannel;
-import com.nncloudtv.model.CategorySet;
 import com.nncloudtv.model.ContentOwnership;
 import com.nncloudtv.model.Ipg;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnSet;
+import com.nncloudtv.model.NnSetChannel;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.PdrRaw;
 import com.nncloudtv.model.Subscription;
+import com.nncloudtv.model.SubscriptionGroup;
 import com.nncloudtv.model.SubscriptionLog;
-import com.nncloudtv.model.SubscriptionSet;
 import com.nncloudtv.model.ViewLog;
 
 /**
@@ -47,30 +48,17 @@ public class InitService {
 		initMsos();
 		initCategories();
 		initMso1Channels();
-		initMso2Channels();
 		initSets();
-		initMsoIpgs();
+		initMso1Ipgs();
 	}
 	
-	public void initMsoIpgs() {
+	public void initMso1Ipgs() {
 		MsoIpgManager msoIpgMngr = new MsoIpgManager();
 		NnChannelManager channelMngr = new NnChannelManager();
-		CategoryManager categoryMngr = new CategoryManager();
 		//msoOne
-		Category c = categoryMngr.findByName("Activism");
-		List<NnChannel> channels = channelMngr.findGoodChannelsByCategoryId(c.getId());
-		for (int i=0; i<2; i++) {
-			MsoIpg msoIpg = new MsoIpg(msoOne.getId(), channels.get(i).getId(), i+1, MsoIpg.TYPE_GENERAL);			
-			msoIpgMngr.create(msoIpg);			
-		}			
-		msoIpgMngr.create(new MsoIpg(msoOne.getId(), channels.get(2).getId(), 3, MsoIpg.TYPE_READONLY));
-		//msoTwo
-		c = categoryMngr.findByName("活動中心");		
-		channels = channelMngr.findGoodChannelsByCategoryId(c.getId());
-		for (int i=0; i<channels.size(); i++) {
-			MsoIpg msoIpg = new MsoIpg(msoTwo.getId(), channels.get(i).getId(), i+1, MsoIpg.TYPE_GENERAL);			
-			msoIpgMngr.create(msoIpg);			
-		}		
+		NnChannel channel = channelMngr.findBySourceUrlSearch("http://9x9pod.s3.amazonaws.com/default.mp4");
+		MsoIpg msoIpg = new MsoIpg(msoOne.getId(), channel.getId(), 81, MsoIpg.TYPE_READONLY);			
+		msoIpgMngr.create(msoIpg);			
 	}
 	
 	public void initMsos() {
@@ -78,10 +66,10 @@ public class InitService {
 		MsoManager msoMngr = new MsoManager();
 		msoOne = new Mso("9x9", "9x9", NNEMAIL, Mso.TYPE_NN);
 		msoOne.setTitle("9x9.tv");
-		msoOne.setPreferredLangCode(Mso.LANG_EN);
-		msoOne.setJingleUrl("http://s3.amazonaws.com/9x9ui/videos/opening.swf ");
+		msoOne.setLangCode(LangTable.LANG_EN);
+		msoOne.setJingleUrl("http://s3.amazonaws.com/9x9ui/videos/opening.swf");
 		msoOne.setLogoUrl("http://s3.amazonaws.com/9x9ui/images/logo_9x9.png");
-		msoOne.setSharding(1);
+		msoOne.setShard(1);
 		msoMngr.create(msoOne);
 				
 		//config
@@ -95,15 +83,15 @@ public class InitService {
 		NnUserManager userMngr = new NnUserManager();
 		userOne = new NnUser(NNEMAIL, "9x9mso", "9x9 mso", NnUser.TYPE_NN);
 		userOne.setMsoId(msoOne.getId());
-		userMngr.create(userOne, msoOne);
+		userMngr.create(userOne, null, (short)1);
 				
 		//------- second mso ---------
 		msoTwo = new Mso("5f", "5f", FFEMAIL, Mso.TYPE_MSO);
 		msoTwo.setTitle("5f.tv");		
-		msoTwo.setPreferredLangCode(Mso.LANG_ZH_TW);
+		msoTwo.setLangCode(LangTable.LANG_ZH);
 		msoTwo.setJingleUrl("http://s3.amazonaws.com/9x9ui/videos/opening.swf ");
 		msoTwo.setLogoUrl("http://s3.amazonaws.com/9x9ui/images/5floor-logo.png");
-		msoTwo.setSharding(2);
+		msoTwo.setShard(2);
 		msoMngr.create(msoTwo);
 		
 		//config
@@ -115,29 +103,35 @@ public class InitService {
 		//a default MSO user		
 		userTwo = new NnUser(FFEMAIL, "5ffmso", "5f mso", NnUser.TYPE_TBC);		
 		userTwo.setMsoId(msoTwo.getId());
-		userMngr.create(userTwo, msoTwo);
+		userMngr.create(userTwo, null, (short)2);
 	}
+	
 	public void initCategories() {
 		//mso1
 		String[] categoryOneStr = {
-				"Activism", "Automotive", "Comedy", "Entertainment", "Finance", "Food & Wine",
-				"Gaming", "Gay & Lesbian", "Health & Fitness", "How to", 
-				"Lifestyle", "Music", "News & Politics", "Outdoor",
-				"People", "Pets & Animals", "Religion", "Sports", "Tech & Science",
-				"Travel"
-			};				
-		CategoryManager categoryMngr = new CategoryManager();
-		for (String name : categoryOneStr) {			
-			categoryMngr.create(new Category(name, true, msoOne.getId()));
-		}
-		
-		//mso2
-		String[] categoryTwoStr = {
-				"活動中心", "視聽劇場", "數位高手", "ACG夢工廠", "生活娛樂館", "國家研究院", "國家體育場", "文創藝廊", "影音實驗室"
+				"News", "Ambient music", "Friends & Family", 
+				"Sports", "Movie trailer", "My Youtube", "Lifestyle", "Food & Wine", "Brands", 			
+				"Religion", "Travel", "Others",
 			};		
-		for (String name : categoryTwoStr) {			
-			categoryMngr.create(new Category(name, true, msoTwo.getId()));
-		}
+		
+		CategoryManager categoryMngr = new CategoryManager();
+		int i=1;
+		for (String name : categoryOneStr) {			
+			Category c = new Category(name, true, msoOne.getId());
+			if (!c.getName().equals("Others") && !c.getName().equals("Religion") && !c.getName().equals("Travel")) {
+				i++;
+				c.setSeq((short)i);
+				c.setIpg(true);
+				c.setType(Category.TYPE_RESTRICTED);
+			}
+			if (c.getName().equals("Friends & Family")) {
+				c.setType(Category.TYPE_PERSONAL);
+			}	
+			if (c.getName().equals("My Youtube")) {
+				c.setType(Category.TYPE_YOUTUBE);
+			}
+			categoryMngr.create(c);
+		}				
 	}
 	
 	public void initSets() {
@@ -183,16 +177,18 @@ public class InitService {
 		NnProgramManager programMngr = new NnProgramManager();
 
 		List<Category> categories = new ArrayList<Category>();
-		Category category = categoryMngr.findByName("Activism");
+		Category category = categoryMngr.list(1, 1, "", "").get(0);
+		System.out.println("<<<<<< category >>>> " + category.getName());
 		categories.add(category);
 		
 		NnChannel channel1 = new NnChannel("Etsy", "Etsy.com", "http://s3.amazonaws.com/9x9chthumb/54e2967caf4e60fe9bc19ef1920997977eae1578.gif", userOne.getId());
+		channel1.setFauxName("Etsy Faux Name");
+		channel1.setFauxIntro("Etsy Faux Intro");
 		channel1.setSourceUrl("http://feeds.feedburner.com/etsyetsyetsy");
 		channel1.setContentType(NnChannel.CONTENTTYPE_PODCAST);
 		channel1.setPublic(true);
 		channel1.setProgramCount(2);
 		channelMngr.create(channel1, categories);
-		System.out.println("<<<<<<<<<<<<<<<<<<channel1 id:" + channel1.getId());
 
 		NnProgram program1 = new NnProgram("Handmade Confessional: Eli Dlugach", "Eli Dlugach gives a testimonial on why he loves handmade", "http://s3.amazonaws.com/9x9cache/005a69b4431d521e39534431254d81a211ebefc7_1227739497_thumbnail.jpg", NnProgram.TYPE_VIDEO);
 		program1.setImageLargeUrl("http://s3.amazonaws.com/9x9cache/005a69b4431d521e39534431254d81a211ebefc7_1227739497_thumbLarge.jpg");
@@ -308,38 +304,7 @@ public class InitService {
 		channel7.setPublic(true);
 		channel7.setContentType(NnChannel.CONTENTTYPE_FACEBOOK);
 		channel7.setProgramCount(0);
-		channelMngr.create(channel7, categories);
-				
-	}
-
-	public void initMso2Channels() {
-		CategoryManager categoryMngr = new CategoryManager();
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnProgramManager programMngr = new NnProgramManager();
-
-		List<Category> categories = new ArrayList<Category>();
-		Category category = categoryMngr.findByName("活動中心");
-		categories.add(category);
-		
-		//channel1
-		NnChannel channel1 = new NnChannel("蘋果日報動新聞", "Apple Daily", "http://i4.ytimg.com/i/778cAEgKGDmh-teUWdg-uQ/1.jpg?v=81cffa", userTwo.getId());
-		channel1.setSourceUrl("http://www.youtube.com/user/nmanews");
-		channel1.setPublic(true);
-		channel1.setProgramCount(2);
-		channel1.setContentType(NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL);
-		channelMngr.create(channel1, categories);
-		
-		// -- create program1
-		NnProgram program1 = new NnProgram("阿諾正宮小三同時懷孕兩子生日差5天2011.05.20", "美國加州前州長阿諾史瓦辛格（Arnold Schwarzenegger）的私生子醜聞成為熱門話題", "http://i.ytimg.com/vi/oYSTYER7Qw4/default.jpg", NnProgram.TYPE_VIDEO);
-		program1.setImageLargeUrl("http://i.ytimg.com/vi/oYSTYER7Qw4/hqdefault.jpg");
-		program1.setOtherFileUrl("http://www.youtube.com/watch?v=oYSTYER7Qw4");
-		program1.setPublic(true);
-		programMngr.create(channel1, program1);
-	
-		NnProgram program2 = new NnProgram("美宗教團體預測：521世界末日2011.05.20", "美國有宗教人士宣稱明天就是相當於世界末日的最後審判日，耶穌將會再臨人世，帶著信徒上天堂，其他人只能待在世上受苦等待末日到來", "http://i.ytimg.com/vi/71QDz5b2LYw/default.jpg", NnProgram.TYPE_VIDEO);
-		program2.setImageLargeUrl("http://i.ytimg.com/vi/71QDz5b2LYw/hqdefault.jpg");	
-		program2.setPublic(true);
-		programMngr.create(channel1, program2);				
+		channelMngr.create(channel7, categories);			
 	}
 	
 	public void deleteAll() {
@@ -351,11 +316,8 @@ public class InitService {
 		list = dumper.findAll(CategoryChannel.class, "createDate", 0);
 		dumper.deleteAll(CategoryChannel.class, list, 0);
 
-		list = dumper.findAll(CategorySet.class, "createDate", 0);
-		dumper.deleteAll(CategorySet.class, list, 0);
-
-		list = dumper.findAll(NnChannel.class, "createDate", 0);
-		dumper.deleteAll(NnChannel.class, list, 0);
+		list = dumper.findAll(ContentOwnership.class, "createDate", 0);
+		dumper.deleteAll(ContentOwnership.class, list, 0);
 		
 		list = dumper.findAll(Ipg.class, "createDate", 0);
 		dumper.deleteAll(Ipg.class, list, 0);
@@ -369,8 +331,17 @@ public class InitService {
 		list = dumper.findAll(MsoIpg.class, "createDate", 0);
 		dumper.deleteAll(MsoIpg.class, list, 0);		
 
+		list = dumper.findAll(NnChannel.class, "createDate", 0);
+		dumper.deleteAll(NnChannel.class, list, 0);		
+
+		list = dumper.findAll(NnProgram.class, "createDate", 0);
+		dumper.deleteAll(NnProgram.class, list, 0);		
+		
 		list = dumper.findAll(NnSet.class, "createDate", 0);
 		dumper.deleteAll(NnSet.class, list, 0);		
+
+		list = dumper.findAll(NnSetChannel.class, "createDate", 1);
+		dumper.deleteAll(NnSetChannel.class, list, 1);
 
 		list = dumper.findAll(NnUser.class, "createDate", 1);
 		dumper.deleteAll(NnUser.class, list, 1);
@@ -396,8 +367,8 @@ public class InitService {
 		list = dumper.findAll(SubscriptionLog.class, "createDate", 0);
 		dumper.deleteAll(SubscriptionLog.class, list, 0);
 
-		list = dumper.findAll(SubscriptionSet.class, "createDate", 0);
-		dumper.deleteAll(SubscriptionSet.class, list, 0);
+		list = dumper.findAll(SubscriptionGroup.class, "createDate", 0);
+		dumper.deleteAll(SubscriptionGroup.class, list, 0);
 		
 		list = dumper.findAll(ViewLog.class, "createDate", 0);
 		dumper.deleteAll(ViewLog.class, list, 0);		

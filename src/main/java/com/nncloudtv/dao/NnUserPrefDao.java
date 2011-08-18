@@ -21,7 +21,7 @@ public class NnUserPrefDao extends GenericDao<NnUserPref> {
 	}	
 		
 	private PersistenceManager getPersistenceManager(NnUser user) {
-		if (user.getSharing() == 1) {
+		if (user.getShard() == 1) {
 			return PMF.getNnUser1().getPersistenceManager();
 		} else {
 			return PMF.getNnUser2().getPersistenceManager();

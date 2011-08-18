@@ -33,8 +33,42 @@ public class NnStringUtil {
 		return result.toString();
 	}
 	
-	public static String escapedQuote(String str) {		
+	public static String escapedQuote(String str) {
+		
 		return "'" + str.replaceAll("'", "''") + "'";
+	}
+	
+	public static String bytesToHex(byte[] src){
+		StringBuilder stringBuilder = new StringBuilder("");
+		if (src == null || src.length <= 0) {
+			return null;
+		}
+		for (int i = 0; i < src.length; i++) {
+			int v = src[i] & 0xFF;
+			String hv = Integer.toHexString(v);
+			if (hv.length() < 2) {
+				stringBuilder.append(0);
+			}
+			stringBuilder.append(hv);
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Translate string to html safe characters
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String htmlSafeChars(String str) {
+		if (str == null)
+			return null;
+		return str.replaceAll("\n", " ")
+		          .replaceAll("\t", " ")
+		          .replaceAll("&", "&amp;")
+		          .replaceAll("<", "&lt;")
+		          .replaceAll(">", "&gt;")
+		          .replaceAll("\"", "&quot;");
 	}
 	
 }

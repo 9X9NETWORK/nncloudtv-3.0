@@ -99,10 +99,11 @@ packaging and run jetty with jetty plugin:
 
 ================================
 In the pipeline
-================================
+================================ 
 - YouTube lib rewrite, the original lib is not maven friendly. replace with com.google.api.client lib
 - Admin portal
 - CMS portal
+- NnUser, find by email, token, look up the 2nd partition if 1st lookup fails, and update user partition
 
 =============================================================================================================
 EC2

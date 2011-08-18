@@ -55,9 +55,9 @@ public class NnSetManager {
 	}
 	
 	public List<NnChannel> findChannelsById(long setId) {
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetChannelManager scMngr = new NnSetChannelManager();
 		NnChannelManager channelMngr = new NnChannelManager();		
-		List<NnSetChannel> scs = cscMngr.findBySetId(setId); 
+		List<NnSetChannel> scs = scMngr.findBySetId(setId); 
 		ArrayList<NnChannel> results = new ArrayList<NnChannel>();
 		
 		for (NnSetChannel sc : scs) {

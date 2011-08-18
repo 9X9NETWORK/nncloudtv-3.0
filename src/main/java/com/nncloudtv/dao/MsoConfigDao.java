@@ -41,4 +41,23 @@ public class MsoConfigDao {
 		return config;		
 	}
 
+	public MsoConfig findByItem(String item) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		MsoConfig config = null;
+		try {
+			Query query = pm.newQuery(MsoConfig.class);
+			query.setFilter("item == itemParam");		
+			query.declareParameters("String itemParam");
+			@SuppressWarnings("unchecked")
+			List<MsoConfig> results = (List<MsoConfig>) query.execute(item);
+			if (results.size() > 0) {
+				config = results.get(0);
+				config = pm.detachCopy(config);
+			}
+		} finally {
+			pm.close();
+		}
+		return config;		
+	}
+	
 }

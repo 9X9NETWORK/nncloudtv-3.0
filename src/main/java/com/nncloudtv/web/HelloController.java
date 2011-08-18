@@ -7,6 +7,7 @@ import javax.jdo.Query;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -75,11 +76,11 @@ public class HelloController {
     }    
     
     @RequestMapping("fanout")
-    public @ResponseBody String fanout() throws IOException {
-       String exchange_name = "hello";
-	   ConnectionFactory factory = new ConnectionFactory();
-       factory.setHost("localhost");
-       Connection connection = factory.newConnection();
+    public @ResponseBody String fanout(@RequestParam String exchange_name) throws IOException {
+ 	   ConnectionFactory factory = new ConnectionFactory();
+       //factory.setHost("localhost");
+       //Connection connection = factory.newConnection();
+	   Connection connection = factory.newConnection("localhost");
        Channel channel = connection.createChannel();
 
        channel.exchangeDeclare(exchange_name, "fanout");
@@ -99,11 +100,13 @@ public class HelloController {
     	String queue_name = "hello";
     	//create a connection
     	ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        Connection connection = factory.newConnection();
+        //factory.setHost("localhost");
+        //Connection connection = factory.newConnection();    	
+        Connection connection = factory.newConnection("localhost");
         Channel channel = connection.createChannel();
         //declare a queue and publish the message
-        channel.queueDeclare(queue_name, false, false, false, null);
+        //channel.queueDeclare(queue_name, false, false, false, null);
+        channel.queueDeclare(queue_name, false, false, false, false, null);
         String message = "Hello World!";
         channel.basicPublish("", queue_name, null, message.getBytes());
         System.out.println(" [x] Sent '" + message + "'");
@@ -118,11 +121,13 @@ public class HelloController {
     public @ResponseBody String receive() throws IOException, InterruptedException {
     	String queue_name = "hello";
     	ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        Connection connection = factory.newConnection();
+        //factory.setHost("localhost");
+        //Connection connection = factory.newConnection();
+    	Connection connection = factory.newConnection("localhost");
         Channel channel = connection.createChannel();
 
-        channel.queueDeclare(queue_name, false, false, false, null);
+        //channel.queueDeclare(queue_name, false, false, false, null);
+        channel.queueDeclare(queue_name, false, false, false, false, null);
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
         QueueingConsumer consumer = new QueueingConsumer(channel);
         channel.basicConsume(queue_name, true, consumer);

@@ -75,6 +75,12 @@ public class CategoryManager {
 		categories = categoryDao.findAllByMsoId(msoId);
 		return categories;
 	}
+
+	public List<Category> findIpgCategoryByMsoId(long msoId) {
+		List<Category> categories = new ArrayList<Category>();
+		categories = categoryDao.findIpgCategoryByMsoId(msoId);
+		return categories;
+	}
 	
 	public List<Category> findCategoriesByIdStr(String categoryIds) {
 		List<Long> categoryIdList = new ArrayList<Long>();	
@@ -138,6 +144,11 @@ public class CategoryManager {
 		return categories;
 	}
 					
+	public List<Category> findAllInIpg(long msoId) {
+		List<Category> categories = categoryDao.findAllInIpg(msoId);
+		return categories;
+	}
+	
 	public List<Category> list(int page, int limit, String sidx, String sord) {
 		return categoryDao.list(page, limit, sidx, sord);
 	}

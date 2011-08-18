@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.model.Mso;
 import com.nncloudtv.service.PlayerService;
 
 @Controller
@@ -43,14 +42,35 @@ public class PlayerController {
 			                 @RequestParam(value="mso",required=false) String mso, 
 			                 HttpServletRequest req, HttpServletResponse resp, Model model) {
 		PlayerService service = new PlayerService();
-		if (name.equals("5f")) 
-			model = service.prepareBrand(model, Mso.NAME_5F, resp);
-		else {
-			model = service.prepareBrand(model, mso, resp);
-		}
+		model = service.prepareBrand(model, mso, resp);
+		model = service.prepareSetInfo(model, name, resp);
 		return "player/zooatomics";
 	}
 
+	@RequestMapping("view")
+	public String view(@RequestParam(value="mso",required=false) String mso, 
+			           HttpServletRequest req, HttpServletResponse resp, Model model, 
+			           @RequestParam(value="channel", required=false) String channel,
+			           @RequestParam(value="episode", required=false) String episode,
+				       @RequestParam(value="ch", required=false) String ch,
+				       @RequestParam(value="ep", required=false) String ep) {
+		PlayerService service = new PlayerService();
+		model = service.prepareBrand(model, mso, resp);
+		if (episode != null) {
+			model = service.prepareEpisode(model, episode, resp);
+		} else {
+			model = service.prepareChannel(model, channel, resp);
+		}
+		return "player/zooatomics";
+	}	
+
+	@RequestMapping("mini")
+	public String mini(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
+		PlayerService service = new PlayerService();
+		model = service.prepareBrand(model, mso, resp);
+		return "player/mini";
+	}
+	
 	/*
 	 * used for dns redirect watch dog 
 	 */

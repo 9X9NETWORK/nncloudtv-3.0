@@ -10,7 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /**
- * Category and MsoChannel establish connections through CategoryChannel  
+ * To relate category and channel  
  */
 @PersistenceCapable(table="category_channel", detachable="true")
 public class CategoryChannel implements Serializable {
