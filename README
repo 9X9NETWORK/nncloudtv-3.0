@@ -21,18 +21,20 @@ Details can be found in the following sections
 Reference MySql file
 
 - Modify datanucleus.properties files, 
-there are four, make sure db connection is setup correctly
-
-- datanucleus jdo enhance: 
-mvn datanucleus:enhance (it might not be necessary)
-
-- Run jetty server: 
-mvn jetty:run
+there are four, this is to make sure your db connection is setup correctly
 
 - Run nnqueue client 
 Reference README in nnqueue project
 
 - Run memcache server 
+
+- datanucleus jdo enhance:
+Go to project root folder, 
+> mvn datanucleus:enhance (it might not be necessary)
+
+- Run nncloudtv on Jetty: 
+Go to project root folder, 
+> mvn jetty:run
 
 - Basic tests,
 http://localhost:8888/hello (test your servlet and spring dispatcher)
@@ -50,6 +52,7 @@ mvn
 - Download 3.0.3
 http://maven.apache.org/download.html 
 
+- read pom.xml
 ================================
 Datanucleus tool
 ================================
@@ -69,8 +72,9 @@ Note:
 ================================
 Jetty
 ================================
-- Run jetty 
-mvn jetty:run
+- Run your application on jetty
+1) go to project root folder, 
+2) mvn jetty:run
 
 ================================
 RabbitMQ
@@ -93,7 +97,7 @@ http://www.rabbitmq.com/releases/bundles/v1.7.2/
 ================================
 MySql
 ================================
-MySQL Server 5.5
+- Download MySQL Server 5.5
 
 - commands on Windows: 
 > cd c:\Program Files\MySQL\MySQL Server 5.5\bin
@@ -165,7 +169,7 @@ MySql
 apt-get install mysql-server-5.1
 
 - commands
-> service mysql start ??
+> service mysql start
 
 ================================
 RabbitMQ
@@ -208,3 +212,5 @@ http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/hello
 http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/pdr
 http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/fanout?exchange_name=hello
 
+
+	
