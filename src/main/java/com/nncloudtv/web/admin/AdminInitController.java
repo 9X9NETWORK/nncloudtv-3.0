@@ -55,9 +55,9 @@ public class AdminInitController {
 	@RequestMapping(value="groundStart", method=RequestMethod.POST)
 	public String groundStartPost(HttpServletRequest req) {
 		String host = NnNetUtil.getUrlRoot(req);
-		if (host.contains("http://localhost")) {
+		//if (host.contains("http://localhost")) {
 			initService.initAll();
-		}
+		//}
 		return "admin/groundStart";
 	}	
 		
