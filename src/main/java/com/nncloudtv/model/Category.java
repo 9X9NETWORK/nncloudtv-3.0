@@ -43,7 +43,7 @@ public class Category implements Serializable {
 	private int channelCount; 	//channel count in each category
 	
 	@Persistent
-	@Column(name="is_Ipg")
+	@Column(name="is_ipg")
 	private boolean isIpg; //categories 
 	
 	@Persistent	
