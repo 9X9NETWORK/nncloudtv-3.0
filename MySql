@@ -24,7 +24,7 @@ nncloudtv_nnuser1, nncloudtv_nnuser_2
 nnuser
 nnuser_pref
 subscription
-subscription_set
+subscription_group
 
 ------------------
 nncloudtv_content
@@ -33,6 +33,7 @@ category
 category_channel
 category_set
 nnchannel
+content_ownership
 counter
 counter_shard
 ipg
@@ -317,11 +318,12 @@ CREATE TABLE `view_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ===================================
-truncate commands
+truncate 
 ===================================
 truncate category;                    
 truncate category_channel;            
-truncate category_set;                
+truncate category_set;
+truncate content_ownership;                
 truncate ipg;                         
 truncate mso;                         
 truncate mso_config;                  
@@ -334,8 +336,8 @@ truncate nnuser;
 truncate nnuser_pref;                 
 truncate pdr_raw;                     
 truncate subscription;                
+truncate subscription_group;            
 truncate subscription_log;            
-truncate subscription_set;            
 truncate view_log;
 
 ===================================

@@ -32,10 +32,14 @@ mvn jetty:run
 - Run nnqueue client 
 Reference README in nnqueue project
 
+- Run memcache server 
+
 - Basic tests,
 http://localhost:8888/hello (test your servlet and spring dispatcher)
 http://localhost:8888/pdr (write a db record)
 http://localhost:8888/fanout?exchange_name=hello (test your queue component, see if nnqueue client receives the hello message)
+http://localhost:8888/admin/cache/spy_set (test memcache component)
+http://localhost:8888/admin/cache/spy_get
  
 - ready to go,
 go to http://localhost:8888/admin/index, click on initialize link
@@ -104,13 +108,18 @@ MySQL Server 5.5
 ================================
 Package
 ================================
-packaging:
-	mvn datanucleus:enhance 
-	mvn war:war    
-test the packaged war with jetty plugin: 
-	mvn jetty:deploy-war
-packaging and run jetty with jetty plugin: 
-	mvn jetty:run-war 
+- packaging nncloudtv war:
+  a) modify datanucleus.properties files, there are four.
+  b) packaging:   
+     mvn datanucleus:enhance 
+     mvn war:war
+  c) test the packaged war with jetty plugin:    
+        mvn jetty:deploy-war
+     packaging and run jetty with jetty plugin: 
+        mvn jetty:run-war 
+
+- packaging nnqueue jar:
+  reference nnqueue.README 
 
 ================================
 In the pipeline
@@ -119,6 +128,7 @@ In the pipeline
 - Admin portal
 - CMS portal
 - NnUser, find by email, token, look up the 2nd partition if 1st lookup fails, and update user partition
+- Put memcache back 
 
 =============================================================================================================
 EC2
@@ -174,22 +184,26 @@ Memcached
 
 ================================
 Testing
-================================
+================================  
 - upload the war and the jar: use SCP with your private key, and upload to the server
 
 - commands: 
 cd /usr/share/jetty/webapps
 service jetty stop
-rm root.jar
+rm root.war
 mv /home/ubuntu/tmp/nncloudtv-0.0.1-SNAPSHOT.war .
 mv nncloudtv-0.0.1-SNAPSHOT.war root.war
 service jetty start
 java -jar nnqueue.jar hello
+java -jar nnqueue.jar brand_counter
+java -jar nnqueue.jar category_create
+java -jar nnqueue.jar channel_create_related
 
 - testing servers 
 java01, 
 http://ec2-50-17-2-234.compute-1.amazonaws.com:8080/hello
 java02, 
+wget http://localhost:8080/hello
 http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/hello
 http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/pdr
 http://ec2-50-17-15-33.compute-1.amazonaws.com:8080/fanout?exchange_name=hello
