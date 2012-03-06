@@ -8,6 +8,7 @@ public class CookieHelper {
 
 	static public String GUEST = "guest";
 	static public String USER = "user";
+	static public String DEVICE = "device";
 	static public String PLATFORM = "platform";
 	static public String PLATFORM_GAE = "gae";
 	static public String MSO = "mso";

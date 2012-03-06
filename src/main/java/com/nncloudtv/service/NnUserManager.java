@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.jdo.annotations.Transactional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -29,21 +28,25 @@ public class NnUserManager {
 	private NnUserDao nnUserDao = new NnUserDao();
 	
 	//@@@IMPORTANT email duplication is your responsibility
-	public void create(NnUser user, HttpServletRequest req, short shard) {
+	public int create(NnUser user, HttpServletRequest req, short shard) {
+		if (this.findByEmail(user.getEmail(), req) != null) //!!!!! shard or req flexible
+			return NnStatusCode.USER_EMAIL_TAKEN;
 		user.setName(user.getName().replaceAll("\\s", " "));
 		user.setEmail(user.getEmail().toLowerCase());
 		if (shard == 0)
-			shard= this.getShard(req);
-		user.setToken(this.generateToken(shard));
+			shard= NnUserManager.getShard(req);
+		user.setToken(NnUserManager.generateToken(shard));
 		user.setShard(shard);
 		Date now = new Date();
 		user.setCreateDate(now);
 		user.setUpdateDate(now);
 		nnUserDao.save(user);
+		return NnStatusCode.SUCCESS;
 	}
 
-	//default is 1, asia tw, cn, hk is 2
-	public short getShard(HttpServletRequest req) {
+	//Default is 1; Asia (tw, cn, hk) is 2
+	public static short getShard(HttpServletRequest req) {
+		if (req == null) return 0;
 		String ip = req.getRemoteAddr();
 		log.info("findLocaleByHttpRequest() ip is " + ip);
         String country = "";
@@ -54,16 +57,22 @@ public class NnUserManager {
 	        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 	        	log.info("findLocaleByHttpRequest() IP service returns error:" + connection.getResponseCode());	        	
 	        }
-	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));;
-	        if (rd.readLine()!=null) {country = rd.readLine().toLowerCase();} //assuming one line	        
+	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));;	        
+	        if (rd.readLine()!= null) {country = rd.readLine().toLowerCase();} //assuming one line	        
 		} catch (Exception e) {
 			NnLogUtil.logException(e);
 		}
-        short shard = 1;
+        short shard = NnUser.SHARD_DEFAULT;
 		if (country.equals("tw") || country.equals("cn") || country.equals("hk")) {
-			shard = 2;
+			shard = NnUser.SHARD_CHINESE;
 		}		  
 		return shard;
+	}
+	
+	public static short shardIterate(short shard) {
+		if (shard == NnUser.SHARD_DEFAULT)
+			return NnUser.SHARD_CHINESE;
+		return NnUser.SHARD_DEFAULT;
 	}
 	
 	public NnUser createGuest(Mso mso, HttpServletRequest req) {
@@ -87,7 +96,7 @@ public class NnUserManager {
 	 * GAE can only write 5 records a sec, maybe safe enough to do so w/out DB retrieving.
 	 * taking the chance to speed up signin (meaning not to consult DB before creating the account).
 	 */
-	private String generateToken(short shard) {
+	public static String generateToken(short shard) {
 		if (shard == 0)
 			return null;
 		String time = String.valueOf(new Date().getTime());
@@ -98,46 +107,46 @@ public class NnUserManager {
 		return result;
 	}	
 	
+	//!!! able to assign shard
 	public NnUser findByEmail(String email, HttpServletRequest req) {
-		short shard= this.getShard(req);
+		short shard= NnUserManager.getShard(req);
 		return nnUserDao.findByEmail(email.toLowerCase(), shard);
 	}
 	
 	public NnUser findAuthenticatedUser(String email, String password, HttpServletRequest req) {
-		short shard= this.getShard(req); 
+		short shard= NnUserManager.getShard(req); 
 		return nnUserDao.findAuthenticatedUser(email.toLowerCase(), password, shard);
 	}
+
+	public NnUser resetPassword(NnUser user) {
+		user.setPassword(user.getPassword());
+		user.setSalt(AuthLib.generateSalt());
+		user.setCryptedPassword(AuthLib.encryptPassword(user.getPassword(), user.getSalt()));
+		this.save(user);
+		return user;
+	}
 	
-	/*
 	public NnUser findNNUser() {
-		List<NnUser> users = nnUserDao.findByType(NnUser.TYPE_NN, );
-		if (users.size() > 0) {return nnUserDao.findByType(NnUser.TYPE_NN).get(0); }
-		return null;
+		return nnUserDao.findNNUser();
 	}
+ 
 	
-	public List<NnUser> findByType(short type, String token) {
-		return nnUserDao.findByType(type, token);
-	}
-	
-	public List<NnUser> findByType(short type, String token) {
-		return nnUserDao.findByType(type, token);
-	}
+	/*	
 		
 	public NnUser findAuthenticatedMsoUser(String email, String password, long msoId) {
 		return nnUserDao.findAuthenticatedMsoUser(email.toLowerCase(), password, msoId);
 	}
 				
 	public NnUser findByEmailAndMso(String email, Mso mso) {
-		return nnUserDao.findByEmailAndMsoId(email.toLowerCase(), mso.getKey().getId());
+		return nnUserDao.findByEmailAndMsoId(email.toLowerCase(), mso.getId());
 	}
 	
     */
 
-	@Transactional
 	public void subscibeDefaultChannels(NnUser user) {
 		NnChannelManager channelMngr = new NnChannelManager();		
 		List<NnChannel> channels = channelMngr.findMsoDefaultChannels(user.getMsoId(), false);	
-		SubscriptionManager subManager = new SubscriptionManager();
+		NnUserSubscribeManager subManager = new NnUserSubscribeManager();
 		for (NnChannel c : channels) {
 			subManager.subscribeChannel(user, c);
 		}
@@ -148,7 +157,7 @@ public class NnUserManager {
 		return nnUserDao.findByToken(token);
 	}
 	
-	public NnUser findById(long id) {
+	public NnUser findById(long id) { 
 		return nnUserDao.findById(id);
 	}
 	

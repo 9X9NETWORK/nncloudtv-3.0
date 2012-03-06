@@ -1,22 +1,33 @@
 package com.nncloudtv.lib;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.json.JsonCParser;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.util.Key;
+import com.nncloudtv.service.NnStatusCode;
+
 public class YouTubeLib {
 	
 	protected static final Logger log = Logger.getLogger(YouTubeLib.class.getName());
-	
-	private static final String YOUTUBE_CLIENT_ID = "9x9.tv";
-	private static final String YOUTUBE_DEVELOPER_KEY = "AI39si5AKUCeyI23OTiunkacaJ_kRzR_VPxVhTJn2Rw7rJYE2mpKKVITytE22jpws7W6L1IBAA6EEf6_B8Pp2y0hG-zM5jtGFw";
-	
+		
 	/** 
 	 * 1. remove those invalid keywords we already know.
 	 * 2. merge the following youtube channel formats to one, http://www.youtube.com/user/<userid>
@@ -51,7 +62,7 @@ public class YouTubeLib {
 		String[] invalid = {"index", "videos",
 		                    "entertainment", "music", "news", "movies",
 		                    "comedy", "gaming", "sports", "education",
-		                    "shows",  "trailers", 
+		                    "shows", 
 		                    "store", "channels", "contests_main"};		
 		HashSet<String> dic = new HashSet<String>();
 		for (int i=0; i<invalid.length; i++) {
@@ -92,12 +103,113 @@ public class YouTubeLib {
 				url = null;
 			}
 		}
-		log.info("original url:" + urlStr + ";result=" + url);
-		
+		//log.info("original url:" + urlStr + ";result=" + url);		
 		//if (!youTubeCheck(result)) {return null;} //till the function is fixed		
 		return url;		
 	}
 
+	 public static class YouTubeUrl extends GenericUrl {
+	    @Key final String alt = "jsonc";
+	    @Key String author;
+	    @Key("max-results") Integer maxResults;
+	    YouTubeUrl(String url) {
+	      super(url);
+	    }
+	}
+
+	public static class VideoFeed {
+	   @Key String title;
+	   @Key String description;
+	   @Key List<Video> items;
+    }
+	
+	public static class Video {
+		@Key String id;
+		@Key String title;
+		@Key String description;
+		@Key Thumbnail thumbnail;
+		@Key Player player;
+		@Key Video video;
+	}
+		
+	public static class Thumbnail {
+		@Key String sqDefault;		            
+	}
+	
+	public static class ProfileFeed {
+		@Key List<String> items;
+	}
+		
+	public static class Player {
+		@Key("default") String defaultUrl;
+	}
+
+	//return key "status", "title", "thumbnail", "description"
+	public static Map<String, String> getYouTubeEntry(String userIdStr, boolean channel) {		
+		//http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html
+		Map<String, String> results = new HashMap<String, String>();
+		results.put("status", String.valueOf(NnStatusCode.SUCCESS));
+		// set up the HTTP request factory
+	    HttpTransport transport = new NetHttpTransport();
+	    final JsonFactory jsonFactory = new JacksonFactory();
+	    HttpRequestFactory factory = transport.createRequestFactory(new HttpRequestInitializer() {
+	       public void initialize(HttpRequest request) {
+	          // set the parser
+	          JsonCParser parser = new JsonCParser(jsonFactory);
+    	      //parser.jsonFactory = jsonFactory;
+	          request.addParser(parser);
+ 	          //set up the Google headers
+	          GoogleHeaders headers = new GoogleHeaders();
+	          headers.setApplicationName("Google-YouTubeSample/1.0");
+	          headers.gdataVersion = "2";
+	          request.setHeaders(headers);
+	       }
+	    });
+	    
+	    // build the HTTP GET request
+	    HttpRequest request;
+	    VideoFeed feed;
+		try {
+			if (channel) {
+			    GenericUrl profileUrl = new GenericUrl("http://gdata.youtube.com/feeds/api/users/" + userIdStr);
+			    //jsonc does not support profile api
+				request = factory.buildGetRequest(profileUrl);						 
+				String reg = "(.*media:thumbnail url=')(.*)('/>.*)";				
+				Pattern pattern = Pattern.compile(reg);
+				Matcher m = pattern.matcher(request.execute().parseAsString());
+				while (m.find()) {
+					results.put("thumbnail", m.group(2));
+				}
+			}
+			//jsonc video support
+		    YouTubeUrl videoUrl = new YouTubeUrl("https://gdata.youtube.com/feeds/api/videos");
+		    if (channel) {
+		    	videoUrl.author = userIdStr;
+		    } else {
+		    	videoUrl = new YouTubeUrl("https://gdata.youtube.com/feeds/api/playlists/" + userIdStr);
+		    }
+		    videoUrl.maxResults = 1;			
+			request = factory.buildGetRequest(videoUrl);			
+			feed = request.execute().parseAs(VideoFeed.class);
+			if (feed.items != null) {
+				Video video = feed.items.get(0);
+		        results.put("title", video.title);
+		        results.put("description", video.description);
+		        if (!channel) {
+		        	results.put("thumbnail", video.video.thumbnail.sqDefault);
+		        }
+			}
+			if (!channel) {
+				results.put("title", feed.title);
+				results.put("description", feed.description);
+			}
+		} catch (IOException e) {
+			results.put("status", String.valueOf(NnStatusCode.ERROR));
+			NnLogUtil.logException(e);
+		}
+		return results;
+	}
+			
 	public static String getYouTubeChannelName(String urlStr) {
 		String channelUrl = "http://www.youtube.com/user/";
 		String playListUrl = "http://www.youtube.com/view_play_list?p=";

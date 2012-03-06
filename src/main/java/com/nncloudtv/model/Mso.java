@@ -5,6 +5,9 @@ import java.util.Date;
 
 import javax.jdo.annotations.*;
 
+/**
+ * a Multimedia service operator
+ */
 @PersistenceCapable(table="mso", detachable="true")
 public class Mso implements Serializable {
 
@@ -29,36 +32,34 @@ public class Mso implements Serializable {
 	private String intro;
 		
 	@Persistent
-	@Column(name="logo_url", jdbcType="VARCHAR", length=255) 	
+	@Column(jdbcType="VARCHAR", length=255) 	
 	private String logoUrl;
 		
 	@Persistent
-	@Column(name="jingle_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String jingleUrl;
 	
 	@Persistent
-	@Column(name="contact_email", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String contactEmail;
 	
 	@Persistent
 	private short type;
 	public static final short TYPE_NN = 1; //default mso, must have and must have ONLY one
-	public static final short TYPE_MSO = 2;
-		
+	public static final short TYPE_MSO= 2;
+	public static final short TYPE_3X3= 3;
+	public static final short TYPE_TCO = 4; // for Generic CMS
+	public static final short TYPE_ENTERPRISE = 5; // brand, US only
+
+	
 	@Persistent
-	@Column(name="lang_code", jdbcType="VARCHAR", length=4)
-	public String langCode;
-		
+	@Column(jdbcType="VARCHAR", length=5)
+	public String lang;
+	
 	@Persistent
-	private int shard; //what shard it goes to, mainly for user partition
-	                   //currently user partition is determined mainly by ip since we keep one mso for now.
-	                   //default is 1, asia tw, cn, hk is 2
-	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 
 	public Mso(String name, String intro, String contactEmail, short type) {
@@ -148,19 +149,12 @@ public class Mso implements Serializable {
 		this.title = title;
 	}
 
-	public String getLangCode() {
-		return langCode;
+	public String getLang() {
+		return lang;
 	}
 
-	public void setLangCode(String langCode) {
-		this.langCode = langCode;
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 
-	public int getShard() {
-		return shard;
-	}
-
-	public void setShard(int shard) {
-		this.shard = shard;
-	}	
 }

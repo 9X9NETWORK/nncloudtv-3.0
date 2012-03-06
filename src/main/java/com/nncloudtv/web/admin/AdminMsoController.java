@@ -18,7 +18,7 @@ import com.nncloudtv.service.MsoManager;
 @RequestMapping("admin/mso")
 public class AdminMsoController {
 
-	protected static final Logger logger = Logger.getLogger(AdminMsoController.class.getName());
+	protected static final Logger logg = Logger.getLogger(AdminMsoController.class.getName());
 
 	public final MsoManager  msoMngr;
 	
@@ -37,7 +37,7 @@ public class AdminMsoController {
 			                           @RequestParam(value="contactEmail")String contactEmail) {
 		System.out.println("contact:" + contactEmail);
 		Mso mso = new Mso(name, intro, contactEmail, Mso.TYPE_MSO);		
-		msoMngr.create(mso);
+		msoMngr.save(mso);
 		return "OK";
 	}
 	

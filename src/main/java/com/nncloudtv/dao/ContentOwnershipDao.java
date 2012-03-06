@@ -13,7 +13,7 @@ import com.nncloudtv.model.ContentOwnership;
 
 public class ContentOwnershipDao extends GenericDao<ContentOwnership> {
 	
-	protected static final Logger logger = Logger.getLogger(ContentOwnershipDao.class.getName());
+	protected static final Logger log = Logger.getLogger(ContentOwnershipDao.class.getName());
 	
 	public ContentOwnershipDao() {
 		super(ContentOwnership.class);
@@ -24,7 +24,7 @@ public class ContentOwnershipDao extends GenericDao<ContentOwnership> {
 		PersistenceManager pm = PMF.get(ContentOwnership.class).getPersistenceManager();
 		List<ContentOwnership> detached = new ArrayList<ContentOwnership>();
 		
-		logger.info("msoId = " + msoId + ", contentType = " + contentType);
+		log.info("msoId = " + msoId + ", contentType = " + contentType);
 		
 		try {
 			Query query = pm.newQuery(ContentOwnership.class);
@@ -34,7 +34,7 @@ public class ContentOwnershipDao extends GenericDao<ContentOwnership> {
 			List<ContentOwnership> list = (List<ContentOwnership>)query.execute(msoId, contentType);
 			if (list.size() > 0)
 				detached = (List<ContentOwnership>)pm.detachCopyAll(list);
-			logger.info("found = " + list.size());
+			log.info("found = " + list.size());
 		} catch (JDOObjectNotFoundException e) {
 		} finally {
 			pm.close();

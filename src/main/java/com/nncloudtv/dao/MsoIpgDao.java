@@ -12,7 +12,7 @@ import com.nncloudtv.model.MsoIpg;
 
 public class MsoIpgDao extends GenericDao<MsoIpg> {
 	
-	protected static final Logger logger = Logger.getLogger(MsoIpgDao.class.getName());
+	protected static final Logger log = Logger.getLogger(MsoIpgDao.class.getName());
 	
 	public MsoIpgDao() {
 		super(MsoIpg.class);
@@ -22,7 +22,7 @@ public class MsoIpgDao extends GenericDao<MsoIpg> {
 		if (msoIpg == null) {return null;}
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		try {
-			logger.info("save msoIpg (msoId = " + msoIpg.getMsoId() + ", channelId = " + msoIpg.getChannelId() + ")");
+			log.info("save msoIpg (msoId = " + msoIpg.getMsoId() + ", channelId = " + msoIpg.getChannelId() + ")");
 			pm.makePersistent(msoIpg);
 			msoIpg = pm.detachCopy(msoIpg);
 		} finally {
@@ -33,7 +33,7 @@ public class MsoIpgDao extends GenericDao<MsoIpg> {
 	
 	public void delete(MsoIpg msoIpg) {
 		if (msoIpg != null) {
-			logger.info("delete msoIpg (msoId = " + msoIpg.getMsoId() + ", channelId = " + msoIpg.getChannelId() + ")");
+			log.info("delete msoIpg (msoId = " + msoIpg.getMsoId() + ", channelId = " + msoIpg.getChannelId() + ")");
 			PersistenceManager pm = PMF.getContent().getPersistenceManager();
 			try {
 				pm.deletePersistent(msoIpg);

@@ -3,7 +3,6 @@ package com.nncloudtv.service;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -13,9 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.web.json.transcodingservice.*;
-import com.nncloudtv.model.*;
-import com.nncloudtv.lib.*;
+import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.web.json.transcodingservice.PostResponse;
+import com.nncloudtv.web.json.transcodingservice.PostUrl;
+import com.nncloudtv.web.json.transcodingservice.RtnChannel;
+import com.nncloudtv.web.json.transcodingservice.RtnProgram;
+import com.nncloudtv.web.json.transcodingservice.RtnProgramItem;
 
 @Service
 public class TranscodingService {
@@ -132,12 +137,7 @@ public class TranscodingService {
 		if (channel == null) {
 			return new PostResponse(String.valueOf(NnStatusCode.CHANNEL_INVALID), "channel invalid");
 		}
-		
-		if (channel.getProgramCount() >= NnChannel.MAX_CHANNEL_SIZE) {
-			NnProgram oldest = programMngr.findOldestByChannelId(channel.getId());
-			programMngr.delete(oldest); 			
-		}
-		
+				
 		if (channel.isPublic() != true && channel.getStatus() == NnChannel.STATUS_SUCCESS) {
 			channel.setPublic(true);
 			channelMngr.save(channel);
@@ -173,17 +173,8 @@ public class TranscodingService {
 		}
 		program.setStorageId(item.getItemId());	
 		
-		if (item.getMp4() != null) {			
-			program.setMpeg4FileUrl(item.getMp4());
-		}		
-		if (item.getWebm() != null) {
-			program.setWebMFileUrl(item.getWebm());
-		}
 		if (item.getOther() != null) {
-			program.setOtherFileUrl(item.getOther());
-		}
-		if (item.getAudio() != null) {
-			program.setAudioFileUrl(item.getAudio());			
+			program.setFileUrl(item.getOther());
 		}
 		if (item.getDuration() != null) {
 			program.setDuration(item.getDuration());
@@ -193,12 +184,14 @@ public class TranscodingService {
 		} else {
 			program.setType(NnProgram.TYPE_VIDEO);
 		}
+		/*
 		if (item.getPubDate() != null) {
 			Date theDate = new Date(Long.parseLong(item.getPubDate())*1000);
 			program.setPubDate(theDate);
 		} else {
 			program.setPubDate(new Date());
 		}
+		*/
 		program.setPublic(true);
 		if (isNew) {
 			programMngr.create(channel, program);

@@ -18,14 +18,13 @@ import com.nncloudtv.model.NnSet;
 @Service
 public class ContentOwnershipManager {
 	
-	protected static final Logger logger = Logger.getLogger(ContentOwnershipManager.class.getName());
+	protected static final Logger log = Logger.getLogger(ContentOwnershipManager.class.getName());
 	
 	private ContentOwnershipDao ownershipDao = new ContentOwnershipDao();
 	private NnSetDao setDao = new NnSetDao();
 	private NnChannelDao channelDao = new NnChannelDao();
 	
-	public List<NnSet> findOwnedSetsByMsoId(long msoId) {
-		
+	public List<NnSet> findOwnedSetsByMso(long msoId) {
 		List<ContentOwnership> ownershipList = ownershipDao.findByMsoIdAndContentType(msoId, ContentOwnership.TYPE_CHANNELSET);
 		
 		ArrayList<Long> setIds = new ArrayList<Long>();
@@ -81,7 +80,7 @@ public class ContentOwnershipManager {
 		for (NnChannel channel : channelList) {
 			ContentOwnership ownership = this.findByMsoIdAndChannelId(mso.getId(), channel.getId());
 			if (ownership != null) {
-				logger.warning("channel " + channel.getId() + " is already owned by mso " + mso.getId());
+				log.warning("channel " + channel.getId() + " is already owned by mso " + mso.getId());
 				continue;
 			}
 			this.create(new ContentOwnership(), mso, channel);

@@ -3,6 +3,7 @@ package com.nncloudtv.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,12 +13,12 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.QueueMessage;
+import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryChannel;
+import com.nncloudtv.model.CntSubscribe;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnUser;
-import com.nncloudtv.model.SubscriptionLog;
+import com.nncloudtv.model.NnSet;
 
 @Service
 public class NnChannelManager {
@@ -26,47 +27,15 @@ public class NnChannelManager {
 	
 	private NnChannelDao channelDao = new NnChannelDao();
 	
-	/**
-	 * @@@IMPORTANT 
-	 * setProgramCount will be done automatically in MsoProgramManager when a program is added.
-	 * If necessary to manually change programCount, please do with caution.
-	 * 
-	 * @@@IMPORTANT
-	 * sourceURL is not supposed to be duplicated. Duplication check is your responsibility.   
-	 */
-	public void create(NnChannel channel, List<Category> categories) {
-		Date now = new Date();		
-		channel.setCreateDate(now);
-		channel.setUpdateDate(now);
-		channelDao.save(channel);
-
-		Object[] obj = {channel, categories};
-		new QueueMessage().fanout("localhost", QueueMessage.CHANNEL_CREATE_RELATED, obj);
-	}	
-	
-	/**
-	 * There's chance category's channelCounter is wrong, but so far the chance is small: 
-	 * 1. when channel from public to non-public
-	 * 2. when channel from status success to non-success
-	 * Currently the counter is mainly dealt in MsoProgramManager.create() 
-	 * Will need to fix it in transaction
-	 *       
-	 */
-	public NnChannel save(NnChannel channel) {
-		channel = channelDao.save(channel);
-		return channel;
-	}		
-	
-	/**
-	 * No deletion so we can keep track of blacklist urls 
-	 */
-	public void delete(NnChannel channel) {
-	}
-		
-	public NnChannel createChannelFromUrl(String sourceUrl, NnUser user, List<Category> categories, HttpServletRequest req) {
-		//!!!
-		if (sourceUrl == null) {return null;}
-		NnChannel channel = new NnChannel(sourceUrl, user.getId());
+	public NnChannel create(String sourceUrl, HttpServletRequest req) {
+		if (sourceUrl == null) 
+			return null;
+		if (this.verifyUrl(sourceUrl) == null) 
+			return null;
+		NnChannel channel = this.findBySourceUrl(sourceUrl);		
+		if (channel != null)
+			return channel; 
+		channel = new NnChannel(sourceUrl);
 		channel.setContentType(this.getContentTypeByUrl(sourceUrl));
 		if (channel.getContentType() == NnChannel.CONTENTTYPE_FACEBOOK) {
 			FacebookLib lib = new FacebookLib();
@@ -75,22 +44,95 @@ public class NnChannelManager {
 			channel.setImageUrl(info[1]);
 			channel.setStatus(NnChannel.STATUS_SUCCESS);			
 		} else {
-			channel.setImageUrl("/WEB-INF/../images/processing.png");
+			channel.setImageUrl(NnChannel.PROCESSING_IMAGE_URL);
 			channel.setName("Processing");
 			channel.setStatus(NnChannel.STATUS_PROCESSING);
-		}
-		channel.setUserId(user.getId());
-		channel.setPublic(false);
-		this.create(channel, categories);
-		//<<< queue
-		if (req != null) {
-			if (channel.getContentType() != NnChannel.CONTENTTYPE_FACEBOOK) { //!!!
-				TranscodingService tranService = new TranscodingService();
-				tranService.submitToTranscodingService(channel.getId(), sourceUrl, req);
+			if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL) {
+				String url = channel.getSourceUrl();
+				String name = YouTubeLib.getYouTubeChannelName(url);
+				log.info("youtube: " + name);
+				Map<String, String> info = YouTubeLib.getYouTubeEntry(name, true);
+				if (!info.get("status").equals(String.valueOf(NnStatusCode.SUCCESS)))
+					return null;
+				if (info.get("title") != null)
+					channel.setName(info.get("title"));
+				if (info.get("description") != null)
+					channel.setIntro(info.get("description"));
+				if (info.get("thumbnail") != null)
+					channel.setImageUrl(info.get("thumbnail"));
+			} else if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+				String url = channel.getSourceUrl();
+				String name = YouTubeLib.getYouTubeChannelName(url);
+				log.info("playlist: " + name);
+				Map<String, String> info = YouTubeLib.getYouTubeEntry(name, false);
+				if (!info.get("status").equals(String.valueOf(NnStatusCode.SUCCESS)))
+					return null;
+				if (info.get("title") != null)
+					channel.setName(info.get("title"));
+				if (info.get("description") != null)
+					channel.setIntro(info.get("description"));
+				if (info.get("thumbnail") != null)
+					channel.setImageUrl(info.get("thumbnail"));
 			}
+			
 		}
+		channel.setPublic(false);
+		this.save(channel);
 		return channel;
 	}
+	
+	public NnChannel save(NnChannel channel) {
+		NnChannel original = channelDao.findById(channel.getId());
+		Date now = new Date();
+		if (channel.getCreateDate() == null)
+			channel.setCreateDate(now);
+		channel.setUpdateDate(now);		
+		if (channel.getIntro() != null) {
+			channel.setIntro(channel.getIntro().replaceAll("\n", ""));
+			channel.setIntro(channel.getIntro().replaceAll("\t", " "));
+			if (channel.getIntro().length() > 500)
+				channel.getIntro().substring(0, 499);
+		}
+		if (channel.getName() != null) {
+			channel.setName(channel.getName().replaceAll("\n", ""));
+			channel.setName(channel.getName().replaceAll("\t", " "));
+		}
+		channel = channelDao.save(channel);
+		NnChannel[] channels = {original, channel};
+		if (MsoConfigManager.isQueueEnabled(true)) {
+	        new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CREATE_RELATED, channels);
+		} else {
+			this.processChannelRelatedCounter(channels);
+		}
+		return channel;
+	}		
+	
+	public void processChannelRelatedCounter(NnChannel[] channels) {
+		NnChannel original = channels[0];
+		NnChannel channel = channels[1];
+		if (original == null && channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
+			NnSetManager setMngr = new NnSetManager();
+			CategoryManager catMngr = new CategoryManager();
+			List<NnSet> sets = setMngr.findSetsByChannel(channel.getId());
+			List<Category> categories = catMngr.findBySets(sets);
+			for (NnSet set : sets) {
+				set.setChannelCnt(set.getChannelCnt()+1);
+			}
+			for (Category c : categories) {
+				c.setChannelCnt(c.getChannelCnt()+1);
+			}
+		}
+	}
+	
+	public static List<NnChannel> search(String queryString) {
+		return new ArrayList<NnChannel>();		
+	}
+	
+	/**
+	 * No deletion so we can keep track of blacklist urls 
+	 */
+	public void delete(NnChannel channel) {
+	}		
 	
 	//the url has to be verified(verifyUrl) first
 	public short getContentTypeByUrl(String url) {
@@ -101,22 +143,26 @@ public class NnChannelManager {
 			type = NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST;
 		if (url.contains("facebook.com")) 
 			type = NnChannel.CONTENTTYPE_FACEBOOK;
+		if (url.contains("http://www.maplestage.net/show"))
+			type = NnChannel.CONTENTTYPE_MAPLE_VARIETY;
+		if (url.contains("http://www.maplestage.net/drama"))
+			type = NnChannel.CONTENTTYPE_MAPLE_SOAP;
 		return type;
 	}		
 			
 	public boolean isCounterQualified(NnChannel channel) {
 		boolean qualified = false;
 		if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
-			channel.getProgramCount() > 0 &&
+			channel.getProgramCnt() > 0 &&
 			channel.isPublic()) {
 			qualified = true;
 		}
 		return qualified;
 	}
 
-	public NnChannel findBySourceUrlSearch(String url) {
+	public NnChannel findBySourceUrl(String url) {
 		if (url == null) {return null;}
-		return channelDao.findBySourceUrlSearch(url.toLowerCase());
+		return channelDao.findBySourceUrl(url);
 	}
 	
 	public NnChannel findById(long id) {
@@ -127,9 +173,8 @@ public class NnChannelManager {
 	public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {		
 		//find msoIpg
 		MsoIpgManager msoIpgMngr = new MsoIpgManager();
-		SubscriptionLogManager sublogMngr = new SubscriptionLogManager();		
-		List<MsoIpg>msoIpg = msoIpgMngr.findAllByMsoId(msoId);		
-		System.out.println("<<<<<< msoIpg retrival: >>>>>>" + msoIpg.size());
+		CntSubscribeManager cntMngr = new CntSubscribeManager();		
+		List<MsoIpg>msoIpg = msoIpgMngr.findAllByMsoId(msoId);
 		//retrieve channels
 		List<NnChannel> channels = new ArrayList<NnChannel>();
 		for (MsoIpg i : msoIpg) {
@@ -138,8 +183,8 @@ public class NnChannelManager {
 				channel.setType(i.getType());
 				channel.setSeq(i.getSeq());
 				if (needSubscriptionCnt) {
-					SubscriptionLog sublog = sublogMngr.findByMsoIdAndChannelId(msoId, channel.getId());
-					channel.setSubscriptionCount(sublog.getCount());
+					CntSubscribe cnt = cntMngr.findByChannel(channel.getId());
+					channel.setSubscriptionCnt(cnt.getCnt());
 				}
 				channels.add(channel);
 			}
@@ -150,9 +195,9 @@ public class NnChannelManager {
 	//!!! different channel might have program count == 0
 	public List<NnChannel> findGoodChannelsByCategoryId(long categoryId) {
 		//channels within a category
-		CategoryChannelManager ccMngr = new CategoryChannelManager();
-		CategoryManager categoryMngr = new CategoryManager();
-		SubscriptionLogManager sublogMngr = new SubscriptionLogManager();
+		//CategoryChannelManager ccMngr = new CategoryChannelManager();
+		List<NnChannel> channels = new ArrayList<NnChannel>();
+		/*
 		List<CategoryChannel> ccs = (List<CategoryChannel>) ccMngr.findAllByCategoryId(categoryId);
 
 		//retrieve channels
@@ -162,16 +207,10 @@ public class NnChannelManager {
 			if (channel != null && 
 				channel.getStatus() == NnChannel.STATUS_SUCCESS &&  
 				channel.isPublic()) { 
-				//category is used to find this channel's mso, then find corresponding subscription count
-				Category category  = categoryMngr.findById(cc.getCategoryId());
-				if (category != null) {
-					SubscriptionLog sublog = sublogMngr.findByMsoIdAndChannelId(category.getMsoId(), channel.getId());			
-				    if (sublog != null) {channel.setSubscriptionCount(sublog.getCount());}
-				}
 				channels.add(channel);
 			}
 		}				
-		
+		*/
 		return channels; 
 	}
 
@@ -184,14 +223,10 @@ public class NnChannelManager {
 		return channels;		
 	}
 
-	//!!!
 	public String verifyUrl(String url) {
 		if (url == null) return null;
 		TranscodingService tranService = new TranscodingService();
 		if (!url.contains("youtube.com")) {
-			if (url.contains("deimos3.apple.com")) { //temp fix for demo
-				return url;
-			}
 			if (url.contains("facebook.com")) {
 				return url;
 			}
@@ -204,6 +239,18 @@ public class NnChannelManager {
 			//url = YouTubeLib.formatCheck(url);
 		}
 		return url;
+	}
+
+	public static short getDefaultSorting(NnChannel c) {
+		short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
+		if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
+			c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY)
+			sorting = NnChannel.SORT_MAPEL;
+		return sorting;
+	}
+
+	public static List<NnChannel> searchChannelEntries(String queryString) {
+		return new ArrayList<NnChannel>();		
 	}
 	
 }

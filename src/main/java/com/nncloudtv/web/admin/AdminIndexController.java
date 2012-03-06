@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("admin/index")
 public class AdminIndexController {
 	
-	protected static final Logger logger = Logger.getLogger(AdminIndexController.class.getName());		
+	protected static final Logger log = Logger.getLogger(AdminIndexController.class.getName());		
 
 	@RequestMapping("")
 	public String index() {

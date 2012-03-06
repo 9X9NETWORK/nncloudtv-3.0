@@ -1,9 +1,11 @@
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -19,8 +21,23 @@ public class NnUserDao extends GenericDao<NnUser> {
 		super(NnUser.class);
 	}
 
+	public NnUser findById(long id) {
+		PersistenceManager pm = NnUserDao.getPersistenceManager((short) 1, null);
+		NnUser detached = null;
+		try {
+			NnUser user = (NnUser)pm.getObjectById(NnUser.class, id);
+			if (user == null)
+				pm = NnUserDao.getPersistenceManager((short)2, null);
+			detached = (NnUser)pm.detachCopy(user);
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}
+		return detached;		
+	}	
+	
 	//use either shard or token to determine partition, default shard 1 if nothing
-	private PersistenceManager getPersistenceManager(short shard, String token) {
+	public static PersistenceManager getPersistenceManager(short shard, String token) {
 		if (shard != 0) {
 			if (shard != 1)
 				return PMF.getNnUser2().getPersistenceManager();
@@ -36,10 +53,10 @@ public class NnUserDao extends GenericDao<NnUser> {
 		}		
 		return PMF.getNnUser1().getPersistenceManager();
 	}
-			
+				
 	public NnUser save(NnUser user) {
 		if (user == null) {return null;}
-		PersistenceManager pm = this.getPersistenceManager(user.getShard(), user.getToken());
+		PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
 		try {
 			pm.makePersistent(user);
 			user = pm.detachCopy(user);
@@ -51,7 +68,7 @@ public class NnUserDao extends GenericDao<NnUser> {
 	
 	public NnUser findAuthenticatedUser(String email, String password, short shard) {
 		NnUser user = null;
-		PersistenceManager pm = this.getPersistenceManager(shard, null);
+		PersistenceManager pm = NnUserDao.getPersistenceManager(shard, null);
 		try {
 			Query query = pm.newQuery(NnUser.class);
 			query.setFilter("email == emailParam");
@@ -71,10 +88,10 @@ public class NnUserDao extends GenericDao<NnUser> {
 		}
 		return user;		
 	}
-		 
+				 
 	public NnUser findByToken(String token) {
 		NnUser user = null;
-		PersistenceManager pm = this.getPersistenceManager((short)0, token);
+		PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, token);
 		try {
 			Query query = pm.newQuery(NnUser.class);
 			query.setFilter("token == tokenParam");
@@ -90,10 +107,27 @@ public class NnUserDao extends GenericDao<NnUser> {
 		}
 		return user;				
 	}
+
+	public NnUser findNNUser() {
+		List<NnUser> detached = new ArrayList<NnUser>();
+		PersistenceManager pm = NnUserDao.getPersistenceManager((short)1, null);
+		try {
+			Query query = pm.newQuery(NnUser.class);
+			query.setFilter("type == " + NnUser.TYPE_NN);	
+			@SuppressWarnings("unchecked")
+			List<NnUser> users = (List<NnUser>) query.execute(NnUser.TYPE_NN);
+			detached = (List<NnUser>)pm.detachCopyAll(users);
+		} finally {
+			pm.close();
+		}
+		if (detached != null)
+			return detached.get(0);
+		return null;		
+	}
 	
 	public NnUser findByEmail(String email, short shard) {
 		NnUser user = null;
-		PersistenceManager pm = this.getPersistenceManager(shard, null);
+		PersistenceManager pm = NnUserDao.getPersistenceManager(shard, null);
 		try {
 			Query query = pm.newQuery(NnUser.class);
 			query.setFilter("email == emailParam");

@@ -10,12 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.model.Mso;
-import com.nncloudtv.service.MsoManager;
 
 @Controller
 @RequestMapping("admin/cache")
@@ -29,55 +28,34 @@ public class AdminCacheController {
 		return "error/exception";				
 	}
 
-	@RequestMapping("spy_set")
-	public ResponseEntity<String> spy_set() {
-		String output = "No Cache";
-		MemcachedClient c;
+	//delete cache with key
+	@RequestMapping("delete")
+	public ResponseEntity<String> delete(
+			@RequestParam(value="key", required=false)String key) {
 		try {
-			c = new MemcachedClient(
-				    new InetSocketAddress("localhost", 11211));
-			c.set("hello", 3600, "9x9");
-			output = (String)c.get("hello");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return NnNetUtil.textReturn(output);
-	}
-	
-	@RequestMapping("spy_get")
-	public ResponseEntity<String> spy_get() {
-		String output = "No Cache";
-		MemcachedClient c;
-		try {
-			c = new MemcachedClient(
-				    new InetSocketAddress("localhost", 11211));
-			output = (String)c.get("hello");
+			MemcachedClient c = new MemcachedClient(
+				    new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));
+			c.delete(key);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return NnNetUtil.textReturn(output);
+		return NnNetUtil.textReturn("cache delete:" + key);
 	}
-
-	@RequestMapping("client_set")
-	public ResponseEntity<String> client_set() {
-		Mso mso = new MsoManager().findByName("9x9");
-		MemcachedClient cache = CacheFactory.get();
-		if (cache != null) 
-			cache.set(MsoManager.getCacheKey(mso.getName()), 3600, mso);
-		return NnNetUtil.textReturn("OK");
-	}
-
-	@RequestMapping("client_get")
-	public ResponseEntity<String> client_get() {
-		Mso mso = new MsoManager().findByName("9x9");
-		MemcachedClient cache = CacheFactory.get();
-		String result = "no cache found";
-		if (cache != null) {
-			Mso cachedMso = (Mso)cache.get(MsoManager.getCacheKey(mso.getName()));
-			result = cachedMso.getLogoUrl();
+		
+	//cache flush
+	@RequestMapping("flush")
+	public ResponseEntity<String> flush() {
+		MemcachedClient c;
+		try {
+			c = new MemcachedClient(new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));				    
+			c.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return NnNetUtil.textReturn(result);
+
+		return NnNetUtil.textReturn("flush");
 	}
+
 	
 }

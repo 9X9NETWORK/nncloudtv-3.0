@@ -12,7 +12,7 @@ public class AuthLib {
 		byte[] bDigest = passwordDigest(password, bSalt);
 		return bDigest;
 	}
-		 
+	
 	public static byte[] generateSalt() {
 		SecureRandom random = null;
 		byte[] bSalt = null;				

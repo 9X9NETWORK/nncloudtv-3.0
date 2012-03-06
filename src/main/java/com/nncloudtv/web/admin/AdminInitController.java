@@ -1,23 +1,17 @@
 package com.nncloudtv.web.admin;
 
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
-import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.service.InitService;
 
 /**
@@ -46,7 +40,15 @@ public class AdminInitController {
 		}
 		return "error/exception";				
 	}
-			
+
+	//used when importing all the data from gae production except nnuser related
+	@RequestMapping(value="auser", method=RequestMethod.GET)
+	public String auser(HttpServletRequest req) {
+		initService.setRequest(req);
+		initService.auser(req);
+		return "admin/groundStart";
+	}
+	
 	@RequestMapping(value="groundStart", method=RequestMethod.GET)
 	public String groundStartGet(HttpServletRequest req) {
 		return "admin/groundStart";
@@ -54,11 +56,14 @@ public class AdminInitController {
 	
 	@RequestMapping(value="groundStart", method=RequestMethod.POST)
 	public String groundStartPost(HttpServletRequest req) {
-		String host = NnNetUtil.getUrlRoot(req);
+		initService.setRequest(req);
+		initService.initAll(true, true);
+		
+		//String host = NnNetUtil.getUrlRoot(req);
 		//if (host.contains("http://localhost")) {
-			initService.initAll();
 		//}
 		return "admin/groundStart";
 	}	
-		
+			
+	
 }

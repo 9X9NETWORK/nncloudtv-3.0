@@ -16,7 +16,6 @@ public class NnProgram implements Serializable {
 	private long id;
 	
 	@Persistent
-	@Column(name="channel_id")
 	private long channelId;
 	
 	@Persistent
@@ -24,39 +23,43 @@ public class NnProgram implements Serializable {
 	private String name;
 	
 	@Persistent
+	@Column(jdbcType="VARCHAR", length=500)
+	private String comment;
+	
+	@Persistent
+	private short contentType;
+	public static final short CONTENTTYPE_DIRECTLINK = 0;
+	public static final short CONTENTTYPE_YOUTUBE = 1;
+	public static final short CONTENTTYPE_SCRIPT = 2;
+	public static final short CONTENTTYPE_RADIO = 3;
+	
+	
+	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String intro;
 	
 	@Persistent
-	@Column(name="image_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String imageUrl;
 	
 	@Persistent
-	@Column(name="image_large_url", jdbcType="VARCHAR", length=255)
-	private String imageLargeUrl;
+	@Column(jdbcType="VARCHAR", length=255)
+	private String imageLargeUrl; //used for radio programs
 	
 	@Persistent
-	@Column(name="mpeg_file_url", jdbcType="VARCHAR", length=255)
-	private String mpeg4FileUrl;
-	
+	@Column(jdbcType="VARCHAR", length=255)
+	private String fileUrl;
+
 	@Persistent
-	@Column(name="webm_file_url", jdbcType="VARCHAR", length=255)
-	private String webMFileUrl;				
-	
-	@Persistent
-	@Column(name="other_file_url", jdbcType="VARCHAR", length=255)
-	private String otherFileUrl;
-	
-	@Persistent
-	@Column(name="audio_file_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String audioFileUrl;
 	
 	@Persistent
-	@Column(name="storage_id", jdbcType="VARCHAR", length=255)
-	private String storageId; // id of where the file physically stores, from transcoding service
+	@Column(jdbcType="VARCHAR", length=255)
+	private String storageId; // id of where the file physically stores, from channel parsing service
 	
 	@Persistent
-	@Column(name="error_code", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String errorCode;
 
 	@Persistent
@@ -72,25 +75,29 @@ public class NnProgram implements Serializable {
 	private String duration;
 		
 	@Persistent
-	@Column(name="is_public")
 	private boolean isPublic; 
 	
 	@Persistent
 	private short type;
 	public static short TYPE_VIDEO = 1;
 	public static short TYPE_AUDIO = 2;	
-		
+
+	//used by maplestage channels, 9x9 channels, youtube special sorting channels
+	//please not it is a string instead of digit, make 1 00000001, 8 digits total 
 	@Persistent
-	@Column(name="create_date")
+	@Column(jdbcType="VARCHAR", length=8)
+	private String seq;
+
+	//used with seq
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=8)	
+	private String subSeq;
+	
+	@Persistent
 	private Date createDate;
 		
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
-
-	@Persistent
-	@Column(name="pub_date")
-	private Date pubDate; //the value from original publisher, such as podcast, or youtube
 	
 	public NnProgram(String name, String intro, String imageUrl, short type) {
 		this.name = name;
@@ -129,14 +136,6 @@ public class NnProgram implements Serializable {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
-	}
-
-	public String getWebMFileUrl() {
-		return webMFileUrl;
-	}
-
-	public void setWebMFileUrl(String webMFileUrl) {
-		this.webMFileUrl = webMFileUrl;
 	}
 
 	public short getType() {
@@ -179,14 +178,6 @@ public class NnProgram implements Serializable {
 		this.isPublic = isPublic;
 	}
 
-	public String getMpeg4FileUrl() {
-		return mpeg4FileUrl;
-	}
-
-	public void setMpeg4FileUrl(String mpeg4FileUrl) {
-		this.mpeg4FileUrl = mpeg4FileUrl;
-	}
-
 	public String getErrorCode() {
 		return errorCode;
 	}
@@ -211,22 +202,6 @@ public class NnProgram implements Serializable {
 		this.status = status;
 	}
 
-	public String getOtherFileUrl() {
-		return otherFileUrl;
-	}
-
-	public void setOtherFileUrl(String otherFileUrl) {
-		this.otherFileUrl = otherFileUrl;
-	}
-
-	public String getAudioFileUrl() {
-		return audioFileUrl;
-	}
-
-	public void setAudioFileUrl(String audioFileUrl) {
-		this.audioFileUrl = audioFileUrl;
-	}
-
 	public String getImageLargeUrl() {
 		return imageLargeUrl;
 	}
@@ -243,12 +218,52 @@ public class NnProgram implements Serializable {
 		this.storageId = storageId;
 	}
 
-	public Date getPubDate() {
-		return pubDate;
+	public String getFileUrl() {
+		return fileUrl;
 	}
 
-	public void setPubDate(Date pubDate) {
-		this.pubDate = pubDate;
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
 	}
 
+	public String getAudioFileUrl() {
+		return audioFileUrl;
+	}
+
+	public void setAudioFileUrl(String audioFileUrl) {
+		this.audioFileUrl = audioFileUrl;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public short getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(short contentType) {
+		this.contentType = contentType;
+	}
+
+	public String getSeq() {
+		return seq;
+	}
+
+	public void setSeq(String seq) {
+		this.seq = seq;
+	}
+
+	public String getSubSeq() {
+		return subSeq;
+	}
+
+	public void setSubSeq(String subSeq) {
+		this.subSeq = subSeq;
+	}
+	
 }

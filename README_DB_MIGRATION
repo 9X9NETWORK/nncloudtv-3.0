@@ -1,0 +1,64 @@
+=============================================================================================================
+DB Migration
+=============================================================================================================
+================================
+build up python environment
+================================
+> python --version
+Python 2.6.5
+> apt-get install python-mysqldb
+
+================================
+build up GAE python environment
+================================
+- download google_appengine_1.6.2.zip
+- unzip, move to /home/ubuntu/google_appengine
+- python files put under /home/ubuntu/google_appengine folder 
+
+================================
+copy gae backup files over
+================================
+- get backup files from amazon
+> sudo su
+> s3cmd ls s3://9x9gaedata/20120209_020501_9x9tvprod3*
+> s3cmd get s3://9x9gaedata/20120209_020501_9x9tvprod3*
+
+- remove unnecessary files and decompress
+rm *.log.*
+rm *PdrRaw*
+bzip2 -d *	
+mv filename, remove date_9x9tvprod3
+
+-  alter table
+alter table nnset add column ori_id bigint(20);
+alter table nnchannel add column ori_id bigint(20);
+alter table category add column ori_id bigint(20);
+
+- run python migration files 
+cd /home/ubuntu/googleappengine
+python mso.py
+python mso_config.py
+python captcha.py
+python category.py
+python nnset.py
+python nnchannel.py
+python nnprogram.py
+python category_nnset.py
+python nnset_nnchannel.py
+python category_nnset_modify.py
+python nnset_nnchannel_modify.py
+python nnprogram_modify.py
+
+- alter table back
+alter table nnset drop column ori_id;
+alter table nnchannel drop column ori_id;
+alter table category drop column ori_id;
+
+- tmp
+alter table nnchannel modify column sourceUrl varchar(500);
+alter table nnchannel modify column name varchar(500);
+alter table nnchannel modify column oriName varchar(500);
+alter table nnchannel modify column tag varchar(500);
+alter table nnprogram modify column comment varchar(500);
+alter table nnprogram modify column seq varchar(8);
+alter table nnprogram modify column subSeq varchar(8);

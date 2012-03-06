@@ -15,7 +15,7 @@ import com.nncloudtv.model.NnSet;
 
 public class PlayerService {
 	
-	protected static final Logger logger = Logger.getLogger(PlayerService.class.getName());
+	protected static final Logger log = Logger.getLogger(PlayerService.class.getName());
 	
 	public Model prepareBrand(Model model, String msoName, HttpServletResponse resp) {
 		if (msoName != null) {
@@ -41,7 +41,7 @@ public class PlayerService {
 		NnSetManager setMngr = new NnSetManager();
 		NnSet channelSet = setMngr.findBybeautifulUrl(name);
 		if (channelSet != null) {
-			logger.info("found set name = " + name);
+			log.info("found set name = " + name);
 			model.addAttribute("fbName", NnStringUtil.htmlSafeChars(channelSet.getName()));
 			model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(channelSet.getIntro()));
 			model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(channelSet.getImageUrl()));
@@ -57,7 +57,7 @@ public class PlayerService {
 			NnProgramManager programMngr = new NnProgramManager();
 			NnProgram program = programMngr.findById(Long.valueOf(pid));
 			if (program != null) {
-				logger.info("episode found = " + pid);
+				log.info("episode found = " + pid);
 				model.addAttribute("fbName", NnStringUtil.htmlSafeChars(program.getName()));
 				model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(program.getIntro()));
 				model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(program.getImageUrl()));
@@ -78,7 +78,7 @@ public class PlayerService {
 		NnChannelManager channelMngr = new NnChannelManager();
 		NnChannel channel = channelMngr.findById(Long.valueOf(cid));
 		if (channel != null) {
-			logger.info("found channel = " + cid);
+			log.info("found channel = " + cid);
 			model.addAttribute("fbName", NnStringUtil.htmlSafeChars(channel.getName()));
 			model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(channel.getIntro()));
 			model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(channel.getImageUrl()));

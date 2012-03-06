@@ -33,11 +33,10 @@ public class Counter {
     private Long id;
   
     @Persistent
-    @Column(name="counter_name", jdbcType="VARCHAR", length=255)
+    @Column(jdbcType="VARCHAR", length=255)
     private String counterName;
   
     @Persistent
-    @Column(name="num_shards")
     private Integer numShards;
   
     public Counter(String counterName) {

@@ -1,10 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                         http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.nncloudtv</groupId>
   <artifactId>nncloudtv</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>nncloudtv</name>
   <packaging>war</packaging>
+  
   <!-- 
     packaging commands 
     packaging:
@@ -30,6 +34,7 @@
              <connectors>
                 <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                    <port>8888</port>
+                   <maxIdleTime>360000</maxIdleTime>
                 </connector>
              </connectors>
 	         <webAppConfig>
@@ -274,13 +279,14 @@
          <artifactId>commons-lang</artifactId>
          <version>2.3</version>
       </dependency>
-      <!-- Google -->
-      <dependency>
-         <groupId>com.google.api.client</groupId>
-         <artifactId>google-api-client</artifactId>
-         <version>1.4.1-beta</version>
-      </dependency>
+      <!-- Google -->      
       <!-- atomikos -->
+	  <dependency>
+		 <groupId>com.google.api-client</groupId>
+		 <artifactId>google-api-client-extensions</artifactId>
+		 <version>1.5.1-beta</version>
+	  </dependency>
+      <!-- 
 	  <dependency>
 		 <groupId>com.atomikos</groupId>
 		 <artifactId>atomikos-util</artifactId>
@@ -306,6 +312,7 @@
 		<artifactId>transactions-jdbc</artifactId>
 		<version>3.7.0</version>
 	</dependency>
+	 -->
 	<!-- spring transaction dependent -->      
     <dependency>
        <groupId>cglib</groupId>
@@ -317,7 +324,35 @@
        <groupId>spy</groupId>
        <artifactId>spymemcached</artifactId>
        <version>2.6</version>
-    </dependency>        
+    </dependency>
+    <!-- Apache POI -->        
+    <dependency>
+	   <groupId>org.apache.poi</groupId>
+	   <artifactId>poi</artifactId>
+	   <version>3.7</version>
+    </dependency>    
+    <dependency>
+	   <groupId>org.apache.poi</groupId>
+	   <artifactId>poi-ooxml</artifactId>
+	   <version>3.7</version>
+    </dependency>
+    <!-- JavaMail -->    
+    <dependency>
+	   <groupId>javax.mail</groupId>
+	   <artifactId>mail</artifactId>
+	   <version>1.4</version>
+    </dependency>    
+    <!-- Twitter -->
+    <dependency>
+       <groupId>org.twitter4j</groupId>
+       <artifactId>twitter4j-core</artifactId>
+       <version>[2.2,)</version>
+    </dependency>
+    <dependency>
+	   <groupId>rome</groupId>
+	   <artifactId>rome</artifactId>
+	   <version>1.0</version>
+    </dependency>
   </dependencies>
   
   <!-- ====================================================================== -->
@@ -329,11 +364,13 @@
         <name>DataNucleus Repository</name>
         <url>http://www.datanucleus.org/downloads/maven2</url>
      </repository>
+     <!-- 
      <repository>
         <id>atomikos maven-repos</id>
         <name>Atomikos Respository</name>
         <url>http://repo1.maven.org/maven2/com/atomikos</url>
      </repository>
+      -->
      <repository>
         <id>spy</id>
         <name>Spy Repository</name>

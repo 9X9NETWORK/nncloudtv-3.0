@@ -10,8 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /** 
- * Each MSO has his own category.
- * Each channel should belong to at least one category
+ * Content category, the root of our content directory
  */
 @PersistenceCapable(table="category", detachable="true")
 public class Category implements Serializable {
@@ -23,55 +22,40 @@ public class Category implements Serializable {
 	private long id;
 	
 	@Persistent
-	@Column(name="parent_id")
-	private long parentId; 
-	
+	private long parentId; //for structured categories. root category has parent_id 0 
+
 	@Persistent
-	@Column(name="mso_id")
-	private long msoId;
+	@Column(jdbcType="VARCHAR", length=5)
+	private String lang;	
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String name;
+	private String name; //category name
+	public static String UNCATEGORIZED = "UNCATEGORIZED";
 	
 	@Persistent
-	@Column(name="is_public")
-	private boolean isPublic;
+	private boolean isPublic; //shows only public categories on our directory
 	
 	@Persistent
-	@Column(name="channel_count")
-	private int channelCount; 	//channel count in each category
+	private int channelCnt; //channel count in each category
 	
 	@Persistent
-	@Column(name="is_ipg")
-	private boolean isIpg; //categories 
-	
-	@Persistent	
-	private short type;
-	public static final short TYPE_FREE = 0;
-	public static final short TYPE_RESTRICTED = 1;	
-	public static final short TYPE_PERSONAL = 2;
-	public static final short TYPE_YOUTUBE = 3;
+	private short seq; //sequence shown in the directory
 
 	@Persistent
-	private short seq; //seq shown on the ipg
+	private int subCatCnt; //sub category count
 	
 	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
-	
+
 	public Category() {}	
 	
-	public Category(String name, boolean isPublic, long msoId) {
+	public Category(String name, boolean isPublic) {
 		this.name = name;
 		this.isPublic = isPublic;
-		this.msoId= msoId;
-		this.isIpg = false;
-		this.type = TYPE_FREE;
 	}
 	
 	public long getId() {
@@ -80,14 +64,6 @@ public class Category implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public long getMsoId() {
-		return msoId;
-	}
-
-	public void setMsoId(long msoId) {
-		this.msoId = msoId;
 	}
 
 	public String getName() {
@@ -113,21 +89,12 @@ public class Category implements Serializable {
 	}
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
-	}
-	
-	public int getChannelCount() {
-		return channelCount;
-	}
-
-	public void setChannelCount(int channelCount) {
-		this.channelCount = channelCount;
-	}
+	}	
 
 	public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("name: " + name + ";");
-        buffer.append("msoId: " + msoId + ";");
-        buffer.append("channelCount: " + channelCount + ";");
+        buffer.append("channelCount: " + channelCnt + ";");
         return buffer.toString();
 	}
 
@@ -139,28 +106,36 @@ public class Category implements Serializable {
 		return parentId;
 	}
 
-	public boolean isIpg() {
-		return isIpg;
-	}
-
-	public void setIpg(boolean isIpg) {
-		this.isIpg = isIpg;
-	}
-
-	public short getType() {
-		return type;
-	}
-
-	public void setType(short type) {
-		this.type = type;
-	}
-
 	public short getSeq() {
 		return seq;
 	}
 
 	public void setSeq(short seq) {
 		this.seq = seq;
+	}
+
+	public int getChannelCnt() {
+		return channelCnt;
+	}
+
+	public void setChannelCnt(int channelCnt) {
+		this.channelCnt = channelCnt;
+	}
+
+	public int getSubCatCnt() {
+		return subCatCnt;
+	}
+
+	public void setSubCatCnt(int subCatCnt) {
+		this.subCatCnt = subCatCnt;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 	
 }

@@ -50,49 +50,49 @@ public class CategoryDao extends GenericDao<Category> {
 		}
 		return detached;
 	}
-
-	public List<Category> findIpgCategoryByMsoId(long msoId) {
-		PersistenceManager pm = PMF.getContent().getPersistenceManager();
-		List<Category> detached = new ArrayList<Category>();
-		try {
-			Query q = pm.newQuery(Category.class);
-			q.setFilter("msoId == msoIdParam && isIpg == isIpgParam");
-			q.declareParameters("long msoIdParam, boolean isIpgParam");
-			q.setOrdering("name");
-			@SuppressWarnings("unchecked")
-			List<Category> categories = (List<Category>)q.execute(msoId, true);
-			detached = (List<Category>)pm.detachCopyAll(categories);
-		} finally {
-			pm.close();			
-		}
-		return detached;
-	}
 	
-	public List<Category> findAllByMsoId(long msoId) {
+	public List<Category> findPlayerCategories(long parentId, String lang) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<Category> detached = new ArrayList<Category>();
 		try {
-			Query q = pm.newQuery(Category.class);
-			q.setFilter("msoId == msoIdParam");
-			q.declareParameters("long msoIdParam");
-			q.setOrdering("name");
+			Query query = pm.newQuery(Category.class);
+			query.setFilter("lang == langParam && parentId == parentIdParam && isPublic == isPublicParam");
+			query.declareParameters("String langParam, long parentIdParam, boolean isPublicParam");
+			query.setOrdering("seq");
 			@SuppressWarnings("unchecked")
-			List<Category> categories = (List<Category>)q.execute(msoId);
-			detached = (List<Category>)pm.detachCopyAll(categories);
+			List<Category> results = (List<Category>) query.execute(lang, parentId, true);			
+			detached = (List<Category>)pm.detachCopyAll(results);
 		} finally {
-			pm.close();			
+			pm.close();
 		}
 		return detached;		
-	}
+	}	
+
+	public List<Category> findPublicCategories(boolean isPublic) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<Category> detached = new ArrayList<Category>();
+		try {
+			Query query = pm.newQuery(Category.class);
+			query.setFilter("isPublic == isPublicParam");
+			query.declareParameters("boolean isPublicParam");
+			query.setOrdering("lang asc, seq asc");
+			@SuppressWarnings("unchecked")
+			List<Category> results = (List<Category>) query.execute(isPublic);			
+			detached = (List<Category>)pm.detachCopyAll(results);
+		} finally {
+			pm.close();
+		}
+		return detached;		
+	}	
 	
 	public List<Category> findAll() {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<Category> detached = new ArrayList<Category>();
 		try {
-			String query = "select from " + Category.class.getName() + " order by createDate";
+			Query query = pm.newQuery(Category.class);
 			@SuppressWarnings("unchecked")
-			List<Category> categories = (List<Category>) pm.newQuery(query).execute();
-			detached = (List<Category>)pm.detachCopyAll(categories);
+			List<Category> results = (List<Category>) query.execute();
+			detached = (List<Category>)pm.detachCopyAll(results);
 		} finally {
 			pm.close();
 		}
@@ -110,23 +110,6 @@ public class CategoryDao extends GenericDao<Category> {
 			pm.close();
 		}
 		return category;		
-	}
-
-	public List<Category> findAllInIpg(long msoId) {
-		PersistenceManager pm = PMF.getContent().getPersistenceManager();
-		List<Category> detached = new ArrayList<Category>();
-		try {
-			Query q = pm.newQuery(Category.class);
-			q.setFilter("msoId == msoIdParam && isIpg == isIpgParam");
-			q.declareParameters("long msoIdParam, boolean isIpgParam");
-			q.setOrdering("seq asc");
-			@SuppressWarnings("unchecked")
-			List<Category> categories = (List<Category>)q.execute(msoId, true);
-			detached = (List<Category>)pm.detachCopyAll(categories);
-		} finally {
-			pm.close();			
-		}
-		return detached;		
 	}
 	
 	//!!! contains query

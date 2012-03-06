@@ -7,9 +7,6 @@ import javax.jdo.annotations.*;
 
 /**
  * The ownership between mso and channel/channelset/program
- * 
- * @author louis
- *
  */
 @PersistenceCapable(table="content_ownership", detachable = "true")
 public class ContentOwnership implements Serializable {
@@ -21,31 +18,26 @@ public class ContentOwnership implements Serializable {
 	private long id;
 	
 	@Persistent
-	@Column(name="mso_id")
 	private long msoId;
 	
 	/**
 	 * channelSetId / channelId / programId according to contentType
 	 */
 	@Persistent
-	@Column(name="content_id")
 	private long contentId;
 	
 	@Persistent
-	@Column(name="content_type")
 	private short contentType;
 	public static final short TYPE_CHANNELSET = 1;
 	public static final short TYPE_CHANNEL = 2;
 	public static final short TYPE_PROGRAM = 3;
 	
 	@Persistent
-	@Column(name="create_mode")
 	private short createMode;
 	public static final short MODE_UPLOAD = 1;
 	public static final short MODE_CURATE = 2;
 	
 	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	public Date getCreateDate() {

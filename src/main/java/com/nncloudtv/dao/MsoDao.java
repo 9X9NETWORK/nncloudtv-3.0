@@ -10,9 +10,15 @@ import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.dao.GenericDao;
 
-public class MsoDao {	
-	protected static final Logger logger = Logger.getLogger(MsoDao.class.getName());
+public class MsoDao extends GenericDao<Mso> {	
+	
+	protected static final Logger log = Logger.getLogger(MsoDao.class.getName());
+
+	public MsoDao() {
+		super(Mso.class);
+	}
 	
 	public Mso save(Mso mso) {
 		if (mso == null) {return null;}
@@ -45,13 +51,17 @@ public class MsoDao {
 	}
 	
 	public List<Mso> findByType(short type) {
+		log.info("<<<<< type >>>> " + type);
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<Mso> detached = new ArrayList<Mso>();
 		try {
-			Query query = pm.newQuery(Mso.class);
-			query.setFilter("type == " + type);
+			Query q= pm.newQuery(Mso.class);
+			q.setFilter("type == typeParam");
+			q.declareParameters("short typeParam");
+			
+			//query.setFilter("type == " + type);
 			@SuppressWarnings("unchecked")
-			List<Mso> results = (List<Mso>) query.execute(type);
+			List<Mso> results = (List<Mso>) q.execute(type);
 			detached = (List<Mso>)pm.detachCopyAll(results);
 		} finally {
 			pm.close();
@@ -62,7 +72,7 @@ public class MsoDao {
 	public Mso findById(long id) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		Mso mso = null;
-		logger.info("id == '" + id + "'");
+		log.info("id == '" + id + "'");
 		try {
 			mso = pm.getObjectById(Mso.class, id);
 			mso = pm.detachCopy(mso);

@@ -18,7 +18,6 @@ public class MsoConfig {
 	private long id;
 
 	@Persistent
-	@Column(name="mso_id")
 	private long msoId;
 		
 	@Persistent
@@ -26,7 +25,10 @@ public class MsoConfig {
 	private String item;
 	public static String CDN = "cdn";
 	public static String DEBUG = "debug";
-	public static String FBTOKEN = "fbtoken"; //regardless of the brand	
+	public static String FBTOKEN = "fbtoken";  //regardless of the brand, for player parsing feed data 
+	public static String REALFBTOKEN = "realfbtoken";
+	public static String RO = "read-only"; //
+	public static String QUEUED = "queued";
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
@@ -35,11 +37,9 @@ public class MsoConfig {
 	public static String CDN_AKAMAI = "akamai";
 
 	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 	
 	public MsoConfig() {}
@@ -65,7 +65,7 @@ public class MsoConfig {
 	public void setMsoId(long msoId) {
 		this.msoId = msoId;
 	}
-
+	
 	public String getItem() {
 		return item;
 	}

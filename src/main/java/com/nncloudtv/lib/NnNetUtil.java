@@ -24,7 +24,13 @@ public class NnNetUtil {
 		headers.setContentType(MediaType.valueOf("text/plain;charset=utf-8"));
 		return new ResponseEntity<String>(output, headers, HttpStatus.OK);		
 	}	
-		
+
+	public static ResponseEntity<String> htmlReturn(String output) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.valueOf("text/html;charset=utf-8"));			                                                    
+		return new ResponseEntity<String>(output, headers, HttpStatus.OK);
+	}	
+	
 	public static String getUrlRoot(HttpServletRequest req) {
 		String url = req.getRequestURL().toString();
 	    Pattern p = Pattern.compile("(^http://.*?)/(.*)");	    	    

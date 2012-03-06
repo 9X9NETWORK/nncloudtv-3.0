@@ -3,7 +3,6 @@ package com.nncloudtv.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -21,11 +20,9 @@ public class MsoIpg  implements Serializable {
 	private long id;
 		
 	@Persistent
-	@Column(name="mso_id")
 	private long msoId; 
 
 	@Persistent 
-	@Column(name="channel_id")
 	private long channelId;
 	
 	public static short TYPE_GENERAL = 1;
@@ -34,17 +31,12 @@ public class MsoIpg  implements Serializable {
 	private short type;
 	
 	@Persistent
-	private int seq;
-
-	@Persistent
-	private short start;
+	private int seq; //the sequence in the ipg
 	
 	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 	
 	public MsoIpg(long msoId, long channelId, int seq, short type) {
@@ -110,12 +102,4 @@ public class MsoIpg  implements Serializable {
 		this.updateDate = updateDate;
 	}
 
-	public short getStart() {
-		return start;
-	}
-
-	public void setStart(short start) {
-		this.start = start;
-	}
-	
 }

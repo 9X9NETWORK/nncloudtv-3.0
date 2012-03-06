@@ -2,9 +2,16 @@ package com.nncloudtv.service;
 
 import java.util.Date;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.nncloudtv.dao.PdrRawDao;
+import com.nncloudtv.model.NnDevice;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.PdrRaw;
+import com.nncloudtv.model.NnUserWatched;
+import com.nncloudtv.service.NnUserWatchedManager;
+import com.nncloudtv.service.PdrRawManager;
 
 public class PdrRawManager {
 
@@ -24,44 +31,33 @@ public class PdrRawManager {
 		return pdrDao.save(pdr);
 	}		
 	
-	/**
-	 * 	Keep the implementation since the requirement can be changed back again.
-	 *  @@@ IMPORTANT It needs to be done in task if there's viewLog process  
-	 */
-	public void processPdr(String pdr, long userId, String sessionId) {
+	public void processPdr(NnUser user, NnDevice device, String sessionId, String pdr, String ip) {		
 		if (pdr == null) {return;}		
-		
-		PdrRawManager pdrMngr = new PdrRawManager();
-		log.info("pdr length: " + pdr.length());
-		int times = Math.round(pdr.length() / 255) + 1;
-		int start = 0;
-		int end = 254;
-		if (pdr.length() < end) { end = pdr.length();}
-		for (int i=0; i<times; i++) {
-			String detail = pdr.substring(start, end);
-			PdrRaw raw = new PdrRaw(userId, sessionId, 0, null, detail);			
-			pdrMngr.create(raw);
-			start = start + 255;
-			end = end  + 254;
-			if (pdr.length() < end) { end = pdr.length();}
-		}		
-		
-		/*
-		//if the verb is watch, store the data in viewlog
-		String[] lines = pdr.split("\n");
-		ViewLogManager viewLogMngr = new ViewLogManager();
-		try {			
-			for (String line : lines) {						
-				String[] data = line.split("\t");			
-				String verb = data[1];			
-				if (verb.equals(PdrRaw.VERB_WATCH)) {
-					viewLogMngr.processPdr(line, userId);
+		PdrRawManager pdrMngr = new PdrRawManager();		
+		NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
+		String reg = "w\t(\\d++)\t(\\w++)";		
+		Pattern pattern = Pattern.compile(reg);
+		Matcher m = pattern.matcher(pdr);
+		if (user != null) {
+			while (m.find()) {			
+				long channelId = Long.parseLong(m.group(1));
+				String program = m.group(2);
+				if (channelId != 0 && !program.equals("0")) {
+					NnUserWatched watched = new NnUserWatched(user, channelId, program);
+					log.info("user watched channel and program:" + user.getToken() + ";" + channelId + ";" + program);
+					watchedMngr.save(user, watched);
 				}
 			}
-		} catch (Exception e) {
-			log.info("exception catpures: " + e.getClass());
+		}
+		//!!!
+		/*
+		if (pdr.length() > 5000) {
+			pdr = pdr.substring(0, 4999);
 		}
 		*/
+		PdrRaw raw = new PdrRaw(user, device, sessionId, pdr.trim());			
+		raw.setIp(ip);
+		pdrMngr.create(raw);		
 	}
 		
 }

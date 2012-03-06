@@ -13,7 +13,7 @@ import com.nncloudtv.model.NnChannel;
 
 public class NnChannelDao extends GenericDao<NnChannel> {
 	
-	protected static final Logger logger = Logger.getLogger(MsoDao.class.getName());
+	protected static final Logger log = Logger.getLogger(MsoDao.class.getName());
 	
 	public NnChannelDao() {
 		super(NnChannel.class);
@@ -44,6 +44,24 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		return channel;		
 	}	
 
+	/*
+	@SuppressWarnings("unchecked")
+	public static List<NnChannel> searchChannelEntries(String queryString) {
+	    String sqlText = "SELECT * "
+	                   + "  FROM {Employee}"
+	                   + " WHERE {Employee.hireDate} BETWEEN ?startDate? AND ?endDate?";
+
+	    PersistenceManager pm = PMF.getContent().getPersistenceManager();
+	    Query q= pm.newQuery("javax.jdo.query.SQL", "SELECT * from NnChannel");
+	    q.setClass(NnChannel.class	;
+	    //q.declareImports("import com.nncloudtv.NnChannel");
+	    //q.declareParameters("Date startDate, ");
+	    
+		return new ArrayList<NnChannel>(); 
+		//http://tjdo.sourceforge.net/docs/direct_sql_queries.html	
+	}
+	*/
+	
 	public List<NnChannel> findAll() {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<NnChannel> detached = new ArrayList<NnChannel>();
@@ -75,7 +93,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		return detached;
 	}	
 
-	public NnChannel findBySourceUrlSearch(String url) {
+	public NnChannel findBySourceUrl(String url) {
 		if (url == null) {return null;}
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		NnChannel channel = null;
@@ -84,7 +102,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 			q.setFilter("sourceUrl== sourceUrlParam");
 			q.declareParameters("String sourceUrlParam");
 			@SuppressWarnings("unchecked")
-			List<NnChannel> channels = (List<NnChannel>) q.execute(url.toLowerCase());
+			//List<NnChannel> channels = (List<NnChannel>) q.execute(url.toLowerCase());
+			List<NnChannel> channels = (List<NnChannel>) q.execute(url);
 			if (channels.size() > 0) {
 				channel = pm.detachCopy(channels.get(0));
 			}

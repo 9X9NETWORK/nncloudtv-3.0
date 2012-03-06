@@ -6,41 +6,45 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.dao.NnSetChannelDao;
-import com.nncloudtv.model.NnSetChannel;
+import com.nncloudtv.dao.NnSetToNnChannelDao;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnSetToNnChannel;
 
 @Service
 public class NnSetChannelManager {
-	protected static final Logger logger = Logger.getLogger(NnSetChannelManager.class.getName());
+	protected static final Logger log = Logger.getLogger(NnSetChannelManager.class.getName());
 	
-	NnSetChannelDao scDao = new NnSetChannelDao();
+	NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
 	
-	public void create(NnSetChannel sc) {
+	public void create(NnSetToNnChannel sc) {
 		Date now = new Date();
 		sc.setCreateDate(now);
 		sc.setUpdateDate(now);
-		scDao.save(sc);
+		dao.save(sc);
 	}
 	
-	public void delete(NnSetChannel sc) {
-		scDao.delete(sc);
+	public void delete(NnSetToNnChannel sc) {
+		dao.delete(sc);
 	}
 	
-	public NnSetChannel save(NnSetChannel sc) {
+	public NnSetToNnChannel save(NnSetToNnChannel sc) {
 		sc.setUpdateDate(new Date());
-		scDao.save(sc);
+		dao.save(sc);
 		return sc;
 	}
 	
-	public List<NnSetChannel> findBySetId(long setId) {
-		return scDao.findBySetId(setId);
+	public List<NnSetToNnChannel> findBySet(long setId) {
+		return dao.findBySet(setId);
 	}
+
+	public NnSetToNnChannel findBySetAndChannel(long channelSetId, long channelId) {
+		return dao.findBySetAndChannel(channelSetId, channelId);
+	}	
 	
 	//move from seq1 to seq2
 	public boolean moveSeq(long setId, int seq1, int seq2) {
-		NnSetChannel sc1 = scDao.findBySetIdAndSeq(setId, seq1);
-		NnSetChannel sc2 = scDao.findBySetIdAndSeq(setId, seq2);
+		NnSetToNnChannel sc1 = dao.findBySetAndSeq(setId, seq1);
+		NnSetToNnChannel sc2 = dao.findBySetAndSeq(setId, seq2);
 		if (sc1 == null) {return false;}
 		sc1.setSeq(seq2);
 		this.save(sc1);
@@ -52,9 +56,9 @@ public class NnSetChannelManager {
 	}
 	
 	public void addChannel(long channelSetId, NnChannel channel) {
-		NnSetChannel sc = scDao.findBySetIdAndSeq(channelSetId, channel.getSeq());
+		NnSetToNnChannel sc = dao.findBySetAndSeq(channelSetId, channel.getSeq());
 		if (sc == null) {
-			sc = new NnSetChannel(channelSetId, channel.getId(), channel.getSeq());
+			sc = new NnSetToNnChannel(channelSetId, channel.getId(), channel.getSeq());
 			this.create(sc);
 		} else {
 			sc.setChannelId(channel.getId());
@@ -63,7 +67,7 @@ public class NnSetChannelManager {
 	}
 	
 	public void removeChannel(long channelSetId, int seq) {
-		NnSetChannel csc = scDao.findBySetIdAndSeq(channelSetId, seq);
+		NnSetToNnChannel csc = dao.findBySetAndSeq(channelSetId, seq);
 		if (csc != null)
 			this.delete(csc);
 	}

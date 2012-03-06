@@ -12,7 +12,7 @@ import com.nncloudtv.lib.PMF;
 
 public class GenericDao<T> {
 	
-	protected static final Logger logger = Logger.getLogger(GenericDao.class.getName());
+	protected static final Logger log = Logger.getLogger(GenericDao.class.getName());
 	private Class<T> daoClass;
 		
 	public GenericDao(Class<T> daoClass) {

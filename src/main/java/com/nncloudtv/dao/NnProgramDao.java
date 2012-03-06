@@ -59,15 +59,12 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		return detached;
 	}
 	
-	/**
-	 * Good: reference findGoodProgramsByChannelId  
-	 */
-	public List<NnProgram> findGoodProgramsByChannelIds(List<Long> channelIds) {
+	public List<NnProgram> findPlayerProgramsByChannels(List<Long> channelIds) {
 		List<NnProgram> good = new ArrayList<NnProgram>();
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(NnProgram.class, ":p.contains(channelId)");
-			q.setOrdering("channelId asc, pubDate desc");
+			q.setOrdering("channelId asc");
 			@SuppressWarnings("unchecked")
 			List<NnProgram> programs = ((List<NnProgram>) q.execute(channelIds));		
 			good = (List<NnProgram>) pm.detachCopyAll(programs);
@@ -82,34 +79,41 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		return good;
 	}
 		
-	/**
-	 * Good: is Public, is STATUS_OK, is TYPE_VIDEO
-	 */
-	public List<NnProgram> findGoodProgramsByChannelId(long channelId) {
+	public List<NnProgram> findPlayerProgramsByChannel(NnChannel c) {
 		List<NnProgram> detached = new ArrayList<NnProgram>();
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(NnProgram.class);
-			q.setFilter("channelId == channelIdParam && status == statusParam && type == typeParam");
-			q.declareParameters("long channelIdParam, short statusParam, short typeParam");
-			q.setOrdering("pubDate desc");
+			q.setFilter("channelId == channelIdParam && isPublic == isPublicParam && status == statusParam");
+			q.declareParameters("long channelIdParam, boolean isPublicParam, short statusParam");
+			if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP) { 				
+				q.setOrdering("seq asc, subSeq asc"); 
+		    } else if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {
+				q.setOrdering("seq desc, subSeq asc");	
+			} else if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
+				q.setOrdering("seq asc");
+			} else if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
+				q.setOrdering("seq desc, subSeq asc");				
+			} else {
+				q.setOrdering("updateDate desc");
+			}
+			
 			@SuppressWarnings("unchecked")
-			List<NnProgram> programs = (List<NnProgram>)q.execute(channelId, NnProgram.STATUS_OK, NnProgram.TYPE_VIDEO);
+			List<NnProgram> programs = (List<NnProgram>)q.execute(c.getId(), true, NnProgram.STATUS_OK);
 			detached = (List<NnProgram>)pm.detachCopyAll(programs);
 		} finally {
 			pm.close();
 		}
 		return detached;
 	}
-	
-	public List<NnProgram> findAllByChannelId(long channelId) {
+
+	public List<NnProgram> findByChannel(long channelId) {
 		List<NnProgram> detached = new ArrayList<NnProgram>();
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(NnProgram.class);
 			q.setFilter("channelId == channelIdParam");
 			q.declareParameters("long channelIdParam");
-			q.setOrdering("pubDate desc");
 			@SuppressWarnings("unchecked")
 			List<NnProgram> programs = (List<NnProgram>)q.execute(channelId);		
 			detached = (List<NnProgram>)pm.detachCopyAll(programs);
@@ -132,48 +136,5 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		}
 		return program;		
 	}	
-	
-	public int findAndDeleteProgramsOlderThanMax(long channelId) {
-		List<NnProgram> list = new ArrayList<NnProgram>();
-		PersistenceManager pm = PMF.getContent().getPersistenceManager();
-		try {
-			Query q = pm.newQuery(NnProgram.class);
-			q.setOrdering("pubDate asc");
-			q.setFilter("channelId == channelIdParam");
-			q.declareParameters("long channelIdParam");			
-			@SuppressWarnings("unchecked")
-			List<NnProgram> programs = (List<NnProgram>) q.execute(channelId);			
-			if (programs.size() > NnChannel.MAX_CHANNEL_SIZE) {
-				int over = programs.size() - NnChannel.MAX_CHANNEL_SIZE;
-				list = programs.subList(0, over);				
-				log.info("Channel id, original size, delete size:" + channelId + "," + programs.size() + "," + list.size());
-				pm.deletePersistentAll(list);
-			}
-			return programs.size() - list.size(); 
-			
-		} finally {
-			pm.close();
-		}		
-	}	
-	
-	public NnProgram findOldestByChannelId(long channelId) {
-		NnProgram oldest = null;
-		PersistenceManager pm = PMF.getContent().getPersistenceManager();
-		try {
-			Query q = pm.newQuery(NnProgram.class);
-			q.setFilter("channelId == channelIdParam");
-			q.declareParameters("long channelIdParam");			
-			q.setOrdering("pubDate asc");
-			q.setRange(0, 1);
-			@SuppressWarnings("unchecked")
-			List<NnProgram> programs = (List<NnProgram>) q.execute(channelId);
-			if (programs.size() > 0) {
-				oldest = programs.get(0);
-				oldest = pm.detachCopy(oldest);
-			}		
-		} finally {
-			pm.close();
-		}
-		return oldest;		
-	}	
+		
 }

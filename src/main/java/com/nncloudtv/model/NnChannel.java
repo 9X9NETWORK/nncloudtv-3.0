@@ -13,7 +13,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.nncloudtv.lib.YouTubeLib;
 
 /**
- * 9x9 Channel
+ * a Channel
  */
 @PersistenceCapable(table="nnchannel", detachable="true")
 public class NnChannel implements Serializable {
@@ -22,52 +22,42 @@ public class NnChannel implements Serializable {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
-	
+			
 	@Persistent
-	@Column(name="user_id")
-	private long userId;
-		
-	@Persistent
-	@Column(jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=500)
 	private String name; 
 
 	@Persistent
-	@Column(name="faux_name", jdbcType="VARCHAR", length=255)
-	private String fauxName; //instead the original podcast/youtube name, we make up something 
+	@Column(jdbcType="VARCHAR", length=500)
+	private String oriName; //instead the original podcast/youtube name, we make up something 
 	
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=500)
 	private String intro;
 
 	@Persistent
-	@Column(name="faux_intro", jdbcType="VARCHAR", length=255)
-	private String fauxIntro; //instead the original podcast/youtube description, we make up something 
-	
-	@Persistent
-	@Column(name="image_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String imageUrl; 
-			
+	public static String PROCESSING_IMAGE_URL = "https://s3.amazonaws.com/9x9ui/images/processing.png";
+	
 	@Persistent
-	@Column(name="is_public")
 	private boolean isPublic;
+		
+	@Persistent
+	private int programCnt;
 	
 	@Persistent
-	@Column(name="lang_code", jdbcType="VARCHAR", length=4)
-	private String langCode;
-	
-	@Persistent
-	@Column(name="program_count")
-	private int programCount;
-	
-	@Persistent
-	@Column(name="source_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=500)
 	private String sourceUrl;
 
 	@NotPersistent
 	private short type; //Use with MsoIpg and Subscription, to define attributes such as MsoIpg.TYPE_READONLY
 
 	@Persistent
-	@Column(name="content_type")
+	@Column(jdbcType="VARCHAR", length=500)
+	private String tag;
+	
+	@Persistent
 	public short contentType;
 	public static final short CONTENTTYPE_SYSTEM = 1;
 	public static final short CONTENTTYPE_PODCAST = 2;
@@ -75,7 +65,14 @@ public class NnChannel implements Serializable {
 	public static final short CONTENTTYPE_YOUTUBE_PLAYLIST = 4;
 	public static final short CONTENTTYPE_FACEBOOK = 5;
 	public static final short CONTENTTYPE_MIXED = 6;
-	public static final short CONTENTTYPE_SLIDE = 7;	
+	public static final short CONTENTTYPE_SLIDE = 7;
+	public static final short CONTENTTYPE_MAPLE_VARIETY = 8;
+	public static final short CONTENTTYPE_MAPLE_SOAP = 9;
+	public static final short CONTENTTYPE_YOUTUBE_SPECIAL_SORTING = 10;
+	
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String piwik;
 	
 	@Persistent
 	private short status;
@@ -94,48 +91,45 @@ public class NnChannel implements Serializable {
 	//internal
 	public static final short STATUS_TRANSCODING_DB_ERROR = 1000;
 	public static final short STATUS_NNVMSO_JSON_ERROR = 1001;		
-					
-	//enforce transcoding, could be used to assign special formats or bit rates
-	//currently 0 is no, 1 is yes
-	@Persistent
-	@Column(name="enforce_transcoding")
-	private short enforceTranscoding; 
-		
+							
 	//value mostly passing from transcoding service
 	@Persistent
-	@Column(name="error_reason", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String errorReason;
 		
 	@NotPersistent
 	private int seq; //use with subscription, to specify sequence in IPG. 
 		
-	@NotPersistent	
-	private int subscriptionCount;
-	
+	public static final short SORT_NEWEST_TO_OLDEST = 1; //default
+	public static final short SORT_OLDEST_TO_NEWEST = 2;
+	public static final short SORT_MAPEL = 3;
 	@Persistent
-	@Column(name="create_date") 
+	private short sorting;
+
+	@NotPersistent
+	private String recentlyWatchedProgram;  
+
+	@NotPersistent	
+	private int subscriptionCnt;
+	
+	@Persistent 
 	private Date createDate;
 		
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 			
 	@Persistent
-	@Column(name="transcoding_update_date", jdbcType="VARCHAR", length=255)
-	private String transcodingUpdateDate; //timestamps from transcoding server	
+	@Column(jdbcType="VARCHAR", length=255)
+	private String transcodingUpdateDate; //timestamps from transcoding server			
 		
-	public static short MAX_CHANNEL_SIZE = 50;
-		
-	public NnChannel(String name, String intro, String imageUrl, long userId) {
+	public NnChannel(String name, String intro, String imageUrl) {
 		this.name = name;
 		this.intro = intro;
 		this.imageUrl = imageUrl;
-		this.userId = userId;
 	}
 	
-	public NnChannel(String sourceUrl, long userId) {
+	public NnChannel(String sourceUrl) {
 		this.sourceUrl = sourceUrl;
-		this.userId = userId;
 	}
 		
 	public long getId() {
@@ -153,21 +147,7 @@ public class NnChannel implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getPlayerPrefIntro() {
-		if (getFauxIntro() != null && getFauxIntro().length() > 0) {
-			return getFauxName();
-		}
-		return intro;
-	}
 		
-	public String getPlayerPrefName() {
-		if (getFauxName() != null && getFauxName().length() > 0) {
-			return getFauxName();
-		}
-		return name;		
-	}
-	
 	public String getPlayerPrefSource() {
 		if (getSourceUrl() != null && getSourceUrl().contains("http://www.youtube.com"))
 			return YouTubeLib.getYouTubeChannelName(getSourceUrl());		
@@ -229,14 +209,6 @@ public class NnChannel implements Serializable {
 		return createDate;
 	}
 
-	public String getLangCode() {
-		return langCode;
-	}
-
-	public void setLangCode(String langCode) {
-		this.langCode = langCode;
-	}
-
 	public short getType() {
 		return type;
 	}
@@ -245,12 +217,12 @@ public class NnChannel implements Serializable {
 		this.type = type;
 	}
 
-	public int getProgramCount() {
-		return programCount;
+	public int getProgramCnt() {
+		return programCnt;
 	}
 
-	public void setProgramCount(int count) {
-		this.programCount = count;
+	public void setProgramCnt(int cnt) {
+		this.programCnt = cnt;
 	}
 	
 	public int getStatus() {
@@ -263,14 +235,6 @@ public class NnChannel implements Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
-	}
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
 	}
 
 	public String getSourceUrl() {
@@ -303,46 +267,62 @@ public class NnChannel implements Serializable {
 
 	public void setErrorReason(String errorReason) {
 		this.errorReason = errorReason;
+	}	
+
+	public int getSubscriptionCnt() {
+		return subscriptionCnt;
 	}
 
-	public int getSubscriptionCount() {
-		return subscriptionCount;
-	}
-
-	public void setSubscriptionCount(int subscriptionCount) {
-		this.subscriptionCount = subscriptionCount;
+	public void setSubscriptionCnt(int subscriptionCnt) {
+		this.subscriptionCnt = subscriptionCnt;
 	}
 
 	public void setTranscodingUpdateDate(String transcodingUpdateDate) {
 		this.transcodingUpdateDate = transcodingUpdateDate;
 	}
 
-	public short getEnforceTranscoding() {
-		return enforceTranscoding;
-	}
-
-	public void setEnforceTranscoding(short enforceTranscoding) {
-		this.enforceTranscoding = enforceTranscoding;
-	}
-
 	public String getTranscodingUpdateDate() {
 		return transcodingUpdateDate;
 	}
 
-	public String getFauxName() {
-		return fauxName;
+	public String getOriName() {
+		return oriName;
 	}
 
-	public void setFauxName(String fauxName) {
-		this.fauxName = fauxName;
+	public void setOriName(String oriName) {
+		this.oriName = oriName;
 	}
 
-	public String getFauxIntro() {
-		return fauxIntro;
+	public short getSorting() {
+		return sorting;
 	}
 
-	public void setFauxIntro(String fauxIntro) {
-		this.fauxIntro = fauxIntro;
+	public void setSorting(short sorting) {
+		this.sorting = sorting;
+	}
+
+	public String getRecentlyWatchedProgram() {
+		return recentlyWatchedProgram;
+	}
+
+	public void setRecentlyWatchedProgram(String recentlyWatchedProgram) {
+		this.recentlyWatchedProgram = recentlyWatchedProgram;
+	}
+
+	public String getPiwik() {
+		return piwik;
+	}
+
+	public void setPiwik(String piwik) {
+		this.piwik = piwik;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -20,11 +21,7 @@ public class NnSet implements Serializable {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
-	
-	@Persistent
-	@Column(name="mso_id")
-	private long msoId; // don't use this, please refer to class ContentOwnership
-	
+		
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String name;
@@ -34,35 +31,54 @@ public class NnSet implements Serializable {
 	private String intro;
 	
 	@Persistent
-	@Column(name="image_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String imageUrl;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String imageLargeUrl;
 	
 	@Persistent
-	@Column(name="is_public")
 	private boolean isPublic;
 	
+	//it will be used as part of the url for outside to access
+	//example, beautifulUrl value abc, user can access such NnSet via http://domain/abc
 	@Persistent
-	@Column(name="default_url", jdbcType="VARCHAR", length=255)
-	private String defaultUrl;
+	@Column(jdbcType="VARCHAR", length=255)
+	private String beautifulUrl;  
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=5)
+	private String lang;
 	
+    @Persistent
+    private int channelCnt;
+	
+  //it's used for recommendation !!! seems not used, in nnsettonnchannel    
 	@Persistent
-	@Column(name="beautiful_url", jdbcType="VARCHAR", length=255)
-	private String beautifulUrl;
+	private short seq; 
+
+	@Persistent
+	private boolean featured;
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String tag;
 	
 	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 		
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String piwik;
 	
-	public NnSet(long msoId, String name, String intro, boolean isPublic) {
-		this.msoId = msoId;
+	@NotPersistent
+	private int subscriptionCnt;
+    
+	public NnSet(String name, String intro, boolean isPublic) {
 		this.name = name;
 		this.intro = intro;
 		this.isPublic = isPublic;
@@ -119,15 +135,7 @@ public class NnSet implements Serializable {
 	public Date getCreateDate() {
 		return createDate;
 	}
-	
-	public String getDefaultUrl() {
-		return defaultUrl;
-	}
-	
-	public void setDefaultUrl(String defaultUrl) {
-		this.defaultUrl = defaultUrl;
-	}
-	
+		
 	public void setBeautifulUrl(String beautifulUrl) {
 		this.beautifulUrl = beautifulUrl;
 	}
@@ -139,15 +147,7 @@ public class NnSet implements Serializable {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	
-	public long getMsoId() {
-		return msoId;
-	}
-	
-	public void setMsoId(long msoId) {
-		this.msoId = msoId;
-	}
-	
+		
 	public String getTag() {
 		return tag;
 	}
@@ -155,5 +155,65 @@ public class NnSet implements Serializable {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-		
+
+	public String getImageLargeUrl() {
+		return imageLargeUrl;
+	}
+
+	public void setImageLargeUrl(String imageLargeUrl) {
+		this.imageLargeUrl = imageLargeUrl;
+	}
+
+	public String getPiwik() {
+		return piwik;
+	}
+
+	public void setPiwik(String piwik) {
+		this.piwik = piwik;
+	}
+
+	public int getChannelCnt() {
+		return channelCnt;
+	}
+
+	public void setChannelCnt(int channelCnt) {
+		this.channelCnt = channelCnt;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	public short getSeq() {
+		return seq;
+	}
+
+	public void setSeq(short seq) {
+		this.seq = seq;
+	}
+
+	public boolean isFeatured() {
+		return featured;
+	}
+
+	public void setFeatured(boolean featured) {
+		this.featured = featured;
+	}
+
+	public int getSubscriptionCnt() {
+		return subscriptionCnt;
+	}
+
+	public void setSubscriptionCnt(int subscriptionCnt) {
+		this.subscriptionCnt = subscriptionCnt;
+	}
+	
 }

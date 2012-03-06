@@ -1,5 +1,6 @@
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,12 +13,29 @@ import com.nncloudtv.model.NnSet;
 
 public class NnSetDao extends GenericDao<NnSet> {
 	
-	protected static final Logger logger = Logger.getLogger(NnSetDao.class.getName());
+	protected static final Logger log = Logger.getLogger(NnSetDao.class.getName());
 	
 	public NnSetDao() {
 		super(NnSet.class);
 	}
 
+	public List<NnSet> findByLang(String lang) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<NnSet> detached = new ArrayList<NnSet>(); 
+		try {
+			Query q = pm.newQuery(NnSet.class);
+			q.setFilter("lang == langParam");
+			q.declareParameters("String langParam");
+			q.setOrdering("seq asc");
+			@SuppressWarnings("unchecked")
+			List<NnSet> sets = (List<NnSet>) q.execute(lang);
+			detached = (List<NnSet>)pm.detachCopyAll(sets);
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}	
+	
 	public NnSet findById(long id) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
 		NnSet cs = null;
@@ -30,6 +48,23 @@ public class NnSetDao extends GenericDao<NnSet> {
 		}
 		return cs;
 	}
+
+	public List<NnSet> findFeaturedSets(String lang) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<NnSet> detached = new ArrayList<NnSet>(); 
+		try {
+			Query q = pm.newQuery(NnSet.class);
+			q.setFilter("featured == featuredParam && lang == langParam");
+			q.declareParameters("boolean featuredParam, String langParam");
+			q.setOrdering("seq asc");
+			@SuppressWarnings("unchecked")
+			List<NnSet> sets = (List<NnSet>) q.execute(true, lang);
+			detached = (List<NnSet>)pm.detachCopyAll(sets);
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}	
 	
 	public NnSet findByBeautifulUrl(String url) {		
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();

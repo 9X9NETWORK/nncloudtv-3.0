@@ -17,13 +17,11 @@ public class NnUserPrefManager {
 		
 	private NnUserPrefDao nnUserPrefDao = new NnUserPrefDao();
 	
-	public void create(NnUser user, NnUserPref pref) { 
-		pref.setCreateDate(new Date());
-		nnUserPrefDao.save(user, pref);
-	}
-
 	public NnUserPref save(NnUser user, NnUserPref pref) {
-		pref.setUpdateDate(new Date());
+		Date now = new Date();
+		if (pref.getCreateDate() == null)
+			pref.setCreateDate(now);
+		pref.setUpdateDate(now);
 		return nnUserPrefDao.save(user, pref);
 	}
 

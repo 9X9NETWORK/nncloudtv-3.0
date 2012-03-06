@@ -1,5 +1,3 @@
-//http://www.datanucleus.org/products/accessplatform_1_0/guides/eclipse/index.html
-//http://www.datanucleus.org/products/accessplatform/guides/eclipse/index.html#preferences_enhancer
 package com.nncloudtv.model;
 
 import java.io.Serializable;
@@ -11,9 +9,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-/**
- * Pdr raw information, for future use
- */
 @PersistenceCapable(table="pdr_raw", detachable="true")
 public class PdrRaw implements Serializable {	
 	private static final long serialVersionUID = 7348543186240756490L;
@@ -23,50 +18,60 @@ public class PdrRaw implements Serializable {
 	private long id;
 	
 	@Persistent
-	@Column(name="user_id")
 	private long userId;
+
+	//when looking up NnUser, token and userId should find the same user 
+	//for easier lookup		
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String userToken;
 	
 	@Persistent
-	@Column(name="session_id", jdbcType="VARCHAR", length=255)
-	private String sessionId;
+	private long deviceId;
+	
+	//when looking up NnDevice, token and deviceId should find the same device 
+	//for easier lookup		
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String deviceToken;
+	
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String session;
 
 	@Persistent
-	@Column(name="time_delta")
-	private long timeDelta;
+	@Column(jdbcType="VARCHAR", length=255)
+	private String ip;
+		
+	@Persistent
+	@Column(jdbcType="LONGVARCHAR", length=100000)
+	private String detail;
 	
-	@Column(name="verb", jdbcType="VARCHAR", length=255)
 	@Persistent
-	private String verb;
-	public static String VERB_WATCH = "w";
-	
-	@Persistent
-	@Column(name="info", jdbcType="VARCHAR", length=255)
-	private String info;
-
-	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 	
-	public PdrRaw (long userId, String sessionId, long timeDelta, String verb, String info) {
-		this.sessionId = sessionId;
-		this.timeDelta = timeDelta;
+	public PdrRaw(long userId, String session, String detail) {
 		this.userId = userId;
-		this.verb = verb;
-		this.info = info;
+		this.session = session;
+		this.detail = detail;
 	}
 	
-	public long getId() {
-		return id;
+	public PdrRaw (NnUser user, NnDevice device, String session, String detail) {
+		this.session = session;
+		if (user != null) {
+			this.userId = user.getId();
+			this.userToken = user.getToken();			
+		}
+		if (device != null) {
+			this.deviceId = device.getId();
+			this.deviceToken = device.getToken();
+		}
+		this.detail = detail;
 	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
+	
 	public long getUserId() {
 		return userId;
 	}
@@ -75,20 +80,12 @@ public class PdrRaw implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getVerb() {
-		return verb;
+	public String getDetail() {
+		return detail;
 	}
 
-	public void setVerb(String verb) {
-		this.verb = verb;
-	}
-
-	public String getInfo() {
-		return info;
-	}
-
-	public void setInfo(String info) {
-		this.info = info;
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
 	public Date getCreateDate() {
@@ -107,20 +104,52 @@ public class PdrRaw implements Serializable {
 		this.updateDate = updateDate;
 	}
 
-	public String getSessionId() {
-		return sessionId;
+	public String getSession() {
+		return session;
 	}
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
+	public void setSession(String session) {
+		this.session = session;
 	}
 
-	public long getTimeDelta() {
-		return timeDelta;
+	public String getUserToken() {
+		return userToken;
 	}
 
-	public void setTimeDelta(long timeDelta) {
-		this.timeDelta = timeDelta;
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
 	}
-		
+
+	public long getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(long deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 }

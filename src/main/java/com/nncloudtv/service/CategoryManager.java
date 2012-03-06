@@ -2,25 +2,25 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nncloudtv.dao.CategoryDao;
+import com.nncloudtv.dao.CategoryToNnSetDao;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryChannel;
+import com.nncloudtv.model.CategoryToNnSet;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnSet;
 
 @Service
 public class CategoryManager {
 	
 	protected static final Logger log = Logger.getLogger(CategoryManager.class.getName());
 	private CategoryDao categoryDao = new CategoryDao();
-		
+	private CategoryToNnSetDao cToNDao = new CategoryToNnSetDao();
+	
 	public void create(Category category) {		
 		if (this.findByName(category.getName()) == null) {
 			Date now = new Date();
@@ -36,30 +36,116 @@ public class CategoryManager {
 		return category;
 	}
 
-	@Transactional
+	private CategoryToNnSet findByCategoryAndSet(Category c, NnSet s) {
+		return cToNDao.findByCategoryAndSet(c.getId(), s.getId());
+	}
+	
+	public void addSets(Category c, List<NnSet> sets) {
+		Date now = new Date();
+		for (NnSet s : sets) {
+			if (this.findByCategoryAndSet(c, s) != null) {
+				CategoryToNnSet cs = new CategoryToNnSet(
+					c.getId(), 
+					s.getId()
+				);
+				s.setUpdateDate(now);
+				s.setCreateDate(now);
+				cToNDao.save(cs);
+			}
+		}
+	}
+
+	/*
+	public List<CategoryToNnSet> findSetsByCategory(long categoryId) {
+		CategoryToNnSetDao dao = new CategoryToNnSetDao();
+		return dao.findByCategory(categoryId);
+	}
+	*/
+
+	public void changeChannelCntBySet(NnSet set, int cnt) {
+		List<NnSet> sets = new ArrayList<NnSet>();
+		sets.add(set);
+		List<Category> categories = this.findBySets(sets);
+		for (Category c : categories) {
+			c.setChannelCnt(c.getChannelCnt() + cnt);
+			categoryDao.save(c);
+		}		
+	}
+	
+	public List<Category> findBySets(List<NnSet> sets) {
+		CategoryToNnSetDao dao = new CategoryToNnSetDao();
+		List<CategoryToNnSet> list = new ArrayList<CategoryToNnSet>();
+		List<Category> categories = new ArrayList<Category>();
+		for (NnSet set : sets) {
+			list.addAll(dao.findBySet(set.getId()));
+		}		
+		for (CategoryToNnSet cToS : list) {
+			Category c = this.findById(cToS.getCategoryId());
+			if (c != null) {
+				categories.add(c);
+			}
+		}
+		return categories;
+	}
+	
+	public List<NnSet> findSetsByCategory(long categoryId, boolean isPublic) {
+		CategoryToNnSetDao dao = new CategoryToNnSetDao();
+		List<CategoryToNnSet> list = dao.findByCategory(categoryId);
+		List<Long> ids = new ArrayList<Long>();
+		for (CategoryToNnSet cToN : list) {
+			ids.add(cToN.getSetId());
+		}
+		NnSetManager setMngr = new NnSetManager();
+		List<NnSet> sets = new ArrayList<NnSet>();
+		if (isPublic) {
+			sets.addAll(setMngr.findPublicByIds(ids));
+		} else {
+			sets.addAll(setMngr.findByIds(ids));
+		}
+		return sets;
+	}
+	public boolean moveSet(long fromCategoryId, long toCategoryId, long setId) {
+		CategoryToNnSetDao dao = new CategoryToNnSetDao();
+		CategoryToNnSet cToS = dao.findByCategoryAndSet(fromCategoryId, setId);
+		if (cToS == null)
+			return false;
+		cToS.setCategoryId(toCategoryId);
+		dao.save(cToS);
+		return true;		
+	}
+	
+	public boolean deleteSet(long categoryId, long setId) {
+		CategoryToNnSetDao dao = new CategoryToNnSetDao();
+		CategoryToNnSet found = dao.findByCategoryAndSet(categoryId, setId);
+		if (found == null)
+			return false;
+		dao.delete(found);
+		return true;
+	}
+		
 	public void createChannelRelated(NnChannel channel, List<Category> categories) {
 		//create CategoryChannel
-		CategoryChannelManager ccMngr = new CategoryChannelManager();
-		for (Category c : categories) {
-			ccMngr.create(new CategoryChannel(c.getId(), channel.getId()));
-		}	
 		this.addChannelCounter(channel);
 	}
 	
-	@Transactional
-	public void addChannelCounter(NnChannel channel) {
-		CategoryChannelManager ccMngr = new CategoryChannelManager();
-		NnChannelManager channelMngr = new NnChannelManager();
-		if (channelMngr.isCounterQualified(channel)) {
-			List<CategoryChannel> ccs = new ArrayList<CategoryChannel>();
-			ccs = ccMngr.findAllByChannelId(channel.getId());
-			for (CategoryChannel cc : ccs) {
-				Category c = this.findById(cc.getCategoryId());
-				log.info("count added: category id" + c.getId() + ";channelId " + channel.getId() + ";name " + channel.getName());
-				c.setChannelCount(c.getChannelCount() + 1);
-				this.save(c);					
+	public void addChannelCounter(NnChannel channel) {						
+	}
+	
+		
+	public List<NnSet> findPlayerSetsByCategory(long categoryId) {
+		NnSetManager setMngr = new NnSetManager();
+		CategoryToNnSetDao csDao = new CategoryToNnSetDao();
+		List<CategoryToNnSet> list = csDao.findByCategory(categoryId);
+		List<NnSet> sets = new ArrayList<NnSet>();
+		for (CategoryToNnSet cs : list) {
+			NnSet set = setMngr.findById(cs.getSetId());
+			if (set != null) {
+				if (set.isPublic()) {
+					sets.add(set);
+				}
 			}
-		}						
+		}
+		return sets;		
 	}
 	
 	public Category findByName(String name) {
@@ -70,82 +156,20 @@ public class CategoryManager {
 		return categoryDao.findById(id);
 	}
 
-	public List<Category> findAllByMsoId(long msoId) {
-		List<Category> categories = new ArrayList<Category>();
-		categories = categoryDao.findAllByMsoId(msoId);
-		return categories;
+	public List<Category> findPlayerCategories(long parentId, String lang) {
+		return categoryDao.findPlayerCategories(parentId, lang);
 	}
 
-	public List<Category> findIpgCategoryByMsoId(long msoId) {
-		List<Category> categories = new ArrayList<Category>();
-		categories = categoryDao.findIpgCategoryByMsoId(msoId);
-		return categories;
-	}
-	
-	public List<Category> findCategoriesByIdStr(String categoryIds) {
-		List<Long> categoryIdList = new ArrayList<Long>();	
-		String[] arr = categoryIds.split(",");
-		for (int i=0; i<arr.length; i++) { categoryIdList.add(Long.parseLong(arr[i])); }
-		List<Category> categories = this.findAllByIds(categoryIdList);
-		return categories;		
+	public List<Category> findPublicCategories(boolean isPublic) {
+		return categoryDao.findPublicCategories(isPublic);
 	}
 	
 	public List<Category> findAllByIds(List<Long> ids) {
 		 return categoryDao.findAllByIds(ids);
-	}
-	
-	//add only
-	public List<Category> addCategory(long channelId, List<Category>categories) {
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel channel = channelMngr.findById(channelId);
-		if (channel == null) {return new ArrayList<Category>();}		
-		if (categories.size() == 0) {return new ArrayList<Category>();}		
-		
-		//update category if necessary
-		CategoryChannelManager ccMngr = new CategoryChannelManager();
-		// --find existing categories
-		List<CategoryChannel> ccs = ccMngr.findAllByChannelId(channel.getId()); 			
-		HashSet<Long> existing = new HashSet<Long>();
-		for (CategoryChannel cc : ccs) {
-			existing.add(cc.getCategoryId());
-		}				
-		// --find new categories user defines if there's any	
-		List<Long> newCategoryIdList = new ArrayList<Long>();
-		for (int i=0; i<categories.size(); i++) {
-			if (!existing.contains((categories.get(i).getId()))) {newCategoryIdList.add(categories.get(i).getId());}
-		}
-		// --add new category		
-		if (newCategoryIdList.size() > 0) {
-			HashMap<Long, Category> categoryMap = new HashMap<Long, Category>();
-			for (Category c : categories) {
-				categoryMap.put(c.getId(), c);
-			}
-			for (Long id : newCategoryIdList) {
-				Category c = categoryMap.get(Long.valueOf(id));
-				ccMngr.create(new CategoryChannel(c.getId(), channel.getId()));				
-			}
-		}
-		return categories;
-	}
-	
-	public List<Category> findCategoriesByChannelId(long channelId) {
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel channel = channelMngr.findById(channelId);
-		if (channel == null) {return new ArrayList<Category>();}
-		
-		CategoryChannelManager ccMngr = new CategoryChannelManager();
-		CategoryManager categoryMngr = new CategoryManager();
-		List<CategoryChannel> ccs = ccMngr.findAllByChannelId(channel.getId());				
-		List<Category> categories = new ArrayList<Category>();		
-		for (CategoryChannel cc : ccs) {
-			Category c = categoryMngr.findById(cc.getCategoryId());
-			if (c != null) {categories.add(c);}
-		}
-		return categories;
-	}
+	}	
 					
-	public List<Category> findAllInIpg(long msoId) {
-		List<Category> categories = categoryDao.findAllInIpg(msoId);
+	public List<Category> findAll() {
+		List<Category> categories = categoryDao.findAll();
 		return categories;
 	}
 	

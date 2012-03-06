@@ -19,14 +19,16 @@ public class NnUser implements Serializable {
 		
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String token;
+	private String token;  //each user has a unique token
 	
 	@Persistent
-	private short shard;
+	private short shard; //which shard a user belongs to
+	public static short SHARD_DEFAULT = 1;
+	public static short SHARD_CHINESE = 2;
+	
 	
 	@Persistent
-	@Column(name="mso_id")
-	private long msoId;
+	private long msoId; //which mso a user belongs to
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
@@ -37,49 +39,61 @@ public class NnUser implements Serializable {
 	private String name;	
 	
 	@Persistent
-	private int age;
+	private String dob; //for now it's year
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String intro;
 			
 	@Persistent
-	@Column(name="image_url", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String imageUrl;
 
 	@NotPersistent
 	private String password;
 	
 	@Persistent
-	@Column(name="crypted_password")
 	private byte[] cryptedPassword;
 
 	@Persistent
 	private byte[] salt;
-		
+	
 	@Persistent
-	@Column(name="create_date")
+	@Column(jdbcType="VARCHAR", length=255)
+	private String sphere; //content region
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=5)
+	private String lang; //ui language
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String ip; //ui language
+	
+	@Persistent
+	private short gender;
+	
+	@Persistent
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 	
 	@Persistent
-	private short type;
-		
-	public static String GUEST_EMAIL = "guest@9x9.com";
-	public static String GUEST_NAME = "Guest";
-	
+	private short type; //user/s type
 	public static short TYPE_ADMIN = 1; 
 	public static short TYPE_TBC = 2;
 	public static short TYPE_TCO = 3; 
 	public static short TYPE_USER = 4;
 	public static short TYPE_NN = 5; //default user, must have and only one
 	public static short TYPE_3X3 = 6;
+	public static short TYPE_ENTERPRISE = 7;
+		
+	public static String GUEST_EMAIL = "guest@9x9.com";
+	public static String GUEST_NAME = "Guest";
 	
 	@Persistent
-	@Column(name="facebook_token", jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=255)
 	private String facebookToken;
 	
 	public NnUser(String email, String password, String name, short type) {
@@ -187,14 +201,6 @@ public class NnUser implements Serializable {
 		this.imageUrl = imageUrl;
 	}
 
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
 	public long getMsoId() {
 		return msoId;
 	}
@@ -226,5 +232,45 @@ public class NnUser implements Serializable {
 	public void setShard(short shard) {
 		this.shard = shard;
 	}
-	
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	public String getSphere() {
+		return sphere;
+	}
+
+	public void setSphere(String sphere) {
+		this.sphere = sphere;
+	}
+
+	public short getGender() {
+		return gender;
+	}
+
+	public void setGender(short gender) {
+		this.gender = gender;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
 }

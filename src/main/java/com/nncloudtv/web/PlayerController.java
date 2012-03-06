@@ -1,5 +1,6 @@
 package com.nncloudtv.web;
 
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ import com.nncloudtv.service.PlayerService;
 @RequestMapping("")
 public class PlayerController {
 
-	protected static final Logger log= Logger.getLogger(PlayerController.class.getName());
+	protected static final Logger log = Logger.getLogger(PlayerController.class.getName());
 	
 	@ExceptionHandler(Exception.class)
 	public String exception(Exception e) {
@@ -32,21 +33,34 @@ public class PlayerController {
 	@RequestMapping("/")
 	public String index() {
 		return "redirect:9x9";
-	}
+	}	
+	
+	@RequestMapping("10ft")
+	public String tenft(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
+		PlayerService service = new PlayerService();
+		model = service.prepareBrand(model, mso, resp);
+		return "player/mini";
+	}	
+	
+	@RequestMapping("tv")
+	public String tv(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
+		PlayerService service = new PlayerService();
+		model = service.prepareBrand(model, mso, resp);
+		return "player/mini";
+	}	
 	
 	/**
 	 * to become a 9x9 player, 1)delete cookie, 2)set fb info 
 	 */	
 	@RequestMapping("{name}")
-	public String zooatomics(@PathVariable String name,
-			                 @RequestParam(value="mso",required=false) String mso, 
-			                 HttpServletRequest req, HttpServletResponse resp, Model model) {
-		PlayerService service = new PlayerService();
+	public String zooatomics(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model, @PathVariable("name") String name) {
+		PlayerService service = new PlayerService();		
 		model = service.prepareBrand(model, mso, resp);
 		model = service.prepareSetInfo(model, name, resp);
+		//String prefLanguage = req.getHeader("Accept-Language");		
 		return "player/zooatomics";
 	}
-
+	
 	@RequestMapping("view")
 	public String view(@RequestParam(value="mso",required=false) String mso, 
 			           HttpServletRequest req, HttpServletResponse resp, Model model, 
@@ -62,22 +76,29 @@ public class PlayerController {
 			model = service.prepareChannel(model, channel, resp);
 		}
 		return "player/zooatomics";
-	}	
-
-	@RequestMapping("mini")
-	public String mini(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
-		PlayerService service = new PlayerService();
-		model = service.prepareBrand(model, mso, resp);
-		return "player/mini";
 	}
 	
+	@RequestMapping("support")
+	public String support() {
+		return "general/support";
+	}	
+		
 	/*
 	 * used for dns redirect watch dog 
 	 */
-	@RequestMapping("{mso}/wd")
+	@RequestMapping("9x9/wd")
 	public ResponseEntity<String> watchdog() {		
 		return NnNetUtil.textReturn("OK");
 	}
 	
+	@RequestMapping("flipr")
+	public String flipr(HttpServletRequest request) {
+		Locale locale = request.getLocale();
+		if((locale.getCountry()=="TW")||(locale.getCountry()=="CN")) {
+			return "redirect:flipr/tw/";
+		} else {
+			return "redirect:flipr/en/";
+		}
+	}
 	
 }

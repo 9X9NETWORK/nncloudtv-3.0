@@ -21,7 +21,6 @@ public class NnUserPref implements Serializable {
 	private long id;
 		
 	@Persistent
-	@Column(name="user_id")
 	private long userId;
 
 	@Persistent
@@ -33,11 +32,9 @@ public class NnUserPref implements Serializable {
 	private String value;
 	
 	@Persistent
-	@Column(name="create_date")
 	private Date createDate;
 	
 	@Persistent
-	@Column(name="update_date")
 	private Date updateDate;
 
 	public long getId() {
