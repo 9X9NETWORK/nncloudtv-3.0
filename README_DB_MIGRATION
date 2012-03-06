@@ -18,10 +18,9 @@ build up GAE python environment
 ================================
 copy gae backup files over
 ================================
-- get backup files from amazon
-> sudo su
-> s3cmd ls s3://9x9gaedata/20120209_020501_9x9tvprod3*
-> s3cmd get s3://9x9gaedata/20120209_020501_9x9tvprod3*
+- get backup files from amazon 
+ubuntu> s3cmd ls s3://9x9gaedata/20120209_020501_9x9tvprod3*
+ubuntu> s3cmd get s3://9x9gaedata/20120209_020501_9x9tvprod3*
 
 - remove unnecessary files and decompress
 rm *.log.*
@@ -53,12 +52,3 @@ python nnprogram_modify.py
 alter table nnset drop column ori_id;
 alter table nnchannel drop column ori_id;
 alter table category drop column ori_id;
-
-- tmp
-alter table nnchannel modify column sourceUrl varchar(500);
-alter table nnchannel modify column name varchar(500);
-alter table nnchannel modify column oriName varchar(500);
-alter table nnchannel modify column tag varchar(500);
-alter table nnprogram modify column comment varchar(500);
-alter table nnprogram modify column seq varchar(8);
-alter table nnprogram modify column subSeq varchar(8);

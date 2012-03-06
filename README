@@ -54,6 +54,7 @@ mvn
 http://maven.apache.org/download.html 
 
 - read pom.xml
+
 ================================
 Datanucleus tool
 ================================
@@ -108,13 +109,13 @@ MySql
 > mysql nncloudtv_nnuser1 -h localhost -u root -p
 > mysql nncloudtv_nnuser2 -h localhost -u root -p
 
+- please reference MySql file
+
 - dump data example
 > mysqldump --user=root nncloudtv_analytics > nnanalytics.sql
 
 - import data example
 > cat nnanalytics.sql | mysql nncloudtv_analytics -h localhost -u root -p
-
-- please reference MySql file
  
 ================================
 Package
@@ -135,11 +136,7 @@ Package
 ================================
 In the pipeline
 ================================ 
-- YouTube lib rewrite, the original lib is not maven friendly. replace with com.google.api.client lib
 - Admin portal
-- CMS portal
-- NnUser, find by email, look up the 2nd partition if 1st lookup fails, and update user partition
-- Put memcache back 
 
 ================================
 Note
