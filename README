@@ -101,7 +101,7 @@ MySql
 ================================
 - Download MySQL Server 5.5
 
-- commands on Windows: 
+- example commands on Windows: 
 > cd c:\Program Files\MySQL\MySQL Server 5.5\bin
 > mysqld
 > mysql nncloudtv_analytics -h localhost -u root -p
