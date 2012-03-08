@@ -24,7 +24,7 @@ public class NnContent {
 	private String item;
 	
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=5000)
+	@Column(jdbcType="VARCHAR", length=20000)
 	private String value;
 
 	@Persistent
