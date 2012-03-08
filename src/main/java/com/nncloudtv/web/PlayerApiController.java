@@ -191,7 +191,7 @@ public class PlayerApiController {
 		String text = req.getParameter("text");
 		String sphere = req.getParameter("sphere");
 		String year = req.getParameter("year");
-		String lang = req.getParameter("lang");
+		String lang = req.getParameter("ui-lang");
 		
 		log.info("signup: email=" + email + ";name=" + name + ";userToken=" + userToken);
 

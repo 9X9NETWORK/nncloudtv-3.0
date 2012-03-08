@@ -225,7 +225,9 @@ public class CmsController {
 		}
 		
 		NnUser user = userMngr.findAuthenticatedUser(email, password, request);
-		Mso msoAuth = msoMngr.findById(user.getMsoId());		
+		Mso msoAuth = null;
+		if (user != null)
+			msoAuth = msoMngr.findById(user.getMsoId());		
 		if (msoAuth == null) {
 			log.info("login failed");
 			String error;
