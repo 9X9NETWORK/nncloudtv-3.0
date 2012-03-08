@@ -51,15 +51,12 @@ public class MsoDao extends GenericDao<Mso> {
 	}
 	
 	public List<Mso> findByType(short type) {
-		log.info("<<<<< type >>>> " + type);
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<Mso> detached = new ArrayList<Mso>();
 		try {
 			Query q= pm.newQuery(Mso.class);
 			q.setFilter("type == typeParam");
-			q.declareParameters("short typeParam");
-			
-			//query.setFilter("type == " + type);
+			q.declareParameters("short typeParam");			
 			@SuppressWarnings("unchecked")
 			List<Mso> results = (List<Mso>) q.execute(type);
 			detached = (List<Mso>)pm.detachCopyAll(results);

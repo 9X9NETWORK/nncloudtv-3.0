@@ -21,7 +21,9 @@ import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.PdrRaw;
+import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.PdrRawManager;
 import com.nncloudtv.service.PlayerApiService;
 import com.rabbitmq.client.Channel;
@@ -42,8 +44,17 @@ public class HelloController {
 
     @RequestMapping("/locale")
     public ModelAndView locale(HttpServletRequest req) {
-    	String message = req.getLocalName() + ";" + req.getLocalAddr();
+    	String message = req.getLocalName() + ";" + req.getLocalAddr() + req.getLocale().getLanguage();
         return new ModelAndView("hello", "message", message);
+    }            
+
+    //test email service
+    @RequestMapping("/email")
+    public @ResponseBody String email(HttpServletRequest req) {
+		EmailService service = new EmailService();
+		NnEmail mail = new NnEmail("yiwen@teltel.com", "yiwen", NnEmail.SEND_EMAIL_SHARE, "share 9x9", NnEmail.SEND_EMAIL_SHARE, "hello", "world");
+		service.sendEmail(mail);
+		return "email sent";
     }            
     
     //db test
