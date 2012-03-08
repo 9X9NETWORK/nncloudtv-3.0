@@ -124,8 +124,8 @@ public class NnChannelManager {
 		}
 	}
 	
-	public static List<NnChannel> search(String queryString) {
-		return new ArrayList<NnChannel>();		
+	public static List<NnChannel> search(String queryStr) {
+		return NnChannelDao.searchChannelEntries(queryStr);		
 	}
 	
 	/**
@@ -247,10 +247,6 @@ public class NnChannelManager {
 			c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY)
 			sorting = NnChannel.SORT_MAPEL;
 		return sorting;
-	}
-
-	public static List<NnChannel> searchChannelEntries(String queryString) {
-		return new ArrayList<NnChannel>();		
 	}
 	
 }

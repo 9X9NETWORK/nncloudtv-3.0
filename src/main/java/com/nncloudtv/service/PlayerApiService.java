@@ -1376,7 +1376,7 @@ public class PlayerApiService {
 	public String search(String text) {
 		if (text == null || text.length() == 0)
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
-		List<NnChannel> searchResults = NnChannelManager.searchChannelEntries(text);
+		List<NnChannel> searchResults = NnChannelManager.search(text);
 		String[] result = {""};
 		for (NnChannel c : searchResults) {
 			result[0] += this.composeChannelLineupStr(c, mso) + "\n";
