@@ -44,23 +44,19 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		return channel;		
 	}	
 
-	/*
 	@SuppressWarnings("unchecked")
-	public static List<NnChannel> searchChannelEntries(String queryString) {
-	    String sqlText = "SELECT * "
-	                   + "  FROM {Employee}"
-	                   + " WHERE {Employee.hireDate} BETWEEN ?startDate? AND ?endDate?";
-
+	public static List<NnChannel> searchChannelEntries(String queryStr) {		
 	    PersistenceManager pm = PMF.getContent().getPersistenceManager();
-	    Query q= pm.newQuery("javax.jdo.query.SQL", "SELECT * from NnChannel");
-	    q.setClass(NnChannel.class	;
-	    //q.declareImports("import com.nncloudtv.NnChannel");
-	    //q.declareParameters("Date startDate, ");
+	    String sql = "select * from nnchannel " +
+	    		      "where name like '%" + queryStr + "%'" + 
+	    		         "|| intro like '%" + queryStr + "%'";	 	   
+	    log.info("Sql=" + sql);
+	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+	    q.setClass(NnChannel.class);
+	    List<NnChannel> results = (List<NnChannel>) q.execute();
 	    
-		return new ArrayList<NnChannel>(); 
-		//http://tjdo.sourceforge.net/docs/direct_sql_queries.html	
+		return results; 	
 	}
-	*/
 	
 	public List<NnChannel> findAll() {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();

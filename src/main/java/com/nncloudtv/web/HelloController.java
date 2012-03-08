@@ -2,10 +2,10 @@ package com.nncloudtv.web;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.memcached.MemcachedClient;
@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.PdrRaw;
 import com.nncloudtv.service.EmailService;
@@ -36,29 +38,45 @@ import com.rabbitmq.client.QueueingConsumer;
 public class HelloController {
 	
 	//basic test
-    @RequestMapping("/world")
+    @RequestMapping("world")
     public ModelAndView helloWorld() { 
         String message = "Hello NnCloudTv";
         return new ModelAndView("hello", "message", message);
     }    
 
-    @RequestMapping("/locale")
+    @RequestMapping("locale")
     public ModelAndView locale(HttpServletRequest req) {
     	String message = req.getLocalName() + ";" + req.getLocalAddr() + req.getLocale().getLanguage();
         return new ModelAndView("hello", "message", message);
     }            
 
     //test email service
-    @RequestMapping("/email")
-    public @ResponseBody String email(HttpServletRequest req) {
+    @RequestMapping("search")
+    public @ResponseBody String search(
+    		@RequestParam String text,
+    		HttpServletRequest req) {
+    	List<NnChannel> channels = NnChannelDao.searchChannelEntries(text);
+    	String result = "size:" + channels.size();
+    	for (NnChannel c : channels) {
+    		result += c.getId() + ";" + c.getName() + "<br/>";
+    	}
+		return result;
+    }            
+    
+    //test email service
+    @RequestMapping("email")
+    public @ResponseBody String email(
+    		@RequestParam String toEmail, 
+    		@RequestParam String toName, 
+    		HttpServletRequest req) {
 		EmailService service = new EmailService();
-		NnEmail mail = new NnEmail("yiwen@teltel.com", "yiwen", NnEmail.SEND_EMAIL_SHARE, "share 9x9", NnEmail.SEND_EMAIL_SHARE, "hello", "world");
+		NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, "share 9x9", NnEmail.SEND_EMAIL_SHARE, "hello", "world");
 		service.sendEmail(mail);
 		return "email sent";
     }            
     
     //db test
-    @RequestMapping("/pdr")
+    @RequestMapping("pdr")
     public @ResponseBody String pdr() { 
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
@@ -71,7 +89,7 @@ public class HelloController {
     }    
 
     //db test through manager
-    @RequestMapping("/pdr_mngt")
+    @RequestMapping("pdr_mngt")
     public @ResponseBody String pdr_mngt() { 
 		PdrRawManager rawMngr = new PdrRawManager();
 		PdrRaw raw = new PdrRaw(1, "session1", "test");
@@ -102,11 +120,13 @@ public class HelloController {
 		return NnNetUtil.textReturn("hello");
 	}
 	
-    @RequestMapping("/truncate")
+    /*
+    @RequestMapping("truncate")
     public @ResponseBody String truncate() { 
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
 			Query query = pm.newQuery("javax.jdo.query.SQL","alter table pdr_raw auto_increment=1");
+			query.setClass(PdrRaw.class);
 			query.execute();
 		} finally {
 			pm.close();
@@ -114,7 +134,6 @@ public class HelloController {
         return "OK";
     }    
     
-    /*
     @RequestMapping("/tx")
     public ModelAndView tx() { 
         MsoManager mngr = new MsoManager();         
@@ -142,7 +161,7 @@ public class HelloController {
        return "OK";
     }
  
-    @RequestMapping("/youtube")
+    @RequestMapping("youtube")
     public ModelAndView youtube() { 
     	Map<String, String> maps = YouTubeLib.getYouTubeEntry("nike", true);
         String msg = "thumbnail:" + maps.get("thumbnail") + "<br/>";
@@ -176,8 +195,6 @@ public class HelloController {
     public @ResponseBody String receive() throws IOException, InterruptedException {
     	String queue_name = "hello";
     	ConnectionFactory factory = new ConnectionFactory();
-        //factory.setHost("localhost");
-        //Connection connection = factory.newConnection();
     	Connection connection = factory.newConnection("localhost");
         Channel channel = connection.createChannel();
 
