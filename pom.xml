@@ -280,12 +280,12 @@
          <version>2.3</version>
       </dependency>
       <!-- Google -->      
+      <dependency>
+         <groupId>com.google.api-client</groupId>
+         <artifactId>google-api-client</artifactId>
+         <version>1.5.1-beta</version>
+      </dependency>	  
       <!-- atomikos -->
-	  <dependency>
-		 <groupId>com.google.api-client</groupId>
-		 <artifactId>google-api-client-extensions</artifactId>
-		 <version>1.5.1-beta</version>
-	  </dependency>
       <!-- 
 	  <dependency>
 		 <groupId>com.atomikos</groupId>
@@ -336,7 +336,7 @@
 	   <artifactId>poi-ooxml</artifactId>
 	   <version>3.7</version>
     </dependency>
-    <!-- JavaMail -->    
+    <!-- JavaMail -->     
     <dependency>
 	   <groupId>javax.mail</groupId>
 	   <artifactId>mail</artifactId>

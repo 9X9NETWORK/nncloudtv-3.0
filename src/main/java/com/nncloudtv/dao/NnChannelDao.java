@@ -44,6 +44,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		return channel;		
 	}	
 
+	//replaced with Apache Lucene
 	@SuppressWarnings("unchecked")
 	public static List<NnChannel> searchChannelEntries(String queryStr) {		
 	    PersistenceManager pm = PMF.getContent().getPersistenceManager();

@@ -52,3 +52,4 @@ python nnprogram_modify.py
 alter table nnset drop column ori_id;
 alter table nnchannel drop column ori_id;
 alter table category drop column ori_id;
+update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/images/facebook-icon.gif' where imageUrl='/WEB-INF/../images/facebook-icon.gif'

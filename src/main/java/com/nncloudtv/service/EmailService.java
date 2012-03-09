@@ -35,6 +35,7 @@ public class EmailService {
             msg.setSubject(subject);
             msg.setText(msgBody);
             Transport.send(msg);
+            
         } catch (Exception e) {
         	NnLogUtil.logException(e);
 		}					
@@ -52,6 +53,7 @@ public class EmailService {
         	Address addrs[] = {addr};
         	msg.setReplyTo(addrs);
             msg.setSubject(email.getSubject());
+            //msg.setContent(email.getBody(), "text/plain");
             msg.setText(email.getBody());
             Transport.send(msg);
         } catch (Exception e) {

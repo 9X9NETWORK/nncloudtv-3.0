@@ -198,6 +198,26 @@ Memcached
 > apt-get install memcached
 
 ================================
+Mail server
+================================
+> apt-get install sendmail
+
+- sendmail configuration (by wilson)
+
+- jetty6 is loading wrong gnumail.jar, fixes:
+a. edit /etc/jetty/start.config:
+comment out the use of gnumail and activation.jar
+doesn't actually take effect, but just to be sure for future use.
+
+b. remove following files(gnumail*.jar) under /usr/share/java/:
+gnumail.jar, gnumail-1.1.2.jar, gnumail-providers.jar, gnumail-providers-1.1.2.jar
+
+c. copy following files to /usr/share/jetty/lib:
+mail-1.4.jar, activation-1.1.jar to 
+ 
+d. upgrade to jetty 7 should be able to solve the problem as well.
+ 
+================================
 Running the app on EC2
 ================================  
 - upload the war and the jar: use SCP with your private key, and upload to the server
@@ -230,4 +250,3 @@ sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port
 
 - stop apache2 (if u ever need it)
 > sudo /etc/init.d/apache2 stop
-
