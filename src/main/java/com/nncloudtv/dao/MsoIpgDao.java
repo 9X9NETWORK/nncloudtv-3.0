@@ -81,13 +81,13 @@ public class MsoIpgDao extends GenericDao<MsoIpg> {
 		return msoIpg;
 	}
 	
-	public MsoIpg findByMsoIdAndSeq(long msoId, int seq) {
+	public MsoIpg findByMsoIdAndSeq(long msoId, short seq) {
 		MsoIpg msoIpg = null;
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(MsoIpg.class);
 			q.setFilter("msoId == msoIdParam && seq == seqParam");
-			q.declareParameters("long msoIdParam, int seqParam");
+			q.declareParameters("long msoIdParam, short seqParam");
 			@SuppressWarnings("unchecked")
 			List<MsoIpg> results = (List<MsoIpg>)q.execute(msoId, seq);
 			if (results.size() > 0) {

@@ -2,17 +2,21 @@ package com.nncloudtv.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.spy.memcached.MemcachedClient;
 
 import com.nncloudtv.dao.MsoConfigDao;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 
 public class MsoConfigManager {
 
 	private MsoConfigDao configDao = new MsoConfigDao();
+    protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());    
+	
 
 	public MsoConfig create(MsoConfig config) {
 		Date now = new Date();
@@ -40,27 +44,29 @@ public class MsoConfigManager {
 		if (!cacheReset && cache != null) {
 			String result = (String)cache.get(cacheKey);
 			if (result != null){
-				return Boolean.parseBoolean(result);
-			}
-			
+				log.info("value from cache: key=" + cacheKey + "value=" + result);
+				return NnStringUtil.stringToBool(result);
+			}			
 		}
 		boolean value = false;
-		MsoConfig config = new MsoConfigDao().findByItem(key);		
+		MsoConfig config = new MsoConfigDao().findByItem(key);
 		if (config != null) {
 			if (cache != null) {
 				cache.set(cacheKey, CacheFactory.EXP_DEFAULT, config.getValue());
 			}
-			value = Boolean.parseBoolean(config.getValue());
+			value = NnStringUtil.stringToBool(config.getValue());
 		}
-		return value;		
+		return value;
 	}
 	
 	public static boolean isInReadonlyMode(boolean cacheReset) {
 		return MsoConfigManager.getBooleanValueFromCache(MsoConfig.RO, cacheReset);
-	}	
-
+	}
+		
 	public static boolean isQueueEnabled(boolean cacheReset) {
-		return MsoConfigManager.getBooleanValueFromCache(MsoConfig.QUEUED, cacheReset);	}	
+		boolean status = MsoConfigManager.getBooleanValueFromCache(MsoConfig.QUEUED, cacheReset);	 
+		return status; 	
+	}
 	
 	public List<MsoConfig> findByMso(Mso mso) {
 		return configDao.findByMso(mso);

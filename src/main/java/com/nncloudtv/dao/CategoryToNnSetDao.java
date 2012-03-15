@@ -41,7 +41,7 @@ public class CategoryToNnSetDao extends GenericDao<CategoryToNnSet> {
 		List<CategoryToNnSet> detached = new ArrayList<CategoryToNnSet>();
 		try {
 			Query query = pm.newQuery(CategoryToNnSet.class);
-			query.setFilter("setIdId == setIdParam");
+			query.setFilter("setId == setIdParam");
 			query.declareParameters("long setIdParam");
 			@SuppressWarnings("unchecked")
 			List<CategoryToNnSet> ccs = (List<CategoryToNnSet>)query.execute(setId);

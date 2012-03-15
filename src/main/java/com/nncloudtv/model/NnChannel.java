@@ -100,7 +100,7 @@ public class NnChannel implements Serializable {
 	private String errorReason;
 		
 	@NotPersistent
-	private int seq; //use with subscription, to specify sequence in IPG. 
+	private short seq; //use with subscription, to specify sequence in IPG. 
 		
 	public static final short SORT_NEWEST_TO_OLDEST = 1; //default
 	public static final short SORT_OLDEST_TO_NEWEST = 2;
@@ -247,11 +247,11 @@ public class NnChannel implements Serializable {
 		this.sourceUrl = sourceUrl;
 	}
 
-	public int getSeq() {
+	public short getSeq() {
 		return seq;
 	}
 
-	public void setSeq(int seq) {
+	public void setSeq(short seq) {
 		this.seq = seq;
 	}
 

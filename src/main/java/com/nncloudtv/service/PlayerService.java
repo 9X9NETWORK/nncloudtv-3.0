@@ -39,12 +39,12 @@ public class PlayerService {
 	public Model prepareSetInfo(Model model, String name,
 			HttpServletResponse resp) {		
 		NnSetManager setMngr = new NnSetManager();
-		NnSet channelSet = setMngr.findBybeautifulUrl(name);
-		if (channelSet != null) {
+		NnSet set = setMngr.findBybeautifulUrl(name);
+		if (set != null) {
 			log.info("found set name = " + name);
-			model.addAttribute("fbName", NnStringUtil.htmlSafeChars(channelSet.getName()));
-			model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(channelSet.getIntro()));
-			model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(channelSet.getImageUrl()));
+			model.addAttribute("fbName", NnStringUtil.htmlSafeChars(set.getName()));
+			model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(set.getIntro()));
+			model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(set.getImageUrl()));
 		}
 		
 		return model;

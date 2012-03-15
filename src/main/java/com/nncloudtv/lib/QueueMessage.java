@@ -15,10 +15,10 @@ public class QueueMessage {
 	protected static final Logger log = Logger.getLogger(QueueMessage.class.getName());
 	
 	public final static String HELLO = "hello";
-	public final static String BRAND_COUNTER = "brand_counter";
-	public final static String CATEGORY_CREATE = "category_create";
-	public final static String CHANNEL_CREATE_RELATED = "channel_create_related";	
-	public final static String TRANSCODING_SUBMIT = "transcoding_submit";
+	public final static String VISITOR_COUNTER = "visitor_counter";
+	public final static String CATEGORY_CUD_RELATED = "category_cud_related";
+	public final static String CHANNEL_CUD_RELATED = "channel_cud_related";	
+	public final static String SET_CUD_RELATED = "set_cud_related";	
 	
 	public static void send(String host, String queue, String message) throws IOException {
 		ConnectionFactory factory = new ConnectionFactory();
@@ -62,20 +62,17 @@ public class QueueMessage {
 	    return obj;
 	}	
 	
-	//!!!
 	public void fanout(String host, String exchange_name, Object msg) {
 	   ConnectionFactory factory = new ConnectionFactory();
        Connection connection;
        Channel channel;
 		try {
-		   //connection = factory.newConnection();
-			connection = factory.newConnection(host);
+		   connection = factory.newConnection(host);
 	       channel = connection.createChannel();
 	       channel.exchangeDeclare(exchange_name, "fanout");
 	       channel.basicPublish(exchange_name, "", null, this.toByteArray(msg));	       
 		   channel.close(); //finally
 		   connection.close();
-	       //System.out.println(" [x] Sent '" + message + "'");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -87,9 +84,12 @@ public class QueueMessage {
 	   Connection connection = factory.newConnection(host);
        Channel channel = connection.createChannel();
        channel.exchangeDeclare(exchange_name, "fanout");
-       channel.basicPublish(exchange_name, "", null, msg.getBytes());	       
+       String message = msg;
+       if (msg == null)
+    	   message = "";
+       channel.basicPublish(exchange_name, "", null, message.getBytes());	       
        channel.close();
-       connection.close();		
+       connection.close();		              
 	}
 	
 }

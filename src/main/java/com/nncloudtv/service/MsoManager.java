@@ -21,14 +21,16 @@ public class MsoManager {
 	
 	private MsoDao msoDao = new MsoDao();	
 	
-	public int addMsoVisitCounter(String msoName) {
-		String counterName = msoName + "BrandInfo";
+	public int addMsoVisitCounter(boolean readOnly) {		
+		String counterName = "9x9" + "BrandInfo";
 		CounterFactory factory = new CounterFactory();
 		ShardedCounter counter = factory.getOrCreateCounter(counterName);
-		counter.increment();			
+		if (!readOnly) {
+			counter.increment();
+		}
 		return counter.getCount();
 	}
-
+	
 	// only 9x9 mso will be stored in cache
 	public Mso save(Mso mso) {
 		if (this.findByName(mso.getName()) != null) { 

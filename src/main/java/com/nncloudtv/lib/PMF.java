@@ -40,7 +40,7 @@ public final class PMF {
 	public static PersistenceManagerFactory getContent() {
 		return pmfInstanceContent;
 	}
-
+	
 	public static PersistenceManagerFactory getAnalytics() {
 		return pmfInstanceAnalytics;
 	}

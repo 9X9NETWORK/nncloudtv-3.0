@@ -27,7 +27,7 @@ public class NnUserSubscribe implements Serializable {
 	private long channelId;
 	
 	@Persistent
-	private int seq; //from 1-81
+	private short seq; //from 1-81
 	
 	@Persistent
 	private short type; //The value derived from msoIpg
@@ -38,7 +38,7 @@ public class NnUserSubscribe implements Serializable {
 	@Persistent
 	private Date updateDate;
 	
-	public NnUserSubscribe(long userId, long channelId, int seq, short type) {
+	public NnUserSubscribe(long userId, long channelId, short seq, short type) {
 		this.userId = userId;
 		this.channelId= channelId;
 		this.seq = seq;
@@ -77,11 +77,11 @@ public class NnUserSubscribe implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public int getSeq() {
+	public short getSeq() {
 		return seq;
 	}
 
-	public void setSeq(int seq) {
+	public void setSeq(short seq) {
 		this.seq = seq;
 	}
 

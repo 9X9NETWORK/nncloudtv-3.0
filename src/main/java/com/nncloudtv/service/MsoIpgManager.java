@@ -50,7 +50,7 @@ public class MsoIpgManager {
 		return msoIpgDao.findByMsoIdAndChannelId(msoId, channelId);
 	}
 	
-	public MsoIpg findByMsoIdAndSeq(long msoId, int seq) {
+	public MsoIpg findByMsoIdAndSeq(long msoId, short seq) {
 		return msoIpgDao.findByMsoIdAndSeq(msoId, seq);
 	}
 	

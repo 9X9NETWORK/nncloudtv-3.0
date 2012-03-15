@@ -100,7 +100,7 @@ public class NnChannelManager {
 		channel = channelDao.save(channel);
 		NnChannel[] channels = {original, channel};
 		if (MsoConfigManager.isQueueEnabled(true)) {
-	        new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CREATE_RELATED, channels);
+	        new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CUD_RELATED, channels);
 		} else {
 			this.processChannelRelatedCounter(channels);
 		}

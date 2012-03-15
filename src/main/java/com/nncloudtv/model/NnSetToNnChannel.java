@@ -27,7 +27,7 @@ public class NnSetToNnChannel implements Serializable {
 	private long setId;
 	
 	@Persistent
-	private int seq;
+	private short seq;
 	
 	@Persistent
 	private Date createDate;
@@ -35,7 +35,7 @@ public class NnSetToNnChannel implements Serializable {
 	@Persistent
 	private Date updateDate;
 
-	public NnSetToNnChannel(long setId, long channelId, int seq) {
+	public NnSetToNnChannel(long setId, long channelId, short seq) {
 		this.setId = setId;
 		this.channelId = channelId;
 		this.seq = seq;
@@ -65,11 +65,11 @@ public class NnSetToNnChannel implements Serializable {
 		this.channelId = channelId;
 	}
 
-	public int getSeq() {
+	public short getSeq() {
 		return seq;
 	}
 
-	public void setSeq(int seq) {
+	public void setSeq(short seq) {
 		this.seq = seq;
 	}
 

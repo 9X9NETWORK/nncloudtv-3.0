@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.datastore.DataStoreCache;
+
 import net.spy.memcached.MemcachedClient;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.NnSetDao;
 import com.nncloudtv.dao.NnSetToNnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.PMF;
+import com.nncloudtv.lib.QueueMessage;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
@@ -36,7 +41,7 @@ public class NnSetManager {
 	
 	public NnSet create(NnSet set, List<NnChannel> channels) {		
 		if (this.findByName(set.getName()) != null) {
-			log.warning("channelSet already exists, name: " + set.getName());
+			log.warning("set already exists, name: " + set.getName());
 			return null;
 		}
 		Date now = new Date();
@@ -61,9 +66,20 @@ public class NnSetManager {
 	}
 	
 	public void processChannelRelatedCounter(NnSet set, int cnt) {
-		if (cnt > 0) {
-			set.setChannelCnt(set.getChannelCnt() + cnt);
+		//setDao.evictAll();
+		PersistenceManagerFactory pmf = PMF.getContent(); 
+		DataStoreCache cache = pmf.getDataStoreCache();
+		cache.evictAll();
+		
+		log.info("<<<<<<<<< original:" + set.getChannelCnt());
+		log.info("<<<<<<<<< cnt:" + cnt);
+		int count = set.getChannelCnt() + cnt;
+		log.info("<<<<<<<<< add:" + count);
+		if (count > 0) {
+			//change set counter			
+			set.setChannelCnt(count);
 			setDao.save(set);
+			log.info("<<<<<<<<< save:" + set.getId());
 			//change category counter
 			CategoryManager catMngr = new CategoryManager();
 			catMngr.changeChannelCntBySet(set, cnt);
@@ -74,22 +90,31 @@ public class NnSetManager {
 		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
 		int newChCnt = 0;
 		for (NnChannel channel : channels) {
-			if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
-				newChCnt++;
-			}
 			if (dao.findBySetAndChannel(set.getId(), channel.getId()) == null) {
 				NnSetToNnChannel sToC = new NnSetToNnChannel(set.getId(), channel.getId(), channel.getSeq()); 
-				dao.save(sToC);				
+				dao.save(sToC);
+				if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
+					newChCnt++;
+				}				
 			}
 		}
-		if (MsoConfigManager.isQueueEnabled(false))
-			this.processChannelRelatedCounter(set, newChCnt);
-		/*
-		if (MsoConfigManager.isQueueEnabled(true)) {
-	        new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CREATE_RELATED, channels);
-		} else {			
+		PersistenceManagerFactory pmf = PMF.getContent(); 
+		DataStoreCache cache = pmf.getDataStoreCache();
+		cache.evictAll();
+
+		Object[] obj = new Object[2];
+		if (newChCnt > 0) {
+			if (MsoConfigManager.isQueueEnabled(false)) {
+				setDao.evict(set);
+				log.info("throw to queue <<<<<<<" + set.getChannelCnt());
+				obj[0] = set;
+				obj[1] = newChCnt;
+		        new QueueMessage().fanout("localhost",QueueMessage.SET_CUD_RELATED, obj);
+			} else {
+				this.processChannelRelatedCounter(set, newChCnt);
+				log.info("process channel related");
+			}
 		}
-		*/
 	}
 
 	public List<NnSet> findSetsByChannel(long channelId) {
@@ -154,14 +179,14 @@ public class NnSetManager {
 	public List<NnChannel> findPlayerChannelsById(long setId) {
 		NnSetChannelManager scMngr = new NnSetChannelManager();
 		NnChannelManager channelMngr = new NnChannelManager();		
-		List<NnSetToNnChannel> scs = scMngr.findBySet(setId);
+		List<NnSetToNnChannel> relations = scMngr.findBySet(setId);
 		ArrayList<NnChannel> results = new ArrayList<NnChannel>();
 		
-		for (NnSetToNnChannel sc : scs) {
-			NnChannel c = channelMngr.findById(sc.getChannelId());
+		for (NnSetToNnChannel sToC : relations) {
+			NnChannel c = channelMngr.findById(sToC.getChannelId());
 			if (c != null) {
 				if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic()) {
-					c.setSeq(sc.getSeq());
+					c.setSeq(sToC.getSeq());
 					results.add(c);
 				}
 			}
@@ -169,8 +194,8 @@ public class NnSetManager {
 		return results;
 	}
 
-	public NnSet findById(long channelSetId) {
-		return setDao.findById(channelSetId);
+	public NnSet findById(long setId) {
+		return setDao.findById(setId);
 	}
 
 	//!!! cache

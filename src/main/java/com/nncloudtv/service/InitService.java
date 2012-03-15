@@ -326,7 +326,7 @@ public class InitService {
 			Hashtable<String, NnChannel> table = new Hashtable<String, NnChannel>();
  			for (int i=0; i<setList.size(); i++) {
  				System.out.println(setList.get(i).getName() + NnSetList.get(i));
- 				int j=1;
+ 				short j=1;
  				for (String url : NnSetList.get(i)) {
 					NnChannel c = table.get(url);
  					if (c == null)

@@ -75,14 +75,14 @@ public class NnSetToNnChannelDao extends GenericDao<NnSetToNnChannel> {
 		return detached;
 	}
 		
-	public NnSetToNnChannel findBySetAndSeq(long setId, int seq) {		
+	public NnSetToNnChannel findBySetAndSeq(long setId, short seq) {		
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		NnSetToNnChannel result = null;
 		
 		try {
 			Query query = pm.newQuery(NnSetToNnChannel.class);
 			query.setFilter("setId == setIdParam && seq == seqParam");
-			query.declareParameters("long setIdParam, int seqParam");
+			query.declareParameters("long setIdParam, short seqParam");
 			@SuppressWarnings("unchecked")
 			List<NnSetToNnChannel> list = (List<NnSetToNnChannel>)query.execute(setId, seq);
 			if (list.size() > 0)

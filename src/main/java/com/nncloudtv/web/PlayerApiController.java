@@ -270,7 +270,7 @@ public class PlayerApiController {
 	 */	
 	@RequestMapping(value="brandInfo")
 	public ResponseEntity<String> brandInfo(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
-		log.info("brandInfo:" + brandName);
+		//log.info("brandInfo:" + brandName);  //don't care
 		this.prepService(req);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
@@ -1210,5 +1210,32 @@ public class PlayerApiController {
 		}
 		return NnNetUtil.textReturn(output);
 	}
+	
+	/**
+	 * Mark a program bad when player sees it 
+	 * 
+	 * @param user user token
+	 * @param program programId
+	 */	
+	@RequestMapping(value="programRemove")
+	public ResponseEntity<String> programRemove(
+			@RequestParam(value="program", required=false) String programId,
+			@RequestParam(value="user", required=false) String userToken,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		int status = this.prepService(req);
+		if (status != NnStatusCode.SUCCESS)
+			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+
+		log.info("bad program:" + programId + ";reported by user:" + userToken);
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			output = playerApiService.programRemove(programId, userToken);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+	
 	
 }

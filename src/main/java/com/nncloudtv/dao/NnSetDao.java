@@ -37,10 +37,11 @@ public class NnSetDao extends GenericDao<NnSet> {
 	}	
 	
 	public NnSet findById(long id) {
-		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		NnSet cs = null;
 		try {
 			cs = pm.getObjectById(NnSet.class, id);
+			//pm.refresh(cs);
 			cs = pm.detachCopy(cs);
 		} catch (JDOObjectNotFoundException e) {
 		} finally {

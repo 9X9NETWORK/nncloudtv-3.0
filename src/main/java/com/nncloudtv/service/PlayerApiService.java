@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
@@ -83,26 +82,22 @@ public class PlayerApiService {
         return output;
     }    
 
-    public int addMsoInfoVisitCounter(String msoName) {
-        try {
-            new QueueMessage().fanout("localhost",QueueMessage.BRAND_COUNTER, msoName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }        
-        String counterName = msoName + "BrandInfo";
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getOrCreateCounter(counterName);            
-        return counter.getCount()+1;                                 
+    public int addMsoInfoVisitCounter(boolean readOnly) {
+    	if (!readOnly) {
+    		if (MsoConfigManager.isQueueEnabled(true)) {
+    	        try {
+    	        	log.info("quque enabled");
+					new QueueMessage().fanout("localhost",QueueMessage.VISITOR_COUNTER, null);
+				} catch (IOException e) {
+					NnLogUtil.logException((Exception) e);
+				}
+    		} else {
+    			log.info("quque not enabled");
+    			return msoMngr.addMsoVisitCounter(readOnly);
+    		}
+    	}
+    	return msoMngr.addMsoVisitCounter(readOnly); 								    
     }
-    
-	public int addMsoInfoVisitCounter(String msoName, boolean readOnly) {		
-		String counterName = msoName + "BrandInfo";
-		CounterFactory factory = new CounterFactory();
-		ShardedCounter counter = factory.getOrCreateCounter(counterName);
-		if (!readOnly)
-			counter.increment();			
-		return counter.getCount(); 								
-	}
             
     //assemble key and value string
     public static String assembleKeyValue(String key, String value) {
@@ -313,7 +308,7 @@ public class PlayerApiService {
 		//counter
 		int counter = 0;
 		if (!readOnly)
-			counter = this.addMsoInfoVisitCounter(mso.getName(), readOnly);		
+			counter = this.addMsoInfoVisitCounter(readOnly);		
 		result[0] += PlayerApiService.assembleKeyValue("brandInfoCounter", String.valueOf(counter));
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }    
@@ -480,7 +475,7 @@ public class PlayerApiService {
 				if (grid == null) {
 					s = subMngr.findByUserAndChannel(user, Long.parseLong(channelId));
 				} else {
-					s = subMngr.findChannelSubscription(user, Long.parseLong(channelId), Integer.parseInt(grid));
+					s = subMngr.findChannelSubscription(user, Long.parseLong(channelId), Short.parseShort(grid));
 				}
 				subMngr.unsubscribeChannel(user, s);				
 				NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
@@ -529,7 +524,8 @@ public class PlayerApiService {
 		if (!status) {
 			//the general status shows error even there's only one error
 			return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);
-		}
+		}				
+		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
@@ -616,14 +612,14 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
 		//sort by seq
 		if (channelPos) {
-			TreeMap<Integer, NnChannel> channelMap = new TreeMap<Integer, NnChannel>();
+			TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
 			for (NnChannel c : channels) {
 				channelMap.put(c.getSeq(), c);				
 			}
-			Iterator<Entry<Integer, NnChannel>> it = channelMap.entrySet().iterator();
+			Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
 	    	channels.clear();
 		    while (it.hasNext()) {
-		        Map.Entry<Integer, NnChannel> pairs = (Map.Entry<Integer, NnChannel>)it.next();
+		        Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
 		    	channels.add((NnChannel)pairs.getValue());
 		    }
 		}
@@ -688,7 +684,7 @@ public class PlayerApiService {
 		
 		//subscribe
 		NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-		boolean success = subMngr.subscribeChannel(user, channel.getId(), Integer.parseInt(grid), MsoIpg.TYPE_GENERAL);
+		boolean success = subMngr.subscribeChannel(user, channel.getId(), Short.parseShort(grid), MsoIpg.TYPE_GENERAL);
 		String result[] = {""};
 		if (!success) {
 			return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);
@@ -808,7 +804,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         
         NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-        boolean success = subMngr.moveSeq(user, Integer.parseInt(grid1), Integer.parseInt(grid2));
+        boolean success = subMngr.moveSeq(user, Short.parseShort(grid1), Short.parseShort(grid2));
 
         if (!success) { return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_ERROR, null); }
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
@@ -1384,4 +1380,21 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}
 	
+	public String programRemove(String programId, String userToken) {
+		if (programId == null || userToken == null) {
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		}
+		try {
+			NnProgramManager programMngr = new NnProgramManager();
+			NnProgram program = programMngr.findById(Long.parseLong(programId));
+			program.setStatus(NnProgram.STATUS_ERROR);
+			programMngr.save(program);
+		} catch (NumberFormatException e) {
+			log.info("pass invalid program id:" + programId);
+		} catch (NullPointerException e) {
+			log.info("program does not exist: " + programId);
+		}
+		return this.assembleMsgs(NnStatusCode.SUCCESS, null);		
+	}
+
 }

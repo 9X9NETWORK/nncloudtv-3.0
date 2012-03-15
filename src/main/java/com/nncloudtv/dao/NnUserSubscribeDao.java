@@ -57,13 +57,13 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
 		}
 	}
 	
-	public NnUserSubscribe findByUserAndSeq(NnUser user, int seq) {
+	public NnUserSubscribe findByUserAndSeq(NnUser user, short seq) {
 		NnUserSubscribe s = null;
 		PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
 		try {
 			Query q = pm.newQuery(NnUserSubscribe.class);
 			q.setFilter("userId == userIdParam && seq == seqParam");
-			q.declareParameters("long userIdParam, int seqParam");
+			q.declareParameters("long userIdParam, short seqParam");
 			q.setOrdering("seq asc");
 			@SuppressWarnings("unchecked")
 			List<NnUserSubscribe> subs = (List<NnUserSubscribe>)q.execute(user.getId(), seq);
@@ -77,13 +77,13 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
 		return s;
 	}	 
 	
-	public NnUserSubscribe findChannelSubscription(NnUser user, long channelId, int seq) {
+	public NnUserSubscribe findChannelSubscription(NnUser user, long channelId, short seq) {
 		PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
 		NnUserSubscribe detached = null;
 		try {
 			Query q = pm.newQuery(NnUserSubscribe.class);
 			q.setFilter("userId == userIdParam && channelId == channelIdParam && seq == seqParam");
-			q.declareParameters("long userIdParam, long chanenlIdParam, int seqParam");
+			q.declareParameters("long userIdParam, long channelIdParam, short seqParam");
 			q.setOrdering("seq asc");
 			@SuppressWarnings("unchecked")
 			List<NnUserSubscribe> subs = (List<NnUserSubscribe>)q.execute(user.getId(), channelId, seq);

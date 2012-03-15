@@ -37,12 +37,12 @@ public class NnSetChannelManager {
 		return dao.findBySet(setId);
 	}
 
-	public NnSetToNnChannel findBySetAndChannel(long channelSetId, long channelId) {
-		return dao.findBySetAndChannel(channelSetId, channelId);
+	public NnSetToNnChannel findBySetAndChannel(long setId, long channelId) {
+		return dao.findBySetAndChannel(setId, channelId);
 	}	
 	
 	//move from seq1 to seq2
-	public boolean moveSeq(long setId, int seq1, int seq2) {
+	public boolean moveSeq(long setId, short seq1, short seq2) {
 		NnSetToNnChannel sc1 = dao.findBySetAndSeq(setId, seq1);
 		NnSetToNnChannel sc2 = dao.findBySetAndSeq(setId, seq2);
 		if (sc1 == null) {return false;}
@@ -55,10 +55,10 @@ public class NnSetChannelManager {
 		return true;
 	}
 	
-	public void addChannel(long channelSetId, NnChannel channel) {
-		NnSetToNnChannel sc = dao.findBySetAndSeq(channelSetId, channel.getSeq());
+	public void addChannel(long setId, NnChannel channel) {
+		NnSetToNnChannel sc = dao.findBySetAndSeq(setId, channel.getSeq());
 		if (sc == null) {
-			sc = new NnSetToNnChannel(channelSetId, channel.getId(), channel.getSeq());
+			sc = new NnSetToNnChannel(setId, channel.getId(), channel.getSeq());
 			this.create(sc);
 		} else {
 			sc.setChannelId(channel.getId());
@@ -66,8 +66,8 @@ public class NnSetChannelManager {
 		}
 	}
 	
-	public void removeChannel(long channelSetId, int seq) {
-		NnSetToNnChannel csc = dao.findBySetAndSeq(channelSetId, seq);
+	public void removeChannel(long setId, short seq) {
+		NnSetToNnChannel csc = dao.findBySetAndSeq(setId, seq);
 		if (csc != null)
 			this.delete(csc);
 	}

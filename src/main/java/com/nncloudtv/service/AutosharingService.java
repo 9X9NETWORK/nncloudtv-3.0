@@ -60,8 +60,8 @@ public class AutosharingService {
 		return setAutosharingDao.findBySetAndMso(setId, msoId);
 	}
 	
-	public NnSetAutosharing findSetAutosharing(long msoId, long channelSetId, short type) {
-		return setAutosharingDao.findSetAutosharing(msoId, channelSetId, type);
+	public NnSetAutosharing findSetAutosharing(long msoId, long setId, short type) {
+		return setAutosharingDao.findSetAutosharing(msoId, setId, type);
 	}
 	
 	public void create(NnSetAutosharing autosharing) {

@@ -56,17 +56,17 @@ public class NnSetAutosharingDao extends GenericDao<NnSetAutosharing> {
 		return results;
 	}
 	
-	public NnSetAutosharing findSetAutosharing(long msoId, long channelSetId, short type) {
+	public NnSetAutosharing findSetAutosharing(long msoId, long setId, short type) {
 		
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		NnSetAutosharing result = null;
 		
 		try {
 			Query query = pm.newQuery(NnSetAutosharing.class);
-			query.setFilter("msoId == msoIdParam && channelSetId == channelSetIdParam && type == typeParam");
-			query.declareParameters("long msoIdParam, long channelSetIdParam, short typeParam");
+			query.setFilter("msoId == msoIdParam && setId == setIdParam && type == typeParam");
+			query.declareParameters("long msoIdParam, long setIdParam, short typeParam");
 			@SuppressWarnings("unchecked")
-			List<NnSetAutosharing> list = (List<NnSetAutosharing>) query.execute(msoId, channelSetId, type);
+			List<NnSetAutosharing> list = (List<NnSetAutosharing>) query.execute(msoId, setId, type);
 			if (list.size() > 0)
 				result = pm.detachCopy(list.get(0));
 		} catch (JDOObjectNotFoundException e) {

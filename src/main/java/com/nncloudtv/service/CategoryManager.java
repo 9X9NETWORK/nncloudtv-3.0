@@ -55,13 +55,6 @@ public class CategoryManager {
 		}
 	}
 
-	/*
-	public List<CategoryToNnSet> findSetsByCategory(long categoryId) {
-		CategoryToNnSetDao dao = new CategoryToNnSetDao();
-		return dao.findByCategory(categoryId);
-	}
-	*/
-
 	public void changeChannelCntBySet(NnSet set, int cnt) {
 		List<NnSet> sets = new ArrayList<NnSet>();
 		sets.add(set);
@@ -71,7 +64,7 @@ public class CategoryManager {
 			categoryDao.save(c);
 		}		
 	}
-	
+
 	public List<Category> findBySets(List<NnSet> sets) {
 		CategoryToNnSetDao dao = new CategoryToNnSetDao();
 		List<CategoryToNnSet> list = new ArrayList<CategoryToNnSet>();

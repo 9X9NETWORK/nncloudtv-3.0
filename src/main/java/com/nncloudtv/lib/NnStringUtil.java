@@ -9,6 +9,14 @@ import java.util.logging.Logger;
 public class NnStringUtil {
 	protected static final Logger log = Logger.getLogger(NnStringUtil.class.getName());	
 	public static final int MAX_JDO_STRING_LENGTH = 500;
+
+	public static boolean stringToBool(String s) {
+	  if (s.equals("1"))
+	    return true;
+	  if (s.equals("0"))
+	    return false;
+	  throw new IllegalArgumentException(s +" is not a bool");
+	}
 	
 	public static String capitalize(String str) {
 		if (str == null) {return null;}

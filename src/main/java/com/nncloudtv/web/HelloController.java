@@ -2,6 +2,7 @@ package com.nncloudtv.web;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,12 @@ import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
+import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.PdrRaw;
 import com.nncloudtv.service.EmailService;
+import com.nncloudtv.service.MsoConfigManager;
+import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.PdrRawManager;
 import com.nncloudtv.service.PlayerApiService;
 import com.rabbitmq.client.Channel;
@@ -44,13 +49,20 @@ public class HelloController {
         return new ModelAndView("hello", "message", message);
     }    
 
+    /*
+    @RequestMapping("root")
+    public ModelAndView root() { 
+        String message = "Hello NnCloudTv";
+        return new ModelAndView("hello", "message", message);
+    } 
+    */   
+    
     @RequestMapping("locale")
     public ModelAndView locale(HttpServletRequest req) {
     	String message = req.getLocalName() + ";" + req.getLocalAddr() + req.getLocale().getLanguage();
         return new ModelAndView("hello", "message", message);
     }            
-
-    //test email service
+    
     @RequestMapping("search")
     public @ResponseBody String search(
     		@RequestParam String text,
@@ -113,36 +125,27 @@ public class HelloController {
 		return NnNetUtil.textReturn(output);
 	}
 	
-	@RequestMapping("queue_db") 
+	@RequestMapping("queue_visitor") 
 	public ResponseEntity<String> queue_db() {
+		boolean status = MsoConfigManager.isQueueEnabled(true);
 		PlayerApiService service = new PlayerApiService();
-		service.addMsoInfoVisitCounter("9x9");
-		return NnNetUtil.textReturn("hello");
+		int cnt = service.addMsoInfoVisitCounter(false);
+		return NnNetUtil.textReturn(String.valueOf(status) + ";" + cnt);
 	}
-	
-    /*
-    @RequestMapping("truncate")
-    public @ResponseBody String truncate() { 
-		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
-		try {
-			Query query = pm.newQuery("javax.jdo.query.SQL","alter table pdr_raw auto_increment=1");
-			query.setClass(PdrRaw.class);
-			query.execute();
-		} finally {
-			pm.close();
-		}        
-        return "OK";
-    }    
-    
-    @RequestMapping("/tx")
-    public ModelAndView tx() { 
-        MsoManager mngr = new MsoManager();         
-        mngr.test(new Mso("meow", "meow", "a@a.com", Mso.TYPE_NN));        
-        String message = "hello transaction";
-        return new ModelAndView("hello", "message", message);
-    } 
-    */   
-        
+
+	@RequestMapping("queue_addChToSet") 
+	public ResponseEntity<String> queue_addChToSet(
+			@RequestParam String sid,
+			@RequestParam String cid) {
+		boolean status = MsoConfigManager.isQueueEnabled(true);
+		NnSetManager setMngr = new NnSetManager();
+		NnSet set = setMngr.findById(Long.parseLong(sid));
+		List<NnChannel> channels = new ArrayList<NnChannel>();
+		channels.add(new NnChannelManager().findById(Long.parseLong(cid)));
+		setMngr.addChannels(set, channels);
+		return NnNetUtil.textReturn(String.valueOf(status));
+	}
+	        
     @RequestMapping("fanout")
     public @ResponseBody String fanout(@RequestParam String exchange_name) throws IOException {
  	   ConnectionFactory factory = new ConnectionFactory();
@@ -150,12 +153,9 @@ public class HelloController {
        Channel channel = connection.createChannel();
 
        channel.exchangeDeclare(exchange_name, "fanout");
-
        String message = "hello superman";
-
        channel.basicPublish(exchange_name, "", null, message.getBytes());
        System.out.println(" [x] Sent '" + message + "'");
-
        channel.close();
        connection.close();
        return "OK";

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.datastore.DataStoreCache;
 
 import com.nncloudtv.lib.PMF;
 
@@ -17,6 +18,20 @@ public class GenericDao<T> {
 		
 	public GenericDao(Class<T> daoClass) {
 		this.daoClass = daoClass;
+	}
+	
+	public void evictAll() {
+		DataStoreCache cache = PMF.getContent().getDataStoreCache();
+		if (cache != null) {
+			cache.evictAll();
+		}
+	}
+
+	public void evict(T dao) {
+		DataStoreCache cache = PMF.getContent().getDataStoreCache();
+		if (cache != null) {
+			cache.evict(dao);
+		}
 	}
 	
 	public T save(T dao) {

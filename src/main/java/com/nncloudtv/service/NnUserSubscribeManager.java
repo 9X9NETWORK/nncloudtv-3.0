@@ -37,7 +37,7 @@ public class NnUserSubscribeManager {
 		return true;
 	}
 
-	public boolean subscribeChannel(NnUser user, long channelId, int seq, short type) {
+	public boolean subscribeChannel(NnUser user, long channelId, short seq, short type) {
 		NnUserSubscribe existed = subDao.findByUserAndChannel(user, channelId);
 		if (existed != null) {
 			log.info("user trying to subscribe a channel that has been subscribed." + channelId);
@@ -77,7 +77,7 @@ public class NnUserSubscribeManager {
 		return true;
 	}
 
-	public NnUserSubscribe findChannelSubscription(NnUser user, long channelId, int seq) {
+	public NnUserSubscribe findChannelSubscription(NnUser user, long channelId, short seq) {
 		NnUserSubscribe s = subDao.findChannelSubscription(user, channelId, seq);
 		return s;
 	}
@@ -103,7 +103,7 @@ public class NnUserSubscribeManager {
 		CntSubscribeManager cntMngr = new CntSubscribeManager();
 		for (NnUserSubscribe s : subs) {
 			NnChannel c = channelMngr.findById(s.getChannelId()); //!!!
-			if ( c!= null) {
+			if (c != null) {
 				c.setSeq(s.getSeq());
 				c.setType(s.getType());
 				CntSubscribe cnt = cntMngr.findByChannel(c.getId());			
@@ -118,7 +118,7 @@ public class NnUserSubscribeManager {
 	}
 
 	//move from seq1 to seq2
-	public boolean moveSeq(NnUser user, int seq1, int seq2) {						
+	public boolean moveSeq(NnUser user, short seq1, short seq2) {						
 		NnUserSubscribe sub = subDao.findByUserAndSeq(user, seq1);
 		if (sub == null) {return false;}
 		sub.setSeq(seq2);

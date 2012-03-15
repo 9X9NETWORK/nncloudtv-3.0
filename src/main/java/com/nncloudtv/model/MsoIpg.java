@@ -31,7 +31,7 @@ public class MsoIpg  implements Serializable {
 	private short type;
 	
 	@Persistent
-	private int seq; //the sequence in the ipg
+	private short seq; //the sequence in the ipg
 	
 	@Persistent
 	private Date createDate;
@@ -39,7 +39,7 @@ public class MsoIpg  implements Serializable {
 	@Persistent
 	private Date updateDate;
 	
-	public MsoIpg(long msoId, long channelId, int seq, short type) {
+	public MsoIpg(long msoId, long channelId, short seq, short type) {
 		this.msoId = msoId;
 		this.channelId = channelId;
 		this.seq = seq;
@@ -78,11 +78,11 @@ public class MsoIpg  implements Serializable {
 		this.type = type;
 	}
 
-	public int getSeq() {
+	public short getSeq() {
 		return seq;
 	}
 
-	public void setSeq(int seq) {
+	public void setSeq(short seq) {
 		this.seq = seq;
 	}
 

@@ -106,10 +106,10 @@ public class CmsApiController {
 	@RequestMapping("defaultNnSetCategory")
 	public @ResponseBody Category defaultNnSetCategory(@RequestParam Long msoId) {
 		CmsApiService cmsService = new CmsApiService();
-		NnSet channelSet = cmsService.getDefaultNnSet(msoId);
-		if (channelSet == null)
+		NnSet set = cmsService.getDefaultNnSet(msoId);
+		if (set == null)
 			return null;
-		Category category = cmsService.whichSystemCategoryContainingTheSet(channelSet.getId());
+		Category category = cmsService.whichSystemCategoryContainingTheSet(set.getId());
 		
 		return category;
 	}
@@ -264,7 +264,7 @@ public class CmsApiController {
 					log.warning("channel id does not exist: " + split[i]);
 					continue;
 				}
-				cscMngr.create(new NnSetToNnChannel(setId, channel.getId(), i + 1));
+				cscMngr.create(new NnSetToNnChannel(setId, channel.getId(), (short) (i + 1)));
 			}
 		}
 		// piwik

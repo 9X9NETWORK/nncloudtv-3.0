@@ -25,7 +25,7 @@ public class ContentOwnershipManager {
 	private NnChannelDao channelDao = new NnChannelDao();
 	
 	public List<NnSet> findOwnedSetsByMso(long msoId) {
-		List<ContentOwnership> ownershipList = ownershipDao.findByMsoIdAndContentType(msoId, ContentOwnership.TYPE_CHANNELSET);
+		List<ContentOwnership> ownershipList = ownershipDao.findByMsoIdAndContentType(msoId, ContentOwnership.TYPE_SET);
 		
 		ArrayList<Long> setIds = new ArrayList<Long>();
 		for (ContentOwnership ownership : ownershipList) {
@@ -59,7 +59,7 @@ public class ContentOwnershipManager {
 
 	public void create(ContentOwnership own, Mso mso, NnSet set) {
 		
-		own.setContentType(ContentOwnership.TYPE_CHANNELSET);
+		own.setContentType(ContentOwnership.TYPE_SET);
 		own.setContentId(set.getId());
 		own.setMsoId(mso.getId());
 		own.setCreateDate(new Date());
