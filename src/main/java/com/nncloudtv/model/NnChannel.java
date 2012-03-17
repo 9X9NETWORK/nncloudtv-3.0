@@ -38,9 +38,9 @@ public class NnChannel implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String imageUrl; 
-	public static String PROCESSING_IMAGE_URL = "http://s3.amazonaws.com/9x9ui/images/processing.png";
-	public static String ERROR_IMAGE_URL = "http://9x9ui.s3.amazonaws.com/9x9playerV65/images/error.png";
-	public static String FB_IMAGE_URL = "https://s3.amazonaws.com/9x9ui/images/facebook-icon.gif";
+	public static String PROCESSING_IMAGE_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/processing.png";
+	public static String ERROR_IMAGE_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/error.png";
+	public static String FB_IMAGE_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif";
 	
 	@Persistent
 	private boolean isPublic;
