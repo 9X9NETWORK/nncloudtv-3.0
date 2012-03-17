@@ -12,13 +12,18 @@ Python 2.6.5
 build up GAE python environment
 ================================
 - download google_appengine_1.6.2.zip
+> wget http://googleappengine.googlecode.com/files/google_appengine_1.6.3.zip
+
 - unzip, move to /home/ubuntu/google_appengine
+> unzip google_appengine_1.6.3.zip
+
 - python files put under /home/ubuntu/google_appengine folder 
 
 ================================
 copy gae backup files over
 ================================
 - get backup files from amazon 
+apt-get install s3cmd
 ubuntu> s3cmd ls s3://9x9gaedata/20120209_020501_9x9tvprod3*
 ubuntu> s3cmd get s3://9x9gaedata/20120209_020501_9x9tvprod3*
 
@@ -52,4 +57,4 @@ python nnprogram_modify.py
 alter table nnset drop column ori_id;
 alter table nnchannel drop column ori_id;
 alter table category drop column ori_id;
-update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/images/facebook-icon.gif' where imageUrl='/WEB-INF/../images/facebook-icon.gif'
+update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/images/facebook-icon.gif' where imageUrl='/WEB-INF/../images/facebook-icon.gif';

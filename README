@@ -170,8 +170,19 @@ Jetty
 > java -jar start.jar --version
 null 6.1.22
 
-- deploy app: deploy your wars to webapps under jetty 
+- if v=6.1.24, bug fix
+vi /etc/init.d/jetty
+
+replace
+CONFIG_LINES=$(cat /etc/jetty/jetty.conf | grep -v "^[:space:]*#" | tr "\n" " ")
+
+with this one:
+CONFIG_LINES=$(cat /etc/jetty/jetty.conf | grep -v "^[[:space:]]*#" | tr "\n" " ")
+
+- deploy app: deploy your war to webapps under jetty 
 > /usr/share/jetty/webapps
+
+- remove 'root' folder if default has one
 
 ================================
 MySql
@@ -182,6 +193,12 @@ apt-get install mysql-server-5.1
 - commands
 > service mysql start
 
+- permission
+Grant permission for remote application access if application server is on a different machine
+
+> CREATE USER 'root'@'%.compute.internal' IDENTIFIED BY 'password';
+> GRANT ALL ON *.* TO 'root'@'%.compute.internal';
+ 
 ================================
 RabbitMQ
 ================================
@@ -212,24 +229,32 @@ doesn't actually take effect, but just to be sure for future use.
 b. remove following files(gnumail*.jar) under /usr/share/java/:
 gnumail.jar, gnumail-1.1.2.jar, gnumail-providers.jar, gnumail-providers-1.1.2.jar
 
-c. copy following files to /usr/share/jetty/lib:
-mail-1.4.jar, activation-1.1.jar to 
+(c). copy following files to /usr/share/jetty/lib:
+mail-1.4.jar, activation-1.1.jar
  
 d. upgrade to jetty 7 should be able to solve the problem as well.
  
 ================================
 Running the app on EC2
 ================================  
+- build war
+a. change datanucleus property files if necessary
+b. check port setting on server if ncessary 
+> netstat -vatn
+
 - upload the war and the jar: use SCP with your private key, and upload to the server
 
 - login name: ubuntu
+
+- change hostname if necessary 
+> hostname devel 
 
 - commands: 
 sudo su
 cd /usr/share/jetty/webapps
 service jetty stop
 rm root.war
-mv /home/ubuntu/tmp/nncloudtv-0.0.1-SNAPSHOT.war .
+cp /home/ubuntu/tmp/nncloudtv-0.0.1-SNAPSHOT.war .
 mv nncloudtv-0.0.1-SNAPSHOT.war root.war
 service jetty start
 java -jar nnqueue.jar hello
@@ -245,8 +270,8 @@ http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/cache_set (test me
 http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/cache_get (test memcache component)
 http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/fanout?exchange_name=hello (rabbit queue client test)
 
-- run on port 80 
-sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+- run on port 80 (port 80 might be closed, check ec2 console setting) 
+> sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 
 - stop apache2 (if u ever need it)
 > sudo /etc/init.d/apache2 stop
