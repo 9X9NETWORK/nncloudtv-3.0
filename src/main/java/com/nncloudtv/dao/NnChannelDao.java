@@ -1,6 +1,7 @@
 package com.nncloudtv.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,6 +11,7 @@ import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnUserReport;
 
 public class NnChannelDao extends GenericDao<NnChannel> {
 	
@@ -18,6 +20,24 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 	public NnChannelDao() {
 		super(NnChannel.class);
 	}	
+	
+	public List<NnChannel> findSince(Date since) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<NnChannel> detached = new ArrayList<NnChannel>();
+		try {
+			Query query = pm.newQuery(NnUserReport.class);
+			query.setFilter("createDate > createDateParam");
+			query.declareImports("import java.util.Date");
+			query.declareParameters("Date createDateParam");			 
+			 
+			@SuppressWarnings("unchecked")
+			List<NnChannel> results = (List<NnChannel>) query.execute(since);
+			detached = (List<NnChannel>)pm.detachCopyAll(results);
+		} finally {
+			pm.close();
+		}
+		return detached;		
+	}
 	
 	public NnChannel save(NnChannel channel) {
 		if (channel == null) {return null;}

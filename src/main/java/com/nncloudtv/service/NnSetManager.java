@@ -39,6 +39,16 @@ public class NnSetManager {
 		return set;
 	}
 	
+	public void saveAll(List<NnSet> sets) {
+		for(NnSet set : sets) {
+			save(set);
+		}
+	}
+	
+	public void delete(NnSet cs) {
+		setDao.delete(cs);
+	}
+	
 	public NnSet create(NnSet set, List<NnChannel> channels) {		
 		if (this.findByName(set.getName()) != null) {
 			log.warning("set already exists, name: " + set.getName());
@@ -146,6 +156,10 @@ public class NnSetManager {
 		return setDao.findByLang(lang);
 	}
 	
+	public NnSet findByLangAndSeq(String lang, String seq) {
+		return setDao.findByLangAndSeq(lang, Short.parseShort(seq));
+	}
+	
 	public NnSet findByName(String name) {
 		return setDao.findByName(name.trim());
 	}
@@ -232,6 +246,38 @@ public class NnSetManager {
 			}
 		}
 		return results;
+	}
+	
+	public List<NnChannel> findPublicChannelsById(long setId) {
+		NnSetToNnChannelDao sToCDao = new NnSetToNnChannelDao();
+		NnChannelManager channelMngr = new NnChannelManager();		
+		List<NnSetToNnChannel> list = sToCDao.findBySet(setId); 
+		ArrayList<NnChannel> results = new ArrayList<NnChannel>();
+		
+		for (NnSetToNnChannel nToC : list) {
+			NnChannel channel = channelMngr.findById(nToC.getChannelId());
+			if (channel != null && channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.getProgramCnt() > 0 && channel.isPublic()) {
+				channel.setSeq(nToC.getSeq());
+				results.add(channel);
+			}
+		}
+		return results;
+	}
+	
+	public int total() {
+		return setDao.total();
+	}
+	
+	public int total(String filter) {
+		return setDao.total(filter);
+	}
+	
+	public List<NnSet> list(int page, int limit, String sidx, String sord) {
+		return setDao.list(page, limit, sidx, sord);
+	}
+	
+	public List<NnSet> list(int page, int limit, String sidx, String sord, String filter) {
+		return setDao.list(page, limit, sidx, sord, filter);
 	}
 	
 }

@@ -34,7 +34,28 @@ public class NnSetDao extends GenericDao<NnSet> {
 			pm.close();
 		}
 		return detached;
-	}	
+	}
+	
+	public NnSet findByLangAndSeq(String lang, short seq) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		NnSet detached = null;
+		
+		try {
+			Query query = pm.newQuery(NnSet.class);
+			query.setFilter("lang == langParam && seq == seqParam");
+			query.declareParameters("String langParam, int seqParam");
+			@SuppressWarnings("unchecked")
+			List<NnSet> channelSets = (List<NnSet>) query.execute(lang, seq);
+			if (channelSets.size() > 0) {
+				detached = pm.detachCopy(channelSets.get(0));
+			}
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}
+		
+		return detached;		
+	}
 	
 	public NnSet findById(long id) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();

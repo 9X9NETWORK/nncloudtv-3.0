@@ -128,5 +128,25 @@ public class CategoryDao extends GenericDao<Category> {
 		}
 		return categories;
 	}
-			
+	
+	public Category findByLangAndSeq(String lang, short seq) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		Category detached = null;		
+		try {
+			Query query = pm.newQuery(Category.class);
+			query.setFilter("lang == langParam && seq == seqParam");
+			query.declareParameters("String langParam, int seqParam");
+			@SuppressWarnings("unchecked")
+			List<Category> categories = (List<Category>) query.execute(lang, seq);
+			if (categories.size() > 0) {
+				detached = pm.detachCopy(categories.get(0));
+			}
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}
+		
+		return detached;		
+	}
+	
 }

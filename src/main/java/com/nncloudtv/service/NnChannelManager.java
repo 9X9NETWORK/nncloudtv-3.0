@@ -2,6 +2,7 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -26,6 +27,10 @@ public class NnChannelManager {
 	protected static final Logger log = Logger.getLogger(NnChannelManager.class.getName());
 	
 	private NnChannelDao channelDao = new NnChannelDao();
+	
+	public List<NnChannel> findSince(Date since) {
+		return channelDao.findSince(since);
+	}
 	
 	public NnChannel create(String sourceUrl, HttpServletRequest req) {
 		if (sourceUrl == null) 
@@ -222,6 +227,32 @@ public class NnChannelManager {
 		}
 		return channels;		
 	}
+	
+	public List<NnChannel> findAllByStatus(short status) {
+		List<NnChannel> channels = channelDao.findAllByStatus(status);		
+		return channels;
+	}
+	
+	//!!! limit
+	public List<NnChannel> findAll() {
+		return channelDao.findAll();
+	}
+	
+	public List<NnChannel> list(int page, int limit, String sidx, String sord) {
+		return channelDao.list(page, limit, sidx, sord);
+	}
+	
+	public List<NnChannel> list(int page, int limit, String sidx, String sord, String filter) {
+		return channelDao.list(page, limit, sidx, sord, filter);
+	}
+	
+	public int total() {
+		return channelDao.total();
+	}
+	
+	public int total(String filter) {
+		return channelDao.total(filter);
+	}
 
 	public String verifyUrl(String url) {
 		if (url == null) return null;
@@ -240,6 +271,10 @@ public class NnChannelManager {
 		}
 		return url;
 	}
+	
+	public static List<NnChannel> searchChannelEntries(String queryString) {
+		return NnChannelDao.searchChannelEntries(queryString);		
+	}
 
 	public static short getDefaultSorting(NnChannel c) {
 		short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
@@ -249,4 +284,18 @@ public class NnChannelManager {
 		return sorting;
 	}
 	
+	public List<NnChannel> findUnUniqueSourceUrl() {
+		List<NnChannel> channels = this.findAll();
+		HashSet<String> set = new HashSet<String>();
+		List<NnChannel> bad = new ArrayList<NnChannel>();
+		for (NnChannel c : channels) {
+			if (!set.contains(c.getSourceUrl())) {
+				set.add(c.getSourceUrl());
+			} else {
+				log.info("duplicate source url:" + c.getSourceUrl());
+				bad.add(c);
+			}
+		}
+		return bad;
+	}
 }

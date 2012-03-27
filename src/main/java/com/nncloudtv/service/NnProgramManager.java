@@ -274,5 +274,20 @@ public class NnProgramManager {
 		String str = "nnprogram(" + channelId + ")"; 
 		return str;
 	}
-		
+	
+	public int total() {
+		return programDao.total();
+	}
+	
+	public int total(String filter) {
+		return programDao.total(filter);
+	}
+	
+	public List<NnProgram> list(int page, int limit, String sidx, String sord) {
+		return programDao.list(page, limit, sidx, sord);
+	}
+	
+	public List<NnProgram> list(int page, int limit, String sidx, String sord, String filter) {
+		return programDao.list(page, limit, sidx, sord, filter);
+	}
 }

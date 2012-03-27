@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnSetToNnChannelDao;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
 
 @Service
@@ -27,19 +28,57 @@ public class NnSetChannelManager {
 		dao.delete(sc);
 	}
 	
+	public void deleteAll(List<NnSetToNnChannel> list) {
+		dao.deleteAll(list);
+	}
+	
+	public void deleteChannelSet(NnChannel channel, List<NnSet> sets) {
+		if (channel == null) {return;}
+		if (sets.size() == 0) {return;}
+				
+		for (NnSet s : sets) {	
+			NnSetToNnChannel cs = this.findBySetAndChannel(s.getId(), channel.getId());
+			if (cs != null) {
+				this.delete(cs);
+			}
+		}		
+	}
+	
 	public NnSetToNnChannel save(NnSetToNnChannel sc) {
 		sc.setUpdateDate(new Date());
 		dao.save(sc);
 		return sc;
 	}
 	
+	public void saveAll(List<NnSetToNnChannel> list) {
+		for(NnSetToNnChannel sc : list) {
+			sc.setUpdateDate(new Date());
+		}
+		dao.saveAll(list);
+		//sc.setUpdateDate(new Date());
+		//dao.save(sc);
+		//return sc;
+	}
+	
+	public NnSetToNnChannel findById(long id) {
+		return dao.findById(id);
+	}
+	
 	public List<NnSetToNnChannel> findBySet(long setId) {
 		return dao.findBySet(setId);
+	}
+	
+	public List<NnSetToNnChannel> findByChannel(long channelId) {
+		return dao.findByChannel(channelId);
 	}
 
 	public NnSetToNnChannel findBySetAndChannel(long setId, long channelId) {
 		return dao.findBySetAndChannel(setId, channelId);
-	}	
+	}
+	
+	public NnSetToNnChannel findBySetAndSeq(long setId, short seq) {
+		return dao.findBySetAndSeq(setId, seq);
+	}
 	
 	//move from seq1 to seq2
 	public boolean moveSeq(long setId, short seq1, short seq2) {
@@ -72,5 +111,20 @@ public class NnSetChannelManager {
 			this.delete(csc);
 	}
 	
+	public int total() {
+		return dao.total();
+	}
+	
+	public int total(String filter) {
+		return dao.total(filter);
+	}
+	
+	public List<NnSetToNnChannel> list(int page, int limit, String sidx, String sord) {
+		return dao.list(page, limit, sidx, sord);
+	}
+	
+	public List<NnSetToNnChannel> list(int page, int limit, String sidx, String sord, String filter) {
+		return dao.list(page, limit, sidx, sord, filter);
+	}
 	
 }

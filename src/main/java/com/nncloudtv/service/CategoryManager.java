@@ -40,6 +40,14 @@ public class CategoryManager {
 		return cToNDao.findByCategoryAndSet(c.getId(), s.getId());
 	}
 	
+	private List<CategoryToNnSet> findCatToSetByCategoryId(long c) {
+		return cToNDao.findByCategory(c);
+	}
+	
+	private List<CategoryToNnSet> findCatToSetBySetId(long s) {
+		return cToNDao.findBySet(s);
+	}
+	
 	public void addSets(Category c, List<NnSet> sets) {
 		Date now = new Date();
 		for (NnSet s : sets) {
@@ -52,6 +60,19 @@ public class CategoryManager {
 				s.setCreateDate(now);
 				cToNDao.save(cs);
 			}
+		}
+	}
+	
+	public void addSet(Category c, NnSet set) {
+		Date now = new Date();
+		if (this.findByCategoryAndSet(c, set) == null) {
+			CategoryToNnSet cs = new CategoryToNnSet(
+				c.getId(), 
+				set.getId()
+			);
+			cs.setUpdateDate(now);
+			cs.setCreateDate(now);
+			cToNDao.save(cs);
 		}
 	}
 
@@ -81,6 +102,22 @@ public class CategoryManager {
 		return categories;
 	}
 	
+	public List<Category> findBySet(NnSet set) {
+		CategoryToNnSetDao dao = new CategoryToNnSetDao();
+		List<CategoryToNnSet> list = new ArrayList<CategoryToNnSet>();
+		List<Category> categories = new ArrayList<Category>();
+		
+		list.addAll(dao.findBySet(set.getId()));
+				
+		for (CategoryToNnSet cToS : list) {
+			Category c = this.findById(cToS.getCategoryId());
+			if (c != null) {
+				categories.add(c);
+			}
+		}
+		return categories;
+	}
+	
 	public List<NnSet> findSetsByCategory(long categoryId, boolean isPublic) {
 		CategoryToNnSetDao dao = new CategoryToNnSetDao();
 		List<CategoryToNnSet> list = dao.findByCategory(categoryId);
@@ -97,6 +134,15 @@ public class CategoryManager {
 		}
 		return sets;
 	}
+	
+	public List<Category> findCategoriesByIdStr(String categoryIds) {
+		List<Long> categoryIdList = new ArrayList<Long>();	
+		String[] arr = categoryIds.split(",");
+		for (int i=0; i<arr.length; i++) { categoryIdList.add(Long.parseLong(arr[i])); }
+		List<Category> categories = this.findAllByIds(categoryIdList);
+		return categories;		
+	}
+	
 	public boolean moveSet(long fromCategoryId, long toCategoryId, long setId) {
 		CategoryToNnSetDao dao = new CategoryToNnSetDao();
 		CategoryToNnSet cToS = dao.findByCategoryAndSet(fromCategoryId, setId);
@@ -114,6 +160,24 @@ public class CategoryManager {
 			return false;
 		dao.delete(found);
 		return true;
+	}
+	
+	public void deleteCatToSetBySetId(long setId) {
+		deleteAll(this.findCatToSetBySetId(setId));
+/*
+		for(Category category : categories) {
+			deleteSet(category.getId(), setId);
+		}
+*/
+	}
+	
+	public void deleteCatToSetByCatId(long categoryId) {
+		deleteAll(this.findCatToSetByCategoryId(categoryId));
+/*
+		for(NnSet set : sets) {
+			deleteSet(categoryId, set.getId());
+		}
+*/
 	}
 		
 	public void createChannelRelated(NnChannel channel, List<Category> categories) {
@@ -159,8 +223,12 @@ public class CategoryManager {
 	
 	public List<Category> findAllByIds(List<Long> ids) {
 		 return categoryDao.findAllByIds(ids);
-	}	
-					
+	}
+	
+	public Category findByLangAndSeq(String lang, String seq) {
+		return categoryDao.findByLangAndSeq(lang, Short.parseShort(seq));
+	}
+	
 	public List<Category> findAll() {
 		List<Category> categories = categoryDao.findAll();
 		return categories;
@@ -180,6 +248,14 @@ public class CategoryManager {
 	
 	public int total(String filter) {
 		return categoryDao.total(filter);
+	}
+	
+	public void delete(Category c) {
+		categoryDao.delete(c);
+	}
+	
+	private void deleteAll(List<CategoryToNnSet> list) {
+		cToNDao.deleteAll(list);
 	}
 	
 }

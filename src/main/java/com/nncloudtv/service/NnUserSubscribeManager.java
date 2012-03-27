@@ -138,7 +138,7 @@ public class NnUserSubscribeManager {
 		return true;		
 	}
 	
-	/*
+	
 	public List<NnUserSubscribe> list(int page, int limit, String sidx, String sord) {
 		return subDao.list(page, limit, sidx, sord);
 	}
@@ -154,5 +154,5 @@ public class NnUserSubscribeManager {
 	public int total(String filter) {
 		return subDao.total(filter);
 	}
-	*/
+	
 }
