@@ -75,18 +75,7 @@ var cms = {
     }
     return year + '/' + month + '/' + date + ' ' + hour + ':' + minute + ':' + second;
   },
-  bubblePopupProperties: {
-    'position':  'top',
-    'align':     'center',
-    'innerHtmlStyle':
-    {
-      'color':      '#292929',
-      'text-align': 'left',
-      'font-size':  '0.8em'
-    },
-    'themeName': 'all-black',
-    'themePath': '/images/cms'
-  },
+  bubblePopupProperties: { /* need initialize */ },
   escapeHtml: function(text) {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   },
@@ -187,6 +176,9 @@ var cms = {
       return 'application/octet-stream';
     }
   },
+  getExternalRootPath: function() {
+    return $('#external_root_path').text();
+  },
   get: function(url, data, success, dataType, error) {
     try {
       $.ajax({
@@ -272,7 +264,7 @@ var cms = {
       ajax:    'setup',
       trigger: '#setup',
       onLoad: function() {
-        cms.loadScript('/javascripts/cms/setup.js', function() {
+        cms.loadScript(cms.getExternalRootPath() + '/javascripts/cms/setup.js', function() {
           pageSetup.init();
           if (cms.isGeneric()) {
             pageSetup.initGenericOne();
@@ -362,31 +354,46 @@ var cms = {
       cache: false // Disable caching of AJAX responses
     });
     
-    cms.loadScript('/javascripts/plugins/jquery.getCSS.js', function() {
-      $.getCSS('/stylesheets/jquery.jqModal.css', function() {
-        cms.loadScript('/javascripts/plugins/jquery.jqModal.js', cms.initSetupButton);
+    cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.getCSS.js', function() {
+      $.getCSS(cms.getExternalRootPath() + '/stylesheets/jquery.jqModal.css', function() {
+        cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.jqModal.js', cms.initSetupButton);
       });
     });
   }
 };
 
-var addthis_config = {
-  'data_use_cookies':     false,
-  'data_use_flash':       false,
-  'data_track_clickback': false,
-  'services_expanded':    'email,facebook,twitter,tumblr,sinaweibo,funp,plusone.google.com',
-  'pubid':                'ra-4dcccc98718a5dbe',
-  'services_custom': [
-    {
-      name: "Google+",
-      url:  "https://plusone.google.com/_/+1/confirm?hl=en&url={{URL}}",
-      icon: "/images/cms/google-plus.png"
-    }
-  ]
-};
+var addthis_config = { };
 
 // everything is start from here
 $(function() {
+  
+  addthis_config = {
+    'data_use_cookies':     false,
+    'data_use_flash':       false,
+    'data_track_clickback': false,
+    'services_expanded':    'email,facebook,twitter,tumblr,sinaweibo,funp,plusone.google.com',
+    'pubid':                'ra-4dcccc98718a5dbe',
+    'services_custom': [
+      {
+        name: "Google+",
+        url:  "https://plusone.google.com/_/+1/confirm?hl=en&url={{URL}}",
+        icon: cms.getExternalRootPath() + "/images/cms/google-plus.png"
+      }
+    ]
+  };
+  
+  cms.bubblePopupProperties = {
+    'position':  'top',
+    'align':     'center',
+    'innerHtmlStyle':
+    {
+      'color':      '#292929',
+      'text-align': 'left',
+      'font-size':  '0.8em'
+    },
+    'themeName': 'all-black',
+    'themePath': cms.getExternalRootPath() + '/images/cms'
+  },
   
   addthis_config['ui_language'] = $('#locale').val();
   log("locale: " + $('#locale').val());
@@ -396,7 +403,7 @@ $(function() {
   if (cms.debug) {
     cms.loadScript('http://www.netgrow.com.au/assets/files/jquery_plugins/jquery.dump.js');
   }
-  cms.loadScript('/javascripts/plugins/jquery.blockUI.js', function() {
+  cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.blockUI.js', function() {
     
     $.blockUI.defaults.message = $('#warning_please_wait').html();
     $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);

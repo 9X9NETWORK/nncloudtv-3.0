@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<c:set var="root" value="http://9x9ui.s3.amazonaws.com/cms"/>
 <div class="setup_context">
   <a href="javascript:" class="btnClose jqmClose"></a>
   <div class="setCon">
@@ -128,7 +127,7 @@
 <label class="lang" id="lang_button_enable_autosharing"><spring:message code="cms.setup.button.enable_autosharing"/></label>
 <label class="lang" id="lang_warning_not_9x9_user"><spring:message code="cms.warning.not_9x9_user"/></label>
 <label class="lang" id="lang_warning_remove_admin_member"><spring:message code="cms.warning.remove_admin_member"/></label>
-<label class="lang" id="image_bg_setup">${root}/images/<spring:message code="cms.image.bg_setup"/></label>
+<label class="lang" id="image_bg_setup">${root}/images/cms/<spring:message code="cms.image.bg_setup"/></label>
 <label class="lang" id="lang_warning_error_occurs"><spring:message code="cms.warning.error_occurs"/></label>
 <label class="lang" id="lang_confirm_disconnect_with_facebook"><spring:message code="cms.setup.confirm_disconnect_with_facebook"/></label>
 <label class="lang" id="lang_confirm_disconnect_with_twitter"><spring:message code="cms.setup.confirm_disconnect_with_twitter"/></label>

@@ -7,7 +7,7 @@ var page$ = {
     rangeSelect: true,
     firstDay: 1,
     showOn: 'button',
-    buttonImage: '/images/cms/icon_calendar.png',
+    buttonImage: cms.getExternalRootPath() + '/images/cms/icon_calendar.png',
     buttonImageOnly: true
   },
   statisticsReport: {
@@ -195,7 +195,7 @@ var page$ = {
     var css = '<style> .chPublic { background:url(' + $('#image_ch_public').text() + ') no-repeat; }\n.chUnPublic { background:url(' + $('#image_ch_unpublic').text() + ') no-repeat; } </style>';
     $(css).appendTo('head');
     
-    cms.loadScript('/javascripts/piwik-analytics.js', function() {
+    cms.loadScript(cms.getExternalRootPath() + '/javascripts/piwik-analytics.js', function() {
       page$.channelAndChannelSetList.init();
     });
   }

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,7 +57,12 @@ public class CmsController {
 		log.info("readonly mode: " + readonly);
 		return readonly;
 	}
-		
+	
+	@ModelAttribute("root")
+	public String getExternalRootPath() {
+		return MsoConfigManager.getExternalRootPath();
+	}
+	
 	private Model setAttributes(Model model, Mso mso) {
 		
 		model.addAttribute("msoLogo", mso.getLogoUrl());
@@ -80,8 +86,9 @@ public class CmsController {
 	}
 	
 	@RequestMapping("cms/logout")
-	public String genericCMSLogout(HttpServletResponse resp) {
+	public String genericCMSLogout(HttpServletResponse resp, Model model) {
 		CookieHelper.deleteCookie(resp, CookieHelper.USER);
+		model.asMap().clear();
 		return "redirect:/9x9";
 	}
 	
@@ -90,6 +97,7 @@ public class CmsController {
 		String userToken = CookieHelper.getCookie(request, CookieHelper.USER);
 		if (userToken == null) {
 			log.warning("user not login");
+			model.asMap().clear();
 			return "redirect:/9x9";
 		} else {
 			NnUserManager userMngr = new NnUserManager();
@@ -105,7 +113,7 @@ public class CmsController {
 				Mso mso = new Mso(user.getEmail(), user.getIntro(), user.getEmail(), Mso.TYPE_TCO);
 				mso.setTitle(user.getName());
 				mso.setLang(LangTable.LANG_ZH);
-				mso.setLogoUrl("http://9x9ui.s3.amazonaws.com/images/9x9.tv.png");
+				mso.setLogoUrl(MsoConfigManager.getExternalRootPath() + "/images/9x9.tv.png");
 				mso = msoMngr.save(mso);
 				if (mso == null) {
 					log.info("failed to migrate to TCO");
@@ -130,9 +138,10 @@ public class CmsController {
 					return "cms/readonly";
 				}
 				if (cmsTab.equals("admin")) {
+					model.asMap().clear();
 					return "redirect:/cms/channelManagement";
 				}
-				mso.setLogoUrl("http://9x9ui.s3.amazonaws.com/images/9x9.tv.png");
+				mso.setLogoUrl(MsoConfigManager.getExternalRootPath() + "/images/9x9.tv.png");
 				model = setAttributes(model, mso);
 				model.addAttribute("locale", request.getLocale().getLanguage());
 				if (cmsTab.equals("channelManagement") || cmsTab.equals("channelSetManagement")) {
@@ -173,6 +182,7 @@ public class CmsController {
 		
 		Mso sessionMso = (Mso)session.getAttribute("mso");
 		if (sessionMso != null && sessionMso.getId() == mso.getId()) {
+			model.asMap().clear();
 			if (mso.getType() == Mso.TYPE_ENTERPRISE)
 				return "redirect:/" + msoName + "/channelSetManagement";
 			else
@@ -255,7 +265,7 @@ public class CmsController {
 		} else {
 			response.addCookie(new Cookie("cms_login_" + msoName, ""));
 		}
-		
+		model.asMap().clear();
 		if (mso.getType() == Mso.TYPE_ENTERPRISE)
 			return "redirect:/" + msoName + "/channelSetManagement";
 		else
@@ -266,6 +276,7 @@ public class CmsController {
 	public String logout(Model model, HttpServletRequest request, @PathVariable String msoName) {
 		SessionService sessionService = new SessionService(request);
 		sessionService.removeSession();
+		model.asMap().clear();
 		return "redirect:/" + msoName + "/admin";
 	}
 	
@@ -304,6 +315,7 @@ public class CmsController {
 			}
 		} else {
 			sessionService.removeSession();
+			model.asMap().clear();
 			return "redirect:/" + msoName + "/admin";
 		}
 	}

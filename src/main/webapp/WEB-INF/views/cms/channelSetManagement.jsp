@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="global.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -30,7 +32,7 @@
       <li><a class="menuD"></a></li>
       <li><a class="menuE"></a></li>
     </ul>
-    <label class="lang" id="image_menu">${root}/images/<spring:message code="cms.image.menu"/></label>
+    <label class="lang" id="image_menu">${root}/images/cms/<spring:message code="cms.image.menu"/></label>
     <div class="clear"></div>
     <div class="left_body">
       <div class="left_title"><spring:message code="cms.channel_set_management.title.channel_set_info"/></div>
@@ -40,7 +42,7 @@
           <input type="hidden" id="cc_id" value="0"/>
           <label class="floatL"><span class="red">＊</span><spring:message code="cms.channel_set_management.label.logo"/></label>
           <div class="uploadImg">
-            <img alt="" id="cc_image" src="${root}/images/upload_img.jpg" class="floatL"/><input type="hidden" id="cc_image_updated" value="false"/>
+            <img alt="" id="cc_image" src="${root}/images/cms/upload_img.jpg" class="floatL"/><input type="hidden" id="cc_image_updated" value="false"/>
             <div class="floatL imgBtn">
               <p class="gray"><spring:message code="cms.channel_set_management.msg.best_resolution"/></p>
               <a href="javascript:" id="upload_image" class="uploadBtn"></a>
@@ -174,7 +176,8 @@
 <label class="lang" id="lang_warning_set_is_empty"><spring:message code="cms.warning.set_is_empty"/></label>
 <label class="lang" id="lang_warning_new_channel_will_be_reviewed"><spring:message code="cms.warning.new_channel_will_be_reviewed"/></label>
 <label class="lang" id="lang_warning_new_channels_will_be_reviewed"><spring:message code="cms.warning.new_channels_will_be_reviewed"/></label>
-<label class="lang" id="image_bg_album">${root}/images/<spring:message code="cms.image.bg_album"/></label>
-<label class="lang" id="image_btn_upload">${root}/images/<spring:message code="cms.image.btn_upload"/></label>
+<label class="lang" id="image_bg_album">${root}/images/cms/<spring:message code="cms.image.bg_album"/></label>
+<label class="lang" id="image_btn_upload">${root}/images/cms/<spring:message code="cms.image.btn_upload"/></label>
+<%@ include file="global.jsp" %>
 </body>
 </html>

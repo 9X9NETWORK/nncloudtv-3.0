@@ -369,7 +369,8 @@ public class CmsApiController {
 				}
 			}
 		}
-		log.info("<<<<<<<<<< results size:" + results.size() + ";" + results.get(0).getName());
+		// size() is not always > 0
+		// log.info("<<<<<<<<<< results size:" + results.size() + ";" + results.get(0).getName());
 		return results;
 	}
 	

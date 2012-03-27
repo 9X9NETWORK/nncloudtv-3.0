@@ -19,8 +19,8 @@ var page$ = {
       page$.programDetail.destroy();
       page$.programList.destroy();
       $('#choose_channel_type').hide();
-      $('#publish_button').css('background-image', 'url(/images/cms/graybtn.png)').html('<span>' + $('#image_btn_reorder').text() + '</span>');
-      $('.program_info_removebutton').css('background-image', 'url(/images/cms/btnClose.png)').css('cursor', 'pointer');
+      $('#publish_button').css('background-image', 'url(' + cms.getExternalRootPath() + '/images/cms/graybtn.png)').html('<span>' + $('#image_btn_reorder').text() + '</span>');
+      $('.program_info_removebutton').css('background-image', 'url(' + cms.getExternalRootPath() + '/images/cms/btnClose.png)').css('cursor', 'pointer');
       $('.program_info_block_cloned').css('cursor', 'pointer');
       return true;
     }
@@ -189,7 +189,7 @@ var page$ = {
       });
       $('<span/>').addClass('ep_upload_image').appendTo(programDetailBlock.find('.upload_button_place'));
       var swfupload_settings = {
-        flash_url:              '/javascripts/swfupload/swfupload.swf',
+        flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
         upload_url:             'http://9x9tmp.s3.amazonaws.com/',
         file_size_limit:        '10240',
         file_types:             cms.imageTypes,
@@ -357,7 +357,7 @@ var page$ = {
         
         // audio uploading
         var swfupload_settings = {
-          flash_url:              '/javascripts/swfupload/swfupload.swf',
+          flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
           upload_url:             'http://9x9tmp.s3.amazonaws.com/',
           file_size_limit:        '100 MB',
           file_types:             cms.audioTypes,
@@ -429,7 +429,7 @@ var page$ = {
             this.startUpload(file.id);
             this.setButtonDisabled(true);
             programDetailBlock.find('.ep_uploading_audio .progress').text('').progressBar({
-              barImage: '/images/cms/progressbg_black.gif'
+              barImage: cms.getExternalRootPath() + '/images/cms/progressbg_black.gif'
             }).show();
             programDetailBlock.find('.ep_url_input').val('').css('color', '#000');
             programDetailBlock.find('.ep_url_block').hide();
@@ -447,7 +447,7 @@ var page$ = {
         
         // logo uploading
         var swfupload_settings = {
-          flash_url:              '/javascripts/swfupload/swfupload.swf',
+          flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
           upload_url:             'http://9x9tmp.s3.amazonaws.com/',
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,
@@ -685,7 +685,7 @@ var page$ = {
         $('<li></li>').append(programDetailBlock).appendTo('#program_create_ul');
         // video uploading
         var swfupload_settings = {
-          flash_url:              '/javascripts/swfupload/swfupload.swf',
+          flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
           upload_url:             'http://9x9tmp.s3.amazonaws.com/',
           file_size_limit:        '1 GB',
           file_types:             cms.videoTypes,
@@ -728,7 +728,7 @@ var page$ = {
             this.setPostParams(post_params);
             this.startUpload(file.id);
             programDetailBlock.find('.ep_uploading_video div').text('').progressBar({
-              barImage: '/images/cms/progressbg_black.gif'
+              barImage: cms.getExternalRootPath() + '/images/cms/progressbg_black.gif'
             }).parent().show();
             programDetailBlock.find('.ep_url_input').val('');
             programDetailBlock.find('.ep_url_block').hide();
@@ -744,7 +744,7 @@ var page$ = {
         page$.programDetail.swfObjectVideo.push(swfObject);
         // logo uploading
         var swfupload_settings = {
-          flash_url:              '/javascripts/swfupload/swfupload.swf',
+          flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
           upload_url:             'http://9x9tmp.s3.amazonaws.com/',
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,
@@ -837,7 +837,7 @@ var page$ = {
           return;
         }
         $('#publish_button').unbind().click({ 'channelId': channelId, 'channelName': channelName }, function(event) { // actually, its re-order button
-          $('.program_info_removebutton').unbind().css('background-image', 'url(/images/cms/btn_move.png)').css('cursor', 'move');
+          $('.program_info_removebutton').unbind().css('background-image', 'url(' + cms.getExternalRootPath() + '/images/cms/btn_move.png)').css('cursor', 'move');
           $(this).css('background-image', 'url(' + $('#image_btn_save').text() + ')');
           $('#program_list_ul').sortable({
             disabled: false,
@@ -1093,7 +1093,7 @@ var page$ = {
       $('#channel_import_detail [name="ch_tag"]').val('').attr('disabled', true);
       $('#channel_import_detail [name="ch_language"]').val('zh').attr('disabled', true);
       $('#channel_import_detail [name="ch_savebutton"]').removeClass('btnCreate').addClass('btnDisable');
-      $('#channel_import_detail [name="ch_image"]').attr('src', '/images/cms/upload_img.jpg');
+      $('#channel_import_detail [name="ch_image"]').attr('src', cms.getExternalRootPath() + '/images/cms/upload_img.jpg');
       $('#channel_import_detail [name="ch_image_updated"]').val('false');
       $('#channel_import_detail [name="ch_import_button"]').unbind().css('width', 90);
     },
@@ -1126,7 +1126,7 @@ var page$ = {
             page$.channelDetail.swfObject.destroy();
           }
           var swfupload_settings = {
-            flash_url:              '/javascripts/swfupload/swfupload.swf',
+            flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
             upload_url:             'http://9x9tmp.s3.amazonaws.com/',
             file_size_limit:        '10 MB',
             file_types:             cms.imageTypes,
@@ -1177,7 +1177,7 @@ var page$ = {
           $('#channel_import_detail [name="ch_image"]').attr('src', channel.imageUrl);
           $('#channel_import_detail [name="ch_image_updated"]').val('false');
           if (channel.imageUrl == '/WEB-INF/../images/processing.png') {
-            $('#channel_import_detail [name="ch_image"]').attr('src', '/images/cms/upload_img.jpg');
+            $('#channel_import_detail [name="ch_image"]').attr('src', cms.getExternalRootPath() + '/images/cms/upload_img.jpg');
             $('#channel_import_detail [name="ch_image_updated"]').val('true');
             if (channel.sourceUrl.indexOf('youtube.com') >= 0) {
               var requestUrl;
@@ -1290,7 +1290,7 @@ var page$ = {
         }
         $('<span/>').attr('id', 'ch_upload_image').appendTo('#upload_button_place');
         var swfupload_settings = {
-          flash_url:              '/javascripts/swfupload/swfupload.swf',
+          flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
           upload_url:             'http://9x9tmp.s3.amazonaws.com/',
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,

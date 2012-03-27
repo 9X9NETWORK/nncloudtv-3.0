@@ -62,7 +62,7 @@ var page$ = {
                   var channelId = channel.key.id;
                   if (channel.name == null) continue;
                   var child = {
-                    'title': cms.escapeHtml(channel.name) + ' <img alt="' + channelId + '" class="tiny-button plus-button" src="/images/cms/plus.png"> <img alt="' + channelId + '" class="tiny-button play-button" src="/images/cms/play.png">',
+                    'title': cms.escapeHtml(channel.name) + ' <img alt="' + channelId + '" class="tiny-button plus-button" src="' + cms.getExternalRootPath() + '/images/cms/plus.png"> <img alt="' + channelId + '" class="tiny-button play-button" src="' + cms.getExternalRootPath() + '/images/cms/play.png">',
                     'key':   channelId,
                     'isFolder': false,
                     'isLazy':   false,
@@ -169,9 +169,9 @@ var page$ = {
       cms.loadJSON('/CMSAPI/systemCategories', function(categories) {
         $('#sys_directory option[value!="0"]').remove();
         for (var i = 0; i < categories.length; i++) {
-          var icon = '/javascripts/plugins/dynatree/skin/ch.gif';
+          var icon = cms.getExternalRootPath() + '/javascripts/plugins/dynatree/skin/ch.gif';
           if (categories[i].lang == 'en') {
-            icon = '/javascripts/plugins/dynatree/skin/en.gif';
+            icon = cms.getExternalRootPath() + '/javascripts/plugins/dynatree/skin/en.gif';
           }
           $('<option/>')
             .attr('value', categories[i].key.id)
@@ -205,7 +205,7 @@ var page$ = {
           $('#cc_image_updated').val('false');
           $('#cc_id').val(channelSet.key.id);
           var swfupload_settings = {
-            flash_url:              '/javascripts/swfupload/swfupload.swf',
+            flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
             upload_url:             'http://9x9tmp.s3.amazonaws.com/',
             file_size_limit:        '10 MB',
             file_types:             cms.imageTypes,
@@ -374,7 +374,7 @@ var page$ = {
     var language = $('#cc_language').val();
     var imageUrl = $('#cc_image').attr('src');
     var imageUpdated = $('#cc_image_updated').val();
-    if (imageUrl.length == 0 || imageUrl == '/images/cms/upload_img.jpg') {
+    if (imageUrl.length == 0 || imageUrl == cms.getExternalRootPath() + '/images/cms/upload_img.jpg') {
       alert($('#lang_warning_empty_logo').text());
       return;
     }

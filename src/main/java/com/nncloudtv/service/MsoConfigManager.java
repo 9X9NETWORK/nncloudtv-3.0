@@ -15,7 +15,12 @@ import com.nncloudtv.model.MsoConfig;
 public class MsoConfigManager {
 
 	private MsoConfigDao configDao = new MsoConfigDao();
-    protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());    
+    protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());
+	public static final String EXTERNAL_ROOT_PATH = "http://9x9ui.s3.amazonaws.com/tprd-moveout";    
+	
+	static public String getExternalRootPath() {
+		return EXTERNAL_ROOT_PATH;
+	}
 	
 	public MsoConfig create(MsoConfig config) {
 		Date now = new Date();

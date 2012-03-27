@@ -11,8 +11,8 @@
     <a href="javascript:" class="setup" id="setup"></a>
     <a href="${logoutUrl}" class="logout"></a>
   </div>
-  <label class="lang" id="image_header_logout">${root}/images/<spring:message code="cms.image.header_logout"/></label>
-  <label class="lang" id="image_header_setup">${root}/images/<spring:message code="cms.image.header_setup"/></label>
-  <label class="lang" id="image_header_sg">${root}/images/<spring:message code="cms.image.header_sg"/></label>
+  <label class="lang" id="image_header_logout">${root}/images/cms/<spring:message code="cms.image.header_logout"/></label>
+  <label class="lang" id="image_header_setup">${root}/images/cms/<spring:message code="cms.image.header_setup"/></label>
+  <label class="lang" id="image_header_sg">${root}/images/cms/<spring:message code="cms.image.header_sg"/></label>
   <label class="lang" id="warning_please_wait"><spring:message code="cms.warning.please_wait"/></label>
 </div>

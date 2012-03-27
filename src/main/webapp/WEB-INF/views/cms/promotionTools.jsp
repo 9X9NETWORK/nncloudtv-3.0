@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="global.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -22,7 +24,7 @@
       <li><a class="menuD_active"></a></li>
       <li><a class="menuE"></a></li>
     </ul>
-    <label class="lang" id="image_menu">${root}/images/<spring:message code="cms.image.menu"/></label>
+    <label class="lang" id="image_menu">${root}/images/cms/<spring:message code="cms.image.menu"/></label>
     <div class="clear"></div>
     <div class="left_body">
       <div class="left_title"><spring:message code="cms.promotion_tools.title.channel_list"/></div>
@@ -108,7 +110,8 @@
 <label class="lang" id="lang_confirm_goto_setting_page"><spring:message code="cms.warning.goto_setting_page"/></label>
 <label class="lang" id="lang_update_successfully"><spring:message code="cms.warning.update_successfully"/></label>
 <label class="lang" id="lang_warning_error_occurs"><spring:message code="cms.warning.error_occurs"/></label>
-<label class="lang" id="image_ch_public">${root}/images/<spring:message code="cms.image.ch_public"/></label>
-<label class="lang" id="image_ch_unpublic">${root}/images/<spring:message code="cms.image.ch_unpublic"/></label>
+<label class="lang" id="image_ch_public">${root}/images/cms/<spring:message code="cms.image.ch_public"/></label>
+<label class="lang" id="image_ch_unpublic">${root}/images/cms/<spring:message code="cms.image.ch_unpublic"/></label>
+<%@ include file="global.jsp" %>
 </body>
 </html>

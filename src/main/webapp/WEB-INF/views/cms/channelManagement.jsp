@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="global.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -27,7 +29,7 @@
       <li><a class="menuD"></a></li>
       <li><a class="menuE"></a></li>
     </ul>
-    <label class="lang" id="image_menu">${root}/images/<spring:message code="cms.image.menu"/></label>
+    <label class="lang" id="image_menu">${root}/images/cms/<spring:message code="cms.image.menu"/></label>
     <div class="clear"></div>
     <div class="left_body">
       <!-- channel management - never create channel yet -->
@@ -158,7 +160,7 @@
               <fieldset class="setAlbum">
                 <label class="floatL"><span class="red" style="display:none">＊</span><spring:message code="cms.channel_management.label.logo"/></label>
                 <div class="uploadImg">
-                  <img id="ch_image" alt="" src="${root}/images/upload_img.jpg" class="floatL"/><input type="hidden" id="ch_image_updated" value="false"/>                                                                   
+                  <img id="ch_image" alt="" src="${root}/images/cms/upload_img.jpg" class="floatL"/><input type="hidden" id="ch_image_updated" value="false"/>                                                                   
                   <div class="floatL imgBtn">
                     <p class="gray"><spring:message code="cms.channel_management.msg.best_resolution"/></p>
                     <span id="upload_button_place"></span>
@@ -257,7 +259,7 @@
                     </div>
                     <label class="floatL"><spring:message code="cms.channel_management.label.program_logo"/></label>
                     <div class="uploadImg">
-                      <img alt="" src="${root}/images/upload_img.jpg" class="floatL ep_image"/><input type="hidden" class="ep_image_updated" value="fase"/>
+                      <img alt="" src="${root}/images/cms/upload_img.jpg" class="floatL ep_image"/><input type="hidden" class="ep_image_updated" value="fase"/>
                       <div class="floatL imgBtn">
                         <p class="gray"><spring:message code="cms.channel_management.msg.best_resolution"/></p>
                         <span class="ep_upload_button_place"><a onclick="return false;" href="javascript:" class="uploadBtn ep_upload_image"></a></span>
@@ -326,7 +328,7 @@
                     </div>
                     <label class="floatL"><spring:message code="cms.channel_management.label.program_logo"/></label>
                     <div class="uploadImg">
-                      <img alt="" src="${root}/images/upload_img.jpg" class="floatL ep_image"/><input type="hidden" class="ep_image_updated" value="fase"/>
+                      <img alt="" src="${root}/images/cms/upload_img.jpg" class="floatL ep_image"/><input type="hidden" class="ep_image_updated" value="fase"/>
                       <div class="floatL imgBtn">
                         <br />
                         <input type="radio" name="ep_image_upload_from" class="ep_image_urlradio" checked="checked"/>&nbsp;<spring:message code="cms.channel_management.btn.from_url"/>
@@ -450,7 +452,7 @@
                 <p class="ep_createdate">2011/04/25 14:30</p><br/>
                 <label class="floatL"><span class="red" style="display:none">＊</span><spring:message code="cms.channel_management.label.program_logo"/></label>
                 <div class="uploadImg">
-                  <img alt="" src="${root}/images/upload_img.jpg" class="floatL ep_image"/><input type="hidden" class="ep_image_updated" value="fase"/>
+                  <img alt="" src="${root}/images/cms/upload_img.jpg" class="floatL ep_image"/><input type="hidden" class="ep_image_updated" value="fase"/>
                   <div class="floatL imgBtn">
                     <p class="gray"><spring:message code="cms.channel_management.msg.best_resolution"/></p>
                     <span class="upload_button_place"></span>
@@ -551,7 +553,7 @@
                 <p class="ep_createdate">2011/04/25 14:30</p><br/><br/>
                 <label class="floatL"><spring:message code="cms.channel_management.label.program_logo"/></label>
                 <div class="uploadImg">
-                  <img class="ep_image" alt="" src="${root}/images/upload_img.jpg" />
+                  <img class="ep_image" alt="" src="${root}/images/cms/upload_img.jpg" />
                 </div>
                 <div class="clear"></div><br/><br/>
                 <label class="floatL"><spring:message code="cms.channel_management.label.name"/></label>
@@ -580,7 +582,7 @@
                 <div class="clear"></div><br/>
                 <label class="floatL"><span style="display:none" class="red">＊</span><spring:message code="cms.channel_management.label.logo"/></label>
                 <div class="uploadImg">
-                  <img name="ch_image" alt="" src="${root}/images/upload_img.jpg" class="floatL"/><input type="hidden" name="ch_image_updated" value="false"/>
+                  <img name="ch_image" alt="" src="${root}/images/cms/upload_img.jpg" class="floatL"/><input type="hidden" name="ch_image_updated" value="false"/>
                   <div class="floatL imgBtn">
                     <p class="gray"><spring:message code="cms.channel_management.msg.best_resolution"/></p>
                     <span name="upload_button_place">
@@ -653,11 +655,12 @@
 <label class="lang" id="lang_channel_source_is_wrong"><spring:message code="cms.warning.channel_source_is_wrong"/></label>
 <label class="lang" id="lang_audio_url_example"><spring:message code="cms.channel_management.msg.audio_url_example"/></label>
 <label class="lang" id="lang_image_url_example"><spring:message code="cms.channel_management.msg.image_url_example"/></label>
-<label class="lang" id="image_btn_upload">${root}/images/<spring:message code="cms.image.btn_upload"/></label>
-<label class="lang" id="image_btn_from_disk">${root}/images/<spring:message code="cms.image.btn_from_disk"/></label>
-<label class="lang" id="image_btn_save">${root}/images/<spring:message code="cms.image.btn_save"/></label>
+<label class="lang" id="image_btn_upload">${root}/images/cms/<spring:message code="cms.image.btn_upload"/></label>
+<label class="lang" id="image_btn_from_disk">${root}/images/cms/<spring:message code="cms.image.btn_from_disk"/></label>
+<label class="lang" id="image_btn_save">${root}/images/cms/<spring:message code="cms.image.btn_save"/></label>
 <label class="lang" id="image_btn_reorder"><spring:message code="cms.channel_management.btn.reorder"/></label>
-<label class="lang" id="image_ch_public">${root}/images/<spring:message code="cms.image.ch_public"/></label>
-<label class="lang" id="image_ch_unpublic">${root}/images/<spring:message code="cms.image.ch_unpublic"/></label>
+<label class="lang" id="image_ch_public">${root}/images/cms/<spring:message code="cms.image.ch_public"/></label>
+<label class="lang" id="image_ch_unpublic">${root}/images/cms/<spring:message code="cms.image.ch_unpublic"/></label>
+<%@ include file="global.jsp" %>
 </body>
 </html>

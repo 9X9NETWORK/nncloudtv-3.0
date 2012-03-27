@@ -318,17 +318,17 @@ var page$ = {
             'types': {
               'folder': {
                 'valid_children': ['folder', 'file', 'set'],
-                'icon': { 'image': '/javascripts/themes/default/folder.png' }
+                'icon': { 'image': cms.getExternalRootPath() + '/javascripts/themes/default/folder.png' }
               },
               'file': {
                 'valid_children': ['none'],
                 'max_depth': 1,
-                'icon': { 'image': '/javascripts/themes/default/file.png' }
+                'icon': { 'image': cms.getExternalRootPath() + '/javascripts/themes/default/file.png' }
               },
               'set': {
                 'valid_children': ['none'],
                 'max_depth': 1,
-                'icon': { 'image': '/javascripts/themes/default/set.png' }
+                'icon': { 'image': cms.getExternalRootPath() + '/javascripts/themes/default/set.png' }
               },
               'default': {
               }
@@ -356,7 +356,7 @@ var page$ = {
             'theme': 'default',
             'dots':  true,
             'icons': true,
-            'url':   '/javascripts/themes/default/style.css'
+            'url':   cms.getExternalRootPath() + '/javascripts/themes/default/style.css'
           },
           'ui': {
             'select_limit': 1
@@ -417,7 +417,7 @@ var page$ = {
     }
   },
   init: function() {
-    cms.loadScript('/javascripts/plugins/jquery.jstree.js', function() {
+    cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.jstree.js', function() {
       page$.channelAndSetPool.onload = page$.directoryArea.init;
       page$.channelAndSetPool.init();
     });

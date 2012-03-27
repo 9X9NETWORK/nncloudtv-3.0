@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="global.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -22,7 +24,7 @@
       <li><a class="menuD"></a></li>
       <li><a class="menuE_active"></a></li>
     </ul>
-    <label class="lang" id="image_menu">${root}/images/<spring:message code="cms.image.menu"/></label>
+    <label class="lang" id="image_menu">${root}/images/cms/<spring:message code="cms.image.menu"/></label>
     <div class="clear"></div>
     <div class="left_body">
       <div class="createChList2" style="height: 548px">
@@ -80,7 +82,7 @@
             <option><spring:message code="cms.statistics.label.average_elapsed_time"/></option>
             <option><spring:message code="cms.statistics.label.returning_rate"/></option>
           </select>
-          <img alt="" src="${root}/images/img_stastics.png"/>
+          <img alt="" src="${root}/images/cms/img_stastics.png"/>
         </div>
         <table border="0" cellpadding="0" cellspacing="0" class="stastics_list">
           <tr>
@@ -128,7 +130,7 @@
               <option><spring:message code="cms.statistics.label.average_elapsed_time"/></option>
               <option><spring:message code="cms.statistics.label.returning_rate"/></option>
             </select>
-            <img alt="" src="${root}/images/img_stastics.png"/>
+            <img alt="" src="${root}/images/cms/img_stastics.png"/>
           </div>
           <table border="0" cellpadding="0" cellspacing="0" class="stastics_list" style="display:none">
             <tr>
@@ -166,7 +168,7 @@
               <option><spring:message code="cms.statistics.label.shared_times"/></option>
               <option><spring:message code="cms.statistics.label.average_watch_time_each"/></option>
             </select>
-            <img alt="" src="${root}/images/img_stastics.png"/>
+            <img alt="" src="${root}/images/cms/img_stastics.png"/>
           </div>
           <table border="0" cellpadding="0" cellspacing="0" class="stastics_list">
             <tr>
@@ -194,7 +196,8 @@
 <label class="lang" id="lang_label_channel_set"><spring:message code="cms.statistics.label.channel_set"/></label>
 <label class="lang" id="lang_title_set_statistics"><spring:message code="cms.statistics.title.channel_set_statistics"/></label>
 <label class="lang" id="lang_label_please_select_program"><spring:message code="cms.statistics.lable.please_select_program"/></label>
-<label class="lang" id="image_ch_public">${root}/images/<spring:message code="cms.image.ch_public"/></label>
-<label class="lang" id="image_ch_unpublic">${root}/images/<spring:message code="cms.image.ch_unpublic"/></label>
+<label class="lang" id="image_ch_public">${root}/images/cms/<spring:message code="cms.image.ch_public"/></label>
+<label class="lang" id="image_ch_unpublic">${root}/images/cms/<spring:message code="cms.image.ch_unpublic"/></label>
+<%@ include file="global.jsp" %>
 </body>
 </html>
