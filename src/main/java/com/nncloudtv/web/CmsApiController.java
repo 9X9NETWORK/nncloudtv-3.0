@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import twitter4j.TwitterException;
 
+import com.google.common.base.Joiner;
 import com.nncloudtv.dao.CategoryToNnSetDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.FacebookLib;
@@ -72,6 +73,14 @@ import com.sun.syndication.io.XmlReader;
 @RequestMapping("CMSAPI")
 public class CmsApiController {
 	protected static final Logger log = Logger.getLogger(CmsApiController.class.getName());
+	
+	class NnProgramSeqComparator implements Comparator<NnProgram> {
+		public int compare(NnProgram program1, NnProgram program2) {
+			int seq1 = (program1.getSeq() == null) ? 0 : Integer.valueOf(program1.getSeq());
+			int seq2 = (program2.getSeq() == null) ? 0 : Integer.valueOf(program2.getSeq());
+			return (seq1 - seq2);
+		}
+	}
 	
 	@ExceptionHandler(Exception.class)
 	public String exception(Exception e) {
@@ -752,6 +761,8 @@ public class CmsApiController {
 		program.setPublic(true);
 		programMngr.create(channel, program);
 		
+		updateAllProgramsSeq(channelId);
+		
 		return "OK";
 	}
 	
@@ -905,6 +916,23 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	// this is a wrapper of updateProgramListSeq
+	private void updateAllProgramsSeq(long channelId) {
+		
+		NnProgramManager programMngr = new NnProgramManager();
+		
+		// update all episode sequence
+		List<NnProgram> programList = programMngr.findByChannel(channelId);
+		Collections.sort(programList, new NnProgramSeqComparator());
+		List<Long> programIdList = new ArrayList<Long>();
+		for (NnProgram program : programList) {
+			programIdList.add(program.getId());
+		}
+		String programListStr = Joiner.on(",").join(programIdList);
+		updateProgramListSeq(channelId, programListStr);
+		
+	}
+	
 	@RequestMapping("updateProgramListSeq")
 	public @ResponseBody String updateProgramListSeq(@RequestParam Long channelId, @RequestParam String programIdList) {
 		log.info("channelId: " + channelId);
@@ -1001,15 +1029,8 @@ public class CmsApiController {
 		NnProgramManager programMngr = new NnProgramManager();
 		List<NnProgram> results = programMngr.findByChannel(channelId);
 		
-		class NnProgramComparator implements Comparator<NnProgram> {
-			public int compare(NnProgram program1, NnProgram program2) {
-				int seq1 = (program1.getSeq() == null) ? 0 : Integer.valueOf(program1.getSeq());
-				int seq2 = (program2.getSeq() == null) ? 0 : Integer.valueOf(program2.getSeq());
-				return (seq1 - seq2);
-			}
-		}
-		Collections.sort(results, new NnProgramComparator());
-
+		Collections.sort(results, new NnProgramSeqComparator());
+		
 		return results;
 	}
 	
@@ -1345,7 +1366,7 @@ public class CmsApiController {
 		return "OK";
 	}
 	
-	@RequestMapping("removeChannelAutosharing")
+	@RequestMapping("removeNnSetAutosharing")
 	public @ResponseBody void removeNnSetAutosharing(@RequestParam Long msoId,
 	                                                 @RequestParam Long setId,
 	                                                 @RequestParam Short type) {
