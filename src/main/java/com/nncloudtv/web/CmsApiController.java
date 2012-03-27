@@ -35,7 +35,6 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PiwikLib;
-import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryToNnSet;
 import com.nncloudtv.model.ContentOwnership;
@@ -60,7 +59,6 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
-import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.SnsAuthManager;
 import com.nncloudtv.service.TranscodingService;
 import com.nncloudtv.web.json.facebook.FBPost;
@@ -295,26 +293,6 @@ public class CmsApiController {
 		return "Failed";
 	}
 	
-	// not used ?
-	@RequestMapping("addNnSetChannel")
-	public @ResponseBody String addNnSetChannel(@RequestParam Long  setId,
-	                                 @RequestParam Long  channelId,
-	                                 @RequestParam Short seq) {
-		
-		log.info("setId = " + setId + ", channelId = " + channelId + ", seq = " + seq);
-		
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
-		NnChannelManager channelMngr = new NnChannelManager();
-		
-		NnChannel channel = channelMngr.findById(channelId);
-		if (channel == null) {
-			return "Invalid channelId";
-		}
-		channel.setSeq(seq);
-		cscMngr.addChannel(setId, channel);
-		return "OK";
-	}
-	
 	@RequestMapping("removeNnSetChannel")
 	public @ResponseBody String removeNnSetChannel(@RequestParam Long  setId,
 	                                    @RequestParam Short seq) {		
@@ -352,12 +330,6 @@ public class CmsApiController {
 			//List<SyndEntry> entries = feed.getEntries();
 		}
 		return result;
-	}
-	
-	// not in used
-	@RequestMapping("getYouTubeVideoInfo")
-	public @ResponseBody Map<String, String> getYouTubeVideoInfo(@RequestParam String videoIdStr) {
-		return YouTubeLib.getYouTubeEntry(videoIdStr, true);
 	}
 	
 	/**
@@ -979,11 +951,6 @@ public class CmsApiController {
 			return null;
 	}
 	
-	@RequestMapping("channelCategory")
-	public @ResponseBody Category channelCategory(@RequestParam Long channelId) {
-		return null;
-	}
-	
 	@RequestMapping("createProgramSkeleton")
 	public @ResponseBody Long createProgramSkeleton(@RequestParam(required=false) Short contentType) {
 		NnProgramManager programMngr = new NnProgramManager();
@@ -1035,10 +1002,6 @@ public class CmsApiController {
 	}
 	
 	//////////////////// Directory Management ////////////////////	
-	@RequestMapping("listCategoryChannels")
-	public @ResponseBody List<NnChannel> listCategoryChannels(@RequestParam Long categoryId) {
-		return new ArrayList<NnChannel>();
-	}
 	
 	@RequestMapping("listCategoryNnSets")
 	public @ResponseBody List<NnSet> listCategoryNnSets(@RequestParam Long categoryId, @RequestParam(required=false) Boolean isPublic) {
@@ -1048,16 +1011,6 @@ public class CmsApiController {
 		} else {
 			return catMngr.findSetsByCategory(categoryId, false);
 		}
-	}
-	
-	@RequestMapping("listCategories")
-	public @ResponseBody List<Category> listCategories(@RequestParam Long msoId) {
-		CategoryManager catMngr = new CategoryManager();
-		MsoManager msoMngr = new MsoManager();
-		Mso mso = msoMngr.findById(msoId);
-		if (mso == null)
-			return new ArrayList<Category>();
-		return catMngr.findAll();  // accuracy
 	}
 	
 	/**
@@ -1102,121 +1055,6 @@ public class CmsApiController {
 		}
 		Collections.sort(results, new CategoryComparator());
 		return results;
-	}
-	
-	@RequestMapping("renameCategory")
-	public @ResponseBody String renameCategory(@RequestParam Long categoryId,
-	                                           @RequestParam String name) {
-		log.info("categoryId = " + categoryId);
-		log.info("name = " + name);
-		
-		CategoryManager catMngr = new CategoryManager();
-		Category category = catMngr.findById(categoryId);
-		if (category == null)
-			return "Invalid categoryId";
-		category.setName(name);
-		catMngr.save(category);
-		return "OK";
-	}
-	
-	@RequestMapping("createCategory")
-	public @ResponseBody Long createCategory(@RequestParam Long msoId,
-	                                         @RequestParam Long parentId,
-	                                         @RequestParam String name) {
-		return (long) NnStatusCode.API_DEPRECATED;
-	}
-	
-	@RequestMapping("createCategoryChannelSet")
-	public @ResponseBody String createCategoryToNnSet(@RequestParam Long categoryId,
-	                                                  @RequestParam Long setId) {
-		log.info("categoryId = " + categoryId);
-		log.info("setId = " + setId);
-		
-		CategoryManager catMngr = new CategoryManager();
-		NnSetManager setMngr = new NnSetManager();
-		
-		Category category = catMngr.findById(categoryId);
-		if (category == null)
-			return "Invalid categoryId";
-		NnSet set = setMngr.findById(setId);
-		if (set == null)
-			return "Invalid setId";
-		List<NnSet> sets = new ArrayList<NnSet>();
-		sets.add(set);
-		catMngr.addSets(category, sets);
-		return "OK";
-	}
-	
-	@RequestMapping("createCategoryChannel")
-	public @ResponseBody String createCategoryChannel(@RequestParam Long categoryId,
-	                                                  @RequestParam Long channelId) {
-		return "NOT SUPPORTED";
-	}
-	
-	@RequestMapping("removeCategoryChannel")
-	public @ResponseBody String removeCategoryChannel(@RequestParam Long categoryId,
-	                                                  @RequestParam Long channelId) {
-		return "NOT SUPPORTED";
-	}
-	
-	@RequestMapping("removeCategoryChannelSet")
-	public @ResponseBody String removeCategoryNnSet(@RequestParam Long categoryId,
-	                                                     @RequestParam Long setId) {
-		log.info("categoryId = " + categoryId);
-		log.info("setId = " + setId);
-		CategoryManager catMngr = new CategoryManager();
-		boolean success = catMngr.deleteSet(categoryId, setId);
-		if (!success)
-			return "Not Found";
-		return "OK";
-	}
-	
-	@RequestMapping("removeCategory")
-	public @ResponseBody String removeCategory(@RequestParam Long categoryId) {		
-		return "NOT SUPPORTED";
-	}
-	
-	@RequestMapping("moveCategory")
-	public @ResponseBody String moveCategory(@RequestParam Long toCategoryId,
-	                                         @RequestParam Long fromCategoryId,
-	                                         @RequestParam Long categoryId) {
-		log.info("toCategoryId = " + toCategoryId);
-		log.info("fromCategoryId = " + fromCategoryId);
-		log.info("categoryId = " + categoryId);
-		
-		CategoryManager catMngr = new CategoryManager();
-		Category category = catMngr.findById(categoryId);
-		if (category == null)
-			return "Category Not Found";
-		Category parent = catMngr.findById(toCategoryId);
-		if (parent == null)
-			return "Parent Not Found";
-		if (category.getParentId() != fromCategoryId)
-			return "Parent Not Matched";
-		category.setParentId(toCategoryId);
-		catMngr.save(category);
-		return "OK";
-	}
-	
-	@RequestMapping("moveCategoryNnSet")
-	public @ResponseBody String moveCategoryNnSet(@RequestParam Long toCategoryId,
-	                                                   @RequestParam Long fromCategoryId,
-	                                                   @RequestParam Long setId) {
-		log.info("toCategoryId = " + toCategoryId);
-		log.info("fromCategoryId = " + fromCategoryId);
-		log.info("setId = " + setId);
-		CategoryManager catMngr = new CategoryManager();
-		boolean success = catMngr.moveSet(fromCategoryId, toCategoryId, setId);
-		if (!success)
-			return "Not Found";
-		return "OK";
-	}
-	
-	@RequestMapping("moveCategoryChannel")
-	public @ResponseBody String moveCategoryChannel(@RequestParam Long toCategoryId,
-	                                                @RequestParam Long fromCategoryId,
-	                                                @RequestParam Long channelId) {
-		return "NOT SUPPORTED";
 	}
 	
 	//////////////////// Promotion Tools ////////////////////
@@ -1406,33 +1244,6 @@ public class CmsApiController {
 	}
 	
 	//////////////////// statistics ////////////////////
-	/*
-	@RequestMapping("channelStatisticsInfo")
-	public @ResponseBody Map<String, Integer> channelStatisticsInfo(@RequestParam Long channelId) {
-		log.info("channelId = " + channelId);
-		SubscriptionLogManager subLogMngr = new SubscriptionLogManager();
-		Map<String, Integer> result = new HashMap<String, Integer>();
-		result.put("subscriptionCount", subLogMngr.findTotalCountByChannelId(channelId));
-		return result;
-	}
-	
-	@RequestMapping("channelSetStatisticsInfo")
-	public @ResponseBody Map<String, Integer> channelSetStatisticsInfo(@RequestParam Long setId) {
-		log.info("setId = " + setId);
-		NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
-		Map<String, Integer> result = new HashMap<String, Integer>();
-		result.put("subscriptionCount", groupMngr.findTotalCountBySetId(setId));
-		return result;
-	}
-	*/
-	
-	@RequestMapping("programStatisticsInfo")
-	public @ResponseBody Map<String, Integer> programStatisticsInfo(@RequestParam Long programId) {
-		log.info("programId = " + programId);
-		Map<String, Integer> result = new HashMap<String, Integer>();
-		result.put("shareCount", 0);
-		return result;
-	}
 	
 	//////////////////// others ////////////////////
 	

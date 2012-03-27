@@ -12,6 +12,7 @@ import javax.jdo.Query;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.MsoManager;
 
 public class NnUserDao extends GenericDao<NnUser> {
 
@@ -66,6 +67,50 @@ public class NnUserDao extends GenericDao<NnUser> {
 		return user;
 	}
 	
+	// return MSO only
+	@SuppressWarnings("unchecked")
+	public NnUser findAuthenticatedMsoUser(String email, String password, long msoId) {
+		NnUser user = null;
+		PersistenceManager pm = NnUserDao.getPersistenceManager(NnUser.SHARD_DEFAULT, null);
+		MsoManager msoMngr = new MsoManager();
+		long nnId = msoMngr.findNNMso().getId();
+		try {
+			Query query = pm.newQuery(NnUser.class);
+			query.setFilter("email == emailParam && msoId == msoIdParam && type == typeParam");
+			query.declareParameters("String emailParam, long msoIdParam, short typeParam");
+			List<NnUser> results = (List<NnUser>) query.execute(email, msoId, NnUser.TYPE_3X3);
+			if (results.size() > 0) {
+				user = results.get(0);		
+			} else {
+				// make 9x9 and 5F login as possible
+				results = (List<NnUser>) query.execute(email, nnId, NnUser.TYPE_NN);  // super account !!!
+				if (results.size() > 0) {
+					user = results.get(0);
+				} else {
+					results = (List<NnUser>) query.execute(email, msoId, NnUser.TYPE_TBC);
+					if (results.size() > 0) {
+						user = results.get(0);
+					} else {
+						results = (List<NnUser>) query.execute(email, msoId, NnUser.TYPE_ENTERPRISE);
+						if (results.size() > 0) {
+							user = results.get(0);
+						}
+					}
+				}
+			}
+			if (user != null) {
+				user = pm.detachCopy(user);
+				byte[] proposedDigest = AuthLib.passwordDigest(password, user.getSalt());
+				if (!Arrays.equals(user.getCryptedPassword(), proposedDigest)) {				
+					user = null;
+				}
+			}
+		} finally {
+			pm.close();
+		}
+		return user;		
+	}
+	
 	public NnUser findAuthenticatedUser(String email, String password, short shard) {
 		NnUser user = null;
 		PersistenceManager pm = NnUserDao.getPersistenceManager(shard, null);
@@ -88,7 +133,22 @@ public class NnUserDao extends GenericDao<NnUser> {
 		}
 		return user;		
 	}
-				 
+	
+	public List<NnUser> findByType(short type) {
+		List<NnUser> detached = new ArrayList<NnUser>();
+		PersistenceManager pm = NnUserDao.getPersistenceManager(NnUser.SHARD_DEFAULT, null);
+		try {
+			Query query = pm.newQuery(NnUser.class);
+			query.setFilter("type == " + type);	
+			@SuppressWarnings("unchecked")
+			List<NnUser> users = (List<NnUser>) query.execute(type);
+			detached = (List<NnUser>)pm.detachCopyAll(users);
+		} finally {
+			pm.close();
+		}
+		return detached;		
+	}
+	
 	public NnUser findByToken(String token) {
 		NnUser user = null;
 		PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, token);
@@ -143,4 +203,23 @@ public class NnUserDao extends GenericDao<NnUser> {
 		}
 		return user;				
 	}	
+	
+	public List<NnUser> findByTypeAndMso(Short type, Long msoId) {
+		List<NnUser> detached = new ArrayList<NnUser>();
+		PersistenceManager pm = NnUserDao.getPersistenceManager(NnUser.SHARD_DEFAULT, null);
+		try {
+			Query query = pm.newQuery(NnUser.class);
+			query.setFilter("type == typeParam && msoId == msoIdParam");
+			query.declareParameters("short typeParam, long msoIdParam");
+			@SuppressWarnings("unchecked")
+			List<NnUser> results = (List<NnUser>) query.execute(type, msoId);
+			if (results.size() > 0) {
+				detached = (List<NnUser>) pm.detachCopyAll(results);
+			}
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}
+	
 }

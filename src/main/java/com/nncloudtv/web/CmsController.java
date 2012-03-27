@@ -37,6 +37,7 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.AuthService;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
@@ -211,6 +212,7 @@ public class CmsController {
 		log.info("rememberMe = " + rememberMe);
 		
 		SessionService sessionService = new SessionService(request);
+		AuthService authService = new AuthService();
 		MsoManager msoMngr = new MsoManager();
 		NnUserManager userMngr = new NnUserManager();
 		Locale locale = request.getLocale();
@@ -223,13 +225,10 @@ public class CmsController {
 			model.addAttribute("msoLogo", msoLogo);
 			return "cms/readonly";
 		}
-		
-		NnUser user = userMngr.findAuthenticatedUser(email, password, request);
-		Mso msoAuth = null;
-		if (user != null)
-			msoAuth = msoMngr.findById(user.getMsoId());		
+		Mso msoAuth = authService.msoAuthenticate(email, password, mso.getId());
 		if (msoAuth == null) {
 			log.info("login failed");
+			NnUser user = userMngr.findMsoUser(mso);
 			String error;
 			if (user != null && user.getEmail().equals(email)) {
 				error = messageSource.getMessage("cms.warning.invalid_password", null, locale);
@@ -245,7 +244,7 @@ public class CmsController {
 		}
 		
 		HttpSession session = sessionService.getSession();
-		session.setAttribute("mso", msoAuth);
+		session.setAttribute("mso", mso);
 		sessionService.saveSession(session);
 		
 		// set cookie
@@ -316,7 +315,7 @@ public class CmsController {
 		
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer("udWzz6YrsaNlbJ18vZ7aCA", "Pf0TdB2QFXWKyphbIdnPG4vZhLVze0cPCxlLkfBwtQ");
-		MemcachedClient cache = CacheFactory.get();		
+		MemcachedClient cache = CacheFactory.get();
 		
 		if(oauthToken==null)
 		{
@@ -326,7 +325,6 @@ public class CmsController {
 			if(msoId!=null) {
 				cache.set(requestToken.getToken()+"msoId", CacheFactory.EXP_DEFAULT, msoId);
 				cache.set(requestToken.getToken(), CacheFactory.EXP_DEFAULT, requestToken.getTokenSecret());
-				
 			}
 			else
 				return NnNetUtil.textReturn("you are not permit authorization");

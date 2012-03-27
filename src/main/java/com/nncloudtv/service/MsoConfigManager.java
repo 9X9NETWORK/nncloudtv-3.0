@@ -17,7 +17,6 @@ public class MsoConfigManager {
 	private MsoConfigDao configDao = new MsoConfigDao();
     protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());    
 	
-
 	public MsoConfig create(MsoConfig config) {
 		Date now = new Date();
 		config.setCreateDate(now);
