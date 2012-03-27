@@ -206,7 +206,7 @@ var page$ = {
           $('#cc_id').val(channelSet.id);
           var swfupload_settings = {
             flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-            upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+            upload_url:             cms.getS3UploadBucket(),
             file_size_limit:        '10 MB',
             file_types:             cms.imageTypes,
             file_types_description: 'Image Files',
@@ -224,7 +224,7 @@ var page$ = {
               if (!file.type)
                 file.type = cms.getFileTypeByName(file.name);
               $('#uploading').hide();
-              $('#cc_image').attr('src', 'http://9x9tmp.s3.amazonaws.com/ch_set_logo_' + channelSet.id + '_' + file.size + file.type);
+              $('#cc_image').attr('src', cms.getS3UploadBucket() + '/ch_set_logo_' + channelSet.id + '_' + file.size + file.type);
               $('#cc_image_updated').val('true');
             },
             upload_error_handler: function(file, code, message) {

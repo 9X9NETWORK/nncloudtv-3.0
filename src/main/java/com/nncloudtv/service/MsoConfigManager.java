@@ -16,7 +16,13 @@ public class MsoConfigManager {
 
 	private MsoConfigDao configDao = new MsoConfigDao();
     protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());
-	public static final String EXTERNAL_ROOT_PATH = "http://9x9ui.s3.amazonaws.com/tprd-moveout";    
+    
+	private static final String EXTERNAL_ROOT_PATH = "http://9x9ui.s3.amazonaws.com/tprd-moveout"; // where to place this config ?
+	private static final String S3_UPLOAD_BUCKET = "9x9tmp"; // where to place this config ?
+	
+	static public String getS3UploadBucket() {
+		return S3_UPLOAD_BUCKET;
+	}
 	
 	static public String getExternalRootPath() {
 		return EXTERNAL_ROOT_PATH;

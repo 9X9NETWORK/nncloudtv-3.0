@@ -58,6 +58,11 @@ public class CmsController {
 		return readonly;
 	}
 	
+	@ModelAttribute("uploadBucket")
+	public String getS3UploadBucket() {
+		return MsoConfigManager.getS3UploadBucket();
+	}
+	
 	@ModelAttribute("root")
 	public String getExternalRootPath() {
 		return MsoConfigManager.getExternalRootPath();
@@ -145,7 +150,7 @@ public class CmsController {
 				model = setAttributes(model, mso);
 				model.addAttribute("locale", request.getLocale().getLanguage());
 				if (cmsTab.equals("channelManagement") || cmsTab.equals("channelSetManagement")) {
-					String policy = AmazonLib.buildS3Policy("9x9tmp", "public-read", "");
+					String policy = AmazonLib.buildS3Policy(MsoConfigManager.getS3UploadBucket(), "public-read", "");
 					model.addAttribute("s3Policy", policy);
 					model.addAttribute("s3Signature", AmazonLib.calculateRFC2104HMAC(policy));
 					model.addAttribute("s3Id", AmazonLib.AWS_ID);
@@ -303,7 +308,7 @@ public class CmsController {
 			model.addAttribute("locale", request.getLocale().getLanguage());
 			
 			if (cmsTab.equals("channelManagement") || cmsTab.equals("channelSetManagement")) {
-				String policy = AmazonLib.buildS3Policy("9x9tmp", "public-read", "");
+				String policy = AmazonLib.buildS3Policy(MsoConfigManager.getS3UploadBucket(), "public-read", "");
 				model.addAttribute("s3Policy", policy);
 				model.addAttribute("s3Signature", AmazonLib.calculateRFC2104HMAC(policy));
 				model.addAttribute("s3Id", AmazonLib.AWS_ID);

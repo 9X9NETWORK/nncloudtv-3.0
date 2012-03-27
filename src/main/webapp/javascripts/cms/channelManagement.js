@@ -190,7 +190,7 @@ var page$ = {
       $('<span/>').addClass('ep_upload_image').appendTo(programDetailBlock.find('.upload_button_place'));
       var swfupload_settings = {
         flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-        upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+        upload_url:             cms.getS3UploadBucket(),
         file_size_limit:        '10240',
         file_types:             cms.imageTypes,
         file_types_description: 'Image Files',
@@ -208,7 +208,7 @@ var page$ = {
           if (!file.type)
             file.type = cms.getFileTypeByName(file.name);
           programDetailBlock.find('.ep_uploading_image').hide();
-          programDetailBlock.find('.ep_image').attr('src', 'http://9x9tmp.s3.amazonaws.com/prog_logo_' + programId + '_' + file.size + file.type);
+          programDetailBlock.find('.ep_image').attr('src', cms.getS3UploadBucket() + '/prog_logo_' + programId + '_' + file.size + file.type);
           programDetailBlock.find('.ep_image_updated').val('true');
         },
         upload_error_handler: function(file, code, message) {
@@ -358,7 +358,7 @@ var page$ = {
         // audio uploading
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-          upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+          upload_url:             cms.getS3UploadBucket(),
           file_size_limit:        '100 MB',
           file_types:             cms.audioTypes,
           file_types_description: 'Audio Files',
@@ -389,7 +389,7 @@ var page$ = {
           upload_success_handler: function(file, serverData, recievedResponse) {
             if (!file.type)
               file.type = cms.getFileTypeByName(file.name);
-            programDetailBlock.find('.ep_url_input').val('http://9x9tmp.s3.amazonaws.com/' + 'prog_audio_' + programId + file.type);
+            programDetailBlock.find('.ep_url_input').val(cms.getS3UploadBucket() + '/prog_audio_' + programId + file.type);
             programDetailBlock.find('.ep_audio_cancel').remove();
             this.setButtonDisabled(false);
           },
@@ -448,7 +448,7 @@ var page$ = {
         // logo uploading
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-          upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+          upload_url:             .getS3UploadBucket()
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,
           file_types_description: 'Image Files',
@@ -465,7 +465,7 @@ var page$ = {
           upload_success_handler: function(file, serverData, recievedResponse) {
             if (!file.type)
               file.type = cms.getFileTypeByName(file.name);
-            var imageUrl = 'http://9x9tmp.s3.amazonaws.com/prog_logo_' + programId + '_' + file.size + file.type;
+            var imageUrl = cms.getS3UploadBucket() + '/prog_logo_' + programId + '_' + file.size + file.type;
             log('imageUrl: ' + imageUrl);
             programDetailBlock.find('.ep_uploading_image').hide();
             programDetailBlock.find('.ep_image').attr('src', imageUrl);
@@ -686,7 +686,7 @@ var page$ = {
         // video uploading
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-          upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+          upload_url:             cms.getS3UploadBucket(),
           file_size_limit:        '1 GB',
           file_types:             cms.videoTypes,
           file_types_description: 'Video Files',
@@ -706,7 +706,7 @@ var page$ = {
           upload_success_handler: function(file, serverData, recievedResponse) {
             if (!file.type)
               file.type = cms.getFileTypeByName(file.name);
-            programDetailBlock.find('.ep_url_input').val('http://9x9tmp.s3.amazonaws.com/' + 'prog_video_' + programId + file.type);
+            programDetailBlock.find('.ep_url_input').val(cms.getS3UploadBucket() + '/prog_video_' + programId + file.type);
             programDetailBlock.find('.ep_url_import').click();
           },
           upload_error_handler: function(file, code, message) {
@@ -745,7 +745,7 @@ var page$ = {
         // logo uploading
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-          upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+          upload_url:             cms.getS3UploadBucket(),
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,
           file_types_description: 'Image Files',
@@ -763,7 +763,7 @@ var page$ = {
             if (!file.type)
               file.type = cms.getFileTypeByName(file.name);
             programDetailBlock.find('.ep_uploading_image').hide();
-            programDetailBlock.find('.ep_image').attr('src', 'http://9x9tmp.s3.amazonaws.com/prog_logo_' + programId + '_' + file.size + file.type);
+            programDetailBlock.find('.ep_image').attr('src', cms.getS3UploadBucket() + '/prog_logo_' + programId + '_' + file.size + file.type);
             programDetailBlock.find('.ep_image_updated').val('true');
           },
           upload_error_handler: function(file, code, message) {
@@ -1127,7 +1127,7 @@ var page$ = {
           }
           var swfupload_settings = {
             flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-            upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+            upload_url:             cms.getS3UploadBucket(),
             file_size_limit:        '10 MB',
             file_types:             cms.imageTypes,
             file_types_description: 'Image Files',
@@ -1145,7 +1145,7 @@ var page$ = {
               if (!file.type)
                 file.type = cms.getFileTypeByName(file.name);
               $('#channel_import_detail [name="ch_uploading_image"]').hide();
-              $('#channel_import_detail [name="ch_image"]').attr('src', 'http://9x9tmp.s3.amazonaws.com/' + 'ch_logo_' + channel.id + '_' + file.size + file.type);
+              $('#channel_import_detail [name="ch_image"]').attr('src', cms.getS3UploadBucket() + '/ch_logo_' + channel.id + '_' + file.size + file.type);
               $('#channel_import_detail [name="ch_image_updated"]').val('true');
             },
             upload_error_handler: function(file, code, message) {
@@ -1291,7 +1291,7 @@ var page$ = {
         $('<span/>').attr('id', 'ch_upload_image').appendTo('#upload_button_place');
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-          upload_url:             'http://9x9tmp.s3.amazonaws.com/',
+          upload_url:             cms.getS3UploadBucket(),
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,
           file_types_description: 'Image Files',
@@ -1309,7 +1309,7 @@ var page$ = {
             if (!file.type)
               file.type = cms.getFileTypeByName(file.name);
             $('#ch_uploading').hide();
-            var imageUrl = 'http://9x9tmp.s3.amazonaws.com/' + 'ch_logo_' + channel.id + '_' + file.size + file.type;
+            var imageUrl = cms.getS3UploadBucket() + '/ch_logo_' + channel.id + '_' + file.size + file.type;
             $('#ch_image').attr('src', imageUrl);
             $('#ch_image_updated').val('true');
           },
