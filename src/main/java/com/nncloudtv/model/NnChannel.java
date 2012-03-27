@@ -44,7 +44,11 @@ public class NnChannel implements Serializable {
 	
 	@Persistent
 	private boolean isPublic;
-		
+	
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=5)
+	private String lang;
+	
 	@Persistent
 	private int programCnt;
 	
@@ -325,6 +329,14 @@ public class NnChannel implements Serializable {
 
 	public void setTag(String tag) {
 		this.tag = tag;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 	
 }
