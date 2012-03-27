@@ -68,7 +68,7 @@ var page$ = {
       // load channels
       var method = 'listOwnedChannels';
       if (cms.isEnterprise()) {
-        method = 'defaultChannelSetChannels';
+        method = 'defaultNnSetChannels';
       }
       cms.loadJSON('/CMSAPI/' + method + '?msoId=' + $('#msoId').val(), function(channels) {
         for (i in channels) {

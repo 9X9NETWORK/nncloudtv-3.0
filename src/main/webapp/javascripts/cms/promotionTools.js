@@ -8,7 +8,7 @@ var page$ = {
       $('.sns_checkbox').attr('checked', false);
       // load auto-sharing info
       var parameters = {
-        'channelSetId': channelSetId,
+        'setId': channelSetId,
         'msoId': $('#msoId').val()
       };
       cms.post('/CMSAPI/listChannelSetAutosharing', parameters, function(autosharings) {
@@ -33,7 +33,7 @@ var page$ = {
           $('input[name="sns_facebook"]').unbind('change').change(function() {
             var parameters = {
               'msoId': $('#msoId').val(),
-              'channelSetId': channelSetId,
+              'setId': channelSetId,
               'type': 1
             };
             if ($(this).is(':checked')) {
@@ -41,7 +41,7 @@ var page$ = {
                 alert($('#lang_update_successfully').text());
               });
             } else {
-              cms.post('/CMSAPI/removeChannelSetAutosharing', parameters, function() {
+              cms.post('/CMSAPI/removeNnSetAutosharing', parameters, function() {
                 alert($('#lang_update_successfully').text());
               });
             }
@@ -51,7 +51,7 @@ var page$ = {
           $('input[name="sns_twitter"]').unbind('change').change(function() {
             var parameters = {
               'msoId': $('#msoId').val(),
-              'channelSetId': channelSetId,
+              'setId': channelSetId,
               'type': 2
             };
             if ($(this).is(':checked')) {
@@ -59,7 +59,7 @@ var page$ = {
                 alert($('#lang_update_successfully').text());
               });
             } else {
-              cms.post('/CMSAPI/removeChannelSetAutosharing', parameters, function() {
+              cms.post('/CMSAPI/removeNnSetAutosharing', parameters, function() {
                 alert($('#lang_update_successfully').text());
               });
             }
@@ -69,7 +69,7 @@ var page$ = {
           $('input[name="sns_plurk"]').change(function() {
             var parameters = {
               'msoId': $('#msoId').val(),
-              'channelSetId': channelSetId,
+              'setId': channelSetId,
               'type': 3
             };
             if ($(this).is(':checked')) {
@@ -77,7 +77,7 @@ var page$ = {
                 alert($('#lang_update_successfully').text());
               });
             } else {
-              cms.post('/CMSAPI/removeChannelSetAutosharing', parameters, function() {
+              cms.post('/CMSAPI/removeNnSetAutosharing', parameters, function() {
                 alert($('#lang_update_successfully').text());
               });
             }
@@ -87,7 +87,7 @@ var page$ = {
           $('input[name="sns_sina"]').change(function() {
             var parameters = {
               'msoId': $('#msoId').val(),
-              'channelSetId': channelSetId,
+              'setId': channelSetId,
               'type': 3
             };
             if ($(this).is(':checked')) {
@@ -95,7 +95,7 @@ var page$ = {
                 alert($('#lang_update_successfully').text());
               });
             } else {
-              cms.post('/CMSAPI/removeChannelSetAutosharing', parameters, function() {
+              cms.post('/CMSAPI/removeNnSetAutosharing', parameters, function() {
                 alert($('#lang_update_successfully').text());
               });
             }

@@ -39,7 +39,7 @@ var page$ = {
           children: nodes,
           onLazyRead: function(node) {
             if (node.data.isFolder && node.data.type == 'category') {
-              cms.post('/CMSAPI/listCategoryChannelSets', { 'categoryId': node.data.key, 'isPublic': true }, function(channelSets) {
+              cms.post('/CMSAPI/listCategoryNnSets', { 'categoryId': node.data.key, 'isPublic': true }, function(channelSets) {
                 for (var i in channelSets) {
                   var channelSet = channelSets[i];
                   var channelSetId = channelSet.key.id;
@@ -56,13 +56,13 @@ var page$ = {
                 node.setLazyNodeStatus(DTNodeStatus_Ok);
               }, 'json');
             } else if (node.data.isFolder && node.data.type == 'set') {
-              cms.post('/CMSAPI/defaultChannelSetChannels', { 'channelSetId': node.data.key, 'isGood': true }, function(channels) {
+              cms.post('/CMSAPI/defaultNnSetChannels', { 'setId': node.data.key, 'isGood': true }, function(channels) {
                 for (var i in channels) {
                   var channel = channels[i];
                   var channelId = channel.key.id;
                   if (channel.name == null) continue;
                   var child = {
-                    'title': cms.escapeHtml(channel.name) + ' <img alt="' + channelId + '" class="tiny-button plus-button" src="http://s3.amazonaws.com/9x9ui/cms/images/plus.png"> <img alt="' + channelId + '" class="tiny-button play-button" src="http://s3.amazonaws.com/9x9ui/cms/images/play.png">',
+                    'title': cms.escapeHtml(channel.name) + ' <img alt="' + channelId + '" class="tiny-button plus-button" src="/images/cms/plus.png"> <img alt="' + channelId + '" class="tiny-button play-button" src="/images/cms/play.png">',
                     'key':   channelId,
                     'isFolder': false,
                     'isLazy':   false,
@@ -179,14 +179,14 @@ var page$ = {
             .attr('title', icon)
             .appendTo('#sys_directory');
         }
-        cms.post('/CMSAPI/defaultChannelSetCategory', { 'msoId': $('#msoId').val() }, function(category) {
+        cms.post('/CMSAPI/defaultNnSetCategory', { 'msoId': $('#msoId').val() }, function(category) {
           if (category != null) {
             $('#sys_directory').val(category.key.id);
           }
           $('#sys_directory').msDropDown();
         }, 'json');
       });
-      cms.post('/CMSAPI/defaultChannelSetInfo', { 'msoId': $('#msoId').val() }, function(channelSet) {
+      cms.post('/CMSAPI/defaultNnSetInfo', { 'msoId': $('#msoId').val() }, function(channelSet) {
         if (channelSet != null) {
           var url = 'http://' + ((location.host == 'www.9x9.tv') ? '9x9.tv' : location.host) + '/';
           url += ((channelSet.beautifulUrl != null) ? channelSet.beautifulUrl : channelSet.defaultUrl);
@@ -205,7 +205,7 @@ var page$ = {
           $('#cc_image_updated').val('false');
           $('#cc_id').val(channelSet.key.id);
           var swfupload_settings = {
-            flash_url:              'http://s3.amazonaws.com/9x9ui/cms/javascripts/swfupload/swfupload.swf',
+            flash_url:              '/javascripts/swfupload/swfupload.swf',
             upload_url:             'http://9x9tmp.s3.amazonaws.com/',
             file_size_limit:        '10 MB',
             file_types:             cms.imageTypes,
@@ -311,7 +311,7 @@ var page$ = {
     },
     init: function() {
       $('#set_ch_list .ch_normal').remove();
-      cms.post('/CMSAPI/defaultChannelSetChannels', { 'msoId': $('#msoId').val() }, function(channels) {
+      cms.post('/CMSAPI/defaultNnSetChannels', { 'msoId': $('#msoId').val() }, function(channels) {
         var area$ = page$.objChannelSetArea;
         if (channels.length == 0) {
           area$.adjustWidth();
@@ -410,7 +410,7 @@ var page$ = {
     }
     
     var parameters = {
-      'channelSetId': $('#cc_id').val(),
+      'setId':        $('#cc_id').val(),
       'channelIds':   channelIds,
       'name':         name,
       'intro':        intro,

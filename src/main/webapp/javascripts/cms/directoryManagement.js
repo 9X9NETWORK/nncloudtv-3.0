@@ -32,7 +32,7 @@ var page$ = {
       };
       if (type == 'channelSet') {
         var url = '/CMSAPI/createCategoryChannelSet';
-        parameters['channelSetId'] = objectId;
+        parameters['setId'] = objectId;
       } else {
         var url = '/CMSAPI/createCategoryChannel';
         parameters['channelId'] = objectId;
@@ -92,7 +92,7 @@ var page$ = {
       }
     }, 'json');
     // load channel sets
-    cms.post('/CMSAPI/listCategoryChannelSets', { 'categoryId': categoryId }, function(channelSets) {
+    cms.post('/CMSAPI/listCategoryNnSets', { 'categoryId': categoryId }, function(channelSets) {
       for (var i in channelSets) {
         var channelSetId = channelSets[i].key.id;
         $('#treeview').jstree('create', '#' + categoryId, 'last', {
@@ -253,8 +253,8 @@ var page$ = {
             url = '/CMSAPI/moveCategoryChannel';
             parameters['channelId'] = objectId;
           } else if (type == 'set') {
-            url = '/CMSAPI/moveCategoryChannelSet';
-            parameters['channelSetId'] = objectId;
+            url = '/CMSAPI/moveCategoryNnSet';
+            parameters['setId'] = objectId;
           } else if (type == 'folder') {
             url = '/CMSAPI/moveCategory';
             parameters['categoryId'] = objectId;
@@ -291,7 +291,7 @@ var page$ = {
                 parameters['channelId'] = objectId;
               } else if (type == 'set') {
                 url = '/CMSAPI/removeCategoryChannelSet';
-                parameters['channelSetId'] = objectId;
+                parameters['setId'] = objectId;
               } else {
                 alert($('#lang_warning_cannot_drag_directory').text());
                 return;
@@ -318,17 +318,17 @@ var page$ = {
             'types': {
               'folder': {
                 'valid_children': ['folder', 'file', 'set'],
-                'icon': { 'image': 'http://s3.amazonaws.com/9x9ui/cms/javascripts/themes/default/folder.png' }
+                'icon': { 'image': '/javascripts/themes/default/folder.png' }
               },
               'file': {
                 'valid_children': ['none'],
                 'max_depth': 1,
-                'icon': { 'image': 'http://s3.amazonaws.com/9x9ui/cms/javascripts/themes/default/file.png' }
+                'icon': { 'image': '/javascripts/themes/default/file.png' }
               },
               'set': {
                 'valid_children': ['none'],
                 'max_depth': 1,
-                'icon': { 'image': 'http://s3.amazonaws.com/9x9ui/cms/javascripts/themes/default/set.png' }
+                'icon': { 'image': '/javascripts/themes/default/set.png' }
               },
               'default': {
               }

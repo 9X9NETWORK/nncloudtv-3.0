@@ -272,7 +272,7 @@ var cms = {
       ajax:    'setup',
       trigger: '#setup',
       onLoad: function() {
-        cms.loadScript('https://s3.amazonaws.com/9x9ui/cms/javascripts/cms/setup.js', function() {
+        cms.loadScript('/javascripts/cms/setup.js', function() {
           pageSetup.init();
           if (cms.isGeneric()) {
             pageSetup.initGenericOne();
@@ -362,9 +362,9 @@ var cms = {
       cache: false // Disable caching of AJAX responses
     });
     
-    cms.loadScript('https://s3.amazonaws.com/9x9ui/cms/javascripts/plugins/jquery.getCSS.js', function() {
-      $.getCSS('https://s3.amazonaws.com/9x9ui/cms/stylesheets/jquery.jqModal.css', function() {
-        cms.loadScript('https://s3.amazonaws.com/9x9ui/cms/javascripts/plugins/jquery.jqModal.js', cms.initSetupButton);
+    cms.loadScript('/javascripts/plugins/jquery.getCSS.js', function() {
+      $.getCSS('/stylesheets/jquery.jqModal.css', function() {
+        cms.loadScript('/javascripts/plugins/jquery.jqModal.js', cms.initSetupButton);
       });
     });
   }
@@ -380,7 +380,7 @@ var addthis_config = {
     {
       name: "Google+",
       url:  "https://plusone.google.com/_/+1/confirm?hl=en&url={{URL}}",
-      icon: "https://s3.amazonaws.com/9x9ui/cms/images/google-plus.png"
+      icon: "/images/cms/google-plus.png"
     }
   ]
 };
@@ -396,7 +396,7 @@ $(function() {
   if (cms.debug) {
     cms.loadScript('http://www.netgrow.com.au/assets/files/jquery_plugins/jquery.dump.js');
   }
-  cms.loadScript('https://s3.amazonaws.com/9x9ui/cms/javascripts/plugins/jquery.blockUI.js', function() {
+  cms.loadScript('/javascripts/plugins/jquery.blockUI.js', function() {
     
     $.blockUI.defaults.message = $('#warning_please_wait').html();
     $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
