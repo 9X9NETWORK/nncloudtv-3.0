@@ -54,7 +54,7 @@ body {
   line-height: 35px;
   text-align: center;
   text-decoration: none;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_tab.png) 0 0 repeat-x;
+  background: url(../images/bg_tab.png) 0 0 repeat-x;
   -moz-border-radius: 5px; /* FF1+ */
   -webkit-border-radius: 5px; /* Saf3+, Chrome */
   border-radius: 5px; /* Opera 10.5, IE 9 */
@@ -77,7 +77,7 @@ body {
 
 #tabs li a.disable, #tabs li a.disable:hover {
   color: #d2d2d4;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_tab.png) 0 -100px repeat-x;
+  background: url(../images/bg_tab.png) 0 -100px repeat-x;
   cursor: default;
 }
 
@@ -87,13 +87,13 @@ body {
   height: 30px;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_tabNum.png) 0 -94px no-repeat;
+  background: url(../images/bg_tabNum.png) 0 -94px no-repeat;
   display: inline-block;
 }
 
 a:hover .tabNum {
   color: #fff;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_tabNum.png) 0 -94px no-repeat;
+  background: url(../images/bg_tabNum.png) 0 -94px no-repeat;
 }
 
 a.on .tabNum, a.on:hover .tabNum {
@@ -110,7 +110,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 7px 10px 0 0;
   width: 30px;
   height: 30px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/dialogClose.png) 0 0 no-repeat;
+  background: url(../images/dialogClose.png) 0 0 no-repeat;
   float: right;
 }
 
@@ -126,7 +126,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   line-height: 30px;
   color: #999;
   text-decoration: none;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_terminate.png) right 0 no-repeat;
+  background: url(../images/btn_terminate.png) right 0 no-repeat;
   float: right;
 }
 
@@ -143,7 +143,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   line-height: 30px;
   color: #999;
   text-decoration: none;
-  background:  url(http://s3.amazonaws.com/9x9ui/cms/images/grafix_searchDivider.png) right center no-repeat;
+  background:  url(../images/grafix_searchDivider.png) right center no-repeat;
   float: right;
 }
 
@@ -176,7 +176,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   color: #000;
   line-height: 31px;
   text-align: left;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_titlebar.gif) 0 0 repeat-x;
+  background: url(../images/bg_titlebar.gif) 0 0 repeat-x;
 }
 
 .titlebarL {
@@ -188,7 +188,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   color: #000;
   line-height: 54px;
   text-align: left;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_titlebarL.gif) 0 0 repeat-x;
+  background: url(../images/bg_titlebarL.gif) 0 0 repeat-x;
   overflow: hidden;
 }
 
@@ -229,7 +229,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   text-decoration: none;
   text-align: center;
   line-height: 32px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_btn.png) 0 0 no-repeat;
+  background: url(../images/bg_btn.png) 0 0 no-repeat;
   float: right;
 }
 
@@ -250,7 +250,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   text-decoration: none;
   text-align: center;
   line-height: 32px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_btnblue.png) 0 0 no-repeat;
+  background: url(../images/bg_btnblue.png) 0 0 no-repeat;
   display: block;
   float: right;
 }
@@ -289,7 +289,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 5px 0 0 0;
   width: 99px;
   height: 34px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_upload.png) 0 0 no-repeat;
+  background: url(../images/btn_upload.png) 0 0 no-repeat;
   border: none;
   float: left;
   cursor: pointer;
@@ -331,7 +331,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 .form .textfieldbox {
   width: 302px;
   height: 22px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_textfield.png) 0 0 no-repeat;
+  background: url(../images/bg_textfield.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -340,7 +340,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 .form .field-on, .form .field-on:hover {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_textfield.png) 0 -100px no-repeat;
+  background: url(../images/bg_textfield.png) 0 -100px no-repeat;
 }
 
 .form .textfield {
@@ -358,7 +358,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 .form .textareabox {
   width: 302px;
   height: 84px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_textarea.png) 0 0 no-repeat;
+  background: url(../images/bg_textarea.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -376,7 +376,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 .mandatory-bubble {
   width: 94px;
   height: 31px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bubble_mandatory.png) 0 0 no-repeat;
+  background: url(../images/bubble_mandatory.png) 0 0 no-repeat;
   position:absolute;
   top: -7px;
   left: 155px;
@@ -391,7 +391,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   color: #fff;
   line-height: 25px;
   text-align: center;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bubble_show.png) 0 0 no-repeat;
+  background: url(../images/bubble_show.png) 0 0 no-repeat;
   position:absolute;
   top: -7px;
   left: 60px;
@@ -423,7 +423,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   font-size: 12px;
   color: #83847c;
   line-height: 20px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_question.png) 0 0 no-repeat;
+  background: url(../images/icon_question.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -435,7 +435,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 35px 0 0 0;
   width: 99px;
   height: 34px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_signin.png) 0 0 no-repeat;
+  background: url(../images/btn_signin.png) 0 0 no-repeat;
   border: none;
   float: left;
   cursor: pointer;
@@ -559,25 +559,25 @@ a.disable .tabNum, a.disable:hover .tabNum {
 
 .q1 #tail  {
   margin: 40px 0 0 -21px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_tailleft.png) right 0 no-repeat;
+  background: url(../images/icon_tailleft.png) right 0 no-repeat;
   float: left;
 }
 
 .q2 #tail  {
   margin: 40px -21px 0 0;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_tailright.png) right 0 no-repeat;
+  background: url(../images/icon_tailright.png) right 0 no-repeat;
   float: right;
 }
 
 .q3 #tail  {
   margin: 120px 0 0 -21px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_tailleft.png) right 0 no-repeat;
+  background: url(../images/icon_tailleft.png) right 0 no-repeat;
   float: left;
 }
 
 .q4 #tail  {
   margin: 120px -21px 0 0;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_tailright.png) right 0 no-repeat;
+  background: url(../images/icon_tailright.png) right 0 no-repeat;
   float: right;
 }
 
@@ -625,7 +625,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   color: #fff;
   line-height: 25px;
   text-decoration: none;
-  background: #0ca7f9 url(http://s3.amazonaws.com/9x9ui/cms/images/icon_edit.png) 10px 4px no-repeat;
+  background: #0ca7f9 url(../images/icon_edit.png) 10px 4px no-repeat;
   -moz-border-radius: 5px; /* FF1+ */
   -webkit-border-radius: 5px; /* Saf3+, Chrome */
   border-radius: 5px; /* Opera 10.5, IE 9 */
@@ -648,7 +648,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   font-size: 12px;
   color: #83847c;
   line-height: 20px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_toggle.png) 0 0 no-repeat;
+  background: url(../images/btn_toggle.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -664,7 +664,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 6px 9px 0 0;
   width: 190px;
   height: 40px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_newchannel.png) 0 0 no-repeat;
+  background: url(../images/btn_newchannel.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -676,7 +676,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 6px 9px 0 0;
   width: 190px;
   height: 40px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_importpodcast.png) 0 0 no-repeat;
+  background: url(../images/btn_importpodcast.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -702,7 +702,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   color: #fff;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_tabNum.png) 0 -85px no-repeat;
+  background: url(../images/bg_tabNum.png) 0 -85px no-repeat;
   display: inline-block;
 }
 
@@ -736,7 +736,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 12px 1px 0 0;
   width: 176px;
   height: 34px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_createShow.png) 0 0 no-repeat;
+  background: url(../images/btn_createShow.png) 0 0 no-repeat;
   border: none;
   cursor: pointer;
   float: right;
@@ -757,7 +757,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 12px 0 0 8px;
   width: 99px;
   height: 34px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_save.png) 0 0 no-repeat;
+  background: url(../images/btn_save.png) 0 0 no-repeat;
   border: none;
   float: right;
   cursor: pointer;
@@ -791,7 +791,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   -moz-border-radius: 5px; /* FF1+ */
   -webkit-border-radius: 5px; /* Saf3+, Chrome */
   border-radius: 5px; /* Opera 10.5, IE 9 */
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_steps.png) 0 0 repeat-x;
+  background: url(../images/bg_steps.png) 0 0 repeat-x;
   overflow: hidden;
 }
 
@@ -799,7 +799,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   padding: 0 0 0 20px;
   width: 360px;
   height: 265px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_arrowdivider.png) 0 center no-repeat;
+  background: url(../images/bg_arrowdivider.png) 0 center no-repeat;
   float: left;
 }
 
@@ -808,7 +808,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 .show .disable {
-  background: #eee url(http://s3.amazonaws.com/9x9ui/cms/images/bg_arrowdivider_disable.png) 0 center no-repeat;
+  background: #eee url(../images/bg_arrowdivider_disable.png) 0 center no-repeat;
 }
 
 .show-title {
@@ -828,7 +828,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   font-size: 16px;
   font-weight: bold;
   text-align: center;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_tabNum.png) 0 4px no-repeat;
+  background: url(../images/bg_tabNum.png) 0 4px no-repeat;
   display: inline-block;
 }
 
@@ -872,7 +872,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 .thumb-uploading {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_uploading.gif) center center no-repeat;
+  background: url(../images/icon_uploading.gif) center center no-repeat;
 }
 
 .show .guide {
@@ -884,7 +884,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 5px 0 0 0;
   width: 99px;
   height: 34px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_save.png) 0 0 no-repeat;
+  background: url(../images/btn_save.png) 0 0 no-repeat;
   border: none;
   float: left;
   cursor: pointer;
@@ -908,7 +908,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 3px 0 0 0;
   width: 99px;
   height: 34px;
-  /*background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_upload.png) 0 0 no-repeat;*/
+  /*background: url(../images/btn_upload.png) 0 0 no-repeat;*/
   border: none;
   float: left;
   cursor: pointer;
@@ -942,7 +942,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 5px 0 0 0;
   width: 99px;
   height: 34px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_upload.png) 0 0 no-repeat;
+  background: url(../images/btn_upload.png) 0 0 no-repeat;
   border: none;
   float: left;
   cursor: pointer;
@@ -976,13 +976,13 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 .show .disable .textfieldbox, .show .disable .textfieldbox:hover {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_textfield.png) 0 -200px no-repeat;
+  background: url(../images/bg_textfield.png) 0 -200px no-repeat;
 }
 
 .uploading {
   margin: 20px 25px 0 25px;
   height: 50px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_loadingbar.gif) center center no-repeat;
+  background: url(../images/icon_loadingbar.gif) center center no-repeat;
   display: none;
 }
 
@@ -1005,7 +1005,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 6px 9px 0 0;
   width: 190px;
   height: 40px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_moreshow.png) 0 0 no-repeat;
+  background: url(../images/btn_moreshow.png) 0 0 no-repeat;
   display: block;
   border: none;
   cursor: default;
@@ -1042,7 +1042,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 6px 9px 0 40px;
   width: 190px;
   height: 40px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_newshow.png) 0 0 no-repeat;
+  background: url(../images/btn_newshow.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -1054,7 +1054,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 12px 20px 0 20px;
   width: 190px;
   height: 40px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_newchannel.png) 0 0 no-repeat;
+  background: url(../images/btn_newchannel.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -1099,7 +1099,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .btn-all {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_edit.png) 0 6px no-repeat;
+  background: url(../images/btn_edit.png) 0 6px no-repeat;
 }
 
 #shows-content .btn-all:hover {
@@ -1114,7 +1114,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 
 
 #shows-content .btn-delete {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_edit.png) -100px 6px no-repeat;
+  background: url(../images/btn_edit.png) -100px 6px no-repeat;
 }
 
 #shows-content .btn-delete:hover {
@@ -1128,7 +1128,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .btn-editshow{
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_edit.png) -200px 6px no-repeat;
+  background: url(../images/btn_edit.png) -200px 6px no-repeat;
 }
 
 #shows-content .btn-editshow:hover {
@@ -1143,7 +1143,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .btn-movedown{
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_edit.png) -300px 6px no-repeat;
+  background: url(../images/btn_edit.png) -300px 6px no-repeat;
 }
 
 #shows-content .btn-movedown:hover {
@@ -1158,7 +1158,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .btn-moveup{
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_edit.png) -500px 6px no-repeat;
+  background: url(../images/btn_edit.png) -500px 6px no-repeat;
 }
 
 #shows-content .btn-moveup:hover {
@@ -1173,7 +1173,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .btn-arrange{
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_edit.png) -700px 6px no-repeat;
+  background: url(../images/btn_edit.png) -700px 6px no-repeat;
 }
 
 #shows-content .btn-arrange:hover {
@@ -1204,7 +1204,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   color: #777;
   line-height: 40px;
   text-align: left;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_uploading.gif) 0 0 no-repeat;
+  background: url(../images/icon_uploading.gif) 0 0 no-repeat;
 }
 
 #shows-content .clip-list {
@@ -1216,20 +1216,20 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 5px 15px 15px 0;
   width: 95px;
   height: 75px;
-  background: #fff url(http://s3.amazonaws.com/9x9ui/cms/images/bg_show.png) 0 0 no-repeat;
+  background: #fff url(../images/bg_show.png) 0 0 no-repeat;
   border: #dadada 1px solid;
   -moz-border-radius: 5px; /* FF1+ */
   -webkit-border-radius: 5px; /* Saf3+, Chrome */
   border-radius: 5px; /* Opera 10.5, IE 9 */
   position: relative;
   float: left;
-  cursor: url(images/icon_hand.cur),url(http://s3.amazonaws.com/9x9ui/cms/images/icon_hand.cur),auto;
+  cursor: url(images/icon_hand.cur),url(../images/icon_hand.cur),auto;
 }
 
 
 
 #shows-content .clip-list li.grab {
-  cursor: url(images/icon_grab.cur),url(http://s3.amazonaws.com/9x9ui/cms/images/icon_grab.cur),auto;
+  cursor: url(images/icon_grab.cur),url(../images/icon_grab.cur),auto;
 }
 
 #shows-content .clip-list img {
@@ -1239,7 +1239,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .clip-list li.processing {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_show.png) 0 -100px no-repeat;
+  background: url(../images/bg_show.png) 0 -100px no-repeat;
 }
 
 #shows-content .clip-list li.processing img {
@@ -1248,7 +1248,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 #shows-content .clip-list li.fail {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_show.png) 0 -200px no-repeat;
+  background: url(../images/bg_show.png) 0 -200px no-repeat;
 }
 
 #shows-content .clip-list li.fail img {
@@ -1273,21 +1273,21 @@ a.disable .tabNum, a.disable:hover .tabNum {
 }
 
 .play:hover {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_play.png) center center no-repeat;
+  background: url(../images/btn_play.png) center center no-repeat;
 }
 
 .processing {
   margin: 0 0 4px 0;
   width: 95px;
   height: 76px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_processing.png) center center no-repeat;
+  background: url(../images/icon_processing.png) center center no-repeat;
 }
 
 .fail {
   margin: 0 0 4px 0;
   width: 95px;
   height: 76px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/icon_fail.png) center center no-repeat;
+  background: url(../images/icon_fail.png) center center no-repeat;
 }
 
 .time {
@@ -1297,7 +1297,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   color: #a2a19f;
   line-height: 15px;
   text-align: center;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_time.png) 0 0 no-repeat;
+  background: url(../images/bg_time.png) 0 0 no-repeat;
   position: absolute;
   bottom: 12px;
   right: 6px;
@@ -1306,7 +1306,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
 .check {
   width: 19px;
   height: 15px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_check.png) 0 0 no-repeat;
+  background: url(../images/btn_check.png) 0 0 no-repeat;
   display: block;
   position: absolute;
   top: -4px;
@@ -1350,7 +1350,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 0 5px 0 0;
   width: 125px;
   height: 22px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_dimensionfield.png) 0 0 no-repeat;
+  background: url(../images/bg_dimensionfield.png) 0 0 no-repeat;
   display: inline-block;
 }
 
@@ -1407,7 +1407,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   padding: 1px;
   width: 575px;
   height: 113px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_textareaEmbed.png) 0 0 no-repeat;
+  background: url(../images/bg_textareaEmbed.png) 0 0 no-repeat;
   display: block;
 }
 
@@ -1452,7 +1452,7 @@ a.disable .tabNum, a.disable:hover .tabNum {
   margin: 3px 5px 0 5px;
   width: 19px;
   height: 15px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_check.png) 0 0 no-repeat;
+  background: url(../images/btn_check.png) 0 0 no-repeat;
   display: block;
   float: left;
   position: inherit;
@@ -1471,5 +1471,5 @@ a.disable .tabNum, a.disable:hover .tabNum {
 
 /* Statistics */
 #statistics-content {
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/bg_statistic.jpg) center 50px no-repeat;
+  background: url(../images/bg_statistic.jpg) center 50px no-repeat;
 }

@@ -16,7 +16,7 @@
 }
 
 #mask.loading {
-  background: #000 url(http://s3.amazonaws.com/9x9ui/cms/images/icon_loading.gif) center center no-repeat;
+  background: #000 url(../images/icon_loading.gif) center center no-repeat;
 }
 
 .popup {
@@ -52,7 +52,7 @@
   margin: 6px 0 0 0;
   width: 18px;
   height: 18px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_popupClose.png) 0 0 no-repeat;
+  background: url(../images/btn_popupClose.png) 0 0 no-repeat;
   float: right;
 }
 
@@ -105,7 +105,7 @@
   margin: -28px -28px 0 0;
   width: 30px;
   height: 30px;
-  background: url(http://s3.amazonaws.com/9x9ui/cms/images/btn_terminate.png) 0 0 no-repeat;
+  background: url(../images/btn_terminate.png) 0 0 no-repeat;
   float: right;
 }
 
