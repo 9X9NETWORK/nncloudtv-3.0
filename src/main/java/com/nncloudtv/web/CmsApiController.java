@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -505,7 +504,7 @@ public class CmsApiController {
 	                                            @RequestParam String name,
 	                                            @RequestParam String intro,
 	                                            @RequestParam String tag,
-	                                            @RequestParam String langCode,
+	                                            @RequestParam String lang,
 	                                            @RequestParam Long msoId) throws NoSuchAlgorithmException {
 		
 		log.info("sourceUrl = " + sourceUrl);
@@ -513,15 +512,13 @@ public class CmsApiController {
 		log.info("name = " + name);
 		log.info("intro = " + intro);
 		log.info("tag = " + tag);
-		log.info("langCode = " + langCode);
+		log.info("lang = " + lang);
 		log.info("msoId = " + msoId);
 		
-		CmsApiService cmsApiService = new CmsApiService();
 		NnChannelManager channelMngr = new NnChannelManager();
 		NnChannel channel = channelMngr.findBySourceUrl(sourceUrl);
 		ContentOwnershipManager ownershipMngr = new ContentOwnershipManager();
 		MsoManager msoMngr = new MsoManager();
-		NnSetManager setMngr = new NnSetManager();
 		
 		Mso mso = msoMngr.findById(msoId);
 		
@@ -701,20 +698,18 @@ public class CmsApiController {
 	                                        @RequestParam(required = false) String name,
 	                                        @RequestParam(required = false) String intro,
 	                                        @RequestParam(required = false) String tag,
-	                                        @RequestParam(required = false) String langCode) throws NoSuchAlgorithmException {
+	                                        @RequestParam(required = false) String lang) throws NoSuchAlgorithmException {
 		
 		log.info("channelId = " + channelId);
 		log.info("imageUrl = " + imageUrl);
 		log.info("name = " + name);
 		log.info("intro = " + intro);
 		log.info("tag = " + tag);
-		log.info("langCode = " + langCode);
+		log.info("lang = " + lang);
 		log.info("msoId = " + msoId);
 		
-		CmsApiService cmsApiService = new CmsApiService();
 		NnChannelManager channelMngr = new NnChannelManager();
 		NnChannel channel = channelMngr.findById(channelId);
-		NnSetManager setMngr = new NnSetManager();
 		
 		if (channel == null)
 			return "Invalid ChannelId";
@@ -740,6 +735,9 @@ public class CmsApiController {
 			channel.setName(name);
 		if (intro != null)
 			channel.setIntro(intro);
+		if (lang != null) {
+			channel.setLang(lang);
+		}
 		if (msoId != null) { // first time the channel be saved
 			channel.setPublic(true);
 		}

@@ -106,7 +106,7 @@ var page$ = {
       }, 'json');
     },
     initChannel: function(channel) {
-      var channelId = channel.key.id;
+      var channelId = channel.id;
       $('.right_title > div').text(channel.name);
       if (channel.contentType != 6) {
         $('#no_promotion').show();
@@ -256,7 +256,7 @@ var page$ = {
       cms.loadJSON('/CMSAPI/listOwnedChannels?msoId=' + $('#msoId').val(), function(channels) {
         for (i in channels) {
           var channelInfoBlock = $('#channel_info_block').clone(true).removeAttr('id').addClass('channel_info_block_cloned');
-          var channelId = channels[i].key.id;
+          var channelId = channels[i].id;
           
           channelInfoBlock.find('.iconStatistics').attr('title', $('#lang_view_statistics').text());
           channelInfoBlock.find('.channel_info_title div').text(channels[i].name);
@@ -330,7 +330,7 @@ var page$ = {
       cms.loadJSON('/CMSAPI/listOwnedChannelSets?msoId=' + $('#msoId').val(), function(channelSets) {
         for (i in channelSets) {
           var channelSetInfoBlock = $('#channel_info_block').clone(true).removeAttr('id').addClass('channel_info_block_cloned');
-          var channelSetId = channelSets[i].key.id;
+          var channelSetId = channelSets[i].id;
           
           channelSetInfoBlock.find('.iconStatistics').attr('title', $('#lang_view_statistics').text());
           channelSetInfoBlock.find('.channel_info_title div').text(channelSets[i].name);

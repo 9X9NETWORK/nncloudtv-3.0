@@ -73,7 +73,7 @@ var page$ = {
       cms.loadJSON('/CMSAPI/' + method + '?msoId=' + $('#msoId').val(), function(channels) {
         for (i in channels) {
           var channelInfoBlock = $('#channel_info_block').clone(true).removeAttr('id').addClass('channel_info_block_cloned');
-          var channelId = channels[i].key.id;
+          var channelId = channels[i].id;
           
           channelInfoBlock.find('.iconStatistics').attr('title', $('#lang_view_statistics').text());
           channelInfoBlock.find('.channel_info_title div').text(channels[i].name);

@@ -74,7 +74,7 @@ var page$ = {
     // load channels
     cms.post('/CMSAPI/listCategoryChannels', { 'categoryId': categoryId }, function(channels) {
       for (var i in channels) {
-        var channelId = channels[i].key.id;
+        var channelId = channels[i].id;
         $('#treeview').jstree('create', '#' + categoryId, 'last', {
           attr: {
             rel: 'file',
@@ -94,7 +94,7 @@ var page$ = {
     // load channel sets
     cms.post('/CMSAPI/listCategoryNnSets', { 'categoryId': categoryId }, function(channelSets) {
       for (var i in channelSets) {
-        var channelSetId = channelSets[i].key.id;
+        var channelSetId = channelSets[i].id;
         $('#treeview').jstree('create', '#' + categoryId, 'last', {
           attr: {
             rel: 'set',
@@ -116,7 +116,7 @@ var page$ = {
     var result = $('<div/>');
     var ul = $('<ul/>')
     for (var i = 0; i < categories.length; i++) {
-      var categoryId = categories[i].key.id;
+      var categoryId = categories[i].id;
       var item = $('<li/>').attr('rel', 'folder').attr('id', categoryId);
       var a = $('<a/>').attr('href', 'javascript:').text(categories[i].name);
       item.append(a);
@@ -382,7 +382,7 @@ var page$ = {
           var img = $('<img/>').attr('src', channelSets[i].imageUrl);
           var p = $('<p class="ch_name"></p>').text(channelSets[i].name);
           var type = $('<input type="hidden" name="type"/>').val('channelSet');
-          var hidden = $('<input type="hidden" name="id"/>').val(channelSets[i].key.id);
+          var hidden = $('<input type="hidden" name="id"/>').val(channelSets[i].id);
           item.append(img).append(p).append(type).append(hidden).appendTo('#directory_list_ul');
           var innerHtml = page$.populateBubbleChannelSetContent(channelSets[i]);
           $('<span></span>').html(innerHtml).hide().appendTo(item);
@@ -397,7 +397,7 @@ var page$ = {
             var img = $('<img/>').attr('src', channels[i].imageUrl);
             var p = $('<p class="ch_name"></p>').text(channels[i].name);
             var type = $('<input type="hidden" name="type"/>').val('channel');
-            var hidden = $('<input type="hidden" name="id"/>').val(channels[i].key.id);
+            var hidden = $('<input type="hidden" name="id"/>').val(channels[i].id);
             item.append(img).append(p).append(type).append(hidden).appendTo('#directory_list_ul');
             var innerHtml = page$.populateBubbleChannelContent(channels[i]);
             $('<span></span>').html(innerHtml).hide().appendTo(item);

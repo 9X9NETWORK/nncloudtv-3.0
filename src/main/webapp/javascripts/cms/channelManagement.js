@@ -109,7 +109,7 @@ var page$ = {
     },
     displayProgram: function(program) {
       var programDetailBlock = $('#program_detail');
-      var programId = program.key.id;
+      var programId = program.id;
       var title = program.name;
       if (title.length > 20) {
         title = title.substring(0, 20) + '...';
@@ -238,7 +238,7 @@ var page$ = {
     },
     displayProgramReadonly: function(program) {
       var programDetailBlock = $('#program_detail_readonly');
-      var programId = program.key.id;
+      var programId = program.id;
       var title = program.name;
       if (title.length > 20) {
         title = title.substring(0, 20) + '...';
@@ -287,7 +287,7 @@ var page$ = {
                                    .clone(true)
                                    .removeAttr('id')
                                    .addClass('program_create_detail_block_cloned');
-        var programId = program.key.id;
+        var programId = program.id;
         log(program);
         
         programDetailBlock.find('.ep_urlbutton').click(function() {
@@ -556,9 +556,9 @@ var page$ = {
                                    .clone(true)
                                    .removeAttr('id')
                                    .addClass('program_create_detail_block_cloned');
-        var programId = program.key.id;
+        var programId = program.id;
         
-        if (program.imageUrl == '/WEB-INF/../images/processing.png') {
+        if (program.imageUrl.match('processing.png')) {
           program.imageUrl = 'http://www.youtube.com/img/pic_youtubelogo_123x63.gif';
         }
         programDetailBlock.find('.ep_name').val(program.name).attr('disabled', true);
@@ -949,7 +949,7 @@ var page$ = {
     displayProgramList: function(programs) {
       for (i in programs) {
         var programInfoBlock = $('#program_info_block').clone(true).removeAttr('id').addClass('program_info_block_cloned');
-        var programId = programs[i].key.id;
+        var programId = programs[i].id;
         var program = programs[i];
         
         programInfoBlock.find('.iconStatistics').attr('title', $('#lang_view_statistics').text());
@@ -1028,7 +1028,7 @@ var page$ = {
     displayProgramListReadonly: function(programs) {
       for (i in programs) {
         var programInfoBlock = $('#program_info_block_readonly').clone(true).removeAttr('id').addClass('program_info_block_cloned');
-        var programId = programs[i].key.id;
+        var programId = programs[i].id;
         var program = programs[i];
         
         programInfoBlock.find('.iconStatistics').attr('title', $('#lang_view_statistics'));
@@ -1145,7 +1145,7 @@ var page$ = {
               if (!file.type)
                 file.type = cms.getFileTypeByName(file.name);
               $('#channel_import_detail [name="ch_uploading_image"]').hide();
-              $('#channel_import_detail [name="ch_image"]').attr('src', 'http://9x9tmp.s3.amazonaws.com/' + 'ch_logo_' + channel.key.id + '_' + file.size + file.type);
+              $('#channel_import_detail [name="ch_image"]').attr('src', 'http://9x9tmp.s3.amazonaws.com/' + 'ch_logo_' + channel.id + '_' + file.size + file.type);
               $('#channel_import_detail [name="ch_image_updated"]').val('true');
             },
             upload_error_handler: function(file, code, message) {
@@ -1157,7 +1157,7 @@ var page$ = {
                 file.type = cms.getFileTypeByName(file.name);
               var post_params = {
                 "AWSAccessKeyId": $('#s3_id').val(),
-                "key":            'ch_logo_' + channel.key.id + '_' + file.size + file.type,
+                "key":            'ch_logo_' + channel.id + '_' + file.size + file.type,
                 "acl":            "public-read",
                 "policy":         $('#s3_policy').val(),
                 "signature":      $('#s3_signature').val(),
@@ -1173,10 +1173,10 @@ var page$ = {
           $('#channel_import_detail [name="ch_name"]').val(channel.name);
           $('#channel_import_detail [name="ch_intro"]').val(channel.intro);
           $('#channel_import_detail [name="ch_tag"]').val(channel.tag);
-          $('#channel_import_detail [name="ch_language"]').val(channel.langCode);
+          $('#channel_import_detail [name="ch_language"]').val(channel.lang);
           $('#channel_import_detail [name="ch_image"]').attr('src', channel.imageUrl);
           $('#channel_import_detail [name="ch_image_updated"]').val('false');
-          if (channel.imageUrl == '/WEB-INF/../images/processing.png') {
+          if (channel.imageUrl.match('processing.png')) {
             $('#channel_import_detail [name="ch_image"]').attr('src', cms.getExternalRootPath() + '/images/cms/upload_img.jpg');
             $('#channel_import_detail [name="ch_image_updated"]').val('true');
             if (channel.sourceUrl.indexOf('youtube.com') >= 0) {
@@ -1189,9 +1189,9 @@ var page$ = {
                 requestUrl = 'http://gdata.youtube.com/feeds/api/users/' + username + '/uploads?callback=?';
               }
               var parameters = {
-                'alt': 'json-in-script',
+                'alt':    'json-in-script',
                 'format': 5,
-                'v': 2
+                'v':      2
               };
               cms.get(requestUrl, parameters, function(data) {
                 if (data == null) return;
@@ -1235,12 +1235,12 @@ var page$ = {
             var imageUpdated = $('#channel_import_detail [name="ch_image_updated"]').val();
             var sourceUrl = $('#channel_import_detail [name="ch_import_url"]').val();
             var tag = $('#channel_import_detail [name="ch_tag"]').val();
-            var langCode = $('#channel_import_detail [name="ch_language"]').val();
+            var lang = $('#channel_import_detail [name="ch_language"]').val();
             var parameters = {
               'name':       name,
               'intro':      intro,
               'tag':        tag,
-              'langCode':   langCode,
+              'lang':       lang,
               'msoId':      $('#msoId').val(),
               'sourceUrl':  sourceUrl
             };
@@ -1274,17 +1274,17 @@ var page$ = {
         $('#ch_title').text($('#lang_title_edit_channel_info').text());
       }
       cms.post('/CMSAPI/channelInfo', { 'channelId': channelId }, function(channel) {
-        $('#ch_id').val(channel.key.id);
+        $('#ch_id').val(channel.id);
         $('#ch_name').val('').val(channel.name);
         $('#ch_image').attr('src', channel.imageUrl);
         $('#ch_image_updated').val('false');
-        if ($('#ch_image').attr('src') == '/WEB-INF/../images/processing.png') {
-          $('#ch_image').attr('src', '/images/cms/upload_img.jpg');
+        if ($('#ch_image').attr('src').match('processing.png')) {
+          $('#ch_image').attr('src', cms.getExternalRootPath() + '/images/cms/upload_img.jpg');
           $('#ch_image_updated').val('true');
         }
         $('#ch_intro').val('').val(channel.intro);
-        $('#ch_tag').val(channel.tags);
-        $('#ch_language').val(channel.langCode);
+        $('#ch_tag').val(channel.tag);
+        $('#ch_language').val(channel.lang);
         if (page$.channelDetail.swfObject != null) {
           page$.channelDetail.swfObject.destroy();
         }
@@ -1309,7 +1309,7 @@ var page$ = {
             if (!file.type)
               file.type = cms.getFileTypeByName(file.name);
             $('#ch_uploading').hide();
-            var imageUrl = 'http://9x9tmp.s3.amazonaws.com/' + 'ch_logo_' + channel.key.id + '_' + file.size + file.type;
+            var imageUrl = 'http://9x9tmp.s3.amazonaws.com/' + 'ch_logo_' + channel.id + '_' + file.size + file.type;
             $('#ch_image').attr('src', imageUrl);
             $('#ch_image_updated').val('true');
           },
@@ -1322,18 +1322,20 @@ var page$ = {
               file.type = cms.getFileTypeByName(file.name);
             var post_params = {
               "AWSAccessKeyId": $('#s3_id').val(),
-              "key":            'ch_logo_' + channel.key.id + '_' + file.size + file.type,
+              "key":            'ch_logo_' + channel.id + '_' + file.size + file.type,
               "acl":            "public-read",
               "policy":         $('#s3_policy').val(),
               "signature":      $('#s3_signature').val(),
               "content-type":   cms.getContentTypeByFileExtention(file.type),
               "success_action_status": "201"
             };
+            //log(post_params);
             this.setPostParams(post_params);
             this.startUpload(file.id);
             $('#ch_uploading').show();
           }
         };
+        //log(swfupload_settings);
         page$.channelDetail.swfObject = new SWFUpload(swfupload_settings);
         $('#channel_detail').show();
       }, 'json');
@@ -1351,7 +1353,7 @@ var page$ = {
           'name':       $('#ch_name').val(),
           'intro':      $('#ch_intro').val(),
           'tag':        $('#ch_tag').val(),
-          'langCode':   $('#ch_language').val()
+          'lang':       $('#ch_language').val()
         };
         if (isNew) {
           parameters.msoId = $('#msoId').val();
@@ -1388,7 +1390,7 @@ var page$ = {
         }
         for (i in channels) {
           var channelInfoBlock = $('#channel_info_block').clone(true).removeAttr('id').addClass('channel_info_block_cloned');
-          var channelId = channels[i].key.id;
+          var channelId = channels[i].id;
           
           channelInfoBlock.find('.iconStatistics').attr('title', $('#lang_view_statistics'));
           channelInfoBlock.find('.channel_info_title div').text(channels[i].name);
@@ -1487,9 +1489,9 @@ var page$ = {
               log('fetch: ' + username);
               page$.programList.initYouTube(username, channel.name, function(programCount) {
                 $('.channel_info_programcount span', infoBlock).text(programCount);
-              }, (channel.contentType == 4), channel.key.id);
+              }, (channel.contentType == 4), channel.id);
             } else {
-              page$.programList.init(channel.key.id, readonly, channel.name);
+              page$.programList.init(channel.id, readonly, channel.name);
             }
           });
         }

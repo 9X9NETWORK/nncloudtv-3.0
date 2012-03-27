@@ -22,7 +22,7 @@ var page$ = {
           var category = categories[i];
           var node = {
             'title':    '&nbsp;' + category.name,
-            'key':      category.key.id,
+            'key':      category.id,
             'isFolder': true,
             'isLazy':   true,
             'type':     'category'
@@ -42,7 +42,7 @@ var page$ = {
               cms.post('/CMSAPI/listCategoryNnSets', { 'categoryId': node.data.key, 'isPublic': true }, function(channelSets) {
                 for (var i in channelSets) {
                   var channelSet = channelSets[i];
-                  var channelSetId = channelSet.key.id;
+                  var channelSetId = channelSet.id;
                   if (channelSet.name == null) continue;
                   var child = {
                     'title': '&nbsp;' + cms.escapeHtml(channelSet.name),
@@ -59,7 +59,7 @@ var page$ = {
               cms.post('/CMSAPI/defaultNnSetChannels', { 'setId': node.data.key, 'isGood': true }, function(channels) {
                 for (var i in channels) {
                   var channel = channels[i];
-                  var channelId = channel.key.id;
+                  var channelId = channel.id;
                   if (channel.name == null) continue;
                   var child = {
                     'title': cms.escapeHtml(channel.name) + ' <img alt="' + channelId + '" class="tiny-button plus-button" src="' + cms.getExternalRootPath() + '/images/cms/plus.png"> <img alt="' + channelId + '" class="tiny-button play-button" src="' + cms.getExternalRootPath() + '/images/cms/play.png">',
@@ -122,7 +122,7 @@ var page$ = {
         
         var item = $('<li class="ch_normal"/>');
         var btnPlay = $('<a/>').attr('target', '_player');
-        btnPlay.attr('href', cms.getChannelUrl(channel.key.id));
+        btnPlay.attr('href', cms.getChannelUrl(channel.id));
         btnPlay.append('<p class="btnPlay"/>');
         btnPlay.appendTo(item);
         
@@ -132,7 +132,7 @@ var page$ = {
         });
         btnAdd.appendTo(item);
         
-        $('<input name="channelId" type="hidden"/>').val(channel.key.id.toString());
+        $('<input name="channelId" type="hidden"/>').val(channel.id.toString());
         //$('<span/>').html(page$.populateBubbleContent(channel)).hide().appendTo();
         
         $('<img/>').attr('src', channel.imageUrl).appendTo(item);
@@ -174,14 +174,14 @@ var page$ = {
             icon = cms.getExternalRootPath() + '/javascripts/plugins/dynatree/skin/en.gif';
           }
           $('<option/>')
-            .attr('value', categories[i].key.id)
+            .attr('value', categories[i].id)
             .text(categories[i].name)
             .attr('title', icon)
             .appendTo('#sys_directory');
         }
         cms.post('/CMSAPI/defaultNnSetCategory', { 'msoId': $('#msoId').val() }, function(category) {
           if (category != null) {
-            $('#sys_directory').val(category.key.id);
+            $('#sys_directory').val(category.id);
           }
           $('#sys_directory').msDropDown();
         }, 'json');
@@ -203,7 +203,7 @@ var page$ = {
             $('#cc_image').attr('src', channelSet.imageUrl);
           }
           $('#cc_image_updated').val('false');
-          $('#cc_id').val(channelSet.key.id);
+          $('#cc_id').val(channelSet.id);
           var swfupload_settings = {
             flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
             upload_url:             'http://9x9tmp.s3.amazonaws.com/',
@@ -224,7 +224,7 @@ var page$ = {
               if (!file.type)
                 file.type = cms.getFileTypeByName(file.name);
               $('#uploading').hide();
-              $('#cc_image').attr('src', 'http://9x9tmp.s3.amazonaws.com/ch_set_logo_' + channelSet.key.id + '_' + file.size + file.type);
+              $('#cc_image').attr('src', 'http://9x9tmp.s3.amazonaws.com/ch_set_logo_' + channelSet.id + '_' + file.size + file.type);
               $('#cc_image_updated').val('true');
             },
             upload_error_handler: function(file, code, message) {
@@ -236,7 +236,7 @@ var page$ = {
                 file.type = cms.getFileTypeByName(file.name);
               var post_params = {
                 'AWSAccessKeyId': $('#s3_id').val(),
-                'key':            'ch_set_logo_' + channelSet.key.id + '_' + file.size + file.type,
+                'key':            'ch_set_logo_' + channelSet.id + '_' + file.size + file.type,
                 'acl':            'public-read',
                 'policy':         $('#s3_policy').val(),
                 'signature':      $('#s3_signature').val(),
@@ -269,8 +269,8 @@ var page$ = {
       btnRemove.appendTo(item);
       $('<img/>').attr('src', channel.imageUrl).appendTo(item);
       $('<p/>').text(channel.name).appendTo(item);
-      $('<input type="hidden" name="channelId"/>').val(channel.key.id).appendTo(item);
-      $('<input type="hidden" name="tags"/>').val(channel.tags).appendTo(item);
+      $('<input type="hidden" name="channelId"/>').val(channel.id).appendTo(item);
+      $('<input type="hidden" name="tag"/>').val(channel.tag).appendTo(item);
       return item;
     },
     appendChannel: function(channel, suppress) {
@@ -278,7 +278,7 @@ var page$ = {
       for (var i in arrChannelsInSet) {
         var found = $(arrChannelsInSet[i]);
         var channelId = found.find('input[name="channelId"]').val();
-        if (channelId == channel.key.id) {
+        if (channelId == channel.id) {
           alert($('#lang_warning_channel_is_already_in').text());
           $('#set_ch_holder').scrollTo(found, 800);
           found.effect('highlight', { }, 3000);
@@ -386,8 +386,8 @@ var page$ = {
         channelIds += ',';
       var channelId = $(items[i]).find('input[name="channelId"]').val();
       var title = $(items[i]).find('p').text();
-      var tags = $(items[i]).find('input[name="tags"]').val();
-      if (tags == 'NEW_CHANNEL') { // hacks
+      var tag = $(items[i]).find('input[name="tag"]').val();
+      if (tag == 'NEW_CHANNEL') { // hacks
         if (titleNewChannels != '') {
           titleNewChannels += ', ';
         }
