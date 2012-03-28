@@ -386,8 +386,8 @@ var page$ = {
         channelIds += ',';
       var channelId = $(items[i]).find('input[name="channelId"]').val();
       var title = $(items[i]).find('p').text();
-      var tag = $(items[i]).find('input[name="tag"]').val();
-      if (tag == 'NEW_CHANNEL') { // hacks
+      var chTag = $(items[i]).find('input[name="tag"]').val();
+      if (chTag == 'NEW_CHANNEL') { // hacks
         if (titleNewChannels != '') {
           titleNewChannels += ', ';
         }

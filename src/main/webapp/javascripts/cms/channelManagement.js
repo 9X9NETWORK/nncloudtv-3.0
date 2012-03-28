@@ -1164,7 +1164,11 @@ var page$ = {
           page$.channelDetail.swfObject = new SWFUpload(swfupload_settings);
           $('#channel_import_detail [name="ch_name"]').val(channel.name);
           $('#channel_import_detail [name="ch_intro"]').val(channel.intro);
-          $('#channel_import_detail [name="ch_tag"]').val(channel.tag);
+          if (channel.tag == 'NEW_CHANNEL') {
+            $('#channel_import_detail [name="ch_tag"]').val('');
+          } else {
+            $('#channel_import_detail [name="ch_tag"]').val(channel.tag);
+          }
           $('#channel_import_detail [name="ch_language"]').val(channel.lang);
           $('#channel_import_detail [name="ch_image"]').attr('src', channel.imageUrl);
           $('#channel_import_detail [name="ch_image_updated"]').val('false');

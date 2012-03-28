@@ -99,10 +99,11 @@ public class NnUserDao extends GenericDao<NnUser> {
 				}
 			}
 			if (user != null) {
-				user = pm.detachCopy(user);
 				byte[] proposedDigest = AuthLib.passwordDigest(password, user.getSalt());
 				if (!Arrays.equals(user.getCryptedPassword(), proposedDigest)) {				
 					user = null;
+				} else {
+					user = pm.detachCopy(user);
 				}
 			}
 		} finally {
