@@ -448,7 +448,7 @@ var page$ = {
         // logo uploading
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
-          upload_url:             .getS3UploadBucket()
+          upload_url:             cms.getS3UploadBucket(),
           file_size_limit:        '10 MB',
           file_types:             cms.imageTypes,
           file_types_description: 'Image Files',

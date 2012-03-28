@@ -178,7 +178,7 @@ var cms = {
   },
   getS3UploadBucket: function() {
     return $('#s3_upload_bucket').text();
-  }
+  },
   getExternalRootPath: function() {
     return $('#external_root_path').text();
   },
