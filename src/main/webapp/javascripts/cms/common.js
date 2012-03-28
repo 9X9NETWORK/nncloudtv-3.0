@@ -291,11 +291,6 @@ var cms = {
     $('<style> .menuB:hover { background-position: -114px 0px; } </style>').appendTo('head');
     log('set management enabled');
   },
-  enableDirectoryManagement: function() {
-    $('.menuC').attr('href', 'directoryManagement');
-    $('<style> .menuC:hover { background-position: -226px 0px; } </style>').appendTo('head');
-    log('directory management enabled');
-  },
   enablePromotionTools: function() {
     $('.menuD').attr('href', 'promotionTools');
     $('<style> .menuD:hover { background-position: -226px 0px; } </style>').appendTo('head');
@@ -323,7 +318,6 @@ var cms = {
     $('#mso_logo').wrapAll('<a href="/9x9"></a>');
     this.enableChannelManagement();
     this.enableChannelSetManagement();
-    this.enableDirectoryManagement();
     this.enablePromotionTools();
     this.enableStatistics();
   },

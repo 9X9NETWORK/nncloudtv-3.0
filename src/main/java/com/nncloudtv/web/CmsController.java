@@ -155,7 +155,7 @@ public class CmsController {
 					model.addAttribute("s3Signature", AmazonLib.calculateRFC2104HMAC(policy));
 					model.addAttribute("s3Id", AmazonLib.AWS_ID);
 					return "cms/" + cmsTab;
-				} else if (cmsTab.equals("directoryManagement") || cmsTab.equals("promotionTools") || cmsTab.equals("setup") || cmsTab.equals("statistics")) {
+				} else if (cmsTab.equals("promotionTools") || cmsTab.equals("setup") || cmsTab.equals("statistics")) {
 					return "cms/" + cmsTab;
 				} else {
 					return "error/404";
@@ -313,7 +313,7 @@ public class CmsController {
 				model.addAttribute("s3Signature", AmazonLib.calculateRFC2104HMAC(policy));
 				model.addAttribute("s3Id", AmazonLib.AWS_ID);
 				return "cms/" + cmsTab;
-			} else if (cmsTab.equals("directoryManagement") || cmsTab.equals("promotionTools") || cmsTab.equals("setup") || cmsTab.equals("statistics")) {
+			} else if (cmsTab.equals("promotionTools") || cmsTab.equals("setup") || cmsTab.equals("statistics")) {
 				return "cms/" + cmsTab;
 			} else {
 				return "error/404";

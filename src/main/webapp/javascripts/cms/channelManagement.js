@@ -115,12 +115,8 @@ var page$ = {
         title = title.substring(0, 20) + '...';
       }
       var source = "javascript:";
-      if (program.mpeg4FileUrl != null)
-        source = program.mpeg4FileUrl;
-      else if (program.webMFileUrl != null)
-        source = program.webMFileUrl;
-      else if (program.otherFileUrl != null)
-        source = program.otherFileUrl;
+      if (program.fileUrl != null)
+        source = program.fileUrl;
       else if (program.audioFileUrl != null)
         source = program.audioFileUrl;
       programDetailBlock.find('.ep_source a').attr('href', source);
@@ -255,12 +251,8 @@ var page$ = {
         $('#program_list_readonly').show();
       });
       var source = "N/A";
-      if (program.mpeg4FileUrl != null)
-        source = program.mpeg4FileUrl;
-      else if (program.webMFileUrl != null)
-        source = program.webMFileUrl;
-      else if (program.otherFileUrl != null)
-        source = program.otherFileUrl;
+      if (program.fileUrl != null)
+        source = program.fileUrl;
       else if (program.audioFileUrl != null)
         source = program.audioFileUrl;
       var sourceName = 'Unknown';

@@ -428,21 +428,6 @@ public class CmsApiController {
 				}
 			}
 		}
-		/*
-		CategoryChannelManager ccMngr = new CategoryChannelManager();
-		CategoryManager catMngr = new CategoryManager();
-		// remove channels in directory
-		List<Category> categories = catMngr.findAllByMsoIdWithoutCache(msoId);
-		for (Category category : categories) {
-			CategoryChannel cc = ccMngr.findByCategoryIdAndChannelId(category.getId(), channelId);
-			if (cc != null) {
-				QueueFactory.getDefaultQueue().add(
-						TaskOptions.Builder.withUrl("/CMSAPI/removeCategoryChannel")
-						.param("categoryId", String.valueOf(cc.getCategoryId()))
-						.param("channelId", String.valueOf(cc.getChannelId())));
-			}
-		}
-		*/
 	}
 	
 	@RequestMapping("programInfo")
