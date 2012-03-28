@@ -34,9 +34,21 @@ bzip2 -d *
 mv filename, remove date_9x9tvprod3
 
 -  alter table
+use nncloudtv_content;
 alter table nnset add column ori_id bigint(20);
 alter table nnchannel add column ori_id bigint(20);
 alter table category add column ori_id bigint(20);
+alter table nnprogram add column ori_id bigint(20);
+use nncloudtv_nnuser1;
+alter table nnuser add column ori_id bigint(20);
+create index nnuser_ori_id on nnuser (ori_id);
+create index nnuser_subscribe_channel_id on nnuser_subscribe (channelId);
+create index nnuser_watched_channel_id on nnuser_watched (channelId);
+use nncloudtv_nnuser2;
+alter table nnuser add column ori_id bigint(20);
+create index nnuser_ori_id on nnuser (ori_id);
+create index nnuser_subscribe_channel_id on nnuser_subscribe (channelId);
+create index nnuser_watched_channel_id on nnuser_watched (channelId);
 
 - run python migration files 
 cd /home/ubuntu/googleappengine
@@ -52,13 +64,64 @@ python nnset_nnchannel.py
 python category_nnset_modify.py
 python nnset_nnchannel_modify.py
 python nnprogram_modify.py
+python nnuser.py
+python nnuser_pref.py
+python nnuser_sorting.py
+python nnuser_share.py
+python nnuser_watched.py
+python nnuser_report.py
+python nnuser_subscribe.py
+python nnuser_subscribe_group.py
+python nncontent.py 
 
 - alter table back
-alter table nnset drop column ori_id;
-alter table nnchannel drop column ori_id;
-alter table category drop column ori_id;
 update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif' where imageUrl='/WEB-INF/../images/facebook-icon.gif';
 update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/processing.png' where imageUrl='/WEB-INF/../images/processing.png';
 update nnprogram set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/processing.png' where imageUrl='/WEB-INF/../images/processing.png';
 update nnprogram set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/cms/radio.jpg' where imageUrl='/images/cms/radio.jpg';
 
+use nncloudtv_content;
+create table nnset_backup select * from nnset;
+create table nnchannel_backup select * from nnchannel;
+create table nnprogram_backup select * from nnprogram;
+create table category_backup select * from category;
+use nncloudtv_nnuser1;
+create table nnuser_backup select * from nnuser;
+create table nnuser_subscribe_backup select * from nnuser_subscribe;
+create table nnuser_pref_backup select * from nnuser_pref;
+create table nnuser_channel_sorting_backup select * from nnuser_channel_sorting;
+
+use nncloudtv_nnuser1;
+update nnuser set token=concat('1-', token);
+update nnuser set shard=1;
+update nnuser_pref p set p.userId = (select id from nnuser u where p.userId = u.ori_id);
+delete from nnuser_pref where userId=0;
+update nnuser_channel_sorting s set s.userId = (select id from nnuser u where s.userId = u.ori_id);
+update nnuser_channel_sorting s set s.channelId = (select id from nncloudtv_content.nnchannel c where s.channelId = c.ori_id);
+
+update nnuser_share s set s.userId = (select id from nnuser u where s.userId = u.ori_id);
+delete from nnuser_share where userId=0;
+update nnuser_share s set s.channelId = (select id from nncloudtv_content.nnchannel c where s.channelId = c.ori_id);
+update nnuser_share s set s.programId = (select id from nncloudtv_content.nnprogram p where s.programId = p.ori_id) where s.programId != 0;
+update nnuser_share s set s.setId = (select id from nncloudtv_content.nnset s where s.setId = s.ori_id) where s.setId != 0;
+
+update nnuser_watched w set w.userId = (select id from nnuser u where w.userId = u.ori_id);
+delete from nnuser_watched where userId=0;
+update nnuser_watched w set w.channelId = (select id from nncloudtv_content.nnchannel c where w.channelId = c.ori_id);
+
+update nnuser_subscribe s set s.userId = (select id from nnuser u where s.userId = u.ori_id);
+delete from nnuser_watched where userId=0;
+update nnuser_subscribe s, nncloudtv_content.nnchannel c set s.channelId = c.id where s.channelId = c.ori_id;
+
+use nncloudtv_content;
+alter table nnset drop column ori_id;
+alter table nnchannel drop column ori_id;
+alter table category drop column ori_id;
+alter table nnprogram drop column ori_id;
+
+use nncloudtv_nnuser1;	
+alter table nnuser drop column ori_id;	
+
+use nncloudtv_nnuser2;	
+alter table nnuser drop column ori_id;	
+ 

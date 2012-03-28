@@ -562,11 +562,9 @@ public class InitService {
 		//a default MSO user
 		NnUserManager userMngr = new NnUserManager();
 		user = new NnUser(NNEMAIL, "9x9mso", "9x9 mso", NnUser.TYPE_NN);  
-		user.setMsoId(mso.getId());
 		userMngr.create(user, req, NnUser.SHARD_DEFAULT);
 		//a user for testing
 		NnUser a = new NnUser("a@a.com", "foobie", "a", NnUser.TYPE_NN);
-		a.setMsoId(mso.getId());
 		userMngr.create(a, req, NnUser.SHARD_DEFAULT);
 
 		log.info("initializeMso1AndCategories is done");				
@@ -575,7 +573,6 @@ public class InitService {
 	public void auser(HttpServletRequest req) {
 		NnUserManager userMngr = new NnUserManager();
 		user = new NnUser(NNEMAIL, "9x9mso", "9x9 mso", NnUser.TYPE_NN);  
-		user.setMsoId(mso.getId());
 		userMngr.create(user, req, NnUser.SHARD_DEFAULT);
 	}
 	

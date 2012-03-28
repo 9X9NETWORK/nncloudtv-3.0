@@ -3,7 +3,7 @@ package com.nncloudtv.lib;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 
-import com.nncloudtv.model.PdrRaw;
+import com.nncloudtv.model.Pdr;
 
 public final class PMF {
 
@@ -22,7 +22,7 @@ public final class PMF {
 	private PMF() {}
 	
 	public static PersistenceManagerFactory get(@SuppressWarnings("rawtypes") Class c) {
-		if (c.equals(PdrRaw.class)) {
+		if (c.equals(Pdr.class)) {
 			return PMF.getAnalytics();
 		}
 		//!!! if NnUser, Subscription, SubscriptionSet, throw exception

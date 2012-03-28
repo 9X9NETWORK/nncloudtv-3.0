@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
+import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
@@ -73,9 +74,12 @@ public class PlayerApiService {
         this.mso = mso;
     }        
 
+    //com.mysql.jdbc.exceptions.jdbc4.CommunicationsException
     public String handleException (Exception e) {
     	if (e.getClass().equals(NumberFormatException.class)) {
     		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);    		
+    	} else if (e.getClass().equals(CommunicationsException.class)) {
+    		return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
     	}
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         NnLogUtil.logException((Exception) e);
@@ -367,7 +371,7 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
 		
 		//pdr process
-		PdrRawManager pdrMngr = new PdrRawManager();
+		PdrManager pdrMngr = new PdrManager();
 		String ip = req.getRemoteAddr();
 		pdrMngr.processPdr(user, device, session, pdr, ip);
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);

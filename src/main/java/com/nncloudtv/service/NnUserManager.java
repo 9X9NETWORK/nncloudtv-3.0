@@ -77,7 +77,7 @@ public class NnUserManager {
 	
 	public NnUser createGuest(Mso mso, HttpServletRequest req) {
 		String password = String.valueOf(("token" + Math.random() + new Date().getTime()).hashCode());
-		NnUser guest = new NnUser(NnUser.GUEST_EMAIL, password, NnUser.GUEST_NAME, NnUser.TYPE_USER, mso.getId());
+		NnUser guest = new NnUser(NnUser.GUEST_EMAIL, password, NnUser.GUEST_NAME, NnUser.TYPE_USER);
 		this.create(guest, req, (short)0);
 		return guest;
 	}

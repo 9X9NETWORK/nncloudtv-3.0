@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -132,6 +133,8 @@ public class PlayerApiController {
 			log.info("from iOS");
 		}
 		*/
+		HttpSession session = req.getSession();
+		session.setMaxInactiveInterval(60);
 		MsoManager msoMngr = new MsoManager();
 		Mso mso = msoMngr.findNNMso();
 		Locale locale = Locale.ENGLISH;
@@ -160,14 +163,13 @@ public class PlayerApiController {
 	 */	
 	@RequestMapping(value="guestRegister")
 	public ResponseEntity<String> guestRegister(@RequestParam(value="ipg", required = false) String ipg, HttpServletRequest req, HttpServletResponse resp) {
-		log.info("guest register: (ipg)" + ipg);
 		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			output = playerApiService.guestRegister(req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
-		}	
+		}
 		return NnNetUtil.textReturn(output);
 	} 
 

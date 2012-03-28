@@ -110,7 +110,6 @@ public class NnUser implements Serializable {
 		this.cryptedPassword= AuthLib.encryptPassword(password, this.getSalt());
 		this.name = name;
 		this.type = type;
-		this.msoId = msoId;
 	}
 	
 	public long getId() {

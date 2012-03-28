@@ -108,6 +108,7 @@ MySql
 > mysql nncloudtv_content -h localhost -u root -p
 > mysql nncloudtv_nnuser1 -h localhost -u root -p
 > mysql nncloudtv_nnuser2 -h localhost -u root -p
+> mysql --default-character-set=utf8 -u root -p
 
 - please reference MySql file
 
@@ -254,7 +255,7 @@ sudo su
 cd /usr/share/jetty/webapps
 service jetty stop
 rm root.war
-cp /home/ubuntu/tmp/nncloudtv-0.0.1-SNAPSHOT.war .
+cp /home/ubuntu/files/nncloudtv-0.0.1-SNAPSHOT.war .
 mv nncloudtv-0.0.1-SNAPSHOT.war root.war
 service jetty start
 java -jar nnqueue.jar hello

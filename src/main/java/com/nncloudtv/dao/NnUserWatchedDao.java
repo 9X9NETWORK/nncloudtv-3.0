@@ -52,6 +52,7 @@ public class NnUserWatchedDao extends GenericDao<NnUserWatched>{
 			if (results.size() > 0) {
 				watched = results.get(0);		
 			}
+			watched = pm.detachCopy(watched);
 		} finally {
 			pm.close();
 		}
@@ -68,6 +69,7 @@ public class NnUserWatchedDao extends GenericDao<NnUserWatched>{
 			q.setFilter("userToken == userTokenParam");
 			q.declareParameters("String userTokenParam");
 			results.addAll((List<NnUserWatched>)q.execute(token));
+			results = (ArrayList<NnUserWatched>) pm.detachCopyAll(results);
 		} finally {
 			pm.close();
 		}

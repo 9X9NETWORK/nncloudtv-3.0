@@ -46,10 +46,10 @@ public class NnUserDao extends GenericDao<NnUser> {
 				return PMF.getNnUser1().getPersistenceManager();
 		}
 		if (token != null) {
-			if (token.contains("1-")) {
-				return PMF.getNnUser1().getPersistenceManager();
-			} else {
+			if (token.contains("2-")) {
 				return PMF.getNnUser2().getPersistenceManager();
+			} else {
+				return PMF.getNnUser1().getPersistenceManager();
 			}
 		}		
 		return PMF.getNnUser1().getPersistenceManager();

@@ -53,7 +53,7 @@ nnuser_share
 ------------------
 nncloudtv_analytics
 ------------------
-pdr_raw
+pdr
 cnt_subscribe
 nnuser_report
 
@@ -67,7 +67,7 @@ CREATE TABLE `captcha` (
   `fileName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `lockedDate` datetime DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,  
-  `random` bigint(20) NOT NULL,
+  `random` double NOT NULL,
   `toBeExpired` bit(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -375,7 +375,7 @@ CREATE TABLE `nnuser_watched` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `pdr_raw` (
+CREATE TABLE `pdr` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `createDate` datetime DEFAULT NULL,
   `detail` text CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -418,7 +418,7 @@ truncate nnuser_share;
 truncate nnuser_subscribe;
 truncate nnuser_subscribe_group;
 truncate nnuser_watched;                 
-truncate pdr_raw;            
+truncate pdr;            
 
 ===================================
                      

@@ -7,9 +7,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV95"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV100"/>
 
-<!-- $Revision: 2484 $ -->
+<!-- $Revision: 2543 $ -->
 
 <!-- Google+ Sharing meta data -->
 <meta itemprop="name" content="${fbName}">
@@ -27,7 +27,6 @@
 <meta property="og:description" content="${fbDescription}"/>
 
 <link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
-<!--link rel="stylesheet" href="${root}/stylesheets/main.css" /-->
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
 
 <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
@@ -41,7 +40,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/flowplayer-3.2.4.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player25.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player28.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.V2.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
@@ -95,7 +94,7 @@ var brandinfo = "${brandInfo}";
 </script>
 
 <script type="text/javascript">
-soundManager.url = '/javascripts/player/';
+soundManager.url = '/player/';
 soundManager.useFlashBlock = false;
 soundManager.onready(function()
   {
@@ -235,6 +234,17 @@ soundManager.onready(function()
   <div id="confirm-holder">
     <p><span id="confirm-text"></span></p>
     <p class="btn" id="btn-confirm-close"><span>Close</span></p>
+  </div>
+</div>
+
+<div id="alert-layer">
+  <div id="alert-holder">
+    <p><span>Are you still watching?</span></p>
+    <ul class="action-list">
+      <li>
+        <p class="btn"><span>Keep watching</span></p>
+      </li>
+    </ul>
   </div>
 </div>
 
@@ -495,6 +505,14 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
   </p>
 </div>
 
+<div id="add-bubble">
+  <img src="${nroot}/images/add_bubble_tip.png" id="add-bubble-tip">
+  <img src="${nroot}/images/bg_add_bubble.png" class="bg-add-bubble">
+  <p id="addbubble-content">
+    <span>Add channels to your personal Guide to receive the latest updates, share on<br><img src="${nroot}/images/icon_fb.png" id="icon-fb">Facebook or Email, watch it in full-screen, and more!</span>
+  </p>
+</div>
+
 <div id="flip-bubble">
   <img src="${nroot}/images/flip-bubble.png">
   <p><span>Ch </span><span id="chOrder">1</span><br><span>of </span><span id="chNum">20</span></p>
@@ -512,18 +530,22 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
       <p><span>One moment...</span></p>
     </div>
     <h2><span>Channel Store</span></h2>
+    <ul id="programlang">
+      <li class="on"><span>English Channels</span></li>
+      <li><span>中文頻道</span></li>
+    </ul>
     <!--img src="${nroot}/images/icon_cart_gray.png" id="btn-cart">
     <p id="cart-bubble">
       <img src="${nroot}/images/cart_bubble.png">
       <span>0</span>
     </p-->
-    <div id="btn-programlang">
+    <!--div id="btn-programlang">
       <p id="selected-programlang"><span>English Channels</span><img src="${nroot}/images/icon_expand.png" class="icon-expand"></p>
       <ul id="programlang-dropdown" class="dropdown">
         <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>English Channels</span></li>
         <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>中文頻道</span></li>
       </ul>
-    </div>
+    </div-->
     <p id="search-input">
       <img src="${nroot}/images/icon_search.png" class="icon-search">
       <input type="text" class="textfield" value="Search" id="search-field">
@@ -537,35 +559,49 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
         <img src="${nroot}/images/btn_flip_L_on.png" id="btn-fp-on">
         <img src="${nroot}/images/btn_flip_L_disable.png" id="btn-fp-disable">
       </p>
-      <p id="preview-index"><span>Previewing</span><span id="index-ch-title"></span><span>channel in</span><span id="index-catg-title"></span><span>set</span></p>
+      <!--p id="preview-index"><span>Previewing</span><span id="index-catg-title"></span><span class="divider">&gt;</span><span id="index-ch-title"></span></p-->
+      <p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title"></span></p>
       <div id="preview-win">
         <div id="preview-video"></div>
-        <p id="preview-ep-meta">
+        <p id="preview-index-meta">
+          <span id="meta-set-title"></span><span class="divider">»</span><span id="meta-ch-title"></span><span class="divider">»</span><span id="meta-ep-title"></span>
+        </p>
+        <!--p id="preview-ep-meta">
           <span class="meta-head">Episode:</span>
           <span class="ep-title"></span>
-        </p>
+        </p-->
         <p id="ep-switcher">
           <img src="${nroot}/images/icon_ep.png" id="btn-ep">
-          <span id="ep-show">Watch more episodes in this channel</span>
-          <span id="ep-hide">Hide</span>
+          <span id="ep-show">Show episodes</span>
         </p>
         <div id="preview-ep">
           <img src="${nroot}/images/arrow_right_on.png" id="preview-arrow-right">
           <img src="${nroot}/images/arrow_left_on.png" id="preview-arrow-left">
           <ul id="preview-ep-list"></ul>
-        </div>   
-        <div id="btn-sound"><img src="${nroot}/images/icon_sound_off.png" id="icon-sound-off" title="Turn Sound On"><img src="${nroot}/images/icon_sound_on.png" id="icon-sound-on" title="Turn Sound Off"></div>
+        </div>
+        <div id="preview-controller">
+          <ul id="control-list">
+            <li id="btn-info"><img src="${nroot}/images/btn_info.png" id="icon-info" title="Channel Info"></li>
+            <li id="btn-preview-play" class="on"><img src="${nroot}/images/btn_play.png" id="icon-preview-play" title="Play"><img src="${nroot}/images/btn_pause.png" id="icon-preview-pause" title="Pause"></li>
+            <li id="btn-flip-prev"><img src="${nroot}/images/btn_flipup.png" id="icon-flip-prev" title="Prev Channel"></li>
+            <li id="btn-flip-next"><img src="${nroot}/images/btn_flipdown.png" id="icon-flip-next" title="Next Channel"></li>
+            <li id="btn-preview-volume-down"><img src="${nroot}/images/btn_volume_down.png" title="Volume Down"></li>
+            <li id="preview-volume-constrain">
+              <ul id="preview-volume-bars"><li class="on"></li><li class="on"></li><li class="on"></li><li class="on"></li><li></li><li></li><li></li></ul>
+            </li>
+            <li id="btn-preview-volume-up"><img src="${nroot}/images/btn_volume_up.png" title="Volume Up"></li>
+          </ul>
+        </div>
       </div>
       <p id="channel-price"><img src="${nroot}/images/tag_free.png" id="icon-tag"><span class="free">FREE</span></p>
-      <p id="control-switch"><img src="${nroot}/images/btn_in.png" id="btn-in"><img src="${nroot}/images/btn_out.png" id="btn-out"></p>
-      <div id="preview-controller">
+      <!--div id="preview-controller">
         <ul id="control-list">
           <li id="btn-info"><img src="${nroot}/images/btn_info.png" id="icon-info" title="Channel Info"></li>
           <li id="btn-preview-play" class="on"><img src="${nroot}/images/btn_play.png" id="icon-preview-play" title="Play"><img src="${nroot}/images/btn_pause.png" id="icon-preview-pause" title="Pause"></li>
           <li id="btn-flip-prev"><img src="${nroot}/images/btn_flipup.png" id="icon-flip-prev" title="Prev Channel"></li>
           <li id="btn-flip-next"><img src="${nroot}/images/btn_flipdown.png" id="icon-flip-next" title="Next Channel"></li>
         </ul>
-      </div>
+      </div-->
       <div id="preview-promo">
         <p><span>Flip through the channels and add your favorites to your Guide</span></p>
       </div>

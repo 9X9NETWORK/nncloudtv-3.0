@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import net.spy.memcached.MemcachedClient;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnNetUtil;
@@ -26,12 +28,12 @@ import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.NnSet;
-import com.nncloudtv.model.PdrRaw;
+import com.nncloudtv.model.Pdr;
 import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetManager;
-import com.nncloudtv.service.PdrRawManager;
+import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.service.PlayerApiService;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -44,7 +46,14 @@ public class HelloController {
 	
 	//basic test
     @RequestMapping("world")
-    public ModelAndView helloWorld() { 
+    public ModelAndView world(HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+		session.setMaxInactiveInterval(1);
+		for (long i=0; i<500000000; i++) {
+			System.out.println(i);
+			for (long j=0; j<500000000; j++) {			
+			}			
+		}
         String message = "Hello NnCloudTv";
         return new ModelAndView("hello", "message", message);
     }    
@@ -89,22 +98,26 @@ public class HelloController {
     
     //db test
     @RequestMapping("pdr")
-    public @ResponseBody String pdr() { 
-		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
-		try {
-			PdrRaw raw = new PdrRaw(1, "session1", "test");
-			pm.makePersistent(raw);
-		} finally {
-			pm.close();
-		}        
+    public @ResponseBody String pdr() throws CommunicationsException {
+    	try {
+			PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+			try {
+				Pdr raw = new Pdr(1, "session1", "test");
+				pm.makePersistent(raw);
+			} finally {
+				pm.close();
+			}
+    	} catch (Exception e){
+    		throw new CommunicationsException(null, 0, 0, e);
+    	}
         return "OK";
     }    
 
     //db test through manager
     @RequestMapping("pdr_mngt")
     public @ResponseBody String pdr_mngt() { 
-		PdrRawManager rawMngr = new PdrRawManager();
-		PdrRaw raw = new PdrRaw(1, "session1", "test");
+		PdrManager rawMngr = new PdrManager();
+		Pdr raw = new Pdr(1, "session1", "test");
 		rawMngr.create(raw);
         return "OK";
     }    
