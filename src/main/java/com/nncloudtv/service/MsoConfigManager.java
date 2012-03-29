@@ -1,31 +1,47 @@
 package com.nncloudtv.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import net.spy.memcached.MemcachedClient;
 
 import com.nncloudtv.dao.MsoConfigDao;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 
 public class MsoConfigManager {
-
+	
 	private MsoConfigDao configDao = new MsoConfigDao();
-    protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());
-    
-	private static final String EXTERNAL_ROOT_PATH = "http://9x9ui.s3.amazonaws.com/tprd-moveout"; // where to place this config ?
-	private static final String S3_UPLOAD_BUCKET = "9x9tmp"; // where to place this config ?
+	protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());
 	
 	static public String getS3UploadBucket() {
-		return S3_UPLOAD_BUCKET;
+		Properties properties = new Properties();
+		String result = "";
+		try {
+			properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("aws.properties"));
+			result = properties.getProperty("s3_upload_bucket");
+		} catch (IOException e) {
+			NnLogUtil.logException(e);
+		}
+		return result;
 	}
 	
 	static public String getExternalRootPath() {
-		return EXTERNAL_ROOT_PATH;
+		Properties properties = new Properties();
+		String result = "";
+		try {
+			properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("aws.properties"));
+			result = properties.getProperty("static_file_root_path");
+		} catch (IOException e) {
+			NnLogUtil.logException(e);
+		}
+		return result;
 	}
 	
 	public MsoConfig create(MsoConfig config) {
