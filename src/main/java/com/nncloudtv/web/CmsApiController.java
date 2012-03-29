@@ -45,6 +45,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetAutosharing;
 import com.nncloudtv.model.NnSetToNnChannel;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.SnsAuth;
 import com.nncloudtv.service.AutosharingService;
 import com.nncloudtv.service.CategoryManager;
@@ -58,6 +59,7 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
+import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.SnsAuthManager;
 import com.nncloudtv.service.TranscodingService;
 import com.nncloudtv.web.json.facebook.FBPost;
@@ -1108,8 +1110,8 @@ public class CmsApiController {
 	//////////////////// others ////////////////////
 	
 	@RequestMapping("changePassword")
-	public @ResponseBody String changePassword(@RequestParam Long msoId, @RequestParam String newPassword) {
-		/*
+	public @ResponseBody String changePassword(@RequestParam Long msoId, @RequestParam String newPassword, HttpServletRequest req) {
+		
 		MsoManager msoMngr = new MsoManager();
 		NnUserManager userMngr = new NnUserManager();
 		Mso mso = msoMngr.findById(msoId);
@@ -1120,15 +1122,18 @@ public class CmsApiController {
 		case Mso.TYPE_3X3:
 		case Mso.TYPE_ENTERPRISE:
 		case Mso.TYPE_MSO:
-		case Mso.TYPE_TCO:
 			user = userMngr.findMsoUser(mso);
+			break;
+		case Mso.TYPE_TCO:
+			user = userMngr.findTcoUser(mso, NnUserManager.getShard(req));
+			break;
 		default:
 		}
 		if (user == null)
 			return "Invalid msoType";
 		user.setPassword(newPassword);
 		userMngr.resetPassword(user);
-		*/
+		
 		return "OK";
 	}
 	

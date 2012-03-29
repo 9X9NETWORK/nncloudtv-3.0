@@ -150,15 +150,19 @@ public class NnUserManager {
 					return user;
 				}
 			}
-		} else if (mso.getType() == Mso.TYPE_TCO) {
-			List<NnUser> users = nnUserDao.findByTypeAndMso(NnUser.TYPE_TCO, mso.getId());
-			if (users.size() > 0)
-				log.info("found TYPE_TCO");
-				return users.get(0);
 		}
 		return null;
 	}
 	
+	public NnUser findTcoUser(Mso mso, short shard) {
+		List<NnUser> users = nnUserDao.findTcoUser(mso, shard);
+		if (users.size() > 0) {
+			log.info("found TYPE_TCO");
+			return users.get(0);
+		}
+		return null;
+	}
+
 	public NnUser resetPassword(NnUser user) {
 		user.setPassword(user.getPassword());
 		user.setSalt(AuthLib.generateSalt());

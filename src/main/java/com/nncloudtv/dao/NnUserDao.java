@@ -11,6 +11,7 @@ import javax.jdo.Query;
 
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoManager;
 
@@ -214,6 +215,24 @@ public class NnUserDao extends GenericDao<NnUser> {
 			query.declareParameters("short typeParam, long msoIdParam");
 			@SuppressWarnings("unchecked")
 			List<NnUser> results = (List<NnUser>) query.execute(type, msoId);
+			if (results.size() > 0) {
+				detached = (List<NnUser>) pm.detachCopyAll(results);
+			}
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}
+	
+	public List<NnUser> findTcoUser(Mso mso, short shard) {
+		List<NnUser> detached = new ArrayList<NnUser>();
+		PersistenceManager pm = NnUserDao.getPersistenceManager(shard, null);
+		try {
+			Query query = pm.newQuery(NnUser.class);
+			query.setFilter("type == typeParam && msoId == msoIdParam");
+			query.declareParameters("short typeParam, long msoIdParam");
+			@SuppressWarnings("unchecked")
+			List<NnUser> results = (List<NnUser>) query.execute(NnUser.TYPE_TCO, mso.getId());
 			if (results.size() > 0) {
 				detached = (List<NnUser>) pm.detachCopyAll(results);
 			}
