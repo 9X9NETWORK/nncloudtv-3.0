@@ -32,7 +32,7 @@ public class NnChannelManager {
 		return channelDao.findSince(since);
 	}
 	
-	public NnChannel create(String sourceUrl, HttpServletRequest req) {
+	public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
 		if (sourceUrl == null) 
 			return null;
 		if (this.verifyUrl(sourceUrl) == null) 
@@ -52,28 +52,26 @@ public class NnChannelManager {
 			channel.setImageUrl(NnChannel.PROCESSING_IMAGE_URL);
 			channel.setName("Processing");
 			channel.setStatus(NnChannel.STATUS_PROCESSING);
-			if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL) {
+			if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
+				channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
 				String url = channel.getSourceUrl();
-				String name = YouTubeLib.getYouTubeChannelName(url);
-				log.info("youtube: " + name);
-				Map<String, String> info = YouTubeLib.getYouTubeEntry(name, true);
+				Map<String, String> info = null;
+				String youtubeName = YouTubeLib.getYouTubeChannelName(url);
+				if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL) {
+					info = YouTubeLib.getYouTubeEntry(youtubeName, true);
+				} else {
+					info = YouTubeLib.getYouTubeEntry(youtubeName, false);
+				}
 				if (!info.get("status").equals(String.valueOf(NnStatusCode.SUCCESS)))
 					return null;
-				if (info.get("title") != null)
-					channel.setName(info.get("title"));
-				if (info.get("description") != null)
-					channel.setIntro(info.get("description"));
-				if (info.get("thumbnail") != null)
-					channel.setImageUrl(info.get("thumbnail"));
-			} else if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-				String url = channel.getSourceUrl();
-				String name = YouTubeLib.getYouTubeChannelName(url);
-				log.info("playlist: " + name);
-				Map<String, String> info = YouTubeLib.getYouTubeEntry(name, false);
-				if (!info.get("status").equals(String.valueOf(NnStatusCode.SUCCESS)))
-					return null;
-				if (info.get("title") != null)
-					channel.setName(info.get("title"));
+				if (name != null)
+					channel.setName(name);
+				String oriName = info.get("title");
+				if (info.get("title") != null) {
+					channel.setOriName(oriName);
+					if (name == null)
+						channel.setName(oriName);
+				}
 				if (info.get("description") != null)
 					channel.setIntro(info.get("description"));
 				if (info.get("thumbnail") != null)

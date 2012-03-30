@@ -678,7 +678,7 @@ public class PlayerApiService {
 		
 		//create a new channel
 		if (channel == null) {
-			channel = channelMngr.create(url, req);
+			channel = channelMngr.create(url, null, req);
 			if (channel == null) {
 				return this.assembleMsgs(NnStatusCode.CHANNEL_URL_INVALID, null);
 			}			

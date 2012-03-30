@@ -1,20 +1,17 @@
 package com.nncloudtv.web.admin;
 
-//import com.google.appengine.api.users.UserService;
-//import com.google.appengine.api.users.UserServiceFactory;
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.Math;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,15 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 
 @Controller
@@ -40,43 +33,17 @@ public class AdminNnProgramController {
 	protected static final Logger logger = Logger.getLogger(AdminNnProgramController.class.getName());		
 	
 	private final NnProgramManager programMngr;
-//	private final UserService       userService;
 	
 	@Autowired
 	public AdminNnProgramController(NnProgramManager programMngr) {
 		this.programMngr = programMngr;
-//		this.userService = UserServiceFactory.getUserService();
 	}
 
 	@ExceptionHandler(Exception.class)
 	public String exception(Exception e) {
 		NnLogUtil.logException(e);
 		return "error/exception";				
-	}	
-		
-	/*
-	// there should no delete, we only mark a program "Bad"
-	@RequestMapping(value="delete")
-	public @ResponseBody String delete(@RequestParam(value="id") String id) {
-		Log.info("delete program: " + id);
-		MsoProgram p = programMngr.findById(Long.valueOf(id));
-		programMngr.delete(p);
-		return "OK";
-	}
-	*/
-
-/*	in nnprogram model, no such data structure like mpeg4FileUrl
-	//mainly for demo purpose, so someone can download all the mp4 files into box or something
-	@RequestMapping("mp4") 
-	public ResponseEntity<String> mp4(@RequestParam(value="channel")long channelId) {
-		List<NnProgram> programs = programMngr.findByChannel(channelId);		
-		String result = "";
-		for (NnProgram p:programs) {
-			result = result + p.getMpeg4FileUrl() + "\n";
-		}		
-		return NnNetUtil.textReturn(result);
-	}
-*/
+	}			
 	
 	@RequestMapping("list")
 	public ResponseEntity<String> list(@RequestParam(value="channel")long channelId) {
@@ -125,12 +92,8 @@ public class AdminNnProgramController {
 			cell.add(program.getImageUrl());
 			cell.add(program.getId());
 			cell.add(program.getName());
-//			cell.add(new SimpleDateFormat("yyyyMMddHHmmss").format(program.getPubDate()));
 			cell.add(new SimpleDateFormat("yyyyMMddHHmmss").format(program.getUpdateDate()));
 			cell.add(new SimpleDateFormat("yyyyMMddHHmmss").format(program.getCreateDate()));
-//			cell.add(program.getMpeg4FileUrl());
-//			cell.add(program.getWebMFileUrl());
-//			cell.add(program.getOtherFileUrl());
 			cell.add(program.getAudioFileUrl());
 			cell.add(program.getStatus());
 			cell.add(program.getType());

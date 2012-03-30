@@ -1,3 +1,4 @@
+alert("hello");
 var constants = {
   channelContentType: {
     0: 'Unknwon',

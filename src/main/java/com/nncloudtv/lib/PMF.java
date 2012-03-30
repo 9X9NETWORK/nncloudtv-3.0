@@ -17,7 +17,7 @@ public final class PMF {
 	private static final PersistenceManagerFactory pmfInstanceContent = 
 		JDOHelper.getPersistenceManagerFactory("datanucleus_content.properties");		
 	private static final PersistenceManagerFactory pmfInstanceAnalytics = 
-		JDOHelper.getPersistenceManagerFactory("datanucleus_analytics.properties");		
+		JDOHelper.getPersistenceManagerFactory("datanucleus_analytics.properties");		                                            
 	
 	private PMF() {}
 	

@@ -105,7 +105,6 @@ public class PdrController {
 				return NnNetUtil.textReturn("wrong date format: yyyymmdd");
 			}
 		}
-		
 		List<Pdr> list = pdrMngr.findDebugging(u, d, session, ip, sinceDate);
 		String[] result = {""};
 		for (Pdr r : list) {
@@ -126,8 +125,9 @@ public class PdrController {
 	 * @return html format, user token, session, and user comment
 	 */
 	@RequestMapping("listReport")
-	public ResponseEntity<String> listReport(@RequestParam(required=false) String user, 			                             
-			                           @RequestParam(required=false) String since) {				
+	public ResponseEntity<String> listReport(
+			@RequestParam(required=false) String user, 			                             
+			@RequestParam(required=false) String since) {				
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		List<NnUserReport> list = new ArrayList<NnUserReport>();
 		NnUserReportManager reportMngr = new NnUserReportManager();

@@ -6,21 +6,22 @@
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/ui-darkness/jquery-ui.css"
 	type="text/css" />
-<link rel="stylesheet" href="/stylesheets/ui.jqgrid.css" />
-<link rel="stylesheet" href="/stylesheets/admin-portal-ui.css" />
+<link rel="stylesheet" href="${root}/stylesheets/ui.jqgrid.css" />
+<link rel="stylesheet" href="${root}/stylesheets/admin-portal-ui.css" />
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js"></script>
-<script type="text/javascript" src="/javascripts/grid.locale-en.js"></script>
-<script type="text/javascript" src="/javascripts/jquery.jqGrid.min.js"></script>
-<script type="text/javascript" src="/javascripts/admin-portal-ui.js"></script>
+<script type="text/javascript" src="${root}/javascripts/grid.locale-en.js"></script>
+<script type="text/javascript" src="${root}/javascripts/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="${root}/javascripts/admin-portal-ui.js"></script>
 <title>9x9 Admin Portal</title>
 </head>
 <body>
-<div id="header"><img src="/images/logo_9x9.png" id="logo">
-<a href="${logoutURL}" id="btn-signout">Sign Out</a> <span
-	id="btn-account">${admin}</span></div>
+<div id="header"><img src="${root}/images/9x9.tv.png" id="logo">
+  <a href="${root}/${logoutURL}" id="btn-signout">Sign Out</a> 
+  <span id="btn-account">${admin}</span>
+</div>
 
 <div id="ui_tabs">
 <ul>

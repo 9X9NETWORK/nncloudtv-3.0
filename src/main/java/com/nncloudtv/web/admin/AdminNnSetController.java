@@ -13,30 +13,20 @@ import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.JqgridHelper;
-import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryToNnSet;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
-import com.nncloudtv.model.ContentOwnership;
-import com.nncloudtv.model.LangTable;
-import com.nncloudtv.model.Mso;
-import com.nncloudtv.model.NnChannel;
-//import com.nncloudtv.service.CategoryChannelSetManager;
 import com.nncloudtv.service.CategoryManager;
+import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
-import com.nncloudtv.service.ContentOwnershipManager;
-import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.MsoManager;
 
 @Controller
 @RequestMapping("admin/set")
@@ -48,238 +38,7 @@ public class AdminNnSetController {
 	@Autowired
 	public AdminNnSetController(NnSetManager setMngr) {
 		this.setMngr = setMngr;		
-	}
-/*	there are no mso in nnset model	
-	@RequestMapping("deleteMso")
-	public ResponseEntity<String> deleteMso(@RequestParam(required=false) long id) {					
-		NnSetManager csMngr = new NnSetManager();
-		List<NnSet> sets = csMngr.findByMso(id);
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
-		for (NnSet cs : sets) {
-			List<NnSetToNnChannel> list = cscMngr.findBySet(cs.getId());
-			cscMngr.deleteAll(list);
-			csMngr.delete(cs);		
-		}
-		return NnNetUtil.textReturn("OK");
-	}
-*/
-	@RequestMapping("changeSet")
-	public ResponseEntity<String> changeSet() {
-		String[] urls = {
-				"http://www.youtube.com/user/achun5",
-				"http://www.youtube.com/user/luckyboommini",
-				"http://www.youtube.com/user/wondergirls",
-				"http://www.youtube.com/user/beyonceVEVO",
-				"http://www.youtube.com/user/linkinparktv",
-				"http://www.youtube.com/user/ladygagavevo",
-				"http://www.youtube.com/user/KatyPerryVEVO",
-				"http://www.youtube.com/user/CAguileraVevo",
-				"http://www.youtube.com/user/RihannaVevo",
-		};
-		NnSetManager setMngr = new NnSetManager();
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
-		NnSet set = setMngr.findByName("本周主打星");
-		if (set != null) {
-			List<NnSetToNnChannel> list = cscMngr.findBySet(set.getId());
-			cscMngr.deleteAll(list);
-			List<NnChannel> channels = new ArrayList<NnChannel>();
-			for (int i=0; i<urls.length; i++) {
-				String checkedUrl = YouTubeLib.formatCheck(urls[i]);
-				NnChannel c = channelMngr.findBySourceUrl(checkedUrl);
-				channels.add(c);
-			}
-			int i=1;
-			for (NnChannel c : channels) {			
-				NnSetToNnChannel csc = new NnSetToNnChannel(set.getId(), c.getId(), (short)i);
-				i++;
-				cscMngr.save(csc);
-			}
-		}
-		return NnNetUtil.textReturn("OK");
-		
-	}
-
-	@RequestMapping("createBatch2")
-	public ResponseEntity<String> createBatch2() {
-		String name="頻道策展決賽";
-		
-		String lang="zh";
-		String desc="展示一下你的策展talent! 精彩決賽頻道就在這！";
-		String cname="教育學習";
-		
-		NnChannelManager channelMngr = new NnChannelManager();
-		List<NnChannel> channels = new ArrayList<NnChannel>();
-		String[] urls = {
-				"4599054",
-				"4562966",
-				"4553178",
-				"4420853",
-				"http://www.youtube.com/playlist?list=PL3FC1CEA86F082B94",
-				"4529036",
-				"4574781",
-				"4570843",
-				"4565833"
-		};
-		NnSetManager csMngr = new NnSetManager();
-		NnSet cs = csMngr.findByName(name);
-		if (cs == null) {
-			return NnNetUtil.textReturn("channel set zero");
-		}
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
-		for (int i=0; i<urls.length; i++) {
-			String checkedUrl = urls[i];
-			System.out.println("checked url:" + checkedUrl);
-			if (checkedUrl.contains("youtube.com")) {
-				checkedUrl = YouTubeLib.formatCheck(checkedUrl);
-				NnChannel c = channelMngr.findBySourceUrl(checkedUrl);
-				//c.setSeq(i+1+20);
-				if (c == null) {
-					System.out.println("---id null---");
-				}
-				channels.add(c);
-			} else {
-				NnChannel c = channelMngr.findById(Long.parseLong(urls[i]));
-				if (c == null) {
-					System.out.println("---id null---");
-				}
-				//c.setSeq(i+1+20);
-				channels.add(c);				
-			}
-		}
-		String output = "";
-		int i = 20;
-		System.out.println("channels size:" + channels.size());
-		for (NnChannel c : channels) {
-			NnSetToNnChannel csc = new NnSetToNnChannel(cs.getId(), c.getId(), (short)i);
-			cscMngr.create(csc);
-			i++;
-		}
-		
-		/*
-		channelSet.setDefaultUrl(name); 
-		channelSet.setBeautifulUrl(name);
-		//related channels
-		channelSet.setLang(lang);
-		channelSetMngr.create(channelSet, channels);
-		*/						
-		
-		//category and set
-		/*
-		CategoryChannelSetManager cscMngr = new CategoryChannelSetManager();
-		CategoryManager cMngr = new CategoryManager();
-		Category c = cMngr.findByName(cname);
-		CategoryChannelSet csc = new CategoryChannelSet(c.getKey().getId(), channelSet.getKey().getId());
-		cscMngr.save(csc);
-		*/		
-		return NnNetUtil.textReturn("OK");
-		
-	}
-	
-	@RequestMapping("createBatch")
-	public ResponseEntity<String> createBatch() {
-		String name="頻道策展決賽";
-		String lang="zh";
-		String desc="展示一下你的策展talent! 精彩決賽頻道就在這！";
-		String cname="教育學習";
-		
-		String[] urls = {
-				"http://www.9x9.tv/view?channel=4575605",
-				"http://www.9x9.tv/view?channel=4503257", 
-				"http://www.9x9.tv/view?channel=4324184",
-				"http://www.9x9.tv/view?channel=4321246",
-				"http://www.9x9.tv/view?channel=4229572",
-				"http://www.9x9.tv/view?channel=4430392",
-				"http://www.9x9.tv/view?channel=4562725",
-				"http://www.9x9.tv/view?channel=4420612",
-				"http://www.9x9.tv/view?channel=4541346",
-				"http://www.9x9.tv/view?channel=4394854",
-				"http://www.9x9.tv/view?channel=4426972",
-				"http://www.9x9.tv/view?channel=4429711",
-				"http://www.youtube.com/user/yintuosi",
-				"http://www.9x9.tv/view?channel=4560416",
-				"http://www.9x9.tv/view?channel=4583084",
-				"http://www.9x9.tv/view?channel=4570947",
-				"www.9x9.tv/view?channel=4565104",
-				"http://www.9x9.tv/view?channel=4519095",
-				"http://www.9x9.tv/view?channel=4576913",
-		};
-		NnChannelManager channelMngr = new NnChannelManager();
-		List<NnChannel> channels = new ArrayList<NnChannel>();
-		for (int i=0; i<urls.length; i++) {
-			String checkedUrl = urls[i];
-			if (!checkedUrl.contains("maplestage") && !checkedUrl.contains("9x9.tv")) {
-				checkedUrl = YouTubeLib.formatCheck(urls[i]);
-			}
-			NnChannel c = channelMngr.findBySourceUrl(checkedUrl);
-			c.setSeq((short)(i+1));
-			channels.add(c);
-		}
-		String output = "";
-		for (NnChannel c : channels) {
-			output += c.getId() + "\t" + c.getSourceUrl() + "\n";
-		}
-		Mso mso = new MsoManager().findNNMso();
-		NnSetManager channelSetMngr = new NnSetManager();
-		NnSet channelSet = new NnSet(name, desc, true);
-//		channelSet.setDefaultUrl(name); 
-		channelSet.setBeautifulUrl(name);
-		//related channels
-		channelSet.setLang(lang);
-		channelSetMngr.create(channelSet, channels);						
-		
-		//category and set		
-//		CategoryChannelSetManager cscMngr = new CategoryChannelSetManager();
-		CategoryManager cMngr = new CategoryManager();
-		Category c = cMngr.findByName(cname);
-/*
-		CategoryToNnSet csc = new CategoryToNnSet(c.getId(), channelSet.getId());
-		cMngr.save(csc);
-*/
-		cMngr.addSet(c, channelSet);
-		return NnNetUtil.textReturn("OK");
-	}
-
-	@RequestMapping("recommendedChange")
-	public ResponseEntity<String> recommendedChange(
-			@RequestParam(required=false) String lang,
-			@RequestParam(required=false) String ids,
-			@RequestParam(required=false) String seqs) {
-
-		String[] id = ids.split(",");
-		String[] seq = seqs.split(",");
-		
-		//either turn off a recommended
-		//if it's on, then re-arrange the sequence of everything
-		NnSetManager channelSetMngr = new NnSetManager();
-		List<NnSet> list = channelSetMngr.findFeaturedSets(lang);
-		for (NnSet cs : list) {
-			cs.setFeatured(false);
-		}
-		channelSetMngr.saveAll(list);		
-		list = new ArrayList<NnSet>();
-		for (int i=0; i<id.length; i++) {
-			NnSet cs = channelSetMngr.findById(Long.parseLong(id[i]));
-			cs.setSeq(Short.parseShort(seq[i]));
-			cs.setFeatured(true);
-			list.add(cs);
-		}
-		channelSetMngr.saveAll(list);
-		return NnNetUtil.textReturn("OK");
-	}
-
-	@RequestMapping("recommendedList")
-	public ResponseEntity<String> recommendedList() {							
-		NnSetManager channelSetMngr = new NnSetManager();
-		List<NnSet> list = new ArrayList<NnSet>();
-		list.addAll(channelSetMngr.findFeaturedSets(LangTable.LANG_EN));
-		list.addAll(channelSetMngr.findFeaturedSets(LangTable.LANG_ZH));
-		String output = "";
-		for (NnSet cs : list) {
-			output += cs.getId() + "\t" + cs.getName() + "\n";
-		}
-		return NnNetUtil.textReturn(output);
-	}
+	}	
 	
 	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
 	public void list(@RequestParam(value = "page")   Integer      currentPage,
@@ -419,7 +178,6 @@ public class AdminNnSetController {
 			             @RequestParam(required = false) int seq,
 	                     OutputStream out) {
 		NnSetManager csMngr = new NnSetManager();
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
 		NnChannelManager cMngr = new NnChannelManager();
 		NnChannel c = cMngr.findById(channel);
 		if (c == null)
@@ -695,153 +453,17 @@ public class AdminNnSetController {
 	                                   @RequestParam String beautifulUrl,
 	                                   @RequestParam String seq,
 	                                   @RequestParam String lang) {
-		Mso mso = new MsoManager().findNNMso();
-		NnSetManager channelSetMngr = new NnSetManager();
-		NnSet cs = new NnSet(name, intro, true);		
-//		cs.setDefaultUrl(name); 
-		cs.setBeautifulUrl(name);
-		cs.setLang(lang);		
-		cs.setBeautifulUrl(beautifulUrl);
-		cs.setImageUrl(imageUrl);
-		cs.setFeatured(featured);
-		channelSetMngr.create(cs, null);
-		this.addRecCategory(cs);
-		this.adjustSeq(cs, seq);
+		NnSetManager setMngr = new NnSetManager();
+		NnSet set = new NnSet(name, intro, true);
+		set.setBeautifulUrl(name);
+		set.setLang(lang);		
+		set.setBeautifulUrl(beautifulUrl);
+		set.setImageUrl(imageUrl);
+		set.setFeatured(featured);
+		setMngr.create(set, null);
+		this.addRecCategory(set);
+		this.adjustSeq(set, seq);
 		return "OK";		
 	}
-	
-	@RequestMapping("createTest")
-	public ResponseEntity<String> createTest(@RequestParam(required=false) String name, 			                             
-			                             @RequestParam(required=false) String desc,
-			                             @RequestParam(required=false) String channelIds,
-			                             @RequestParam(required=false) String seqs,
-			                             @RequestParam(required=false) String lang,
-			                             @RequestParam(required=false) String imageUrl,
-			                             @RequestParam(required=false) String categoryIds) {
-		//set info
-		Mso mso = new MsoManager().findNNMso();
-		NnSetManager channelSetMngr = new NnSetManager();
-		NnSet channelSet = new NnSet(name, desc, true);
-//		channelSet.setDefaultUrl(name); 
-		channelSet.setBeautifulUrl(name);
-		//related channels
-		NnChannelManager channelMngr = new NnChannelManager();
-		String[] chArr = channelIds.split(",");
-		String[] seqArr = seqs.split(",");
-		List<Long> list = new ArrayList<Long>();
-		for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
-		List<NnChannel> channels = channelMngr.findAllByChannelIds(list);
-		for (int i=0; i<channels.size(); i++) {
-			channels.get(i).setSeq(Short.valueOf(seqArr[i]));
-		}
-		channelSet.setLang(lang);
-		channelSet.setImageUrl(imageUrl);
-		channelSetMngr.create(channelSet, channels);						
 		
-		//channelSet ownership
-		ContentOwnershipManager ownershipMngr = new ContentOwnershipManager();
-		ownershipMngr.create(new ContentOwnership(), mso, channelSet);
-		
-		//category and set
-		String[] categoryArr = categoryIds.split(",");
-//		CategoryChannelSetManager cscMngr = new CategoryChannelSetManager();
-		CategoryManager cMngr = new CategoryManager();
-		List<Category> categories = new ArrayList<Category>();
-		for (int i=0; i<categoryArr.length; i++) {
-			Category c = cMngr.findById(Long.parseLong(categoryArr[i]));
-			categories.add(c);
-		}
-		for (Category c : categories) {
-/*
-			CategoryToNnSet csc = new CategoryToNnSet(c.getId(), channelSet.getId());			
-			cscMngr.save(csc);
-*/		
-			cMngr.addSet(c, channelSet);
-		}
-		return NnNetUtil.textReturn("OK");
-	}	
-
-	@RequestMapping("createTest")
-	public ResponseEntity<String> createTest(@RequestParam(required=false) String name, 			                             
-			                             @RequestParam(required=false) String desc,
-			                             @RequestParam(required=false) String channelIds,
-			                             @RequestParam(required=false) String seqs,
-			                             @RequestParam(required=false) String lang,
-			                             @RequestParam(required=false) String categoryIds) {
-		//set info
-		name="Most Popular this Week";
-		desc = "All your favorites in one place!";
-		
-		Mso mso = new MsoManager().findNNMso();
-		NnSetManager channelSetMngr = new NnSetManager();
-		NnSet channelSet = new NnSet(name, desc, true);
-//		channelSet.setDefaultUrl(name); 
-		channelSet.setBeautifulUrl(name);
-		//related channels
-		NnChannelManager channelMngr = new NnChannelManager();
-		String[] urls = {
-				"http://www.youtube.com/user/TEDtalksDirector",
-				"http://www.youtube.com/user/AtGoogleTalks",
-				"http://www.youtube.com/user/ReutersVideo",
-				"http://www.youtube.com/user/AssociatedPress",
-				"http://www.youtube.com/user/JimmyKimmelLive",
-				"http://www.youtube.com/user/journeymanpictures",
-				"http://www.youtube.com/user/NASAtelevision",
-				"http://www.youtube.com/user/NewYorkerDotCom",
-				"http://www.youtube.com/user/ComputerHistory",
-				"http://www.youtube.com/user/animalplanetTV",                                              
-				"http://www.youtube.com/user/NBA",
-				"http://www.youtube.com/user/bigthink",
-				"http://www.youtube.com/user/ResearchChannel",
-				"http://www.youtube.com/user/boyceavenue",
-				"http://www.youtube.com/user/growingyourgreens",
-				"http://www.youtube.com/user/ThirteenWNET",
-				"http://www.youtube.com/user/Autoexpress",
-				"http://www.youtube.com/user/PulitzerCenter",
-				"http://www.youtube.com/user/richarddawkinsdotnet",
-				"http://www.youtube.com/user/FunnyorDie",
-				"http://www.youtube.com/reelzchannel",
-				"http://www.youtube.com/user/realannoyingorange",
-				"http://www.youtube.com/user/FoodNetworkTV",
-				"http://www.youtube.com/user/japanesepod101",
-				"http://www.youtube.com/user/NationalGeographic",
-				"http://www.youtube.com/user/CorridorDigital",
-				"http://www.youtube.com/user/trendhuntertv"				
-		};
-		List<NnChannel> channels = new ArrayList<NnChannel>();
-		int j=1;
-		for (String url : urls) {
-			String checkedUrl = YouTubeLib.formatCheck(url);
-			NnChannel c = channelMngr.findBySourceUrl(checkedUrl);
-			c.setSeq((short)j);
-			channels.add(c);
-			j++;
-		}
-		channelSet.setLang(lang);
-		channelSetMngr.create(channelSet, channels);						
-		
-		//channelSet ownership
-		ContentOwnershipManager ownershipMngr = new ContentOwnershipManager();
-		ownershipMngr.create(new ContentOwnership(), mso, channelSet);
-		
-		//category and set
-		String[] categoryArr = categoryIds.split(",");
-//		CategoryChannelSetManager cscMngr = new CategoryChannelSetManager();
-		CategoryManager cMngr = new CategoryManager();
-		List<Category> categories = new ArrayList<Category>();
-		for (int i=0; i<categoryArr.length; i++) {
-			Category c = cMngr.findById(Long.parseLong(categoryArr[i]));
-			categories.add(c);
-		}
-		for (Category c : categories) {
-/*
-			CategoryToNnSet csc = new CategoryToNnSet(c.getId(), channelSet.getId());			
-			cscMngr.save(csc);	
-*/
-			cMngr.addSet(c, channelSet);
-		}
-		return NnNetUtil.textReturn("OK");
-	}	
-	
-	
 }

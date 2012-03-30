@@ -9,9 +9,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable(table="pdr_raw", detachable="true")
+@PersistenceCapable(table="pdr", detachable="true")
 public class Pdr implements Serializable {	
-	private static final long serialVersionUID = 7348543186240756490L;
+	
+	private static final long serialVersionUID = 1064168991300530081L;
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -45,7 +46,7 @@ public class Pdr implements Serializable {
 		
 	@Persistent
 	@Column(jdbcType="LONGVARCHAR", length=100000)
-	private String detail;
+	private String detail;	
 	
 	@Persistent
 	private Date createDate;

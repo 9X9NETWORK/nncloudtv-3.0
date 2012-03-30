@@ -2,29 +2,32 @@ package com.nncloudtv.web.admin;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.Math;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.model.*;
-import com.nncloudtv.service.*;
+import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserSubscribe;
+import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.service.NnUserSubscribeManager;
 
 @Controller
 @RequestMapping("admin/nnuser")
@@ -38,34 +41,6 @@ public class AdminNnUserController {
 	public AdminNnUserController(NnUserManager nnUserMngr) {
 		this.nnUserMngr = nnUserMngr;		
 	}	
-
-	@RequestMapping("subscription")
-	public ResponseEntity<String> subscription(@RequestParam(required=false) String token, @RequestParam(required=false) Long id) {
-//		SubscriptionManager subMngr = new SubscriptionManager();
-		NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-		NnUser user = null;
-		if (token != null) {
-			user = nnUserMngr.findByToken(token);
-		} else {
-			user = nnUserMngr.findById(id);
-		}
-		if (user == null) { return NnNetUtil.textReturn("user does not exist"); }		
-//		String output = "email\tkey\tid\ttoken\n-----------------\n";
-		String output = "email\tid\ttoken\n-----------------\n";
-//		output = output + user.getEmail() + "\t" + NnStringUtil.getKeyStr(user.getKey()) + "\t" + user.getKey().getId() + "\t" + user.getToken();
-		output = output + user.getEmail() + "\t" + user.getId() + "\t" + user.getToken();
-		output = output + "\n\n";
-//		output = output + "key\tid\tname\turl\ttype\tprogramCount\tstatus\n-----------------\n";
-		output = output + "id\tname\turl\ttype\tprogramCount\tstatus\n-----------------\n";
-		List<NnChannel> channels = subMngr.findSubscribedChannels(user);		
-		for (NnChannel c : channels) {			
-			output = output + "\t" + c.getId() + "\t" + c.getName() + "\t" + c.getSourceUrl() + 
-							  "\t" + c.getType() + "\t" + c.getProgramCnt() + "\t" + c.getStatus();
-			output = output + "\n";
-		}
-		return NnNetUtil.textReturn(output);
-	}
-
 	
 	@RequestMapping(value = "subscription", params = {"id", "page", "rows", "sidx", "sord"})
 	public void subscription(@RequestParam(value = "id")   Long         userId,

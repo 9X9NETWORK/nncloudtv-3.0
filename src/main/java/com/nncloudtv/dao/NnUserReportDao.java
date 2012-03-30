@@ -18,9 +18,23 @@ public class NnUserReportDao extends GenericDao<NnUserReport>{
 		super(NnUserReport.class);
 	}
 
+	public List<NnUserReport> findAll() {
+		List<NnUserReport> detached = new ArrayList<NnUserReport>();
+		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+		try {
+			Query query = pm.newQuery(NnUserReport.class);		
+			@SuppressWarnings("unchecked")
+			List<NnUserReport> results = (List<NnUserReport>) query.execute();
+			detached = (List<NnUserReport>)pm.detachCopyAll(results);			
+		} finally {
+			pm.close();
+		}
+		return detached;				
+	}
+
+	
 	public NnUserReport save(NnUserReport report) {
 		if (report == null) {return null;}
-		log.info("<<<<<<<<<<<<<, enter save >>>>>>>>>>>>");
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
 			pm.makePersistent(report);			

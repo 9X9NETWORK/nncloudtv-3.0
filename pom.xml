@@ -31,6 +31,7 @@
            <version>6.1.22</version>
            <configuration>
              <!-- <webApp>${basedir}/target/nncloudtv.war</webApp>  -->
+             <!-- <session-timeout>1</session-timeout>  -->
              <connectors>
                 <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                    <port>8888</port>

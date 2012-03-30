@@ -463,7 +463,7 @@ public class CmsApiController {
 		NnChannel channel = channelMngr.findBySourceUrl(sourceUrl);
 		if (channel == null) {
 			log.info("new source url");
-			channel = channelMngr.create(sourceUrl, req); //!!!
+			channel = channelMngr.create(sourceUrl, null, req);
 			if (channel == null) {
 				log.warning("invalid source url");
 				return null;

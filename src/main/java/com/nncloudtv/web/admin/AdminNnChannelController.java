@@ -2,7 +2,6 @@ package com.nncloudtv.web.admin;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,46 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.jdo.JDOUserException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//import com.google.appengine.api.users.UserService;
-//import com.google.appengine.api.users.UserServiceFactory;
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnLogUtil;
-import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PiwikLib;
-import com.nncloudtv.lib.YouTubeLib;
-//import com.nncloudtv.model.Category;
-//import com.nncloudtv.model.CategoryChannel;
-import com.nncloudtv.model.ContentOwnership;
-import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
-import com.nncloudtv.model.NnUser;
-//import com.nncloudtv.service.CategoryChannelManager;
-//import com.nncloudtv.service.CategoryManager;
-import com.nncloudtv.service.ContentOwnershipManager;
 import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
-import com.nncloudtv.service.NnUserManager;
-//import com.nncloudtv.service.SubscriptionLogManager;
-import com.nncloudtv.service.TranscodingService;
 
 @Controller
 @RequestMapping("admin/channel")
@@ -58,12 +39,10 @@ public class AdminNnChannelController {
 	protected static final Logger logger = Logger.getLogger(AdminNnChannelController.class.getName());		
 	
 	private final NnChannelManager channelMngr;
-//	private final UserService       userService;
 	
 	@Autowired
 	public AdminNnChannelController(NnChannelManager channelMngr) {
 		this.channelMngr = channelMngr;
-//		this.userService = UserServiceFactory.getUserService();
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -72,31 +51,6 @@ public class AdminNnChannelController {
 		return "error/exception";				
 	}	
 	
-	@RequestMapping("tmpList")
-	public ResponseEntity<String> tmpList(
-				HttpServletRequest req) {
-		String[] urls = {
-				"http://www.youtube.com/user/goodtv/user/FBE16B28C166951F",
-				"http://www.youtube.com/user/DianaAmazing",
-				"http://www.youtube.com/user/tbwtv",
-				"http://www.youtube.com/user/TVHS109",
-				"http://www.youtube.com/user/ntdchinese",
-				"http://www.youtube.com/user/ChinaTimes",
-				"http://www.youtube.com/user/TheChineseNews",				
-		};
-		List<NnChannel> channels = new ArrayList<NnChannel>();
-		for (String url : urls) {
-			String checkedUrl = YouTubeLib.formatCheck(url);
-			NnChannel c = channelMngr.findBySourceUrl(checkedUrl);
-			channels.add(c);
-		}
-		String output = "";
-		for (NnChannel c : channels) {
-			output += c.getId() + "\t" + c.getSourceUrl() + "\n";
-		}
-		return NnNetUtil.textReturn(output);
-	}	
-
 	@RequestMapping("createPiwik")
 	public @ResponseBody String createPiwik(
 				HttpServletRequest req,
@@ -113,75 +67,16 @@ public class AdminNnChannelController {
 		}
 		return "OK";
 	}
-	
-	@RequestMapping("createBatch")
-	public @ResponseBody String createBatch(
-				HttpServletRequest req,
-				@RequestParam(value="devel",required=false) boolean devel) {
-		String[] urls = {
-				"http://www.youtube.com/playlist?list=PL3FC1CEA86F082B94",
-		};
-		String[] names= {
-				"Brand New Life",                       
-		};
-		for (int i=0; i<urls.length; i++) {
-//			channelMngr.create(urls[i], names[i], devel, req);
-			channelMngr.create(urls[i], req);
-		}
-		return "OK";
-	}		
-	
+		
 	@RequestMapping("create")
 	public @ResponseBody String create(
 				HttpServletRequest req,
 			    @RequestParam(value="sourceUrl", required=false)String url,
 				@RequestParam(value="name", required=false) String name,
 				@RequestParam(value="devel",required=false) boolean devel) {
-//		channelMngr.create(url, name, false, req);
-		channelMngr.create(url, req);
+		channelMngr.create(url, name, req);
 		return "OK";
 	}	
-
-	@RequestMapping("list")
-	public ResponseEntity<String> list(
-			@RequestParam(value="status", required=false)String status,
-			@RequestParam(value="since", required=false)String since) {		
-		List<NnChannel> channels = new ArrayList<NnChannel>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		Date sinceDate = null;
-		String output = "";
-		
-		if (since != null) {
-			try {
-				sinceDate = sdf.parse(since);
-			} catch (ParseException e) {
-				return NnNetUtil.textReturn("wrong date format: yyyymmdd");
-			}			
-			channels.addAll(channelMngr.findSince(sinceDate));			
-		}		
-		List<NnChannel> bad = new ArrayList<NnChannel>();		
-		if (status == null) {
-			channels = channelMngr.findAll();
-			for (NnChannel c : channels) {
-				/*
-				if (c.getName() == null || c.getStatus() != NnChannel.STATUS_SUCCESS || 
-					c.isPublic() != true || c.getProgramCnt() < 1 ) {
-					bad.add(c);
-				}
-				*/
-			}
-			output = "Total count: " + channels.size() + "\n" + "Bad channel count(not public, name=null, status!=success, programCount < 1): " + bad.size();
-			output = output + "\n\n --------------- \n\n";
-			output = output + this.printChannelData(channels);				
-			output = output + "\n\n --------------- \n\n";
-			//output = output + this.printChannelData(bad);			
-		} else {
-			channels = channelMngr.findAllByStatus(Short.valueOf(status));
-		}
-		
-		output = output + this.printChannelData(channels);		
-		return NnNetUtil.textReturn(output);
-	}
 		
 	/**
 	 * List items in jqGrid format
@@ -347,45 +242,12 @@ public class AdminNnChannelController {
 		return "OK";
 	}
 	
-	private String printChannelData(List<NnChannel> channels) {
-		String[] title = {"id", "name", "sourceUrl", "isPublic", "status", "programCount"};		
-		String result = "";		
-		for (NnChannel c : channels) {
-			String[] ori = {String.valueOf(c.getId()),
-				    	    c.getName(),
-				    	    c.getSourceUrl(), 
-				    	    String.valueOf(c.isPublic()),
-				    	    String.valueOf(c.getStatus()), 
-				    	    String.valueOf(c.getProgramCnt())}; 						
-			result = result + NnStringUtil.getDelimitedStr(ori);		
-			result = result + "\n";			
-		}
-		String output = NnStringUtil.getDelimitedStr(title) + "\n" + result;		
-		return output;
-	}
-
-/*  
-	//add only, a channel's categories are accumulated
-	@RequestMapping("addCategories")
-	public @ResponseBody String addCategories(@RequestParam(required=true)long channel, String categories) {
-		CategoryManager categoryMngr = new CategoryManager();
-		List<Category> categoryList = categoryMngr.findCategoriesByIdStr(categories);
-		List<Category> list = categoryMngr.changeCategory(channel, categoryList);
-		String output = "";
-		for (Category c : list) {
-			output = output + c.getId() + "\t" + c.getName() + "<br/>";
-		}
-		return output;
-	}
-*/	
-
 
 	@RequestMapping("addSet")
 	public @ResponseBody String addCategory(@RequestParam(value = "channel")  Long channelId,
 	                                        @RequestParam(value = "set") Long setId) {
 		
-//		logger.info("admin = " + userService.getCurrentUser().getEmail());
-		
+//		logger.info("admin = " + userService.getCurrentUser().getEmail());		
 		NnSetChannelManager csMngr = new NnSetChannelManager();
 		NnSetManager setMngr = new NnSetManager();
 		logger.info("setId = " + setId);
@@ -417,8 +279,6 @@ public class AdminNnChannelController {
 		
 		return "OK";
 	}
-
-
 
 	@RequestMapping("deleteSets")
 	public @ResponseBody String deleteCategories(@RequestParam(required=true)long channel, String sets) {
@@ -611,10 +471,4 @@ public class AdminNnChannelController {
 		return "OK";
 	}
 	
-	@RequestMapping("findUnUniqueSourceUrl")
-	public ResponseEntity<String> findUnUniqueSourceUrl() {
-		List<NnChannel> channels = channelMngr.findUnUniqueSourceUrl();
-		String result = this.printChannelData(channels);
-		return NnNetUtil.textReturn(result);
-	}
 }
