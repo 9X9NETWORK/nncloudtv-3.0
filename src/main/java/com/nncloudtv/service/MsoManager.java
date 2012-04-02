@@ -115,4 +115,20 @@ public class MsoManager {
 		return msoDao.findAll();
 	}
 	
+	public List<Mso> list(int page, int limit, String sidx, String sord) {
+		return msoDao.list(page, limit, sidx, sord);
+	}
+	
+	public List<Mso> list(int page, int limit, String sidx, String sord, String filter) {
+		return msoDao.list(page, limit, sidx, sord, filter);
+	}
+	
+	public int total() {
+		return msoDao.total();
+	}
+	
+	public int total(String filter) {
+		return msoDao.total(filter);
+	}
+	
 }

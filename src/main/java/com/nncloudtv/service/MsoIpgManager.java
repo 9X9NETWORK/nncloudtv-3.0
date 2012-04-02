@@ -52,9 +52,8 @@ public class MsoIpgManager {
 	
 	public MsoIpg findByMsoIdAndSeq(long msoId, short seq) {
 		return msoIpgDao.findByMsoIdAndSeq(msoId, seq);
-	}
+	}	
 	
-	/*
 	public List<MsoIpg> list(int page, int limit, String sidx, String sord) {
 		return msoIpgDao.list(page, limit, sidx, sord);
 	}
@@ -70,5 +69,5 @@ public class MsoIpgManager {
 	public int total(String filter) {
 		return msoIpgDao.total(filter);
 	}
-	*/
+	
 }

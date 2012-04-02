@@ -28,6 +28,7 @@ import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
+import com.nncloudtv.model.CategoryToNnSet;
 //import com.nncloudtv.model.CategoryChannel;
 //import com.nncloudtv.model.CategoryToNnSet;
 import com.nncloudtv.model.NnSet;
@@ -177,9 +178,9 @@ public class AdminCategoryController {
 	                    @RequestParam(value = "sidx")     String       sortIndex,
 	                    @RequestParam(value = "sord")     String       sortDirection,
 	                    OutputStream out) {
-		System.out.println("hit setList");		
+//		System.out.println("hit setList");		
 //		CategoryChannelManager ccMngr      = new CategoryChannelManager();
-		
+//		System.out.println(categoryId);
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 		
@@ -194,15 +195,28 @@ public class AdminCategoryController {
 		}
 		
 		String filter = "categoryId == " + categoryId;
-		int totalRecords = categoryMngr.total(filter);
+		int totalRecords = categoryMngr.totalCatToSet(filter);
 		int totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);
 		if (currentPage > totalPages)
 			currentPage = totalPages;
-		
-//		CategoryChannelSetManager ccsMngr = new CategoryChannelSetManager();
-//		NnSetManager csMngr = new NnSetManager();
+
+		//check if data exist
 		List<NnSet> list = categoryMngr.findSetsByCategory(categoryId, false);
-		for (NnSet set : list) {
+		if(list == null) {
+			System.out.println("its null");
+		} else {
+			System.out.println("its not null");
+			for (NnSet aSet : list)
+				System.out.println(aSet.getName());
+		}
+		
+		List<CategoryToNnSet> listCatToSet =  categoryMngr.listCatToSet(currentPage, rowsPerPage, sortIndex, sortDirection, filter);
+		NnSetManager setMngr = new NnSetManager();
+		NnSet set = null;
+		
+		for (CategoryToNnSet catToSet : listCatToSet) {
+			System.out.println(catToSet.getSetId());
+			set = setMngr.findById(catToSet.getSetId());
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<Object> cell = new ArrayList<Object>();
@@ -269,6 +283,10 @@ public class AdminCategoryController {
 		
 		String filter = "";
 		if (searchField != null && searchOper != null && searchString != null && !searchString.isEmpty()) {
+			
+			if (searchField.equals("lang")) {
+				searchString = NnStringUtil.escapedQuote(searchString);
+			}
 			
 			Map<String, String> opMap = JqgridHelper.getOpMap();
 			if (opMap.containsKey(searchOper)) {

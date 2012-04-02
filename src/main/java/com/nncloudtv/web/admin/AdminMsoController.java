@@ -1,10 +1,20 @@
 package com.nncloudtv.web.admin;
 
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,7 +32,10 @@ import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.ContentOwnershipManager;
 import com.nncloudtv.service.MsoManager;
+
 import com.nncloudtv.service.NnSetManager;
+import com.nncloudtv.lib.JqgridHelper;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.NnUserManager;
 
 @Controller
@@ -102,4 +115,147 @@ public class AdminMsoController {
 		
 		return "OK";
 	}
+
+	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
+	public void list(@RequestParam(value = "page")   Integer      currentPage,
+	                 @RequestParam(value = "rows")   Integer      rowsPerPage,
+	                 @RequestParam(value = "sidx")   String       sortIndex,
+	                 @RequestParam(value = "sord")   String       sortDirection,
+	                 @RequestParam(required = false) String       searchField,
+	                 @RequestParam(required = false) String       searchOper,
+	                 @RequestParam(required = false) String       searchString,
+	                                                 OutputStream out) {
+		
+		NnUserManager userMngr = new NnUserManager();
+		ObjectMapper mapper = new ObjectMapper();
+		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
+		
+		String filter = "";
+		if (searchField != null && searchOper != null && searchString != null && !searchString.isEmpty()) {			
+			Map<String, String> opMap = JqgridHelper.getOpMap();
+			if (opMap.containsKey(searchOper)) {
+				filter = searchField + " " + opMap.get(searchOper) + " " + searchString;
+				log.info("filter: " + filter);
+				sortIndex = "updateDate";
+				sortDirection = "desc";
+			}
+		}
+		
+		int totalRecords = msoMngr.total(filter);
+		int totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);
+		if (currentPage > totalPages)
+			currentPage = totalPages;
+		
+		List<Mso> results = msoMngr.list(currentPage, rowsPerPage, sortIndex, sortDirection, filter);
+		
+		for (Mso mso : results) {
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			List<Object> cell = new ArrayList<Object>();
+			
+			cell.add(mso.getLogoUrl());
+			cell.add(mso.getId());
+			cell.add(mso.getName());
+			cell.add(mso.getTitle());
+			cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mso.getUpdateDate()));
+			cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mso.getCreateDate()));
+//			cell.add(mso.getLogoClickUrl());
+			cell.add(mso.getJingleUrl());
+			cell.add(mso.getType());
+			cell.add(mso.getLang());
+			cell.add(mso.getContactEmail());
+			cell.add("********");
+			cell.add(mso.getIntro());
+			cell.add(userMngr.total("msoId == " + mso.getId() + " && email != '" + NnUser.GUEST_EMAIL + "'"));
+			
+			map.put("id", mso.getId());
+			map.put("cell", cell);
+			dataRows.add(map);
+		}
+		
+		try {
+			mapper.writeValue(out, JqgridHelper.composeJqgridResponse(currentPage, totalPages, totalRecords, dataRows));
+		} catch (IOException e) {
+			log.warning(e.getMessage());
+		}
+	}
+	
+	@RequestMapping("msoHtmlSelectOptions")
+	public void msoHtmlSelectOptions(HttpServletResponse response, OutputStream out) {
+		
+		response.setContentType("text/html;charset=utf-8");
+		OutputStreamWriter writer;
+		try {
+			writer = new OutputStreamWriter(out, "UTF-8");
+		} catch (java.io.UnsupportedEncodingException e) {
+			return;
+		}
+		List<Mso> msoList = msoMngr.findAll();
+		try {
+			writer.write("<select>");
+			writer.write("<option selected=\"selected\" value=\"0\">None</option>");
+			for (Mso mso : msoList) {
+				writer.write("<option value=\"" + mso.getId() + "\">" + mso.getName() + "</option>");
+			}
+			writer.write("</select>");
+			writer.close();
+		} catch (IOException e) {
+			return;
+		}
+	}
+	
+	@RequestMapping("modify")
+	public @ResponseBody String modify(@RequestParam(required=true)  Long   id,
+	                                   @RequestParam(required=false) String name,
+	                                   @RequestParam(required=false) String title,
+	                                   @RequestParam(required=false) String contactEmail,
+	                                   @RequestParam(required=false) String intro,
+	                                   @RequestParam(required=false) String lang,
+	                                   @RequestParam(required=false) String logoUrl,
+	                                   @RequestParam(required=false) String jingleUrl) {
+		
+//		logger.info("admin = " + userService.getCurrentUser().getEmail());
+		
+		log.info("msoId = " + id);
+		Mso mso = msoMngr.findById(id);
+		if (mso == null) {
+			String error = "MSO Not Found";
+			log.warning(error);
+			return error;
+		}
+		
+		if (name != null) {
+			log.info("name = " + name);
+			mso.setName(name);
+//			mso.setNameSearch(name.toLowerCase());
+		}
+		if (name != null) {
+			log.info("title = " + title);
+			mso.setTitle(title);
+		}
+		if (contactEmail != null) {
+			log.info("contactEmail = " + contactEmail);
+			mso.setContactEmail(contactEmail);
+		}
+		if (intro != null) {
+			log.info("intro = " + intro);
+			mso.setIntro(intro);
+		}
+		if (lang != null) {
+			log.info("preferredLangCode = " + lang);
+			mso.setLang(lang);
+		}
+		if (logoUrl != null) {
+			log.info("logoUrl = " + logoUrl);
+			mso.setLogoUrl(logoUrl);
+		}
+		if (jingleUrl != null) {
+			log.info("jingleUrl = " + jingleUrl);
+			mso.setJingleUrl(jingleUrl);
+		}
+		
+		msoMngr.save(mso);
+		return "OK";
+	}
+	
 }

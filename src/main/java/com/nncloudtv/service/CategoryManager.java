@@ -163,7 +163,7 @@ public class CategoryManager {
 	}
 	
 	public void deleteCatToSetBySetId(long setId) {
-		deleteAll(this.findCatToSetBySetId(setId));
+		deleteAllCatToSet(this.findCatToSetBySetId(setId));
 /*
 		for(Category category : categories) {
 			deleteSet(category.getId(), setId);
@@ -172,7 +172,7 @@ public class CategoryManager {
 	}
 	
 	public void deleteCatToSetByCatId(long categoryId) {
-		deleteAll(this.findCatToSetByCategoryId(categoryId));
+		deleteAllCatToSet(this.findCatToSetByCategoryId(categoryId));
 /*
 		for(NnSet set : sets) {
 			deleteSet(categoryId, set.getId());
@@ -242,6 +242,14 @@ public class CategoryManager {
 		return categoryDao.list(page, limit, sidx, sord, filter);
 	}
 	
+	public List<CategoryToNnSet> listCatToSet(int page, int limit, String sidx, String sord) {
+		return cToNDao.list(page, limit, sidx, sord);
+	}
+	
+	public List<CategoryToNnSet> listCatToSet(int page, int limit, String sidx, String sord, String filter) {
+		return cToNDao.list(page, limit, sidx, sord, filter);
+	}
+	
 	public int total() {
 		return categoryDao.total();
 	}
@@ -250,11 +258,19 @@ public class CategoryManager {
 		return categoryDao.total(filter);
 	}
 	
+	public int totalCatToSet() {
+		return cToNDao.total();
+	}
+	
+	public int totalCatToSet(String filter) {
+		return cToNDao.total(filter);
+	}
+	
 	public void delete(Category c) {
 		categoryDao.delete(c);
 	}
 	
-	private void deleteAll(List<CategoryToNnSet> list) {
+	private void deleteAllCatToSet(List<CategoryToNnSet> list) {
 		cToNDao.deleteAll(list);
 	}
 	

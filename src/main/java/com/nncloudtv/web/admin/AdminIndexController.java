@@ -27,6 +27,7 @@ public class AdminIndexController {
 	@RequestMapping("ui")
 	public String oss(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+
 		System.out.println("root path:" + MsoConfigManager.getExternalRootPath());
 		model.addAttribute("root", MsoConfigManager.getExternalRootPath());		
 		response.setContentType("text/html");
@@ -56,6 +57,7 @@ public class AdminIndexController {
 			return null;
 		}
 		*/
+
 	}
 	
 }

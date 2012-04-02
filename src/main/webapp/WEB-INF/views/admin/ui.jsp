@@ -1,19 +1,18 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet"
-	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/ui-darkness/jquery-ui.css"
+	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/ui-darkness/jquery-ui.css"
 	type="text/css" />
 <link rel="stylesheet" href="${root}/stylesheets/ui.jqgrid.css" />
 <link rel="stylesheet" href="${root}/stylesheets/admin-portal-ui.css" />
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js"></script>
+<script type="text/javascript" src="${root}/javascripts/jquery-1.6.4.fixed.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.js"></script>
 <script type="text/javascript" src="${root}/javascripts/grid.locale-en.js"></script>
-<script type="text/javascript" src="${root}/javascripts/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="${root}/javascripts/jquery.jqGrid.src.js"></script>
+<script type="text/javascript" src="${root}/javascripts/piwik-analytics.js"></script>
 <script type="text/javascript" src="${root}/javascripts/admin-portal-ui.js"></script>
 <title>9x9 Admin Portal</title>
 </head>

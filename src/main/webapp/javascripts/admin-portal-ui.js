@@ -195,8 +195,8 @@ var page$ = {
         colModel: [
           {
             label:    'Set ID',
-            name:     'setId',
-            index:    'setId',
+            name:     'id',
+            index:    'id',
             width:    80,
             align:    'center',
             sortable: false,
@@ -478,18 +478,6 @@ var page$ = {
               }
             },
             {
-              label:    'Publish Time',
-              name:     'pubDate',
-              index:    'pubDate',
-              width:    120,
-              align:    'center',
-              sortable: true,
-              editable: true,
-              editoptions: {
-                disabled: true
-              }
-            },
-            {
               label:    'Updated Time',
               name:     'updateDate',
               index:    'updateDate',
@@ -511,54 +499,6 @@ var page$ = {
               sortable: true,
               editable: true,
               hidden:   true,
-              editoptions: {
-                disabled: true
-              },
-              editrules: {
-                edithidden: true
-              }
-            },
-            {
-              label:    'MPEG4 URL',
-              name:     'mpeg4FileUrl',
-              index:    'mpeg4FileUrl',
-              width:    150,
-              align:    'center',
-              sortable: true,
-              hidden:   true,
-              editable: true,
-              editoptions: {
-                disabled: true
-              },
-              editrules: {
-                edithidden: true
-              }
-            },
-            {
-              label:    'WebM URL',
-              name:     'webMFileUrl',
-              index:    'webMFileUrl',
-              width:    150,
-              align:    'center',
-              sortable: true,
-              hidden:   true,
-              editable: true,
-              editoptions: {
-                disabled: true
-              },
-              editrules: {
-                edithidden: true
-              }
-            },
-            {
-              label:    'Other URL',
-              name:     'otherFileUrl',
-              index:    'otherFileUrl',
-              width:    150,
-              align:    'center',
-              sortable: true,
-              hidden:   true,
-              editable: true,
               editoptions: {
                 disabled: true
               },
@@ -679,7 +619,7 @@ var page$ = {
           datatype:    'json',
           //url:         '/admin/program/list?channel=' + rowId,
           caption:     'Program List',
-          sortname:    'pubDate',
+          sortname:    'updateDate',
           sortorder:   'desc',
           rowNum:      10,
           rowList:     [10, 20, 30, 40, 50, 100],
@@ -764,8 +704,8 @@ var page$ = {
         colModel: [
           {
             label:    'Channel ID',
-            name:     'channelId',
-            index:    'channelId',
+            name:     'id',
+            index:    'id',
             width:    80,
             align:    'center',
             search:   true,
@@ -857,28 +797,6 @@ var page$ = {
             }
           },
           {
-            label:     'Language',
-            name:      'langCode',
-            index:     'langCode',
-            width:     70,
-            hidden:    true,
-            align:     'center',
-            search:    true,
-            stype:     'select',
-            sortable:  true,
-            formatter: 'select',
-            editable:  true,
-            edittype:  'select',
-            editoptions: {
-              disabled: false,
-              value:    "en:en;zh:zh"
-            },
-            searchoptions: {
-              sopt:  ['eq'],
-              value: "en:en;zh:zh"
-            }
-          },
-          {
             label:     'Public',
             name:      'isPublic',
             index:     'isPublic',
@@ -945,8 +863,8 @@ var page$ = {
           },                    
           {
             label:    'Ep. Count',
-            name:     'programCount',
-            index:    'programCount',
+            name:     'programCnt',
+            index:    'programCnt',
             width:    90,
             align:    'center',
             search:   false,
@@ -960,8 +878,8 @@ var page$ = {
           },
           {
             label:    'Sub. Count',
-            name:     'subscriptionCount',
-            index:    'subscriptionCount',
+            name:     'subscriptionCnt',
+            index:    'subscriptionCnt',
             width:    80,
             align:    'center',
             search:   false,
@@ -1144,7 +1062,7 @@ var page$ = {
                 width:     70,
                 align:     'center',
                 search:    false,
-                sortable:  true,
+                sortable:  false,
                 formatter: 'checkbox',
                 editable:  false,
                 edittype:  'checkbox',
@@ -1173,7 +1091,6 @@ var page$ = {
                 value: "en:en;zh:zh"
               }
             },
-            /*
   	        {
       		    label:    'Seq',
       		    name:     'seq',
@@ -1181,9 +1098,8 @@ var page$ = {
       		    width:    180,
       		    align:    'center',
       		    editable: true,
-      		    sortable: true
-      		  },
-      		  */            
+      		    sortable: false
+            }
           ],
           datatype:    'json',
           //url:         '/admin/category/channelList?category=' + rowId,
@@ -1285,8 +1201,8 @@ var page$ = {
           */          
           {
             label:    'Category ID',
-            name:     'categoryId',
-            index:    'categoryId',
+            name:     'id',
+            index:    'id',
             width:    80,
             align:    'center',
             search:   false,
@@ -1398,8 +1314,8 @@ var page$ = {
   		  },
           {
             label:    'Ch. Count',
-            name:     'channelCount',
-            index:    'channelCount',
+            name:     'channelCnt',
+            index:    'channelCnt',
             width:    90,
             align:    'center',
             search:   false,
@@ -1690,8 +1606,8 @@ var page$ = {
           },
           {
             label:    'MSO ID',
-            name:     'mso',
-            index:    'mso',
+            name:     'id',
+            index:    'id',
             width:    80,
             align:    'center',
             search:   false,
@@ -1762,20 +1678,6 @@ var page$ = {
             }
           },
           {
-            label:    'Logo Click URL',
-            name:     'logoClickUrl',
-            index:    'logoClickUrl',
-            width:    150,
-            align:    'center',
-            search:   false,
-            sortable: true,
-            hidden:   true,
-            editable: true,
-            editrules: {
-              edithidden: true
-            }
-          },
-          {
             label:    'Jingle URL',
             name:     'jingleUrl',
             index:    'jingleUrl',
@@ -1812,8 +1714,8 @@ var page$ = {
           },
           {
             label:     'Language',
-            name:      'preferredLangCode',
-            index:     'preferredLangCode',
+            name:      'lang',
+            index:     'lang',
             width:     90,
             align:     'center',
             sortable:  true,
@@ -2691,8 +2593,8 @@ var page$ = {
           },
           {
             label:    'User ID',
-            name:     'user',
-            index:    'userId',
+            name:     'id',
+            index:    'id',
             width:    80,
             align:    'center',
             search:   false,

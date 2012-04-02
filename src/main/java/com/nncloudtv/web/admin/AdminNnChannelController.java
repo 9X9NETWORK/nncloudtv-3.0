@@ -29,6 +29,9 @@ import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
+import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.CntSubscribeManager;
+import com.nncloudtv.service.ContentOwnershipManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
@@ -109,14 +112,14 @@ public class AdminNnChannelController {
 	                 @RequestParam(required = false) String       set,
 	                 @RequestParam(required = false) boolean      notify,
 	                 OutputStream out) {
-//		SubscriptionLogManager subLogMngr = new SubscriptionLogManager();
+		CntSubscribeManager subMngr = new CntSubscribeManager();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 		
 		List<NnChannel> results;
 		int totalRecords, totalPages;
 		if (searchField != null && searchOper != null && searchString != null
-		    && searchOper.equals("eq") && searchField.equals("channel")) {			
+		    && searchOper.equals("eq") && searchField.equals("id")) {			
 			logger.info("searchString = " + searchString);
 			totalRecords = 0;
 			totalPages = 1;
@@ -135,14 +138,11 @@ public class AdminNnChannelController {
 		        	   searchField.equals("contentType") || 
 		        	   searchField.equals("isPublic") || 
 		        	   searchField.equals("featured") || 
-		        	   searchField.equals("sourceUrl") || 
-		        	   searchField.equals("langCode"))) {			
+		        	   searchField.equals("sourceUrl") )) {			
 			if (searchField.equals("sourceUrl")) {
 				searchString = NnStringUtil.escapedQuote(searchString.toLowerCase());
-				searchField += "Search";
-			}  else if (searchField.equals("langCode")) {
-				searchString = NnStringUtil.escapedQuote(searchString);
-			}			
+//				searchField += "Search";
+			}
 			String filter = searchField + " == " + searchString;
 			logger.info("filter = " + filter);
 			totalRecords = channelMngr.total(filter);
@@ -226,7 +226,7 @@ public class AdminNnChannelController {
 				cell.add(channel.getImageUrl());
 				cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(channel.getUpdateDate()));
 				cell.add(channel.getProgramCnt());
-//				cell.add(subLogMngr.findTotalCountByChannelId(channel.getId()));
+				cell.add(subMngr.findTotalCountByChannel(channel.getId()));
 				//cell.add(channel.getIntro());				
 				map.put("id", channel.getId());
 				map.put("cell", cell);
@@ -337,7 +337,7 @@ public class AdminNnChannelController {
 	
 	
 	@RequestMapping(value = "listSets", params = {"channel", "page", "rows", "sidx", "sord"})
-	public void listCategories(@RequestParam(value = "channel") Long         channelId,
+	public void listSets(@RequestParam(value = "channel") Long         channelId,
 	                           @RequestParam(value = "page")    Integer      currentPage,
 	                           @RequestParam(value = "rows")    Integer      rowsPerPage,
 	                           @RequestParam(value = "sidx")    String       sortIndex,
@@ -396,7 +396,7 @@ public class AdminNnChannelController {
 	
 	@RequestMapping("modify")
 	public @ResponseBody String modify(@RequestParam(required=true)  Long    id,
-			                           @RequestParam(required=true)  Long    channelId,
+//			                           @RequestParam(required=true)  Long    channelId,
 	                                   @RequestParam(required=false) String  name,
 	                                   @RequestParam(required=false) String  intro,
 	                                   @RequestParam(required=false) String  imageUrl,
