@@ -51,6 +51,9 @@ public class AdminNnSetController {
 	                 @RequestParam(required = false) String       search,
 	                 @RequestParam(required = false) boolean      notify,
 	                 OutputStream out) {
+		
+		
+		
 		NnSetManager csMngr = new NnSetManager();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
@@ -313,7 +316,7 @@ public class AdminNnSetController {
 	public @ResponseBody String edit(
 			@RequestParam(required=false) long id,
 			@RequestParam(required=false) String name,
-            @RequestParam(required=false) String desc,
+            @RequestParam(required=false) String intro,
             @RequestParam(required=false) String lang,
             @RequestParam(required=false) String imageUrl,
             @RequestParam(required=false) String beautifulUrl,
@@ -326,7 +329,7 @@ public class AdminNnSetController {
 		NnSetChannelManager cscMngr = new NnSetChannelManager();
 		NnSet cs = csMngr.findById(id);
 		if (name != null) cs.setName(name);
-		if (desc != null) cs.setIntro(desc);
+		if (intro != null) cs.setIntro(intro);
 		if (isPublic != null)
 			cs.setPublic(Boolean.parseBoolean(isPublic));
 		if (featured != null)			
