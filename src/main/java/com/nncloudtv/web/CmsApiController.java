@@ -963,13 +963,13 @@ public class CmsApiController {
 		if (snsAuth == null) {
 			snsAuth = new SnsAuth(msoId, type, token);
 			if (secrete != null)
-				snsAuth.setSecrete(secrete);
+				snsAuth.setSecret(secrete);
 			snsAuth.setEnabled(true);
 			snsMngr.create(snsAuth);
 		} else {
 			snsAuth.setToken(token);
 			if (secrete != null)
-				snsAuth.setSecrete(secrete);
+				snsAuth.setSecret(secrete);
 			snsAuth.setEnabled(true);
 			snsMngr.save(snsAuth);
 		}

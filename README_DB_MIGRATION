@@ -35,8 +35,11 @@ mv filename, remove date_9x9tvprod3
 
 -  alter table
 use nncloudtv_content;
+alter table mso add column ori_id bigint(20);
+create index mso_ori_id on mso (ori_id);
 alter table nnset add column ori_id bigint(20);
 alter table nnchannel add column ori_id bigint(20);
+create index nnchannel_backup_ori_id on nnchannel_backup(ori_id);
 alter table category add column ori_id bigint(20);
 alter table nnprogram add column ori_id bigint(20);
 use nncloudtv_nnuser1;
@@ -81,6 +84,9 @@ update nnprogram set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/proce
 update nnprogram set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/cms/radio.jpg' where imageUrl='/images/cms/radio.jpg';
 
 use nncloudtv_content;
+create table mso_backup select * from mso; 
+update nnuser u set u.channelId = (select id from nncloudtv_content.nnchannel c where s.channelId = c.ori_id);
+
 create table nnset_backup select * from nnset;
 create table nnchannel_backup select * from nnchannel;
 create table nnprogram_backup select * from nnprogram;
@@ -92,6 +98,8 @@ create table nnuser_pref_backup select * from nnuser_pref;
 create table nnuser_channel_sorting_backup select * from nnuser_channel_sorting;
 
 use nncloudtv_nnuser1;
+update nnuser u set u.msoId = (select id from nncloudtv_content.mso m where u.msoId = m.ori_id);
+ 
 update nnuser set token=concat('1-', token);
 update nnuser set shard=1;
 update nnuser_pref p set p.userId = (select id from nnuser u where p.userId = u.ori_id);
@@ -114,6 +122,7 @@ delete from nnuser_watched where userId=0;
 update nnuser_subscribe s, nncloudtv_content.nnchannel c set s.channelId = c.id where s.channelId = c.ori_id;
 
 use nncloudtv_content;
+alter table mso drop column ori_id;
 alter table nnset drop column ori_id;
 alter table nnchannel drop column ori_id;
 alter table category drop column ori_id;
@@ -125,3 +134,20 @@ alter table nnuser drop column ori_id;
 use nncloudtv_nnuser2;	
 alter table nnuser drop column ori_id;	
  
+use nncloudtv_content;
+create table mso_backup select * from mso;
+alter table mso drop column ori_id;
+
+############
+alter table mso add column ori_id bigint(20);
+create index content_ownership_content_id on content_ownership (contentId);
+create index content_ownership_mso_id on content_ownership (msoId);
+
+update content_ownership o, nnchannel_backup c set o.contentId = c.id where o.contentType = 2 and o.contentId = c.ori_id; 
+update content_ownership o, nnset_backup s set o.contentId = s.id where o.contentType = 1 and o.contentId = s.ori_id;
+update content_ownership o, mso_backup m set o.msoId = m.id where o.msoId = m.ori_id;
+
+update content_ownership o, nnset s set o.contentId = s.id where o.contentType = 1 and o.contentId = s.ori_id;
+
+create index sns_mso_id on sns_auth (msoId);
+update sns_auth s, mso_backup m set s.msoId = m.id where s.msoId = m.ori_id;

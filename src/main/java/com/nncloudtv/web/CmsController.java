@@ -302,8 +302,7 @@ public class CmsController {
 		}
 		
 		Mso sessionMso = (Mso)session.getAttribute("mso");
-		if (sessionMso != null && sessionMso.getId() == mso.getId()) {
-			
+		if (sessionMso != null && sessionMso.getId() == mso.getId()) {			
 			model = setAttributes(model, mso);
 			model.addAttribute("locale", request.getLocale().getLanguage());
 			

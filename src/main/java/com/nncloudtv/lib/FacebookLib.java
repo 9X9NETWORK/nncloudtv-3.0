@@ -142,7 +142,7 @@ public class FacebookLib {
 		} else if (sns.getToken() == null || sns.getToken().isEmpty()) {
 			log.warning("token is empty");
 			return;
-		} else if (sns.getSecrete() == null || sns.getSecrete().isEmpty()) {
+		} else if (sns.getSecret() == null || sns.getSecret().isEmpty()) {
 			log.warning("secrete is empty");
 			return;
 		}
@@ -150,7 +150,7 @@ public class FacebookLib {
 		try {
 			String fullpath = 
 					"https://graph.facebook.com/" + sns.getToken() + 
-					"/accounts?access_token=" + URLEncoder.encode(sns.getSecrete(), "US-ASCII");
+					"/accounts?access_token=" + URLEncoder.encode(sns.getSecret(), "US-ASCII");
 			log.info(fullpath);
 			URL url = new URL(fullpath);
 			

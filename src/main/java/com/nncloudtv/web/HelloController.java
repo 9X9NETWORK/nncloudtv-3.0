@@ -49,11 +49,13 @@ public class HelloController {
     public ModelAndView world(HttpServletRequest req) throws Exception {
 		HttpSession session = req.getSession();
 		session.setMaxInactiveInterval(1);
+		/*
 		for (long i=0; i<500000000; i++) {
 			System.out.println(i);
 			for (long j=0; j<500000000; j++) {			
 			}			
 		}
+		*/
         String message = "Hello NnCloudTv";
         return new ModelAndView("hello", "message", message);
     }    

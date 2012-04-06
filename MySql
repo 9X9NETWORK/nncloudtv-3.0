@@ -50,6 +50,7 @@ nnset_to_nnchannel
 nndevice
 nnuser_share
 
+sns_auth
 ------------------
 nncloudtv_analytics
 ------------------
@@ -391,6 +392,17 @@ CREATE TABLE `pdr` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `sns_auth` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createDate` datetime DEFAULT NULL,
+  `enabled` bit(1) NOT NULL,  
+  `msoId` bigint(20) NOT NULL,
+  `secret` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `token` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,  
+  `type` smallint(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 ===================================
 truncate 
 ===================================
@@ -420,6 +432,6 @@ truncate nnuser_subscribe;
 truncate nnuser_subscribe_group;
 truncate nnuser_watched;                 
 truncate pdr;            
-
+truncate sns_auth;
 ===================================
                      

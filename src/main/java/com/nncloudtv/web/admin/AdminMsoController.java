@@ -1,6 +1,5 @@
 package com.nncloudtv.web.admin;
 
-import java.util.ArrayList;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.ContentOwnership;
 import com.nncloudtv.model.LangTable;
@@ -32,10 +32,7 @@ import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.ContentOwnershipManager;
 import com.nncloudtv.service.MsoManager;
-
 import com.nncloudtv.service.NnSetManager;
-import com.nncloudtv.lib.JqgridHelper;
-import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.NnUserManager;
 
 @Controller

@@ -13,7 +13,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.nncloudtv.web.json.facebook.FacebookPage;
 
-@PersistenceCapable(detachable = "true")
+@PersistenceCapable(table="sns_auth", detachable = "true")
 public class SnsAuth implements Serializable {
 	
 	private static final long serialVersionUID = 1001080049969508799L;
@@ -38,7 +38,7 @@ public class SnsAuth implements Serializable {
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String secrete;
+	private String secret;
 	
 	@Persistent
 	private boolean enabled;
@@ -79,12 +79,12 @@ public class SnsAuth implements Serializable {
 		return token;
 	}
 
-	public void setSecrete(String secrete) {
-		this.secrete = secrete;
+	public void setSecret(String secret) {
+		this.secret = secret;
 	}
 
-	public String getSecrete() {
-		return secrete;
+	public String getSecret() {
+		return secret;
 	}
 
 	public void setCreateDate(Date createDate) {
