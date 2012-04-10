@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class NnStringUtil {
 	protected static final Logger log = Logger.getLogger(NnStringUtil.class.getName());	
-	public static final int MAX_JDO_STRING_LENGTH = 500;
+	public static final int MAX_JDO_STRING_LENGTH = 255;
 
 	public static boolean stringToBool(String s) {
 	  if (s.equals("1"))
