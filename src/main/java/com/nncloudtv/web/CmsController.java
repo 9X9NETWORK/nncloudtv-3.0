@@ -119,12 +119,13 @@ public class CmsController {
 				mso.setTitle(user.getName());
 				mso.setLang(LangTable.LANG_ZH);
 				mso.setLogoUrl(MsoConfigManager.getExternalRootPath() + "/images/9x9.tv.png");
+				log.info("msoId should be zero: " + mso.getId());
 				mso = msoMngr.save(mso);
-				if (mso == null) {
+				if (mso == null || mso.getId() == 0) {
 					log.info("failed to migrate to TCO");
 					return "error/404";
 				}
-				log.info("migrate user to TCO");
+				log.info("migrate user to TCO: " + mso.getId());
 				user.setMsoId(mso.getId());
 				user.setType(NnUser.TYPE_TCO);
 				userMngr.save(user);
