@@ -1,0 +1,153 @@
+=============================================================================================================
+DB Migration
+=============================================================================================================
+================================
+build up python environment
+================================
+> python --version
+Python 2.6.5
+> apt-get install python-mysqldb
+
+================================
+build up GAE python environment
+================================
+- download google_appengine_1.6.2.zip
+> wget http://googleappengine.googlecode.com/files/google_appengine_1.6.3.zip
+
+- unzip, move to /home/ubuntu/google_appengine
+> unzip google_appengine_1.6.3.zip
+
+- python files put under /home/ubuntu/google_appengine folder 
+
+================================
+copy gae backup files over
+================================
+- get backup files from amazon 
+apt-get install s3cmd
+ubuntu> s3cmd ls s3://9x9gaedata/20120209_020501_9x9tvprod3*
+ubuntu> s3cmd get s3://9x9gaedata/20120209_020501_9x9tvprod3*
+
+- remove unnecessary files and decompress
+rm *.log.*
+rm *PdrRaw*
+bzip2 -d *	
+mv filename, remove date_9x9tvprod3
+
+-  alter table
+use nncloudtv_content;
+alter table mso add column ori_id bigint(20);
+create index mso_ori_id on mso (ori_id);
+alter table nnset add column ori_id bigint(20);
+alter table nnchannel add column ori_id bigint(20);
+create index nnchannel_backup_ori_id on nnchannel_backup(ori_id);
+alter table category add column ori_id bigint(20);
+alter table nnprogram add column ori_id bigint(20);
+use nncloudtv_nnuser1;
+alter table nnuser add column ori_id bigint(20);
+create index nnuser_ori_id on nnuser (ori_id);
+create index nnuser_subscribe_channel_id on nnuser_subscribe (channelId);
+create index nnuser_watched_channel_id on nnuser_watched (channelId);
+use nncloudtv_nnuser2;
+alter table nnuser add column ori_id bigint(20);
+create index nnuser_ori_id on nnuser (ori_id);
+create index nnuser_subscribe_channel_id on nnuser_subscribe (channelId);
+create index nnuser_watched_channel_id on nnuser_watched (channelId);
+
+- run python migration files 
+cd /home/ubuntu/googleappengine
+python mso.py
+python mso_config.py
+python captcha.py
+python category.py
+python nnset.py
+python nnchannel.py
+python nnprogram.py
+python category_nnset.py
+python nnset_nnchannel.py
+python category_nnset_modify.py
+python nnset_nnchannel_modify.py
+python nnprogram_modify.py
+python nnuser.py
+python nnuser_pref.py
+python nnuser_sorting.py
+python nnuser_share.py
+python nnuser_watched.py
+python nnuser_report.py
+python nnuser_subscribe.py
+python nnuser_subscribe_group.py
+python nncontent.py 
+
+- alter table back
+update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif' where imageUrl='/WEB-INF/../images/facebook-icon.gif';
+update nnchannel set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/processing.png' where imageUrl='/WEB-INF/../images/processing.png';
+update nnprogram set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/processing.png' where imageUrl='/WEB-INF/../images/processing.png';
+update nnprogram set imageUrl='http://s3.amazonaws.com/9x9ui/war/v0/images/cms/radio.jpg' where imageUrl='/images/cms/radio.jpg';
+
+use nncloudtv_content;
+create table mso_backup select * from mso; 
+update nnuser u set u.channelId = (select id from nncloudtv_content.nnchannel c where s.channelId = c.ori_id);
+
+create table nnset_backup select * from nnset;
+create table nnchannel_backup select * from nnchannel;
+create table nnprogram_backup select * from nnprogram;
+create table category_backup select * from category;
+use nncloudtv_nnuser1;
+create table nnuser_backup select * from nnuser;
+create table nnuser_subscribe_backup select * from nnuser_subscribe;
+create table nnuser_pref_backup select * from nnuser_pref;
+create table nnuser_channel_sorting_backup select * from nnuser_channel_sorting;
+
+use nncloudtv_nnuser1;
+update nnuser u set u.msoId = (select id from nncloudtv_content.mso m where u.msoId = m.ori_id);
+ 
+update nnuser set token=concat('1-', token);
+update nnuser set shard=1;
+update nnuser_pref p set p.userId = (select id from nnuser u where p.userId = u.ori_id);
+delete from nnuser_pref where userId=0;
+update nnuser_channel_sorting s set s.userId = (select id from nnuser u where s.userId = u.ori_id);
+update nnuser_channel_sorting s set s.channelId = (select id from nncloudtv_content.nnchannel c where s.channelId = c.ori_id);
+
+update nnuser_share s set s.userId = (select id from nnuser u where s.userId = u.ori_id);
+delete from nnuser_share where userId=0;
+update nnuser_share s set s.channelId = (select id from nncloudtv_content.nnchannel c where s.channelId = c.ori_id);
+update nnuser_share s set s.programId = (select id from nncloudtv_content.nnprogram p where s.programId = p.ori_id) where s.programId != 0;
+update nnuser_share s set s.setId = (select id from nncloudtv_content.nnset s where s.setId = s.ori_id) where s.setId != 0;
+
+update nnuser_watched w set w.userId = (select id from nnuser u where w.userId = u.ori_id);
+delete from nnuser_watched where userId=0;
+update nnuser_watched w set w.channelId = (select id from nncloudtv_content.nnchannel c where w.channelId = c.ori_id);
+
+update nnuser_subscribe s set s.userId = (select id from nnuser u where s.userId = u.ori_id);
+delete from nnuser_watched where userId=0;
+update nnuser_subscribe s, nncloudtv_content.nnchannel c set s.channelId = c.id where s.channelId = c.ori_id;
+
+use nncloudtv_content;
+alter table mso drop column ori_id;
+alter table nnset drop column ori_id;
+alter table nnchannel drop column ori_id;
+alter table category drop column ori_id;
+alter table nnprogram drop column ori_id;
+
+use nncloudtv_nnuser1;	
+alter table nnuser drop column ori_id;	
+
+use nncloudtv_nnuser2;	
+alter table nnuser drop column ori_id;	
+ 
+use nncloudtv_content;
+create table mso_backup select * from mso;
+alter table mso drop column ori_id;
+
+############
+alter table mso add column ori_id bigint(20);
+create index content_ownership_content_id on content_ownership (contentId);
+create index content_ownership_mso_id on content_ownership (msoId);
+
+update content_ownership o, nnchannel_backup c set o.contentId = c.id where o.contentType = 2 and o.contentId = c.ori_id; 
+update content_ownership o, nnset_backup s set o.contentId = s.id where o.contentType = 1 and o.contentId = s.ori_id;
+update content_ownership o, mso_backup m set o.msoId = m.id where o.msoId = m.ori_id;
+
+update content_ownership o, nnset s set o.contentId = s.id where o.contentType = 1 and o.contentId = s.ori_id;
+
+create index sns_mso_id on sns_auth (msoId);
+update sns_auth s, mso_backup m set s.msoId = m.id where s.msoId = m.ori_id;
