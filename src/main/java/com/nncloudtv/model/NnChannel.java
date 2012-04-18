@@ -25,11 +25,11 @@ public class NnChannel implements Serializable {
 			
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
-	private String name; 
+	private String name; //the name we define, versus oriName
 
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
-	private String oriName; //instead the original podcast/youtube name, we make up something 
+	private String oriName; //original podcast/youtube name 
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
@@ -44,17 +44,22 @@ public class NnChannel implements Serializable {
 	
 	@Persistent
 	private boolean isPublic;
+
+	//used for testing without changing the program logic
+    //isTemp set to true means it can be wiped out
+	@Persistent
+	private boolean isTemp;	
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=5)
-	private String lang;
+	private String lang; //used with LangTable
 	
 	@Persistent
 	private int programCnt;
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
-	private String sourceUrl;
+	private String sourceUrl; //unique if not null
 
 	@NotPersistent
 	private short type; //Use with MsoIpg and Subscription, to define attributes such as MsoIpg.TYPE_READONLY
@@ -82,7 +87,6 @@ public class NnChannel implements Serializable {
 	
 	@Persistent
 	private short status;
-	/* status */
 	//general
 	public static final short STATUS_SUCCESS = 0;
 	public static final short STATUS_ERROR = 1;
@@ -123,7 +127,7 @@ public class NnChannel implements Serializable {
 		
 	@Persistent
 	private Date updateDate;
-			
+	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String transcodingUpdateDate; //timestamps from transcoding server			
@@ -338,5 +342,12 @@ public class NnChannel implements Serializable {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
-	
+
+	public boolean isTemp() {
+		return isTemp;
+	}
+
+	public void setTemp(boolean isTemp) {
+		this.isTemp = isTemp;
+	}	
 }
