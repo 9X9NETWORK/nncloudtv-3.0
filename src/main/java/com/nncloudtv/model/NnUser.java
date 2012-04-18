@@ -25,14 +25,13 @@ public class NnUser implements Serializable {
 	private short shard; //which shard a user belongs to
 	public static short SHARD_DEFAULT = 1;
 	public static short SHARD_CHINESE = 2;
-	
-	
+		
 	@Persistent
 	private long msoId; //which mso a user belongs to
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String email;
+	private String email; //unique key
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
@@ -60,18 +59,18 @@ public class NnUser implements Serializable {
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String sphere; //content region
+	private String sphere; //content region, used with LangTable
 
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=5)
-	private String lang; //ui language
+	private String lang; //ui language, used with LangTable
 
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String ip; //ui language
+	private String ip; //user ip
 	
 	@Persistent
-	private short gender;
+	private short gender; //0 or 1
 	
 	@Persistent
 	private Date createDate;
@@ -80,7 +79,7 @@ public class NnUser implements Serializable {
 	private Date updateDate;
 	
 	@Persistent
-	private short type; //user/s type
+	private short type; //user's type
 	public static short TYPE_ADMIN = 1; 
 	public static short TYPE_TBC = 2;
 	public static short TYPE_TCO = 3; 
@@ -95,6 +94,11 @@ public class NnUser implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String facebookToken;
+
+	//used for testing without changing the program logic
+    //isTemp set to true means it can be wiped out
+	@Persistent
+	private boolean isTemp; 
 	
 	public NnUser(String email, String password, String name, short type) {
 		this.email = email;
@@ -272,4 +276,11 @@ public class NnUser implements Serializable {
 		this.ip = ip;
 	}
 
+	public boolean isTemp() {
+		return isTemp;
+	}
+
+	public void setTemp(boolean isTemp) {
+		this.isTemp = isTemp;
+	}	
 }
