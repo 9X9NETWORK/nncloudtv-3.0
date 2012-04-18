@@ -21,7 +21,6 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
 	
 	public NnUserSubscribe save(NnUser user, NnUserSubscribe sub) {
 		if (sub == null) {return null;}
-		log.info("<<<<<<<<<<<<<< continue >>>>>>>>>");
 		log.info("shard:"+user.getShard() + ";token:" + user.getToken());
 		PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
 		try {
