@@ -63,7 +63,8 @@ public class MsoManager {
 		if (cache != null && !cacheReset) {
 			String[] cached = (String[]) cache.get(cacheKey);
 			if (cached != null) {
-				log.info("get brandInfo from cache");
+				log.info("<<<<< get brandInfo from cache >>>>");
+				cache.shutdown();
 				return cached;
 			}
 		}
@@ -93,6 +94,7 @@ public class MsoManager {
 		}
 		if (cache != null) { 
 			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, result);
+			cache.shutdown();
 		}		
 		return result;
 	}

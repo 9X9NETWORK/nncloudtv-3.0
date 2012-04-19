@@ -71,6 +71,7 @@ public class MsoConfigManager {
 			String result = (String)cache.get(cacheKey);
 			if (result != null){
 				log.info("value from cache: key=" + cacheKey + "value=" + result);
+				cache.shutdown();			
 				return NnStringUtil.stringToBool(result);
 			}			
 		}
@@ -81,6 +82,9 @@ public class MsoConfigManager {
 				cache.set(cacheKey, CacheFactory.EXP_DEFAULT, config.getValue());
 			}
 			value = NnStringUtil.stringToBool(config.getValue());
+		}
+		if (cache != null) {
+			cache.shutdown();
 		}
 		return value;
 	}

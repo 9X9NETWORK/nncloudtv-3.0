@@ -221,6 +221,7 @@ public class NnSetManager {
 		if (cache != null) {
 			@SuppressWarnings("unchecked")
 			List<NnSet> cached = (List<NnSet>)cache.get(cacheIdString);
+			cache.shutdown();
 			if (cached != null && cached.size() > 0) {
 				log.info("get system sets from cache");
 				return cached;

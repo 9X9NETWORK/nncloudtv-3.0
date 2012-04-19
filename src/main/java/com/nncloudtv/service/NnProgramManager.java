@@ -76,8 +76,11 @@ public class NnProgramManager {
 		String result = null;
 		if (cache != null) { 
 			result = (String)cache.get(cacheKey);
-			if (result != null)
+			if (result != null) {
+				log.info("<<<<< retrieve program info from cache >>>>>");
+				cache.shutdown();
 				return result;
+			}
 		}		
 		
 		log.info("nothing in the cache");		
@@ -86,6 +89,7 @@ public class NnProgramManager {
 		String str = this.composeProgramInfoStr(programs);
 		if (cache != null) { 
 			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, str);
+			cache.shutdown();
 		}				
 		return str;
 	}	
@@ -132,6 +136,14 @@ public class NnProgramManager {
 			}
 		}		
 		return index;
+	}
+	
+	public short getContentType(NnProgram program) {
+		if (program.getAudioFileUrl() != null)
+			return NnProgram.CONTENTTYPE_RADIO;
+		if (program.getFileUrl().contains("youtube.com")) 
+			return NnProgram.CONTENTTYPE_YOUTUBE; 		
+		return NnProgram.CONTENTTYPE_DIRECTLINK; 	
 	}
 	
 	private String composeLimitProgramInfoStr(String input, long sidx, long limit) {
@@ -256,6 +268,7 @@ public class NnProgramManager {
 		String str = this.composeProgramInfoStr(programs);
 		if (cache != null) { 
 			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, str);
+			cache.shutdown();
 		}
 		return str;
 	}	
@@ -264,7 +277,9 @@ public class NnProgramManager {
 		log.info("cache key:" + key);
 		MemcachedClient cache = CacheFactory.get();
 		if (cache != null) { 
-			return (String)cache.get(key);
+			String value = (String)cache.get(key);
+			cache.shutdown();
+			return value;
 		}
 		return null;
 	}

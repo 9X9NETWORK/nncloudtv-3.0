@@ -161,6 +161,7 @@ public class PlayerApiService {
                          String captchaFilename, String captchaText,
                          String sphere, String lang,
                          String year,
+                         boolean isTemp,
                          HttpServletRequest req, HttpServletResponse resp) {		
 		//validate basic inputs
 		int status = NnUserValidator.validate(email, password, name, req);
@@ -190,6 +191,7 @@ public class PlayerApiService {
 		user.setLang(lang);		
 		user.setDob(year);
 		user.setIp(req.getRemoteAddr());
+		user.setTemp(isTemp);
 		status = userMngr.create(user, req, (short)0);
 		if (status != NnStatusCode.SUCCESS)
 			return this.assembleMsgs(status, null);
@@ -328,13 +330,15 @@ public class PlayerApiService {
 	        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 	        	log.info("findLocaleByHttpRequest() IP service returns error:" + connection.getResponseCode());	        	
 	        }
-	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));;
+	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	        String line = rd.readLine(); 
 	        if (line != null) {
 	        	country = line.toLowerCase();
-	        } //assuming one line	        
+	        } //assuming one line
+	        rd.close();	        
 		} catch (Exception e) {
 			NnLogUtil.logException(e);
+		} finally {			
 		}
 		log.info("country from query:" + country + ";with ip:" + ip);
         String locale = "en";
@@ -1400,5 +1404,48 @@ public class PlayerApiService {
 		}
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);		
 	}
-
+	
+	public String channelCreate(String token, String name, String intro, String imageUrl, boolean isTemp) { 			                    
+		//verify input
+		if (token == null || token.length() == 0 || name == null || name.length() == 0 ||  imageUrl == null || imageUrl.length() == 0) {
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		}
+		NnUser user = new NnUserManager().findByToken(token);
+		if (user == null)
+			return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+		NnChannelManager channelMngr = new NnChannelManager();		
+		NnChannel channel = new NnChannel(name, intro, imageUrl);
+		channel.setPublic(false);
+		channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
+		channel.setContentType(NnChannel.CONTENTTYPE_MIXED); // a channel type in podcast does not allow user to add program in it, so change to mixed type
+		channel.setTemp(isTemp);
+		channelMngr.save(channel);
+		String[] result = {this.composeChannelLineupStr(channel, mso)};		
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
+	}
+	
+	public String programCreate(String channel, String name, String description, String image, String audio, String video, boolean temp) {
+		if (channel == null || channel.length() == 0 || name == null || name.length() == 0 || 
+			(audio == null && video == null)) {
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		}
+		long cid = Long.parseLong(channel);
+		NnChannelManager channelMngr = new NnChannelManager();		
+		NnChannel ch = channelMngr.findById(cid);
+		if (ch == null)
+			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+		NnProgramManager programMngr = new NnProgramManager();
+		short type = NnProgram.TYPE_VIDEO;
+		if (audio != null)
+			type = NnProgram.TYPE_AUDIO;
+		NnProgram program = new NnProgram(name, description, image, type);
+		program.setChannelId(cid);
+		program.setAudioFileUrl(audio);
+		program.setFileUrl(video);
+		program.setContentType(programMngr.getContentType(program));
+		program.setStatus(NnProgram.STATUS_OK);
+		program.setPublic(true);
+		programMngr.save(program);
+		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+	}
 }
