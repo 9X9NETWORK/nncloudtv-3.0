@@ -293,6 +293,9 @@ public class CmsApiController {
 	
 	/**
 	 * List all channel sets owned by mso
+	 * 
+	 * If msoId is missing, list system sets instead
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("listOwnedChannelSets")
@@ -324,6 +327,7 @@ public class CmsApiController {
 					// get from cache
 					results = (List<NnSet>)cache.get(cacheIdString);
 					if (results != null) {
+						cache.shutdown();
 						log.info("get from cache");
 						return results;
 					}
@@ -332,6 +336,9 @@ public class CmsApiController {
 					log.info("remove from cache");
 					cache.delete(cacheIdString);
 				}
+			}
+			if (cache != null) {
+				cache.shutdown();
 			}
 		}
 		log.info("msoId = " + msoId);
@@ -367,6 +374,7 @@ public class CmsApiController {
 				if (cache != null) {
 					log.info("put to cache");
 					cache.set(cacheIdString, CacheFactory.EXP_DEFAULT, results);
+					cache.shutdown();
 				}
 			}
 		}
@@ -801,6 +809,7 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	// which system set contains this channel
 	@RequestMapping("channelSystemNnSet")
 	public @ResponseBody NnSet channelSystemNnSet(@RequestParam Long channelId) {
 		CmsApiService cmsService = new CmsApiService();

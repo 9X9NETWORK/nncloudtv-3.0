@@ -65,28 +65,6 @@ public class CmsApiService {
 		return null;
 	}
 	
-	/*
-	public List<Category> whichSystemCategoriesContainingTheChannel(long channelId) {		
-		List<CategoryChannel> ccs = this.whichCCContainingTheChannel(channelId);		
-		logger.info("ccs count = " + ccs.size());		
-		List<Long> categoryIds = new ArrayList<Long>();
-		for (CategoryChannel cc : ccs) {
-			categoryIds.add(cc.getCategoryId());
-		}
-		
-		return catMngr.findAllByIds(categoryIds);
-	}	
-	public List<CategoryChannel> whichCCContainingTheChannel(Long channelId) {
-		List<Category> sysCategories = catMngr.findAllSystemCategories();
-		List<Long> categoryIds = new ArrayList<Long>();
-		for (Category category : sysCategories) {
-			categoryIds.add(category.getId());
-		}
-		
-		return ccMngr.findByChannelIdAndCategoryIds(channelId, categoryIds);
-	}
-	*/
-	
 	public List<NnSet> whichSystemNnSetsContainingThisChannel(Long channelId) {			
 		NnSetManager setMngr = new NnSetManager();
 		List<NnSetToNnChannel> list = this.whichSystemCSCContainingThisChannel(channelId);

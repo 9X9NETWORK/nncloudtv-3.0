@@ -33,6 +33,7 @@ public class SessionService {
 		if (cache != null) {
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = (Map<String, Object>) cache.get(this.session.getId());
+			cache.shutdown();
 			if (map != null) {
 				Iterator<String> iterator = map.keySet().iterator();
 				while (iterator.hasNext()) {
@@ -59,6 +60,7 @@ public class SessionService {
 				map.put(name, session.getAttribute(name));
 			}
 			cache.set(session.getId(), CacheFactory.EXP_DEFAULT, map);
+			cache.shutdown();
 		}
 	}
 	
@@ -66,6 +68,7 @@ public class SessionService {
 		MemcachedClient cache = CacheFactory.get();
 		if (cache != null) {
 			cache.delete(session.getId());
+			cache.shutdown();
 		}
 		session.invalidate();
 	}

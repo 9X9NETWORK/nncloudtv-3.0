@@ -334,6 +334,10 @@ public class CmsController {
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer("udWzz6YrsaNlbJ18vZ7aCA", "Pf0TdB2QFXWKyphbIdnPG4vZhLVze0cPCxlLkfBwtQ");
 		MemcachedClient cache = CacheFactory.get();
+		if(cache==null)
+		{
+			return NnNetUtil.textReturn("cache error : no cache object");
+		}
 		
 		if(oauthToken==null)
 		{
@@ -345,7 +349,11 @@ public class CmsController {
 				cache.set(requestToken.getToken(), CacheFactory.EXP_DEFAULT, requestToken.getTokenSecret());
 			}
 			else
+			{
+				cache.shutdown();
 				return NnNetUtil.textReturn("you are not permit authorization");
+			}
+			cache.shutdown();
 			String output = "<script language=\"javascript\">location.replace(\""+requestToken.getAuthorizationURL()+"\");</script>";
 			return NnNetUtil.htmlReturn(output);
 		}
@@ -362,10 +370,11 @@ public class CmsController {
 				AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauthVerifier);
 				cache.delete(oauthToken);
 				cache.delete(oauthToken+"msoId");
+				cache.shutdown();
 				
 				CmsApiController cmsApiController = new CmsApiController();
 				cmsApiController.createSnsAuth(userID, type, accessToken.getToken(), accessToken.getTokenSecret());
-
+				
 				String output = "<script language=\"javascript\">window.opener.pageSetup.showTwitterDisconnect(true);" +
 						"window.close();</script>";
 				
@@ -373,6 +382,7 @@ public class CmsController {
 			}
 			else
 			{
+				cache.shutdown();
 				return NnNetUtil.textReturn("cache error : there are no request token in the cache");
 			}
 		}
