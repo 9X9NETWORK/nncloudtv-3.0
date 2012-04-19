@@ -24,15 +24,15 @@ if match:
 	 print "--- generate md5 = " + md5
 
 dest = open("root.md5", "w")
-line = md5 + "\n"
+line = md5 + "  " + "root.war\x00\x0a"
 dest.write(line)
-dest.close
+dest.close()
 
 # write version file
 dest = open("version", "w")
-line = version + "\n"
+line = version
 dest.write(line)
-dest.close
+dest.close()
 print "--- generate version file ---"
 
 # upload to server
@@ -49,5 +49,8 @@ if server == "2":
 if server == "3":
   print "--- uploading to deploy server ---"
   os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
+  os.system("pscp -i prod-west2.ppk root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
+  os.system("pscp -i prod-west2.ppk version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates")  
+  os.system("pscp -i prod-west2.ppk version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
 
 print "--- " + datetime.now().strftime("%d/%m/%y %H:%M:%S %Z") + "---"  
