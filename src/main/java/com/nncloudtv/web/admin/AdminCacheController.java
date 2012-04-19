@@ -1,7 +1,5 @@
 package com.nncloudtv.web.admin;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManagerFactory;
@@ -38,26 +36,18 @@ public class AdminCacheController {
 	//delete cache with key
 	@RequestMapping("delete")
 	public ResponseEntity<String> delete(@RequestParam(value="key", required=false)String key) {
-		try {
-			MemcachedClient c = new MemcachedClient(
-				    new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));
-			c.delete(key);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		MemcachedClient cache = CacheFactory.get();
+		cache.delete(key);
+		cache.shutdown();
 		return NnNetUtil.textReturn("cache delete:" + key);
 	}
 	
 	//cache flush
 	@RequestMapping("flush")
 	public ResponseEntity<String> flush() {
-		MemcachedClient c;
-		try {
-			c = new MemcachedClient(new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));				    
-			c.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		MemcachedClient cache = CacheFactory.get();
+		cache.flush();
+		cache.shutdown();
 		return NnNetUtil.textReturn("flush");
 	}
 
