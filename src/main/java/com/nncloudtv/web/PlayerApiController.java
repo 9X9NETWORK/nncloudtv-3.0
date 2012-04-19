@@ -124,7 +124,7 @@ public class PlayerApiController {
 	public PlayerApiController(PlayerApiService playerApiService) {
 		this.playerApiService= playerApiService;
 	}	
-			
+	
 	private int prepService(HttpServletRequest req) {
 		/*
 		String userAgent = req.getHeader("user-agent");
@@ -181,6 +181,12 @@ public class PlayerApiController {
 	 *  @param email email
 	 *  @param password password
 	 *  @param name display name
+	 *  @param captcha captcha image file name
+	 *  @param text captcha text
+	 *  @param sphere zh or en
+	 *  @param ui-lang zh or en
+	 *  @param year year or birth
+	 *  @param temp not specify means false 
 	 *  @return please reference login
 	 */	
 	@RequestMapping(value="signup")
@@ -194,8 +200,9 @@ public class PlayerApiController {
 		String sphere = req.getParameter("sphere");
 		String year = req.getParameter("year");
 		String lang = req.getParameter("ui-lang");
-		
-		log.info("signup: email=" + email + ";name=" + name + ";userToken=" + userToken);
+		boolean isTemp = Boolean.parseBoolean(req.getParameter("temp"));
+				
+		log.info("signup: email=" + email + ";name=" + name + ";userToken=" + userToken + ";sphere=" + sphere + ";year=" + year + ";ui-lang=" + lang);
 
 		int status = this.prepService(req);
 		if (status != NnStatusCode.SUCCESS)
@@ -203,7 +210,7 @@ public class PlayerApiController {
 		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			output = playerApiService.signup(email, password, name, userToken, captcha, text, sphere, lang, year, req, resp);
+			output = playerApiService.signup(email, password, name, userToken, captcha, text, sphere, lang, year, isTemp, req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		}
@@ -533,7 +540,7 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		this.prepService(req);
-		log.info("userToken=" + userToken + ";isUserInfo:" + userInfo);				
+		log.info("userToken=" + userToken + ";isUserInfo=" + userInfo + ";channel=" + channelIds + ";setInfo=" + setInfo);				
 		boolean isUserInfo = Boolean.parseBoolean(userInfo);
 		boolean isSetInfo = Boolean.parseBoolean(setInfo);
 		boolean isRequired = Boolean.parseBoolean(required);		
@@ -1233,6 +1240,80 @@ public class PlayerApiController {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			output = playerApiService.programRemove(programId, userToken);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	/**
+	 * Create a 9x9 channel
+	 * 
+	 * @param name
+	 * @param description
+	 * @param image
+	 * @param temp not specify means false 
+	 */	
+	@RequestMapping(value="channelCreate")
+	public ResponseEntity<String> channelCreate(
+			@RequestParam(value="user", required=false) String user,
+			@RequestParam(value="name", required=false) String name,
+			@RequestParam(value="description", required=false) String description,
+			@RequestParam(value="image", required=false) String image,
+			@RequestParam(value="temp", required=false) String temp,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		
+		log.info("user:" + user + ";name:" + name + ";description:" + description + ";temp:" + temp);
+		
+		int status = this.prepService(req);
+		if (status != NnStatusCode.SUCCESS)
+			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		boolean isTemp= Boolean.parseBoolean(temp);		
+		try {
+			output = playerApiService.channelCreate(user, name, description, image, isTemp);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	/**
+	 * Create a 9x9 program
+	 * 
+	 * @param channel channel id
+	 * @param name
+	 * @param image
+	 * @param description
+	 * @param image
+	 * @param audio
+	 * @param video
+	 * @param temp not specify means false 
+	 */	
+	@RequestMapping(value="programCreate")
+	public ResponseEntity<String> programCreate(
+			@RequestParam(value="channel", required=false) String channel,
+			@RequestParam(value="name", required=false) String name,
+			@RequestParam(value="image", required=false) String image,
+			@RequestParam(value="description", required=false) String description,
+			@RequestParam(value="audio", required=false) String audio,
+			@RequestParam(value="video", required=false) String video,
+			@RequestParam(value="temp", required=false) String temp,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		
+		log.info("name:" + name + ";description:" + description + ";audio:" + audio+ ";video:" + video);
+		
+		int status = this.prepService(req);
+		if (status != NnStatusCode.SUCCESS)
+			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		boolean isTemp= Boolean.parseBoolean(temp);		
+		try {
+			output = playerApiService.programCreate(channel, name, description, image, audio, video, isTemp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		}
