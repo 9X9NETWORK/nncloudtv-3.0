@@ -24,7 +24,7 @@
 <body>
 <div id="maintenance-layer">
   <div id="maintenance-holder">
-    <img src="/WEB-INF/../images/logo_maintenance.png" id="maintenance-logo">
+    <img src="https://s3.amazonaws.com/9x9ui/war/v0/images/9x9.tv.png" id="maintenance-logo">
     <p class="maintenance-text" id="en">We are working on system upgrades to improve our service.<br>Please return later for better browsing experience.</p>
     <p class="maintenance-text" id="cn">為了提供您更好的服務，目前正在進行系統升級。<br>請稍後再拜訪我們，享受更愉快視覺饗宴！</p>
   </div>
