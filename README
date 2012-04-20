@@ -1,8 +1,18 @@
 About this document,
 
-Two sections,
+Three sections,
+- Project intro
 - Devel environment and tool: more for Windows
 - EC2: i.e. Ubuntu on EC2
+
+=============================================================================================================
+Project intro
+=============================================================================================================
+- This project is based on java spring framework.
+- Installer folder is not part of the main project. It's intended for installation and data migration. 
+a. tools, tools for installer script
+b. maintenance, maintenance page when system is not available
+c. migration, data migration tools to port data from gae to mysql
 
 =============================================================================================================
 Devel environment and tool
@@ -37,6 +47,7 @@ Go to project root folder,
 - Run nncloudtv on Jetty: 
 Go to project root folder, 
 > mvn jetty:run
+(c:\Java\projects\nncloudtv>mvn -Dslf4j=false -Dlog4j.configuration=file:./target/classes/log4j.properties jetty:run)
 
 - Basic tests,
 http://localhost:8888/hello/world (test your servlet and spring dispatcher)
@@ -117,15 +128,15 @@ MySql
 
 - import data example
 > cat nnanalytics.sql | mysql nncloudtv_analytics -h localhost -u root -p
- 
-================================
+ ================================
 Package
 ================================
 - packaging nncloudtv war procedures:
   a) modify datanucleus.properties files, there are four.
-  b) packaging:   
+  b) packaging: 
+     mvn clean:clean  
      mvn datanucleus:enhance 
-     mvn war:war
+     mvn compile war:war
   c) test the packaged war with jetty plugin:    
      mvn jetty:deploy-war
      packaging and run jetty with jetty plugin: 
@@ -244,6 +255,8 @@ b. check port setting on server if ncessary
 > netstat -vatn
 
 - upload the war and the jar: use SCP with your private key, and upload to the server
+pscp -i awsdev.ppk nncloudtv-0.0.1-SNAPSHOT.war ubuntu@ec2-174-129-141-179.compute-1.amazonaws.com:/home/ubuntu/files
+pscp -i prod-west2.ppk nncloudtv-0.0.1-SNAPSHOT.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files
 
 - login name: ubuntu
 
@@ -258,6 +271,12 @@ rm root.war
 cp /home/ubuntu/files/nncloudtv-0.0.1-SNAPSHOT.war .
 mv nncloudtv-0.0.1-SNAPSHOT.war root.war
 service jetty start
+
+> sudo su
+> cd /usr/share/jetty/webapps && service jetty stop && rm root.war && cp /home/ubuntu/files/nncloudtv-0.0.1-SNAPSHOT.war . && mv nncloudtv-0.0.1-SNAPSHOT.war root.war && service jetty start
+
+> bash -x ./install.sh
+
 java -jar nnqueue.jar hello
 java -jar nnqueue.jar brand_counter
 java -jar nnqueue.jar category_create
@@ -282,3 +301,6 @@ pre-up iptables-restore < /etc/iptables.rules
 
 - stop apache2 (if u ever need it)
 > sudo /etc/init.d/apache2 stop
+
+- for server with monit, stop monit before manually restart your server
+service monit stop
