@@ -7,9 +7,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV100"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV102"/>
 
-<!-- $Revision: 2543 $ -->
+<!-- $Revision: 2612 $ -->
 
 <!-- Google+ Sharing meta data -->
 <meta itemprop="name" content="${fbName}">
@@ -40,7 +40,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/flowplayer-3.2.4.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player28.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player29.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.V2.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
@@ -491,8 +491,10 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
     <li id="player" class="main"><img src="${nroot}/images/icon_player.png" id="icon-player"><span>Player</span></li>
     <li class="divider"></li>
     <li id="curate" class="main"><img src="${nroot}/images/icon_curate.png" id="icon-curate"><span>Curate</span></li>
-    <li class="divider"></li>
+    <li class="divider" id="curate-divider"></li>
     <li id="help"><img src="${nroot}/images/icon_help.png" id="icon-help"><span>Help</span></li>
+    <li class="divider"></li>
+    <li id="syncstatus"><img src="${nroot}/images/icon_sync_on.png" id="icon-sync-on" title="with 9x9 sync"><img src="${nroot}/images/icon_sync_off.png" id="icon-sync-off" title="without 9x9 sync"></li>
   </ul>
 </div>
 
@@ -513,11 +515,18 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
   </p>
 </div>
 
-<div id="flip-bubble">
+<div id="flipr-bubble">
+  <img src="${nroot}/images/add_bubble_tip.png" id="flipr-bubble-tip">
+  <img src="${nroot}/images/bg_add_bubble.png" class="bg-flipr-bubble">
+  <p id="fliprbubble-content">
+    <span>Flip to preview the next channel</span>
+  </p>
+</div>
+
+<div id="flip-bubble" class="draggable ui-widget-content">
   <img src="${nroot}/images/flip-bubble.png">
   <p><span>Ch </span><span id="chOrder">1</span><br><span>of </span><span id="chNum">20</span></p>
 </div>
-
 
 <div id="store-layer" class="stage" style="display: none; background: #f0f0f0">
   <div id="store-holder">
@@ -552,6 +561,7 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
     </p>
     <div id="preview-area">
       <ul id="flip-ch-index"></ul>
+      <div id="flip-bubble-constrain"></div>
       <p id="btn-flip-back"><img src="${nroot}/images/btn_flip_back.png" id="icon-fp-back"></p>
       <p id="btn-flip-preview">
         <img src="${nroot}/images/btn_flip_bg.png" id="btn-fp-bg"> 
@@ -732,6 +742,8 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
     <li class="divider"></li>
     <li id="btn-full" class="right"><img src="${nroot}/images/btn_full.png" title="Full Screen"></li>
     <li id="btn-shrink" class="right"><img src="${nroot}/images/btn_shrink.png" title="Exit Full Screen"></li>
+
+
     <li id="btn-sync" class="right">
       <img src="${nroot}/images/btn_sync.png" title="9x9 Sync">
       <ul id="sync-dropdown" class="dropdown">
@@ -968,7 +980,7 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
       </ul>
     </li>
   </ul>
-  <p id="copyright"><span>&copy; 2011 9x9.tv.  All rights reserved</span></p>
+  <p id="copyright"><span>&copy; 2012 9x9.tv.  All rights reserved</span></p>
 </div>
 
 </body>
