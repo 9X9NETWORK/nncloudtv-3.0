@@ -15,5 +15,15 @@ public class NnLogUtil {
 		log.severe("exception:" + e.toString());
 		log.severe("exception stacktrace:\n" + detail);		
 	}
+
+	public static void logThrowable(Throwable t) {
+		String detail = "";
+		StackTraceElement[] elements = t.getStackTrace();
+		for (StackTraceElement elm:elements ) {
+			detail = detail + elm.toString() + "\n";			
+		}
+		log.severe("exception:" + t.toString());
+		log.severe("exception stacktrace:\n" + detail);		
+	}
 	
 }
