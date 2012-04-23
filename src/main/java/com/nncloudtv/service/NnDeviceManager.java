@@ -38,7 +38,7 @@ public class NnDeviceManager {
 		if (device == null)
 			device = new NnDevice();
 		if (device.getToken() == null && user == null)
-			device.setToken(NnUserManager.generateToken(NnUserManager.getShard(req)));		
+			device.setToken(NnUserManager.generateToken(NnUserManager.getShardByLocale(req)));		
 		if (user != null) {
 			device.setUserId(user.getId());
 			device.setShard(user.getShard()); //for future reference

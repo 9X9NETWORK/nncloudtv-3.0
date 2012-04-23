@@ -89,6 +89,18 @@ public class MsoConfigManager {
 		return value;
 	}
 	
+	public static void enableEmergencyRO() {
+		MemcachedClient cache = CacheFactory.get();
+		if (cache != null) {
+			String cacheKey = "msoconfig(" + MsoConfig.RO + ")";
+			System.out.println("cache key;;;;" + cacheKey);
+			log.severe("emergency ro is enabled");
+			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, "1");
+			log.severe(";;;;;;; value is ;;;;;" + (String)cache.get(cacheKey));
+			cache.shutdown();
+		}
+	}
+	
 	public static boolean isInReadonlyMode(boolean cacheReset) {
 		return MsoConfigManager.getBooleanValueFromCache(MsoConfig.RO, cacheReset);
 	}

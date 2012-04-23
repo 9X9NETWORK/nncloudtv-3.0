@@ -35,26 +35,27 @@ public class NnChannelManager {
 	public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
 		if (sourceUrl == null) 
 			return null;
-		if (this.verifyUrl(sourceUrl) == null) 
+		String url = this.verifyUrl(sourceUrl);
+		if (url == null) 
 			return null;
-		NnChannel channel = this.findBySourceUrl(sourceUrl);		
+		
+		NnChannel channel = this.findBySourceUrl(url);		
 		if (channel != null)
 			return channel; 
-		channel = new NnChannel(sourceUrl);
-		channel.setContentType(this.getContentTypeByUrl(sourceUrl));
+		channel = new NnChannel(url);
+		channel.setContentType(this.getContentTypeByUrl(url));
 		if (channel.getContentType() == NnChannel.CONTENTTYPE_FACEBOOK) {
 			FacebookLib lib = new FacebookLib();
-			String[] info = lib.getFanpageInfo(sourceUrl);
+			String[] info = lib.getFanpageInfo(url);
 			channel.setName(info[0]);
 			channel.setImageUrl(info[1]);
 			channel.setStatus(NnChannel.STATUS_SUCCESS);			
 		} else {
-			channel.setImageUrl(NnChannel.PROCESSING_IMAGE_URL);
+			channel.setImageUrl(NnChannel.IMAGE_PROCESSING_URL);
 			channel.setName("Processing");
 			channel.setStatus(NnChannel.STATUS_PROCESSING);
 			if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
 				channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-				String url = channel.getSourceUrl();
 				Map<String, String> info = null;
 				String youtubeName = YouTubeLib.getYouTubeChannelName(url);
 				if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL) {
@@ -265,7 +266,7 @@ public class NnChannelManager {
 				return null;
 			}
 		} else {
-			//url = YouTubeLib.formatCheck(url);
+			url = YouTubeLib.formatCheck(url);
 		}
 		return url;
 	}

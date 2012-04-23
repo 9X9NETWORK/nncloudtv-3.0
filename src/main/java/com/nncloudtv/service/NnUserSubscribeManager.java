@@ -48,7 +48,6 @@ public class NnUserSubscribeManager {
 		s.setCreateDate(now);
 		s.setUpdateDate(now);
 		subDao.save(user, s);
-		log.info("------------save-----------------");
 		CntSubscribeManager cntMngr = new CntSubscribeManager();
 		CntSubscribe cnt = cntMngr.findByChannel(channelId);
 		if (cnt == null) {

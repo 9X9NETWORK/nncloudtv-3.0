@@ -34,7 +34,7 @@ public class NnUserManager {
 		user.setName(user.getName().replaceAll("\\s", " "));
 		user.setEmail(user.getEmail().toLowerCase());
 		if (shard == 0)
-			shard= NnUserManager.getShard(req);
+			shard= NnUserManager.getShardByLocale(req);
 		user.setToken(NnUserManager.generateToken(shard));
 		user.setShard(shard);
 		Date now = new Date();
@@ -45,28 +45,45 @@ public class NnUserManager {
 	}
 
 	//Default is 1; Asia (tw, cn, hk) is 2
-	public static short getShard(HttpServletRequest req) {
-		if (req == null) return 0;
+	public static short getShardByLocale(HttpServletRequest req) {
+		String locale = NnUserManager.findLocaleByHttpRequest(req);
+        short shard = NnUser.SHARD_DEFAULT;
+		if (locale.equals("tw") || locale.equals("cn") || locale.equals("hk")) {
+			shard = NnUser.SHARD_CHINESE;
+		}		  
+		return shard;
+	}
+	
+	public static String findLocaleByHttpRequest(HttpServletRequest req) {
 		String ip = req.getRemoteAddr();
 		log.info("findLocaleByHttpRequest() ip is " + ip);
         String country = "";
 		try {
 			URL url = new URL("http://brussels.teltel.com/geoip/?ip=" + ip);
 	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setConnectTimeout(3000);
 	        connection.setDoOutput(true);
 	        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 	        	log.info("findLocaleByHttpRequest() IP service returns error:" + connection.getResponseCode());	        	
 	        }
-	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));;	        
-	        if (rd.readLine()!= null) {country = rd.readLine().toLowerCase();} //assuming one line	        
+	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	        String line = rd.readLine(); 
+	        if (line != null) {
+	        	country = line.toLowerCase();
+	        } //assuming one line
+	        rd.close();	        
+		} catch (java.net.SocketTimeoutException e) {
+		   log.info("find locale by http request: socket timeout");   
 		} catch (Exception e) {
 			NnLogUtil.logException(e);
+		} finally {			
 		}
-        short shard = NnUser.SHARD_DEFAULT;
-		if (country.equals("tw") || country.equals("cn") || country.equals("hk")) {
-			shard = NnUser.SHARD_CHINESE;
-		}		  
-		return shard;
+		log.info("country from query:" + country + ";with ip:" + ip);
+        String locale = "en";
+		if (country.equals("tw")) {
+			locale = "zh";
+		}
+		return locale;
 	}
 	
 	public static short shardIterate(short shard) {
@@ -109,12 +126,12 @@ public class NnUserManager {
 	
 	//!!! able to assign shard
 	public NnUser findByEmail(String email, HttpServletRequest req) {
-		short shard= NnUserManager.getShard(req);
+		short shard= NnUserManager.getShardByLocale(req);
 		return nnUserDao.findByEmail(email.toLowerCase(), shard);
 	}
 	
 	public NnUser findAuthenticatedUser(String email, String password, HttpServletRequest req) {
-		short shard= NnUserManager.getShard(req); 
+		short shard= NnUserManager.getShardByLocale(req); 
 		return nnUserDao.findAuthenticatedUser(email.toLowerCase(), password, shard);
 	}
 	

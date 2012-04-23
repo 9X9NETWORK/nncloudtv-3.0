@@ -1,10 +1,6 @@
 package com.nncloudtv.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -74,13 +70,13 @@ public class PlayerApiService {
         this.mso = mso;
     }        
 
-    //com.mysql.jdbc.exceptions.jdbc4.CommunicationsException
     public String handleException (Exception e) {
     	if (e.getClass().equals(NumberFormatException.class)) {
     		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);    		
     	} else if (e.getClass().equals(CommunicationsException.class)) {
     		return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
-    	}
+    	} 
+    		
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         NnLogUtil.logException((Exception) e);
         return output;
@@ -319,32 +315,8 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }    
 
-	public String findLocaleByHttpRequest(HttpServletRequest req) {		
-		String ip = req.getRemoteAddr();
-		log.info("findLocaleByHttpRequest() ip is " + ip);
-        String country = "";
-		try {
-			URL url = new URL("http://brussels.teltel.com/geoip/?ip=" + ip);
-	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	        connection.setDoOutput(true);
-	        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-	        	log.info("findLocaleByHttpRequest() IP service returns error:" + connection.getResponseCode());	        	
-	        }
-	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        String line = rd.readLine(); 
-	        if (line != null) {
-	        	country = line.toLowerCase();
-	        } //assuming one line
-	        rd.close();	        
-		} catch (Exception e) {
-			NnLogUtil.logException(e);
-		} finally {			
-		}
-		log.info("country from query:" + country + ";with ip:" + ip);
-        String locale = "en";
-		if (country.equals("tw")) {
-			locale = "zh";
-		}
+	public String findLocaleByHttpRequest(HttpServletRequest req) {
+		String locale = NnUserManager.findLocaleByHttpRequest(req);
 		return locale;
 	}
     

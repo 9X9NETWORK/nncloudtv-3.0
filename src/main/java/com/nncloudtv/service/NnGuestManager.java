@@ -15,7 +15,7 @@ public class NnGuestManager {
 		if (guest.getCreateDate() == null)
 			guest.setCreateDate(new Date());
 		if (guest.getShard() == 0) {
-			short shard = NnUserManager.getShard(req);
+			short shard = NnUserManager.getShardByLocale(req);
 			guest.setShard(shard);
 		}
 		guestDao.save(guest);

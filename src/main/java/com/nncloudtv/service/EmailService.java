@@ -20,29 +20,10 @@ import com.nncloudtv.model.NnEmail;
  */
 @Service
 public class EmailService {
-	
-	private String fromEmail = "nncloudtv@gmail.com";
-	private String fromName = "nncloudtv";
-	
-	public void sendEmail(String subject, String msgBody, String recipientEmail, String recipientName) {
-		Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, null);
-        
-        try {
-        	Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(fromEmail, fromName));
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail, recipientName));                             
-            msg.setSubject(subject);
-            msg.setText(msgBody);
-            Transport.send(msg);
-            
-        } catch (Exception e) {
-        	NnLogUtil.logException(e);
-		}					
-	}	
-
+		
 	public void sendEmail(NnEmail email) {
 		Properties props = new Properties();
+		props.put("mail.smtp.host", "ec2-50-112-96-199.us-west-2.compute.amazonaws.com"); 
         Session session = Session.getDefaultInstance(props, null);
         
         try {
@@ -53,17 +34,12 @@ public class EmailService {
         	Address addrs[] = {addr};
         	msg.setReplyTo(addrs);
             msg.setSubject(email.getSubject());
-            //msg.setContent(email.getBody(), "text/plain");
             msg.setText(email.getBody());
             Transport.send(msg);
         } catch (Exception e) {
         	NnLogUtil.logException(e);
 		}					
 	}	
-		
-	public void sendEmailToAdmin(String subject, String msgBody) {
-		this.sendEmail(subject, msgBody, fromEmail, fromName);
-	}
-	
+			
 
 }
