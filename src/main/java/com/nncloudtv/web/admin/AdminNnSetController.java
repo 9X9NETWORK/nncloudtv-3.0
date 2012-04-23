@@ -51,9 +51,7 @@ public class AdminNnSetController {
 	                 @RequestParam(required = false) String       search,
 	                 @RequestParam(required = false) boolean      notify,
 	                 OutputStream out) {
-		
-		
-		
+						
 		NnSetManager csMngr = new NnSetManager();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();

@@ -21,27 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//import com.google.appengine.api.users.UserService;
-//import com.google.appengine.api.users.UserServiceFactory;
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryToNnSet;
-//import com.nncloudtv.model.CategoryChannel;
-//import com.nncloudtv.model.CategoryToNnSet;
 import com.nncloudtv.model.NnSet;
-//import com.nncloudtv.model.NnSetToNnChannel;
-//import com.nncloudtv.model.NnChannel;
-//import com.nncloudtv.model.SubscriptionLog;
-//import com.nncloudtv.service.CategoryChannelManager;
-//import com.nncloudtv.service.CategoryChannelSetManager;
 import com.nncloudtv.service.CategoryManager;
-//import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
-//import com.nncloudtv.service.NnChannelManager;
-//import com.nncloudtv.service.SubscriptionLogManager;
 
 @Controller
 @RequestMapping("admin/category")
@@ -360,15 +348,12 @@ public class AdminCategoryController {
 	@RequestMapping("delete")
 	public @ResponseBody String delete(
 			@RequestParam(required=true)  Long    id) {
-		System.out.println("------------delete:" + id);
 		Category category = categoryMngr.findById(id);
-//		CategoryChannelSetManager ccsMngr = new CategoryChannelSetManager();
-//		List<NnSet> oldList = categoryMngr.findSetsByCategory(id, false);
 		categoryMngr.deleteCatToSetByCatId(category.getId());
 		categoryMngr.delete(category);
 		return "OK";
 	}
-
+	
 	private void adjustSeq(Category category, String seq) {				
 		//swap
 		Category toBeSwapped = categoryMngr.findByLangAndSeq(category.getLang(), seq);
