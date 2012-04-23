@@ -806,6 +806,15 @@ public class CmsApiController {
 			programMngr.save(program);
 		}
 		
+		MemcachedClient cache = CacheFactory.get();
+		if (cache != null) {
+			// evaporate cache data
+			String cacheKey = "nnprogram(" + channelId + ")";
+			log.info("remove cached programInfo data");
+			cache.delete(cacheKey);
+			cache.shutdown();
+		}
+		
 		return "OK";
 	}
 	
