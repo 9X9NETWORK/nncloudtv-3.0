@@ -86,17 +86,18 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 			Query q = pm.newQuery(NnProgram.class);
 			q.setFilter("channelId == channelIdParam && isPublic == isPublicParam && status == statusParam");
 			q.declareParameters("long channelIdParam, boolean isPublicParam, short statusParam");
-			if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP) { 				
+			if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP) {
 				q.setOrdering("seq asc, subSeq asc"); 
 		    } else if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {
 				q.setOrdering("seq desc, subSeq asc");	
 			} else if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
+				log.info("ordering by seq asc");
 				q.setOrdering("seq asc");
 			} else if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
 				q.setOrdering("seq desc, subSeq asc");				
 			} else {
 				q.setOrdering("updateDate desc");
-			}
+			}						
 			
 			@SuppressWarnings("unchecked")
 			List<NnProgram> programs = (List<NnProgram>)q.execute(c.getId(), true, NnProgram.STATUS_OK);
