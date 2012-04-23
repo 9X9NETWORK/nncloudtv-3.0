@@ -48,6 +48,7 @@ if server == "2":
   os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files")
 if server == "3":
   print "--- uploading to deploy server ---"
+  folder = raw_input('Folder created? : ')  # to be hooked up with ssh command, used as reminder for now
   os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
   os.system("pscp -i prod-west2.ppk root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
   os.system("pscp -i prod-west2.ppk version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates")  
