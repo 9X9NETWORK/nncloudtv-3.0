@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.jdo.annotations.*;
 
+import com.nncloudtv.lib.NnStringUtil;
+
 /**
  * Programs(shows) under a NnChannel.
  */
@@ -123,6 +125,8 @@ public class NnProgram implements Serializable {
 	}
 
 	public String getName() {
+		if (name != null)
+			name = NnStringUtil.revertHtml(name);
 		return name;
 	}
 
@@ -163,6 +167,8 @@ public class NnProgram implements Serializable {
 	}
 
 	public String getIntro() {
+		if (intro != null)
+			intro = NnStringUtil.revertHtml(intro);
 		return intro;
 	}
 
@@ -235,6 +241,8 @@ public class NnProgram implements Serializable {
 	}
 
 	public String getComment() {
+		if (comment != null)
+			comment = NnStringUtil.revertHtml(comment);
 		return comment;
 	}
 

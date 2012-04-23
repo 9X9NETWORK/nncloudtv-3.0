@@ -9,7 +9,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable(detachable = "true")
+@PersistenceCapable(table="nnchannel_autosharing", detachable="true")
 public class NnChannelAutosharing implements Serializable {
 	
 	private static final long serialVersionUID = -2644869375639221703L;
