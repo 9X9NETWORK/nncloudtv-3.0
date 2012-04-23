@@ -17,8 +17,28 @@ public class PdrDao {
 
 	protected static final Logger log = Logger.getLogger(PdrDao.class.getName());
 	
-	public Pdr save(Pdr pdr) {
+	/*
+	private PersistenceManager getPersistenceManager() {
+		PersistenceManager pm = null;
+		try {
+			pm = PMF.getAnalytics().getPersistenceManager();
+    	} catch (Throwable t) {    		
+    		if (t.getCause() instanceof JDOFatalDataStoreException) {
+    			t.printStackTrace();
+    			MsoConfigManager.enableEmergencyRO();
+    			try {
+    				pm = PMF.getAnalyticsSlave().getPersistenceManager();
+    			} catch (Throwable t1) { 
+    			}
+    		}	
+    	}
+    	return pm;    	
+	}
+	*/
+	
+	public Pdr save(Pdr pdr) {		
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+		if (pm == null) return null;
 		try {
 			pm.makePersistent(pdr);
 			pdr = pm.detachCopy(pdr);
