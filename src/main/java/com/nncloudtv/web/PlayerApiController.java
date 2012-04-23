@@ -163,12 +163,14 @@ public class PlayerApiController {
 	 */	
 	@RequestMapping(value="guestRegister")
 	public ResponseEntity<String> guestRegister(@RequestParam(value="ipg", required = false) String ipg, HttpServletRequest req, HttpServletResponse resp) {
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			output = playerApiService.guestRegister(req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	} 
@@ -203,16 +205,16 @@ public class PlayerApiController {
 		boolean isTemp = Boolean.parseBoolean(req.getParameter("temp"));
 				
 		log.info("signup: email=" + email + ";name=" + name + ";userToken=" + userToken + ";sphere=" + sphere + ";year=" + year + ";ui-lang=" + lang);
-
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			output = playerApiService.signup(email, password, name, userToken, captcha, text, sphere, lang, year, isTemp, req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -228,13 +230,15 @@ public class PlayerApiController {
 	@RequestMapping(value="userTokenVerify")
 	public ResponseEntity<String> userTokenVerify(@RequestParam(value="token") String token, HttpServletRequest req, HttpServletResponse resp) {
 		log.info("userTokenVerify() : userToken=" + token);		
-
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+
 		try {
+			this.prepService(req);
 			output = playerApiService.userTokenVerify(token, req, resp);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -246,14 +250,16 @@ public class PlayerApiController {
 	 */		
 	@RequestMapping(value="signout")
     public ResponseEntity<String> signout(@RequestParam(value="user", required=false) String userKey, HttpServletRequest req, HttpServletResponse resp) {
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			CookieHelper.deleteCookie(resp, CookieHelper.USER);
 			CookieHelper.deleteCookie(resp, CookieHelper.GUEST);
 			output = NnStatusMsg.getPlayerMsg(NnStatusCode.SUCCESS, locale);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -280,16 +286,31 @@ public class PlayerApiController {
 	@RequestMapping(value="brandInfo")
 	public ResponseEntity<String> brandInfo(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
 		//log.info("brandInfo:" + brandName);  //don't care
-		this.prepService(req);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			output = playerApiService.brandInfo(req);
 		} catch (Exception e) {
-			output = playerApiService.handleException(e);
+			output = playerApiService.handleException(e);			
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
 
+	@RequestMapping(value="brandInfoTest")
+	public ResponseEntity<String> brandInfoTest(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
+		//log.info("brandInfo:" + brandName);  //don't care
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req);
+			output = playerApiService.brandInfo(req);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);			
+		}
+		return NnNetUtil.textReturn(output);
+	}
+	
 	/**
 	 * For directory query. Depending on the query level, it returns category, set, or channel info.    
 	 * API returns list of category info until it reaches category leaf.
@@ -311,12 +332,14 @@ public class PlayerApiController {
 			@RequestParam(value="lang", required=false) String lang,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			output = playerApiService.category(category, lang);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -342,16 +365,19 @@ public class PlayerApiController {
 			@RequestParam(value="pdr", required=false) String pdr,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
-		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		log.info("user=" + userToken + ";device=" + deviceToken + ";session=" + session);
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.pdr(userToken, deviceToken, session, pdr, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -386,13 +412,14 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);
-		this.prepService(req);
-		
-		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
+			this.prepService(req);		
 			output = playerApiService.setInfo(id, beautifulUrl);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);			
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -420,15 +447,18 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("subscribe: userToken=" + userToken+ "; channel=" + channelId + "; grid=" + gridId + "; set=" + setId + ";pos=" + pos);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.subscribe(userToken, channelId, gridId);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);			
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -457,16 +487,19 @@ public class PlayerApiController {
 			@RequestParam(value="set", required=false) String setId,
 			HttpServletRequest req,
 			HttpServletResponse resp) {			
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
 		log.info("userToken=" + userToken + "; channel=" + channelId + "; set=" + setId + "; seq=" + grid);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			output = playerApiService.unsubscribe(userToken, channelId, setId, grid);
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
+			output = playerApiService.unsubscribe(userToken, channelId, setId, grid);	
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -539,16 +572,18 @@ public class PlayerApiController {
 			@RequestParam(value="required", required=false) String required,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		this.prepService(req);
 		log.info("userToken=" + userToken + ";isUserInfo=" + userInfo + ";channel=" + channelIds + ";setInfo=" + setInfo);				
-		boolean isUserInfo = Boolean.parseBoolean(userInfo);
-		boolean isSetInfo = Boolean.parseBoolean(setInfo);
-		boolean isRequired = Boolean.parseBoolean(required);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
+			boolean isUserInfo = Boolean.parseBoolean(userInfo);
+			boolean isSetInfo = Boolean.parseBoolean(setInfo);
+			boolean isRequired = Boolean.parseBoolean(required);		
 			output = playerApiService.channelLineup(userToken, isUserInfo, channelIds, isSetInfo, isRequired);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -587,14 +622,16 @@ public class PlayerApiController {
 			@RequestParam(value="limit", required = false) String limit,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		this.prepService(req);		
 		log.info("params: channel:" + channelIds + ";user:" + userToken + ";ipg:" + ipgId);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
-		boolean isUserInfo = Boolean.parseBoolean(userInfo);
 		try {
+			this.prepService(req);		
+			boolean isUserInfo = Boolean.parseBoolean(userInfo);
 			output =  playerApiService.programInfo(channelIds, userToken, ipgId, isUserInfo, sidx, limit);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -622,17 +659,19 @@ public class PlayerApiController {
 		String tags = req.getParameter("tag");
 		String lang = req.getParameter("lang");
 
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		log.info("player input - userToken=" + userToken+ "; url=" + url + ";grid=" + grid + ";categoryId=" + categoryIds);				
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
-		
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.channelSubmit(categoryIds, userToken, url, grid, tags, lang, req);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);		
 	}
@@ -661,13 +700,15 @@ public class PlayerApiController {
 	public ResponseEntity<String> login(HttpServletRequest req, HttpServletResponse resp) {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");		
-		this.prepService(req);
 		log.info("login: email=" + email);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
+			this.prepService(req);
 			output = playerApiService.login(email, password, req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -689,15 +730,18 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("userPref: key(" + key + ");value(" + value + ")");
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-				
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.setUserPref(user, key, value);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -718,15 +762,17 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("setInfo: user=" + userToken + ";pos =" + pos);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.setSetInfo(userToken, name, pos);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -744,12 +790,14 @@ public class PlayerApiController {
 			@RequestParam(value="lang", required=false) String lang,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			output = playerApiService.staticContent(key, lang);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -767,15 +815,18 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.deviceRegister(userToken, type, req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -791,12 +842,14 @@ public class PlayerApiController {
 			@RequestParam(value="lang", required=false) String lang,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			output = playerApiService.listRecommended(lang);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -813,12 +866,14 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + token);
-		this.prepService(req);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);		
 			output = playerApiService.deviceTokenVerify(token, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -837,15 +892,18 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken + ";device=" + deviceToken);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
 			output = playerApiService.deviceAddUser(deviceToken, userToken, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -864,15 +922,16 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken + ";device=" + deviceToken);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));			
 			output = playerApiService.deviceRemoveUser(deviceToken, userToken, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -895,15 +954,16 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + user + ";session=" + session);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			output = playerApiService.userReport(user, device, session, comment);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -931,15 +991,17 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {		
 		log.info("set user profile: key(" + key + ");value(" + value + ")");
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
+			}
 			output = playerApiService.setUserProfile(user, key, value, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -957,12 +1019,14 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false)String user,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		this.prepService(req);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);		
 			output = playerApiService.getUserProfile(user);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -991,13 +1055,14 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken + ";to whom:" + toEmail + ";content:" + content);
-		this.prepService(req);
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);		
 			output = playerApiService.shareByEmail(userToken, toEmail, toName, subject, content, captcha, text);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1016,13 +1081,14 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + token);
-		this.prepService(req);
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);		
 			output = playerApiService.requestCaptcha(token, action, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1044,15 +1110,16 @@ public class PlayerApiController {
 			HttpServletResponse resp) {
 		
 		log.info("user:" + userToken + ";channel:" + channelId + ";sorting:" + sorting);
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			output = playerApiService.saveSorting(userToken, channelId, sorting);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1075,16 +1142,17 @@ public class PlayerApiController {
 			HttpServletRequest req,
 			HttpServletResponse resp) {		
 		
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
 		log.info("saveShare(" + userToken + ")");
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));	
 			output = playerApiService.saveShare(userToken, channelId, programId, setId);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}	
@@ -1101,12 +1169,14 @@ public class PlayerApiController {
 	public ResponseEntity<String> loadShare(@RequestParam(value="id") Long id, 
 										  HttpServletRequest req) {		
 		log.info("ipgShare:" + id);		
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
+			this.prepService(req);
 			output = playerApiService.loadShare(id);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);						
 	}
@@ -1129,14 +1199,16 @@ public class PlayerApiController {
 			@RequestParam(value="channelInfo", required=false) String channelInfo,
 			@RequestParam(value="episodeIndex", required=false) String episodeIndex,
 			HttpServletRequest req) {				                                
-		this.prepService(req);
-		boolean isChannelInfo = Boolean.parseBoolean(channelInfo);
-		boolean isEpisodeIndex = Boolean.parseBoolean(episodeIndex);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
+			this.prepService(req);
+			boolean isChannelInfo = Boolean.parseBoolean(channelInfo);
+			boolean isEpisodeIndex = Boolean.parseBoolean(episodeIndex);
 			output = playerApiService.userWatched(userToken, count, isChannelInfo, isEpisodeIndex, channel);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1156,16 +1228,17 @@ public class PlayerApiController {
 			@RequestParam(value="channel", required=false) String channelId,
 			@RequestParam(value="grid", required=false) String grid,
 			HttpServletRequest req){
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
 		log.info("userToken=" + userToken + ";grid=" + grid);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			output = playerApiService.copyChannel(userToken, channelId, grid);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}	
 		return NnNetUtil.textReturn(output);		
 	}						
@@ -1186,15 +1259,17 @@ public class PlayerApiController {
 			@RequestParam(value="grid2", required=false) String grid2,
 			HttpServletRequest req,
 			HttpServletResponse resp){
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 		log.info("userToken=" + userToken + ";grid1=" + grid1 + ";grid2=" + grid2);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			output = playerApiService.moveChannel(userToken, grid1, grid2);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}	
 		return NnNetUtil.textReturn(output);		
 	}					
@@ -1210,12 +1285,14 @@ public class PlayerApiController {
 			@RequestParam(value="text", required=false) String text,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		this.prepService(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			this.prepService(req);
 			output = playerApiService.search(text);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1232,16 +1309,17 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
 		log.info("bad program:" + programId + ";reported by user:" + userToken);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			output = playerApiService.programRemove(programId, userToken);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1265,17 +1343,17 @@ public class PlayerApiController {
 			HttpServletResponse resp) {
 		
 		log.info("user:" + user + ";name:" + name + ";description:" + description + ";temp:" + temp);
-		
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
-		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
-		boolean isTemp= Boolean.parseBoolean(temp);		
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));	
+			boolean isTemp= Boolean.parseBoolean(temp);		
 			output = playerApiService.channelCreate(user, name, description, image, isTemp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}
@@ -1305,17 +1383,18 @@ public class PlayerApiController {
 			HttpServletResponse resp) {
 		
 		log.info("name:" + name + ";description:" + description + ";audio:" + audio+ ";video:" + video);
-		
-		int status = this.prepService(req);
-		if (status != NnStatusCode.SUCCESS)
-			return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
-		boolean isTemp= Boolean.parseBoolean(temp);		
+		
 		try {
+			int status = this.prepService(req);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));	
+			boolean isTemp= Boolean.parseBoolean(temp);		
 			output = playerApiService.programCreate(channel, name, description, image, audio, video, isTemp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
 	}

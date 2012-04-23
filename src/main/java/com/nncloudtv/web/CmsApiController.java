@@ -840,14 +840,14 @@ public class CmsApiController {
 		
 		NnProgram program;		
 		if (contentType != null && contentType == NnProgram.CONTENTTYPE_RADIO) {			
-			program = new NnProgram("New Program", "New Program", "/images/cms/radio.jpg", NnProgram.TYPE_AUDIO);
+			program = new NnProgram("New Program", "New Program", NnChannel.IMAGE_RADIO_URL, NnProgram.TYPE_AUDIO);
 			program.setPublic(false);
 			program.setType(NnProgram.TYPE_AUDIO);
 			program.setContentType(NnProgram.CONTENTTYPE_RADIO);
 			programMngr.save(program);
 			
 		} else {			
-			program = new NnProgram("New Program", "New Program", "/WEB-INF/../images/processing.png", NnProgram.TYPE_VIDEO);
+			program = new NnProgram("New Program", "New Program", NnChannel.IMAGE_PROCESSING_URL, NnProgram.TYPE_VIDEO);
 			program.setPublic(false);
 			program.setType(NnProgram.TYPE_VIDEO);
 			programMngr.save(program);
@@ -861,7 +861,7 @@ public class CmsApiController {
 	public @ResponseBody Long createChannelSkeleton() {
 		
 		NnChannelManager channelMngr = new NnChannelManager();		
-		NnChannel channel = new NnChannel("New Channel", "New Channel", NnChannel.PROCESSING_IMAGE_URL);
+		NnChannel channel = new NnChannel("New Channel", "New Channel", NnChannel.IMAGE_PROCESSING_URL);
 		channel.setPublic(false);
 		channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
 		channel.setContentType(NnChannel.CONTENTTYPE_MIXED); // a channel type in podcast does not allow user to add program in it, so change to mixed type
@@ -875,7 +875,6 @@ public class CmsApiController {
 		
 		NnProgramManager programMngr = new NnProgramManager();
 		List<NnProgram> results = programMngr.findByChannel(channelId);
-		
 		Collections.sort(results, new NnProgramSeqComparator());
 		
 		return results;
@@ -1143,7 +1142,7 @@ public class CmsApiController {
 			user = userMngr.findMsoUser(mso);
 			break;
 		case Mso.TYPE_TCO:
-			user = userMngr.findTcoUser(mso, NnUserManager.getShard(req));
+			user = userMngr.findTcoUser(mso, NnUserManager.getShardByLocale(req));
 			break;
 		default:
 		}

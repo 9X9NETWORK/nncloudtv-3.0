@@ -1,27 +1,32 @@
 package com.nncloudtv.web;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.jdo.JDOFatalDataStoreException;
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.OperationTimeoutException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.GenericException;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.YouTubeLib;
@@ -43,23 +48,47 @@ import com.rabbitmq.client.QueueingConsumer;
 @Controller
 @RequestMapping("hello")
 public class HelloController {
+
+	protected static final Logger log = Logger.getLogger(HelloController.class.getName());
+
+	@RequestMapping(method = RequestMethod.GET)
+	public String printWelcome(ModelMap model) {
+ 
+		model.addAttribute("message", "Spring Security Hello World");
+		return "hello";
+ 
+	}
 	
 	//basic test
     @RequestMapping("world")
     public ModelAndView world(HttpServletRequest req) throws Exception {
 		HttpSession session = req.getSession();
 		session.setMaxInactiveInterval(1);
-		/*
+        String message = "Hello NnCloudTv";
+        return new ModelAndView("hello", "message", message);
+    }    
+
+    @RequestMapping("log")
+    public ModelAndView log()  {
+    	log.info("----- hello log -----");
+    	log.warning("----- hello warning -----");
+    	log.severe("----- hello severe -----");
+        return new ModelAndView("hello", "message", "log");
+    }    
+    
+    @RequestMapping("timeout")
+    public ModelAndView timeout(HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+		session.setMaxInactiveInterval(1);
 		for (long i=0; i<500000000; i++) {
 			System.out.println(i);
 			for (long j=0; j<500000000; j++) {			
 			}			
 		}
-		*/
         String message = "Hello NnCloudTv";
         return new ModelAndView("hello", "message", message);
     }    
-
+    
     /*
     @RequestMapping("root")
     public ModelAndView root() { 
@@ -70,7 +99,9 @@ public class HelloController {
     
     @RequestMapping("locale")
     public ModelAndView locale(HttpServletRequest req) {
-    	String message = req.getLocalName() + ";" + req.getLocalAddr() + req.getLocale().getLanguage();
+    	String message = "locale name: " + req.getLocalName() + "<br/>" + 
+    	                 "locale address: " + req.getLocalAddr() + "<br/>" +  
+    	                 req.getLocale().getLanguage();    	
         return new ModelAndView("hello", "message", message);
     }            
     
@@ -97,20 +128,45 @@ public class HelloController {
 		service.sendEmail(mail);
 		return "email sent";
     }            
-    
+
+    /*
+    @RequestMapping("slave")
+    public @ResponseBody String slave() throws Exception{
+		PersistenceManager pm = PMF.getAnalyticsSlave().getPersistenceManager();
+		try {
+			long id = 1;
+			Pdr pdr = (Pdr)pm.getObjectById(Pdr.class, id);
+			if (pdr != null)
+				log.info("<<< detached >>> " + pdr.getId());
+			else 
+				log.info("<<< detached >>> pdr is empty");
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}		
+        return "OK";
+    }    
+     */ 
+        
     //db test
     @RequestMapping("pdr")
-    public @ResponseBody String pdr() throws CommunicationsException {
+    public @ResponseBody String pdr() throws Exception{
     	try {
-			PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+    		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 			try {
 				Pdr raw = new Pdr(1, "session1", "test");
 				pm.makePersistent(raw);
-			} finally {
+    	    }finally {
 				pm.close();
-			}
+			}    
+    	} catch (JDOFatalDataStoreException e){
+    		log.severe("Fatal Exception");
     	} catch (Exception e){
-    		throw new CommunicationsException(null, 0, 0, e);
+    		throw new GenericException("system error");
+    	} catch (Throwable t) {    		
+    		if (t.getCause() instanceof JDOFatalDataStoreException) {
+    			log.severe("");
+    		}	
     	}
         return "OK";
     }    
@@ -118,9 +174,9 @@ public class HelloController {
     //db test through manager
     @RequestMapping("pdr_mngt")
     public @ResponseBody String pdr_mngt() { 
-		PdrManager rawMngr = new PdrManager();
-		Pdr raw = new Pdr(1, "session1", "test");
-		rawMngr.create(raw);
+		PdrManager pdrMngr = new PdrManager();
+		Pdr pdr = new Pdr(1, "session1", "test");
+		pdrMngr.create(pdr);
         return "OK";
     }    
         
@@ -128,18 +184,22 @@ public class HelloController {
 	@RequestMapping("cache_set")
 	public ResponseEntity<String> cache_set() {
 		String output = "No Cache";
-		MemcachedClient c;
+		MemcachedClient cache = null;
 		try {
-			c = new MemcachedClient(new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));
-			output = "original: " + (String)c.get("hello") + "\n";			
-			c.set("hello", CacheFactory.EXP_DEFAULT, "9x9");
-			output += "after set cache: " + (String)c.get("hello");
-		} catch (IOException e) {
-			e.printStackTrace();
+			cache = CacheFactory.get();
+			if (cache != null) {
+				output = "original: " + (String)cache.get("hello") + "\n";
+				cache.set("hello", CacheFactory.EXP_DEFAULT, "9x9");
+				output += "after set cache: " + (String)cache.get("hello");
+			}
+		} catch (OperationTimeoutException e) {
+			return NnNetUtil.textReturn("fail");
 		}
+		if (cache != null)
+			cache.shutdown();
 		return NnNetUtil.textReturn(output);
 	}
-	
+		
 	@RequestMapping("queue_visitor") 
 	public ResponseEntity<String> queue_db() {
 		boolean status = MsoConfigManager.isQueueEnabled(true);
@@ -204,7 +264,19 @@ public class HelloController {
                 
         return new ModelAndView("hello", "message", msg);
     }    
+ 
+	@RequestMapping("fiveHundred")
+	public ModelAndView fiveHundred(HttpServletRequest req, HttpServletResponse resp) {
+		resp.setStatus(500);
+		return new ModelAndView("hello", "message", "msg");
+	}
     
+	@RequestMapping("error")
+	public ModelAndView error(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		throw new Exception();
+	}
+
+	
     //rabbitmqctl list_queues
     @RequestMapping("receive")
     public @ResponseBody String receive() throws IOException, InterruptedException {
