@@ -115,7 +115,7 @@ p.hint_title{ text-align:right; color:#2e2e2e; font-size:0.8em; padding-right:20
 .left_title , .right_title{ color:#fff; font-size:1.2em;}
 .left_title{ background:url(../images/cms/left_title.jpg) no-repeat; width:410px; height:35px; padding:10px 0 0 10px;}
 .right_title{ background:url(../images/cms/right_title.jpg) no-repeat; width:480px; height:35px; padding:10px 0 0 10px; border-left:1px solid #ccc; border-right:1px solid #ccc;}
-.right_title div { max-width:250px; overflow:hidden; height:24px; }
+.right_title div { max-width:250px; overflow:hidden; height:20px; }
 
 .red{color:#ff3000;}
 .gray { color:#666; font-size:0.9em; padding:10px 0;}
