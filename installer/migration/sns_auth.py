@@ -14,7 +14,7 @@ def AllEntities(db):
 #main
 conn = MySQLdb.connect (host = "localhost",
                         user = "root",
-                        passwd = "",
+                        passwd = "letlet",
                         db = "nncloudtv_content",
                         charset = "utf8", 
                         use_unicode = True)

@@ -42,11 +42,12 @@ try:
      transcodingUpdateDate   = entity['transcodingUpdateDate']
      updateDate              = entity['updateDate']                             
      sorting                 = 0
+     isTemp                  = 0
 
      cursor.execute ("""
-          INSERT INTO nnchannel (contentType, createDate, errorReason, oriName, imageUrl, intro, isPublic, name, piwik, programCnt, sourceUrl, status, tag, transcodingUpdateDate, updateDate, ori_id, sorting)
-          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-       """, (contentType, createDate, errorReason, oriName, imageUrl, intro, isPublic, name, piwik, programCnt, sourceUrl, status, tag, transcodingUpdateDate, updateDate, ori_id, sorting))
+          INSERT INTO nnchannel (contentType, createDate, errorReason, oriName, imageUrl, intro, isPublic, name, piwik, programCnt, sourceUrl, status, tag, transcodingUpdateDate, updateDate, ori_id, sorting, isTemp)
+          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+       """, (contentType, createDate, errorReason, oriName, imageUrl, intro, isPublic, name, piwik, programCnt, sourceUrl, status, tag, transcodingUpdateDate, updateDate, ori_id, sorting, isTemp))
           
      conn.commit()
           

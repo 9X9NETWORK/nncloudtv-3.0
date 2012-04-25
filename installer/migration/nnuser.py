@@ -14,7 +14,7 @@ def AllEntities(db):
 #main
 conn = MySQLdb.connect (host = "localhost",
                         user = "root",
-                        passwd = "",
+                        passwd = "letlet",
                         charset = "utf8", 
                         use_unicode = True,                       
                         db = "nncloudtv_nnuser1")
@@ -33,6 +33,7 @@ try:
      dob               = ""
      lang              = "en"
      sphere            = "en"
+     isTemp            = 0
      try:     
        dob             = entity['dob']
        lang            = entity['lang']                             
@@ -50,9 +51,9 @@ try:
      gender            = entity['gender']
 
      cursor.execute ("""
-          INSERT INTO nnuser (ori_id, token, email, name, dob, intro, imageUrl, cryptedPassword, salt, createDate, updateDate, type, facebookToken, gender, lang, sphere, msoId)
-          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-       """, (ori_id, token, email, name, dob, intro, imageUrl, cryptedPassword, salt, createDate, updateDate, nntype, facebookToken, gender, lang, sphere, msoId))
+          INSERT INTO nnuser (ori_id, token, email, name, dob, intro, imageUrl, cryptedPassword, salt, createDate, updateDate, type, facebookToken, gender, lang, sphere, msoId, isTemp)
+          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+       """, (ori_id, token, email, name, dob, intro, imageUrl, cryptedPassword, salt, createDate, updateDate, nntype, facebookToken, gender, lang, sphere, msoId, isTemp))
           
      conn.commit()
           

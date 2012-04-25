@@ -33,13 +33,15 @@ try:
      name = entity['name']
      lang = entity['preferredLangCode']
      title = entity['title']
+     createDate = entity['createDate']
+     updateDate = entity['updateDate']
      nntype = int(entity['type'])
      #nntype = 2
      
      cursor.execute ("""
           INSERT INTO mso (contactEmail, createDate, intro, jingleUrl, logoUrl, name, lang, title, type, updateDate, ori_id)
-          VALUES (%s, now(), %s, %s, %s, %s, %s, %s, %s, now(), %s)
-       """, (contactEmail, intro, jingleUrl, logoUrl, name, lang,  title, nntype, ori_id))
+          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+       """, (contactEmail, createDate, intro, jingleUrl, logoUrl, name, lang,  title, nntype, updateDate, ori_id))
      conn.commit()
 
   cursor.close ()
