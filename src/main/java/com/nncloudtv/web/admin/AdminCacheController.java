@@ -38,19 +38,32 @@ public class AdminCacheController {
 	public ResponseEntity<String> delete(@RequestParam(value="key", required=false)String key) {
 		MemcachedClient cache = CacheFactory.get();
 		cache.delete(key);
-		cache.shutdown();
+		cache.shutdown(); //unsure
 		return NnNetUtil.textReturn("cache delete:" + key);
+	}
+
+	@RequestMapping("get")
+	public ResponseEntity<String> get(@RequestParam(value="key", required=false)String key) {
+		MemcachedClient cache = CacheFactory.get();
+		String value = "";
+		if (cache != null) { 
+			value = (String)cache.get(key);		
+			cache.shutdown();
+		}
+		return NnNetUtil.textReturn("cache get:" + value);
 	}
 	
 	//cache flush
 	@RequestMapping("flush")
 	public ResponseEntity<String> flush() {
 		MemcachedClient cache = CacheFactory.get();
-		cache.flush();
-		cache.shutdown();
+		if (cache != null) {
+			cache.flush(); //need further investigate, shutdown then flush won't happen. w/out shutdown there will be unclosed connection
+			//cache.shutdown();
+		}
 		return NnNetUtil.textReturn("flush");
 	}
-
+	
 	@RequestMapping("dbevict")
 	public ResponseEntity<String> dbevict(@RequestParam int pm) {
 		String output = "dbevict:fail";
