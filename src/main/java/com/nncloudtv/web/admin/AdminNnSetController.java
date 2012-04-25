@@ -178,26 +178,24 @@ public class AdminNnSetController {
 			             @RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) int seq,
 	                     OutputStream out) {
-		NnSetManager csMngr = new NnSetManager();
+		NnSetManager setMngr = new NnSetManager();
+		//NnSetToNnChannelManager cscMngr = new ChannelSetChannelManager();
 		NnChannelManager cMngr = new NnChannelManager();
 		NnChannel c = cMngr.findById(channel);
 		if (c == null)
 			return "Channel does not exist";
-		NnSet cs = csMngr.findById(set);
-		if (cs == null)
+		NnSet mySet = setMngr.findById(set);
+		if (mySet == null)
 			return "Set does not exist";
-		/*
-		NnSetToNnChannel csc = cscMngr.findBySetAndChannel(set, channel);		
-		if (csc == null) {
-			System.out.println("enter empty?:" + set + ";" + channel + ";" + seq);
-			csc = new NnSetToNnChannel(set, channel, seq);
-			cscMngr.create(csc);
+		List<NnChannel> channels = new ArrayList<NnChannel>();
+		channels.add(c);
+		setMngr.addChannels(mySet, channels);		
+		if (mySet.isFeatured()) {
+			this.channelSeqAdjust(mySet, c, seq, false, false);
 		}
-		*/
-		this.channelSeqAdjust(cs, c, seq, false, false);
 		return "OK";		
-	}	
-
+	}		
+			
 	@RequestMapping(value="editCh")
 	public @ResponseBody String editCh(
 			             @RequestParam(required = false) long id,

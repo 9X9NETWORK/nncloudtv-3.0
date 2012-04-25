@@ -139,7 +139,7 @@ public class AdminNnChannelController {
 		        	   searchField.equals("sourceUrl") )) {			
 			if (searchField.equals("sourceUrl")) {
 				searchString = NnStringUtil.escapedQuote(searchString.toLowerCase());
-//				searchField += "Search";
+				searchField += "Search";
 			}
 			String filter = searchField + " == " + searchString;
 			logger.info("filter = " + filter);
