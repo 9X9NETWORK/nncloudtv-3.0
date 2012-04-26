@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +15,7 @@ import net.spy.memcached.MemcachedClient;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.CookieHelper;
 
 @Service
 // for stateless, we save session in cache now, or other media later
@@ -28,11 +30,18 @@ public class SessionService {
 	}
 	
 	public SessionService(HttpServletRequest request) {
+		
 		session = request.getSession();
+		String sessionId = CookieHelper.getCookie(request, CookieHelper.CMS_SESSION);
+		if (sessionId == null) {
+			sessionId = session.getId();
+		}
+		log.info("session id = " + sessionId);
+		
 		MemcachedClient cache = CacheFactory.get(); 
 		if (cache != null) {
 			@SuppressWarnings("unchecked")
-			Map<String, Object> map = (Map<String, Object>) cache.get(this.session.getId());
+			Map<String, Object> map = (Map<String, Object>) cache.get(sessionId);
 			cache.shutdown();
 			if (map != null) {
 				Iterator<String> iterator = map.keySet().iterator();
@@ -45,12 +54,12 @@ public class SessionService {
 		}
 	}
 	
-	public void saveSession(HttpSession session) {
+	public void saveSession(HttpSession session, HttpServletResponse resp) {
 		this.session = session;
-		saveSession();
+		saveSession(resp);
 	}
 	
-	public void saveSession() {
+	public void saveSession(HttpServletResponse resp) {
 		MemcachedClient cache = CacheFactory.get();
 		if (cache != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
@@ -61,15 +70,17 @@ public class SessionService {
 			}
 			cache.set(session.getId(), CacheFactory.EXP_DEFAULT, map);
 			cache.shutdown();
+			CookieHelper.setCookie(resp, CookieHelper.CMS_SESSION, session.getId());
 		}
 	}
 	
-	public void removeSession() {
+	public void removeSession(HttpServletResponse resp) {
 		MemcachedClient cache = CacheFactory.get();
 		if (cache != null) {
 			cache.delete(session.getId());
 			cache.shutdown();
 		}
+		CookieHelper.deleteCookie(resp, CookieHelper.CMS_SESSION);
 		session.invalidate();
 	}
 	

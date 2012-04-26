@@ -12,6 +12,7 @@ public class CookieHelper {
 	static public String PLATFORM = "platform";
 	static public String PLATFORM_GAE = "gae";
 	static public String MSO = "mso";
+	static public String CMS_SESSION = "session";
 	
 	static public void deleteCookie(HttpServletResponse resp, String cookieName) {
 		Cookie cookie = new Cookie(cookieName, "");

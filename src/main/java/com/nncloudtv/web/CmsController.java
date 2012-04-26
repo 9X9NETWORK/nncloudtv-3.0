@@ -169,7 +169,7 @@ public class CmsController {
 	}
 	
 	@RequestMapping(value = "{msoName}/admin", method = RequestMethod.GET)
-	public String admin(HttpServletRequest request, @PathVariable("msoName") String msoName, Model model) throws SignatureException {
+	public String admin(HttpServletRequest request, HttpServletResponse response, @PathVariable("msoName") String msoName, Model model) throws SignatureException {
 		
 		if (msoName.equals("cms"))
 			return this.genericCMSLogin(request, "admin", model);
@@ -209,7 +209,7 @@ public class CmsController {
 			}
 			model.addAttribute("msoLogo", mso.getLogoUrl());
 			model.addAttribute("locale", request.getLocale().getLanguage());
-			sessionService.removeSession();
+			sessionService.removeSession(response);
 			return "cms/login";
 		}
 	}
@@ -256,13 +256,13 @@ public class CmsController {
 			model.addAttribute("password", password);
 			model.addAttribute("msoLogo", msoLogo);
 			model.addAttribute("error", error);
-			sessionService.removeSession();
+			sessionService.removeSession(response);
 			return "cms/login";
 		}
 		
 		HttpSession session = sessionService.getSession();
 		session.setAttribute("mso", mso);
-		sessionService.saveSession(session);
+		sessionService.saveSession(session, response);
 		
 		// set cookie
 		if (rememberMe != null && rememberMe) {
@@ -279,15 +279,15 @@ public class CmsController {
 	}
 	
 	@RequestMapping(value = "{msoName}/logout")
-	public String logout(Model model, HttpServletRequest request, @PathVariable String msoName) {
+	public String logout(Model model, HttpServletRequest request, HttpServletResponse response, @PathVariable String msoName) {
 		SessionService sessionService = new SessionService(request);
-		sessionService.removeSession();
+		sessionService.removeSession(response);
 		model.asMap().clear();
 		return "redirect:/" + msoName + "/admin";
 	}
 	
 	@RequestMapping(value = "{msoName}/{cmsTab}")
-	public String management(HttpServletRequest request, @PathVariable String msoName, @PathVariable String cmsTab, Model model) throws SignatureException {
+	public String management(HttpServletRequest request, HttpServletResponse response, @PathVariable String msoName, @PathVariable String cmsTab, Model model) throws SignatureException {
 		
 		SessionService sessionService = new SessionService(request);
 		HttpSession session = sessionService.getSession();
@@ -319,7 +319,7 @@ public class CmsController {
 				return "error/404";
 			}
 		} else {
-			sessionService.removeSession();
+			sessionService.removeSession(response);
 			model.asMap().clear();
 			return "redirect:/" + msoName + "/admin";
 		}
