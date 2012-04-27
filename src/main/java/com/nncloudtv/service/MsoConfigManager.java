@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import net.spy.memcached.MemcachedClient;
-
 import com.nncloudtv.dao.MsoConfigDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnLogUtil;
@@ -66,41 +64,24 @@ public class MsoConfigManager {
 
 	public static boolean getBooleanValueFromCache(String key, boolean cacheReset) {
 		String cacheKey = "msoconfig(" + key + ")";
-		MemcachedClient cache = CacheFactory.get();		
-		if (!cacheReset && cache != null) {
-			String result = (String)cache.get(cacheKey);
+		String result = (String)CacheFactory.get(cacheKey);		
+		if (!cacheReset && CacheFactory.isRunning) {
 			if (result != null){
-				log.info("value from cache: key=" + cacheKey + "value=" + result);
-				cache.shutdown();			
+				log.info("value from cache: key=" + cacheKey + "value=" + result);			
 				return NnStringUtil.stringToBool(result);
 			}			
 		}
 		boolean value = false;
 		MsoConfig config = new MsoConfigDao().findByItem(key);
 		if (config != null) {
-			if (cache != null) {
-				cache.set(cacheKey, CacheFactory.EXP_DEFAULT, config.getValue());
+			if (CacheFactory.isRunning) {
+				CacheFactory.set(cacheKey, config.getValue());
 			}
 			value = NnStringUtil.stringToBool(config.getValue());
 		}
-		if (cache != null) {
-			cache.shutdown();
-		}
 		return value;
 	}
-	
-	public static void enableEmergencyRO() {
-		MemcachedClient cache = CacheFactory.get();
-		if (cache != null) {
-			String cacheKey = "msoconfig(" + MsoConfig.RO + ")";
-			System.out.println("cache key;;;;" + cacheKey);
-			log.severe("emergency ro is enabled");
-			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, "1");
-			log.severe(";;;;;;; value is ;;;;;" + (String)cache.get(cacheKey));
-			cache.shutdown();
-		}
-	}
-	
+		
 	public static boolean isInReadonlyMode(boolean cacheReset) {
 		return MsoConfigManager.getBooleanValueFromCache(MsoConfig.RO, cacheReset);
 	}

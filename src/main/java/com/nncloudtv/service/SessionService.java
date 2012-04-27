@@ -1,16 +1,14 @@
 package com.nncloudtv.service;
 
-import java.util.logging.Logger;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-
-import net.spy.memcached.MemcachedClient;
 
 import org.springframework.stereotype.Service;
 
@@ -29,8 +27,7 @@ public class SessionService {
 		session = null;
 	}
 	
-	public SessionService(HttpServletRequest request) {
-		
+	public SessionService(HttpServletRequest request) {		
 		session = request.getSession();
 		String sessionId = CookieHelper.getCookie(request, CookieHelper.CMS_SESSION);
 		if (sessionId == null) {
@@ -38,18 +35,14 @@ public class SessionService {
 		}
 		log.info("session id = " + sessionId);
 		
-		MemcachedClient cache = CacheFactory.get(); 
-		if (cache != null) {
-			@SuppressWarnings("unchecked")
-			Map<String, Object> map = (Map<String, Object>) cache.get(sessionId);
-			cache.shutdown();
-			if (map != null) {
-				Iterator<String> iterator = map.keySet().iterator();
-				while (iterator.hasNext()) {
-					String name = iterator.next();
-					log.info("cached session = " + name);
-					session.setAttribute(name, map.get(name));
-				}
+		@SuppressWarnings("unchecked")
+		Map<String, Object> map = (Map<String, Object>) CacheFactory.get(sessionId); 
+		if (map != null) {
+			Iterator<String> iterator = map.keySet().iterator();
+			while (iterator.hasNext()) {
+				String name = iterator.next();
+				log.info("cached session = " + name);
+				session.setAttribute(name, map.get(name));
 			}
 		}
 	}
@@ -60,26 +53,18 @@ public class SessionService {
 	}
 	
 	public void saveSession(HttpServletResponse resp) {
-		MemcachedClient cache = CacheFactory.get();
-		if (cache != null) {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			for (@SuppressWarnings("unchecked") Enumeration<String> enu = (Enumeration<String>)session.getAttributeNames(); enu.hasMoreElements();) {
-				String name = (String)enu.nextElement();
-				log.info("put to cache = " + name);
-				map.put(name, session.getAttribute(name));
-			}
-			cache.set(session.getId(), CacheFactory.EXP_DEFAULT, map);
-			cache.shutdown();
-			CookieHelper.setCookie(resp, CookieHelper.CMS_SESSION, session.getId());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		for (@SuppressWarnings("unchecked") Enumeration<String> enu = (Enumeration<String>)session.getAttributeNames(); enu.hasMoreElements();) {
+			String name = (String)enu.nextElement();
+			log.info("put to cache = " + name);
+			map.put(name, session.getAttribute(name));
 		}
+		CacheFactory.set(session.getId(), map);
+		CookieHelper.setCookie(resp, CookieHelper.CMS_SESSION, session.getId());
 	}
 	
 	public void removeSession(HttpServletResponse resp) {
-		MemcachedClient cache = CacheFactory.get();
-		if (cache != null) {
-			cache.delete(session.getId());
-			cache.shutdown();
-		}
+		CacheFactory.delete(session.getId());
 		CookieHelper.deleteCookie(resp, CookieHelper.CMS_SESSION);
 		session.invalidate();
 	}

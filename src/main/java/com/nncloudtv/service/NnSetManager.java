@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.datastore.DataStoreCache;
 
-import net.spy.memcached.MemcachedClient;
-
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnSetDao;
@@ -217,16 +215,12 @@ public class NnSetManager {
 		List<NnSet> results = new ArrayList<NnSet>();
 		ContentOwnershipManager ownershipMngr = new ContentOwnershipManager();
 		String cacheIdString = "System.NnSets(sortby=lang)";
-		MemcachedClient cache = CacheFactory.get();		
-		if (cache != null) {
-			@SuppressWarnings("unchecked")
-			List<NnSet> cached = (List<NnSet>)cache.get(cacheIdString);
-			cache.shutdown();
-			if (cached != null && cached.size() > 0) {
-				log.info("get system sets from cache");
-				return cached;
-			}
-		}		
+		@SuppressWarnings("unchecked")
+		List<NnSet> cached = (List<NnSet>)CacheFactory.get(cacheIdString);		
+		if (cached != null && cached.size() > 0) {
+			log.info("get system sets from cache");
+			return cached;
+		}
 		MsoManager msoMngr = new MsoManager();
 		Mso nnMso = msoMngr.findNNMso();		
 		results = ownershipMngr.findOwnedSetsByMso(nnMso.getId());

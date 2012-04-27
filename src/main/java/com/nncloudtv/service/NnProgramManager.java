@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.spy.memcached.MemcachedClient;
-
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnProgramDao;
@@ -72,25 +70,19 @@ public class NnProgramManager {
 
 	public String findPlayerProgramInfoByChannel(long channelId) {
 		String cacheKey = "nnprogram(" + channelId + ")";
-		MemcachedClient cache = CacheFactory.get();
-		String result = null;
-		if (cache != null) { 
-			result = (String)cache.get(cacheKey);
-			if (result != null) {
-				log.info("<<<<< retrieve program info from cache >>>>>");
-				cache.shutdown();
-				return result;
-			}
+		String result = (String)CacheFactory.get(cacheKey);
+		if (CacheFactory.isRunning && result != null) { 
+			log.info("<<<<< retrieve program info from cache >>>>>");
+			return result;
 		}		
 		
 		log.info("nothing in the cache");		
 		List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
 		log.info("channel id:" + channelId + "; program size:" + programs.size());
 		String str = this.composeProgramInfoStr(programs);
-		if (cache != null) { 
-			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, str);
-			cache.shutdown();
-		}				
+		if (CacheFactory.isRunning) { 
+			CacheFactory.set(cacheKey, str);
+		}
 		return str;
 	}	
 	
@@ -263,25 +255,16 @@ public class NnProgramManager {
 	public String processCache(long channelId) {
 		List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
 		log.info("channel id:" + channelId + "; program size:" + programs.size());
-		MemcachedClient cache = CacheFactory.get();
 		String cacheKey = this.getCacheKey(channelId);
-		String str = this.composeProgramInfoStr(programs);
-		if (cache != null) { 
-			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, str);
-			cache.shutdown();
-		}
+		String str = this.composeProgramInfoStr(programs); 
+		CacheFactory.set(cacheKey, str);
 		return str;
 	}	
 	
 	public String retrieveCache(String key) {
 		log.info("cache key:" + key);
-		MemcachedClient cache = CacheFactory.get();
-		if (cache != null) { 
-			String value = (String)cache.get(key);
-			cache.shutdown();
-			return value;
-		}
-		return null;
+		String value = (String)CacheFactory.get(key);
+		return value;
 	}
 	
 	//example: nnprogram(channel_id)

@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.spy.memcached.MemcachedClient;
-
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.MsoDao;
@@ -58,13 +56,11 @@ public class MsoManager {
 	
 	public String[] getBrandInfoCache(boolean cacheReset) {
 		String cacheKey = "brandInfo";
-		MemcachedClient cache = CacheFactory.get();
         String[] result = {""};
-		if (cache != null && !cacheReset) {
-			String[] cached = (String[]) cache.get(cacheKey);
+		String[] cached = (String[]) CacheFactory.get(cacheKey);
+		if (CacheFactory.isRunning && !cacheReset) {
 			if (cached != null) {
 				log.info("<<<<< get brandInfo from cache >>>>");
-				cache.shutdown();
 				return cached;
 			}
 		}
@@ -92,11 +88,10 @@ public class MsoManager {
 				result[0] += PlayerApiService.assembleKeyValue(MsoConfig.RO, c.getValue());
 			}			
 		}
-		if (cache != null) { 
-			cache.set(cacheKey, CacheFactory.EXP_DEFAULT, result);
-			cache.shutdown();
+		if (CacheFactory.isRunning) { 
+			CacheFactory.set(cacheKey, result);
 		}		
-		return result;
+		return result;		
 	}
 			
 	public List<Mso> findByType(short type) {
