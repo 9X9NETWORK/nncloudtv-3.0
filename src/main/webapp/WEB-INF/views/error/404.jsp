@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/war/v0/stylesheets/maintenance.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-<script src="http://9x9ui.s3.amazonaws.com/war/v0/maintenance.js"></script>
+<script src="http://9x9ui.s3.amazonaws.com/war/v0/javascripts/maintenance.js"></script>
 <title>9x9.tv</title>
 
 <script type="text/javascript">
