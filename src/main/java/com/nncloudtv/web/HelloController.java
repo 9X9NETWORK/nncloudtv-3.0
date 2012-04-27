@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.OperationTimeoutException;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,16 +23,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
-import com.nncloudtv.lib.GenericException;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.Pdr;
 import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.MsoConfigManager;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.PdrManager;
@@ -52,12 +51,17 @@ public class HelloController {
 	protected static final Logger log = Logger.getLogger(HelloController.class.getName());
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String printWelcome(ModelMap model) {
- 
+	public String printWelcome(ModelMap model) { 
 		model.addAttribute("message", "Spring Security Hello World");
 		return "hello";
  
 	}
+	@RequestMapping("logger")
+    public ModelAndView logger(HttpServletRequest req) throws Exception {
+		String message = log.getName() + "\n";
+		message += log.getLevel(); 
+        return new ModelAndView("hello", "message", message);
+    }    
 	
 	//basic test
     @RequestMapping("world")
@@ -158,11 +162,9 @@ public class HelloController {
 				pm.makePersistent(raw);
     	    }finally {
 				pm.close();
-			}    
+			}
     	} catch (JDOFatalDataStoreException e){
     		log.severe("Fatal Exception");
-    	} catch (Exception e){
-    		throw new GenericException("system error");
     	} catch (Throwable t) {    		
     		if (t.getCause() instanceof JDOFatalDataStoreException) {
     			log.severe("");
@@ -178,28 +180,53 @@ public class HelloController {
 		Pdr pdr = new Pdr(1, "session1", "test");
 		pdrMngr.create(pdr);
         return "OK";
-    }    
-        
-    //cache test, set a cache, use with cache_delete
+    }                
+    
 	@RequestMapping("cache_set")
 	public ResponseEntity<String> cache_set() {
 		String output = "No Cache";
-		MemcachedClient cache = null;
-		try {
-			cache = CacheFactory.get();
-			if (cache != null) {
-				output = "original: " + (String)cache.get("hello") + "\n";
-				cache.set("hello", CacheFactory.EXP_DEFAULT, "9x9");
-				output += "after set cache: " + (String)cache.get("hello");
+		String cacheValue = (String)CacheFactory.get("hello");
+		output = "original: " + cacheValue + "\n";
+		if (CacheFactory.isRunning) {
+			output += "it's running"  + "\n";
+			if (cacheValue == null) {
+			   CacheFactory.set("hello", "9x9");
+			   cacheValue = (String)CacheFactory.get("hello");
+			   output += "after set cache: " + cacheValue;
 			}
-		} catch (OperationTimeoutException e) {
-			return NnNetUtil.textReturn("fail");
+		} else {
+			output += "cache is not running";
 		}
-		if (cache != null)
-			cache.shutdown();
+		
 		return NnNetUtil.textReturn(output);
 	}
-		
+	
+	@RequestMapping("jdo_cached")
+	public ResponseEntity<String> jdoCached() {
+		MsoConfigManager configMngr = new MsoConfigManager();
+		MsoConfig c = configMngr.findByItem("test");
+		return NnNetUtil.textReturn(c.getValue());
+	}
+
+	@RequestMapping("set")
+	public ResponseEntity<String> set(
+			@RequestParam String value) {
+		MsoManager msoMngr = new MsoManager();
+		Mso mso = msoMngr.findNNMso();
+		MsoConfigManager configMngr = new MsoConfigManager();
+		MsoConfig c = configMngr.findByItem("test");
+		c.setValue(value);
+		configMngr.save(mso, c);
+		return NnNetUtil.textReturn("set value");
+	}
+
+	@RequestMapping("get")
+	public ResponseEntity<String> get() {
+		MsoConfigManager configMngr = new MsoConfigManager();
+		MsoConfig c = configMngr.findByItem("test");
+		return NnNetUtil.textReturn(c.getValue());
+	}
+	
 	@RequestMapping("queue_visitor") 
 	public ResponseEntity<String> queue_db() {
 		boolean status = MsoConfigManager.isQueueEnabled(true);
@@ -275,7 +302,6 @@ public class HelloController {
 	public ModelAndView error(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		throw new Exception();
 	}
-
 	
     //rabbitmqctl list_queues
     @RequestMapping("receive")
@@ -298,4 +324,12 @@ public class HelloController {
     	return "OK";
     }
 
+    //test ip behind proxy, aka load balancer
+    @RequestMapping("getIp")
+    public ResponseEntity<String> getIp(HttpServletRequest req) {
+    	String ip = NnNetUtil.getIp(req);
+    	return NnNetUtil.textReturn(ip);
+    }
+    
 }
+    

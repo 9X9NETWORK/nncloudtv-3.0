@@ -1,11 +1,13 @@
 package com.nncloudtv.web.admin;
 
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.datastore.DataStoreCache;
 
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.OperationTimeoutException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,15 +38,21 @@ public class AdminCacheController {
 	//delete cache with key
 	@RequestMapping("delete")
 	public ResponseEntity<String> delete(@RequestParam(value="key", required=false)String key) {
-		MemcachedClient cache = CacheFactory.get();
-		cache.delete(key);
+		MemcachedClient cache = CacheFactory.getClient();
+		try {
+			cache.delete(key).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 		cache.shutdown(); //unsure
 		return NnNetUtil.textReturn("cache delete:" + key);
 	}
 
 	@RequestMapping("get")
 	public ResponseEntity<String> get(@RequestParam(value="key", required=false)String key) {
-		MemcachedClient cache = CacheFactory.get();
+		MemcachedClient cache = CacheFactory.getClient();
 		String value = "";
 		if (cache != null) { 
 			value = (String)cache.get(key);		
@@ -52,14 +60,39 @@ public class AdminCacheController {
 		}
 		return NnNetUtil.textReturn("cache get:" + value);
 	}
+
+	@RequestMapping("set")
+	public ResponseEntity<String> set(
+			@RequestParam(value="key", required=false)String key,
+			@RequestParam(value="value", required=false)String value) {
+		MemcachedClient cache = null;
+		try {
+			cache = CacheFactory.getClient();
+		} catch (OperationTimeoutException e) {
+			log.info("memcache down");
+		}
+		String setValue = "";
+		if (cache != null) { 
+			cache.set(key, CacheFactory.EXP_DEFAULT, value);
+			setValue = (String)cache.get(key);
+			cache.shutdown();
+		}
+		return NnNetUtil.textReturn("cache get:" + setValue);
+	}
 	
 	//cache flush
 	@RequestMapping("flush")
 	public ResponseEntity<String> flush() {
-		MemcachedClient cache = CacheFactory.get();
+		MemcachedClient cache = CacheFactory.getClient();
 		if (cache != null) {
-			cache.flush(); //need further investigate, shutdown then flush won't happen. w/out shutdown there will be unclosed connection
-			//cache.shutdown();
+			try {
+				cache.flush().get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+			cache.shutdown();
 		}
 		return NnNetUtil.textReturn("flush");
 	}

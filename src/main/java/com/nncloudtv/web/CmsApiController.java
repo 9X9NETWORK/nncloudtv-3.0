@@ -16,8 +16,6 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.memcached.MemcachedClient;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -321,24 +319,19 @@ public class CmsApiController {
 			log.info("system channel sets");
 			msoId = nn.getId();
 			
-			MemcachedClient cache = CacheFactory.get();
-			if (sortby != null && cache != null) {
+			if (sortby != null) {
 				if (sortby.equalsIgnoreCase("lang")) {
 					// get from cache
-					results = (List<NnSet>)cache.get(cacheIdString);
+					results = (List<NnSet>)CacheFactory.get(cacheIdString);
 					if (results != null) {
-						cache.shutdown();
 						log.info("get from cache");
 						return results;
 					}
 				} else if (sortby.equalsIgnoreCase("reset")) {
 					// hack
 					log.info("remove from cache");
-					cache.delete(cacheIdString);
+					CacheFactory.delete(cacheIdString);
 				}
-			}
-			if (cache != null) {
-				cache.shutdown();
 			}
 		}
 		log.info("msoId = " + msoId);
@@ -370,12 +363,8 @@ public class CmsApiController {
 			Collections.sort(results, new NnSetComparator());
 			if (msoId == nn.getId()) {
 				// put to cache
-				MemcachedClient cache = CacheFactory.get();
-				if (cache != null) {
-					log.info("put to cache");
-					cache.set(cacheIdString, CacheFactory.EXP_DEFAULT, results);
-					cache.shutdown();
-				}
+				log.info("put to cache");
+				CacheFactory.set(cacheIdString, results);
 			}
 		}
 		// size() is not always > 0
@@ -805,16 +794,9 @@ public class CmsApiController {
 			program.setSeq(String.format("%08d", seq + 1));
 			programMngr.save(program);
 		}
-		
-		MemcachedClient cache = CacheFactory.get();
-		if (cache != null) {
-			// evaporate cache data
-			String cacheKey = "nnprogram(" + channelId + ")";
-			log.info("remove cached programInfo data");
-			cache.delete(cacheKey);
-			cache.shutdown();
-		}
-		
+		String cacheKey = "nnprogram(" + channelId + ")";
+		log.info("remove cached programInfo data");
+		CacheFactory.delete(cacheKey);
 		return "OK";
 	}
 	

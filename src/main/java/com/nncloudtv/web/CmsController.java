@@ -333,7 +333,7 @@ public class CmsController {
 		
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer("udWzz6YrsaNlbJ18vZ7aCA", "Pf0TdB2QFXWKyphbIdnPG4vZhLVze0cPCxlLkfBwtQ");
-		MemcachedClient cache = CacheFactory.get();
+		MemcachedClient cache = CacheFactory.getClient();
 		if(cache==null)
 		{
 			return NnNetUtil.textReturn("cache error : no cache object");
@@ -344,13 +344,12 @@ public class CmsController {
 			// overwrite the application call_back_url setting
 			String call_back_url = "http://"+req.getServerName()+"/cms/twitter/authorization";
 			RequestToken requestToken = twitter.getOAuthRequestToken(call_back_url);
-			if(msoId!=null) {
-				cache.set(requestToken.getToken()+"msoId", CacheFactory.EXP_DEFAULT, msoId);
-				cache.set(requestToken.getToken(), CacheFactory.EXP_DEFAULT, requestToken.getTokenSecret());
+			if(msoId != null) {
+				CacheFactory.set(requestToken.getToken()+"msoId", msoId);
+				CacheFactory.set(requestToken.getToken(), requestToken.getTokenSecret());
 			}
 			else
 			{
-				cache.shutdown();
 				return NnNetUtil.textReturn("you are not permit authorization");
 			}
 			cache.shutdown();
@@ -368,9 +367,8 @@ public class CmsController {
 				
 				RequestToken requestToken = new RequestToken(oauthToken,requestTokenSecret);
 				AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauthVerifier);
-				cache.delete(oauthToken);
-				cache.delete(oauthToken+"msoId");
-				cache.shutdown();
+				CacheFactory.delete(oauthToken);
+				CacheFactory.delete(oauthToken+"msoId");
 				
 				CmsApiController cmsApiController = new CmsApiController();
 				cmsApiController.createSnsAuth(userID, type, accessToken.getToken(), accessToken.getTokenSecret());
