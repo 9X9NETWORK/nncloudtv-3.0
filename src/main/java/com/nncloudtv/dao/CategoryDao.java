@@ -3,7 +3,6 @@ package com.nncloudtv.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.JDOFatalException;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
