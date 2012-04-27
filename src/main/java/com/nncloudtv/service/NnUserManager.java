@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.NnUserDao;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
@@ -57,6 +58,8 @@ public class NnUserManager {
 	public static String findLocaleByHttpRequest(HttpServletRequest req) {
 		String ip = req.getRemoteAddr();
 		log.info("findLocaleByHttpRequest() ip is " + ip);
+		ip = NnNetUtil.getIp(req);
+		log.info("try to find ip behind proxy " + ip);
         String country = "";
 		try {
 			URL url = new URL("http://brussels.teltel.com/geoip/?ip=" + ip);
@@ -69,12 +72,14 @@ public class NnUserManager {
 	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	        String line = rd.readLine(); 
 	        if (line != null) {
+	        	log.info("country:" + line);
 	        	country = line.toLowerCase();
 	        } //assuming one line
 	        rd.close();	        
 		} catch (java.net.SocketTimeoutException e) {
-		   log.info("find locale by http request: socket timeout");   
+		   log.info("socket timeout");   
 		} catch (Exception e) {
+			log.info("exception");
 			NnLogUtil.logException(e);
 		} finally {			
 		}
