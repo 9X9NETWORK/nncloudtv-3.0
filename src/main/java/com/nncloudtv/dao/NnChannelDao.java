@@ -69,8 +69,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 	public static List<NnChannel> searchChannelEntries(String queryStr) {		
 	    PersistenceManager pm = PMF.getContent().getPersistenceManager();
 	    String sql = "select * from nnchannel " +
-	    		      "where name like '%" + queryStr + "%'" + 
-	    		         "|| intro like '%" + queryStr + "%'";	 	   
+	    		      "where lower(name) like lower('%" + queryStr + "%')" + 
+	    		         "|| lower(intro) like lower('%" + queryStr + "%')";	 	   
 	    log.info("Sql=" + sql);
 	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
 	    q.setClass(NnChannel.class);
