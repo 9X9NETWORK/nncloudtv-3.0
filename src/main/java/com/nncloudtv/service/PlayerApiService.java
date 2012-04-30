@@ -243,7 +243,7 @@ public class PlayerApiService {
 	}
     
 
-	public String category(String id, String lang) {
+	public String category(String id, String lang, boolean flatten) {
 		lang = this.checkLang(lang);	
         if (lang == null)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);				        
@@ -298,7 +298,31 @@ public class PlayerApiService {
 					        subItemHint};				
 			result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
 		}
-		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+		if (id.equals("0") && flatten) {
+			List<String> flattenResult = new ArrayList<String>();
+			flattenResult.add(result[0]);
+			flattenResult.add(result[1]);
+			for (Category c : categories) {				
+				if (c.getName().equals("All") || c.getName().equals("頻道總覽")) { //shortcut
+					List<NnSet> list = catMngr.findPlayerSetsByCategory(c.getId());
+					int setCnt = 0;
+					String s = "";
+					for (NnSet cs : list) {
+						String name =  cs.getName();
+						int cnt = cs.getChannelCnt();
+						String[] str = {"s" + String.valueOf(cs.getId()), name, String.valueOf(cnt), "ch"};				
+						s += NnStringUtil.getDelimitedStr(str) + "\n";
+						setCnt++;
+					}
+					if (s.length() > 0)
+						flattenResult.add(s);
+				}
+			}
+			String size[] = new String[flattenResult.size()];
+			return this.assembleMsgs(NnStatusCode.SUCCESS, flattenResult.toArray(size));
+		} else {
+			return this.assembleMsgs(NnStatusCode.SUCCESS, result);			
+		}
 	}
      
     public String brandInfo(HttpServletRequest req) {    	
