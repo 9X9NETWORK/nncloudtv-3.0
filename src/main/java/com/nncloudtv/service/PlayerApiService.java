@@ -382,6 +382,7 @@ public class PlayerApiService {
         if (id == null && beautifulUrl == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
+        if (id != null && id.startsWith("s")) id = id.replace("s", "");
         NnSetManager setMngr = new NnSetManager();
         NnSet set = null;
         if (id != null) {
