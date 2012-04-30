@@ -330,12 +330,14 @@ public class PlayerApiController {
 	public ResponseEntity<String> category(
 			@RequestParam(value="category", required=false) String category,
 			@RequestParam(value="lang", required=false) String lang,
+			@RequestParam(value="flatten", required=false) String isFlatten,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req);
-			output = playerApiService.category(category, lang);
+			boolean flatten = Boolean.parseBoolean(isFlatten);
+			output = playerApiService.category(category, lang, flatten);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
