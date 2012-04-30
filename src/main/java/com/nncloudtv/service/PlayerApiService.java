@@ -756,8 +756,9 @@ public class PlayerApiService {
 		} else if (chArr.length > 1) {			
 			List<Long> list = new ArrayList<Long>();
 			for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
+			System.out.println("hello charr:" + list.size());
 			for (Long l : list) {
-				programInfoStr = programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);				
+				programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);
 			}
 		} else {
 			programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);				
