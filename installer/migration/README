@@ -33,15 +33,15 @@ copy gae backup files over
 - get backup files from amazon 
 apt-get install s3cmd
 <<<<<<<<<<<<<<<<<< change date >>>>>>>>>>>>>>>>>>>>>
-ubuntu> s3cmd ls s3://9x9gaedata/20120427_020501_9x9tvprod3*
+ubuntu> s3cmd ls s3://9x9gaedata/20120430_150501_9x9tvprod3*
 ubuntu> 
 <<<<<<<<<<<<<<<<<< change date >>>>>>>>>>>>>>>>>>>>>
-s3cmd get s3://9x9gaedata/20120427_020501_9x9tvprod3_A*
-s3cmd get s3://9x9gaedata/20120427_020501_9x9tvprod3_C*
-s3cmd get s3://9x9gaedata/20120427_020501_9x9tvprod3_I*
-s3cmd get s3://9x9gaedata/20120427_020501_9x9tvprod3_M*
-s3cmd get s3://9x9gaedata/20120427_020501_9x9tvprod3_N*
-s3cmd get s3://9x9gaedata/20120427_020501_9x9tvprod3_S*
+s3cmd get s3://9x9gaedata/20120430_150501_9x9tvprod3_A*
+s3cmd get s3://9x9gaedata/20120430_150501_9x9tvprod3_C*
+s3cmd get s3://9x9gaedata/20120430_150501_9x9tvprod3_I*
+s3cmd get s3://9x9gaedata/20120430_150501_9x9tvprod3_M*
+s3cmd get s3://9x9gaedata/20120430_150501_9x9tvprod3_N*
+s3cmd get s3://9x9gaedata/20120430_150501_9x9tvprod3_S*
 
 - remove unnecessary files and decompress
 rm *.log.*
