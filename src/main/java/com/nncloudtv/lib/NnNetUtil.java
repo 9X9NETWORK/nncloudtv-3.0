@@ -22,9 +22,11 @@ public class NnNetUtil {
 
 	public static void logUrl(HttpServletRequest req) {
 		String url = req.getRequestURL().toString();		
-		String queryStr = req.getQueryString().toString();		
-		if (queryStr != null)
+		String queryStr = req.getQueryString();		
+		if (queryStr != null && !queryStr.equals("null"))
 			queryStr = "?" + queryStr;
+		else 
+			queryStr = "";
 		url = url + queryStr;
 		log.info(url);
 	}
