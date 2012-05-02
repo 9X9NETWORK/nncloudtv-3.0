@@ -9,6 +9,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
 
 public class NnSetToNnChannelDao extends GenericDao<NnSetToNnChannel> {
@@ -37,6 +38,7 @@ public class NnSetToNnChannelDao extends GenericDao<NnSetToNnChannel> {
 		return result;
 	}
 	
+	//TODO, should be merged to findBySet(NnSet set), it sets ordering 	
 	public List<NnSetToNnChannel> findBySet(long setId) {	
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<NnSetToNnChannel> detached = new ArrayList<NnSetToNnChannel>();
@@ -47,7 +49,30 @@ public class NnSetToNnChannelDao extends GenericDao<NnSetToNnChannel> {
 			query.declareParameters("long setIdParam");
 			@SuppressWarnings("unchecked")
 			List<NnSetToNnChannel> list = (List<NnSetToNnChannel>)query.execute(setId);
-			System.out.println("<<< dao layer size:" + list.size() + ";setId=" + setId);
+			detached = (List<NnSetToNnChannel>)pm.detachCopyAll(list);
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}
+
+	public List<NnSetToNnChannel> findBySet(NnSet set) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<NnSetToNnChannel> detached = new ArrayList<NnSetToNnChannel>();		
+		try {
+			Query query = pm.newQuery(NnSetToNnChannel.class);
+			query.setFilter("setId == setIdParam");
+			query.declareParameters("long setIdParam");
+			if (set.isFeatured()) {
+				log.info("ordering by seq");
+				query.setOrdering("seq");
+			} else { 
+				log.info("ordering by update date");
+				query.setOrdering("updateDate desc");
+			}
+			@SuppressWarnings("unchecked")
+			List<NnSetToNnChannel> list = (List<NnSetToNnChannel>)query.execute(set.getId());
 			detached = (List<NnSetToNnChannel>)pm.detachCopyAll(list);
 		} catch (JDOObjectNotFoundException e) {
 		} finally {
