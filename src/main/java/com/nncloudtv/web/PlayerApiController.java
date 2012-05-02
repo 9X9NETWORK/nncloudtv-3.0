@@ -125,14 +125,15 @@ public class PlayerApiController {
 		this.playerApiService= playerApiService;
 	}	
 	
-	private int prepService(HttpServletRequest req) {
+	private int prepService(HttpServletRequest req) {		
 		/*
 		String userAgent = req.getHeader("user-agent");
 		if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))	 {
 			playerApiService.setUserAgent(PlayerApiService.PLAYER_IOS);
 			log.info("from iOS");
 		}
-		*/
+		*/ 
+		NnNetUtil.logUrl(req);
 		HttpSession session = req.getSession();
 		session.setMaxInactiveInterval(60);
 		MsoManager msoMngr = new MsoManager();
@@ -285,7 +286,7 @@ public class PlayerApiController {
 	 */	
 	@RequestMapping(value="brandInfo")
 	public ResponseEntity<String> brandInfo(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
-		//log.info("brandInfo:" + brandName);  //don't care
+		NnNetUtil.logUrl(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req);
@@ -298,19 +299,6 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 
-	@RequestMapping(value="brandInfoTest")
-	public ResponseEntity<String> brandInfoTest(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
-		//log.info("brandInfo:" + brandName);  //don't care
-		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
-		try {
-			this.prepService(req);
-			output = playerApiService.brandInfo(req);
-		} catch (Exception e) {
-			output = playerApiService.handleException(e);			
-		}
-		return NnNetUtil.textReturn(output);
-	}
-	
 	/**
 	 * For directory query. Depending on the query level, it returns category, set, or channel info.    
 	 * API returns list of category info until it reaches category leaf.

@@ -60,7 +60,7 @@ public class MsoManager {
 		String[] cached = (String[]) CacheFactory.get(cacheKey);
 		if (CacheFactory.isRunning && !cacheReset) {
 			if (cached != null) {
-				log.info("<<<<< get brandInfo from cache >>>>");
+				log.info("get brandInfo from cache");
 				return cached;
 			}
 		}

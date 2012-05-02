@@ -72,7 +72,7 @@ public class NnUserManager {
 	        BufferedReader rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	        String line = rd.readLine(); 
 	        if (line != null) {
-	        	log.info("country:" + line);
+	        	log.info("country from locale service:" + line);
 	        	country = line.toLowerCase();
 	        } //assuming one line
 	        rd.close();	        
