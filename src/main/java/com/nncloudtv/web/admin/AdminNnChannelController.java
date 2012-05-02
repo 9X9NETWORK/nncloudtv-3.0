@@ -31,7 +31,7 @@ import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
 import com.nncloudtv.service.CntSubscribeManager;
 import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.NnSetChannelManager;
+import com.nncloudtv.service.NnSetToNnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 
 @Controller
@@ -246,7 +246,7 @@ public class AdminNnChannelController {
 	                                        @RequestParam(value = "set") Long setId) {
 		
 //		logger.info("admin = " + userService.getCurrentUser().getEmail());		
-		NnSetChannelManager csMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 		NnSetManager setMngr = new NnSetManager();
 		logger.info("setId = " + setId);
 		NnSet set = setMngr.findById(setId);
@@ -288,7 +288,7 @@ public class AdminNnChannelController {
 		
 		if (c != null) {
 			//find all the sets
-			NnSetChannelManager csMngr = new NnSetChannelManager();
+			NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 			NnSetManager setMngr = new NnSetManager();
 			List<Long> setIdList = new ArrayList<Long>();	
 			String[] arr = sets.split(",");
@@ -307,7 +307,7 @@ public class AdminNnChannelController {
 		
 //		logger.info("admin = " + userService.getCurrentUser().getEmail());
 		
-		NnSetChannelManager csMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 		
 		logger.info("csId = " + csId);
 		NnSetToNnChannel cs = csMngr.findById(csId);
@@ -342,7 +342,7 @@ public class AdminNnChannelController {
 	                           @RequestParam(value = "sord")    String       sortDirection,
 	                                                            OutputStream out) {		
 		NnSetManager setMngr = new NnSetManager();
-		NnSetChannelManager csMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 		
@@ -452,7 +452,7 @@ public class AdminNnChannelController {
 		
 		if (status != null) {
 			NnSetManager setMngr = new NnSetManager();
-			NnSetChannelManager csMngr = new NnSetChannelManager();
+			NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 			List<NnSetToNnChannel> csList = csMngr.findByChannel(channel.getId());
 			List<Long> setIds = new ArrayList<Long>();
 			for (NnSetToNnChannel cs : csList) {

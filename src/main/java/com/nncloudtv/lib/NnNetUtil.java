@@ -19,7 +19,16 @@ import org.springframework.http.ResponseEntity;
 public class NnNetUtil {
 	
 	protected final static Logger log = Logger.getLogger(NnNetUtil.class.getName());
-		
+
+	public static void logUrl(HttpServletRequest req) {
+		String url = req.getRequestURL().toString();		
+		String queryStr = req.getQueryString().toString();		
+		if (queryStr != null)
+			queryStr = "?" + queryStr;
+		url = url + queryStr;
+		log.info(url);
+	}
+	
 	public static ResponseEntity<String> textReturn(String output) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.valueOf("text/plain;charset=utf-8"));

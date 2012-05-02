@@ -188,19 +188,23 @@ public class NnSetManager {
 	}
 	
 	
-	public List<NnChannel> findPlayerChannelsById(long setId) {
-		NnSetChannelManager scMngr = new NnSetChannelManager();
+	public List<NnChannel> findPlayerChannels(NnSet set) {
+		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
 		NnChannelManager channelMngr = new NnChannelManager();		
-		List<NnSetToNnChannel> relations = scMngr.findBySet(setId);
+		List<NnSetToNnChannel> relations = dao.findBySet(set);
 		ArrayList<NnChannel> results = new ArrayList<NnChannel>();
 		
+		int i=1;
 		for (NnSetToNnChannel sToC : relations) {
-			NnChannel c = channelMngr.findById(sToC.getChannelId());
+			NnChannel c = channelMngr.findById(sToC.getChannelId());			
 			if (c != null) {
 				if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic()) {
-					c.setSeq(sToC.getSeq());
-					results.add(c);
+					if (set.isFeatured())
+						c.setSeq(sToC.getSeq());
+					else 
+						c.setSeq((short)i++);
 				}
+				results.add(c);
 			}
 		}
 		return results;

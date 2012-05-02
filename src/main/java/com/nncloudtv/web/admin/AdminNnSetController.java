@@ -25,7 +25,7 @@ import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
 import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.NnSetChannelManager;
+import com.nncloudtv.service.NnSetToNnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 
 @Controller
@@ -72,7 +72,7 @@ public class AdminNnSetController {
 		if (currentPage > totalPages)
 			currentPage = totalPages;		
 		List<NnSet> results = csMngr.list(currentPage, rowsPerPage, sortIndex, sortDirection, filter);
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		for (NnSet cs : results) {			
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<Object> cell = new ArrayList<Object>();
@@ -122,7 +122,7 @@ public class AdminNnSetController {
 	public void channelSeqAdjust(NnSet set, NnChannel channel, int seq, boolean delete, boolean edit) {
 		if (!set.isFeatured())
 			return;
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		List<NnSetToNnChannel> list = cscMngr.findBySet(set.getId());		
 		for (NnSetToNnChannel csc : list) {
 			if (!delete && csc.getSeq() >= seq) {
@@ -160,7 +160,7 @@ public class AdminNnSetController {
 	public @ResponseBody String deleteCh(@RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) long id,
 	                     OutputStream out) {
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		NnSetToNnChannel csc = cscMngr.findBySetAndChannel(set, id);
 		if (csc != null) {
 			int seq = csc.getSeq();
@@ -203,7 +203,7 @@ public class AdminNnSetController {
 			             @RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) int seq,
 	                     OutputStream out) {
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		NnSetToNnChannel csc = cscMngr.findBySetAndChannel(set, id);
 		if (csc != null) {
 			NnSetToNnChannel c1 = cscMngr.findBySetAndChannel(set, channel);
@@ -294,7 +294,7 @@ public class AdminNnSetController {
 	@RequestMapping("delete")
 	public @ResponseBody String delete(@RequestParam(required=false) long id) {
 		NnSetManager csMngr = new NnSetManager();
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		CategoryManager cMngr = new CategoryManager();
 		NnSet cs = csMngr.findById(id);		
 		List<NnSetToNnChannel> list = cscMngr.findBySet(cs.getId());
@@ -322,7 +322,7 @@ public class AdminNnSetController {
             @RequestParam(required=false) String seq) {
 		NnSetManager csMngr = new NnSetManager();
 		NnChannelManager cMngr = new NnChannelManager();
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		NnSet cs = csMngr.findById(id);
 		if (name != null) cs.setName(name);
 		if (intro != null) cs.setIntro(intro);

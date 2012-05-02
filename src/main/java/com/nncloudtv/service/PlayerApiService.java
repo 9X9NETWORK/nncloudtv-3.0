@@ -24,6 +24,7 @@ import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.QueueMessage;
 import com.nncloudtv.lib.YouTubeLib;
@@ -262,7 +263,7 @@ public class PlayerApiService {
 			if (set != null) {
 				result[0] += "piwik" + "\t" + set.getPiwik() + "\n";
 			}
-			List<NnChannel> channels = setMngr.findPlayerChannelsById(csId);			
+			List<NnChannel> channels = setMngr.findPlayerChannels(set);			
 			for (NnChannel c : channels) {
 				c.setSorting(NnChannelManager.getDefaultSorting(c));
 				result[2] += this.composeChannelLineupStr(c, mso) + "\n";
@@ -372,7 +373,7 @@ public class PlayerApiService {
 		
 		//pdr process
 		PdrManager pdrMngr = new PdrManager();
-		String ip = req.getRemoteAddr();
+		String ip = NnNetUtil.getIp(req); 		
 		pdrMngr.processPdr(user, device, session, pdr, ip);
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}    
@@ -393,11 +394,11 @@ public class PlayerApiService {
         if (set == null)
             return this.assembleMsgs(NnStatusCode.SET_INVALID, null);            
         
-        List<NnChannel> channels = setMngr.findPlayerChannelsById(set.getId());
+        List<NnChannel> channels = setMngr.findPlayerChannels(set);
         String result[] = {"", "", ""};
 
         Mso csMso = msoMngr.findNNMso();
-        //mso info        
+        //mso info
         result[0] += assembleKeyValue("name", csMso.getName());
         result[0] += assembleKeyValue("imageUrl", csMso.getLogoUrl()); 
         result[0] += assembleKeyValue("intro", csMso.getIntro());            

@@ -55,8 +55,8 @@ import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
-import com.nncloudtv.service.NnSetChannelManager;
 import com.nncloudtv.service.NnSetManager;
+import com.nncloudtv.service.NnSetToNnChannelManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.SnsAuthManager;
 import com.nncloudtv.service.TranscodingService;
@@ -211,7 +211,7 @@ public class CmsApiController {
 		}
 		
 		if (channelIds != null) {
-			NnSetChannelManager cscMngr = new NnSetChannelManager();
+			NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 			NnChannelManager channelMngr = new NnChannelManager();
 			List<NnSetToNnChannel> list = cscMngr.findBySet(setId);
 			for (NnSetToNnChannel sToC : list) {
@@ -416,7 +416,7 @@ public class CmsApiController {
 			ownershipMngr.delete(ownership);
 			log.info("remove ownership");
 		}
-		NnSetChannelManager cscMngr = new NnSetChannelManager();
+		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		// remove channels in set
 		List<NnSet> channelSets = ownershipMngr.findOwnedSetsByMso(msoId);
 		for (NnSet channelSet : channelSets) {

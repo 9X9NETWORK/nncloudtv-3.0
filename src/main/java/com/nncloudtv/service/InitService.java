@@ -238,7 +238,7 @@ public class InitService {
 	public void initSetAndChannels(boolean english) {
 		NnChannelManager channelMngr = new NnChannelManager();
 		NnSetManager setMngr = new NnSetManager();
-		NnSetChannelManager scMngr = new NnSetChannelManager();		
+		NnSetToNnChannelManager scMngr = new NnSetToNnChannelManager();		
 		InputStream input;
 		Workbook wb;
 		List<NnSet> setList = new ArrayList<NnSet>();
