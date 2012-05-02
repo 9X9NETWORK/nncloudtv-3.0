@@ -125,7 +125,7 @@ public class PlayerApiController {
 		this.playerApiService= playerApiService;
 	}	
 	
-	private int prepService(HttpServletRequest req) {		
+	private int prepService(HttpServletRequest req, boolean log) {		
 		/*
 		String userAgent = req.getHeader("user-agent");
 		if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))	 {
@@ -133,7 +133,8 @@ public class PlayerApiController {
 			log.info("from iOS");
 		}
 		*/ 
-		NnNetUtil.logUrl(req);
+		if (log)
+			NnNetUtil.logUrl(req);
 		HttpSession session = req.getSession();
 		session.setMaxInactiveInterval(60);
 		MsoManager msoMngr = new MsoManager();
@@ -166,7 +167,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> guestRegister(@RequestParam(value="ipg", required = false) String ipg, HttpServletRequest req, HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.guestRegister(req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -208,7 +209,7 @@ public class PlayerApiController {
 		log.info("signup: email=" + email + ";name=" + name + ";userToken=" + userToken + ";sphere=" + sphere + ";year=" + year + ";ui-lang=" + lang);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			output = playerApiService.signup(email, password, name, userToken, captcha, text, sphere, lang, year, isTemp, req, resp);
@@ -234,7 +235,7 @@ public class PlayerApiController {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.userTokenVerify(token, req, resp);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
@@ -253,7 +254,7 @@ public class PlayerApiController {
     public ResponseEntity<String> signout(@RequestParam(value="user", required=false) String userKey, HttpServletRequest req, HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			CookieHelper.deleteCookie(resp, CookieHelper.USER);
 			CookieHelper.deleteCookie(resp, CookieHelper.GUEST);
 			output = NnStatusMsg.getPlayerMsg(NnStatusCode.SUCCESS, locale);
@@ -286,10 +287,9 @@ public class PlayerApiController {
 	 */	
 	@RequestMapping(value="brandInfo")
 	public ResponseEntity<String> brandInfo(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
-		NnNetUtil.logUrl(req);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.brandInfo(req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);			
@@ -323,7 +323,7 @@ public class PlayerApiController {
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			boolean flatten = Boolean.parseBoolean(isFlatten);
 			output = playerApiService.category(category, lang, flatten);
 		} catch (Exception e) {
@@ -358,7 +358,7 @@ public class PlayerApiController {
 		log.info("user=" + userToken + ";device=" + deviceToken + ";session=" + session);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, false);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -404,7 +404,7 @@ public class PlayerApiController {
 		log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			this.prepService(req);		
+			this.prepService(req, true);		
 			output = playerApiService.setInfo(id, beautifulUrl);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -439,7 +439,7 @@ public class PlayerApiController {
 		log.info("subscribe: userToken=" + userToken+ "; channel=" + channelId + "; grid=" + gridId + "; set=" + setId + ";pos=" + pos);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -480,7 +480,7 @@ public class PlayerApiController {
 		log.info("userToken=" + userToken + "; channel=" + channelId + "; set=" + setId + "; seq=" + grid);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -565,7 +565,7 @@ public class PlayerApiController {
 		log.info("userToken=" + userToken + ";isUserInfo=" + userInfo + ";channel=" + channelIds + ";setInfo=" + setInfo);				
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			boolean isUserInfo = Boolean.parseBoolean(userInfo);
 			boolean isSetInfo = Boolean.parseBoolean(setInfo);
 			boolean isRequired = Boolean.parseBoolean(required);		
@@ -615,7 +615,7 @@ public class PlayerApiController {
 		log.info("params: channel:" + channelIds + ";user:" + userToken + ";ipg:" + ipgId);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);		
+			this.prepService(req, true);		
 			boolean isUserInfo = Boolean.parseBoolean(userInfo);
 			output =  playerApiService.programInfo(channelIds, userToken, ipgId, isUserInfo, sidx, limit);
 		} catch (Exception e){
@@ -652,7 +652,7 @@ public class PlayerApiController {
 		log.info("player input - userToken=" + userToken+ "; url=" + url + ";grid=" + grid + ";categoryId=" + categoryIds);				
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -693,7 +693,7 @@ public class PlayerApiController {
 		log.info("login: email=" + email);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.login(email, password, req, resp);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -722,7 +722,7 @@ public class PlayerApiController {
 		log.info("userPref: key(" + key + ");value(" + value + ")");
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -754,7 +754,7 @@ public class PlayerApiController {
 		log.info("setInfo: user=" + userToken + ";pos =" + pos);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			}
@@ -782,7 +782,7 @@ public class PlayerApiController {
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.staticContent(key, lang);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -807,7 +807,7 @@ public class PlayerApiController {
 		log.info("user:" + userToken);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -834,7 +834,7 @@ public class PlayerApiController {
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.listRecommended(lang);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -858,7 +858,7 @@ public class PlayerApiController {
 		log.info("user:" + token);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);		
+			this.prepService(req, true);		
 			output = playerApiService.deviceTokenVerify(token, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -884,7 +884,7 @@ public class PlayerApiController {
 		log.info("user:" + userToken + ";device=" + deviceToken);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
@@ -914,7 +914,7 @@ public class PlayerApiController {
 		log.info("user:" + userToken + ";device=" + deviceToken);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));			
 			output = playerApiService.deviceRemoveUser(deviceToken, userToken, req);
@@ -946,7 +946,7 @@ public class PlayerApiController {
 		log.info("user:" + user + ";session=" + session);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			output = playerApiService.userReport(user, device, session, comment);
@@ -983,7 +983,7 @@ public class PlayerApiController {
 		log.info("set user profile: key(" + key + ");value(" + value + ")");
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS) {
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			}
@@ -1011,7 +1011,7 @@ public class PlayerApiController {
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);		
+			this.prepService(req, true);		
 			output = playerApiService.getUserProfile(user);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -1047,7 +1047,7 @@ public class PlayerApiController {
 		log.info("user:" + userToken + ";to whom:" + toEmail + ";content:" + content);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);		
+			this.prepService(req, true);		
 			output = playerApiService.shareByEmail(userToken, toEmail, toName, subject, content, captcha, text);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -1073,7 +1073,7 @@ public class PlayerApiController {
 		log.info("user:" + token);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);		
+			this.prepService(req, true);		
 			output = playerApiService.requestCaptcha(token, action, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -1102,7 +1102,7 @@ public class PlayerApiController {
 		log.info("user:" + userToken + ";channel:" + channelId + ";sorting:" + sorting);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));		
 			output = playerApiService.saveSorting(userToken, channelId, sorting);
@@ -1135,7 +1135,7 @@ public class PlayerApiController {
 		log.info("saveShare(" + userToken + ")");
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));	
 			output = playerApiService.saveShare(userToken, channelId, programId, setId);
@@ -1161,7 +1161,7 @@ public class PlayerApiController {
 		log.info("ipgShare:" + id);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.loadShare(id);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -1191,7 +1191,7 @@ public class PlayerApiController {
 			HttpServletRequest req) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			boolean isChannelInfo = Boolean.parseBoolean(channelInfo);
 			boolean isEpisodeIndex = Boolean.parseBoolean(episodeIndex);
 			output = playerApiService.userWatched(userToken, count, isChannelInfo, isEpisodeIndex, channel);
@@ -1221,7 +1221,7 @@ public class PlayerApiController {
 		log.info("userToken=" + userToken + ";grid=" + grid);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			output = playerApiService.copyChannel(userToken, channelId, grid);
@@ -1252,7 +1252,7 @@ public class PlayerApiController {
 		log.info("userToken=" + userToken + ";grid1=" + grid1 + ";grid2=" + grid2);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			output = playerApiService.moveChannel(userToken, grid1, grid2);
@@ -1277,7 +1277,7 @@ public class PlayerApiController {
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req);
+			this.prepService(req, true);
 			output = playerApiService.search(text);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -1302,7 +1302,7 @@ public class PlayerApiController {
 		log.info("bad program:" + programId + ";reported by user:" + userToken);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			output = playerApiService.programRemove(programId, userToken);
@@ -1335,7 +1335,7 @@ public class PlayerApiController {
 		log.info("user:" + user + ";name:" + name + ";description:" + description + ";temp:" + temp);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));	
 			boolean isTemp= Boolean.parseBoolean(temp);		
@@ -1376,7 +1376,7 @@ public class PlayerApiController {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		
 		try {
-			int status = this.prepService(req);
+			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));	
 			boolean isTemp= Boolean.parseBoolean(temp);		
