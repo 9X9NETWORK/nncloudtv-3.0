@@ -36,6 +36,7 @@ public class NnChannelManager {
 		if (sourceUrl == null) 
 			return null;
 		String url = this.verifyUrl(sourceUrl);
+		log.info("valid url=" + url);
 		if (url == null) 
 			return null;
 		
@@ -255,20 +256,16 @@ public class NnChannelManager {
 
 	public String verifyUrl(String url) {
 		if (url == null) return null;
-		TranscodingService tranService = new TranscodingService();
-		if (!url.contains("youtube.com")) {
-			if (url.contains("facebook.com")) {
-				return url;
-			}
-			String podcastInfo[] = tranService.getPodcastInfo(url);			
-			if (!podcastInfo[0].equals("200") || !podcastInfo[1].contains("xml")) {
-				log.info("invalid url:" + url);		
-				return null;
-			}
-		} else {
-			url = YouTubeLib.formatCheck(url);
+		if (!url.contains("http://") && !url.contains("https://"))
+			return null;		
+		if (url.contains("youtube.com")) {
+			return YouTubeLib.formatCheck(url);
+		} else if (url.contains("facebook.com")) {
+			return url;
+		} else if (url.contains("www.maplestage.net") && !url.contains("9x9.tv")) {
+			return url;
 		}
-		return url;
+		return null;
 	}
 	
 	public static List<NnChannel> searchChannelEntries(String queryString) {
