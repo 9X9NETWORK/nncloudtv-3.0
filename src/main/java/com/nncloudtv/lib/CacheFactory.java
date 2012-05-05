@@ -20,8 +20,7 @@ public class CacheFactory {
 	public static MemcachedClient getClient() {		
 		try {
 			//TODO load it from memcache.properties, but make sure the property input stream is closed
-			//cache = new MemcachedClient(new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));
-			cache = new MemcachedClient(new InetSocketAddress("ec2-50-112-96-199.us-west-2.compute.amazonaws.com", CacheFactory.PORT_DEFAULT));			
+			cache = new MemcachedClient(new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));			
 		} catch (IOException e) {
 		   log.severe("memcache io exception");
 		   cache = null;
