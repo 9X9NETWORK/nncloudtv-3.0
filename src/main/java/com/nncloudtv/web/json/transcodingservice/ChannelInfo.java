@@ -2,7 +2,6 @@ package com.nncloudtv.web.json.transcodingservice;
 
 import java.util.List;
 
-import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.service.NnStatusCode;
 
 public class ChannelInfo {
@@ -12,7 +11,7 @@ public class ChannelInfo {
 	private String callBack;
 	private String paging;
 	private String totalPage;
-	private List<NnChannel> channels;
+	private List<Channel> channels;
 
 	public ChannelInfo() {
 		this.setErrorCode(String.valueOf(NnStatusCode.ERROR));
@@ -45,11 +44,11 @@ public class ChannelInfo {
 		this.callBack = callBack;
 	}
 
-	public List<NnChannel> getChannels() {
+	public List<Channel> getChannels() {
 		return channels;
 	}
 
-	public void setChannels(List<NnChannel> channels) {
+	public void setChannels(List<Channel> channels) {
 		this.channels = channels;
 	}
 

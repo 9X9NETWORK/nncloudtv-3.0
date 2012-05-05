@@ -28,9 +28,11 @@ public class NnChannelManager {
 	
 	private NnChannelDao channelDao = new NnChannelDao();
 	
+	/*
 	public List<NnChannel> findSince(Date since) {
 		return channelDao.findSince(since);
 	}
+	*/
 	
 	public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
 		if (sourceUrl == null) 
@@ -219,7 +221,20 @@ public class NnChannelManager {
 		return channels; 
 	}
 
-	public List<NnChannel> findAllByChannelIds(List<Long> channelIds) {
+	public List<NnChannel> findByType(short type) {
+		return channelDao.findByType(type);		
+	}
+	
+	public List<NnChannel> findMaples() {
+		List<NnChannel> variety = this.findByType(NnChannel.CONTENTTYPE_MAPLE_VARIETY);
+		List<NnChannel> soap = this.findByType(NnChannel.CONTENTTYPE_MAPLE_SOAP);
+		List<NnChannel> channels = new ArrayList<NnChannel>();
+		channels.addAll(variety);
+		channels.addAll(soap);
+		return channels;
+	}
+	
+	public List<NnChannel> findByChannelIds(List<Long> channelIds) {
 		List<NnChannel> channels = new ArrayList<NnChannel>();
 		for (Long id : channelIds) {
 			NnChannel channel = this.findById(id);
@@ -228,12 +243,11 @@ public class NnChannelManager {
 		return channels;		
 	}
 	
-	public List<NnChannel> findAllByStatus(short status) {
+	public List<NnChannel> findByStatus(short status) {
 		List<NnChannel> channels = channelDao.findAllByStatus(status);		
 		return channels;
 	}
 	
-	//!!! limit
 	public List<NnChannel> findAll() {
 		return channelDao.findAll();
 	}

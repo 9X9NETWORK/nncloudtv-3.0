@@ -608,7 +608,7 @@ public class PlayerApiService {
 			if (chArr.length > 1) {
 				List<Long> list = new ArrayList<Long>();
 				for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
-				channels = channelMngr.findAllByChannelIds(list);
+				channels = channelMngr.findByChannelIds(list);
 			} else {
 				NnChannel channel = channelMngr.findById(Long.parseLong(channelIds));
 				if (channel != null) channels.add(channel);					

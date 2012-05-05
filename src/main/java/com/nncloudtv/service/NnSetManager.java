@@ -186,29 +186,6 @@ public class NnSetManager {
 		}
 		return results;
 	}
-	
-	
-	public List<NnChannel> findPlayerChannels(NnSet set) {
-		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
-		NnChannelManager channelMngr = new NnChannelManager();		
-		List<NnSetToNnChannel> relations = dao.findBySet(set);
-		ArrayList<NnChannel> results = new ArrayList<NnChannel>();
-		
-		int i=1;
-		for (NnSetToNnChannel sToC : relations) {
-			NnChannel c = channelMngr.findById(sToC.getChannelId());			
-			if (c != null) {
-				if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic()) {
-					if (set.isFeatured())
-						c.setSeq(sToC.getSeq());
-					else 
-						c.setSeq((short)i++);
-				}
-				results.add(c);
-			}
-		}
-		return results;
-	}
 
 	public NnSet findById(long setId) {
 		return setDao.findById(setId);
@@ -231,6 +208,43 @@ public class NnSetManager {
 		return results;
 	}
 
+	public List<NnChannel> findPlayerChannels(NnSet set) {
+		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
+		NnChannelManager channelMngr = new NnChannelManager();		
+		List<NnSetToNnChannel> relations = dao.findBySet(set);
+		ArrayList<NnChannel> results = new ArrayList<NnChannel>();
+		
+		int i=1;
+		for (NnSetToNnChannel sToC : relations) {
+			NnChannel c = channelMngr.findById(sToC.getChannelId());			
+			if (c != null) {
+				if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic()) {
+					if (set.isFeatured())
+						c.setSeq(sToC.getSeq());
+					else 
+						c.setSeq((short)i++);
+				}
+				results.add(c);
+			}
+		}
+		return results;
+	}
+	
+	public List<NnChannel> findChannels(NnSet set) {
+		NnSetToNnChannelDao sToCDao = new NnSetToNnChannelDao();
+		NnChannelManager channelMngr = new NnChannelManager();		
+		List<NnSetToNnChannel> list = sToCDao.findBySet(set); 
+		ArrayList<NnChannel> results = new ArrayList<NnChannel>();		
+		for (NnSetToNnChannel nToC : list) {
+			NnChannel channel = channelMngr.findById(nToC.getChannelId());
+			if (channel != null) {
+				channel.setSeq(nToC.getSeq());
+				results.add(channel);
+			}
+		}
+		return results;
+	}
+	
 	public List<NnChannel> findChannelsById(long setId) {
 		NnSetToNnChannelDao sToCDao = new NnSetToNnChannelDao();
 		NnChannelManager channelMngr = new NnChannelManager();		

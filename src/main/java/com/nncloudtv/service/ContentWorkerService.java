@@ -20,7 +20,7 @@ public class ContentWorkerService {
 	private static int TASK_PROGRAM_VIDEO_PROCESS = 2; 	
 		
 	public void submit(int task, ContentWorker content, HttpServletRequest req) {
-		TranscodingService service = new TranscodingService();
+		DepotService service = new DepotService();
 		String[] transcodingEnv = service.getTranscodingEnv(req);
 		String transcodingServer = transcodingEnv[0] + "contentworker.php" + "?task=" + task;
 		String callbackUrl = transcodingEnv[1];

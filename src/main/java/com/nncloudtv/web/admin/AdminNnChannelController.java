@@ -57,7 +57,7 @@ public class AdminNnChannelController {
 				HttpServletRequest req,
 				@RequestParam(value="id",required=false) long id) {
 		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel c = channelMngr.findById(id);
+		NnChannel c = channelMngr.findById(id); 
 		if (c != null) {
 			if (c.getPiwik() == null) {
 				String piwikId = PiwikLib.createPiwikSite(0, c.getId(), req);
@@ -75,7 +75,10 @@ public class AdminNnChannelController {
 			    @RequestParam(value="sourceUrl", required=false)String url,
 				@RequestParam(value="name", required=false) String name,
 				@RequestParam(value="devel",required=false) boolean devel) {
-		channelMngr.create(url, name, req);
+		System.out.println("new channel create");
+		NnChannel c = channelMngr.create(url, name, req);
+		if (c == null)
+			return "fail"; 
 		return "OK";
 	}	
 		

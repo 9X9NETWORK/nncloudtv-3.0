@@ -1,7 +1,6 @@
 package com.nncloudtv.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -11,7 +10,6 @@ import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnUserReport;
 
 public class NnChannelDao extends GenericDao<NnChannel> {
 	
@@ -21,6 +19,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		super(NnChannel.class);
 	}	
 	
+	/*
 	public List<NnChannel> findSince(Date since) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<NnChannel> detached = new ArrayList<NnChannel>();
@@ -38,6 +37,23 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		}
 		return detached;		
 	}
+	*/
+	
+	public List<NnChannel> findByType(short type) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<NnChannel> detached = new ArrayList<NnChannel>(); 
+		try {
+			Query q = pm.newQuery(NnChannel.class);
+			q.setFilter("contentType == contentTypeParam");
+			q.declareParameters("short contentTypeParam");
+			@SuppressWarnings("unchecked")
+			List<NnChannel> channels = (List<NnChannel>) q.execute(type);
+			detached = (List<NnChannel>)pm.detachCopyAll(channels);
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}	
 	
 	public NnChannel save(NnChannel channel) {
 		if (channel == null) {return null;}

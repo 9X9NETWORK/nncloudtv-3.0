@@ -363,7 +363,7 @@ public class InitService {
 		MsoManager msoMngr = new MsoManager();
 		Mso mso = msoMngr.findNNMso();
 		NnChannelManager channelMngr = new NnChannelManager();		
-		TranscodingService tranService = new TranscodingService();
+		DepotService tranService = new DepotService();
 		boolean piwik = true;
 		int zeroProgramCnt = 0;
 		for (String entry : entries) {	

@@ -59,7 +59,7 @@ import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.NnSetToNnChannelManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.SnsAuthManager;
-import com.nncloudtv.service.TranscodingService;
+import com.nncloudtv.service.DepotService;
 import com.nncloudtv.web.json.facebook.FBPost;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -467,7 +467,7 @@ public class CmsApiController {
 			}
 			channel = channelMngr.save(channel);
 			if (channel != null && channel.getContentType() != NnChannel.CONTENTTYPE_FACEBOOK) { //!!!
-				TranscodingService tranService = new TranscodingService();
+				DepotService tranService = new DepotService();
 				tranService.submitToTranscodingService(channel.getId(), sourceUrl, req);
 				// piwik
 				PiwikLib.createPiwikSite(0, channel.getId(), req);
@@ -533,7 +533,7 @@ public class CmsApiController {
 		
 		// submit to transcoding server again
 		if (channel != null && channel.getContentType() != NnChannel.CONTENTTYPE_FACEBOOK) { //!!!
-			TranscodingService tranService = new TranscodingService();
+			DepotService tranService = new DepotService();
 			tranService.submitToTranscodingService(channel.getId(), sourceUrl, req);
 		}
 		

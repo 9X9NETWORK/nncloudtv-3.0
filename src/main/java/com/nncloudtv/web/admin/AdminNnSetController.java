@@ -39,7 +39,7 @@ public class AdminNnSetController {
 	public AdminNnSetController(NnSetManager setMngr) {
 		this.setMngr = setMngr;		
 	}	
-	
+
 	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
 	public void list(@RequestParam(value = "page")   Integer      currentPage,
 	                 @RequestParam(value = "rows")   Integer      rowsPerPage,
@@ -262,11 +262,11 @@ public class AdminNnSetController {
 	                 @RequestParam(required = false) String       searchString,
 	                 @RequestParam(required = false) long       set,
 	                 OutputStream out) {
-		NnSetManager csMngr = new NnSetManager();
+		NnSetManager setMngr = new NnSetManager();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
-		NnSet cs = csMngr.findById(set);
-		List<NnChannel> channels = csMngr.findChannelsById(cs.getId());
+		NnSet s = setMngr.findById(set);
+		List<NnChannel> channels = setMngr.findChannels(s);
 		for (NnChannel c : channels) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<Object> cell = new ArrayList<Object>();			
@@ -287,21 +287,14 @@ public class AdminNnSetController {
 		return "OK";		
 	}
 
-	/*
-	@RequestMapping(value = "create", params = {"name", "intro", "featured", "lang"})
-	public @ResponseBody String create(@RequestParam String name,	                                   
-	*/
 	@RequestMapping("delete")
 	public @ResponseBody String delete(@RequestParam(required=false) long id) {
 		NnSetManager csMngr = new NnSetManager();
-		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
-		CategoryManager cMngr = new CategoryManager();
+		NnSetToNnChannelManager sToNMngr = new NnSetToNnChannelManager();
 		NnSet cs = csMngr.findById(id);		
-		List<NnSetToNnChannel> list = cscMngr.findBySet(cs.getId());
-		cscMngr.deleteAll(list);	
-				
-//		CategoryChannelSetManager ccsMngr = new CategoryChannelSetManager();
-//		List<Category> list2 = cMngr.findBySet(cs);
+		List<NnSetToNnChannel> list = sToNMngr.findBySet(cs.getId());
+		sToNMngr.deleteAll(list);	
+		CategoryManager cMngr = new CategoryManager();				
 		cMngr.deleteCatToSetBySetId(id);
 		
 		csMngr.delete(cs);

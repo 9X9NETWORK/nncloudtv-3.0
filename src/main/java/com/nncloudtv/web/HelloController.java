@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.YouTubeLib;
@@ -62,7 +63,35 @@ public class HelloController {
 		message += log.getLevel(); 
         return new ModelAndView("hello", "message", message);
     }    
-	
+
+	//basic test
+    @RequestMapping("setCookie")
+    public ModelAndView setCookie(
+    		HttpServletResponse resp,
+    		HttpServletRequest req) {
+		String a = "abcdefghijklmnopqrstuvwxyz";
+		String v1 = a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+
+		            a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+
+		            a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a;
+		String v2 = v1;
+		System.out.println("length:" + v2.length());
+    	CookieHelper.setCookie(resp, "test2", v2);
+    	return new ModelAndView("hello", "message", "hello");
+    }
+
+    @RequestMapping("getCookie")
+    public ModelAndView setCookie(HttpServletRequest req) {    		
+    	String cookie = CookieHelper.getCookie(req, "test");
+    	System.out.println("cookie:" + cookie);
+    	String cookie1 = CookieHelper.getCookie(req, "test1");
+    	System.out.println("cookie:" + cookie1);
+    	String cookie2 = CookieHelper.getCookie(req, "test2");
+    	System.out.println("cookie:" + cookie2);
+    	String cookie3 = CookieHelper.getCookie(req, "test3");
+    	System.out.println("cookie:" + cookie3);
+    	return new ModelAndView("hello", "message", cookie);
+    }
+    
 	//basic test
     @RequestMapping("world")
     public ModelAndView world(HttpServletRequest req) throws Exception {
@@ -327,8 +356,10 @@ public class HelloController {
     //test ip behind proxy, aka load balancer
     @RequestMapping("getIp")
     public ResponseEntity<String> getIp(HttpServletRequest req) {
+    	String oriIp = req.getRemoteAddr();
     	String ip = NnNetUtil.getIp(req);
-    	return NnNetUtil.textReturn(ip);
+    	String output = "ori ip:" + oriIp + "\n" + ";process ip:" + ip;
+    	return NnNetUtil.textReturn(output);
     }
     
 }
