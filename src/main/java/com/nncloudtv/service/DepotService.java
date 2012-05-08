@@ -240,17 +240,11 @@ public class DepotService {
 		String url = NnNetUtil.getUrlRoot(req);
 		String env = "office";
 		String callback_env = "_callback";
-		if (url.contains("9x9tvalpha") || url.contains("alpha.9x9.tv") || url.contains("alpha.5f.tv")) {
+		if (url.contains("alpha.9x9.tv")) {
 			env = "alpha";
-		} else if (url.contains("9x9tvbeta") || url.contains("beta.9x9.tv") || url.contains("beta.5f.tv")){
-			env = "beta";
-		} else if (url.contains("9x9tvdev") || url.contains("dev.9x9.tv") || url.contains("dev.5f.tv")){
+		} else if (url.contains("dev1.9x9.tv") || url.contains("dev2.9x9.tv")){
 			env = "dev";
-		} else if (url.contains("9x9tvqa") || url.contains("qa.9x9.tv") || url.contains("qa.5f.tv")) {
-			env = "qa";
-		} else if (url.contains("9x9tvprod") || url.contains("prod.9x9.tv") || url.contains("prod.5f.tv") ||
-				   url.contains("9x9.tv") || url.contains("www.9x9.tv") || 
-				   url.contains("5f.tv") || url.contains("www.5f.tv")) {
+		} else if (url.contains("www.9x9.tv")) {				   
 			env = "prod";
 		}
 		callback_env = env + callback_env;
