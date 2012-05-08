@@ -69,27 +69,36 @@ public class DepotService {
 			channelMngr.save(channel);
 			return new PostResponse(String.valueOf(NnStatusCode.SUCCESS), "SUCCESS"); 
 		}
-		//change status to WAIT_FOR_APPROVAL at the end
-		if (channel.getStatus() == NnChannel.STATUS_PROCESSING) { 
-			String name = podcast.getTitle();
+		String name = podcast.getTitle();
+		if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
+			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {			
+			channel.setOriName(name);
+		} else {
 			channel.setName(name);
-			//!!!!
-			//if (name != null) { channel.setNameSearch(name.toLowerCase()); };			
-			String intro = podcast.getDescription();
-			if (intro!= null && intro.length() > 500) {
-				intro = intro.substring(0, 499);
-			}
-			if (intro != null) { intro = intro.replaceAll("\\s", " ");}
-			channel.setIntro(intro);
-			channel.setImageUrl(podcast.getImage());
+		}		
+		String intro = podcast.getDescription();
+		if (intro!= null && intro.length() > 500) {
+			intro = intro.substring(0, 499);
+		}
+		if (intro != null) { intro = intro.replaceAll("\\s", " ");}
+		if (podcast.getContentType() != null) {
+			channel.setContentType(Short.parseShort(podcast.getContentType()));
+		}		
+		channel.setIntro(intro);
+		channel.setImageUrl(podcast.getImage());
+		if (channel.getStatus() == NnChannel.STATUS_PROCESSING) {			
+			channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
+		}
+		if (channel.getStatus() != NnChannel.STATUS_PROCESSING && channel.getStatus() != NnChannel.STATUS_WAIT_FOR_APPROVAL) {
+			channel.setStatus(this.convertStatus(Short.valueOf(podcast.getErrorCode())));
 		}
 		
-		if (podcast.getLastUpdateTime() != null) {
+		if (podcast.getLastUpdateTime() != null)
 			channel.setTranscodingUpdateDate(podcast.getLastUpdateTime());
-		}
 		channel.setPublic(true);
 		channel.setErrorReason("");
-		channelMngr.save(channel);		
+		
+		channelMngr.save(channel);
 		return new PostResponse(String.valueOf(NnStatusCode.SUCCESS), "SUCCESS");
 	}
 

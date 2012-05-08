@@ -6,10 +6,12 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.service.DepotService;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.NnStatusMsg;
-import com.nncloudtv.service.DepotService;
 import com.nncloudtv.web.json.transcodingservice.Channel;
 import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
 import com.nncloudtv.web.json.transcodingservice.PostResponse;
@@ -49,17 +51,25 @@ public class DepotController {
 
 	protected static final Logger log = Logger.getLogger(DepotController.class.getName());
 	
-	private DepotService transcodingService;
+	private DepotService depotService;
 	
 	@Autowired
-	public DepotController(DepotService transcodingService) {
-		this.transcodingService = transcodingService;
+	public DepotController(DepotService depotService) {
+		this.depotService = depotService;
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public String exception(Exception e) {
+	public @ResponseBody PostResponse exception(Exception e, HttpServletRequest req, HttpServletResponse resp) {
+    	if (e.getClass().equals(HttpMediaTypeNotSupportedException.class)) {
+    		log.info("HttpMediaTypeNotSupportedException");
+    	}
 		NnLogUtil.logException(e);
-		return "error/blank";
+		PostResponse post = new PostResponse();
+		post.setErrorCode(String.valueOf(NnStatusCode.ERROR));
+		post.setErrorReason("error");
+		resp.setStatus(200);
+		log.info("continue.................");
+		return post;
 	}		
 	
 	/**
@@ -93,9 +103,9 @@ public class DepotController {
 		PostResponse resp = new PostResponse(
 				String.valueOf(NnStatusCode.ERROR), NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, Locale.ENGLISH));		
 		try {
-			resp = transcodingService.updateProgram(rtnProgram);
+			resp = depotService.updateProgram(rtnProgram);
 		} catch (Exception e) {
-			resp = transcodingService.handleException(e);
+			resp = depotService.handleException(e);
 		}
 		log.info(resp.getErrorCode());
 		return NnNetUtil.textReturn("OK");
@@ -128,7 +138,7 @@ public class DepotController {
 			} else {
 				channels = channelMngr.findMaples();
 			}
-			String[] transcodingEnv = transcodingService.getTranscodingEnv(req);		
+			String[] transcodingEnv = depotService.getTranscodingEnv(req);		
 			String callbackUrl = transcodingEnv[1];		
 			List<Channel> cs = new ArrayList<Channel>();
 			for (NnChannel c : channels) {
@@ -144,7 +154,7 @@ public class DepotController {
 			info.setChannels(cs);
 			info.setCallBack(callbackUrl);
 		} catch (Exception e) {
-			PostResponse resp = transcodingService.handleException(e);
+			PostResponse resp = depotService.handleException(e);
 			info.setErrorCode(resp.getErrorCode());
 			info.setErrorReason(resp.getErrorReason());
 		}
@@ -167,17 +177,54 @@ public class DepotController {
 	 * } 
 	 */
 	@RequestMapping("channelUpdate")
-	public  @ResponseBody PostResponse channelUpdate(@RequestBody RtnChannel podcast) {
+	public @ResponseBody PostResponse channelUpdate(@RequestBody RtnChannel podcast) {
 		log.info(podcast.toString());
 		PostResponse resp = new PostResponse(
-				String.valueOf(NnStatusCode.ERROR), NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, Locale.ENGLISH));
+			String.valueOf(NnStatusCode.ERROR), NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, Locale.ENGLISH));
 		try {
-			resp = transcodingService.updateChannel(podcast);
+			resp = depotService.updateChannel(podcast);
 		} catch (Exception e) {
-			resp = transcodingService.handleException(e);
+			resp = depotService.handleException(e);
 		}
 		return resp;
 	}
 
+	/**
+	 * Transcoding service update Podcast Channel Information
+	 * 
+	 * @param podcast podcast in json type <br/>
+	 * {  <br/>
+	 *    "action":"updateChannel", <br/>
+	 *    "key":"channel_key_id", <br/>
+	 *    "title":"channel_title", <br/>
+	 *    "description":"channel_description", <br/>    
+	 *    "pubDate":"channel_pubDate", <br/>
+	 *    "image":"channel_thumbnail",<br/>   
+	 *    "errorCode":0, <br/>
+	 *    "errorReason":"error description" <br/>     
+	 * } 
+	 */
+	@RequestMapping("channelUpdateTest")
+	public  @ResponseBody PostResponse channelUpdateTest(
+            @RequestParam(value="key", required=false)String key,
+            @RequestParam(value="title", required=false)String title			
+			) {
+		RtnChannel podcast = new RtnChannel();
+		podcast.setKey(key);
+		podcast.setTitle(title);
+		podcast.setErrorCode("0");
+		this.channelUpdate(podcast);
+		
+		log.info(podcast.toString());
+		PostResponse resp = new PostResponse(
+				String.valueOf(NnStatusCode.ERROR), NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, Locale.ENGLISH));
+		try {
+			resp = depotService.updateChannel(podcast);
+		} catch (Exception e) {
+			resp = depotService.handleException(e);
+		}
+		return resp;
+	}
+	
 	
 }

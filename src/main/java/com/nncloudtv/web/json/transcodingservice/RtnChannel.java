@@ -1,14 +1,18 @@
 package com.nncloudtv.web.json.transcodingservice;
 
+import java.io.Serializable;
+
 /**
  * Receive Channel information from Transcoding Service 
  */
-public class RtnChannel {
+public class RtnChannel implements Serializable{
 
+	private static final long serialVersionUID = -1003729993905988235L;
 	private String action;
 	private String key; //channel key
 	private String title;
 	private String description;
+	private String contentType;
 	private String pubDate;
 	private String lastUpdateTime;
 	private String image;
@@ -71,6 +75,12 @@ public class RtnChannel {
 	public void setLastUpdateTime(String lastUpdateTime) {
 		this.lastUpdateTime = lastUpdateTime;
 	}
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	} 	
 	public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("key: " + key + ";");
@@ -79,6 +89,5 @@ public class RtnChannel {
         buffer.append("errorCode: " + errorCode + ";");
         buffer.append("errorReason: " + errorReason + ";");
         return buffer.toString();
-    } 
-	
+    }
 }
