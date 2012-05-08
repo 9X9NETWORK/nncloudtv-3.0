@@ -75,8 +75,10 @@ public class AdminNnChannelController {
 			    @RequestParam(value="sourceUrl", required=false)String url,
 				@RequestParam(value="name", required=false) String name,
 				@RequestParam(value="devel",required=false) boolean devel) {
-		System.out.println("new channel create");
-		NnChannel c = channelMngr.create(url, name, req);
+		NnChannel c = channelMngr.findBySourceUrl(channelMngr.verifyUrl(url));
+		if (c != null)
+			return "Old channel:" + c.getId();
+		c = channelMngr.create(url, name, req);
 		if (c == null)
 			return "fail"; 
 		return "OK";
