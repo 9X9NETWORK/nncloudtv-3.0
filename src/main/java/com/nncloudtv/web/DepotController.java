@@ -68,7 +68,6 @@ public class DepotController {
 		post.setErrorCode(String.valueOf(NnStatusCode.ERROR));
 		post.setErrorReason("error");
 		resp.setStatus(200);
-		log.info("continue.................");
 		return post;
 	}		
 	
