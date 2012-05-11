@@ -69,6 +69,7 @@ public class NnProgram implements Serializable {
 	//general
 	public static short STATUS_OK = 0;
 	public static short STATUS_ERROR = 1;
+	public static short STATUS_NEEDS_REVIEWED = 2;
 	//quality
 	public static short STATUS_BAD_QUALITY = 101;	
 	

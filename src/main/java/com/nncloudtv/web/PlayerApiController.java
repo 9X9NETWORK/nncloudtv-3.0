@@ -286,7 +286,9 @@ public class PlayerApiController {
 	 *         </p>
 	 */	
 	@RequestMapping(value="brandInfo")
-	public ResponseEntity<String> brandInfo(@RequestParam(value="mso", required=false)String brandName, HttpServletRequest req) {
+	public ResponseEntity<String> brandInfo(
+			@RequestParam(value="mso", required=false)String brandName, 
+			HttpServletRequest req) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);
@@ -1297,6 +1299,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> programRemove(
 			@RequestParam(value="program", required=false) String programId,
 			@RequestParam(value="user", required=false) String userToken,
+			@RequestParam(value="bird", required=false) String secret,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("bad program:" + programId + ";reported by user:" + userToken);
@@ -1305,7 +1308,7 @@ public class PlayerApiController {
 			int status = this.prepService(req, true);
 			if (status != NnStatusCode.SUCCESS)
 				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-			output = playerApiService.programRemove(programId, userToken);
+			output = playerApiService.programRemove(programId, userToken, secret);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {

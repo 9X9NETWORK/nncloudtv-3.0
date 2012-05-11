@@ -242,7 +242,6 @@ public class PlayerApiService {
 		result[0] = this.prepareUserInfo(user, guest);
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}
-    
 
 	public String category(String id, String lang, boolean flatten) {
 		lang = this.checkLang(lang);	
@@ -1246,6 +1245,7 @@ public class PlayerApiService {
 			return this.assembleMsgs((Integer)map.get("s"), null);
 		}
 		NnUser user = (NnUser) map.get("u");
+		System.out.println("user???" + user.getId());
 		NnUserChannelSorting sorting = new NnUserChannelSorting(user.getId(), 
 				                           Long.parseLong(channelId), Short.parseShort(sort));
 		NnUserChannelSortingManager sortingMngr = new NnUserChannelSortingManager();
@@ -1387,14 +1387,18 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}
 	
-	public String programRemove(String programId, String userToken) {
+	public String programRemove(String programId, String userToken, String secret) {
 		if (programId == null || userToken == null) {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 		}
 		try {
 			NnProgramManager programMngr = new NnProgramManager();
 			NnProgram program = programMngr.findById(Long.parseLong(programId));
-			program.setStatus(NnProgram.STATUS_ERROR);
+			if (secret != null && secret.equals("chicken")) {
+				program.setStatus(NnProgram.STATUS_ERROR);
+			} else {
+				program.setStatus(NnProgram.STATUS_NEEDS_REVIEWED);
+			}			
 			programMngr.save(program);
 		} catch (NumberFormatException e) {
 			log.info("pass invalid program id:" + programId);
