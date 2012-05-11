@@ -16,6 +16,18 @@ public class NnUserChannelSortingDao extends GenericDao<NnUserChannelSorting>{
 		super(NnUserChannelSorting.class);
 	}
 
+	public NnUserChannelSorting save(NnUser user, NnUserChannelSorting sorting) {
+		if (user == null || sorting == null) {return null;}		
+		PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
+		try {
+			pm.makePersistent(sorting);
+			sorting = pm.detachCopy(sorting);
+		} finally {
+			pm.close();
+		}
+		return sorting;
+	}
+	
 	public NnUserChannelSorting findByUserAndChannel(NnUser user, long channelId) {
 		PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
 		
@@ -30,9 +42,11 @@ public class NnUserChannelSortingDao extends GenericDao<NnUserChannelSorting>{
 				s = sorting.get(0);
 				s = pm.detachCopy(s);
 			}
+			System.out.println("sorting found???" + sorting.size());
 		} finally {
 			pm.close();
 		}
+		System.out.println("sorting found???" + s);
 		return s;		
 	}
 	

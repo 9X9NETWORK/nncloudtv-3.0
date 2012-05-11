@@ -24,7 +24,7 @@ public class NnUserChannelSortingManager {
 			existed.setSort(sorting.getSort());
 		}
 		existed.setUpdateDate(now);
-		return sortingDao.save(existed);		
+		return sortingDao.save(user, existed);		
 	}		
 	
 	public NnUserChannelSorting findByUserAndChannel(NnUser user, long channelId) {		

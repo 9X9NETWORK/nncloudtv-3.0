@@ -41,10 +41,11 @@ public class NnUserDao extends GenericDao<NnUser> {
 	//use either shard or token to determine partition, default shard 1 if nothing
 	public static PersistenceManager getPersistenceManager(short shard, String token) {
 		if (shard != 0) {
-			if (shard != 1)
+			if (shard != 1) {
 				return PMF.getNnUser2().getPersistenceManager();
-			else 
+			} else {
 				return PMF.getNnUser1().getPersistenceManager();
+			}
 		}
 		if (token != null) {
 			if (token.contains("2-")) {
