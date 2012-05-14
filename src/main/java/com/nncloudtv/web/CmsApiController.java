@@ -402,7 +402,10 @@ public class CmsApiController {
 		NnProgramManager programMngr = new NnProgramManager();
 		NnProgram program = programMngr.findById(programId);
 		if (program != null) {
+			long channelId = program.getChannelId();
 			programMngr.delete(program);
+			log.info("program deleted, reorder program sequence");
+			updateAllProgramsSeq(channelId);
 		}
 	}
 	
