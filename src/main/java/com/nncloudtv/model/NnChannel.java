@@ -42,6 +42,7 @@ public class NnChannel implements Serializable {
 	public static String IMAGE_RADIO_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/cms/radio.jpg";
 	public static String IMAGE_ERROR_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/error.png";
 	public static String IMAGE_FB_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif";
+	public static String IMAGE_WATERMARK_URL= "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
 	
 	@Persistent
 	private boolean isPublic;

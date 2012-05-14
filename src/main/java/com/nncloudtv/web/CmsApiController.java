@@ -832,7 +832,7 @@ public class CmsApiController {
 			programMngr.save(program);
 			
 		} else {			
-			program = new NnProgram("New Program", "New Program", NnChannel.IMAGE_PROCESSING_URL, NnProgram.TYPE_VIDEO);
+			program = new NnProgram("New Program", "New Program", NnChannel.IMAGE_WATERMARK_URL, NnProgram.TYPE_VIDEO);
 			program.setPublic(false);
 			program.setType(NnProgram.TYPE_VIDEO);
 			programMngr.save(program);
@@ -846,7 +846,7 @@ public class CmsApiController {
 	public @ResponseBody Long createChannelSkeleton() {
 		
 		NnChannelManager channelMngr = new NnChannelManager();		
-		NnChannel channel = new NnChannel("New Channel", "New Channel", NnChannel.IMAGE_PROCESSING_URL);
+		NnChannel channel = new NnChannel("New Channel", "New Channel", NnChannel.IMAGE_WATERMARK_URL);
 		channel.setPublic(false);
 		channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
 		channel.setContentType(NnChannel.CONTENTTYPE_MIXED); // a channel type in podcast does not allow user to add program in it, so change to mixed type
