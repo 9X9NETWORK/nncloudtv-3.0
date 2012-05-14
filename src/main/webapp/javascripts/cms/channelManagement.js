@@ -351,7 +351,7 @@ var page$ = {
         var swfupload_settings = {
           flash_url:              cms.getExternalRootPath() + '/javascripts/swfupload/swfupload.swf',
           upload_url:             cms.getS3UploadBucket(),
-          file_size_limit:        '100 MB',
+          file_size_limit:        '300 MB',
           file_types:             cms.audioTypes,
           file_types_description: 'Audio Files',
           file_post_name:         'file',
