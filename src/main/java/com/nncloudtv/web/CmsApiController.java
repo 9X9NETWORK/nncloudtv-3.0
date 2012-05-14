@@ -345,7 +345,6 @@ public class CmsApiController {
 			}
 			// remove some unused field to reduce cached size
 			set.setIntro("");
-			set.setImageUrl("");
 		}
 		class NnSetComparator implements Comparator<NnSet> {  // yes, I know, its a little dirty
 			public int compare(NnSet set1, NnSet set2) {
