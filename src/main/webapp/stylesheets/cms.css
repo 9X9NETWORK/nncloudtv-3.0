@@ -40,7 +40,7 @@ body {
 .header .sg{ background:url(../images/cms/icon_sg.png) no-repeat; width:38px; height:56px; display:block; float:left}
 .header img{ height: 65px; }
 
-/*.menuA:hover,*/ .menuA_active {
+.menuA_active {
   background: url(../images/cms/menu-shrinked.png) no-repeat 0 0;
   width:      114px;
   height:     55px;
@@ -52,7 +52,7 @@ body {
   height:     55px;
   display:    block;
 }
-/*.menuB:hover,*/ .menuB_active {
+.menuB_active {
   background: url(../images/cms/menu-shrinked.png) no-repeat -114px 0;
   width:      112px;
   height:     55px;
@@ -64,7 +64,7 @@ body {
   height:     55px;
   display:    block;
 }
-/*.menuC:hover,*/ .menuC_active {
+.menuC_active {
   background: url(../images/cms/menu-shrinked.png) no-repeat -226px 0px;
   width:      0px;
   height:     55px;
@@ -76,7 +76,7 @@ body {
   height:     55px;
   display:    block;
 }
-/*.menuD:hover,*/ .menuD_active {
+.menuD_active {
   background: url(../images/cms/menu-shrinked.png) no-repeat -226px 0px;
   width:      112px;
   height:     55px;
@@ -88,12 +88,11 @@ body {
   height:     55px;
   display:    block;
 }
-/*.menuE:hover,*/ .menuE_active {
+.menuE_active {
   background: url(../images/cms/menu-shrinked.png) no-repeat -338px 0px;
   width:      114px;
   height:     55px;
   display:    block;
-*/
 }
 .menuE {
   background: url(../images/cms/menu-shrinked.png) no-repeat -338px -59px;
