@@ -216,8 +216,8 @@ public class NnProgramManager {
 					        url1, 
 					        url2, 
 					        url3, 
-					        url4,					        
-					        "", //pubDate
+					        url4,			
+					        String.valueOf(p.getUpdateDate().getTime()),
 					        p.getComment()};
 			output = output + NnStringUtil.getDelimitedStr(ori);
 			output = output.replaceAll("null", "");

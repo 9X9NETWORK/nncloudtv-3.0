@@ -1,6 +1,5 @@
 package com.nncloudtv.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +25,6 @@ import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.lib.QueueMessage;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
 import com.nncloudtv.model.Category;
@@ -86,12 +84,7 @@ public class PlayerApiService {
     public int addMsoInfoVisitCounter(boolean readOnly) {
     	if (!readOnly) {
     		if (MsoConfigManager.isQueueEnabled(true)) {
-    	        try {
-    	        	log.info("quque enabled");
-					new QueueMessage().fanout("localhost",QueueMessage.VISITOR_COUNTER, null);
-				} catch (IOException e) {
-					NnLogUtil.logException((Exception) e);
-				}
+				//new QueueMessage().fanout("localhost",QueueMessage.VISITOR_COUNTER, null);
     		} else {
     			log.info("quque not enabled");
     			return msoMngr.addMsoVisitCounter(readOnly);

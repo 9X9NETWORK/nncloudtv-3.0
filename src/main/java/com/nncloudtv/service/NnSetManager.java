@@ -14,7 +14,6 @@ import com.nncloudtv.dao.NnSetDao;
 import com.nncloudtv.dao.NnSetToNnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.PMF;
-import com.nncloudtv.lib.QueueMessage;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
@@ -117,7 +116,7 @@ public class NnSetManager {
 				log.info("throw to queue <<<<<<<" + set.getChannelCnt());
 				obj[0] = set;
 				obj[1] = newChCnt;
-		        new QueueMessage().fanout("localhost",QueueMessage.SET_CUD_RELATED, obj);
+		        //new QueueMessage().fanout("localhost",QueueMessage.SET_CUD_RELATED, obj);
 			} else {
 				this.processChannelRelatedCounter(set, newChCnt);
 				log.info("process channel related");

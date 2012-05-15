@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.JDOFatalDataStoreException;
 import javax.jdo.PersistenceManager;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,9 +23,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
-import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -40,16 +40,13 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.service.PlayerApiService;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.QueueingConsumer;
+import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
  
 @Controller
 @RequestMapping("hello")
 public class HelloController {
 
-	protected static final Logger log = Logger.getLogger(HelloController.class.getName());
+	protected static final Logger log = Logger.getLogger(HelloController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) { 
@@ -57,40 +54,6 @@ public class HelloController {
 		return "hello";
  
 	}
-	@RequestMapping("logger")
-    public ModelAndView logger(HttpServletRequest req) throws Exception {
-		String message = log.getName() + "\n";
-		message += log.getLevel(); 
-        return new ModelAndView("hello", "message", message);
-    }    
-
-	//basic test
-    @RequestMapping("setCookie")
-    public ModelAndView setCookie(
-    		HttpServletResponse resp,
-    		HttpServletRequest req) {
-		String a = "abcdefghijklmnopqrstuvwxyz";
-		String v1 = a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+
-		            a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+
-		            a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a+a;
-		String v2 = v1;
-		System.out.println("length:" + v2.length());
-    	CookieHelper.setCookie(resp, "test2", v2);
-    	return new ModelAndView("hello", "message", "hello");
-    }
-
-    @RequestMapping("getCookie")
-    public ModelAndView setCookie(HttpServletRequest req) {    		
-    	String cookie = CookieHelper.getCookie(req, "test");
-    	System.out.println("cookie:" + cookie);
-    	String cookie1 = CookieHelper.getCookie(req, "test1");
-    	System.out.println("cookie:" + cookie1);
-    	String cookie2 = CookieHelper.getCookie(req, "test2");
-    	System.out.println("cookie:" + cookie2);
-    	String cookie3 = CookieHelper.getCookie(req, "test3");
-    	System.out.println("cookie:" + cookie3);
-    	return new ModelAndView("hello", "message", cookie);
-    }
     
 	//basic test
     @RequestMapping("world")
@@ -104,8 +67,8 @@ public class HelloController {
     @RequestMapping("log")
     public ModelAndView log()  {
     	log.info("----- hello log -----");
-    	log.warning("----- hello warning -----");
-    	log.severe("----- hello severe -----");
+    	log.warn("----- hello warning -----");
+    	log.fatal("----- hello severe -----");
         return new ModelAndView("hello", "message", "log");
     }    
     
@@ -193,10 +156,10 @@ public class HelloController {
 				pm.close();
 			}
     	} catch (JDOFatalDataStoreException e){
-    		log.severe("Fatal Exception");
+    		log.info("Fatal Exception");
     	} catch (Throwable t) {    		
     		if (t.getCause() instanceof JDOFatalDataStoreException) {
-    			log.severe("");
+    			log.info("");
     		}	
     	}
         return "OK";
@@ -214,8 +177,10 @@ public class HelloController {
 	@RequestMapping("cache_set")
 	public ResponseEntity<String> cache_set() {
 		String output = "No Cache";
+		
 		String cacheValue = (String)CacheFactory.get("hello");
 		output = "original: " + cacheValue + "\n";
+		        
 		if (CacheFactory.isRunning) {
 			output += "it's running"  + "\n";
 			if (cacheValue == null) {
@@ -276,7 +241,8 @@ public class HelloController {
 		setMngr.addChannels(set, channels);
 		return NnNetUtil.textReturn(String.valueOf(status));
 	}
-	        
+	     
+	/*
     @RequestMapping("fanout")
     public @ResponseBody String fanout(@RequestParam String exchange_name) throws IOException {
  	   ConnectionFactory factory = new ConnectionFactory();
@@ -291,7 +257,32 @@ public class HelloController {
        connection.close();
        return "OK";
     }
- 
+    */
+
+    @RequestMapping("queue")
+    public @ResponseBody String queue(HttpServletRequest req, @RequestParam String msg) throws IOException {
+    	ChannelInfo info = new ChannelInfo();
+    	info.setErrorCode("lalala");
+    	System.out.println(info.toString());
+    	QueueFactory.add(req, msg, null);
+    	
+    	/*
+    	ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        Connection connection = factory.newConnection();
+        Channel channel = connection.createChannel();        
+        channel.queueDeclare(QueueMessage.QUEUE_NNCLOUDTV, true, false, false, null);        
+        channel.basicPublish( "", QueueMessage.QUEUE_NNCLOUDTV, 
+                    MessageProperties.PERSISTENT_TEXT_PLAIN,
+                    msg.getBytes());
+        System.out.println(" [x] Sent '" + msg + "'");
+        
+        channel.close();
+        connection.close();
+        */
+        return "OK";
+    }
+    
     @RequestMapping("youtube")
     public ModelAndView youtube() { 
     	Map<String, String> maps = YouTubeLib.getYouTubeEntry("nike", true);
@@ -333,6 +324,7 @@ public class HelloController {
 	}
 	
     //rabbitmqctl list_queues
+	/*
     @RequestMapping("receive")
     public @ResponseBody String receive() throws IOException, InterruptedException {
     	String queue_name = "hello";
@@ -352,6 +344,8 @@ public class HelloController {
 
     	return "OK";
     }
+    */
+    
 
     //test ip behind proxy, aka load balancer
     @RequestMapping("getIp")

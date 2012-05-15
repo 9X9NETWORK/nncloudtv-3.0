@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.FacebookLib;
-import com.nncloudtv.lib.QueueMessage;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CntSubscribe;
@@ -27,12 +26,6 @@ public class NnChannelManager {
 	protected static final Logger log = Logger.getLogger(NnChannelManager.class.getName());
 	
 	private NnChannelDao channelDao = new NnChannelDao();
-	
-	/*
-	public List<NnChannel> findSince(Date since) {
-		return channelDao.findSince(since);
-	}
-	*/
 	
 	public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
 		if (sourceUrl == null) 
@@ -107,7 +100,7 @@ public class NnChannelManager {
 		channel = channelDao.save(channel);
 		NnChannel[] channels = {original, channel};
 		if (MsoConfigManager.isQueueEnabled(true)) {
-	        new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CUD_RELATED, channels);
+	        //new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CUD_RELATED, channels);
 		} else {
 			this.processChannelRelatedCounter(channels);
 		}
