@@ -1,7 +1,9 @@
 package com.nncloudtv.lib;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -92,6 +94,24 @@ public class NnNetUtil {
         return pattern.matcher(ip).matches();
     }
 	
+    public static void urlGet (String urlStr) {
+		URL url;
+		try {
+			url = new URL(urlStr);
+	        HttpURLConnection connection;
+			connection = (HttpURLConnection) url.openConnection();
+		    connection.setDoOutput(true);
+			connection.setRequestMethod("GET");
+	        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {	        	
+	        	log.info("response not ok!" + connection.getResponseCode());
+	        }			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}    	
+    }
+    
 	public static void urlPostWithJson(String urlStr, Object obj) {
         URL url;
 		try {
