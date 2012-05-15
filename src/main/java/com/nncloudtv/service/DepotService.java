@@ -180,28 +180,22 @@ public class DepotService {
 				program.setImageUrl(channel.getImageUrl());
 			}		
 		}
-		program.setStorageId(item.getItemId());	
-		
-		if (item.getOther() != null) {
+		program.setStorageId(item.getItemId());			
+		if (item.getOther() != null)
 			program.setFileUrl(item.getOther());
-		}
-		if (item.getDuration() != null) {
+		if (item.getDuration() != null)
 			program.setDuration(item.getDuration());
-		}
 		if (item.getAudio() != null) {
 			program.setType(NnProgram.TYPE_AUDIO);
 		} else {
 			program.setType(NnProgram.TYPE_VIDEO);
 		}
-		/*
-		if (item.getPubDate() != null) {
-			Date theDate = new Date(Long.parseLong(item.getPubDate())*1000);
-			program.setPubDate(theDate);
-		} else {
-			program.setPubDate(new Date());
-		}
-		*/
 		program.setPublic(true);
+		if (item.getSortId() != null)
+			program.setSeq(item.getSortId());
+		if (item.getSubSortId() != null)
+			program.setSubSeq(item.getSubSortId());
+		
 		if (isNew) {
 			programMngr.create(channel, program);
 		} else {
