@@ -129,6 +129,7 @@ public class PlayerApiService {
 			output += assembleKeyValue("lastLogin", String.valueOf(user.getUpdateDate().getTime()));
 			output += assembleKeyValue("sphere", user.getSphere());
 			output += assembleKeyValue("ui-lang", user.getLang());			
+			output += assembleKeyValue("userid", String.valueOf(user.getId()));
 			NnUserPrefManager prefMngr = new NnUserPrefManager();
 			List<NnUserPref> list = prefMngr.findByUser(user);		
 			for (NnUserPref pref : list) {
@@ -720,7 +721,37 @@ public class PlayerApiService {
     	}
     	return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
-       
+    
+    public String setProgramProperty(String program, String property, String value) {
+    	if (program == null || property == null || value == null)
+    		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+    	NnProgramManager programMngr = new NnProgramManager();
+    	NnProgram p = programMngr.findById(Long.parseLong(program));
+    	if (p == null)
+    		return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+    	if (property.equals("duration")) {
+    		p.setDuration(value);
+    		programMngr.save(p);
+    	} else {
+    		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+    	}
+    	return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
+    }
+
+    public String setChannelProperty(String channel, String property, String value) {
+    	if (channel == null || property == null || value == null)
+    		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+    	NnChannelManager channelMngr = new NnChannelManager();
+    	NnChannel c = channelMngr.findById(Long.parseLong(channel));
+    	if (c == null)
+    		return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+    	if (property.equals("count")) {
+    		c.setProgramCnt(Integer.valueOf(value));
+    		channelMngr.save(c);
+    	}
+    	return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
+    }
+    
 	public String programInfo(String channelIds, String userToken, 
                                   String ipgId, boolean userInfo,
                                   String sidx, String limit) {

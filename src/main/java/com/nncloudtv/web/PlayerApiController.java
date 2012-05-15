@@ -1443,5 +1443,68 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 	
+	/**
+	 * Set program property
+	 * 
+	 * @param program program id
+	 * @param property
+	 * @param value
+	 */	
+	@RequestMapping(value="setProgramProperty")
+	public ResponseEntity<String> setProgramProperty(
+			@RequestParam(value="program", required=false) String program,
+			@RequestParam(value="property", required=false) String property,
+			@RequestParam(value="value", required=false) String value,
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+						
+		log.info("program:" + program + ";property:" + property + ";value:" + value);
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		
+		try {
+			int status = this.prepService(req, true);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));						
+			output = playerApiService.setProgramProperty(program, property, value);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	/**
+	 * Set channel property
+	 * 
+	 * @param channel channel id
+	 * @param property
+	 * @param value
+	 */	
+	@RequestMapping(value="setChannelProperty")
+	public ResponseEntity<String> setChannelProperty(
+			@RequestParam(value="channel", required=false) String channel,
+			@RequestParam(value="property", required=false) String property,
+			@RequestParam(value="value", required=false) String value,
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+						
+		log.info("channel:" + channel + ";property:" + property + ";value:" + value);
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		
+		try {
+			int status = this.prepService(req, true);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));						
+			output = playerApiService.setChannelProperty(channel, property, value);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
 	
 }
