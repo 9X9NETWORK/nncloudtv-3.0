@@ -18,27 +18,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 	public NnChannelDao() {
 		super(NnChannel.class);
 	}	
-	
-	/*
-	public List<NnChannel> findSince(Date since) {
-		PersistenceManager pm = PMF.getContent().getPersistenceManager();
-		List<NnChannel> detached = new ArrayList<NnChannel>();
-		try {
-			Query query = pm.newQuery(NnUserReport.class);
-			query.setFilter("createDate > createDateParam");
-			query.declareImports("import java.util.Date");
-			query.declareParameters("Date createDateParam");			 
-			 
-			@SuppressWarnings("unchecked")
-			List<NnChannel> results = (List<NnChannel>) query.execute(since);
-			detached = (List<NnChannel>)pm.detachCopyAll(results);
-		} finally {
-			pm.close();
-		}
-		return detached;		
-	}
-	*/
-	
+		
 	public List<NnChannel> findByType(short type) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<NnChannel> detached = new ArrayList<NnChannel>(); 
@@ -85,8 +65,10 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 	public static List<NnChannel> searchChannelEntries(String queryStr) {		
 	    PersistenceManager pm = PMF.getContent().getPersistenceManager();
 	    String sql = "select * from nnchannel " +
-	    		      "where lower(name) like lower('%" + queryStr + "%')" + 
-	    		         "|| lower(intro) like lower('%" + queryStr + "%')";	 	   
+	    		     "where status = " + NnChannel.STATUS_SUCCESS + 
+	    		     " and " + 
+	    		     "(lower(name) like lower('%" + queryStr + "%')" + 
+	    		     "|| lower(intro) like lower('%" + queryStr + "%'))";	 	   
 	    log.info("Sql=" + sql);
 	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
 	    q.setClass(NnChannel.class);
