@@ -1,7 +1,11 @@
 package com.nncloudtv.web.json.transcodingservice;
 
-public class PostResponse {
+import java.io.Serializable;
 
+public class PostResponse implements Serializable {
+
+	private static final long serialVersionUID = 8750982298842719988L;
+	
 	private String errorCode;
 	private String errorReason;
 	

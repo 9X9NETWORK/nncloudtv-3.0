@@ -1,9 +1,12 @@
 package com.nncloudtv.web.json.facebook;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class FacebookResponse {
+public class FacebookResponse implements Serializable {
+	private static final long serialVersionUID = -930385136285315982L;
+	
 	private List<FacebookPage> data;
 	private FacebookError error;
 	private Map<String,String> paging;

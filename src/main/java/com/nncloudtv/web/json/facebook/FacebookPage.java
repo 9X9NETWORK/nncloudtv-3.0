@@ -1,6 +1,10 @@
 package com.nncloudtv.web.json.facebook;
 
-public class FacebookPage {
+import java.io.Serializable;
+
+public class FacebookPage implements Serializable {
+	private static final long serialVersionUID = 5360642433865767444L;
+	
 	private String name;
 	private String access_token;
 	private String category;

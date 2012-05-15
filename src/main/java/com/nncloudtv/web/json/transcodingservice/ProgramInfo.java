@@ -1,11 +1,14 @@
 package com.nncloudtv.web.json.transcodingservice;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.service.NnStatusCode;
 
-public class ProgramInfo {
+public class ProgramInfo implements Serializable {
+	private static final long serialVersionUID = 1281119999721089935L;
+	
 	private String errorCode;
 	private String errorReason;
 	private String callback;

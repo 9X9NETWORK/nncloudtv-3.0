@@ -1,11 +1,14 @@
 package com.nncloudtv.web.json.transcodingservice;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.nncloudtv.service.NnStatusCode;
 
-public class ChannelInfo {
+public class ChannelInfo implements Serializable {
 
+	private static final long serialVersionUID = -3971482679688470754L;
+	
 	private String errorCode;
 	private String errorReason;
 	private String callBack;
@@ -67,5 +70,8 @@ public class ChannelInfo {
 	public void setErrorReason(String errorReason) {
 		this.errorReason = errorReason;
 	}
-	
+
+	public String toString() {
+		return "channel info";
+	}
 }

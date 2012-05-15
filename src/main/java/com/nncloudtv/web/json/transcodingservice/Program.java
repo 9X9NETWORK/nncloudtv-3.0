@@ -1,6 +1,10 @@
 package com.nncloudtv.web.json.transcodingservice;
 
-public class Program {
+import java.io.Serializable;
+
+public class Program implements Serializable {
+	private static final long serialVersionUID = 4283777238540646610L;
+	
 	private String audio;
 	private String mp4;
 	private String other;

@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class RtnChannel implements Serializable{
 
 	private static final long serialVersionUID = -1003729993905988235L;
+	
 	private String action;
 	private String key; //channel key
 	private String title;

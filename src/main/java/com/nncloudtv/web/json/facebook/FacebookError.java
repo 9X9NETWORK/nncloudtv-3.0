@@ -1,6 +1,10 @@
 package com.nncloudtv.web.json.facebook;
 
-public class FacebookError {
+import java.io.Serializable;
+
+public class FacebookError implements Serializable {
+	private static final long serialVersionUID = -2144615533057273573L;
+	
 	private String message;
 	private String type;
 	public String getMessage() {

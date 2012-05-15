@@ -1,10 +1,14 @@
 package com.nncloudtv.web.json.transcodingservice;
 
+import java.io.Serializable;
+
 /**
  * Pass RSS feed to Transcoding Service
  */
-public class PostUrl {
+public class PostUrl implements Serializable {
 
+	private static final long serialVersionUID = 8382838010042182091L;
+	
 	private String key; //channel key
 	private String rss; //rss feed
 	private String callback; //callback host name

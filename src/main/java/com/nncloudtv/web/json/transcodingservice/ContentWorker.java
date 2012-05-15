@@ -1,13 +1,16 @@
 package com.nncloudtv.web.json.transcodingservice;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class ContentWorker {
+public class ContentWorker implements Serializable {
 
+	private static final long serialVersionUID = -8187551206678593605L;
+	
 	private long id;
 	private String imageUrl;
 	private String videoUrl;
