@@ -164,7 +164,11 @@ public class PlayerApiController {
 	 * @return please reference login
 	 */	
 	@RequestMapping(value="guestRegister")
-	public ResponseEntity<String> guestRegister(@RequestParam(value="ipg", required = false) String ipg, HttpServletRequest req, HttpServletResponse resp) {
+	public ResponseEntity<String> guestRegister(
+			@RequestParam(value="ipg", required = false) String ipg, 
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req, 
+			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);
@@ -204,9 +208,13 @@ public class PlayerApiController {
 		String sphere = req.getParameter("sphere");
 		String year = req.getParameter("year");
 		String lang = req.getParameter("ui-lang");
+		String rx = req.getParameter("rx");
 		boolean isTemp = Boolean.parseBoolean(req.getParameter("temp"));
 				
-		log.info("signup: email=" + email + ";name=" + name + ";userToken=" + userToken + ";sphere=" + sphere + ";year=" + year + ";ui-lang=" + lang);
+		log.info("signup: email=" + email + ";name=" + name + 
+				 ";userToken=" + userToken + ";sphere=" + sphere + 
+				 ";year=" + year + ";ui-lang=" + lang + 
+				 ";rx=" + rx);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			int status = this.prepService(req, true);
@@ -230,7 +238,11 @@ public class PlayerApiController {
 	 * 		   Return info please reference login.
 	 */	
 	@RequestMapping(value="userTokenVerify")
-	public ResponseEntity<String> userTokenVerify(@RequestParam(value="token") String token, HttpServletRequest req, HttpServletResponse resp) {
+	public ResponseEntity<String> userTokenVerify(
+			@RequestParam(value="token") String token,
+			@RequestParam(value="rx", required = false) String rx,			
+			HttpServletRequest req, 
+			HttpServletResponse resp) {
 		log.info("userTokenVerify() : userToken=" + token);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 
@@ -251,7 +263,10 @@ public class PlayerApiController {
 	 * @param user user key identifier 
 	 */		
 	@RequestMapping(value="signout")
-    public ResponseEntity<String> signout(@RequestParam(value="user", required=false) String userKey, HttpServletRequest req, HttpServletResponse resp) {
+    public ResponseEntity<String> signout(
+    		@RequestParam(value="user", required=false) String userKey,
+			@RequestParam(value="rx", required = false) String rx,
+    		HttpServletRequest req, HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);
@@ -287,7 +302,8 @@ public class PlayerApiController {
 	 */	
 	@RequestMapping(value="brandInfo")
 	public ResponseEntity<String> brandInfo(
-			@RequestParam(value="mso", required=false)String brandName, 
+			@RequestParam(value="mso", required=false)String brandName,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
@@ -321,6 +337,7 @@ public class PlayerApiController {
 			@RequestParam(value="category", required=false) String category,
 			@RequestParam(value="lang", required=false) String lang,
 			@RequestParam(value="flatten", required=false) String isFlatten,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -355,6 +372,7 @@ public class PlayerApiController {
 			@RequestParam(value="device", required=false) String deviceToken,
 			@RequestParam(value="session", required=false) String session,
 			@RequestParam(value="pdr", required=false) String pdr,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user=" + userToken + ";device=" + deviceToken + ";session=" + session);
@@ -401,6 +419,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> setInfo(
 			@RequestParam(value="set", required=false) String id,
 			@RequestParam(value="landing", required=false) String beautifulUrl,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);
@@ -436,6 +455,7 @@ public class PlayerApiController {
 			@RequestParam(value="set", required=false) String setId,
 			@RequestParam(value="grid", required=false) String gridId, 
 			@RequestParam(value="pos", required=false) String pos,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("subscribe: userToken=" + userToken+ "; channel=" + channelId + "; grid=" + gridId + "; set=" + setId + ";pos=" + pos);
@@ -477,6 +497,7 @@ public class PlayerApiController {
 			@RequestParam(value="channel", required=false) String channelId,
 			@RequestParam(value="grid", required=false) String grid,
 			@RequestParam(value="set", required=false) String setId,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {			
 		log.info("userToken=" + userToken + "; channel=" + channelId + "; set=" + setId + "; seq=" + grid);
@@ -562,6 +583,7 @@ public class PlayerApiController {
 			@RequestParam(value="channel", required=false) String channelIds,
 			@RequestParam(value="setInfo", required=false) String setInfo,
 			@RequestParam(value="required", required=false) String required,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("userToken=" + userToken + ";isUserInfo=" + userInfo + ";channel=" + channelIds + ";setInfo=" + setInfo);				
@@ -612,6 +634,7 @@ public class PlayerApiController {
 			@RequestParam(value="ipg", required = false) String ipgId,
 			@RequestParam(value="sidx", required = false) String sidx,
 			@RequestParam(value="limit", required = false) String limit,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("params: channel:" + channelIds + ";user:" + userToken + ";ipg:" + ipgId);
@@ -650,8 +673,11 @@ public class PlayerApiController {
 		String categoryIds = req.getParameter("category");
 		String tags = req.getParameter("tag");
 		String lang = req.getParameter("lang");
-
-		log.info("player input - userToken=" + userToken+ "; url=" + url + ";grid=" + grid + ";categoryId=" + categoryIds);				
+		String rx = req.getParameter("rx");
+		
+		log.info("player input - userToken=" + userToken+ "; url=" + url + 
+				 ";grid=" + grid + ";categoryId=" + categoryIds +
+				 ";rx=" + rx);				
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
 			int status = this.prepService(req, true);
@@ -691,8 +717,9 @@ public class PlayerApiController {
 	@RequestMapping(value="login")
 	public ResponseEntity<String> login(HttpServletRequest req, HttpServletResponse resp) {
 		String email = req.getParameter("email");
-		String password = req.getParameter("password");		
-		log.info("login: email=" + email);		
+		String password = req.getParameter("password");
+		String rx = req.getParameter("rx");
+		log.info("login: email=" + email + ";rx=" + rx);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
 			this.prepService(req, true);
@@ -719,6 +746,7 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false)String user,
 			@RequestParam(value="key", required=false)String key,
 			@RequestParam(value="value", required=false)String value,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("userPref: key(" + key + ");value(" + value + ")");
@@ -751,6 +779,7 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken,
 			@RequestParam(value="name", required=false) String name,
 			@RequestParam(value="pos", required=false) String pos,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("setInfo: user=" + userToken + ";pos =" + pos);
@@ -780,6 +809,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> staticContent(
 			@RequestParam(value="key", required=false) String key,
 			@RequestParam(value="lang", required=false) String lang,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -804,6 +834,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> deviceRegister(
 			@RequestParam(value="user", required=false) String userToken,
 			@RequestParam(value="type", required=false) String type,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken);
@@ -832,6 +863,7 @@ public class PlayerApiController {
 	@RequestMapping(value="listRecommended")
 	public ResponseEntity<String> listRecommended(
 			@RequestParam(value="lang", required=false) String lang,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -855,6 +887,7 @@ public class PlayerApiController {
 	@RequestMapping(value="deviceTokenVerify")
 	public ResponseEntity<String> deviceTokenVerify(
 			@RequestParam(value="device", required=false) String token,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + token);
@@ -881,6 +914,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> deviceAddUser(
 			@RequestParam(value="device", required=false) String deviceToken,
 			@RequestParam(value="user", required=false) String userToken,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken + ";device=" + deviceToken);
@@ -911,6 +945,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> deviceRemoveUser(
 			@RequestParam(value="device", required=false) String deviceToken,
 			@RequestParam(value="user", required=false) String userToken,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken + ";device=" + deviceToken);
@@ -943,6 +978,7 @@ public class PlayerApiController {
 			@RequestParam(value="device", required=false) String device,
 			@RequestParam(value="session", required=false) String session,
 			@RequestParam(value="comment", required=false) String comment,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + user + ";session=" + session);
@@ -980,6 +1016,7 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false)String user,
 			@RequestParam(value="key", required=false)String key,
 			@RequestParam(value="value", required=false)String value,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {		
 		log.info("set user profile: key(" + key + ");value(" + value + ")");
@@ -1009,6 +1046,7 @@ public class PlayerApiController {
 	@RequestMapping(value="getUserProfile")
 	public ResponseEntity<String> getUserProfile(
 			@RequestParam(value="user", required=false)String user,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -1044,6 +1082,7 @@ public class PlayerApiController {
 			@RequestParam(value="content", required=false) String content,
 			@RequestParam(value="captcha", required=false) String captcha,
 			@RequestParam(value="text", required=false) String text,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + userToken + ";to whom:" + toEmail + ";content:" + content);
@@ -1070,6 +1109,7 @@ public class PlayerApiController {
 	public ResponseEntity<String> requestCaptcha(
 			@RequestParam(value="user", required=false) String token,
 			@RequestParam(value="action", required=false) String action,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("user:" + token);
@@ -1098,6 +1138,7 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken,
 			@RequestParam(value="channel", required=false) String channelId,
 			@RequestParam(value="sorting", required=false) String sorting,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		
@@ -1130,7 +1171,8 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken, 
 			@RequestParam(value="channel", required=false) String channelId,
 			@RequestParam(value="set", required=false) String setId,
-			@RequestParam(value="program", required=false) String programId, 
+			@RequestParam(value="program", required=false) String programId,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {		
 		
@@ -1158,8 +1200,10 @@ public class PlayerApiController {
 	 *          3rd section is channel information, format please reference channelLineup.
 	 */
 	@RequestMapping(value="loadShare")
-	public ResponseEntity<String> loadShare(@RequestParam(value="id") Long id, 
-										  HttpServletRequest req) {		
+	public ResponseEntity<String> loadShare(
+			@RequestParam(value="id") Long id, 
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req) {		
 		log.info("ipgShare:" + id);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
@@ -1190,6 +1234,7 @@ public class PlayerApiController {
 			@RequestParam(value="channel", required=false) String channel,
 			@RequestParam(value="channelInfo", required=false) String channelInfo,
 			@RequestParam(value="episodeIndex", required=false) String episodeIndex,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req) {				                                
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
 		try {
@@ -1219,6 +1264,7 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken, 
 			@RequestParam(value="channel", required=false) String channelId,
 			@RequestParam(value="grid", required=false) String grid,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req){
 		log.info("userToken=" + userToken + ";grid=" + grid);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -1249,6 +1295,7 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken, 
 			@RequestParam(value="grid1", required=false) String grid1,
 			@RequestParam(value="grid2", required=false) String grid2,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp){
 		log.info("userToken=" + userToken + ";grid1=" + grid1 + ";grid2=" + grid2);
@@ -1275,6 +1322,7 @@ public class PlayerApiController {
 	@RequestMapping(value="search")
 	public ResponseEntity<String> search(
 			@RequestParam(value="text", required=false) String text,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -1300,6 +1348,7 @@ public class PlayerApiController {
 			@RequestParam(value="program", required=false) String programId,
 			@RequestParam(value="user", required=false) String userToken,
 			@RequestParam(value="bird", required=false) String secret,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		log.info("bad program:" + programId + ";reported by user:" + userToken);
@@ -1331,6 +1380,7 @@ public class PlayerApiController {
 			@RequestParam(value="name", required=false) String name,
 			@RequestParam(value="description", required=false) String description,
 			@RequestParam(value="image", required=false) String image,
+			@RequestParam(value="rx", required = false) String rx,
 			@RequestParam(value="temp", required=false) String temp,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
@@ -1372,6 +1422,7 @@ public class PlayerApiController {
 			@RequestParam(value="audio", required=false) String audio,
 			@RequestParam(value="video", required=false) String video,
 			@RequestParam(value="temp", required=false) String temp,
+			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		
