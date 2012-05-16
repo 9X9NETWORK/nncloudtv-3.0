@@ -747,8 +747,14 @@ public class PlayerApiService {
     		return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
     	if (property.equals("count")) {
     		c.setProgramCnt(Integer.valueOf(value));
-    		channelMngr.save(c);
+    	} else if (property.equals("updateDate")) {
+            long epoch = Long.parseLong(value);
+            Date date = new Date (epoch*1000);
+            c.setUpdateDate(date);
+    	} else {
+    		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
     	}
+		channelMngr.save(c);
     	return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
     }
     
