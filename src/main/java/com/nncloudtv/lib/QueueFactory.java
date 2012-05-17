@@ -29,7 +29,8 @@ public class QueueFactory {
 	      oos.close(); 
 	      bos.close();
 	      bytes = bos.toByteArray ();
-	   } catch (IOException ex) {	   
+	   } catch (IOException e) {
+		   e.printStackTrace();
 	   }
 	  return bytes;
 	}
@@ -46,7 +47,8 @@ public class QueueFactory {
 	        channel.queueDeclare(QueueFactory.QUEUE_NNCLOUDTV, true, false, false, null);
 	        
 			Object[] obj = new Object[2];			
-			String root = NnNetUtil.getUrlRoot(req);
+			//String root = NnNetUtil.getUrlRoot(req);
+			String root = "http://localhost:8080";
 			String msg = root.concat(url);
 			obj[0] = msg;
 			obj[1] = json;
