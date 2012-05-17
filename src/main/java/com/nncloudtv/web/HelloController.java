@@ -105,7 +105,7 @@ public class HelloController {
     public @ResponseBody String search(
     		@RequestParam String text,
     		HttpServletRequest req) {
-    	List<NnChannel> channels = NnChannelDao.searchChannelEntries(text);
+    	List<NnChannel> channels = NnChannelDao.search(text, false);
     	String result = "size:" + channels.size();
     	for (NnChannel c : channels) {
     		result += c.getId() + ";" + c.getName() + "<br/>";
