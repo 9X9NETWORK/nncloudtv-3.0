@@ -5,15 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.datastore.DataStoreCache;
-
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnSetDao;
 import com.nncloudtv.dao.NnSetToNnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
-import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
@@ -73,47 +69,70 @@ public class NnSetManager {
 	}
 	
 	public void processChannelRelatedCounter(NnSet set, int cnt) {
-		//setDao.evictAll();
-		PersistenceManagerFactory pmf = PMF.getContent(); 
-		DataStoreCache cache = pmf.getDataStoreCache();
-		cache.evictAll();
-		
-		log.info("<<<<<<<<< original:" + set.getChannelCnt());
-		log.info("<<<<<<<<< cnt:" + cnt);
 		int count = set.getChannelCnt() + cnt;
-		log.info("<<<<<<<<< add:" + count);
 		if (count > 0) {
 			//change set counter			
 			set.setChannelCnt(count);
 			setDao.save(set);
-			log.info("<<<<<<<<< save:" + set.getId());
 			//change category counter
 			CategoryManager catMngr = new CategoryManager();
 			catMngr.changeChannelCntBySet(set, cnt);
 		}
 	}
 	
-	public void addChannels(NnSet set, List<NnChannel> channels) {		
+	public void editChannel(long setId, long channelId, short seq) {
+		System.out.println("seq:" + seq);
+		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
+		NnSetToNnChannel sToC1 = dao.findBySetAndChannel(setId, channelId);
+		NnSetToNnChannel sToC2 = dao.findBySetAndSeq(setId, sToC1.getSeq());
+		if (sToC1 != null && sToC2 != null) {
+			short seq1 = sToC1.getSeq();
+			sToC1.setSeq(seq);
+			sToC2.setSeq(seq1);
+			dao.save(sToC1);
+			dao.save(sToC2);
+		}
+		if (sToC1 != null && sToC2 == null) {
+			sToC1.setSeq(seq);
+			dao.save(sToC1);
+		}
+	}
+	
+	public void addChannels(NnSet set, List<NnChannel> channels) {
+		if (channels == null || channels.size() == 0)
+			return;
 		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
 		int newChCnt = 0;
 		for (NnChannel channel : channels) {
 			if (dao.findBySetAndChannel(set.getId(), channel.getId()) == null) {
-				NnSetToNnChannel sToC = new NnSetToNnChannel(set.getId(), channel.getId(), channel.getSeq()); 
+				NnSetToNnChannel sToC = new NnSetToNnChannel(set.getId(), channel.getId(), (short)0);				
 				dao.save(sToC);
 				if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
 					newChCnt++;
 				}				
 			}
+		}		
+		if (set.isFeatured() && channels.size() == 1) {
+			NnSetToNnChannel sToC = dao.findBySetAndChannel(set.getId(), channels.get(0).getId());
+			List<NnSetToNnChannel> list = dao.findBySet(set);
+			List<NnSetToNnChannel> toBeSaved = new ArrayList<NnSetToNnChannel>();
+			short seq = channels.get(0).getSeq();
+			for (int i=seq; i<list.size(); i++) {
+				NnSetToNnChannel r = list.get(i);
+				r.setSeq((short)(i+1));
+				int test = i+1;
+				System.out.println("-----------------channel id -------------" + list.get(i).getChannelId() + "; seq=" + test);
+				toBeSaved.add(r);
+			}
+			sToC.setSeq(channels.get(0).getSeq());
+			toBeSaved.add(sToC);
+			dao.saveAll(toBeSaved);	
 		}
-		PersistenceManagerFactory pmf = PMF.getContent(); 
-		DataStoreCache cache = pmf.getDataStoreCache();
-		cache.evictAll();
 
 		Object[] obj = new Object[2];
 		if (newChCnt > 0) {
 			if (MsoConfigManager.isQueueEnabled(false)) {
 				setDao.evict(set);
-				log.info("throw to queue <<<<<<<" + set.getChannelCnt());
 				obj[0] = set;
 				obj[1] = newChCnt;
 		        //new QueueMessage().fanout("localhost",QueueMessage.SET_CUD_RELATED, obj);
@@ -222,8 +241,8 @@ public class NnSetManager {
 						c.setSeq(sToC.getSeq());
 					else 
 						c.setSeq((short)i++);
+					results.add(c);
 				}
-				results.add(c);
 			}
 		}
 		return results;

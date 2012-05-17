@@ -94,7 +94,7 @@ public class CmsApiController {
 			log.warning("no query string");
 			return new ArrayList<NnChannel>();
 		}
-		return NnChannelManager.search(text);
+		return NnChannelManager.search(text, true);
 	}
 	
 	@RequestMapping("defaultNnSetInfo")

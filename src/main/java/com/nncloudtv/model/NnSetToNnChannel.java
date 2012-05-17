@@ -39,6 +39,9 @@ public class NnSetToNnChannel implements Serializable {
 		this.setId = setId;
 		this.channelId = channelId;
 		this.seq = seq;
+		Date now = new Date();
+		this.createDate = now;
+		this.updateDate = now;
 	}
 
 	public long getId() {

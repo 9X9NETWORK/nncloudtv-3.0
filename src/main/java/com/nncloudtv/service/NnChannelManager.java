@@ -77,7 +77,7 @@ public class NnChannelManager {
 			
 		}
 		channel.setPublic(false);
-		this.save(channel);
+		channel = this.save(channel);
 		return channel;
 	}
 	
@@ -124,8 +124,8 @@ public class NnChannelManager {
 		}
 	}
 	
-	public static List<NnChannel> search(String queryStr) {
-		return NnChannelDao.searchChannelEntries(queryStr);		
+	public static List<NnChannel> search(String queryStr, boolean all) {
+		return NnChannelDao.search(queryStr, all);		
 	}
 	
 	/**
@@ -269,16 +269,13 @@ public class NnChannelManager {
 			return YouTubeLib.formatCheck(url);
 		} else if (url.contains("facebook.com")) {
 			return url;
-		} else if (url.contains("www.maplestage.net") && !url.contains("9x9.tv")) {
+		} else if (url.contains("www.maplestage.net")) {
+		//} else if (url.contains("www.maplestage.net") && !url.contains("9x9.tv")) {
 			return url;
 		}
 		return null;
 	}
 	
-	public static List<NnChannel> searchChannelEntries(String queryString) {
-		return NnChannelDao.searchChannelEntries(queryString);		
-	}
-
 	public static short getDefaultSorting(NnChannel c) {
 		short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
 		if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 

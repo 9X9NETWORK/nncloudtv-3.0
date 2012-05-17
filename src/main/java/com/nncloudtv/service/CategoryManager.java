@@ -20,18 +20,12 @@ public class CategoryManager {
 	protected static final Logger log = Logger.getLogger(CategoryManager.class.getName());
 	private CategoryDao categoryDao = new CategoryDao();
 	private CategoryToNnSetDao cToNDao = new CategoryToNnSetDao();
-	
-	public void create(Category category) {		
-		if (this.findByName(category.getName()) == null) {
-			Date now = new Date();
-			category.setCreateDate(now);
-			category.setUpdateDate(now);
-			categoryDao.save(category);
-		}
-	}
-	
+		
 	public Category save(Category category) {
-		category.setUpdateDate(new Date());		
+		Date now = new Date();
+		if (category.getCreateDate() == null)
+			category.setCreateDate(now);
+		category.setUpdateDate(now);		
 		category = categoryDao.save(category);
 		return category;
 	}
@@ -39,15 +33,7 @@ public class CategoryManager {
 	private CategoryToNnSet findByCategoryAndSet(Category c, NnSet s) {
 		return cToNDao.findByCategoryAndSet(c.getId(), s.getId());
 	}
-	
-	private List<CategoryToNnSet> findCatToSetByCategoryId(long c) {
-		return cToNDao.findByCategory(c);
-	}
-	
-	private List<CategoryToNnSet> findCatToSetBySetId(long s) {
-		return cToNDao.findBySet(s);
-	}
-	
+		
 	public void addSets(Category c, List<NnSet> sets) {
 		Date now = new Date();
 		for (NnSet s : sets) {
@@ -152,33 +138,22 @@ public class CategoryManager {
 		dao.save(cToS);
 		return true;		
 	}
+		
 	
-	public boolean deleteSet(long categoryId, long setId) {
-		CategoryToNnSetDao dao = new CategoryToNnSetDao();
-		CategoryToNnSet found = dao.findByCategoryAndSet(categoryId, setId);
-		if (found == null)
-			return false;
-		dao.delete(found);
-		return true;
-	}
-	
+	/*
 	public void deleteCatToSetBySetId(long setId) {
 		deleteAllCatToSet(this.findCatToSetBySetId(setId));
-/*
 		for(Category category : categories) {
 			deleteSet(category.getId(), setId);
 		}
-*/
 	}
-	
+*/
+
+	/*
 	public void deleteCatToSetByCatId(long categoryId) {
 		deleteAllCatToSet(this.findCatToSetByCategoryId(categoryId));
-/*
-		for(NnSet set : sets) {
-			deleteSet(categoryId, set.getId());
-		}
-*/
 	}
+	*/
 		
 	public void createChannelRelated(NnChannel channel, List<Category> categories) {
 		//create CategoryChannel
@@ -196,10 +171,8 @@ public class CategoryManager {
 		List<NnSet> sets = new ArrayList<NnSet>();
 		for (CategoryToNnSet cs : list) {
 			NnSet set = setMngr.findById(cs.getSetId());
-			if (set != null) {
-				if (set.isPublic()) {
-					sets.add(set);
-				}
+			if (set != null && set.isPublic()) {
+				sets.add(set);
 			}
 		}
 		return sets;		
@@ -225,8 +198,13 @@ public class CategoryManager {
 		 return categoryDao.findAllByIds(ids);
 	}
 	
-	public Category findByLangAndSeq(String lang, String seq) {
-		return categoryDao.findByLangAndSeq(lang, Short.parseShort(seq));
+	public Category findByLangAndSeq(String lang, short seq) {
+		return categoryDao.findByLangAndSeq(lang, seq);
+	}
+
+	//sort by seq
+	public List<Category> findByLang(String lang) {
+		return categoryDao.findByLang(lang);
 	}
 	
 	public List<Category> findAll() {
@@ -266,12 +244,26 @@ public class CategoryManager {
 		return cToNDao.total(filter);
 	}
 	
-	public void delete(Category c) {
-		categoryDao.delete(c);
-	}
-	
-	private void deleteAllCatToSet(List<CategoryToNnSet> list) {
+	public void deleteSets(Category c) {
+		List<CategoryToNnSet> list = cToNDao.findByCategory(c.getId());
 		cToNDao.deleteAll(list);
 	}
 	
+	public boolean deleteSet(long categoryId, long setId) {
+		CategoryToNnSet found = cToNDao.findByCategoryAndSet(categoryId, setId);
+		if (found == null)
+			return false;
+		cToNDao.delete(found);
+		return true;
+	}
+	
+	public void delete(Category c) {
+		deleteSets(c);
+		categoryDao.delete(c);
+	}
+
+	public void saveAll(List<Category> categories) {
+		categoryDao.saveAll(categories);
+	}
+		
 }

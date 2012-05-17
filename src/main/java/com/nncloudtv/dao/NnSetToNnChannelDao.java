@@ -38,8 +38,8 @@ public class NnSetToNnChannelDao extends GenericDao<NnSetToNnChannel> {
 		return result;
 	}
 	
-	//TODO, should be merged to findBySet(NnSet set), it sets ordering 	
-	public List<NnSetToNnChannel> findBySet(long setId) {	
+	//TODO, should be merged to findBySet(NnSet set), it sets ordering		
+	public List<NnSetToNnChannel> findBySet(long setId) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<NnSetToNnChannel> detached = new ArrayList<NnSetToNnChannel>();
 		
@@ -68,13 +68,13 @@ public class NnSetToNnChannelDao extends GenericDao<NnSetToNnChannel> {
 				log.info("ordering by seq");
 				query.setOrdering("seq");
 			} else { 
-				log.info("ordering by update date");
+				log.info("ordering by updateDate");
 				query.setOrdering("updateDate desc");
 			}
 			@SuppressWarnings("unchecked")
 			List<NnSetToNnChannel> list = (List<NnSetToNnChannel>)query.execute(set.getId());
 			detached = (List<NnSetToNnChannel>)pm.detachCopyAll(list);
-		} catch (JDOObjectNotFoundException e) {
+		} catch (JDOObjectNotFoundException e) {	
 		} finally {
 			pm.close();
 		}

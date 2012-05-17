@@ -287,15 +287,10 @@ var page$ = {
               width:     60,
               align:     'center',
               sortable:  true,
-              editable:  true
-              /*
+              editable:  true,
               editrules: {
-                minValue: 0,
-                maxValue: 81,
-                required: false,
                 integer:  true
               }
-              */
           },
           {	
               label:     'Brand URL',
@@ -340,9 +335,9 @@ var page$ = {
         datatype:    'json',
         url:         '/admin/set/list',
         caption:     'Set List',
-        sortname:    'updateDate',
-        sortorder:   'desc',
-        rowNum:      10,
+        sortname:    'lang, name',
+        sortorder:   'asc',
+        rowNum:      200,
         rowList:     [10, 20, 30, 40, 50, 100, 200],
         viewrecords: true,
         height:      'auto',
@@ -747,7 +742,8 @@ var page$ = {
               disabled: false
             },
             editrules: {
-              edithidden: true
+              edithidden: true,
+              required: true
             },
             searchoptions: {
               sopt: ['eq'],
@@ -808,7 +804,8 @@ var page$ = {
             editable:  true,
             edittype:  'checkbox',
             editoptions: {
-              value: 'true:false'
+              value: 'true:false',
+              defaultValue: "true"
             },
             searchoptions: {
               sopt:  ['eq'],
@@ -896,7 +893,7 @@ var page$ = {
         caption:     'Channel List',
         sortname:    'updateDate',
         sortorder:   'desc',
-        rowNum:      10,
+        rowNum:      200,
         rowList:     [10, 20, 30, 40, 50, 100, 200],
         viewrecords: true,
         height:      'auto',
@@ -1089,15 +1086,6 @@ var page$ = {
                 sopt:  ['eq'],
                 value: "en:en;zh:zh"
               }
-            },
-  	        {
-      		    label:    'Seq',
-      		    name:     'seq',
-      		    index:    'seq',
-      		    width:    180,
-      		    align:    'center',
-      		    editable: true,
-      		    sortable: false
             }
           ],
           datatype:    'json',
@@ -1157,7 +1145,6 @@ var page$ = {
           },
           {
             // 'delete' properties
-        	//url:               '/admin/set/addCh?set=' + rowId,
             url:               '/admin/category/deleteSet?category=' + rowId,
             caption:           'Remove A Set',
             msg:               'Do you want to remove a set from Category ?',
@@ -1172,32 +1159,6 @@ var page$ = {
       },
       properties: {
         colModel: [
-          /*
-          {
-            label:     'MSO ID',
-            name:      'msoId',
-            index:     'msoId',
-            width:     80,
-            align:     'center',
-            search:    true,
-            sortable:  true,
-            editable:  true,
-            edittype:  'select',
-            stype:     'select',
-            editoptions: {
-              dataUrl:  '/admin/mso/msoHtmlSelectOptions',
-              disabled: false
-            },
-            editrules: {
-              required: true,
-              number:   true
-            },
-            searchoptions: {
-              sopt:    ['eq'],
-              dataUrl: '/admin/mso/msoHtmlSelectOptions'
-            }
-          },
-          */          
           {
             label:    'Category ID',
             name:     'id',
@@ -1207,17 +1168,6 @@ var page$ = {
             search:   false,
             sortable: false
           },
-          /*
-          {
-            label:    'Parent ID',
-            name:     'parentId',
-            index:    'parentId',
-            width:    80,
-            align:    'center',
-            search:   false,
-            sortable: true
-          },
-          */
           {
             label:    'Category Name',
             name:     'name',
@@ -1247,25 +1197,6 @@ var page$ = {
               disabled: true
             }
           },
-          /*
-          {
-            label:    'Created Time',
-            name:     'createDate',
-            index:    'createDate',
-            width:    140,
-            align:    'center',
-            search:   false,
-            sortable: true,
-            editable: false,
-            hidden:   true,
-            editoptions: {
-              disabled: true
-            },
-            editrules: {
-              edithidden: true
-            }
-          },
-          */
           {
             label:     'Language',
             name:      'lang',
@@ -1309,10 +1240,16 @@ var page$ = {
   		    width:    180,
   		    align:    'center',
   		    editable: true,
-  		    sortable: true
+  		    sortable: true,
+            editrules: {
+              integer:    true,
+              edithidden: true,
+              minValue: 1,
+              required: true          
+            }
   		  },
           {
-            label:    'Ch. Count',
+            label:    'Ch Cnt',
             name:     'channelCnt',
             index:    'channelCnt',
             width:    90,
@@ -1323,16 +1260,17 @@ var page$ = {
             editable: true,
             editrules: {
               integer:    true,
-              edithidden: true
+              edithidden: true,
+              minValue: 0
             }
           }
         ],
         url:         '/admin/category/list',
         datatype:    'json',
         caption:     'Category List',
-        sortname:    'updateDate',
-        sortorder:   'desc',
-        rowNum:      10,
+        sortname:    'lang, seq',
+        sortorder:   'asc',
+        rowNum:      200,
         rowList:     [10, 20, 30, 40, 50, 100, 200],
         viewrecords: true,
         height:      'auto',
@@ -2072,7 +2010,7 @@ var page$ = {
         caption:     'Set List',
         sortname:    'updateDate',
         sortorder:   'desc',
-        rowNum:      10,
+        rowNum:      200,
         rowList:     [10, 20, 30, 40, 50, 100, 200],
         viewrecords: true,
         height:      'auto',

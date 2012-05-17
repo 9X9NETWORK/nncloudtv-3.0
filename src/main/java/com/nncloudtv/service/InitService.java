@@ -475,7 +475,7 @@ public class InitService {
 				c.setPublic(false);
 			c.setSeq((short)i);
 			c.setSubCatCnt(0);
-			categoryMngr.create(c);
+			categoryMngr.save(c);
 			i++;
 		}
 		log.info("category size:" + list.size());

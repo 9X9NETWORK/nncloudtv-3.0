@@ -143,5 +143,24 @@ public class CategoryDao extends GenericDao<Category> {
 		
 		return detached;		
 	}
+
+	public List<Category> findByLang(String lang) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<Category> detached = new ArrayList<Category>();		
+		try {
+			Query query = pm.newQuery(Category.class);
+			query.setFilter("lang == langParam");
+			query.declareParameters("String langParam");
+			query.setOrdering("seq");
+			@SuppressWarnings("unchecked")
+			List<Category> results = (List<Category>) query.execute(lang);
+			detached = (List<Category>)pm.detachCopyAll(results);			
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}
+		
+		return detached;		
+	}
 	
 }
