@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
+import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
@@ -741,8 +742,8 @@ public class PlayerApiService {
     public String setChannelProperty(String channel, String property, String value) {
     	if (channel == null || property == null || value == null)
     		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-    	NnChannelManager channelMngr = new NnChannelManager();
-    	NnChannel c = channelMngr.findById(Long.parseLong(channel));
+    	NnChannelDao dao = new NnChannelDao();
+    	NnChannel c = dao.findById(Long.parseLong(channel));
     	if (c == null)
     		return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
     	if (property.equals("count")) {
@@ -750,11 +751,12 @@ public class PlayerApiService {
     	} else if (property.equals("updateDate")) {
             long epoch = Long.parseLong(value);
             Date date = new Date (epoch*1000);
+            log.info("Date:" + date);
             c.setUpdateDate(date);
     	} else {
     		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
     	}
-		channelMngr.save(c);
+		dao.save(c);
     	return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
     }
     
