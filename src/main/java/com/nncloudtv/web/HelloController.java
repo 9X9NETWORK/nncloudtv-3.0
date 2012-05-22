@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.jdo.JDOFatalDataStoreException;
 import javax.jdo.PersistenceManager;
@@ -11,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,13 +41,14 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
  
 @Controller
 @RequestMapping("hello")
 public class HelloController {
 
-	protected static final Logger log = Logger.getLogger(HelloController.class);
+	protected static final Logger log = Logger.getLogger(HelloController.class.getName());
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) { 
@@ -67,8 +69,8 @@ public class HelloController {
     @RequestMapping("log")
     public ModelAndView log()  {
     	log.info("----- hello log -----");
-    	log.warn("----- hello warning -----");
-    	log.fatal("----- hello severe -----");
+    	//log.warn("----- hello warning -----");
+    	//log.fatal("----- hello severe -----");
         return new ModelAndView("hello", "message", "log");
     }    
     
@@ -241,7 +243,42 @@ public class HelloController {
 		setMngr.addChannels(set, channels);
 		return NnNetUtil.textReturn(String.valueOf(status));
 	}
-	     
+	
+	/**
+	 * MQ / MQCallback - tiny MQ loopback test
+	 * 
+	 * http://localhost:8888/hello/MQ?msg=HelloWorld
+	 * 
+	 * @param req
+	 * @param msg
+	 * @return
+	 */
+	
+	@RequestMapping("MQ")
+	public @ResponseBody String MQ(HttpServletRequest req, @RequestParam(required=false) String msg) {
+		
+		FacebookError json = new FacebookError(); // none of FB business though
+		json.setType("MQ Test");
+		if (msg != null) {
+			json.setMessage(msg);
+			log.info("your message is: " + msg);
+		} else {
+			json.setMessage("none");
+			log.info("you didn't specify message to carry");
+		}
+		
+		QueueFactory.add(req, "/hello/MQCallback", json);
+		
+		return "OK";
+	}
+	
+	@RequestMapping("MQCallback")
+	public @ResponseBody void MQCallback(@RequestBody FacebookError err, HttpServletRequest req) {
+		
+		log.info("MQCallback received message: " + err.getMessage());
+		
+	}
+	
 	/*
     @RequestMapping("fanout")
     public @ResponseBody String fanout(@RequestParam String exchange_name) throws IOException {
