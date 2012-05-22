@@ -125,11 +125,31 @@ public class NnProgramManager {
 		}
 	} 
 
+	/**
+	 * Sometimes we save program, but want updateDate to keep untouched
+	 * 
+	 * @param program
+	 * @param untouched
+	 * @return
+	 */
+	public NnProgram save(NnProgram program, boolean untouched) {
+		Date now = new Date();
+		if (program.getCreateDate() == null)
+			program.setCreateDate(now);
+		if (!untouched) {
+			program.setUpdateDate(now);
+		}
+		program = programDao.save(program);
+		this.processCache(program.getChannelId());
+		
+		return program;
+	}
+	
 	public NnProgram save(NnProgram program) {
 		Date now = new Date();
 		if (program.getCreateDate() == null)
 			program.setCreateDate(now);
-		program.setUpdateDate(now); // NOTE: a trying to modify program update time (from admin) will be omitted by this
+		program.setUpdateDate(now); // NOTE: a trying to modify program update time (from admin) will be omitted by this, use "untouched" save() instread
 		program = programDao.save(program);
 		this.processCache(program.getChannelId());
 		return program;

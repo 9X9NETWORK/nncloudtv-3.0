@@ -794,7 +794,7 @@ public class CmsApiController {
 		for (NnProgram program : origProgramList) {
 			int seq = programIds.indexOf(program.getId());
 			program.setSeq(String.format("%08d", seq + 1));
-			programMngr.save(program);
+			programMngr.save(program, true);
 		}
 		String cacheKey = "nnprogram(" + channelId + ")";
 		log.info("remove cached programInfo data");
