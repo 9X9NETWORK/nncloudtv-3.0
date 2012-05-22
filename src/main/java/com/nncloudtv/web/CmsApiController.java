@@ -1085,6 +1085,7 @@ public class CmsApiController {
 	@RequestMapping("postToFacebook")
 	public @ResponseBody void postToFacebook(@RequestBody FBPost fbPost, HttpServletRequest req) {
 		try {
+			log.info("server name: " + req.getServerName());
 			fbPost.setLink(fbPost.getLink().replaceFirst("localhost", req.getServerName()));
 			log.info(fbPost.toString());
 			FacebookLib.postToFacebook(fbPost);

@@ -64,8 +64,9 @@ public class NnProgramManager {
 			FBPost fbPost = new FBPost(program.getName(), program.getIntro(), program.getImageUrl());
 			MsoManager msoMngr = new MsoManager();
 			InetAddress local = InetAddress.getLocalHost();
-			String url = "http://" + local.getHostName() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
+			String url = "http://" + local.getCanonicalHostName() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
 			fbPost.setLink(url);
+			log.info("share link: " + url);
 			if (program.getComment() != null) {
 				fbPost.setMessage(program.getComment());
 			}
@@ -99,8 +100,9 @@ public class NnProgramManager {
 			FBPost fbPost = new FBPost(program.getName(), program.getIntro(), program.getImageUrl());
 			MsoManager msoMngr = new MsoManager();
 			InetAddress local = InetAddress.getLocalHost();
-			String url = "http://" + local.getHostName() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
+			String url = "http://" + local.getCanonicalHostName() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
 			fbPost.setLink(url);
+			log.info("share link: " + url);
 			if (program.getComment() != null) {
 				fbPost.setMessage(program.getComment());
 			}
