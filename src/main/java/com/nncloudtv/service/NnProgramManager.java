@@ -1,23 +1,35 @@
 package com.nncloudtv.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.QueueFactory;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnChannelAutosharing;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.SnsAuth;
+import com.nncloudtv.web.json.facebook.FBPost;
 
 @Service
 public class NnProgramManager {
 	
 	protected static final Logger log = Logger.getLogger(NnProgramManager.class.getName());
+	private static MessageSource messageSource = new ClassPathXmlApplicationContext("locale.xml");
 	
 	private NnProgramDao programDao = new NnProgramDao();
 	
@@ -41,7 +53,76 @@ public class NnProgramManager {
 			CategoryManager categoryMngr = new CategoryManager();
 			System.out.println("mso program manager, channel create, addChannelCount");
 			categoryMngr.addChannelCounter(channel);
-		}		
+		}
+		
+		// hook, auto share to facebook
+		AutosharingService sharingService = new AutosharingService();
+		SnsAuthManager snsMngr = new SnsAuthManager();
+		List<NnChannelAutosharing> channelAutosharings = sharingService.findByChannelAndType(channel.getId(), SnsAuth.TYPE_FACEBOOK);
+		log.info("autosharing count = " + channelAutosharings.size());
+		try {
+			FBPost fbPost = new FBPost(program.getName(), program.getIntro(), program.getImageUrl());
+			MsoManager msoMngr = new MsoManager();
+			InetAddress local = InetAddress.getLocalHost();
+			String url = "http://" + local.getHostName() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
+			fbPost.setLink(url);
+			if (program.getComment() != null) {
+				fbPost.setMessage(program.getComment());
+			}
+			for (NnChannelAutosharing autosharing : channelAutosharings) {
+				SnsAuth snsAuth = snsMngr.findFacebookAuthByMso(autosharing.getMsoId());
+				Mso mso = msoMngr.findById(autosharing.getMsoId());
+				if (mso.getLang() != null && mso.getLang().equals("en")) {
+					fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.ENGLISH));
+				} else {
+					fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.TRADITIONAL_CHINESE));
+				}
+				if (snsAuth != null && snsAuth.isEnabled()) {
+					if (autosharing.getTarget() != null && autosharing.getParameter() != null) {
+						fbPost.setFacebookId(autosharing.getTarget());
+						fbPost.setAccessToken(autosharing.getParameter());
+					} else {
+						fbPost.setFacebookId(snsAuth.getToken());
+						fbPost.setAccessToken(snsAuth.getSecret());
+					}
+					QueueFactory.add(null, "/CMSAPI/postToFacebook", fbPost);
+				}
+			}
+		} catch (UnknownHostException e) {
+			NnLogUtil.logException(e);
+		}
+		
+		// hook, auto share to twitter
+		channelAutosharings = sharingService.findByChannelAndType(channel.getId(), SnsAuth.TYPE_TWITTER);
+		log.info("twitter autosharing count = " + channelAutosharings.size());
+		try {
+			FBPost fbPost = new FBPost(program.getName(), program.getIntro(), program.getImageUrl());
+			MsoManager msoMngr = new MsoManager();
+			InetAddress local = InetAddress.getLocalHost();
+			String url = "http://" + local.getHostName() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
+			fbPost.setLink(url);
+			if (program.getComment() != null) {
+				fbPost.setMessage(program.getComment());
+			}
+			for (NnChannelAutosharing autosharing : channelAutosharings) {
+				SnsAuth snsAuth = snsMngr.findTitterAuthByMsoId(autosharing.getMsoId());
+				Mso mso = msoMngr.findById(autosharing.getMsoId());
+				if (mso.getLang() != null && mso.getLang().equals("en")) {
+					fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.ENGLISH));
+				} else {
+					fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.TRADITIONAL_CHINESE));
+				}
+				if (snsAuth != null && snsAuth.isEnabled()) {
+					
+					fbPost.setFacebookId(snsAuth.getToken());
+					fbPost.setAccessToken(snsAuth.getSecret());
+					
+					QueueFactory.add(null, "/CMSAPI/postToTwitter", fbPost);
+				}
+			}
+		} catch (UnknownHostException e) {
+			NnLogUtil.logException(e);
+		}
 	} 
 
 	public NnProgram save(NnProgram program) {
