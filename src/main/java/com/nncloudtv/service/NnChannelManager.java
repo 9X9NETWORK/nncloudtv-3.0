@@ -18,6 +18,7 @@ import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CntSubscribe;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnSet;
 
 @Service
@@ -298,4 +299,20 @@ public class NnChannelManager {
 		}
 		return bad;
 	}
+	
+	/** unmark if needed
+	public void calibrateProgramCnt(NnChannel channel) {
+		
+		NnProgramManager programMngr = new NnProgramManager();
+		List<NnProgram> programs = programMngr.findByChannel(channel.getId());
+		int counter = 0;
+		for (NnProgram program : programs) {
+			if (program.getStatus() == NnProgram.STATUS_OK) {
+				counter++;
+			}
+		}
+		// not save yet
+		channel.setProgramCnt(counter);
+		log.info("programCnt: " + counter);
+	} **/
 }

@@ -392,7 +392,7 @@ public class AdminChannelController {
 //	                                   @RequestParam(required=false) String  langCode,
 	                                   @RequestParam(required=false) Boolean isPublic,
 //	                                   @RequestParam(required=false) Boolean featured,
-	                                   @RequestParam(required=false) Integer programCount) {
+	                                   @RequestParam(required=false) Integer programCnt) {
 		
 //		logger.info("admin = " + userService.getCurrentUser().getEmail());		
 		NnChannel channel = channelMngr.findById(id);
@@ -434,9 +434,9 @@ public class AdminChannelController {
 			channel.setFeatured(featured);
 		}
 */		
-		if (programCount != null) {
-			logger.info("programCount = " + programCount);
-			channel.setProgramCnt(programCount);
+		if (programCnt != null) {
+			logger.info("programCnt = " + programCnt);
+			channel.setProgramCnt(programCnt);
 		}		
 		channelMngr.save(channel);
 		

@@ -898,8 +898,8 @@ var page$ = {
             return;
           } else {
             $('#program_list_readonly .right_title div').text(channelName);
-            var programCount = feed.entry.length;
-            callback(programCount);
+            var programCnt = feed.entry.length;
+            callback(programCnt);
             page$.programList.displayYouTube(feed.entry, channelId);
           }
         }
@@ -1414,8 +1414,8 @@ var page$ = {
             default:
           }
           channelInfoBlock.find('.channel_info_contenttype span').text(contentType);
-          channelInfoBlock.find('.channel_info_programcount span').text(channels[i].programCount);
-          channelInfoBlock.find('.channel_info_subscribers span').text(channels[i].subscriptionCount);
+          channelInfoBlock.find('.channel_info_programcount span').text(channels[i].programCnt);
+          channelInfoBlock.find('.channel_info_subscribers span').text(channels[i].subscriptionCnt);
           channelInfoBlock.find('.channel_info_updatedate span').text(cms.formatDate(channels[i].updateDate, true));
           // add this
           var promoteUrl = 'http://' + location.host + '/view?channel=' + channelId;
@@ -1483,8 +1483,8 @@ var page$ = {
                 return;
               }
               log('fetch: ' + username);
-              page$.programList.initYouTube(username, channel.name, function(programCount) {
-                $('.channel_info_programcount span', infoBlock).text(programCount);
+              page$.programList.initYouTube(username, channel.name, function(programCnt) {
+                $('.channel_info_programcount span', infoBlock).text(programCnt);
               }, (channel.contentType == 4), channel.id);
             } else {
               page$.programList.init(channel.id, readonly, channel.name);

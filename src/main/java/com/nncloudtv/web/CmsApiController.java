@@ -728,6 +728,7 @@ public class CmsApiController {
 			channel.setPublic(true);
 		}
 		channel.setUpdateDate(new Date());
+		// channelMngr.calibrateProgramCnt(channel);
 		channelMngr.save(channel);
 		
 		//channel1 ownership

@@ -284,8 +284,8 @@ var page$ = {
             default:
           }
           channelInfoBlock.find('.channel_info_contenttype span').text(contentType);
-          channelInfoBlock.find('.channel_info_programcount span').text(channels[i].programCount);
-          channelInfoBlock.find('.channel_info_subscribers span').text(channels[i].subscriptionCount);
+          channelInfoBlock.find('.channel_info_programcount span').text(channels[i].programCnt);
+          channelInfoBlock.find('.channel_info_subscribers span').text(channels[i].subscriptionCnt);
           channelInfoBlock.find('.channel_info_updatedate span').text(cms.formatDate(channels[i].updateDate));
           // add this
           var promoteUrl = 'http://' + location.host + '/view?channel=' + channelId;
@@ -337,7 +337,7 @@ var page$ = {
           $('<img/>').attr('src', channelSets[i].imageUrl).appendTo(channelSetInfoBlock.find('.channel_info_image'));
           channelSetInfoBlock.find('.channel_info_contenttype span').text($('#lang_label_channel_set').text());
           channelSetInfoBlock.find('.channel_info_programcount span').text('N/A');
-          channelSetInfoBlock.find('.channel_info_subscribers span').text(channelSets[i].subscriptionCount);
+          channelSetInfoBlock.find('.channel_info_subscribers span').text(channelSets[i].subscriptionCnt);
           channelSetInfoBlock.find('.channel_info_updatedate span').text(cms.formatDate(channelSets[i].updateDate));
           // add this
           var promoteUrl = 'http://' + location.host + '/';

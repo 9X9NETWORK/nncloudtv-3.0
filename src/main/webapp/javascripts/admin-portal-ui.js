@@ -2266,8 +2266,8 @@ var page$ = {
                        },                    
                        {
                          label:    'Ep. Count',
-                         name:     'programCount',
-                         index:    'programCount',
+                         name:     'programCnt',
+                         index:    'programCnt',
                          width:    90,
                          align:    'center',
                          search:   false,
@@ -2281,8 +2281,8 @@ var page$ = {
                        },
                        {
                          label:    'Sub. Count',
-                         name:     'subscriptionCount',
-                         index:    'subscriptionCount',
+                         name:     'subscriptionCnt',
+                         index:    'subscriptionCnt',
                          width:    80,
                          align:    'center',
                          search:   false,

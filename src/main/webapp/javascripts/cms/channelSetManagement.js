@@ -342,7 +342,7 @@ var page$ = {
     var innerHtml = span.html();
     var label_program_count = $('#lang_label_program_count').text();
     var label_update_time = $('#lang_label_update_time').text();
-    innerHtml += '<br/>' + label_program_count + ' : ' + channel.programCount;
+    innerHtml += '<br/>' + label_program_count + ' : ' + channel.programCnt;
     innerHtml += '<br/>' + label_update_time + ' : ' + year + '/' + month + '/' + date + '&nbsp;' + hour + ':' + minute + ':' + second;
     
     return innerHtml;
