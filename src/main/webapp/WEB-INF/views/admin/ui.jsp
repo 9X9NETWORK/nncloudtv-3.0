@@ -22,7 +22,7 @@
 </div>
 <div id="ui_tabs">
   <ul>
-    <li><a href="/admin/index">Admin Console</a></li>
+    <!-- <li><a href="/admin/index">Admin Console</a></li> -->
     <li><a href="#tabs_category_mngt">Category Management</a></li>
     <li><a href="#tabs_set_mngt">Set Management</a></li>
     <li><a href="#tabs_channel_mngt">Channel Management</a></li>
