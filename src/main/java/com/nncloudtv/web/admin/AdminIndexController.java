@@ -1,6 +1,7 @@
 package com.nncloudtv.web.admin;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,26 +9,68 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.nncloudtv.service.MsoConfigManager;
 
 @Controller
-@RequestMapping("admin/index")
+@RequestMapping("admin")
 public class AdminIndexController {
 	
 	protected static final Logger log = Logger.getLogger(AdminIndexController.class.getName());		
 
-	@RequestMapping("")
+	@RequestMapping("index")
 	public String index() {
 		return "admin/index";
 	}
-	
-	@RequestMapping("ui")
-	public String oss(Model model, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
 
+	 
+	@RequestMapping(value="welcome", method = RequestMethod.GET)
+	public String printWelcome(ModelMap model, Principal principal ) { 
+		String name = principal.getName();
+		model.addAttribute("username", name);
+		model.addAttribute("message", "Spring Security Custom Form example");
+		return "hello"; 
+	}
+	
+	@RequestMapping(value="login", method = RequestMethod.GET)
+	public String login(ModelMap model) {		
+		return "admin/login";
+ 
+	}
+ 
+	@RequestMapping(value="loginfailed", method = RequestMethod.GET)
+	public String loginerror(ModelMap model) {
+		model.addAttribute("error", "true");
+		return "admin/login";
+ 
+	}
+ 
+	@RequestMapping(value="logout", method = RequestMethod.GET)
+	public String logout(ModelMap model) {
+		return "admin/login";
+ 
+	}
+
+//	public String printWelcome(ModelMap model, Principal principal ) {
+//		 
+//		String name = principal.getName();
+//		model.addAttribute("username", name);
+//		model.addAttribute("message", "Spring Security Custom Form example");
+//		return "/admin/hello";
+	
+	
+	@RequestMapping("/index/ui")
+	public String oss(Model model, 
+				      HttpServletRequest request, 
+			          HttpServletResponse response,
+			          Principal principal)
+			throws IOException {
+		String name = principal.getName();
 		System.out.println("root path:" + MsoConfigManager.getExternalRootPath());
+		model.addAttribute("username", name);
 		model.addAttribute("root", MsoConfigManager.getExternalRootPath());		
 		response.setContentType("text/html");
 		return "admin/ui";				

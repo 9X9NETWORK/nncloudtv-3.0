@@ -52,7 +52,7 @@ public class AdminSetController {
 	                 @RequestParam(required = false) boolean      notify,
 	                 OutputStream out) {
 						
-		NnSetManager csMngr = new NnSetManager();
+		NnSetManager setMngr = new NnSetManager();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 
@@ -67,11 +67,11 @@ public class AdminSetController {
 			}
 		}
 
-		int totalRecords = csMngr.total(filter);
+		int totalRecords = setMngr.total(filter);
 		int totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);
 		if (currentPage > totalPages)
 			currentPage = totalPages;		
-		List<NnSet> results = csMngr.list(currentPage, rowsPerPage, sortIndex, sortDirection, filter);
+		List<NnSet> results = setMngr.list(currentPage, rowsPerPage, sortIndex, sortDirection, filter);
 		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
 		for (NnSet cs : results) {			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -220,6 +220,7 @@ public class AdminSetController {
 			             @RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) short seq,
 	                     OutputStream out) {
+		logger.info("channel=" + channel + ";set=" + set + ";seq=" + seq);
 		setMngr.editChannel(set, channel, seq);
 		return "OK";		
 	}
@@ -308,64 +309,64 @@ public class AdminSetController {
             @RequestParam(required=false) String featured,
             @RequestParam(required=false) String channelIds,
             @RequestParam(required=false) String seq) {
-		NnSetManager csMngr = new NnSetManager();
+		System.out.println("seq in is <<< " + seq);
+		NnSetManager setMngr = new NnSetManager();
 		NnChannelManager cMngr = new NnChannelManager();
 		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
-		NnSet cs = csMngr.findById(id);
-		if (name != null) cs.setName(name);
-		if (intro != null) cs.setIntro(intro);
+		NnSet set = setMngr.findById(id);
+		if (name != null) set.setName(name);
+		if (intro != null) set.setIntro(intro);
 		if (isPublic != null)
-			cs.setPublic(Boolean.parseBoolean(isPublic));
+			set.setPublic(Boolean.parseBoolean(isPublic));
 		if (featured != null)			
-			cs.setFeatured(Boolean.parseBoolean(featured));
+			set.setFeatured(Boolean.parseBoolean(featured));
 		if (imageUrl != null)
-			cs.setImageUrl(imageUrl);
+			set.setImageUrl(imageUrl);
 		if (beautifulUrl != null)
-			cs.setBeautifulUrl(beautifulUrl);
-		cs.setLang(lang);
-		if (seq != null) {
-			/*
-			System.out.println("seqs:" + seq);
-			cs.setSeq(Short.parseShort(seq));
-			*/
+			set.setBeautifulUrl(beautifulUrl);
+		set.setLang(lang);
+		if (set.isFeatured()) {
+			NnSet toBeSwapped = setMngr.findByLangAndSeq(lang, seq);
+			if (toBeSwapped != null) {
+				toBeSwapped.setSeq(set.getSeq());
+				setMngr.save(toBeSwapped);
+			}
+			set.setSeq(Short.parseShort(seq));
 		}		
-		csMngr.save(cs);
-		//this.adjustSeq(cs, seq);
-		this.addRecCategory(cs);
-
+		setMngr.save(set);
+		this.addRecCategory(set);
 		if (channelIds == null) 
 			return "OK";
 		
 		String[] chId = channelIds.split(",");
 		String[] chSeq = seq.split(",");		
 
-		List<NnSetToNnChannel> list = cscMngr.findBySet(cs.getId());
+		List<NnSetToNnChannel> list = cscMngr.findBySet(set.getId());
 		cscMngr.deleteAll(list);
 		list = new ArrayList<NnSetToNnChannel>();
 		for (int i=0; i<chId.length; i++) {
 			NnChannel c = cMngr.findById(Long.parseLong(chId[i]));			
-			NnSetToNnChannel csc = new NnSetToNnChannel(cs.getId(), c.getId(), Short.parseShort(chSeq[i]));
+			NnSetToNnChannel csc = new NnSetToNnChannel(set.getId(), c.getId(), Short.parseShort(chSeq[i]));
 			csc.setCreateDate(new Date());
 			list.add(csc);
 		}
 		cscMngr.saveAll(list);
 		
 		CategoryManager catMngr = new CategoryManager();		
-		if (cs.getLang().equals("zh") && cs.getName().equals("綜合推薦")) {
+		if (set.getLang().equals("zh") && set.getName().equals("綜合推薦")) {
 			Category cat = catMngr.findByName("推薦頻道");
 			if (cat != null) {
-				catMngr.addSet(cat, cs);
+				catMngr.addSet(cat, set);
 			}				
 		}
-		if (cs.getLang().equals("en") && cs.getName().equals("Recommended")) {
+		if (set.getLang().equals("en") && set.getName().equals("Recommended")) {
 			Category cat = catMngr.findByName("Recommended");
 			if (cat != null) {
 				if (cat != null) {
-				   catMngr.addSet(cat, cs);
+				   catMngr.addSet(cat, set);
 				}
 			}				
-		}
-		//this.adjustSeq(cs, seq);		
+		}		
 		return "OK";
 	}
 		
