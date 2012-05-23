@@ -74,8 +74,12 @@ public class NnChannelManager {
 					channel.setIntro(info.get("description"));
 				if (info.get("thumbnail") != null)
 					channel.setImageUrl(info.get("thumbnail"));
-			}
-			
+			}			
+		}
+		if (channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
+			channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
+			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {			
+			new DepotService().submitToTranscodingService(channel.getId(), channel.getSourceUrl(), req);								
 		}
 		channel.setPublic(false);
 		channel = this.save(channel);

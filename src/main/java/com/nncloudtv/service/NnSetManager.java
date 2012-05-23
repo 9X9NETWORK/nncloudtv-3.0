@@ -120,8 +120,6 @@ public class NnSetManager {
 			for (int i=seq; i<list.size(); i++) {
 				NnSetToNnChannel r = list.get(i);
 				r.setSeq((short)(i+1));
-				int test = i+1;
-				System.out.println("-----------------channel id -------------" + list.get(i).getChannelId() + "; seq=" + test);
 				toBeSaved.add(r);
 			}
 			sToC.setSeq(channels.get(0).getSeq());
