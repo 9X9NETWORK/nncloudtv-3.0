@@ -743,7 +743,7 @@ var page$ = {
             },
             editrules: {
               edithidden: true,
-              required: true
+              required: false
             },
             searchoptions: {
               sopt: ['eq'],
