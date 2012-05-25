@@ -7,7 +7,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV102"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV104"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -40,7 +40,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/flowplayer-3.2.4.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player30.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player31.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.V2.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
@@ -498,13 +498,31 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
   </ul>
 </div>
 
-<div id="set-bubble">
-  <img src="${nroot}/images/bubble_tip.png" id="set-bubble-tip">
+<div id="setbubble">
+  <img src="${nroot}/images/bubble_tip.png" id="setbubble-tip">
   <img src="${nroot}/images/bg_bubble.png" class="bg-bubble">
   <p id="setbubble-content">
     <span id="setbubble-title"></span>
     <span id="setbubble-description"></span>
   </p>
+</div>
+
+<div id="setbubbleclick">
+  <div id="setbubbleclick-slider" class="slider-wrap"><div class="slider-vertical"></div></div> 
+  <img src="${nroot}/images/add_bubble_tip_left.png" class="left-bubble-tip">
+  <img src="${nroot}/images/add_bubble_tip_right.png" class="right-bubble-tip">
+  <p id="btn-setbub-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
+  <div id="setbubbleclick-content">
+    <div class="setbubbleclick-category-content">
+      <ul id="setbubbleclick-list" class="setbubbleclick-level3-list">
+        <li>
+          <span class="setbubbleclick-title">Top 10 TV Show of the World</span>
+          <span class="setbubbleclick-description">Green sails in a television action movie serial shows</span>
+          <span class="setbubbleclick-channel">20 channels</span>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <div id="add-bubble">
@@ -569,17 +587,20 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
         <img src="${nroot}/images/btn_flip_L_on.png" id="btn-fp-on">
         <img src="${nroot}/images/btn_flip_L_disable.png" id="btn-fp-disable">
       </p>
-      <!--p id="preview-index"><span>Previewing</span><span id="index-catg-title"></span><span class="divider">&gt;</span><span id="index-ch-title"></span></p-->
-      <p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title"></span></p>
+      <!--p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title"></span></p-->
+
+
+
       <div id="preview-win">
-        <div id="preview-video"></div>
+        <div id="preview-win-top-bar">
+           <p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title">The Beautiful Universe</span></p>
+        </div>
+        <div id="preview-video-bg">
+           <div id="preview-video"></div>
+        </div>
         <p id="preview-index-meta">
-          <span id="meta-set-title"></span><span class="divider">»</span><span id="meta-ch-title"></span><span class="divider">»</span><span id="meta-ep-title"></span>
+          <span id="meta-set-title">Top 10 TV Shows in the World</span><span class="divider">&raquo;</span><span id="meta-ch-title">The Beautyful Universe</span><span class="divider">&raquo;</span><span id="meta-ep-title">Jay Leno's eclectic car collection</span>
         </p>
-        <!--p id="preview-ep-meta">
-          <span class="meta-head">Episode:</span>
-          <span class="ep-title"></span>
-        </p-->
         <p id="ep-switcher">
           <img src="${nroot}/images/icon_ep.png" id="btn-ep">
           <span id="ep-show">Show episodes</span>
@@ -589,6 +610,9 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
           <img src="${nroot}/images/arrow_left_on.png" id="preview-arrow-left">
           <ul id="preview-ep-list"></ul>
         </div>
+
+
+
         <div id="preview-controller">
           <ul id="control-list">
             <li id="btn-info"><img src="${nroot}/images/btn_info.png" id="icon-info" title="Channel Info"></li>
