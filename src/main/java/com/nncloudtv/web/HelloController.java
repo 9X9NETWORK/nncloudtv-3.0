@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.JDOFatalDataStoreException;
 import javax.jdo.PersistenceManager;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,6 +34,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.Pdr;
+import com.nncloudtv.service.DepotService;
 import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
@@ -48,13 +49,13 @@ import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
 @RequestMapping("hello")
 public class HelloController {
 
-	protected static final Logger log = Logger.getLogger(HelloController.class.getName());
+	//protected static final Logger log = Logger.getLogger(HelloController.class.getName());
+	protected static final Logger log = Logger.getLogger(HelloController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) { 
 		model.addAttribute("message", "Spring Security Hello World");
 		return "hello";
- 
 	}
     
 	//basic test
@@ -69,8 +70,9 @@ public class HelloController {
     @RequestMapping("log")
     public ModelAndView log()  {
     	log.info("----- hello log -----");
-    	//log.warn("----- hello warning -----");
-    	//log.fatal("----- hello severe -----");
+    	log.warn("----- hello warning -----");
+    	log.fatal("----- hello severe -----");
+    	System.out.println("----- hello console -----");
         return new ModelAndView("hello", "message", "log");
     }    
     
@@ -382,7 +384,15 @@ public class HelloController {
     	return "OK";
     }
     */
-    
+    @RequestMapping("getDepotServer")
+    public ResponseEntity<String> getDepotServer(HttpServletRequest req) {
+    	DepotService depot = new DepotService();
+		String[] transcodingEnv = depot.getTranscodingEnv(req);
+		String transcodingServer = transcodingEnv[0];
+		String callbackUrl = transcodingEnv[1];
+    	String output = "transcodingServer:" + transcodingServer + "\n" + ";callbackUrl:" + callbackUrl;
+    	return NnNetUtil.textReturn(output);		
+    }
 
     //test ip behind proxy, aka load balancer
     @RequestMapping("getIp")
