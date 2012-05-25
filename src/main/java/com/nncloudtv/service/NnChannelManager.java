@@ -78,13 +78,13 @@ public class NnChannelManager {
 					channel.setImageUrl(info.get("thumbnail"));
 			}			
 		}
+		channel.setPublic(false);
+		channel = this.save(channel);
 		if (channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
 			channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
 			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
 			new DepotService().submitToTranscodingService(channel.getId(), channel.getSourceUrl(), req);								
 		}
-		channel.setPublic(false);
-		channel = this.save(channel);
 		return channel;
 	}
 	
