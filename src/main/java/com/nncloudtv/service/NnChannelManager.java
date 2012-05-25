@@ -18,7 +18,6 @@ import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CntSubscribe;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnSet;
 
 @Service
@@ -37,10 +36,13 @@ public class NnChannelManager {
 			return null;
 		
 		NnChannel channel = this.findBySourceUrl(url);		
-		if (channel != null)
+		if (channel != null) {
+			log.info("submit a duplicate channel:" + channel.getId());
 			return channel; 
+		}
 		channel = new NnChannel(url);
 		channel.setContentType(this.getContentTypeByUrl(url));
+		log.info("new channel contentType:" + channel.getContentType());
 		if (channel.getContentType() == NnChannel.CONTENTTYPE_FACEBOOK) {
 			FacebookLib lib = new FacebookLib();
 			String[] info = lib.getFanpageInfo(url);
@@ -78,7 +80,7 @@ public class NnChannelManager {
 		}
 		if (channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
 			channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
-			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {			
+			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
 			new DepotService().submitToTranscodingService(channel.getId(), channel.getSourceUrl(), req);								
 		}
 		channel.setPublic(false);
