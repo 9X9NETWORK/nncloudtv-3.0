@@ -204,7 +204,7 @@ public class DepotService {
 		return new PostResponse(String.valueOf(NnStatusCode.SUCCESS), "SUCCESS");
 	}
 
-	public void submitToTranscodingService(long channelId, String sourceUrl, HttpServletRequest req) {
+	public void submitToTranscodingService(long channelId, String sourceUrl, HttpServletRequest req) {		
 		PostUrl postUrl = new PostUrl();
 		postUrl.setKey(String.valueOf(channelId));
 		postUrl.setRss(sourceUrl);	
@@ -236,11 +236,12 @@ public class DepotService {
 		String callback_env = "_callback";
 		if (url.contains("alpha.9x9.tv")) {
 			env = "alpha";
-		} else if (url.contains("dev1.9x9.tv") || url.contains("dev2.9x9.tv")){
+		} else if (url.contains("dev") && url.contains("9x9.tv")){
 			env = "dev";
-		} else if (url.contains("www.9x9.tv")) {				   
+		} else if (url.contains("9x9.tv")) {				   
 			env = "prod";
 		}
+		log.info("submit to server " + env);
 		callback_env = env + callback_env;
 		
 		//set transcoding server and callback urls
