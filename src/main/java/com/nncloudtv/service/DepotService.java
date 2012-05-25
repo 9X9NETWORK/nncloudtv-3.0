@@ -209,7 +209,7 @@ public class DepotService {
 		postUrl.setKey(String.valueOf(channelId));
 		postUrl.setRss(sourceUrl);	
 		String[] transcodingEnv = this.getTranscodingEnv(req);
-		String transcodingServer = transcodingEnv[0];
+		String transcodingServer = transcodingEnv[0] + "podcatcher.php";
 		String callbackUrl = transcodingEnv[1];
 		String devel = transcodingEnv[2];		
 		postUrl.setCallback(callbackUrl);
