@@ -1369,9 +1369,9 @@ public class PlayerApiController {
 	/**
 	 * Create a 9x9 channel
 	 * 
-	 * @param name
-	 * @param description
-	 * @param image
+	 * @param name name
+	 * @param description description
+	 * @param image image url
 	 * @param temp not specify means false 
 	 */	
 	@RequestMapping(value="channelCreate")
@@ -1405,12 +1405,11 @@ public class PlayerApiController {
 	 * Create a 9x9 program
 	 * 
 	 * @param channel channel id
-	 * @param name
-	 * @param image
-	 * @param description
-	 * @param image
-	 * @param audio
-	 * @param video
+	 * @param name name
+	 * @param image image url
+	 * @param description description
+	 * @param audio audio url
+	 * @param video video url
 	 * @param temp not specify means false 
 	 */	
 	@RequestMapping(value="programCreate")
@@ -1447,8 +1446,8 @@ public class PlayerApiController {
 	 * Set program property
 	 * 
 	 * @param program program id
-	 * @param property
-	 * @param value
+	 * @param property program property
+	 * @param value program property value
 	 */	
 	@RequestMapping(value="setProgramProperty")
 	public ResponseEntity<String> setProgramProperty(
@@ -1479,8 +1478,8 @@ public class PlayerApiController {
 	 * Set channel property
 	 * 
 	 * @param channel channel id
-	 * @param property
-	 * @param value
+	 * @param property channel property
+	 * @param value channel property value
 	 */	
 	@RequestMapping(value="setChannelProperty")
 	public ResponseEntity<String> setChannelProperty(

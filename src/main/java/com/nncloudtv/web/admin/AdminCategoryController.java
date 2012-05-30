@@ -2,15 +2,12 @@ package com.nncloudtv.web.admin;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +45,13 @@ public class AdminCategoryController {
 		return "error/exception";				
 	}
 	
+	/**
+	 * Add the set to the category
+	 * 
+	 * @param category category id
+	 * @param set set id
+	 * @return status in text
+	 */
 	@RequestMapping(value="addSet")
 	public @ResponseBody String addSet(
 			             @RequestParam(required = false) long category,
@@ -65,6 +69,13 @@ public class AdminCategoryController {
 		return "OK";		
 	}
 
+	/**
+	 * Delete the set from the category
+	 * 
+	 * @param category
+	 * @param id
+	 * @return status in text
+	 */
 	@RequestMapping(value="deleteSet")
 	public @ResponseBody String deleteSet(
 			             @RequestParam(required = false) long category,
@@ -76,6 +87,15 @@ public class AdminCategoryController {
 			return "there are nothing can delete";
 	}
 	
+	/**
+	 * List sets of the category
+	 * 
+	 * @param categoryId category id
+	 * @param currentPage current page
+	 * @param rowsPerPage rows per page
+	 * @param sortIndex sorting field
+	 * @param sortDirection asc or desc
+	 */
 	//list every channel under a category	
 	@RequestMapping(value = "listSet", params = {"category", "page", "rows", "sidx", "sord"})
 	public void listSet(@RequestParam(value = "category") Long         categoryId,
@@ -133,6 +153,17 @@ public class AdminCategoryController {
 		}
 	}
 	
+	/**
+	 * Category listing 
+	 * 
+	 * @param currentPage current page
+	 * @param rowsPerPage rows per page
+	 * @param sortIndex sort field
+	 * @param sortDirection asc or desc
+	 * @param searchField search field
+	 * @param searchOper search condition
+	 * @param searchString search string
+	 */
 	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
 	public void list(@RequestParam(value = "page")   Integer      currentPage,
 	                 @RequestParam(value = "rows")   Integer      rowsPerPage,
@@ -195,6 +226,15 @@ public class AdminCategoryController {
 		}
 	}
 	
+	/**
+	 * Category create
+	 * 
+	 * @param name category nama
+	 * @param lang category language, en or zh
+	 * @param seq category sequence in the directory
+	 * @param isPublic to show in directory or not
+	 * @return status in text
+	 */
 	@RequestMapping("create") 	
 	public @ResponseBody String create(@RequestParam(required=true) String name,
 									   @RequestParam(required=true) String lang,
@@ -208,6 +248,12 @@ public class AdminCategoryController {
 		return "OK";
 	}
 
+	/**
+	 * Category deletion
+	 * 
+	 * @param id category id
+	 * @return status in text
+	 */
 	@RequestMapping("delete")
 	public @ResponseBody String delete(
 			@RequestParam(required=true) Long id) {
@@ -246,6 +292,17 @@ public class AdminCategoryController {
 		categoryMngr.saveAll(toBeSaved);
 	}
 	
+	/**
+	 * Category edit
+	 * 
+	 * @param id category id
+	 * @param name catetory name
+	 * @param isPublic to be shown in directory or not
+	 * @param seq sequence in the directory
+	 * @param channelCnt channel count
+	 * @param lang language, zh or en
+	 * @return status in text
+	 */
 	@RequestMapping("edit")
 	public @ResponseBody String edit(
 			@RequestParam(required=true)  Long    id,
@@ -292,6 +349,7 @@ public class AdminCategoryController {
 		return "OK";
 	}
 	
+	/*
 	@RequestMapping("categoriesHtmlSelectOptions")
 	public void categoriesHtmlSelectOptions(HttpServletResponse response, OutputStream out) {
 		
@@ -313,4 +371,5 @@ public class AdminCategoryController {
 			return;
 		}
 	}
+	*/
 }

@@ -86,7 +86,12 @@ public class CmsApiController {
 	}
 	
 	//////////////////// NnSet Management ////////////////////
-	
+	/**
+	 * Search channel 
+	 * 
+	 * @param text search text
+	 * @return list of channel objects
+	 */
 	@RequestMapping("searchChannel")
 	public @ResponseBody List<NnChannel> searchChannel(@RequestParam String text) {
 		log.info("search: " + text);
@@ -96,6 +101,13 @@ public class CmsApiController {
 		}
 		return NnChannelManager.search(text, true);
 	}
+	
+	/**
+	 * Retrieve sets owned by the mso 
+	 * 
+	 * @param msoId
+	 * @return list of set objects
+	 */
 	
 	@RequestMapping("defaultNnSetInfo")
 	public @ResponseBody NnSet defaultNnSetInfo(@RequestParam Long msoId) {
@@ -119,14 +131,20 @@ public class CmsApiController {
 		
 		return category;
 	}
-	
+
 	/**
 	 * List all channel in mso default channel set
+	 * 
+	 * @param msoId mso id
+	 * @param isGood find success channel or not
+	 * @param setId set id
+	 * @return list of set objects
 	 */
 	@RequestMapping("defaultNnSetChannels")
-	public @ResponseBody List<NnChannel> defaultNnSetChannels(@RequestParam(required=false) Long msoId,
-	                                                                 @RequestParam(required=false) Boolean isGood,
-	                                                                 @RequestParam(required=false) Long setId) {
+	public @ResponseBody List<NnChannel> defaultNnSetChannels(
+			@RequestParam(required=false) Long msoId,
+	        @RequestParam(required=false) Boolean isGood,
+	        @RequestParam(required=false) Long setId) {
 		CmsApiService cmsService = new CmsApiService();
 		NnSetManager setMngr = new NnSetManager();
 		NnSet channelSet = null;
@@ -149,6 +167,20 @@ public class CmsApiController {
 		return results;
 	}
 	
+	/**
+	 * Save set information
+	 * 
+	 * @param req
+	 * @param setId set id
+	 * @param channelIds channel ids
+	 * @param imageUrl image url
+	 * @param name name
+	 * @param intro description
+	 * @param tag tag
+	 * @param lang language, en or zh
+	 * @param categoryId category id it belongs to
+	 * @return status in text
+	 */
 	@RequestMapping("saveChannelSet")
 	public @ResponseBody String saveNnSet(HttpServletRequest req,
 	                                           @RequestParam Long setId,
@@ -231,9 +263,17 @@ public class CmsApiController {
 		PiwikLib.createPiwikSite(setId, 0, req);
 		return "OK";
 	}
-	
+
 	//////////////////// Channel/Program Management ////////////////////
-	
+	/**
+	 * Retrieve podcast information
+	 *   
+	 * @param url
+	 * @return Map<String, String> Key includes title, description, thumbnail
+	 * @throws IllegalArgumentException
+	 * @throws FeedException
+	 * @throws IOException
+	 */
 	@RequestMapping("getPodcastInfo")
 	public @ResponseBody Map<String, String> getPodcastInfo(@RequestParam String url) throws IllegalArgumentException, FeedException, IOException {
 		//URL feedUrl = new URL(url);
@@ -260,9 +300,12 @@ public class CmsApiController {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * List all channels owned by mso
+	 * 
+	 * @param msoId mso id
+	 * @return list of channel objects
 	 */
 	@RequestMapping("listOwnedChannels")
 	public @ResponseBody List<NnChannel> listOwnedChannels(@RequestParam Long msoId) {
@@ -288,12 +331,12 @@ public class CmsApiController {
 		}
 		return results;
 	}
-	
+
 	/**
-	 * List all channel sets owned by mso
-	 * 
-	 * If msoId is missing, list system sets instead
-	 * 
+	 * List all channel sets owned by mso. If msoId is missing, list system sets instead 
+	 * @param msoId mso id
+	 * @param sortby sort field
+	 * @return list of set objects
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("listOwnedChannelSets")
@@ -370,7 +413,13 @@ public class CmsApiController {
 		// log.info("<<<<<<<<<< results size:" + results.size() + ";" + results.get(0).getName());
 		return results;
 	}
-	
+
+	/**
+	 * Change program public attribute 
+	 * 
+	 * @param programId program id
+	 * @return true or false of a program's publicity
+	 */
 	@RequestMapping("switchProgramPublicity")
 	public @ResponseBody Boolean switchProgramPublicity(@RequestParam Long programId) {
 		NnProgramManager programMngr = new NnProgramManager();
@@ -383,6 +432,12 @@ public class CmsApiController {
 		return program.isPublic();
 	}
 	
+	/**
+	 * Change channel public attribute 
+	 * 
+	 * @param channelId channel id
+	 * @return true or false of a program's publicity
+	 */	
 	@RequestMapping("switchChannelPublicity")
 	public @ResponseBody Boolean switchChannelPublicity(@RequestParam Long channelId) {
 		NnChannelManager channelMngr = new NnChannelManager();
@@ -395,6 +450,11 @@ public class CmsApiController {
 		return channel.isPublic();
 	}
 	
+	/**
+	 * Remove a program
+	 * 
+	 * @param programId program id
+	 */
 	@RequestMapping("removeProgram")
 	public @ResponseBody void removeProgram(@RequestParam Long programId) {
 		log.info("programId = " + programId);
@@ -408,6 +468,12 @@ public class CmsApiController {
 		}
 	}
 	
+	/**
+	 * Remove channel's ownership of a mso, but channel itself is kept 
+	 * 
+	 * @param channelId channel id
+	 * @param msoId mso id
+	 */
 	@RequestMapping("removeChannelFromList")
 	public @ResponseBody void removeChannelFromList(@RequestParam Long channelId, @RequestParam Long msoId) {
 		
@@ -431,6 +497,12 @@ public class CmsApiController {
 		}
 	}
 	
+	/**
+	 * Retrieve program info
+	 * 
+	 * @param programId program id
+	 * @return program object
+	 */
 	@RequestMapping("programInfo")
 	public @ResponseBody NnProgram programInfo(@RequestParam Long programId) {
 		NnProgramManager programMngr = new NnProgramManager();
@@ -441,12 +513,25 @@ public class CmsApiController {
 		return program;
 	}
 	
+	/**
+	 * Retrieve channel info
+	 * 
+	 * @param channelId channel id
+	 * @return channel object
+	 */
 	@RequestMapping("channelInfo")
 	public @ResponseBody NnChannel channelInfo(@RequestParam Long channelId) {
 		NnChannelManager channelMngr = new NnChannelManager();
 		return channelMngr.findById(channelId);
 	}
 	
+	/**
+	 * Create a channel by url
+	 * 
+	 * @param req
+	 * @param sourceUrl
+	 * @return channel object
+	 */
 	@RequestMapping("importChannelByUrl")
 	public @ResponseBody NnChannel importChannelByUrl(HttpServletRequest req, @RequestParam String sourceUrl) {
 		
@@ -483,6 +568,19 @@ public class CmsApiController {
 		return channel;
 	}
 	
+	/**
+	 * Create a 9x9 channel
+	 * 
+	 * @param sourceUrl source url
+	 * @param imageUrl image url
+	 * @param name name
+	 * @param intro description
+	 * @param tag tag
+	 * @param lang language
+	 * @param msoId mso id
+	 * @return status in text
+	 * @throws NoSuchAlgorithmException
+	 */
 	@RequestMapping("addChannelByUrl")
 	public @ResponseBody String addChannelByUrl(HttpServletRequest req,
 	                                            @RequestParam String sourceUrl,
@@ -546,7 +644,20 @@ public class CmsApiController {
 		
 		return "OK";
 	}
-	
+
+	/**
+	 * Create program
+	 * 
+	 * @param programId program id
+	 * @param channelId channel id
+	 * @param sourceUrl source url
+	 * @param imageUrl image url
+	 * @param name name
+	 * @param comment curator comment
+	 * @param intro description
+	 * @return status in text
+	 * @throws NoSuchAlgorithmException
+	 */
 	@RequestMapping("saveNewProgram")
 	public @ResponseBody String saveNewProgram(HttpServletRequest req,
 	                                           @RequestParam Long programId,
@@ -625,6 +736,17 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	/**
+	 * Edit program
+	 * 
+	 * @param programId program id
+	 * @param imageUrl image url
+	 * @param name name 
+	 * @param intro description
+	 * @param comment curator comment
+	 * @return status intext
+	 * @throws NoSuchAlgorithmException
+	 */
 	@RequestMapping("saveProgram")
 	public @ResponseBody String saveProgram(HttpServletRequest req,
 	                                        @RequestParam Long programId,
@@ -675,7 +797,20 @@ public class CmsApiController {
 		
 		return "OK";
 	}
-	
+
+	/**
+	 * Channel edit
+	 * 
+	 * @param channelId channel id
+	 * @param msoId mso id
+	 * @param imageUrl image url
+	 * @param name name
+	 * @param intro description
+	 * @param tag tag
+	 * @param lang language
+	 * @return status in text
+	 * @throws NoSuchAlgorithmException
+	 */
 	@RequestMapping("saveChannel")
 	public @ResponseBody String saveChannel(HttpServletRequest req,
 	                                        @RequestParam Long channelId,
@@ -766,7 +901,14 @@ public class CmsApiController {
 		updateProgramListSeq(channelId, programListStr);
 		
 	}
-	
+
+	/**
+	 * Adjust program list
+	 * 
+	 * @param channelId channel id
+	 * @param programIdList program list, separed with comma
+	 * @return status in text
+	 */
 	@RequestMapping("updateProgramListSeq")
 	public @ResponseBody String updateProgramListSeq(@RequestParam Long channelId, @RequestParam String programIdList) {
 		log.info("channelId: " + channelId);
@@ -802,8 +944,12 @@ public class CmsApiController {
 		CacheFactory.delete(cacheKey);
 		return "OK";
 	}
-	
-	// which system set contains this channel
+	/**
+	 * Which system set contains this channel
+	 * 
+	 * @param channelId channel id
+	 * @return set object
+	 */ 
 	@RequestMapping("channelSystemNnSet")
 	public @ResponseBody NnSet channelSystemNnSet(@RequestParam Long channelId) {
 		CmsApiService cmsService = new CmsApiService();
@@ -816,6 +962,12 @@ public class CmsApiController {
 			return null;
 	}
 	
+	/**
+	 * Create program with default values
+	 * 
+	 * @param contentType content type
+	 * @return program id
+	 */
 	@RequestMapping("createProgramSkeleton")
 	public @ResponseBody Long createProgramSkeleton(@RequestParam(required=false) Short contentType) {
 		NnProgramManager programMngr = new NnProgramManager();
@@ -841,7 +993,11 @@ public class CmsApiController {
 		
 		return program.getId();
 	}
-	
+
+	/**
+	 * Create channel with default values 
+	 * @return channel id
+	 */
 	@RequestMapping("createChannelSkeleton")
 	public @ResponseBody Long createChannelSkeleton() {
 		
@@ -855,6 +1011,12 @@ public class CmsApiController {
 		return channel.getId();
 	}
 	
+	/**
+	 * Program listing
+	 * 
+	 * @param channelId
+	 * @return list of program objects
+	 */
 	@RequestMapping("programList")
 	public @ResponseBody List<NnProgram> programList(Long channelId) {
 		
@@ -865,8 +1027,14 @@ public class CmsApiController {
 		return results;
 	}
 	
-	//////////////////// Directory Management ////////////////////	
-	
+	////////////////////Directory Management ////////////////////	
+	/**
+	 * List all the sets under the category  
+	 * 
+	 * @param categoryId category id
+	 * @param isPublic public sets or not
+	 * @return
+	 */
 	@RequestMapping("listCategoryNnSets")
 	public @ResponseBody List<NnSet> listCategoryNnSets(@RequestParam Long categoryId, @RequestParam(required=false) Boolean isPublic) {
 		CategoryManager catMngr = new CategoryManager();
@@ -876,9 +1044,13 @@ public class CmsApiController {
 			return catMngr.findSetsByCategory(categoryId, false);
 		}
 	}
-	
+
 	/**
 	 * List all system categories (mso in TYPE_NN)
+	 * 
+	 * @param parentId category parent id, default is 0
+	 * @param lang language, en or zh
+	 * @return list of category objects
 	 */
 	@RequestMapping("systemCategories")
 	public @ResponseBody List<Category> systemCategories(@RequestParam(required=false) Long parentId,
@@ -921,8 +1093,15 @@ public class CmsApiController {
 		return results;
 	}
 	
-	//////////////////// Promotion Tools ////////////////////
-	
+	////////////////////Promotion Tools ////////////////////
+	/**
+	 * Enable or disable sharing promotion information
+	 * 
+	 * @param msoId mso id
+	 * @param type mso type
+	 * @param enabled enablie sharing features
+	 * @return status in text
+	 */
 	@RequestMapping("setSnsAuth")
 	public @ResponseBody String setSnsAuth(@RequestParam Long msoId,
 	                                        @RequestParam Short type,
@@ -937,9 +1116,17 @@ public class CmsApiController {
 			return "NotFound";
 		}
 	}
+	
+	/**
+	 * Remove sharing promotion information
+	 * 
+	 * @param msoId mso id 
+	 * @param type mso type
+	 * @return status in text
+	 */
 	@RequestMapping("removeSnsAuth")
 	public @ResponseBody String removeSnsAuth(@RequestParam Long msoId,
-	                                           @RequestParam Short type) {
+	                                          @RequestParam Short type) {
 		SnsAuthManager snsMngr = new SnsAuthManager();
 		AutosharingService shareService = new AutosharingService();
 		
@@ -954,11 +1141,20 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	/**
+	 * Create sharing promotion information
+	 * 
+	 * @param msoId mso id
+	 * @param type mso type
+	 * @param token sns token
+	 * @param secrete sns secret 
+	 * @return
+	 */
 	@RequestMapping("createSnsAuth")
 	public @ResponseBody String createSnsAuth(@RequestParam Long msoId,
-	                                           @RequestParam Short type,
-	                                           @RequestParam String token,
-	                                           @RequestParam(required=false) String secrete) {
+	                                          @RequestParam Short type,
+	                                          @RequestParam String token,
+	                                          @RequestParam(required=false) String secrete) {
 		
 		SnsAuthManager snsMngr = new SnsAuthManager();
 		SnsAuth snsAuth = snsMngr.findMsoIdAndType(msoId, type);
@@ -978,6 +1174,12 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	/**
+	 * List sharing promotion information
+	 * 
+	 * @param msoId mso id
+	 * @return list of SnsAuth objects
+	 */
 	@RequestMapping("listSnsAuth")
 	public @ResponseBody List<SnsAuth> listSnsAuth(@RequestParam Long msoId) {
 		log.info("msoId = " + msoId);
@@ -990,7 +1192,14 @@ public class CmsApiController {
 		}
 		return list;
 	}
-	
+
+	/**
+	 * List channel auto sharing information
+	 * 
+	 * @param msoId mso id
+	 * @param channelId channel id
+	 * @return list of channel auto sharing objects
+	 */
 	@RequestMapping("listChannelAutosharing")
 	public @ResponseBody List<NnChannelAutosharing> listChannelAutosharing(@RequestParam Long msoId, @RequestParam Long channelId) {
 		log.info("msoId = " + msoId);
@@ -999,6 +1208,13 @@ public class CmsApiController {
 		return shareService.findByChannelAndMso(channelId, msoId);
 	}
 	
+	/**
+	 * List set auto sharing information
+	 * 
+	 * @param msoId mso id
+	 * @param setId set id
+	 * @return list of set auto sharing objects
+	 */
 	@RequestMapping("listChannelSetAutosharing")
 	public @ResponseBody List<NnSetAutosharing> listNnSetAutosharing(@RequestParam Long msoId, @RequestParam Long setId) {
 		log.info("msoId = " + msoId);
@@ -1007,6 +1223,16 @@ public class CmsApiController {
 		return shareService.findBySetAndMso(setId, msoId);
 	}
 	
+	/**
+	 * Create channel auto sharing
+	 * 
+	 * @param msoId mso id
+	 * @param channelId channel id
+	 * @param parameter parameters
+	 * @param target target
+	 * @param type type
+	 * @return status in text
+	 */
 	@RequestMapping("createChannelAutosharing")
 	public @ResponseBody String createChannelAutosharing(@RequestParam Long msoId,
 	                                                   @RequestParam Long channelId,
@@ -1038,6 +1264,12 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	/**
+	 * Create set auto sharing
+	 * @param msoId mso id
+	 * @param setId set id
+	 * @param type type
+	 */
 	@RequestMapping("createChannelSetAutosharing")
 	public @ResponseBody void createNnSetAutosharing(@RequestParam Long msoId,
 	                                                      @RequestParam Long setId,
@@ -1051,7 +1283,15 @@ public class CmsApiController {
 			shareService.create(new NnSetAutosharing(msoId, setId, type));
 		}
 	}
-	
+
+	/**
+	 * Remove a channel's auto sharing feature
+	 * 
+	 * @param msoId mso id
+	 * @param channelId channel id
+	 * @param type type
+	 * @return status in text
+	 */
 	@RequestMapping("removeChannelAutosharing")
 	public @ResponseBody String removeChannelAutosharing(@RequestParam Long msoId,
 	                                                   @RequestParam Long channelId,
@@ -1068,6 +1308,13 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	/**
+	 * Remove a set's auto sharing feature
+	 * 
+	 * @param msoId mso id
+	 * @param setId set id
+	 * @param type type
+	 */
 	@RequestMapping("removeNnSetAutosharing")
 	public @ResponseBody void removeNnSetAutosharing(@RequestParam Long msoId,
 	                                                 @RequestParam Long setId,
@@ -1082,7 +1329,12 @@ public class CmsApiController {
 			shareService.delete(autosharing);
 		}
 	}
-	
+
+	/**
+	 * Post the FBPost object to facebook
+	 * 
+	 * @param fbPost FBPost object
+	 */
 	@RequestMapping("postToFacebook")
 	public @ResponseBody void postToFacebook(@RequestBody FBPost fbPost, HttpServletRequest req) {
 		try {
@@ -1095,6 +1347,11 @@ public class CmsApiController {
 		}
 	}
 	
+	/**
+	 * Post a FBPost object to twitter
+	 * 
+	 * @param fbPost FBPost object
+	 */
 	@RequestMapping("postToTwitter")
 	public @ResponseBody void postToTwitter(@RequestBody FBPost fbPost, HttpServletRequest req) {
 		try {
@@ -1107,11 +1364,17 @@ public class CmsApiController {
 			log.info("post to twitter operation terminated : "+e.getErrorMessage());
 		}
 	}
-	
+
 	//////////////////// statistics ////////////////////
 	
-	//////////////////// others ////////////////////
-	
+	//////////////////// others ////////////////////		
+	/**
+	 * Change password
+	 * 
+	 * @param msoId mso id
+	 * @param newPassword new password
+	 * @return status in text
+	 */
 	@RequestMapping("changePassword")
 	public @ResponseBody String changePassword(@RequestParam Long msoId, @RequestParam String newPassword, HttpServletRequest req) {
 		
@@ -1140,6 +1403,15 @@ public class CmsApiController {
 		return "OK";
 	}
 	
+	/**
+	 * Send email
+	 * 
+	 * @param from from email address
+	 * @param to to email address
+	 * @param subject email subject
+	 * @param msgBody email body
+	 * @return status in text
+	 */
 	@RequestMapping(value="sendEmail", params = {"from", "to", "subject", "msgBody"})
 	public @ResponseBody String sendEmail(
 					@RequestParam(value = "from") String from,

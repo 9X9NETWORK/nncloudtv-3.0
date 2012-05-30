@@ -40,6 +40,18 @@ public class AdminSetController {
 		this.setMngr = setMngr;		
 	}	
 
+	/**
+	 * Set listing
+	 * 
+	 * @param currentPage current page
+	 * @param rowsPerPage rows per page
+	 * @param sortIndex sort field
+	 * @param sortDirection asc or desc
+	 * @param searchField search field
+	 * @param searchOper search condition
+	 * @param searchString search string 
+	 * @param notify set to true for notification page
+	 */
 	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
 	public void list(@RequestParam(value = "page")   Integer      currentPage,
 	                 @RequestParam(value = "rows")   Integer      rowsPerPage,
@@ -48,7 +60,6 @@ public class AdminSetController {
 	                 @RequestParam(required = false) String       searchField,
 	                 @RequestParam(required = false) String       searchOper,
 	                 @RequestParam(required = false) String       searchString,
-	                 @RequestParam(required = false) String       search,
 	                 @RequestParam(required = false) boolean      notify,
 	                 OutputStream out) {
 						
@@ -118,45 +129,13 @@ public class AdminSetController {
 		}				
 	}
 
-	public void channelSeqAdjust(
-			NnSet set, NnChannel channel, 
-			short seq, boolean delete, boolean edit) {
-		if (!set.isFeatured())
-			return;
-		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
-		List<NnSetToNnChannel> list = cscMngr.findBySet(set.getId());		
-		for (NnSetToNnChannel csc : list) {
-			if (!delete && csc.getSeq() >= seq) {
-				System.out.println("enter correct adjustment:" + csc.getSeq() + ";" + csc.getSeq()+1);
-				csc.setSeq((short)(csc.getSeq() + 1));
-				cscMngr.save(csc);
-			}			
-			if (delete) {
-				if (csc.getSeq() >= seq) {
-					if (csc != null) {
-						csc.setSeq((short)(csc.getSeq() - 1));
-						cscMngr.save(csc);
-					}
-				}				
-			}
-			
-		}
-		if (!delete) {
-			NnSetToNnChannel csc = cscMngr.findBySetAndChannel(set.getId(), channel.getId());
-			if (csc == null) { //add
-				csc = new NnSetToNnChannel(set.getId(), channel.getId(), (short)seq);
-				cscMngr.create(csc);
-			} else {
-				if (!edit) {
-					csc.setSeq((short)(csc.getSeq() + 1));
-				} else {
-					csc.setSeq(csc.getSeq());
-				}
-				cscMngr.save(csc);
-			}
-		}
-	}
-	
+	/**
+	 * Delete the channel from the set
+	 * 
+	 * @param set set id
+	 * @param id channel id
+	 * @return status in text
+	 */
 	@RequestMapping(value="deleteCh", params = {"id", "set"})
 	public @ResponseBody String deleteCh(@RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) long id,
@@ -183,6 +162,14 @@ public class AdminSetController {
 		return "OK";		
 	}
 
+	/**
+	 * Add the channel to the set
+	 * 
+	 * @param channel channel id
+	 * @param set set id
+	 * @param seq channel sequence in the set, it is for featured set, set to 0 for not featured set
+	 * @return status in text
+	 */
 	@RequestMapping(value="addCh")
 	public @ResponseBody String addCh(
 			             @RequestParam(required = false) long channel,
@@ -201,10 +188,6 @@ public class AdminSetController {
 		c.setSeq(Short.parseShort(seq));
 		channels.add(c);
 		setMngr.addChannels(s, channels);		
-//		if (s.isFeatured()) {
-//			this.adjustSeq(s, c, Short.parseShort(seq));
-//			//this.channelSeqAdjust(s, c, Short.parseShort(seq), false, false);
-//		}
 		List<NnChannel> existing = setMngr.findPlayerChannels(s);		
 		if (existing.get(0).getImageUrl() != null)		 {	
 			s.setImageUrl(existing.get(0).getImageUrl());
@@ -213,9 +196,16 @@ public class AdminSetController {
 		return "OK";
 	}		
 			
+	/**
+	 * Channel edit
+	 * 
+	 * @param channel channel id
+	 * @param set set id
+	 * @param seq channel sequence in the set, it is for featured set, set to 0 for not featured set
+	 * @return status in text
+	 */
 	@RequestMapping(value="editCh")
 	public @ResponseBody String editCh(
-			             @RequestParam(required = false) long id,
 			             @RequestParam(required = false) long channel,
 			             @RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) short seq,
@@ -224,7 +214,20 @@ public class AdminSetController {
 		setMngr.editChannel(set, channel, seq);
 		return "OK";		
 	}
-		
+
+	/**
+	 * Listing channels under the set
+	 * 
+	 * @param currentPage current page
+	 * @param rowsPerPage rows per page
+	 * @param sortIndex sort field
+	 * @param sortDirection asc or desc
+	 * @param searchField search field
+	 * @param searchOper search condition
+	 * @param searchString search string
+	 * @param set set id
+	 * @return status in text
+	 */
 	@RequestMapping(value = "listCh", params = {"page", "rows", "sidx", "sord", "set"})
 	public @ResponseBody String listCh(
 			         @RequestParam(value = "page")   Integer      currentPage,
@@ -246,8 +249,6 @@ public class AdminSetController {
 		List<NnChannel> totalResults = setMngr.findChannels(s);
 		int totalRecords = totalResults.size();
 		int totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);
-		//totalRecords = totalResults.size();
-		//totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);
 		
 		List<NnChannel> results = new ArrayList<NnChannel>();		
 		if(totalPages==0) {
@@ -286,6 +287,12 @@ public class AdminSetController {
 		return "OK";		
 	}
 
+	/**
+	 * Set delition
+	 * 
+	 * @param id set id
+	 * @return status in text
+	 */
 	@RequestMapping("delete")
 	public @ResponseBody String delete(@RequestParam(required=false) long id) {
 		NnSetManager setMngr = new NnSetManager();
@@ -297,6 +304,20 @@ public class AdminSetController {
 		return "OK";
 	}
 
+	/**
+	 * Set edititon
+	 * 
+	 * @param id set id
+	 * @param name set name
+	 * @param intro set description
+	 * @param lang set language, en or zh
+	 * @param imageUrl image url
+	 * @param beautifulUrl outside access url
+	 * @param isPublic to show in directory or not
+	 * @param featured is featured set or not
+	 * @param seq for featured sets. sequence shown in the front page directory 
+	 * @return status in text
+	 */
 	@RequestMapping("edit")
 	public @ResponseBody String edit(
 			@RequestParam(required=false) long id,
@@ -309,7 +330,6 @@ public class AdminSetController {
             @RequestParam(required=false) String featured,
             @RequestParam(required=false) String channelIds,
             @RequestParam(required=false) String seq) {
-		System.out.println("seq in is <<< " + seq);
 		NnSetManager setMngr = new NnSetManager();
 		NnChannelManager cMngr = new NnChannelManager();
 		NnSetToNnChannelManager cscMngr = new NnSetToNnChannelManager();
@@ -388,6 +408,18 @@ public class AdminSetController {
 		}
 	}
 	
+	/**
+	 * Set creation
+	 * 
+	 * @param name set name
+	 * @param intro set description 
+	 * @param featured is feauted set or not
+	 * @param imageUrl image url
+	 * @param beautifulUrl outside access url
+	 * @param seq seq for featured sets. sequence shown in the front page directory 
+	 * @param lang zh or en
+	 * @return status in text
+	 */
 	@RequestMapping(value = "create", params = {"name", "intro", "featured", "lang", "imageUrl", "beautifulUrl", "seq"})
 	public @ResponseBody String create(@RequestParam String name,	                                   
 	                                   @RequestParam String intro,

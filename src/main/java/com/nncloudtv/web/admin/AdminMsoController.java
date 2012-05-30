@@ -50,18 +50,19 @@ public class AdminMsoController {
 
 	@Autowired
 	public AdminMsoController(MsoManager msoMngr) {
-		this.msoMngr     = msoMngr;		
+		this.msoMngr = msoMngr;		
 	}	
-	
-	@RequestMapping("create")
-	public @ResponseBody String create(@RequestParam(value="name")String name, @RequestParam(value="intro")String intro,
-			                           @RequestParam(value="contactEmail")String contactEmail) {
-		System.out.println("contact:" + contactEmail);
-		Mso mso = new Mso(name, intro, contactEmail, Mso.TYPE_MSO);		
-		msoMngr.save(mso);
-		return "OK";
-	}
-	
+		
+	/**
+	 * Mso creation
+	 * 
+	 * @param name mso name
+	 * @param contactEmail contact email
+	 * @param password password
+	 * @param logoUrl logo image url
+	 * @param type mso type
+	 * @return status in text
+	 */
 	@RequestMapping(value = "create", params = {"name", "contactEmail", "password", "logoUrl", "type"})
 	public @ResponseBody String create(@RequestParam String name,
 	                                   @RequestParam String contactEmail,
@@ -113,6 +114,17 @@ public class AdminMsoController {
 		return "OK";
 	}
 
+	/**
+	 * Mso listing
+	 * 
+	 * @param currentPage current page
+	 * @param rowsPerPage rows per page
+	 * @param sortIndex sort field
+	 * @param sortDirection asc or desc
+	 * @param searchField search field name
+	 * @param searchOper search condition
+	 * @param searchString search string
+	 */
 	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
 	public void list(@RequestParam(value = "page")   Integer      currentPage,
 	                 @RequestParam(value = "rows")   Integer      rowsPerPage,
@@ -156,7 +168,6 @@ public class AdminMsoController {
 			cell.add(mso.getTitle());
 			cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mso.getUpdateDate()));
 			cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mso.getCreateDate()));
-//			cell.add(mso.getLogoClickUrl());
 			cell.add(mso.getJingleUrl());
 			cell.add(mso.getType());
 			cell.add(mso.getLang());
@@ -178,8 +189,7 @@ public class AdminMsoController {
 	}
 	
 	@RequestMapping("msoHtmlSelectOptions")
-	public void msoHtmlSelectOptions(HttpServletResponse response, OutputStream out) {
-		
+	public void msoHtmlSelectOptions(HttpServletResponse response, OutputStream out) {		
 		response.setContentType("text/html;charset=utf-8");
 		OutputStreamWriter writer;
 		try {
@@ -201,6 +211,19 @@ public class AdminMsoController {
 		}
 	}
 	
+	/**
+	 * Mso editing
+	 * 
+	 * @param id mso id
+	 * @param name mso name
+	 * @param title mso title
+	 * @param contactEmail contact email
+	 * @param intro mso description
+	 * @param lang mso default language, en or zh
+	 * @param logoUrl mso logo image url
+	 * @param jingleUrl mso jingle url
+	 * @return
+	 */
 	@RequestMapping("modify")
 	public @ResponseBody String modify(@RequestParam(required=true)  Long   id,
 	                                   @RequestParam(required=false) String name,
@@ -210,9 +233,6 @@ public class AdminMsoController {
 	                                   @RequestParam(required=false) String lang,
 	                                   @RequestParam(required=false) String logoUrl,
 	                                   @RequestParam(required=false) String jingleUrl) {
-		
-//		logger.info("admin = " + userService.getCurrentUser().getEmail());
-		
 		log.info("msoId = " + id);
 		Mso mso = msoMngr.findById(id);
 		if (mso == null) {
@@ -224,7 +244,6 @@ public class AdminMsoController {
 		if (name != null) {
 			log.info("name = " + name);
 			mso.setName(name);
-//			mso.setNameSearch(name.toLowerCase());
 		}
 		if (name != null) {
 			log.info("title = " + title);
@@ -254,5 +273,16 @@ public class AdminMsoController {
 		msoMngr.save(mso);
 		return "OK";
 	}
+
+	/*
+	@RequestMapping("create")
+	public @ResponseBody String create(@RequestParam(value="name")String name, @RequestParam(value="intro")String intro,
+			                           @RequestParam(value="contactEmail")String contactEmail) {
+		System.out.println("contact:" + contactEmail);
+		Mso mso = new Mso(name, intro, contactEmail, Mso.TYPE_MSO);		
+		msoMngr.save(mso);
+		return "OK";
+	}
+	*/
 	
 }

@@ -25,14 +25,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnSetToNnChannel;
 import com.nncloudtv.service.CntSubscribeManager;
 import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.NnSetToNnChannelManager;
 import com.nncloudtv.service.NnSetManager;
+import com.nncloudtv.service.NnSetToNnChannelManager;
 
 @Controller
 @RequestMapping("admin/channel")
@@ -51,31 +50,22 @@ public class AdminChannelController {
 		NnLogUtil.logException(e);
 		return "error/exception";				
 	}	
-	
-	@RequestMapping("createPiwik")
-	public @ResponseBody String createPiwik(
-				HttpServletRequest req,
-				@RequestParam(value="id",required=false) long id) {
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel c = channelMngr.findById(id); 
-		if (c != null) {
-			if (c.getPiwik() == null) {
-				String piwikId = PiwikLib.createPiwikSite(0, c.getId(), req);
-				logger.info("piwikId:" + piwikId);
-				c.setPiwik(piwikId);
-				channelMngr.save(c);					
-			}			
-		}
-		return "OK";
-	}
-		
+
+	/**
+	 * Channel creation
+	 * 
+	 * @param url source url
+	 * @param name channel name
+	 * @param isPublic to be shown in the directory or not
+	 * @param devel is in devel mode or not, i.e. whether to submit to transcoding service 
+	 * @return status in text
+	 */
 	@RequestMapping("create")
-	public @ResponseBody String create(
-				HttpServletRequest req,
-			    @RequestParam(value="sourceUrl", required=false)String url,
-				@RequestParam(value="name", required=false) String name,
-				@RequestParam(required=false) Boolean isPublic,
-				@RequestParam(value="devel",required=false) boolean devel) {
+	public @ResponseBody String create(HttpServletRequest req,				
+			                           @RequestParam(value="sourceUrl", required=false)String url,
+				                       @RequestParam(value="name", required=false) String name,
+				                       @RequestParam(required=false) Boolean isPublic,
+				                       @RequestParam(value="devel",required=false) boolean devel) {
 		NnChannel c = channelMngr.findBySourceUrl(channelMngr.verifyUrl(url));
 		if (c != null)
 			return "Existed channel:" + c.getId();
@@ -86,9 +76,9 @@ public class AdminChannelController {
 		channelMngr.save(c);
 		return "OK";
 	}	
-		
+	
 	/**
-	 * List items in jqGrid format
+	 * Channel listing. List items in jqGrid format.
 	 *
 	 * A jqGrid response format should look like:
 	 *
@@ -104,7 +94,16 @@ public class AdminChannelController {
 	 *     ["938362", "9x9", "http://9x9.tv", "NN", "false", "13"]
 	 *   ]
 	 * }
-	 *
+	 * 
+	 * @param currentPage current page
+	 * @param rowsPerPage rows per page
+	 * @param sortIndex sort field
+	 * @param sortDirection asc or desc
+	 * @param searchField search field
+	 * @param searchOper search condition
+	 * @param searchString search string 
+	 * @param notify set to true for notification page
+	 * @return status in text
 	 */
 	@RequestMapping(value = "list", params = {"page", "rows", "sidx", "sord"})
 	public @ResponseBody String list	(
@@ -115,7 +114,6 @@ public class AdminChannelController {
 	                 @RequestParam(required = false) String       searchField,
 	                 @RequestParam(required = false) String       searchOper,
 	                 @RequestParam(required = false) String       searchString,
-	                 @RequestParam(required = false) String       set,
 	                 @RequestParam(required = false) boolean      notify,
 	                 OutputStream out) {
 		CntSubscribeManager subMngr = new CntSubscribeManager();
@@ -243,12 +241,83 @@ public class AdminChannelController {
 		return "OK";
 	}
 	
-
+	/**
+	 * Channel modification
+	 * 
+	 * @param id channel id
+	 * @param name channel name
+	 * @param intro channel description
+	 * @param imageUrl channel image url
+	 * @param status channel status
+	 * @param isPublic to show in the directory or not
+	 * @param programCnt program count
+	 * @return status in text
+	 */
+	@RequestMapping("modify")
+	public @ResponseBody String modify(@RequestParam(required=true)  Long    id,
+	                                   @RequestParam(required=false) String  name,
+	                                   @RequestParam(required=false) String  intro,
+	                                   @RequestParam(required=false) String  imageUrl,
+	                                   @RequestParam(required=false) Short   status,
+	                                   @RequestParam(required=false) Boolean isPublic,
+	                                   @RequestParam(required=false) Integer programCnt) {
+				
+		NnChannel channel = channelMngr.findById(id);
+		if (channel == null)
+			return "Channel Not Found";
+		
+		if (name != null) {
+			logger.info("name = " + name);
+			channel.setName(name);
+		}
+		if (imageUrl != null) {
+			logger.info("imageUrl = " + imageUrl);
+			channel.setImageUrl(imageUrl);
+		}
+		if (intro != null) {
+			logger.info("intro = " + intro);
+			if (intro.length() > 255)
+				return "Introduction Is Too Long";
+			channel.setIntro(intro);
+		}		
+		if (status != null) {
+			logger.info("status = " + status);
+			channel.setStatus(status);
+		}
+		if (isPublic != null) {
+			logger.info("isPublic = " + isPublic);
+			channel.setPublic(isPublic);
+		}
+		if (programCnt != null) {
+			logger.info("programCnt = " + programCnt);
+			channel.setProgramCnt(programCnt);
+		}		
+		channelMngr.save(channel);
+		
+		if (status != null) {
+			NnSetManager setMngr = new NnSetManager();
+			NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
+			List<NnSetToNnChannel> csList = csMngr.findByChannel(channel.getId());
+			List<Long> setIds = new ArrayList<Long>();
+			for (NnSetToNnChannel cs : csList) {
+				setIds.add(cs.getSetId());
+			}
+			List<NnSet> sets = setMngr.findByIds(setIds);
+			for (NnSet s : sets) {
+				List<NnChannel> channels = setMngr.findPublicChannelsById(s.getId());
+				s.setChannelCnt(channels.size());
+				setMngr.save(s);				
+			}			
+		}
+		
+		return "OK";
+	}	
+	
+	/*
 	@RequestMapping("addSet")
 	public @ResponseBody String addCategory(@RequestParam(value = "channel")  Long channelId,
 	                                        @RequestParam(value = "set") Long setId) {
-		
-//		logger.info("admin = " + userService.getCurrentUser().getEmail());		
+				
 		NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 		NnSetManager setMngr = new NnSetManager();
 		logger.info("setId = " + setId);
@@ -280,7 +349,8 @@ public class AdminChannelController {
 		
 		return "OK";
 	}
-
+	*/
+	/*
 	@RequestMapping("deleteSets")
 	public @ResponseBody String deleteCategories(@RequestParam(required=true)long channel, String sets) {
 		if (sets == null) {return "fail";}
@@ -303,13 +373,10 @@ public class AdminChannelController {
 		
 		return "success";
 	}
-	
-	
+	*/
+	/*
 	@RequestMapping("deleteSet")
-	public @ResponseBody String deleteCategory(@RequestParam(value = "id") Long csId) {
-		
-//		logger.info("admin = " + userService.getCurrentUser().getEmail());
-		
+	public @ResponseBody String deleteCategory(@RequestParam(value = "id") Long csId) {		
 		NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
 		
 		logger.info("csId = " + csId);
@@ -323,7 +390,9 @@ public class AdminChannelController {
 		// TODO: deal with Set.channelCount
 		return "OK";
 	}	
-	
+	 */		
+
+	/*
 	@RequestMapping(value = "listSets", params = {"channel", "page", "rows", "sidx", "sord"})
 	public void listSets(@RequestParam(value = "channel") Long         channelId,
 	                           @RequestParam(value = "page")    Integer      currentPage,
@@ -336,7 +405,6 @@ public class AdminChannelController {
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 		
-		// no channel was specified
 		if (channelId == 0) {
 			try {
 				mapper.writeValue(out, JqgridHelper.composeJqgridResponse(1, 1, 0, new ArrayList<Map<String, Object>>()));
@@ -359,9 +427,7 @@ public class AdminChannelController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<Object> cell = new ArrayList<Object>();
 			
-			NnSet set = setMngr.findById(cs.getSetId());
-			
-//			cell.add(set.getMsoId());
+			NnSet set = setMngr.findById(cs.getSetId());			
 			cell.add(cs.getChannelId());
 			cell.add(cs.getSetId());
 			cell.add(set.getName());
@@ -373,90 +439,32 @@ public class AdminChannelController {
 			map.put("id", cs.getId());
 			map.put("cell", cell);
 			dataRows.add(map);
-		}
-		
+		}		
 		try {
 			mapper.writeValue(out, JqgridHelper.composeJqgridResponse(currentPage, totalPages, totalRecords, dataRows));
 		} catch (IOException e) {
 			logger.warning(e.getMessage());
 		}
 	}
+	*/
 	
-	@RequestMapping("modify")
-	public @ResponseBody String modify(@RequestParam(required=true)  Long    id,
-//			                           @RequestParam(required=true)  Long    channelId,
-	                                   @RequestParam(required=false) String  name,
-	                                   @RequestParam(required=false) String  intro,
-	                                   @RequestParam(required=false) String  imageUrl,
-	                                   @RequestParam(required=false) Short   status,
-//	                                   @RequestParam(required=false) String  langCode,
-	                                   @RequestParam(required=false) Boolean isPublic,
-//	                                   @RequestParam(required=false) Boolean featured,
-	                                   @RequestParam(required=false) Integer programCnt) {
-		
-//		logger.info("admin = " + userService.getCurrentUser().getEmail());		
-		NnChannel channel = channelMngr.findById(id);
-		if (channel == null)
-			return "Channel Not Found";
-		
-		if (name != null) {
-			logger.info("name = " + name);
-			channel.setName(name);
-		}
-		if (imageUrl != null) {
-			logger.info("imageUrl = " + imageUrl);
-			channel.setImageUrl(imageUrl);
-		}
-		if (intro != null) {
-			logger.info("intro = " + intro);
-			if (intro.length() > 255)
-				return "Introduction Is Too Long";
-			channel.setIntro(intro);
-		}
-		//!!! change counter implementation
-		if (status != null) {
-			logger.info("status = " + status);
-			channel.setStatus(status);
-		}
-/*		
-		if (langCode != null) {
-			logger.info("langCode = " + langCode);
-			channel.setLangCode(langCode);
-		}
-*/		
-		if (isPublic != null) {
-			logger.info("isPublic = " + isPublic);
-			channel.setPublic(isPublic);
-		}
-/*		
-		if (featured != null) {
-			logger.info("featured = " + featured);
-			channel.setFeatured(featured);
-		}
-*/		
-		if (programCnt != null) {
-			logger.info("programCnt = " + programCnt);
-			channel.setProgramCnt(programCnt);
-		}		
-		channelMngr.save(channel);
-		
-		if (status != null) {
-			NnSetManager setMngr = new NnSetManager();
-			NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
-			List<NnSetToNnChannel> csList = csMngr.findByChannel(channel.getId());
-			List<Long> setIds = new ArrayList<Long>();
-			for (NnSetToNnChannel cs : csList) {
-				setIds.add(cs.getSetId());
-			}
-			List<NnSet> sets = setMngr.findByIds(setIds);
-			for (NnSet s : sets) {
-				List<NnChannel> channels = setMngr.findPublicChannelsById(s.getId());
-				s.setChannelCnt(channels.size());
-				setMngr.save(s);				
+	/*
+	@RequestMapping("createPiwik")
+	public @ResponseBody String createPiwik(
+				HttpServletRequest req,
+				@RequestParam(value="id",required=false) long id) {
+		NnChannelManager channelMngr = new NnChannelManager();
+		NnChannel c = channelMngr.findById(id); 
+		if (c != null) {
+			if (c.getPiwik() == null) {
+				String piwikId = PiwikLib.createPiwikSite(0, c.getId(), req);
+				logger.info("piwikId:" + piwikId);
+				c.setPiwik(piwikId);
+				channelMngr.save(c);					
 			}			
 		}
-		
 		return "OK";
 	}
+	*/
 	
 }
