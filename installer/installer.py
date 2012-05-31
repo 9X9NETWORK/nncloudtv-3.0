@@ -7,8 +7,20 @@ from datetime import datetime
 #   2.write md5 to root.md5 file
 #   3.write version file
 #   4.upload files to server:
-#     prerequisites: your own key files, pscp(change to your own scp programs) 
-version = raw_input('Enter version number : ') 
+#     prerequisites: your own key files, pscp(change to your own scp programs)
+
+myfile = open("..\\src\\main\\java\\com\\nncloudtv\\web\\VersionController.java", "rU")
+version = ""
+for line in myfile:
+  if (line.find("String appVersion") > 0):
+     start = line.find("\"")+1;   
+     end = line.rfind("\"");
+     version = line[start:end]
+
+if version == "":
+  version = raw_input('Enter version number : ') 
+
+print "version number:" + version
 
 # copy over root.war
 src = "..\\target\\nncloudtv-0.0.1-SNAPSHOT.war"
@@ -37,16 +49,19 @@ print "--- generate version file ---"
 
 # upload to server
 print "\n"
-server = raw_input('Environment (1.devel 2.stage 3.deploy 4.exit) : ')
-if server != "4":
+server = raw_input('Environment (1.devel 2.alpha 3.stage 4.deploy 5.exit) : ')
+if server != "5":
   print "--- " + datetime.now().strftime("%d/%m/%y %H:%M:%S %Z") + "---"
 if server == "1":
   print "--- uploading to devel server ---" 
-  os.system("pscp -i awsdev.ppk root.war ubuntu@ec2-174-129-141-179.compute-1.amazonaws.com:/home/ubuntu/files")
+  os.system("pscp -i dev-west2.ppk root.war ubuntu@ec2-50-112-54-59.us-west-2.compute.amazonaws.com:/home/ubuntu/files")
 if server == "2":
+  print "--- uploading to alpha server ---"
+  os.system("pscp -i dev-west2.ppk root.war ubuntu@alpha_log.9x9.tv:/var/www/updates/" + version)
+if server == "3":
   print "--- uploading to stage server ---"
   os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files")
-if server == "3":
+if server == "4":
   print "--- uploading to deploy server ---"
   folder = raw_input('Folder created? : ')  # to be hooked up with ssh command, used as reminder for now
   os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
