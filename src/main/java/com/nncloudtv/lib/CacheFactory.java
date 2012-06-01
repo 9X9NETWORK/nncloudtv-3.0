@@ -2,6 +2,7 @@ package com.nncloudtv.lib;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,18 +22,20 @@ public class CacheFactory {
 	public static MemcachedClient getClient() {
 		System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
 		Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
-		
+	 
 		try {
-			//TODO load it from memcache.properties, but make sure the property input stream is closed
-			cache = new MemcachedClient(new InetSocketAddress("localhost", CacheFactory.PORT_DEFAULT));			
+			Properties properties = new Properties();
+			properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
+			String server = properties.getProperty("server");
+			log.info("memcache server:" + server);
+			cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));			
 		} catch (IOException e) {
 		   log.severe("memcache io exception");
 		   cache = null;
 		} catch (Exception e) {
 		   log.severe("memcache exception");
 		   cache = null;
-		}
-
+		}		
 		return cache;
 	}	
 
