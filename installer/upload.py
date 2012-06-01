@@ -41,7 +41,7 @@ if match:
 print "--- generate md5 = " + md5
 
 dest = open("root.md5", "w")
-line = md5 + "  " + "root.war\x00\x0a"
+line = md5 + " " + "root.war\x00\x0a"
 dest.write(line)
 dest.close()
 
