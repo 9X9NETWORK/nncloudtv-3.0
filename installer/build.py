@@ -5,44 +5,44 @@ choice = raw_input('Environment (1.devel 2.alpha 3.prod) : ')
 server="dev"
 if choice == "2":
  server="alpha"
-if choice == "3":
+if choice == "3":                                          
  print "prod"
  server="prod"
 
-src = server + "\\datanucleus_analytics.properties"
-dst = "..\\src\\main\\resources\datanucleus_analytics.properties"
+src = server + "//datanucleus_analytics.properties"
+dst = "..//src//main//resources//datanucleus_analytics.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\datanucleus_content.properties"
-dst = "..\\src\\main\\resources\datanucleus_content.properties"
+src = server + "//datanucleus_content.properties"
+dst = "..//src//main//resources//datanucleus_content.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\datanucleus_nnuser1.properties"
-dst = "..\\src\\main\\resources\datanucleus_nnuser1.properties"
+src = server + "//datanucleus_nnuser1.properties"
+dst = "..//src//main//resources//datanucleus_nnuser1.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\datanucleus_nnuser2.properties"
-dst = "..\\src\\main\\resources\datanucleus_nnuser2.properties"
+src = server + "//datanucleus_nnuser2.properties"
+dst = "..//src//main//resources//datanucleus_nnuser2.properties"                                   
 shutil.copyfile(src, dst)
 
-src = server + "\\aws.properties"
-dst = "..\\src\\main\\resources\\aws.properties"
+src = server + "//aws.properties"
+dst = "..//src//main//resources//aws.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\memcache.properties"
-dst = "..\\src\\main\\resources\\memcache.properties"
+src = server + "//memcache.properties"
+dst = "..//src//main//resources//memcache.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\queue.properties"
-dst = "..\\src\\main\\resources\\queue.properties"
+src = server + "//queue.properties"
+dst = "..//src//main//resources//queue.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\sns.properties"
-dst = "..\\src\\main\\resources\\sns.properties"
+src = server + "//sns.properties"
+dst = "..//src//main//resources//sns.properties"
 shutil.copyfile(src, dst)
 #================================================================                         
 version = raw_input('Enter version number : ')
-source = open(".svn\\entries", "rU")
+source = open(".svn//entries", "rU")
 cnt = 0
 for line in source:
   cnt = cnt + 1
@@ -53,8 +53,8 @@ source.close
 print "Revision number:" + rev
 now = datetime.datetime.utcnow()
 print now
-old_file = open("..\\src\\main\\java\\com\\nncloudtv\\web\\VersionController.java", "rU")
-new_file = open("..\\src\\main\\java\\com\\nncloudtv\\web\\VersionController.java.tmp",'w')
+old_file = open("..//src//main//java//com//nncloudtv//web//VersionController.java", "rU")
+new_file = open("..//src//main//java//com//nncloudtv//web//VersionController.java.tmp",'w')
 for line in old_file:
   if (line.find("String appVersion") > 0):   
      line = "        String appVersion = \"" + version + "\";\n"
@@ -66,8 +66,8 @@ for line in old_file:
 old_file.close()
 new_file.close()
                                                             
-os.remove("..\\src\\main\\java\\com\\nncloudtv\\web\\VersionController.java")
-os.rename("..\\src\\main\\java\\com\\nncloudtv\\web\\VersionController.java.tmp", "..\\src\\main\\java\\com\\nncloudtv\\web\\VersionController.java")
+os.remove("..//src//main//java//com//nncloudtv//web//VersionController.java")
+os.rename("..//src//main//java//com//nncloudtv//web//VersionController.java.tmp", "..//src//main//java//com//nncloudtv//web//VersionController.java")
 
 #================================================================
 

@@ -8,35 +8,35 @@ if choice == "3":
  print "prod"
  server="prod"
 
-src = server + "\\datanucleus_analytics.properties"
-dst = "..\\src\\main\\resources\datanucleus_analytics.properties"
+src = server + "//datanucleus_analytics.properties"
+dst = "..//src//main//resources//datanucleus_analytics.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\datanucleus_content.properties"
-dst = "..\\src\\main\\resources\datanucleus_content.properties"
+src = server + "//datanucleus_content.properties"
+dst = "..//src//main//resources//datanucleus_content.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\datanucleus_nnuser1.properties"
-dst = "..\\src\\main\\resources\datanucleus_nnuser1.properties"
+src = server + "//datanucleus_nnuser1.properties"
+dst = "..//src//main//resources//datanucleus_nnuser1.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\datanucleus_nnuser2.properties"
-dst = "..\\src\\main\\resources\datanucleus_nnuser2.properties"
+src = server + "//datanucleus_nnuser2.properties"
+dst = "..//src//main//resources//datanucleus_nnuser2.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\aws.properties"
-dst = "..\\src\\main\\resources\\aws.properties"
+src = server + "//aws.properties"
+dst = "..//src//main//resources//aws.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\memcache.properties"
-dst = "..\\src\\main\\resources\\memcache.properties"
+src = server + "//memcache.properties"
+dst = "..//src//main//resources//memcache.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\queue.properties"
-dst = "..\\src\\main\\resources\\queue.properties"
+src = server + "//queue.properties"
+dst = "..//src//main//resources//queue.properties"
 shutil.copyfile(src, dst)
 
-src = server + "\\sns.properties"
-dst = "..\\src\\main\\resources\\sns.properties"
+src = server + "//sns.properties"
+dst = "..//src//main//resources//sns.properties"
 shutil.copyfile(src, dst)
 
