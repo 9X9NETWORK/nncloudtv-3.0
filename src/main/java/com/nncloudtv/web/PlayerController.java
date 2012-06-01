@@ -60,11 +60,19 @@ public class PlayerController {
 	 * to become a 9x9 player, 1)delete cookie, 2)set fb info 
 	 */	
 	@RequestMapping("{name}")
-	public String zooatomics(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model, @PathVariable("name") String name) {
+	public String zooatomics(
+			@PathVariable("name") String name,
+			@RequestParam(value="jsp",required=false) String jsp,
+			@RequestParam(value="mso",required=false) String mso, 
+			HttpServletRequest req, HttpServletResponse resp, Model model) { 			
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
 			model = service.prepareSetInfo(model, name, resp);
+			if (jsp != null && jsp.equals("zooatomics2")) {
+				log.info("zooatomics2 is enabled>");
+				return "player/zooatomics2";
+			}
 			//String prefLanguage = req.getHeader("Accept-Language");		
 		} catch (Throwable t) {
 			NnLogUtil.logThrowable(t);
