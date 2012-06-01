@@ -3,6 +3,7 @@ package com.nncloudtv.lib;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,17 +39,22 @@ public class QueueFactory {
 	//for now, assuming if obj is not null, then it's a json request
 	public static void add(HttpServletRequest req, String url, Object json) {
     	ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        Connection connection;
 		try {
-			connection = factory.newConnection();
-			Channel channel;
-			channel = connection.createChannel();
+			Properties properties = new Properties();
+			properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("queue.properties"));
+			String server = properties.getProperty("server");
+			log.info("queue server:" + server);
+	        factory.setHost(server);
+	        Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
 	        channel.queueDeclare(QueueFactory.QUEUE_NNCLOUDTV, true, false, false, null);
 	        
-			Object[] obj = new Object[2];			
-			//String root = NnNetUtil.getUrlRoot(req);
+			Object[] obj = new Object[2];
 			String root = "http://localhost:8080";
+			if (!server.equals("localhost")) {
+				root = NnNetUtil.getUrlRoot(req);
+			}
+			log.info("queue root:" + root);
 			String msg = root.concat(url);
 			obj[0] = msg;
 			obj[1] = json;
