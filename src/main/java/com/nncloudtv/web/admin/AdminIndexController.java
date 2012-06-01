@@ -25,8 +25,7 @@ public class AdminIndexController {
 	public String index() {
 		return "admin/index";
 	}
-
-	 
+	
 	@RequestMapping(value="welcome", method = RequestMethod.GET)
 	public String printWelcome(ModelMap model, Principal principal ) { 
 		String name = principal.getName();
@@ -37,12 +36,15 @@ public class AdminIndexController {
 	
 	@RequestMapping(value="login", method = RequestMethod.GET)
 	public String login(ModelMap model) {		
+		model.addAttribute("root", MsoConfigManager.getExternalRootPath());		
+		log.info("root path:" + MsoConfigManager.getExternalRootPath());
 		return "admin/login";
  
 	}
  
 	@RequestMapping(value="loginfailed", method = RequestMethod.GET)
 	public String loginerror(ModelMap model) {
+		model.addAttribute("root", MsoConfigManager.getExternalRootPath());		
 		model.addAttribute("error", "true");
 		return "admin/login";
  
@@ -50,24 +52,17 @@ public class AdminIndexController {
  
 	@RequestMapping(value="logout", method = RequestMethod.GET)
 	public String logout(ModelMap model) {
+		model.addAttribute("root", MsoConfigManager.getExternalRootPath());		
 		return "admin/login";
  
-	}
-
-//	public String printWelcome(ModelMap model, Principal principal ) {
-//		 
-//		String name = principal.getName();
-//		model.addAttribute("username", name);
-//		model.addAttribute("message", "Spring Security Custom Form example");
-//		return "/admin/hello";
-	
+	}	
 	
 	@RequestMapping("/index/ui")
 	public String oss(Model model, 
 				      HttpServletRequest request, 
 			          HttpServletResponse response,
 			          Principal principal)
-			throws IOException {
+			throws IOException {		
 		String name = principal.getName();
 		System.out.println("root path:" + MsoConfigManager.getExternalRootPath());
 		model.addAttribute("username", name);
