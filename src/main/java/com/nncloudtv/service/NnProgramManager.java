@@ -1,7 +1,5 @@
 package com.nncloudtv.service;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.lib.CacheFactory;
-import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.model.Mso;
