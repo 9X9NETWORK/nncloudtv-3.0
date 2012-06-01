@@ -113,6 +113,7 @@ public class NnNetUtil {
     }
     
 	public static void urlPostWithJson(String urlStr, Object obj) {
+		log.info("post to " + urlStr);
         URL url;
 		try {
 			url = new URL(urlStr);
