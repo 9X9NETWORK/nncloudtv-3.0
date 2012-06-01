@@ -5,14 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/ui-darkness/jquery-ui.css" type="text/css" />
-<link rel="stylesheet" href="${root}/stylesheets/ui.jqgrid.css" />
-<link rel="stylesheet" href="${root}/stylesheets/admin-portal-ui.css" />
-<script type="text/javascript" src="${root}/javascripts/jquery-1.6.4.fixed.js"></script>
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/war/v0/stylesheets/ui.jqgrid.css" />
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/war/v0/stylesheets/admin-portal-ui.css" />
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/war/v0/javascripts/jquery-1.6.4.fixed.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.js"></script>
-<script type="text/javascript" src="${root}/javascripts/grid.locale-en.js"></script>
-<script type="text/javascript" src="${root}/javascripts/jquery.jqGrid.src.js"></script>
-<script type="text/javascript" src="${root}/javascripts/piwik-analytics.js"></script>
-<script type="text/javascript" src="${root}/javascripts/admin-portal-ui.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/war/v0/javascripts/grid.locale-en.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/war/v0/javascripts/jquery.jqGrid.src.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/war/v0/javascripts/piwik-analytics.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/war/v0/javascripts/admin-portal-ui.js"></script>
 <title>9x9 Admin Portal</title>
 <style>
 .errorblock {
@@ -27,7 +27,7 @@
 </head>
 <body>
 <div id="header">
-  <img src="${root}/images/9x9.tv.png" id="logo">
+  <img src="http://9x9ui.s3.amazonaws.com/war/v0/images/9x9.tv.png" id="logo">
   <a href="<c:url value="/j_spring_security_logout" />" id="btn-signout"> Logout</a>
   <span id="btn-account">${admin}</span>
 </div>
