@@ -7,7 +7,6 @@
   <artifactId>nncloudtv</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>nncloudtv</name>
-  <packaging>war</packaging>
   
   <!-- 
     packaging commands 
