@@ -63,15 +63,20 @@ public class PlayerController {
 	public String zooatomics(
 			@PathVariable("name") String name,
 			@RequestParam(value="jsp",required=false) String jsp,
+			@RequestParam(value="js",required=false) String js,
 			@RequestParam(value="mso",required=false) String mso, 
 			HttpServletRequest req, HttpServletResponse resp, Model model) { 			
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
-			model = service.prepareSetInfo(model, name, resp);
-			if (jsp != null && jsp.equals("zooatomics2")) {
-				log.info("zooatomics2 is enabled>");
-				return "player/zooatomics2";
+			model = service.prepareSetInfo(model, name, resp);			
+			model.addAttribute("js", "");
+			if (js != null && js.length() > 0) {
+				model.addAttribute("js", js);
+			}
+			if (jsp != null && jsp.length() > 0) {
+				log.info("alternate is enabled: " + jsp);
+				return "player/" + jsp;
 			}
 			//String prefLanguage = req.getHeader("Accept-Language");		
 		} catch (Throwable t) {
