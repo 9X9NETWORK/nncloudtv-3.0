@@ -1483,4 +1483,85 @@ public class PlayerApiService {
 		programMngr.save(program);
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
+
+	private short getStatus(String msg) {
+		String[] status = msg.split("\t");
+		if (status.length > 0)
+			return Short.valueOf(status[0]);
+		return NnStatusCode.ERROR;
+	}
+	
+	/**
+	 * 1. user info
+	 * 2. obtain list of recommended sets for this user's language
+	 * 3. obtain first recommended set
+	 * 4. obtain list of programs in first channel of first recommended set
+	 */
+	public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+		//1. user info
+		List<String> data = new ArrayList<String>();
+		String userInfo = "";
+		if (token != null) {
+			userInfo = this.userTokenVerify(token, req, resp);
+		} else if (email != null || password != null) {		
+			userInfo = this.login(email, password, req, resp);			
+		} else {
+			userInfo = this.guestRegister(req, resp);
+		}		
+		if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
+			return userInfo;
+		}
+		data.add(userInfo);
+		//2. obtain list of recommended sets for this user's language
+		String lang = LangTable.LANG_EN;
+		try {
+			int sphereIndex = userInfo.indexOf("sphere") + 7;
+			if (sphereIndex > 7)
+				lang = userInfo.substring(sphereIndex, sphereIndex+2);
+		} catch (Exception e){
+			lang = LangTable.LANG_EN;
+		}
+		log.info("<<< quick login >>> lang = " + lang);
+		String recommended = this.listRecommended(lang);
+		data.add(recommended);
+		if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}		
+		//3. obtain first recommended set
+		int recommendedIndex = recommended.indexOf("--\n") + 3;
+		String setId = "";
+		String setInfo = this.assembleMsgs(NnStatusCode.SET_INVALID, null);;
+		try { 
+			String setStr = recommended.substring(recommendedIndex);
+			setId = setStr.split("\n")[0].split("\t")[0];
+		} catch (Exception e) {			
+			data.add(setInfo);
+			return this.assembleSections(data);
+		}
+		log.info("<<< quick login >>> setId = " + setId);
+		setInfo = this.setInfo(setId, null);
+		data.add(setInfo);
+		//4. obtain list of programs in first channel of first recommended set					 
+		int channelIndex = setInfo.lastIndexOf("--\n") + 3;
+		String programInfo = this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+		try {
+			String channelStr = setInfo.substring(channelIndex);
+			String channelId = channelStr.split("\n")[0].split("\t")[0];
+			programInfo = this.programInfo(channelId, null, null, false, "0", "0");
+			log.info("<<< quick login >>> channelId = " + channelId);
+		} catch (Exception e) {
+			data.add(programInfo);
+			return this.assembleSections(data);
+		}
+		data.add(programInfo);
+		return this.assembleSections(data);
+	}
+
+	private String assembleSections(List<String> data) {
+		String output = "";
+		for (String d : data) {
+			output += d + "--\n";
+		}
+		return output;				
+	}
 }
