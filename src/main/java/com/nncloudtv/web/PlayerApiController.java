@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
@@ -1504,6 +1505,44 @@ public class PlayerApiController {
 			NnLogUtil.logThrowable(t);
 		}
 		return NnNetUtil.textReturn(output);
+	}
+
+	/**
+	 * first: userTokenVerify, or login, or guestRegister
+	 * second: listRecommended
+	 * third: setInfo
+	 * fourth: programInfo 
+	 * 
+	 * @param token if not empty, will do userTokenVerify
+	 * @param email if not empty, will do login
+	 * @param password same as email
+	 * @param rx
+	 * @param req
+	 * @param resp
+	 * @return please reference api introduction
+	 */
+	@RequestMapping(value="quickLogin")
+	public ResponseEntity<String> quickLogin(
+			@RequestParam(value="token", required=false) String token,
+			@RequestParam(value="email", required=false) String email,
+			@RequestParam(value="password", required=false) String password,			
+			@RequestParam(value="rx", required = false) String rx,			
+			HttpServletRequest req,
+			HttpServletResponse resp) {		
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			int status = this.prepService(req, true);
+			if (status != NnStatusCode.SUCCESS)
+				return NnNetUtil.textReturn(playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));						
+			output = playerApiService.quickLogin(token, email, password, req, resp);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+		
+		 
 	}
 	
 }
