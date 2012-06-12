@@ -16,7 +16,9 @@ USAGE:
 (function($) {
 	$.extend({
 		progressBar: new function() {
-
+			
+			var rootPath = 'http://9x9ui.s3.amazonaws.com/war/v0';
+			
 			this.defaults = {
 				steps			: 20,											// steps taken to reach target
 				stepDuration	: 20,											
@@ -26,13 +28,12 @@ USAGE:
 				width			: 120,											// Width of the progressbar - don't forget to adjust your image too!!!												// Image to use in the progressbar. Can be a single image too: 'images/progressbg_green.gif'
 				height			: 12,											// Height of the progressbar - don't forget to adjust your image too!!!
 				callback		: null,											// Calls back with the config object that has the current percentage, target percentage, current image, etc
-				boxImage		: '/images/cms/progressbar.gif',						// boxImage : image around the progress bar
+				boxImage		: rootPath + '/images/cms/progressbar.gif',		// boxImage : image around the progress bar
 				barImage		: {
-									0:	'/images/cms/progressbg_red.gif',
-									30: '/images/cms/progressbg_orange.gif',
-									70: '/images/cms/progressbg_green.gif'
+									0:  rootPath + '/images/cms/progressbg_red.gif',
+									30: rootPath + '/images/cms/progressbg_orange.gif',
+									70: rootPath + '/images/cms/progressbg_green.gif'
 								},
-				
 				
 				// Internal use
 				running_value	: 0,
