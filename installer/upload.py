@@ -79,7 +79,7 @@ if server == "2":
 if server == "3":
   print "--- uploading to stage server ---"
   if myos == "1":             
-    os.system("scp -i ~/keys/prod-west2.ppk root.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files/root.war")
+    os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files/root.war")
   if myos == "2": 
     os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files")
 if server == "4":
