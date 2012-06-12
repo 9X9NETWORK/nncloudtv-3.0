@@ -72,7 +72,7 @@ public class AmazonLib {
 		result += "[ 'starts-with', '$Content-Type', '" + contentType + "' ],";
 		result += "{ 'success_action_status': '201' },";
 		result += "[ 'starts-with', '$Filename', '' ],";
-		result += "[ 'content-length-range', 0, 50000000 ],";
+		result += "[ 'content-length-range', 0, 1073741824 ],"; // 1 GB
 		result += "]";
 		result += "}";
 		
