@@ -125,12 +125,10 @@ public class NnSetManager {
 			sToC.setSeq(channels.get(0).getSeq());
 			toBeSaved.add(sToC);
 			dao.saveAll(toBeSaved);	
-		}
-
+		}		
 		Object[] obj = new Object[2];
 		if (newChCnt > 0) {
 			if (MsoConfigManager.isQueueEnabled(false)) {
-				setDao.evict(set);
 				obj[0] = set;
 				obj[1] = newChCnt;
 		        //new QueueMessage().fanout("localhost",QueueMessage.SET_CUD_RELATED, obj);
