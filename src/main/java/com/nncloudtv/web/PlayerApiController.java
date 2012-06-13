@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
@@ -1508,17 +1507,23 @@ public class PlayerApiController {
 	}
 
 	/**
+	 * It's merged of 4 APIs, userTokenVerify(login, guestRegister), listRecommended, setInfo and programInfo.
+	 * 
+	 * If token is provided, will do userTokenVerify.
+	 * If token is not provided, will do login
+	 * If token and email/password is not provided, will do guestRegister.
+	 * 
+	 * Return text includes 4 sections. 
+	 * 
 	 * first: userTokenVerify, or login, or guestRegister
 	 * second: listRecommended
 	 * third: setInfo
 	 * fourth: programInfo 
 	 * 
 	 * @param token if not empty, will do userTokenVerify
-	 * @param email if not empty, will do login
-	 * @param password same as email
-	 * @param rx
-	 * @param req
-	 * @param resp
+	 * @param email if token is not provided, will do login check with email and password
+	 * @param password password 
+	 * @param rx rx
 	 * @return please reference api introduction
 	 */
 	@RequestMapping(value="quickLogin")
