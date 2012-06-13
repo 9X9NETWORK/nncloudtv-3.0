@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.dao.NnSetToNnChannelDao;
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.NnChannel;
@@ -140,14 +141,19 @@ public class AdminSetController {
 	public @ResponseBody String deleteCh(@RequestParam(required = false) long set,	                 
 			             @RequestParam(required = false) long id,
 	                     OutputStream out) {		
-		NnSetToNnChannelManager rMngr = new NnSetToNnChannelManager();
-		NnSetToNnChannel sToC = rMngr.findBySetAndChannel(set, id);
+		NnSetToNnChannelDao dao = new NnSetToNnChannelDao();
+		NnSetToNnChannel sToC = dao.findBySetAndChannel(set, id);
 		if (sToC != null) {
-			rMngr.delete(sToC);
+			dao.delete(sToC);
 			NnSet s = new NnSetManager().findById(set);
 			if (s.isFeatured()) {
-				List<NnSetToNnChannel> list = rMngr.findBySet(set);
-				List<NnSetToNnChannel> toBeSaved = new ArrayList<NnSetToNnChannel>();
+				List<NnSetToNnChannel> list = dao.findBySet(s);
+
+				for (NnSetToNnChannel c : list) {
+					System.out.println("--- cid=" + c.getChannelId() + "---seq=" + c.getSeq());
+				}											
+				
+				List<NnSetToNnChannel> toBeSaved = new ArrayList<NnSetToNnChannel>();				
 				for (int i=0; i<list.size(); i++) {				
 					NnSetToNnChannel t = list.get(i);
 					int sequence = i+1;
@@ -156,7 +162,7 @@ public class AdminSetController {
 						toBeSaved.add(t);
 					}
 				}
-				rMngr.saveAll(toBeSaved);
+				dao.saveAll(toBeSaved);
 			}
 		}
 		return "OK";		
@@ -187,7 +193,7 @@ public class AdminSetController {
 		List<NnChannel> channels = new ArrayList<NnChannel>();
 		c.setSeq(Short.parseShort(seq));
 		channels.add(c);
-		setMngr.addChannels(s, channels);		
+		setMngr.addChannels(s, channels); 
 		List<NnChannel> existing = setMngr.findPlayerChannels(s);		
 		if (existing.get(0).getImageUrl() != null)		 {	
 			s.setImageUrl(existing.get(0).getImageUrl());
