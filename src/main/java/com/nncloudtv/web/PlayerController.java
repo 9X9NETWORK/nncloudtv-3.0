@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,12 +27,7 @@ public class PlayerController {
 		NnLogUtil.logException(e);
 		return "error/exception";				
 	}		
-	
-	@RequestMapping("/")
-	public String index() {
-		return "redirect:9x9";
-	}	
-	
+		
 	@RequestMapping("10ft")
 	public String tenft(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
 		try {
@@ -56,12 +50,39 @@ public class PlayerController {
 		return "player/mini";
 	}	
 	
+	@RequestMapping("/")
+	public String index(
+			@RequestParam(value="name",required=false) String name,
+			@RequestParam(value="jsp",required=false) String jsp,
+			@RequestParam(value="js",required=false) String js,
+			@RequestParam(value="mso",required=false) String mso, 
+			HttpServletRequest req, HttpServletResponse resp, Model model) { 			
+		try {
+			PlayerService service = new PlayerService();		
+			model = service.prepareBrand(model, mso, resp);
+			model = service.prepareSetInfo(model, name, resp);			
+			model.addAttribute("js", "");
+			if (js != null && js.length() > 0) {
+				model.addAttribute("js", js);
+			}
+			if (jsp != null && jsp.length() > 0) {
+				log.info("alternate is enabled: " + jsp);
+				return "player/" + jsp;
+			}
+			//String prefLanguage = req.getHeader("Accept-Language");		
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return "player/zooatomics";
+	}	
+	
 	/**
 	 * to become a 9x9 player, 1)delete cookie, 2)set fb info 
 	 */	
 	@RequestMapping("{name}")
 	public String zooatomics(
-			@PathVariable("name") String name,
+			//@PathVariable("name") String name,
+			@RequestParam(value="name",required=false) String name,
 			@RequestParam(value="jsp",required=false) String jsp,
 			@RequestParam(value="js",required=false) String js,
 			@RequestParam(value="mso",required=false) String mso, 
