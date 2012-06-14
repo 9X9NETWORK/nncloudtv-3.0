@@ -52,8 +52,8 @@
             <Set name="Acceptors">2</Set>
             <Set name="statsOn">false</Set>
             <Set name="confidentialPort">8443</Set>
-	    <Set name="lowResourcesConnections">5000</Set>
-	    <Set name="lowResourcesMaxIdleTime">5000</Set>
+	        <Set name="lowResourcesConnections">5000</Set>
+	        <Set name="lowResourcesMaxIdleTime">5000</Set>
             <Set name="headerBufferSize">32000</Set>
             <Set name='forwarded'>true</Set>
           </New>
