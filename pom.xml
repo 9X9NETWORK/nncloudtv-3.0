@@ -34,6 +34,13 @@
                    <port>8080</port>
                    <maxIdleTime>360000</maxIdleTime>
                 </connector>
+                <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+                   <port>8443</port>
+                   <maxIdleTime>60000</maxIdleTime> 
+                   <keystore>.keystore</keystore>
+                   <password>nncloudtv</password>
+                   <keyPassword>nncloudtv</keyPassword>
+                </connector>
              </connectors>
 	         <webAppConfig>
                 <contextPath>/</contextPath>
