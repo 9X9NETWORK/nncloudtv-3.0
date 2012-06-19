@@ -155,14 +155,7 @@ public class FacebookLib {
 			URL url = new URL(fullpath);
 			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			//connection.setDoOutput(true);
-			//connection.setRequestMethod("POST");
 			
-			//OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-			//writer.write(post);
-			//writer.close();
-			
-			//BufferedReader reader = new BufferedReader(new InputStreamReader());
 			ObjectMapper mapper = new ObjectMapper();
 			FacebookResponse response = mapper.readValue(connection.getInputStream(), FacebookResponse.class);
 			if (response.getData() != null) {
