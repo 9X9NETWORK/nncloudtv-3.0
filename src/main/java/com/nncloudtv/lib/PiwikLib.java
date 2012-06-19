@@ -3,15 +3,18 @@ package com.nncloudtv.lib;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
 
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnSet;
+import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 
@@ -20,12 +23,11 @@ public class PiwikLib {
 	protected static final Logger log = Logger.getLogger(PiwikLib.class.getName());
 	
 	private static Boolean isNoPiwik() {
-		/*
 		Properties properties = new Properties();
 		Boolean result = true;
 		try {
-			properties.load(NnChannelManager.class.getClassLoader().getResourceAsStream("transcoding.properties"));
-			String noPiwik = properties.getProperty("nopiwik");
+			properties.load(NnChannelManager.class.getClassLoader().getResourceAsStream("piwik.properties"));
+			String noPiwik = properties.getProperty("no_piwik");
 			if (noPiwik.equalsIgnoreCase("0")) {
 				result = false;
 			}
@@ -33,11 +35,9 @@ public class PiwikLib {
 			NnLogUtil.logException(e);
 		}		
 		return result;
-		*/
-		return true;
 	}
 	
-	public static String createPiwikSite(long setId, long channelId, HttpServletRequest req) {
+	public static String createPiwikSite(long setId, long channelId) {
 		if (isNoPiwik()) {
 			log.info("no piwik");
 			return null;
@@ -70,28 +70,9 @@ public class PiwikLib {
 				return c.getPiwik();
 			}
 		}
-			
-		String urlRoot = NnNetUtil.getUrlRoot(req);
-		String site = "";
-		if (urlRoot.contains("demo")) {
-			site = "demo.";
-		} else if (urlRoot.contains("localhost") ||
-				   urlRoot.contains("office") ||
-				   urlRoot.contains("beta")){
-			return null;
-		} else if (urlRoot.contains("alpha")) {
-			site = "alpha.";
-		} else if (urlRoot.contains("puppy")) {
-			site = "dev.";
-		} else if (urlRoot.contains("qa")) {
-			site = "qa.";
-//		} else if (!urlRoot.contains("9x9.tv")) {
-//			site = "_garbage_";
-		}
-		String postHost = "http://" + site + "piwik.9x9.tv";
-		if (urlRoot.contains("cms")) {
-			postHost = "http://piwik.teltel.com";
-		}
+		
+		String urlRoot = "http://" + MsoConfigManager.getServerDomain() + "/";
+		String piwikHost = "http://" + MsoConfigManager.getPiwikDomain();
 		String contentUrl = urlRoot + "?";
 		String siteName = "";
 		if (channelId != 0) {
@@ -101,15 +82,20 @@ public class PiwikLib {
 			contentUrl += "set=" + setId;
 			siteName = "set" + String.valueOf(setId);
 		}
-				
-		String urlStr = postHost + "/index.php?";
-		urlStr += "jsoncallback=jsonp1316430986921";
-		urlStr += "&method=SitesManager.addSite";
-		urlStr += "&module=API";
-		urlStr += "&format=JSON";
-		urlStr += "&token_auth=23ed70e585b18033d7150f917232d1f4"; 
-		urlStr += "&urls=" + contentUrl;
-		urlStr += "&siteName=" + siteName;
+		
+		String urlStr = piwikHost + "/index.php?";
+		try {
+			urlStr += "jsoncallback=jsonp1316430986921";
+			urlStr += "&method=SitesManager.addSite";
+			urlStr += "&module=API";
+			urlStr += "&format=JSON";
+			urlStr += "&token_auth=23ed70e585b18033d7150f917232d1f4"; 
+			urlStr += "&urls=" + URLEncoder.encode(contentUrl, "UTF-8");
+			urlStr += "&siteName=" + URLEncoder.encode(siteName, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
 		
 		//urlStr = "http://piwik.teltel.com/index.php?jsoncallback=jsonp1316424512664&method=SitesManager.getSitesIdFromSiteUrl&url=http%3A%2F%2Fcms.9x9.tv%2F9x9&module=API&format=JSON&token_auth=23ed70e585b18033d7150f917232d1f4";
 		//HTTP GET
@@ -147,6 +133,7 @@ public class PiwikLib {
 	}
 	
 	//urlRoot example, "http://qa.9x9.tv"
+	// DEPRECATED !!!
 	public static String createPiwikSite(long setId, long channelId, String urlRoot) {
 		if (isNoPiwik()) {
 			log.info("no piwik");

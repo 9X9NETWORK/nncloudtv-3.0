@@ -426,7 +426,7 @@ public class InitService {
 					piwik = false;
 			}
 			if (piwik) {
-				String piwikId = PiwikLib.createPiwikSite(0, c.getId(), req);
+				String piwikId = PiwikLib.createPiwikSite(0, c.getId());
 				c.setPiwik(piwikId);
 			}
 			c.setName(name);
@@ -529,7 +529,7 @@ public class InitService {
 				set.setLang(LangTable.LANG_ZH);
 			setMngr.save(set);
 			if (!devel) {
-				String piwik = PiwikLib.createPiwikSite(set.getId(), 0, req);
+				String piwik = PiwikLib.createPiwikSite(set.getId(), 0);
 				log.info("piwik id:" + piwik);
 				set.setPiwik(piwik);
 				setMngr.save(set);

@@ -57,7 +57,7 @@ public class NnProgramManager {
 		SnsAuthManager snsMngr = new SnsAuthManager();
 		FBPost fbPost = new FBPost(program.getName(), program.getIntro(), program.getImageUrl());
 		MsoManager msoMngr = new MsoManager();
-		String url = "http://" + MsoConfigManager.getSharingDomain() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
+		String url = "http://" + MsoConfigManager.getServerDomain() + "/view?channel=" + channel.getId() + "&episode=" + program.getId();
 		fbPost.setLink(url);
 		log.info("share link: " + url);
 		if (program.getComment() != null) {

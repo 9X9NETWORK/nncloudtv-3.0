@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.FacebookLib;
+import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CntSubscribe;
@@ -85,6 +86,13 @@ public class NnChannelManager {
 			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
 			new DepotService().submitToTranscodingService(channel.getId(), channel.getSourceUrl(), req);								
 		}
+		
+		// piwik
+		if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+			
+			PiwikLib.createPiwikSite(0, channel.getId());
+		}
+		
 		return channel;
 	}
 	

@@ -30,12 +30,24 @@ public class MsoConfigManager {
 		return result;
 	}
 	
-	static public String getSharingDomain() {
+	static public String getPiwikDomain() {
+		Properties properties = new Properties();
+		String result = "";
+		try {
+			properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("piwik.properties"));
+			result = properties.getProperty("piwik_server");
+		} catch (IOException e) {
+			NnLogUtil.logException(e);
+		}
+		return result;
+	}
+	
+	static public String getServerDomain() {
 		Properties properties = new Properties();
 		String result = "";
 		try {
 			properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("sns.properties"));
-			result = properties.getProperty("sharing_domain");
+			result = properties.getProperty("server_domain");
 		} catch (IOException e) {
 			NnLogUtil.logException(e);
 		}

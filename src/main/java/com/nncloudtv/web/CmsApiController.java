@@ -260,7 +260,7 @@ public class CmsApiController {
 			}
 		}
 		// piwik
-		PiwikLib.createPiwikSite(setId, 0, req);
+		PiwikLib.createPiwikSite(setId, 0);
 		return "OK";
 	}
 
@@ -557,12 +557,12 @@ public class CmsApiController {
 				DepotService tranService = new DepotService();
 				tranService.submitToTranscodingService(channel.getId(), sourceUrl, req);
 				// piwik
-				PiwikLib.createPiwikSite(0, channel.getId(), req);
+				PiwikLib.createPiwikSite(0, channel.getId());
 			}
 			channel.setTag("NEW_CHANNEL");
 		} else {
 			// piwik
-			PiwikLib.createPiwikSite(0, channel.getId(), req);
+			PiwikLib.createPiwikSite(0, channel.getId());
 		}
 		
 		return channel;
@@ -881,7 +881,7 @@ public class CmsApiController {
 			}
 		}
 		// piwik
-		PiwikLib.createPiwikSite(0, channelId, req);
+		PiwikLib.createPiwikSite(0, channelId);
 		return "OK";
 	}
 	
