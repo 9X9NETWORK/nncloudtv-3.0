@@ -111,6 +111,8 @@ public class PlayerController {
 			           HttpServletRequest req, HttpServletResponse resp, Model model, 
 			           @RequestParam(value="channel", required=false) String channel,
 			           @RequestParam(value="episode", required=false) String episode,
+			           @RequestParam(value="js",required=false) String js,
+						@RequestParam(value="jsp",required=false) String jsp,
 				       @RequestParam(value="ch", required=false) String ch,
 				       @RequestParam(value="ep", required=false) String ep) {
 		try {
@@ -120,6 +122,14 @@ public class PlayerController {
 				model = service.prepareEpisode(model, episode, resp);
 			} else {
 				model = service.prepareChannel(model, channel, resp);
+			}
+			model.addAttribute("js", "");
+			if (js != null && js.length() > 0) {
+				model.addAttribute("js", js);
+			}
+			if (jsp != null && jsp.length() > 0) {
+				log.info("alternate is enabled: " + jsp);
+				return "player/" + jsp;
 			}
 			return "player/zooatomics";
 		} catch (Throwable t){
