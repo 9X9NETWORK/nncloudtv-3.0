@@ -6,8 +6,8 @@ import java.io.ObjectOutputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
 
+import com.nncloudtv.service.MsoConfigManager;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -37,7 +37,7 @@ public class QueueFactory {
 	}
 	
 	//for now, assuming if obj is not null, then it's a json request
-	public static void add(HttpServletRequest req, String url, Object json) {
+	public static void add(String url, Object json) {
     	ConnectionFactory factory = new ConnectionFactory();
 		try {
 			Properties properties = new Properties();
@@ -52,7 +52,7 @@ public class QueueFactory {
 			Object[] obj = new Object[2];
 			String root = "http://localhost:8080";
 			if (!server.equals("localhost")) {
-				root = NnNetUtil.getUrlRoot(req);
+				root = "http://" + MsoConfigManager.getServerDomain(); // configurable
 			}
 			log.info("queue root:" + root);
 			String msg = root.concat(url);

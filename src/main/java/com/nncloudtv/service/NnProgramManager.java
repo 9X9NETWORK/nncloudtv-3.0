@@ -82,7 +82,7 @@ public class NnProgramManager {
 					fbPost.setFacebookId(snsAuth.getToken());
 					fbPost.setAccessToken(snsAuth.getSecret());
 				}
-				QueueFactory.add(null, "/CMSAPI/postToFacebook", fbPost);
+				QueueFactory.add("/CMSAPI/postToFacebook", fbPost);
 			}
 		}
 		
@@ -102,7 +102,7 @@ public class NnProgramManager {
 				fbPost.setFacebookId(snsAuth.getToken());
 				fbPost.setAccessToken(snsAuth.getSecret());
 				
-				QueueFactory.add(null, "/CMSAPI/postToTwitter", fbPost);
+				QueueFactory.add("/CMSAPI/postToTwitter", fbPost);
 			}
 		}
 	} 

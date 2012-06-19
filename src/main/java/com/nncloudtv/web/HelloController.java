@@ -269,7 +269,7 @@ public class HelloController {
 			log.info("you didn't specify message to carry");
 		}
 		
-		QueueFactory.add(req, "/hello/MQCallback", json);
+		QueueFactory.add("/hello/MQCallback", json);
 		
 		return "OK";
 	}
@@ -303,7 +303,7 @@ public class HelloController {
     	ChannelInfo info = new ChannelInfo();
     	info.setErrorCode("lalala");
     	System.out.println(info.toString());
-    	QueueFactory.add(req, msg, null);
+    	QueueFactory.add(msg, null);
     	
     	/*
     	ConnectionFactory factory = new ConnectionFactory();
