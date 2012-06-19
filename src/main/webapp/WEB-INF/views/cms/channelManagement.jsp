@@ -8,13 +8,14 @@
 <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/start/jquery-ui.css"/>
 <link type="text/css" rel="stylesheet" href="${root}/javascripts/plugins/msdropdown/dd.css"/>
 <link type="text/css" rel="stylesheet" href="${root}/stylesheets/cms.css"/>
+<link type="text/css" rel="stylesheet" href="${root}/stylesheets/jquery.jqModal.css"/>
 <script type="text/javascript" src="${root}/javascripts/jquery-1.6.4.fixed.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${root}/javascripts/plugins/jquery.progressbar.js"></script>
 <script type="text/javascript" src="${root}/javascripts/plugins/msdropdown/jquery.dd.js"></script>
 <script type="text/javascript" src="${root}/javascripts/swfupload/swfupload.js"></script>
 <script type="text/javascript" src="${root}/javascripts/swfupload/swfupload.speed.js"></script>
-<script type="text/javascript" src="${root}/javascripts/cms/common.js"></script>
+<script type="text/javascript" src="${root}/javascripts/require.js" data-main="${root}/javascripts/cms/common.js"></script>
 <script type="text/javascript" src="${root}/javascripts/cms/channelManagement.js"></script>
 <title><spring:message code="cms.channel_management.title"/></title>
 </head>

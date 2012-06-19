@@ -32,7 +32,7 @@ var cms = {
       });
       return (typeof callback == 'function') ? callback() : null;
     };
-    cms.loadScript('http://connect.beta.facebook.net/en_US/all.js');
+    require(['http://connect.beta.facebook.net/en_US/all.js']);
   },
   isNN: function() {
     return ($('#msoType').val() == '1');
@@ -48,13 +48,13 @@ var cms = {
   },
   initPlusone: function(callback) {
     if (callback)
-      cms.loadScript('https://apis.google.com/js/plusone.js', callback);
+      require(['https://apis.google.com/js/plusone.js'], callback);
     else
-      cms.loadScript('https://apis.google.com/js/plusone.js');
+      require(['https://apis.google.com/js/plusone.js']);
   },
   initAddthis: function() {
     window.addthis = null;
-    cms.loadScript('http://s7.addthis.com/js/250/addthis_widget.js', function() {
+    require(['http://s7.addthis.com/js/250/addthis_widget.js'], function() {
       addthis.init();
     });
   },
@@ -232,33 +232,6 @@ var cms = {
       success: callback
     });
   },
-  loadScript: function(url, callback) {
-    if ($.browser.msie && url.charAt(0) == '/') {
-      log('loadScript: ' + url);
-      return (function(url, callback) {
-        var head   = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        var done   = false; // Handle Script loading
-        script.src = url;
-        script.onload = script.onreadystatechange = function() { // Attach handlers for all browsers
-          if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
-            done = true;
-            if (callback) { callback(); }
-            script.onload = script.onreadystatechange = null; // Handle memory leak in IE
-          }
-        };
-        head.appendChild(script);
-        return undefined; // We handle everything using the script element injection
-      })(url, callback);
-    }
-    var cache = $.ajaxSettings.cache;
-    $.ajaxSettings.cache = true;
-    if (typeof (callback) == 'function')
-      $.getScript(url, callback);
-    else
-      $.getScript(url);
-    $.ajaxSettings.cache = cache;
-  },
   initSetupButton: function() {
     $('#setup_page').jqm({
       zIndex:  1000,
@@ -267,7 +240,7 @@ var cms = {
       ajax:    'setup',
       trigger: '#setup',
       onLoad: function() {
-        cms.loadScript(cms.getExternalRootPath() + '/javascripts/cms/setup.js', function() {
+        require(['setup'], function() {
           pageSetup.init();
           if (cms.isGeneric()) {
             pageSetup.initGenericOne();
@@ -351,11 +324,8 @@ var cms = {
       cache: false // Disable caching of AJAX responses
     });
     
-    cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.getCSS.js', function() {
-      $.getCSS(cms.getExternalRootPath() + '/stylesheets/jquery.jqModal.css', function() {
-        cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.jqModal.js', cms.initSetupButton);
-      });
-    });
+    require(['../plugins/jquery.jqModal'], cms.initSetupButton);
+    
   }
 };
 
@@ -398,9 +368,9 @@ $(function() {
   log("msoType: " + $('#msoType').val());
   
   if (cms.debug) {
-    cms.loadScript('http://www.netgrow.com.au/assets/files/jquery_plugins/jquery.dump.js');
+    require(['http://www.netgrow.com.au/assets/files/jquery_plugins/jquery.dump.js']);
   }
-  cms.loadScript(cms.getExternalRootPath() + '/javascripts/plugins/jquery.blockUI.js', function() {
+  require(['../plugins/jquery.blockUI'], function() {
     
     $.blockUI.defaults.message = $('#warning_please_wait').html();
     $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);

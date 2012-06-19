@@ -3,13 +3,6 @@
  */
 
 var page$ = {
-  datepicker_properties: {
-    rangeSelect: true,
-    firstDay: 1,
-    showOn: 'button',
-    buttonImage: cms.getExternalRootPath() + '/images/cms/icon_calendar.png',
-    buttonImageOnly: true
-  },
   statisticsReport: {
     destroy: function() {
       $('#channel_statistics').hide();
@@ -195,7 +188,7 @@ var page$ = {
     var css = '<style> .chPublic { background:url(' + $('#image_ch_public').text() + ') no-repeat; }\n.chUnPublic { background:url(' + $('#image_ch_unpublic').text() + ') no-repeat; } </style>';
     $(css).appendTo('head');
     
-    cms.loadScript(cms.getExternalRootPath() + '/javascripts/piwik-analytics.js', function() {
+    require(['../piwik-analytics'], function() {
       page$.channelAndChannelSetList.init();
     });
   }
