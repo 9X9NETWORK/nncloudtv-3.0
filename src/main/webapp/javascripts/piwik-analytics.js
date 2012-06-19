@@ -12,22 +12,11 @@ var piwik_is_engaging   = false; // mutex
 
 function piwik_host()
   {
-  var host = (document.location.protocol == 'https:') ? "https://" : "http://";
-
-  if (location.host == 'puppy.9x9.tv')
-    host += 'dev.piwik.9x9.tv';
-  else if (location.host == 'alpha.9x9.tv')
-    host += 'alpha.piwik.9x9.tv';
-  else if (location.host == 'qa.9x9.tv')
-    host += 'qa.piwik.9x9.tv';
-  else if (location.host == 'demo.9x9.tv')
-    host += 'demo.piwik.9x9.tv';
-  else if (location.host == 'www.9x9.tv' || location.host == '9x9.tv')
-    host += 'piwik.9x9.tv';
-  else if (location.host == 'cms.9x9.tv')
-    host += 'piwik.teltel.com';
-
+  var host = "http://";
+  
+  host += $('#piwik').val();
   host += '/';
+  
   return host;
   }
 

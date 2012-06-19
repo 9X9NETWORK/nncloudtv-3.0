@@ -68,6 +68,11 @@ public class CmsController {
 		return MsoConfigManager.getExternalRootPath();
 	}
 	
+	@ModelAttribute("piwik")
+	public String getPiwikDomain() {
+		return MsoConfigManager.getPiwikDomain();
+	}
+	
 	private Model setAttributes(Model model, Mso mso) {
 		
 		model.addAttribute("msoLogo", mso.getLogoUrl());

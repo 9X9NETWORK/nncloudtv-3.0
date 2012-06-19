@@ -3,6 +3,7 @@
   <input type="hidden" id="msoType" value="${msoType}"/>
   <input type="hidden" id="msoName" value="${msoName}"/>
   <input type="hidden" id="locale" value="${locale}"/>
+  <input type="hidden" id="piwik" value="${piwik}"/>
   <div class="floatL" id="mso_logo"><img alt="" src="${msoLogo}"/></div>
   <div id="setup_page" class="jqmWindow"></div>
   <div class="floatR">
