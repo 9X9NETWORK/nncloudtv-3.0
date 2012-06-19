@@ -1,5 +1,8 @@
 package com.nncloudtv.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -8,9 +11,11 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +30,7 @@ import com.nncloudtv.service.DepotService;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.NnStatusMsg;
+import com.nncloudtv.service.PlayerService;
 import com.nncloudtv.web.json.transcodingservice.Channel;
 import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
 import com.nncloudtv.web.json.transcodingservice.PostResponse;
@@ -110,6 +116,64 @@ public class DepotController {
 		return NnNetUtil.textReturn("OK");
 	}
 	
+	/**
+	 * Get Channel/Set Meta data (title,description,image)
+	 * 
+	 * This is used by Piwik to fetch channel/set info
+	 * 
+	 * @return json encoded key value pair
+	 */
+	
+	@RequestMapping("getMetaInfo")
+	public @ResponseBody void getMetaInfo(Model model,
+	                                      HttpServletResponse resp,
+	                                      HttpServletRequest req,
+	                                      @RequestParam(required=false) String jsoncallback,
+	                                      @RequestParam(required=false) Long set,
+	                                      @RequestParam(required=false) Long ch) {
+		
+		PlayerService playerService = new PlayerService();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if (set != null) {
+			model = playerService.prepareSetInfo(model, String.valueOf(set), resp);
+			model.addAttribute("type", "set");
+			model.addAttribute("id", String.valueOf(set));
+		} else if (ch != null) {
+			model = playerService.prepareChannel(model, String.valueOf(ch), resp);
+			model.addAttribute("type", "ch");
+			model.addAttribute("id", String.valueOf(ch));
+		}
+		
+		try {
+			OutputStream out = resp.getOutputStream();
+			resp.setCharacterEncoding("UTF-8");
+			resp.addDateHeader("Expires", System.currentTimeMillis() + 3600000);
+			resp.addHeader("Cache-Control", "private, max-age=3600");
+			if (jsoncallback == null) {
+				resp.setContentType("application/json");
+				mapper.writeValue(out, model.asMap());
+			} else {
+				resp.setContentType("application/x-javascript");
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				OutputStreamWriter writer = new OutputStreamWriter(baos, "UTF-8");
+				writer.write(jsoncallback + "(");
+				writer.close();
+				baos.writeTo(out);
+				
+				baos = new ByteArrayOutputStream();
+				writer = new OutputStreamWriter(baos, "UTF-8");
+				log.info("encoding: " + writer.getEncoding());
+				mapper.writeValue(writer, model.asMap());
+				baos.writeTo(out);
+				out.write(')');
+				out.close();
+			}
+		} catch (Exception e) {
+			NnLogUtil.logException(e);
+		}
+	}
 	
 	/** 
 	 * @param page
