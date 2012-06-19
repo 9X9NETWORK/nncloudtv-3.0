@@ -40,15 +40,24 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/flowplayer-3.2.4.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player31.js"></script>
+<c:if test="${js == \"\"}">
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player32.js"></script>
+</c:if>
+<c:if test="${js != \"\"}">
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
+</c:if>
+
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.V2.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.ba-hashchange.min.js"></script>
+
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
                                                                                                                         
 <script type="text/javascript">
 var analytz = false;
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-21595932-1']);
+var acct = document.location.host.match (/(dev|stage|alpha)/) ? 'UA-31930874-1' : 'UA-21595932-1';
+_gaq.push(['_setAccount', acct]);
 _gaq.push(['_setDomainName', '.9x9.tv']);
 _gaq.push(['_trackPageview']);
 function analytics()
