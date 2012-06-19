@@ -331,6 +331,8 @@ public class PlayerApiService {
 		if (!readOnly)
 			counter = this.addMsoInfoVisitCounter(readOnly);		
 		result[0] += PlayerApiService.assembleKeyValue("brandInfoCounter", String.valueOf(counter));
+		//piwik
+		result[0] += PlayerApiService.assembleKeyValue("piwik", "http://" + MsoConfigManager.getPiwikDomain() + "/");
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }    
 
