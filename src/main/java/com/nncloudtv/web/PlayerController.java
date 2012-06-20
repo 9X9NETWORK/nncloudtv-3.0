@@ -86,17 +86,14 @@ public class PlayerController {
 			@RequestParam(value="jsp",required=false) String jsp,
 			@RequestParam(value="js",required=false) String js,
 			@RequestParam(value="mso",required=false) String mso, 
-			HttpServletRequest req, HttpServletResponse resp, Model model) { 			
+			HttpServletRequest req, HttpServletResponse resp, Model model) {
+		System.out.println("share???");
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
 			model = service.prepareSetInfo(model, name, resp);			
-			model.addAttribute("js", "");
-			if (js != null && js.length() > 0) {
-				model.addAttribute("js", js);
-			}
+			model = service.preparePlayer(model, js, jsp);			
 			if (jsp != null && jsp.length() > 0) {
-				log.info("alternate is enabled: " + jsp);
 				return "player/" + jsp;
 			}
 			//String prefLanguage = req.getHeader("Accept-Language");		
@@ -123,12 +120,8 @@ public class PlayerController {
 			} else {
 				model = service.prepareChannel(model, channel, resp);
 			}
-			model.addAttribute("js", "");
-			if (js != null && js.length() > 0) {
-				model.addAttribute("js", js);
-			}
+			model = service.preparePlayer(model, js, jsp);
 			if (jsp != null && jsp.length() > 0) {
-				log.info("alternate is enabled: " + jsp);
 				return "player/" + jsp;
 			}
 			return "player/zooatomics";

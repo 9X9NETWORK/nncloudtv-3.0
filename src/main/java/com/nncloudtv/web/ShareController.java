@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.service.PlayerService;
@@ -26,12 +27,20 @@ public class ShareController {
 	}
 	
 	@RequestMapping("{ipgId}")
-	public String zooatomics(@PathVariable String ipgId, HttpServletResponse resp, Model model) {
+	public String zooatomics(@PathVariable String ipgId,
+	        @RequestParam(value="js",required=false) String js,
+			@RequestParam(value="jsp",required=false) String jsp,			
+			HttpServletResponse resp, 
+			Model model) {
 		log.info("/share/" + ipgId);
-		PlayerService playerService = new PlayerService();		
+		PlayerService service = new PlayerService();		
 		String msoName = null;
 		//find mso info of the user who shares the ipg
-		model = playerService.prepareBrand(model, msoName, resp);
+		model = service.prepareBrand(model, msoName, resp);
+		model = service.preparePlayer(model, js, jsp);
+		if (jsp != null && jsp.length() > 0) {
+			return "player/" + jsp;
+		}
 		return "player/zooatomics";
 	}
 }
