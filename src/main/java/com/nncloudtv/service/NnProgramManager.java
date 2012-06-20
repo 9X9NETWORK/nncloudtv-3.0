@@ -108,23 +108,35 @@ public class NnProgramManager {
 	} 
 
 	/**
-	 * Sometimes we save program, but want updateDate to keep untouched
+	 * Save programs massively, and keep updateDate untouched
 	 * 
-	 * @param program
-	 * @param untouched
-	 * @return
+	 * why? processCache() takes too much time when saving individually
+	 * 
+	 * @param programs
+	 * @return programs
 	 */
-	public NnProgram save(NnProgram program, boolean untouched) {
-		Date now = new Date();
-		if (program.getCreateDate() == null)
-			program.setCreateDate(now);
-		if (!untouched) {
-			program.setUpdateDate(now);
-		}
-		program = programDao.save(program);
-		this.processCache(program.getChannelId());
+	public List<NnProgram> save(List<NnProgram> programs) {
 		
-		return program;
+		long channelId = 0;
+		
+		for (NnProgram program : programs) {
+			
+			Date now = new Date();
+			if (program.getCreateDate() == null)
+				program.setCreateDate(now);
+			if (program.getUpdateDate() == null) {
+				program.setUpdateDate(now);
+			}
+			
+			program = programDao.save(program);
+			
+			if (channelId != program.getChannelId()) {
+				channelId = program.getChannelId();
+				processCache(channelId);
+			}
+		}
+		
+		return programs;
 	}
 	
 	public NnProgram save(NnProgram program) {
