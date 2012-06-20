@@ -85,5 +85,15 @@ public class PlayerService {
 		}
 		return model;
 	}
-	
+
+	public Model preparePlayer(Model model, String js, String jsp) {
+		model.addAttribute("js", "");
+		if (js != null && js.length() > 0) {
+			model.addAttribute("js", js);
+		}
+		if (jsp != null && jsp.length() > 0) {
+			log.info("alternate is enabled: " + jsp);
+		}
+		return model;
+	}
 }
