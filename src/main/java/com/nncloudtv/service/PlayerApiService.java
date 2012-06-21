@@ -1514,6 +1514,12 @@ public class PlayerApiService {
 			return userInfo;
 		}
 		data.add(userInfo);
+		//1a. channel lineup
+		String lineup = this.channelLineup (token, false, null, false, false);
+		data.add(lineup);
+		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
 		//2. obtain list of recommended sets for this user's language
 		String lang = LangTable.LANG_EN;
 		try {
@@ -1562,7 +1568,7 @@ public class PlayerApiService {
 	private String assembleSections(List<String> data) {
 		String output = "";
 		for (String d : data) {
-			output += d + "--\n";
+			output += d + "----\n";
 		}
 		return output;				
 	}
