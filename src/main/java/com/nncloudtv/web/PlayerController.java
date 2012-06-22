@@ -87,7 +87,6 @@ public class PlayerController {
 			@RequestParam(value="js",required=false) String js,
 			@RequestParam(value="mso",required=false) String mso, 
 			HttpServletRequest req, HttpServletResponse resp, Model model) {
-		System.out.println("share???");
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
