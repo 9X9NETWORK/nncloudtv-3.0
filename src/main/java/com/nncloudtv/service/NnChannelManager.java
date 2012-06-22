@@ -294,8 +294,9 @@ public class NnChannelManager {
 	public static short getDefaultSorting(NnChannel c) {
 		short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
 		if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
-			c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY)
-			sorting = NnChannel.SORT_MAPEL;
+			c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY || 
+			c.getContentType() == NnChannel.CONTENTTYPE_MIXED)
+			sorting = NnChannel.SORT_DESIGNATED;
 		return sorting;
 	}
 	
