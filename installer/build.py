@@ -1,7 +1,7 @@
 import os, datetime, shutil
 
 #================================================================
-choice = raw_input('Environment (1.devel 2.alpha 3.prod) : ')
+choice = raw_input('Environment (1.devel 2.alpha 3.prod/stage) : ')
 server="dev"
 if choice == "2":
  server="alpha"
