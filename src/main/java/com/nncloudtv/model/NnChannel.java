@@ -111,10 +111,11 @@ public class NnChannel implements Serializable {
 		
 	@NotPersistent
 	private short seq; //use with subscription, to specify sequence in IPG. 
-		
+	
+	//not used
 	public static final short SORT_NEWEST_TO_OLDEST = 1; //default
 	public static final short SORT_OLDEST_TO_NEWEST = 2;
-	public static final short SORT_MAPEL = 3;
+	public static final short SORT_DESIGNATED = 3;
 	@Persistent
 	private short sorting;
 
