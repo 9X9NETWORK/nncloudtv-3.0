@@ -84,7 +84,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(NnProgram.class);
-			q.setFilter("channelId == channelIdParam && isPublic == isPublicParam && status == statusParam");
+			q.setFilter("channelId == channelIdParam && isPublic == isPublicParam && status != statusParam");
 			q.declareParameters("long channelIdParam, boolean isPublicParam, short statusParam");
 			if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP) {
 				q.setOrdering("seq asc, subSeq asc"); 
@@ -100,7 +100,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 			}						
 			
 			@SuppressWarnings("unchecked")
-			List<NnProgram> programs = (List<NnProgram>)q.execute(c.getId(), true, NnProgram.STATUS_OK);
+			List<NnProgram> programs = (List<NnProgram>)q.execute(c.getId(), true, NnProgram.STATUS_ERROR);
 			detached = (List<NnProgram>)pm.detachCopyAll(programs);
 		} finally {
 			pm.close();
