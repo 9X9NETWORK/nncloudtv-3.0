@@ -26,6 +26,10 @@ public class ShareController {
 		return "error/exception";				
 	}
 	
+	/**
+	 * original url: /share/1
+	 * rewrite to  : #!share=x
+	 */
 	@RequestMapping("{ipgId}")
 	public String zooatomics(@PathVariable String ipgId,
 	        @RequestParam(value="js",required=false) String js,
@@ -33,7 +37,11 @@ public class ShareController {
 			HttpServletResponse resp, 
 			Model model) {
 		log.info("/share/" + ipgId);
-		PlayerService service = new PlayerService();		
+		PlayerService service = new PlayerService();
+		String url = service.rewrite(js, jsp); 
+		return "redirect:/" + url + "#!share=" + ipgId;
+		
+		/*
 		String msoName = null;
 		//find mso info of the user who shares the ipg
 		model = service.prepareBrand(model, msoName, resp);
@@ -42,5 +50,6 @@ public class ShareController {
 			return "player/" + jsp;
 		}
 		return "player/zooatomics";
+		*/
 	}
 }

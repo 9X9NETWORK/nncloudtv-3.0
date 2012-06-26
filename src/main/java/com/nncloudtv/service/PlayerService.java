@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
@@ -93,6 +94,49 @@ public class PlayerService {
 		}
 		if (jsp != null && jsp.length() > 0) {
 			log.info("alternate is enabled: " + jsp);
+		}
+		return model;
+	}
+
+	public String rewrite(String js, String jsp) {
+		String url = "";
+		if (jsp != null)
+			url += "?jsp=" + jsp;
+		if (js != null) {
+			if (jsp != null)
+				url += "&js=" + js;
+			else
+				url += "?js=" + js;
+		}
+		return url;
+	}
+	
+	public Model prepareCrawled(Model model) {
+		PlayerApiService service = new PlayerApiService();
+		//listRecommended
+		String listRecommended = service.listRecommended(LangTable.LANG_EN);		
+		String[] sets = listRecommended.split("\n");
+		String setId = "";
+		for (int i=2; i<sets.length; i++) {
+			String[] ele = sets[i].split("\t");
+			if (i==2) {
+				model.addAttribute("crawlSetTitle", ele[1]);
+				setId = ele[0];
+			}
+			model.addAttribute("crawlRecommendTitle" + i, ele[1]);
+			model.addAttribute("crawlRecommendDesc" + i, ele[2]);
+			model.addAttribute("crawlRecommendThumb" + i, ele[3]);
+			model.addAttribute("crawlRecommendCount" + i, ele[4]);
+		}
+		String setInfo = service.setInfo(setId, null);
+		String[] setInfoSections = setInfo.split("--\n");
+		String[] channels = setInfoSections[2].split("\n");
+		log.info("<<<< set id >>>>" + setId);
+		log.info("<<<< channels >>>>" + channels[0]);
+		for (int i=0; i<1; i++) {
+			String[] ele = channels[i].split("\t");
+			model.addAttribute("crawlChannelTitle" + i, ele[2]);			
+			model.addAttribute("crawlVideoThumb" + i, ele[4]);
 		}
 		return model;
 	}

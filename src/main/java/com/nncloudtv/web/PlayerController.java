@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -56,7 +57,7 @@ public class PlayerController {
 			@RequestParam(value="jsp",required=false) String jsp,
 			@RequestParam(value="js",required=false) String js,
 			@RequestParam(value="mso",required=false) String mso, 
-			HttpServletRequest req, HttpServletResponse resp, Model model) { 			
+			HttpServletRequest req, HttpServletResponse resp, Model model) {
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
@@ -66,6 +67,11 @@ public class PlayerController {
 				model.addAttribute("js", js);
 			}
 			if (jsp != null && jsp.length() > 0) {
+				/*
+				if (jsp.equals("crawled")) {
+					model = service.prepareCrawled(model);
+				}
+				*/
 				log.info("alternate is enabled: " + jsp);
 				return "player/" + jsp;
 			}
@@ -77,16 +83,23 @@ public class PlayerController {
 	}	
 	
 	/**
-	 * to become a 9x9 player, 1)delete cookie, 2)set fb info 
+	 * original url: /durp
+	 * redirect to:  #!landing=durp  
 	 */	
 	@RequestMapping("{name}")
 	public String zooatomics(
-			//@PathVariable("name") String name,
-			@RequestParam(value="name",required=false) String name,
+			@PathVariable("name") String name,
+			//@RequestParam(value="name",required=false) String name,
 			@RequestParam(value="jsp",required=false) String jsp,
 			@RequestParam(value="js",required=false) String js,
 			@RequestParam(value="mso",required=false) String mso, 
 			HttpServletRequest req, HttpServletResponse resp, Model model) {
+		if (name != null) {
+			PlayerService service = new PlayerService();
+			String url = service.rewrite(js, jsp); 
+			return "redirect:/" + url + "#!landing=" + name;
+		}
+		//actually won't continue
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
@@ -102,6 +115,10 @@ public class PlayerController {
 		return "player/zooatomics";
 	}
 	
+	/**
+	 * original url: view?channel=x&episode=y
+	 * redirect to:  #!ch=x!ep=y  
+	 */
 	@RequestMapping("view")
 	public String view(@RequestParam(value="mso",required=false) String mso, 
 			           HttpServletRequest req, HttpServletResponse resp, Model model, 
@@ -111,6 +128,9 @@ public class PlayerController {
 						@RequestParam(value="jsp",required=false) String jsp,
 				       @RequestParam(value="ch", required=false) String ch,
 				       @RequestParam(value="ep", required=false) String ep) {
+		
+		return "redirect:/#!ch=" + channel + "!ep=" + episode;
+		/*
 		try {
 			PlayerService service = new PlayerService();
 			model = service.prepareBrand(model, mso, resp);
@@ -128,6 +148,7 @@ public class PlayerController {
 			NnLogUtil.logThrowable(t);
 			return "player/zooatomics";			
 		}
+		*/
 	}
 	
 	@RequestMapping("support")
