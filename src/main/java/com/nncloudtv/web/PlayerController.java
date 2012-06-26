@@ -128,8 +128,18 @@ public class PlayerController {
 						@RequestParam(value="jsp",required=false) String jsp,
 				       @RequestParam(value="ch", required=false) String ch,
 				       @RequestParam(value="ep", required=false) String ep) {
-		
-		return "redirect:/#!ch=" + channel + "!ep=" + episode;
+		PlayerService service = new PlayerService();
+		String url = service.rewrite(js, jsp);
+		String cid = channel;
+		if (ch != null)
+			cid = ch;
+		String pid = episode;
+		if (ep != null)
+			pid = ep;
+		String epStr = "";
+		if (pid != null)
+			epStr = "!ep=" + episode;
+		return "redirect:/" + url + "#!ch=" + cid + epStr; 
 		/*
 		try {
 			PlayerService service = new PlayerService();
