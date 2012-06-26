@@ -6,7 +6,6 @@ server="dev"
 if choice == "2":
  server="alpha"
 if choice == "3":                                          
- print "prod"
  server="prod"
 
 src = server + "//datanucleus_analytics.properties"
@@ -40,6 +39,11 @@ shutil.copyfile(src, dst)
 src = server + "//sns.properties"
 dst = "..//src//main//resources//sns.properties"
 shutil.copyfile(src, dst)
+
+src = server + "//piwik.properties"
+dst = "..//src//main//resources//piwik.properties"
+shutil.copyfile(src, dst)
+
 #================================================================                         
 version = raw_input('Enter version number : ')
 source = open(".svn//entries", "rU")
