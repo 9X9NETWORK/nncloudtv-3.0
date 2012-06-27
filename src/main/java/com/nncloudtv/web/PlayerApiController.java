@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnStatusCode;
@@ -1545,9 +1546,34 @@ public class PlayerApiController {
 		} catch (Throwable t) {
 			NnLogUtil.logThrowable(t);
 		}
+		return NnNetUtil.textReturn(output);				 
+	}
+
+	@RequestMapping(value="networkSearch")
+	public ResponseEntity<String> networkSearch(
+			@RequestParam(value="name", required=false) String name,
+			@RequestParam(value="email", required=false) String email,			
+			@RequestParam(value="rx", required = false) String rx,			
+			HttpServletRequest req,
+			HttpServletResponse resp) {		
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);
+			output = playerApiService.networkSearch(name, email);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}			
 		return NnNetUtil.textReturn(output);
-		
-		 
 	}
 	
+	@RequestMapping(value="piwikCreate")
+	public ResponseEntity<String> piwikCreate(
+			@RequestParam(value="setId", required=false) long setId,
+			@RequestParam(value="channelId", required=false) long channelId) {
+		String piwikId = PiwikLib.createPiwikSite(setId, channelId);
+		log.info("setId:" + setId + ";channelId:" + channelId + ";piwik id:" + piwikId);
+		return NnNetUtil.textReturn(piwikId);		
+	}
 }
