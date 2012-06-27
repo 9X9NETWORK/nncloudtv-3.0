@@ -1549,6 +1549,7 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);				 
 	}
 
+	/*
 	@RequestMapping(value="networkSearch")
 	public ResponseEntity<String> networkSearch(
 			@RequestParam(value="name", required=false) String name,
@@ -1567,6 +1568,7 @@ public class PlayerApiController {
 		}			
 		return NnNetUtil.textReturn(output);
 	}
+	*/
 	
 	@RequestMapping(value="piwikCreate")
 	public ResponseEntity<String> piwikCreate(
