@@ -1515,7 +1515,7 @@ public class PlayerApiService {
 		}
 		data.add(userInfo);
 		//1a. channel lineup
-		String lineup = this.channelLineup (token, false, null, false, false);
+		String lineup = this.channelLineup (token, false, null, true, false);
 		data.add(lineup);
 		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
 			return this.assembleSections(data);
