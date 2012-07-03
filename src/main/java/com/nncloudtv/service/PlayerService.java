@@ -1,13 +1,18 @@
 package com.nncloudtv.service;
 
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
@@ -98,6 +103,34 @@ public class PlayerService {
 		return model;
 	}
 
+	//get all the query string(things after ?) from url except ch/channel, ep/episode
+	public String rewrite(HttpServletRequest req) {
+		String url = req.getRequestURL().toString();		
+		String queryStr = req.getQueryString();		
+		if (queryStr != null && !queryStr.equals("null"))
+			queryStr = "?" + queryStr;
+		else 
+			queryStr = "";
+		url = url + queryStr;
+		Pattern pattern = Pattern.compile("(.*)\\?(.*)");
+		Matcher m = pattern.matcher(url);
+		if (m.find()) {
+			String matched = m.group(2);
+			matched = matched.replaceAll("ch=\\d*&?", "");
+			log.info("matched 1:" + matched);
+			matched = matched.replaceAll("ep=\\d*&?", "");
+			log.info("matched 2:" + matched);
+			matched = matched.replaceAll("channel=\\d*&?", "");
+			log.info("matched 3:" + matched);
+			matched = matched.replaceAll("episode=\\d*&?", "");
+			log.info("matched 4:" + matched);
+			if (matched.length() > 0)
+				return "?" + matched;
+		}
+		return "";
+	}
+	
+	/*
 	public String rewrite(String js, String jsp) {
 		String url = "";
 		if (jsp != null)
@@ -110,33 +143,74 @@ public class PlayerService {
 		}
 		return url;
 	}
+	*/
 	
-	public Model prepareCrawled(Model model) {
+	public Model prepareCrawled(Model model, String escaped) {						
 		PlayerApiService service = new PlayerApiService();
+		log.info("escaped=" + escaped);		
+		Pattern pattern = Pattern.compile("(ch=)(\\d*)");
+		Matcher m = pattern.matcher(escaped);
+		String ch=null, ep=null;
+	    if (m.find()) {	    	
+	    	ch = m.group(2);
+	    }
+	    pattern = Pattern.compile("(ep=)(\\d*)");
+		m = pattern.matcher(escaped);
+	    if (m.find()) {	    	
+	    	ep = m.group(2);
+	    }
+	    String lang = LangTable.LANG_EN;
+		if (ch != null) {
+			NnChannelManager channelMngr = new NnChannelManager();		
+			NnChannel c = channelMngr.findById(Long.parseLong(ch));
+			if (c != null) {
+				model.addAttribute("crawlChannelTitle", c.getName());
+				lang = c.getLang();
+				if (ep != null) {					
+					NnProgramManager programMngr = new NnProgramManager();
+					List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
+					if (programs.size() > 0) {
+						int i=1;
+						for (NnProgram p : programs) {
+							if (i > 1 && i < 4) {
+								model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+								System.out.println("crawlEpThumb" + i + ":" + p.getImageUrl());
+								i++;
+							}
+							if (p.getId() == Long.parseLong(ep)) {
+								if (p.getImageLargeUrl() != null) {
+									model.addAttribute("crawlVideoThumb", p.getImageLargeUrl());
+								} else {
+									model.addAttribute("crawlVideoThumb", p.getImageUrl());
+								}
+								model.addAttribute("crawlEpisodeTitle", p.getName());
+								model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+								i++;
+							}
+						}
+					} else {
+						if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
+							c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+							
+						}
+					}
+				}
+			}
+		}
 		//listRecommended
-		String listRecommended = service.listRecommended(LangTable.LANG_EN);		
+		String listRecommended = service.listRecommended(lang);		
 		String[] sets = listRecommended.split("\n");
-		String setId = "";
+		//String setId = "";		
 		for (int i=2; i<sets.length; i++) {
 			String[] ele = sets[i].split("\t");
 			if (i==2) {
 				model.addAttribute("crawlSetTitle", ele[1]);
-				setId = ele[0];
 			}
-			model.addAttribute("crawlRecommendTitle" + i, ele[1]);
-			model.addAttribute("crawlRecommendDesc" + i, ele[2]);
-			model.addAttribute("crawlRecommendThumb" + i, ele[3]);
-			model.addAttribute("crawlRecommendCount" + i, ele[4]);
-		}
-		String setInfo = service.setInfo(setId, null);
-		String[] setInfoSections = setInfo.split("--\n");
-		String[] channels = setInfoSections[2].split("\n");
-		log.info("<<<< set id >>>>" + setId);
-		log.info("<<<< channels >>>>" + channels[0]);
-		for (int i=0; i<1; i++) {
-			String[] ele = channels[i].split("\t");
-			model.addAttribute("crawlChannelTitle" + i, ele[2]);			
-			model.addAttribute("crawlVideoThumb" + i, ele[4]);
+			int seq = i -1;
+			model.addAttribute("crawlRecommendTitle" + seq, ele[1]);
+			model.addAttribute("crawlRecommendDesc" + seq, ele[2]);
+			model.addAttribute("crawlRecommendThumb" + seq, ele[3]);
+			model.addAttribute("crawlRecommendCount" + seq, ele[4]);
 		}
 		return model;
 	}
