@@ -2,6 +2,7 @@ package com.nncloudtv.web;
 
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
@@ -34,11 +35,12 @@ public class ShareController {
 	public String zooatomics(@PathVariable String ipgId,
 	        @RequestParam(value="js",required=false) String js,
 			@RequestParam(value="jsp",required=false) String jsp,			
+			HttpServletRequest req, 
 			HttpServletResponse resp, 
 			Model model) {
 		log.info("/share/" + ipgId);
 		PlayerService service = new PlayerService();
-		String url = service.rewrite(js, jsp); 
+		String url = service.rewrite(req); 
 		return "redirect:/" + url + "#!share=" + ipgId;
 		
 		/*

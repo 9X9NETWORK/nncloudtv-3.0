@@ -51,28 +51,25 @@ public class PlayerController {
 		return "player/mini";
 	}	
 	
+	//?_escaped_fragment_=ch=2%26ep=3
 	@RequestMapping("/")
 	public String index(
 			@RequestParam(value="name",required=false) String name,
 			@RequestParam(value="jsp",required=false) String jsp,
 			@RequestParam(value="js",required=false) String js,
-			@RequestParam(value="mso",required=false) String mso, 
+			@RequestParam(value="mso",required=false) String mso,			
+		    @RequestParam(value="_escaped_fragment_", required=false) String escaped,
 			HttpServletRequest req, HttpServletResponse resp, Model model) {
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
-			model = service.prepareSetInfo(model, name, resp);			
-			model.addAttribute("js", "");
-			if (js != null && js.length() > 0) {
-				model.addAttribute("js", js);
-			}
+			model = service.prepareSetInfo(model, name, resp);
+			if (escaped != null) {
+				model = service.prepareCrawled(model, escaped);
+				return "player/crawled";
+			}			
+			model = service.preparePlayer(model, js, jsp);
 			if (jsp != null && jsp.length() > 0) {
-				/*
-				if (jsp.equals("crawled")) {
-					model = service.prepareCrawled(model);
-				}
-				*/
-				log.info("alternate is enabled: " + jsp);
 				return "player/" + jsp;
 			}
 			//String prefLanguage = req.getHeader("Accept-Language");		
@@ -89,14 +86,13 @@ public class PlayerController {
 	@RequestMapping("{name}")
 	public String zooatomics(
 			@PathVariable("name") String name,
-			//@RequestParam(value="name",required=false) String name,
 			@RequestParam(value="jsp",required=false) String jsp,
 			@RequestParam(value="js",required=false) String js,
-			@RequestParam(value="mso",required=false) String mso, 
+			@RequestParam(value="mso",required=false) String mso,
 			HttpServletRequest req, HttpServletResponse resp, Model model) {
 		if (name != null) {
 			PlayerService service = new PlayerService();
-			String url = service.rewrite(js, jsp); 
+			String url = service.rewrite(req); 
 			return "redirect:/" + url + "#!landing=" + name;
 		}
 		//actually won't continue
@@ -125,11 +121,12 @@ public class PlayerController {
 			           @RequestParam(value="channel", required=false) String channel,
 			           @RequestParam(value="episode", required=false) String episode,
 			           @RequestParam(value="js",required=false) String js,
-						@RequestParam(value="jsp",required=false) String jsp,
+					   @RequestParam(value="jsp",required=false) String jsp,
 				       @RequestParam(value="ch", required=false) String ch,
 				       @RequestParam(value="ep", required=false) String ep) {
+		//additional params
 		PlayerService service = new PlayerService();
-		String url = service.rewrite(js, jsp);
+		String queryStr = service.rewrite(req);
 		String cid = channel;
 		if (ch != null)
 			cid = ch;
@@ -139,7 +136,8 @@ public class PlayerController {
 		String epStr = "";
 		if (pid != null)
 			epStr = "!ep=" + episode;
-		return "redirect:/" + url + "#!ch=" + cid + epStr; 
+		return "redirect:/" + queryStr + "#!ch=" + cid + epStr;
+		
 		/*
 		try {
 			PlayerService service = new PlayerService();
