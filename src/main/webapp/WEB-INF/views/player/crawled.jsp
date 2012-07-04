@@ -668,7 +668,7 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
            <p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title">${crawlChannelTitle}</span></p>
         </div>
         <div id="preview-video-bg">
-           <div id="preview-video">${crawlVideoThumb}</div>
+           <img id="preview-video" src="${crawlVideoThumb}" height="100%" width="100%">
         </div>
         <p id="preview-index-meta">
           <span id="meta-set-title">${crawlSetTitle}</span><span class="divider">&raquo;</span><span id="meta-ch-title">${crawlChannelTitle}</span><span class="divider">&raquo;</span><span id="meta-ep-title">${crawlEpisodeTitle}</span>
@@ -682,9 +682,6 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
           <img src="${nroot}/images/arrow_left_on.png" id="preview-arrow-left">
           <ul id="preview-ep-list"><li id="sp-1" class="on"><img src="${crawlEpThumb1}" class="thumbnail"><p class="duration"><span></span></p></li><li id="sp-2"><img src="${crawlEpThumb2}" class="thumbnail"><p class="duration"><span></span></p></li><li id="sp-3"><img src="${crawlEpThumb3}" class="thumbnail"><p class="duration"><span></span></p></li>"</ul>
         </div>
-
-
-
         <div id="preview-controller">
           <ul id="control-list">
             <li id="btn-info"><img src="${nroot}/images/btn_info.png" id="icon-info" title="Channel Info"></li>
