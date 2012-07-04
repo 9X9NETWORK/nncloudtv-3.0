@@ -1,6 +1,9 @@
 package com.nncloudtv.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,66 +147,122 @@ public class PlayerService {
 		return url;
 	}
 	*/
-	
-	public Model prepareCrawled(Model model, String escaped) {						
-		PlayerApiService service = new PlayerApiService();
+		
+	public Model prepareCrawled(Model model, String escaped) {
+		try {
+			escaped = URLDecoder.decode(escaped, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		log.info("escaped=" + escaped);		
-		Pattern pattern = Pattern.compile("(ch=)(\\d*)");
+		PlayerApiService service = new PlayerApiService();
+	    String lang = LangTable.LANG_EN; //default value
+		
+		//-- determine channel and episode and set --
+		String ch=null, ep=null, youtubeEp=null, landing=null;
+		Pattern pattern = Pattern.compile("(ch=)(\\d+)");
 		Matcher m = pattern.matcher(escaped);
-		String ch=null, ep=null;
 	    if (m.find()) {	    	
 	    	ch = m.group(2);
 	    }
-	    pattern = Pattern.compile("(ep=)(\\d*)");
+	    pattern = Pattern.compile("(ep=)(\\d+)");
 		m = pattern.matcher(escaped);
 	    if (m.find()) {	    	
 	    	ep = m.group(2);
 	    }
-	    String lang = LangTable.LANG_EN;
-		if (ch != null) {
+	    pattern = Pattern.compile("(ep=)(\\w+)");
+		m = pattern.matcher(escaped);
+	    if (m.find()) {	    	
+	    	youtubeEp = m.group(2);
+	    }	    
+	    if (ch == null) {
+	    	pattern = Pattern.compile("^\\d+$");
+	    	m = pattern.matcher(escaped);
+	    	if (m.find()) {
+	    		ch = m.group(0);
+	    	}
+	    }
+	    pattern = Pattern.compile("(landing=)(\\w+)");
+	    m = pattern.matcher(escaped);
+	    if (m.find()) {	    	
+	    	landing = m.group(2);
+	    }
+	    //if none is provided, use a recommended set to begin with
+	    if (landing == null && ch == null) {
+	    	NnSetManager setMngr = new NnSetManager();
+	    	List<NnSet> sets = setMngr.findFeaturedSets(LangTable.LANG_EN);
+	    	landing = sets.get(0).getBeautifulUrl();
+	    }
+	    //if set is not null, ch is set here
+	    if (landing != null) {
+	    	NnSetManager setMngr = new NnSetManager();
+	    	NnSet set = setMngr.findBybeautifulUrl(landing);
+	    	if (set != null) {
+	    		model.addAttribute("crawlSetTitle", set.getName());
+	    		List<NnChannel> channels = setMngr.findPlayerChannels(set);	    		
+	    		if (channels.size() > 0) {
+	    			ch = String.valueOf(channels.get(0).getId());
+	    		}
+	    	}
+	    }
+	    log.info("ch:" + ch + ";ep:" + ep + ";youtubeEp:" + youtubeEp + ";set:" + landing);	    
+	    
+	    //-- channel/episode info --
+	    if (ch != null) {
 			NnChannelManager channelMngr = new NnChannelManager();		
 			NnChannel c = channelMngr.findById(Long.parseLong(ch));
 			if (c != null) {
 				model.addAttribute("crawlChannelTitle", c.getName());
+				//in case not enough episode data, use channel for default  
+				model.addAttribute("crawlEpisodeTitle", c.getName());
+				model.addAttribute("crawlVideoThumb", c.getImageUrl());
+				model.addAttribute("crawlEpThumb1", c.getImageUrl());										
 				lang = c.getLang();
-				if (ep != null) {					
-					NnProgramManager programMngr = new NnProgramManager();
-					List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
-					if (programs.size() > 0) {
-						int i=1;
-						for (NnProgram p : programs) {
-							if (i > 1 && i < 4) {
-								model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
-								System.out.println("crawlEpThumb" + i + ":" + p.getImageUrl());
-								i++;
-							}
-							if (p.getId() == Long.parseLong(ep)) {
-								if (p.getImageLargeUrl() != null) {
-									model.addAttribute("crawlVideoThumb", p.getImageLargeUrl());
-								} else {
-									model.addAttribute("crawlVideoThumb", p.getImageUrl());
-								}
-								model.addAttribute("crawlEpisodeTitle", p.getName());
-								model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
-								i++;
-							}
+				NnProgramManager programMngr = new NnProgramManager();
+				List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
+				if (programs.size() > 0) {
+					int i=1;					
+					if (ep == null)
+						ep = String.valueOf(programs.get(0).getId());
+					for (NnProgram p : programs) {
+						if (i > 1 && i < 4) {
+							model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+							System.out.println("crawlEpThumb" + i + ":" + p.getImageUrl());
+							i++;
 						}
-					} else {
-						if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
-							c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-							
+						if (p.getId() == Long.parseLong(ep)) {
+							if (p.getImageLargeUrl() != null) {
+								model.addAttribute("crawlVideoThumb", p.getImageLargeUrl());
+							} else {
+								model.addAttribute("crawlVideoThumb", p.getImageUrl());
+							}
+							model.addAttribute("crawlEpisodeTitle", p.getName());
+							model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+							i++;
 						}
+						if (i == 4) {
+							break;
+						}
+					}
+				} else {					
+					if (youtubeEp != null) {
+						Map<String, String> result = YouTubeLib.getYouTubeVideo(youtubeEp);
+						model.addAttribute("crawlEpisodeTitle", result.get("title"));
+						model.addAttribute("crawlVideoThumb", result.get("imageUrl"));
+						model.addAttribute("crawlEpThumb1", result.get("imageUrl"));
+						model.addAttribute("crawlEpThumb2", result.get("imageUrl"));
+						model.addAttribute("crawlEpThumb3", result.get("imageUrl"));
 					}
 				}
 			}
 		}
-		//listRecommended
+		
+		//-- set info -- 
 		String listRecommended = service.listRecommended(lang);		
 		String[] sets = listRecommended.split("\n");
-		//String setId = "";		
 		for (int i=2; i<sets.length; i++) {
 			String[] ele = sets[i].split("\t");
-			if (i==2) {
+			if (!model.containsAttribute("crawlSetTitle") && i==2) {
 				model.addAttribute("crawlSetTitle", ele[1]);
 			}
 			int seq = i -1;
@@ -212,6 +271,7 @@ public class PlayerService {
 			model.addAttribute("crawlRecommendThumb" + seq, ele[3]);
 			model.addAttribute("crawlRecommendCount" + seq, ele[4]);
 		}
+		
 		return model;
 	}
 }
