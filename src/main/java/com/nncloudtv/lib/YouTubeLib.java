@@ -111,6 +111,7 @@ public class YouTubeLib {
 	 public static class YouTubeUrl extends GenericUrl {
 	    @Key final String alt = "jsonc";
 	    @Key String author;
+	    @Key String q;
 	    @Key("max-results") Integer maxResults;
 	    YouTubeUrl(String url) {
 	      super(url);
@@ -122,6 +123,10 @@ public class YouTubeLib {
 	   @Key String description;
 	   @Key List<Video> items;
     }
+
+	public static class MyFeed {
+	   @Key List<Video> items;
+	}
 	
 	public static class Video {
 		@Key String id;
@@ -143,13 +148,58 @@ public class YouTubeLib {
 	public static class Player {
 		@Key("default") String defaultUrl;
 	}
+		
+	public static HttpRequestFactory getFactory() {
+		HttpTransport transport = new NetHttpTransport();
+		final JsonFactory jsonFactory = new JacksonFactory();
+		HttpRequestFactory factory = transport.createRequestFactory(new HttpRequestInitializer() {
+		       public void initialize(HttpRequest request) {
+		          // set the parser
+		          JsonCParser parser = new JsonCParser(jsonFactory);
+	    	      //parser.jsonFactory = jsonFactory;
+		          request.addParser(parser);
+	 	          //set up the Google headers
+		          GoogleHeaders headers = new GoogleHeaders();
+		          headers.setApplicationName("Google-YouTubeSample/1.0");
+		          headers.gdataVersion = "2";
+		          request.setHeaders(headers);
+		       }
+		    });	
+		return factory;
+	}
 
+	public static Map<String, String> getYouTubeVideo(String videoId) {
+		Map<String, String> results = new HashMap<String, String>();
+		HttpRequestFactory factory = YouTubeLib.getFactory();		
+	    HttpRequest request;
+	    MyFeed feed;
+		try {
+			//https://gdata.youtube.com/feeds/api/videos/nIbzpk8FjbU?v=2&alt=jsonc		    
+			YouTubeUrl videoUrl = new YouTubeUrl("https://gdata.youtube.com/feeds/api/videos");
+			videoUrl.q = videoId;
+		    videoUrl.maxResults = 1;
+			request = factory.buildGetRequest(videoUrl);
+			feed = request.execute().parseAs(MyFeed.class);
+			if (feed.items != null) {
+				Video video = feed.items.get(0);
+		        results.put("title", video.title);
+		        results.put("description", video.description);
+		        results.put("imageUrl", video.thumbnail.sqDefault);
+			}
+		} catch (Exception e) {
+			NnLogUtil.logException(e);
+		}
+		return results;
+	}
+	
 	//return key "status", "title", "thumbnail", "description"
 	public static Map<String, String> getYouTubeEntry(String userIdStr, boolean channel) {		
 		//http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html
 		Map<String, String> results = new HashMap<String, String>();
 		results.put("status", String.valueOf(NnStatusCode.SUCCESS));
+		HttpRequestFactory factory = YouTubeLib.getFactory();
 		// set up the HTTP request factory
+		/*
 	    HttpTransport transport = new NetHttpTransport();
 	    final JsonFactory jsonFactory = new JacksonFactory();
 	    HttpRequestFactory factory = transport.createRequestFactory(new HttpRequestInitializer() {
@@ -165,6 +215,7 @@ public class YouTubeLib {
 	          request.setHeaders(headers);
 	       }
 	    });
+	    */
 	    
 	    // build the HTTP GET request
 	    HttpRequest request;
@@ -231,7 +282,6 @@ public class YouTubeLib {
 	public static boolean youTubeCheck(String urlStr) {		
 		String[] splits = urlStr.split("/");
 		String apiReq = "http://gdata.youtube.com/feeds/api/users/" + splits[splits.length-1];
-
 		URL url;
 		try {
 			//HTTP GET
