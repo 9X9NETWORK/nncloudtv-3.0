@@ -88,7 +88,9 @@ public class NnSetDao extends GenericDao<NnSet> {
 		return detached;
 	}	
 	
-	public NnSet findByBeautifulUrl(String url) {		
+	public NnSet findByBeautifulUrl(String url) {
+		if (url == null)
+			return null;
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		NnSet detached = null;
 		
