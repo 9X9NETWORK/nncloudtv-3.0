@@ -94,12 +94,12 @@ public class NnSetDao extends GenericDao<NnSet> {
 		
 		try {
 			Query query = pm.newQuery(NnSet.class);
-			query.setFilter("beautifulUrl == beautifulUrlParam");
+			query.setFilter("beautifulUrl.toLowerCase() == beautifulUrlParam.toLowerCase()");
 			query.declareParameters("String beautifulUrlParam");
 			@SuppressWarnings("unchecked")
-			List<NnSet> channelNnSets = (List<NnSet>) query.execute(url);
-			if (channelNnSets.size() > 0) {
-				detached = pm.detachCopy(channelNnSets.get(0));
+			List<NnSet> sets = (List<NnSet>) query.execute(url);
+			if (sets.size() > 0) {
+				detached = pm.detachCopy(sets.get(0));
 			}
 		} catch (JDOObjectNotFoundException e) {
 		} finally {
