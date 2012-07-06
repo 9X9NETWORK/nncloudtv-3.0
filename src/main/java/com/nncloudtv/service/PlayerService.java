@@ -60,8 +60,7 @@ public class PlayerService {
 	}
 	
 	public Model prepareEpisode(Model model, String pid,
-			HttpServletResponse resp) {
-		
+			HttpServletResponse resp) {		
 		if (pid.matches("[0-9]+")) {
 			NnProgramManager programMngr = new NnProgramManager();
 			NnProgram program = programMngr.findById(Long.valueOf(pid));
@@ -160,6 +159,7 @@ public class PlayerService {
 		
 		//-- determine channel and episode and set --
 		String ch=null, ep=null, youtubeEp=null, landing=null;
+		boolean episodeShare = false;
 		Pattern pattern = Pattern.compile("(ch=)(\\d+)");
 		Matcher m = pattern.matcher(escaped);
 	    if (m.find()) {	    	
@@ -169,11 +169,13 @@ public class PlayerService {
 		m = pattern.matcher(escaped);
 	    if (m.find()) {	    	
 	    	ep = m.group(2);
+	    	episodeShare = true;
 	    }
 	    pattern = Pattern.compile("(ep=)(\\w+)");
 		m = pattern.matcher(escaped);
 	    if (m.find()) {	    	
 	    	youtubeEp = m.group(2);
+	    	episodeShare = true;
 	    }	    
 	    if (ch == null) {
 	    	pattern = Pattern.compile("^\\d+$");
@@ -216,7 +218,11 @@ public class PlayerService {
 				//in case not enough episode data, use channel for default  
 				model.addAttribute("crawlEpisodeTitle", c.getName());
 				model.addAttribute("crawlVideoThumb", c.getImageUrl());
-				model.addAttribute("crawlEpThumb1", c.getImageUrl());										
+				model.addAttribute("crawlEpThumb1", c.getImageUrl());				
+				model.addAttribute("fbName", NnStringUtil.htmlSafeChars(c.getName()));
+				model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));
+				model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getImageUrl()));
+				
 				lang = c.getLang();
 				NnProgramManager programMngr = new NnProgramManager();
 				List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
@@ -238,6 +244,8 @@ public class PlayerService {
 							}
 							model.addAttribute("crawlEpisodeTitle", p.getName());
 							model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+							if (episodeShare)
+							   model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(p.getIntro()));
 							i++;
 						}
 						if (i == 4) {
@@ -253,6 +261,10 @@ public class PlayerService {
 						model.addAttribute("crawlEpThumb2", result.get("imageUrl"));
 						model.addAttribute("crawlEpThumb3", result.get("imageUrl"));
 					}
+				}
+				if (episodeShare) {
+					model.addAttribute("fbName", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlEpisodeTitle")));
+					model.addAttribute("fbImg", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlVideoThumb")));
 				}
 			}
 		}
@@ -271,7 +283,7 @@ public class PlayerService {
 			model.addAttribute("crawlRecommendThumb" + seq, ele[3]);
 			model.addAttribute("crawlRecommendCount" + seq, ele[4]);
 		}
-		
+
 		return model;
 	}
 }
