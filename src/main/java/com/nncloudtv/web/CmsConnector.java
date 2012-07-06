@@ -22,6 +22,10 @@ public class CmsConnector {
 		
 		log.info("msoName = " + msoName);
 		
-		return "redirect:/cms/" + msoName + "/admin";
+		if (msoName.equals("cms")) {
+			return "redirect:/cms/admin";
+		} else {
+			return "redirect:/cms/" + msoName + "/admin";
+		}
 	}
 }
