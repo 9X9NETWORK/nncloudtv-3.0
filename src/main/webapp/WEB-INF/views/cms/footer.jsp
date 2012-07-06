@@ -1,1 +1,0 @@
-<div class="floatR"><span id="blog_link" style="display:none"><a target="_blog" href="http://curation.9x9.tv"><spring:message code="cms.footer.blog"/></a> | </span><spring:message code="cms.footer.copyright"/></div>
