@@ -55,7 +55,7 @@ qacct:"p-b2xUunKYSaIeQ"
 <!-- End Quantcast tag -->
 
 <script type="text/javascript">
-soundManager.url = '/javascripts/player/';
+soundManager.url = '/player/';
 soundManager.useFlashBlock = false;
 soundManager.onready(function()
   {
