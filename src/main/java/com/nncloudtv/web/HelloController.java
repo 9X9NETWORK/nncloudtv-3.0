@@ -1,7 +1,9 @@
 package com.nncloudtv.web;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.json.facebook.FBPost;
 import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
  
@@ -401,6 +404,23 @@ public class HelloController {
     	String ip = NnNetUtil.getIp(req);
     	String output = "ori ip:" + oriIp + "\n" + ";process ip:" + ip;
     	return NnNetUtil.textReturn(output);
+    }
+    
+    @RequestMapping("FB")
+    public ResponseEntity<String> FB(HttpServletRequest req) {
+    	
+    	String now = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).format(new Date()).toString();
+    	
+    	FBPost fbPost = new FBPost(now, "FB/MQ loopback test", "http://www.iteye.com/upload/logo/user/76967/bf3e420a-8e22-36b8-84e2-1b31c23407f1.jpg");
+    	fbPost.setLink("http://eternal1025.iteye.com/blog/344360");
+    	fbPost.setMessage("test");
+		fbPost.setCaption("999999");
+    	fbPost.setFacebookId("197930870280133");
+    	fbPost.setAccessToken("AAABk0M5owJgBANNPKAVzYjaDktNjivXAP2Y2HSZAIZCq4OdnLm92vgr22Or72LUDSUtnCH3VV8ZAsAKCjzamvL15R31RZCeUZCZB8KFhCAMgZDZD");
+    	
+		QueueFactory.add("/CMSAPI/postToFacebook", fbPost);
+		
+    	return NnNetUtil.textReturn("OK");
     }
     
 }
