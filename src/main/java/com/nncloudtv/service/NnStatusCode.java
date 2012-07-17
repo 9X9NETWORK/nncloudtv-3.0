@@ -41,6 +41,7 @@ public class NnStatusCode {
 	public static final int USER_TOKEN_TAKEN = 204; //token has associated with an account, to sign up an account, log out and singup another one. 
 	public static final int USER_PERMISSION_ERROR = 205; 
 	public static final int ACCOUNT_INVALID = 206;
+	public static final int INVITE_INVALID = 207;
 	
 	//250 mso related
 	public static final int MSO_ERROR = 250;

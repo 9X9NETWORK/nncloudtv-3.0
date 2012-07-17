@@ -228,6 +228,10 @@ public class NnUserManager {
 		return nnUserDao.findById(id);
 	}
 	
+	public NnUser findById(long id, short shard) {
+		return nnUserDao.findById(id, shard);
+	}
+	
 	public List<NnUser> list(int page, int limit, String sidx, String sord) {
 		return nnUserDao.list(page, limit, sidx, sord);
 	}
@@ -242,5 +246,9 @@ public class NnUserManager {
 	
 	public int total(String filter) {
 		return nnUserDao.total(filter);
-	}	
+	}
+	
+	public List<NnUser> search(String email, String name) {
+		return nnUserDao.search(email, name);
+	}
 }

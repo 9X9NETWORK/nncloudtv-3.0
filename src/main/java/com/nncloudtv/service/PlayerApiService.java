@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.dao.NnChannelDao;
+import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
@@ -49,6 +50,7 @@ import com.nncloudtv.model.NnUserShare;
 import com.nncloudtv.model.NnUserSubscribe;
 import com.nncloudtv.model.NnUserSubscribeGroup;
 import com.nncloudtv.model.NnUserWatched;
+import com.nncloudtv.model.UserInvite;
 import com.nncloudtv.validation.BasicValidator;
 import com.nncloudtv.validation.NnUserValidator;
 
@@ -68,7 +70,7 @@ public class PlayerApiService {
     
     public void setMso(Mso mso) {
         this.mso = mso;
-    }        
+    }
 
     public String handleException (Exception e) {
     	if (e.getClass().equals(NumberFormatException.class)) {
@@ -1572,4 +1574,115 @@ public class PlayerApiService {
 		}
 		return output;				
 	}
+
+	public String graphSearch(String email, String name) {
+		if (email == null && name == null) {
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		}
+		NnUserManager userMngr = new NnUserManager();
+		List<NnUser> users = userMngr.search(email, name);
+		String[] result = {""};
+		for (NnUser u : users) {
+			result[0] += u.getEmail() + "\t" + u.getName() + "\n";
+		}		
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result); 
+	}
+
+	public String userInvite(String token, String toEmail, String toName, String channel, HttpServletRequest req) {
+		if (token == null || toEmail == null)
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		NnUserManager userMngr = new NnUserManager();
+		NnUser user = userMngr.findByToken(token);
+		if (user == null) {
+			return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
+		}
+		NnChannelManager channelMngr = new NnChannelManager();
+		NnChannel c = channelMngr.findById(Long.parseLong(channel));
+		if (c == null) {
+			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+		}
+		EmailService service = new EmailService();
+		String inviteToken = UserInvite.generateToken();		
+		UserInvite invite = new UserInvite(user.getShard(), user.getId(), 
+				                           inviteToken, c.getId(), toEmail, toName);
+		
+		invite = new UserInviteDao().save(invite);
+		String content = UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req); 
+		NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE,				                   
+				                   user.getName(), user.getEmail(), UserInvite.getInviteSubject(), 
+				                   content);
+		log.info("email content:" + UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req));
+		service.sendEmail(mail);
+		String[] result = {invite.getInviteToken()};
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
+	}
+
+	public String inviteStatus(String inviteToken) {
+		UserInvite invite = new UserInviteDao().findByToken(inviteToken);
+		if (invite == null)
+			return this.assembleMsgs(NnStatusCode.INVITE_INVALID, null);
+		String[] result = {String.valueOf(invite.getStatus())};		
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
+	}
+	
+	public String disconnect(String userToken, String email, String channel, HttpServletRequest req) {
+		if (userToken == null || email == null || channel == null) {
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		}
+		NnUser user = userMngr.findByToken(userToken);
+		if (user == null) {
+			return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+		}
+		NnChannelManager channelMngr = new NnChannelManager();
+		NnChannel c = channelMngr.findById(Long.parseLong(channel));
+		if (c == null) {
+			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+		}
+		NnUser invitee = userMngr.findByEmail(email, req);
+		if (invitee == null) {
+			log.info("invitee does not exist:" + email);
+			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+		}
+		UserInviteDao dao = new UserInviteDao();
+		UserInvite invite = new UserInviteDao().findByUserAndInvitee(user.getId(), invitee.getId());
+		if (invite == null) {
+			log.info("invite not exist: user id:" + user.getId() + ";invitee id:" + invitee.getId());
+			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+		}		
+		invite.setInviteeId(0);
+		dao.save(invite);
+		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+	}
+
+	public String notifySubscriber(String userToken, String channel, HttpServletRequest req) {
+		NnUser user = userMngr.findByToken(userToken);			
+		if (user == null) {
+			return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+		}
+		NnChannelManager channelMngr = new NnChannelManager();
+		NnChannel c = channelMngr.findById(Long.parseLong(channel));
+		if (c == null) {
+			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+		}		
+		List<UserInvite> invites = new UserInviteDao().findSubscribers(user.getId(), user.getShard(), Long.parseLong(channel));
+		log.info("invite size:" + invites.size());
+		NnUserManager userMngr = new NnUserManager();
+		List<NnUser> list = new ArrayList<NnUser>();
+		for (UserInvite invite : invites) {
+			NnUser u = userMngr.findById(invite.getInviteeId(), invite.getShard());
+			if (u != null) 
+				list.add(u);				
+		}
+		log.info("subscribers number:" + list.size());
+		for (NnUser u : list) {
+			String subject = UserInvite.getNotifySubject(c.getName());
+			String content = UserInvite.getNotifyContent(c.getName());
+			log.info("subject:" + subject);
+			log.info("content:" + content);
+			NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);		
+			new EmailService().sendEmail(mail);			
+		}
+		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+	}
+	
 }

@@ -58,7 +58,8 @@ public class NnStatusMsg {
 				case NnStatusCode.USER_TOKEN_TAKEN: return NnStatusMsg.assembleMsg(status, "USER_TOKEN_TAKEN"); 
 				case NnStatusCode.USER_PERMISSION_ERROR: return NnStatusMsg.assembleMsg(status, "USER_PERMISSION_ERROR");
 				case NnStatusCode.ACCOUNT_INVALID: return NnStatusMsg.assembleMsg(status, "ACCOUNT_INVALID");
-	
+				case NnStatusCode.INVITE_INVALID: return NnStatusMsg.assembleMsg(status, "INVITE_INVALID");
+				
 				case NnStatusCode.MSO_ERROR: return NnStatusMsg.assembleMsg(status, "MSO_ERROR");
 				case NnStatusCode.MSO_INVALID: return NnStatusMsg.assembleMsg(status, "MSO_INVALID");
 	
