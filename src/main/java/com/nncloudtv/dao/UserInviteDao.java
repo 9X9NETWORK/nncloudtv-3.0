@@ -9,6 +9,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.UserInvite;
 
 public class UserInviteDao {
@@ -77,8 +78,30 @@ public class UserInviteDao {
 		} finally {
 			pm.close();
 		}
-		return invite;
-		
+		return invite;		
 	}
 	
+	public UserInvite findInitiate(long userId, short shard, String toEmail, long channelId) {
+		UserInvite invite = null;
+		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+		try {
+		    String sql = "select * from user_invite " +
+		     "where userId = " + userId +		     
+		      " and shard = " + shard +
+		      " and inviteeEmail = '" + toEmail + "'" +
+		      " and channelId = " + channelId;
+			invite = pm.detachCopy(invite);
+		    log.info("Sql=" + sql);
+		    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+		    q.setClass(UserInvite.class);
+		    List<UserInvite> results = (List<UserInvite>) q.execute();
+		    if (results.size() > 0) {
+		    	invite = results.get(0);
+		    	invite = pm.detachCopy(invite);
+		    }		    	
+		} finally {
+			pm.close();
+		}
+		return invite;		
+	}
 }
