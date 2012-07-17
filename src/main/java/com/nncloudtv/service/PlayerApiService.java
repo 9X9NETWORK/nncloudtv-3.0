@@ -1602,8 +1602,14 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
 		}
 		EmailService service = new EmailService();
+		UserInviteDao dao = new UserInviteDao();
+		UserInvite invite = dao.findInitiate(user.getId(), user.getShard(), toEmail, Long.parseLong(channel));
+		if (invite != null) {
+			log.info("old invite:" + invite.getId());
+			return this.assembleMsgs(NnStatusCode.SUCCESS, new String[] {invite.getInviteToken()});
+		}
 		String inviteToken = UserInvite.generateToken();		
-		UserInvite invite = new UserInvite(user.getShard(), user.getId(), 
+		invite = new UserInvite(user.getShard(), user.getId(), 
 				                           inviteToken, c.getId(), toEmail, toName);
 		
 		invite = new UserInviteDao().save(invite);
