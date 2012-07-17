@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnStatusCode;
@@ -1549,18 +1548,17 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);				 
 	}
 
-	/*
-	@RequestMapping(value="networkSearch")
-	public ResponseEntity<String> networkSearch(
-			@RequestParam(value="name", required=false) String name,
+	@RequestMapping(value="graphSearch")
+	public ResponseEntity<String> graphSearch(
 			@RequestParam(value="email", required=false) String email,			
+			@RequestParam(value="name", required=false) String name,
 			@RequestParam(value="rx", required = false) String rx,			
 			HttpServletRequest req,
 			HttpServletResponse resp) {		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);
-			output = playerApiService.networkSearch(name, email);
+			output = playerApiService.graphSearch(email, name);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -1568,8 +1566,92 @@ public class PlayerApiController {
 		}			
 		return NnNetUtil.textReturn(output);
 	}
-	*/
+
+//	When the user invites the user by email that email is sent to the server 
+//	for making automatic invitation.
+//	JSON request looks similar to this: 
+//	{"Invitation": {"User": "my_login_email", "Name": "", "Last Name": , "Email": "blah@9x9.tv"}}	 
+//	The server must generate a special key (use some generator) on the server, 
+//	return it to the client app as {"Invitation Key": "def35502f23ac44"} 
+//	and send the automatic invitation by email using that key as a part of the web link 
+//	by provided email. Using that link must lead to the FLIPr 
+//	registration site where the fields will be pre-filled with already known values.	
+	@RequestMapping(value="userInvite")
+	public ResponseEntity<String> userInvite(
+			@RequestParam(value="user", required=false) String userToken,			                            
+			@RequestParam(value="toEmail", required=false) String toEmail,
+			@RequestParam(value="toName", required=false) String toName,
+			@RequestParam(value="channel", required=false) String channel,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);		
+			output = playerApiService.userInvite(userToken, toEmail, toName, channel, req);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	@RequestMapping(value="inviteStatus")
+	public ResponseEntity<String> inviteStatus(
+			@RequestParam(value="token", required=false) String token,			                            
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);		
+			output = playerApiService.inviteStatus(token);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	@RequestMapping(value="disconnect")
+	public ResponseEntity<String> disconnect(
+			@RequestParam(value="token", required=false) String token,			                            
+			@RequestParam(value="toEmail", required=false) String toEmail,
+			@RequestParam(value="channel", required=false) String channel,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);		
+			output = playerApiService.disconnect(token, toEmail, channel, req);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	@RequestMapping(value="notifySubscriber")
+	public ResponseEntity<String> notifySubscriber(
+			@RequestParam(value="token", required=false) String token,
+			@RequestParam(value="channel", required=false) String channel,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);		
+			output = playerApiService.notifySubscriber(token, channel, req);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
 	
+	
+	/*
 	@RequestMapping(value="piwikCreate")
 	public ResponseEntity<String> piwikCreate(
 			@RequestParam(value="setId", required=false) long setId,
@@ -1578,4 +1660,5 @@ public class PlayerApiController {
 		log.info("setId:" + setId + ";channelId:" + channelId + ";piwik id:" + piwikId);
 		return NnNetUtil.textReturn(piwikId);		
 	}
+	*/
 }
