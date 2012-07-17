@@ -22,9 +22,32 @@ public class NnUserDao extends GenericDao<NnUser> {
 	public NnUserDao() {
 		super(NnUser.class);
 	}
-
-	public NnUser findById(long id) {
-		PersistenceManager pm = NnUserDao.getPersistenceManager((short) 1, null);
+	
+	@SuppressWarnings("unchecked")
+	public List<NnUser> search(String email, String name) {
+		List<NnUser> detached = new ArrayList<NnUser>();		
+	    PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+	    String sql = "select * from nnuser " + "where ";	                  
+	    if (email != null) {
+	        sql += " email = '" + email + "'";
+	    } else if (name != null) { 
+	    	sql += " lower(name) like lower('%" + name + "%')";
+	    }
+	    log.info("Sql=" + sql);	    
+	    pm = PMF.getNnUser1().getPersistenceManager();
+	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+	    q.setClass(NnUser.class);
+	    List<NnUser> results = (List<NnUser>) q.execute();
+	    detached = (List<NnUser>)pm.detachCopyAll(results);	    
+	    pm = PMF.getNnUser2().getPersistenceManager();
+	    q= pm.newQuery("javax.jdo.query.SQL", sql);
+	    results = (List<NnUser>) q.execute();
+	    detached.addAll((List<NnUser>)pm.detachCopyAll(results));
+		return detached;
+	}
+	
+	public NnUser findById(long id, short shard) {
+		PersistenceManager pm = NnUserDao.getPersistenceManager((short) shard, null);
 		NnUser detached = null;
 		try {
 			NnUser user = (NnUser)pm.getObjectById(NnUser.class, id);
