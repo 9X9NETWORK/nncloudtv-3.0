@@ -1625,18 +1625,13 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
 	}
 	
-	public String disconnect(String userToken, String email, String channel, HttpServletRequest req) {
-		if (userToken == null || email == null || channel == null) {
+	public String disconnect(String userToken, String email, HttpServletRequest req) {
+		if (userToken == null || email == null) {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 		}
 		NnUser user = userMngr.findByToken(userToken);
 		if (user == null) {
 			return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-		}
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel c = channelMngr.findById(Long.parseLong(channel));
-		if (c == null) {
-			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
 		}
 		NnUser invitee = userMngr.findByEmail(email, req);
 		if (invitee == null) {
@@ -1644,13 +1639,15 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 		}
 		UserInviteDao dao = new UserInviteDao();
-		UserInvite invite = new UserInviteDao().findByUserAndInvitee(user.getId(), invitee.getId());
-		if (invite == null) {
+		List<UserInvite> invites = new UserInviteDao().findByUserAndInvitee(user.getId(), invitee.getId());
+		if (invites.size() == 0) {
 			log.info("invite not exist: user id:" + user.getId() + ";invitee id:" + invitee.getId());
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
-		}		
-		invite.setInviteeId(0);
-		dao.save(invite);
+		}
+		for (UserInvite u : invites) {
+			u.setInviteeId(0);
+			dao.save(u);
+		}
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 

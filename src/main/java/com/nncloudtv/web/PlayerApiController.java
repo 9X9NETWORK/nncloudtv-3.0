@@ -1567,15 +1567,6 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 
-//	When the user invites the user by email that email is sent to the server 
-//	for making automatic invitation.
-//	JSON request looks similar to this: 
-//	{"Invitation": {"User": "my_login_email", "Name": "", "Last Name": , "Email": "blah@9x9.tv"}}	 
-//	The server must generate a special key (use some generator) on the server, 
-//	return it to the client app as {"Invitation Key": "def35502f23ac44"} 
-//	and send the automatic invitation by email using that key as a part of the web link 
-//	by provided email. Using that link must lead to the FLIPr 
-//	registration site where the fields will be pre-filled with already known values.	
 	@RequestMapping(value="userInvite")
 	public ResponseEntity<String> userInvite(
 			@RequestParam(value="user", required=false) String userToken,			                            
@@ -1615,15 +1606,14 @@ public class PlayerApiController {
 
 	@RequestMapping(value="disconnect")
 	public ResponseEntity<String> disconnect(
-			@RequestParam(value="token", required=false) String token,			                            
+			@RequestParam(value="user", required=false) String userToken,			                            
 			@RequestParam(value="toEmail", required=false) String toEmail,
-			@RequestParam(value="channel", required=false) String channel,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);		
-			output = playerApiService.disconnect(token, toEmail, channel, req);
+			output = playerApiService.disconnect(userToken, toEmail, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -1634,14 +1624,14 @@ public class PlayerApiController {
 
 	@RequestMapping(value="notifySubscriber")
 	public ResponseEntity<String> notifySubscriber(
-			@RequestParam(value="token", required=false) String token,
+			@RequestParam(value="user", required=false) String userToken,
 			@RequestParam(value="channel", required=false) String channel,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);		
-			output = playerApiService.notifySubscriber(token, channel, req);
+			output = playerApiService.notifySubscriber(userToken, channel, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {

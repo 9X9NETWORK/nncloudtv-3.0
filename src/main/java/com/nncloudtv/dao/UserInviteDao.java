@@ -44,8 +44,8 @@ public class UserInviteDao {
 		
 	}
 	
-	public UserInvite findByUserAndInvitee(long userId, long inviteeId) {
-		UserInvite detached = null;
+	public List<UserInvite> findByUserAndInvitee(long userId, long inviteeId) {
+		List<UserInvite> detached = new ArrayList<UserInvite>();
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(UserInvite.class);
@@ -54,10 +54,7 @@ public class UserInviteDao {
 			@SuppressWarnings("unchecked")
 			List<UserInvite> invites = (List<UserInvite>)q.execute(userId, inviteeId);
 			log.info("invites size:" + invites.size());
-			if (invites.size() > 0) {
-				detached = invites.get(0);
-				detached = pm.detachCopy(detached);
-			}
+			detached = (List<UserInvite>)pm.detachCopyAll(invites);
 		} finally {
 			pm.close();
 		}
