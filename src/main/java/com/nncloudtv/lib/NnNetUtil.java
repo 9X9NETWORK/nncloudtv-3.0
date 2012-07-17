@@ -45,6 +45,7 @@ public class NnNetUtil {
 		return new ResponseEntity<String>(output, headers, HttpStatus.OK);
 	}	
 	
+	//get http://localhost:8080
 	public static String getUrlRoot(HttpServletRequest req) {
 		String url = req.getRequestURL().toString();
 	    Pattern p = Pattern.compile("(^http://.*?)/(.*)");	    	    
