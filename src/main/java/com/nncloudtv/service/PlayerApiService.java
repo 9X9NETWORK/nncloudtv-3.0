@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -73,11 +74,11 @@ public class PlayerApiService {
     }
 
     public String handleException (Exception e) {
-    	if (e.getClass().equals(NumberFormatException.class)) {
-    		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);    		
-    	} else if (e.getClass().equals(CommunicationsException.class)) {
-    		return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
-    	} 
+//    	if (e.getClass().equals(NumberFormatException.class)) {
+//    		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);    		
+//    	} else if (e.getClass().equals(CommunicationsException.class)) {
+//    		return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
+//    	} 
     		
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         NnLogUtil.logException((Exception) e);
@@ -932,7 +933,7 @@ public class PlayerApiService {
 		log.info("<<<<<<<<<<< device size>>>>>>>" + devices.size());
 		for (NnDevice d : devices) {
 			if (d.getUserId() != 0) {
-				NnUser user = userMngr.findById(d.getUserId());
+				NnUser user = userMngr.findById(d.getUserId(), (short)1);
 				if (user != null)
 					users.add(user);
 				else
@@ -1631,7 +1632,7 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
 	}
 	
-	public String disconnect(String userToken, String email, HttpServletRequest req) {
+	public String disconnect(String userToken, String email, String channel, HttpServletRequest req) {
 		if (userToken == null || email == null) {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 		}
@@ -1645,7 +1646,7 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 		}
 		UserInviteDao dao = new UserInviteDao();
-		List<UserInvite> invites = new UserInviteDao().findByUserAndInvitee(user.getId(), invitee.getId());
+		List<UserInvite> invites = new UserInviteDao().findSubscribers(user.getId(), invitee.getId(), Long.parseLong(channel));
 		if (invites.size() == 0) {
 			log.info("invite not exist: user id:" + user.getId() + ";invitee id:" + invitee.getId());
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
@@ -1658,33 +1659,52 @@ public class PlayerApiService {
 	}
 
 	public String notifySubscriber(String userToken, String channel, HttpServletRequest req) {
+		System.out.println("notifySubscriber");
 		NnUser user = userMngr.findByToken(userToken);			
 		if (user == null) {
 			return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
 		}
 		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel c = channelMngr.findById(Long.parseLong(channel));
-		if (c == null) {
-			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
-		}		
-		List<UserInvite> invites = new UserInviteDao().findSubscribers(user.getId(), user.getShard(), Long.parseLong(channel));
-		log.info("invite size:" + invites.size());
 		NnUserManager userMngr = new NnUserManager();
-		List<NnUser> list = new ArrayList<NnUser>();
-		for (UserInvite invite : invites) {
-			NnUser u = userMngr.findById(invite.getInviteeId(), invite.getShard());
-			if (u != null) 
-				list.add(u);				
+		Map<String, NnUser> umap = new HashMap<String, NnUser>();		
+		Map<String, String> cmap = new HashMap<String, String>();
+		String[] cid = channel.split(",");
+		        
+		for (String id : cid) {
+			NnChannel c = channelMngr.findById(Long.parseLong(id));
+			if (c == null) {
+				return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+			}
+			List<UserInvite> invites = new UserInviteDao().findSubscribers(user.getId(), user.getShard(), Long.parseLong(id));
+			log.info("invite size with cid " + id + ":" + invites.size());
+			for (UserInvite invite : invites) {	
+				NnUser u = userMngr.findById(invite.getInviteeId(), invite.getShard());
+				if (u != null) {
+					String content = "";
+					if (umap.containsKey(u.getEmail())) {
+						content = (String)cmap.get(u.getEmail()) + ";" + c.getName();
+						cmap.put(u.getEmail(), content);
+					} else {
+						umap.put(u.getEmail(), u);
+						cmap.put(u.getEmail(), c.getName());
+					}					
+				}
+			}
 		}
-		log.info("subscribers number:" + list.size());
-		for (NnUser u : list) {
-			String subject = UserInvite.getNotifySubject(c.getName());
-			String content = UserInvite.getNotifyContent(c.getName());
+		Set set = umap.entrySet(); 
+		Iterator i = set.iterator(); 
+		while(i.hasNext()) { 
+			Map.Entry me = (Map.Entry)i.next();
+			NnUser u = (NnUser) me.getValue();
+			String ch = (String) cmap.get(u.getEmail());
+			String subject = UserInvite.getNotifySubject(ch);
+			String content = UserInvite.getNotifyContent(ch);
+			log.info("-------------- send to " + u.getEmail() + "-----------------");
 			log.info("subject:" + subject);
 			log.info("content:" + content);
-			NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);		
-			new EmailService().sendEmail(mail);			
-		}
+//			NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);		
+//			new EmailService().sendEmail(mail);						
+		} 		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 	

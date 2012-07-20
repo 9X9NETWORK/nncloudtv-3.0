@@ -9,7 +9,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
-import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.UserInvite;
 
 public class UserInviteDao {
@@ -45,15 +44,16 @@ public class UserInviteDao {
 		
 	}
 	
-	public List<UserInvite> findByUserAndInvitee(long userId, long inviteeId) {
+	//supposedly just one
+	public List<UserInvite> findSubscribers(long userId, long inviteeId, long channelId) {
 		List<UserInvite> detached = new ArrayList<UserInvite>();
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(UserInvite.class);
-			q.setFilter("userId == userIdParam && inviteeId == inviteeIdParam");
-			q.declareParameters("long userIdParam, long inviteeIdParam");
+			q.setFilter("userId == userIdParam && inviteeId == inviteeIdParam && channelId == channelIdParam");
+			q.declareParameters("long userIdParam, long inviteeIdParam, long channelIdParam");
 			@SuppressWarnings("unchecked")
-			List<UserInvite> invites = (List<UserInvite>)q.execute(userId, inviteeId);
+			List<UserInvite> invites = (List<UserInvite>)q.execute(userId, inviteeId, channelId);
 			log.info("invites size:" + invites.size());
 			detached = (List<UserInvite>)pm.detachCopyAll(invites);
 		} finally {

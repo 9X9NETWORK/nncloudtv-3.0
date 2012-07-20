@@ -131,7 +131,8 @@ public class UserInvite {
 	}
 
 	public static String getNotifySubject(String channelName) {
-		return "The channel " + channelName + " has new updates";
+		return "New things to watch";
+		//return "The channel " + channelName + " has new updates";
 	}
 
 	public static String getNotifyContent(String channelName) {

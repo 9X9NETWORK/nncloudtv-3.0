@@ -1608,12 +1608,13 @@ public class PlayerApiController {
 	public ResponseEntity<String> disconnect(
 			@RequestParam(value="user", required=false) String userToken,			                            
 			@RequestParam(value="toEmail", required=false) String toEmail,
+			@RequestParam(value="channel", required=false) String channel,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);		
-			output = playerApiService.disconnect(userToken, toEmail, req);
+			output = playerApiService.disconnect(userToken, toEmail, channel, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
