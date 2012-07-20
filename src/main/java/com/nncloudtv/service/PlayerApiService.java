@@ -1633,7 +1633,7 @@ public class PlayerApiService {
 	}
 	
 	public String disconnect(String userToken, String email, String channel, HttpServletRequest req) {
-		if (userToken == null || email == null) {
+		if (userToken == null || email == null || channel == null) {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 		}
 		NnUser user = userMngr.findByToken(userToken);
