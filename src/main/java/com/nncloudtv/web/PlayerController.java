@@ -30,10 +30,16 @@ public class PlayerController {
 	}		
 		
 	@RequestMapping("10ft")
-	public String tenft(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
+	public String tenft(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model,
+			@RequestParam(value="jsp",required=false) String jsp,
+			@RequestParam(value="js",required=false) String js) {
 		try {
 			PlayerService service = new PlayerService();
 			model = service.prepareBrand(model, mso, resp);
+			model = service.preparePlayer(model, js, jsp);			
+			if (jsp != null && jsp.length() > 0) {
+				return "player/" + jsp;
+			}
 		} catch (Throwable t) {
 			NnLogUtil.logThrowable(t);			
 		}			
@@ -41,10 +47,17 @@ public class PlayerController {
 	}	
 	
 	@RequestMapping("tv")
-	public String tv(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model) {
+	public String tv(@RequestParam(value="mso",required=false) String mso, 
+			HttpServletRequest req, HttpServletResponse resp, Model model,
+			@RequestParam(value="jsp",required=false) String jsp,
+			@RequestParam(value="js",required=false) String js) {
 		try {
 			PlayerService service = new PlayerService();
 			model = service.prepareBrand(model, mso, resp);
+			model = service.preparePlayer(model, js, jsp);			
+			if (jsp != null && jsp.length() > 0) {
+				return "player/" + jsp;
+			}
 		} catch (Throwable t) {
 			NnLogUtil.logThrowable(t);			
 		}
