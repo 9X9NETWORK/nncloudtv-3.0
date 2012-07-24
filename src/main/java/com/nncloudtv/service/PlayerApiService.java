@@ -1702,8 +1702,8 @@ public class PlayerApiService {
 			log.info("-------------- send to " + u.getEmail() + "-----------------");
 			log.info("subject:" + subject);
 			log.info("content:" + content);
-//			NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);		
-//			new EmailService().sendEmail(mail);						
+			NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);		
+			new EmailService().sendEmail(mail);						
 		} 		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
