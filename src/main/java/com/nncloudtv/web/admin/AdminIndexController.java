@@ -63,9 +63,9 @@ public class AdminIndexController {
 			          HttpServletResponse response,
 			          Principal principal)
 			throws IOException {		
-		String name = principal.getName();
+		//String name = principal.getName();
 		System.out.println("root path:" + MsoConfigManager.getExternalRootPath());
-		model.addAttribute("username", name);
+		//model.addAttribute("username", name);
 		model.addAttribute("root", MsoConfigManager.getExternalRootPath());		
 		response.setContentType("text/html");
 		return "admin/ui";				
