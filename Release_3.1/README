@@ -1,0 +1,306 @@
+About this document,
+
+Three sections,
+- Project intro
+- Devel environment and tool: more for Windows
+- EC2: i.e. Ubuntu on EC2
+
+=============================================================================================================
+Project intro
+=============================================================================================================
+- This project is based on java spring framework.
+- Installer folder is not part of the main project. It's intended for installation and data migration. 
+a. tools, tools for installer script
+b. maintenance, maintenance page when system is not available
+c. migration, data migration tools to port data from gae to mysql
+
+=============================================================================================================
+Devel environment and tool
+=============================================================================================================
+================================
+First time setup procedures
+================================
+Detail for each step can be found in the following sections.
+
+- Download JDK 1.6.0, MySql 5.5.10, RabbitMQ 1.8, Maven 3.0.3 
+Details can be found in the following sections
+  
+- Start MySql server
+
+- Start RabbitMQ server
+
+- Create databases and tables
+Reference MySql file
+
+- Modify datanucleus.properties files, 
+there are four, this is to make sure your db connection is setup correctly
+
+- Run nnqueue client 
+Reference README in nnqueue project
+
+- Run memcache server 
+
+- datanucleus jdo enhance:
+Go to project root folder, 
+> mvn datanucleus:enhance (it might not be necessary)
+
+- Run nncloudtv on Jetty: 
+Go to project root folder, 
+> mvn jetty:run
+(c:\Java\projects\nncloudtv>mvn -Dslf4j=false -Dlog4j.configuration=file:./target/classes/log4j.properties jetty:run)
+
+- Basic tests,
+http://localhost:8888/hello/world (test your servlet and spring dispatcher)
+http://localhost:8888/hello/pdr (write a db record)
+http://localhost:8888/hello/cache_set (test memcache component)
+http://localhost:8888/fanout?exchange_name=hello (test rabbitq, nnqueue should output a hello message)
+
+- ready to go,
+go to http://localhost:8888/admin/index, click on initialize link
+
+================================
+mvn 
+================================
+- Download 3.0.3
+http://maven.apache.org/download.html 
+
+- read pom.xml
+
+================================
+Datanucleus tool
+================================
+datanucleus commands:
+
+- enhance
+mvn datanucleus:enhance
+
+- Schema tool
+mvn datanucleus:schema-create
+
+Note: 
+1. You might run into command length limitation error if running on Windows. Remove everything under java except model folder if it's the case.
+2. Currently there is four databases need to be initiated. Depending on the db you are going to initiate, change configuration in datanucleus plugin section in pom.xml before you run schema-create
+3. Alternatively, reference MySql file
+
+================================
+Jetty
+================================
+- Run your application on jetty
+1) go to project root folder, 
+2) mvn jetty:run
+
+================================
+RabbitMQ
+================================
+- Windows download
+http://www.rabbitmq.com/releases/bundles/v1.7.2/
+
+- installation quick guide 
+> unzip the package
+> install erlang 5.7.4 using otp_win32_R13B03.exe
+> set ERLANG_HOME in environment variable
+> (move folder rabbitmq-server-windows-1.7.2 to program files)
+
+- commands examples: 
+> cd C:\Program Files (x86)\RabbitMQ\rabbitmq_server-1.7.2\sbin
+> double click "rabbitmq-server.bat" to start the server
+> rabbitmqctl list_exchanges 
+> rabbitmqctl list_queues
+
+================================
+MySql
+================================
+- Download MySQL Server 5.5
+
+- example commands on Windows: 
+> cd c:\Program Files\MySQL\MySQL Server 5.5\bin
+> mysqld
+> mysql nncloudtv_analytics -h localhost -u root -p
+> mysql nncloudtv_content -h localhost -u root -p
+> mysql nncloudtv_nnuser1 -h localhost -u root -p
+> mysql nncloudtv_nnuser2 -h localhost -u root -p
+> mysql --default-character-set=utf8 -u root -p
+
+- please reference MySql file
+
+- dump data example
+> mysqldump --user=root nncloudtv_analytics > nnanalytics.sql
+
+- import data example
+> cat nnanalytics.sql | mysql nncloudtv_analytics -h localhost -u root -p
+ ================================
+Package
+================================
+- packaging nncloudtv war procedures:
+  a) modify datanucleus.properties files, there are four.
+  b) packaging: 
+     mvn clean:clean  
+     mvn datanucleus:enhance 
+     mvn compile war:war
+  c) test the packaged war with jetty plugin:    
+     mvn jetty:deploy-war
+     packaging and run jetty with jetty plugin: 
+     mvn jetty:run-war 
+
+- packaging nnqueue jar:
+  reference nnqueue.README 
+
+================================
+In the pipeline
+================================ 
+- Admin portal
+
+================================
+Note
+================================
+- javascript and image resources should only be placed on amazon s3.
+use account nncloudtv@gmail.com to access
+
+
+=============================================================================================================
+EC2
+=============================================================================================================
+================================
+Jetty 
+================================
+- installation
+> apt-get install jetty
+> apt-get install libjetty-extra
+> apt-get install openjdk-6-jdk
+
+- configuration
+> modify /etc/default/jetty
+> change value of "NO_START" to "NO_START=0" 
+> change value of "JETTY_HOST" TO "JETTY_HOST=0.0.0.0"
+
+- start/stop jetty
+> service jetty start
+> service jetty stop
+
+- jetty version
+> cd /usr/share/jetty 
+> java -jar start.jar --version
+null 6.1.22
+
+- if v=6.1.24, bug fix
+vi /etc/init.d/jetty
+
+replace
+CONFIG_LINES=$(cat /etc/jetty/jetty.conf | grep -v "^[:space:]*#" | tr "\n" " ")
+
+with this one:
+CONFIG_LINES=$(cat /etc/jetty/jetty.conf | grep -v "^[[:space:]]*#" | tr "\n" " ")
+
+- deploy app: deploy your war to webapps under jetty 
+> /usr/share/jetty/webapps
+
+- remove 'root' folder if default has one
+
+================================
+MySql
+================================
+- installation 
+apt-get install mysql-server-5.1
+
+- commands
+> service mysql start
+
+- permission
+Grant permission for remote application access if application server is on a different machine
+
+> CREATE USER 'root'@'%.compute.internal' IDENTIFIED BY 'password';
+> GRANT ALL ON *.* TO 'root'@'%.compute.internal';
+ 
+================================
+RabbitMQ
+================================
+- installation
+> apt-cache search rabbitmq
+> apt-get install rabbitmq-server
+
+- commands: 
+rabbitmqctl status
+
+================================
+Memcached
+================================
+> apt-get install memcached
+
+================================
+Mail server
+================================
+> apt-get install sendmail
+
+- sendmail configuration (by wilson)
+
+- jetty6 is loading wrong gnumail.jar, fixes:
+a. edit /etc/jetty/start.config:
+comment out the use of gnumail and activation.jar
+doesn't actually take effect, but just to be sure for future use.
+
+b. remove following files(gnumail*.jar) under /usr/share/java/:
+gnumail.jar, gnumail-1.1.2.jar, gnumail-providers.jar, gnumail-providers-1.1.2.jar
+
+(c). copy following files to /usr/share/jetty/lib:
+mail-1.4.jar, activation-1.1.jar
+ 
+d. upgrade to jetty 7 should be able to solve the problem as well.
+ 
+================================
+Running the app on EC2
+================================  
+- build war
+a. change datanucleus property files if necessary
+b. check port setting on server if ncessary 
+> netstat -vatn
+
+- upload the war and the jar: use SCP with your private key, and upload to the server
+pscp -i awsdev.ppk nncloudtv-0.0.1-SNAPSHOT.war ubuntu@ec2-174-129-141-179.compute-1.amazonaws.com:/home/ubuntu/files
+pscp -i prod-west2.ppk nncloudtv-0.0.1-SNAPSHOT.war ubuntu@ec2-50-112-111-245.us-west-2.compute.amazonaws.com:/home/ubuntu/files
+
+- login name: ubuntu
+
+- change hostname if necessary 
+> hostname devel 
+
+- commands: 
+sudo su
+cd /usr/share/jetty/webapps
+service jetty stop
+rm root.war
+cp /home/ubuntu/files/nncloudtv-0.0.1-SNAPSHOT.war .
+mv nncloudtv-0.0.1-SNAPSHOT.war root.war
+service jetty start
+
+> sudo su
+> cd /usr/share/jetty/webapps && service jetty stop && rm root.war && cp /home/ubuntu/files/nncloudtv-0.0.1-SNAPSHOT.war . && mv nncloudtv-0.0.1-SNAPSHOT.war root.war && service jetty start
+
+> bash -x ./install.sh
+
+java -jar nnqueue.jar hello
+java -jar nnqueue.jar brand_counter
+java -jar nnqueue.jar category_create
+java -jar nnqueue.jar channel_create_related
+
+- testing on java02, 
+wget http://localhost:8080/hello/world (local test)
+http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/world (basic web server test)
+http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/pdr (write to db test)
+http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/cache_set (test memcache component)
+http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/cache_get (test memcache component)
+http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/fanout?exchange_name=hello (rabbit queue client test)
+
+- run on port 80 (port 80 might be closed, check ec2 console setting) 
+test
+> sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+permanent
+> vi /etc/iptables.rules
+> vi /etc/networks/interfaces
+pre-up iptables-restore < /etc/iptables.rules
+
+- stop apache2 (if u ever need it)
+> sudo /etc/init.d/apache2 stop
+
+- for server with monit, stop monit before manually restart your server
+service monit stop
