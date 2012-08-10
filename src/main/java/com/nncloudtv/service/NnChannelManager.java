@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelDao;
+import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
@@ -19,14 +20,16 @@ import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CntSubscribe;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnSet;
+import com.nncloudtv.model.NnUser;
 
 @Service
 public class NnChannelManager {
 
 	protected static final Logger log = Logger.getLogger(NnChannelManager.class.getName());
 	
-	private NnChannelDao channelDao = new NnChannelDao();
+	private NnChannelDao dao = new NnChannelDao();
 	
 	public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
 		if (sourceUrl == null) 
@@ -95,9 +98,25 @@ public class NnChannelManager {
 		
 		return channel;
 	}
+
+	public void saveFavorite(NnUser user, String fileUrl, String name, String imageUrl, short type) {
+		NnChannel c = dao.findByUserId(user.getId());
+		if (c == null) {
+			c = new NnChannel("'s Favorite", "", "");
+			c.setContentType(NnChannel.CONTENTTYPE_YOUR_FARORITE);
+			dao.save(c);
+		}
+		NnProgramDao pDao = new NnProgramDao();
+		NnProgram p = pDao.findFavorite(c.getId(), fileUrl);
+		if (p == null) {
+			p = new NnProgram(name, "", imageUrl, type);
+			p.setFileUrl(fileUrl);
+			pDao.save(p);
+		}
+	}																																																																																																																																																																																																																																																																																																																																																															
 	
 	public NnChannel save(NnChannel channel) {
-		NnChannel original = channelDao.findById(channel.getId());
+		NnChannel original = dao.findById(channel.getId());
 		Date now = new Date();
 		if (channel.getCreateDate() == null)
 			channel.setCreateDate(now);
@@ -112,7 +131,7 @@ public class NnChannelManager {
 			channel.setName(channel.getName().replaceAll("\n", ""));
 			channel.setName(channel.getName().replaceAll("\t", " "));
 		}
-		channel = channelDao.save(channel);
+		channel = dao.save(channel);
 		NnChannel[] channels = {original, channel};
 		if (MsoConfigManager.isQueueEnabled(true)) {
 	        //new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CUD_RELATED, channels);
@@ -138,7 +157,7 @@ public class NnChannelManager {
 			}
 		}
 	}
-	
+		
 	public static List<NnChannel> search(String queryStr, boolean all) {
 		return NnChannelDao.search(queryStr, all);		
 	}
@@ -177,11 +196,11 @@ public class NnChannelManager {
 
 	public NnChannel findBySourceUrl(String url) {
 		if (url == null) {return null;}
-		return channelDao.findBySourceUrl(url);
+		return dao.findBySourceUrl(url);
 	}
 	
 	public NnChannel findById(long id) {
-		NnChannel channel = channelDao.findById(id);
+		NnChannel channel = dao.findById(id);
 		return channel;
 	}
 
@@ -230,7 +249,7 @@ public class NnChannelManager {
 	}
 
 	public List<NnChannel> findByType(short type) {
-		return channelDao.findByType(type);		
+		return dao.findByType(type);		
 	}
 	
 	public List<NnChannel> findMaples() {
@@ -239,6 +258,26 @@ public class NnChannelManager {
 		List<NnChannel> channels = new ArrayList<NnChannel>();
 		channels.addAll(variety);
 		channels.addAll(soap);
+		return channels;
+	}
+	
+	public List<NnChannel> findFeatured() {
+		List<NnChannel> channels = new NnSetManager().findChannelsById(3);
+		return channels;
+	}
+	
+	public List<NnChannel> findTrending() {
+		List<NnChannel> channels = new NnSetManager().findChannelsById(4);		
+		return channels;
+	}
+
+	public List<NnChannel> findHot() {
+		List<NnChannel> channels = new NnSetManager().findChannelsById(5);		
+		return channels;
+	}
+
+	public List<NnChannel> findRecommended() {
+		List<NnChannel> channels = new NnSetManager().findChannelsById(6);		
 		return channels;
 	}
 	
@@ -252,28 +291,28 @@ public class NnChannelManager {
 	}
 	
 	public List<NnChannel> findByStatus(short status) {
-		List<NnChannel> channels = channelDao.findAllByStatus(status);		
+		List<NnChannel> channels = dao.findAllByStatus(status);		
 		return channels;
 	}
 	
 	public List<NnChannel> findAll() {
-		return channelDao.findAll();
+		return dao.findAll();
 	}
 	
 	public List<NnChannel> list(int page, int limit, String sidx, String sord) {
-		return channelDao.list(page, limit, sidx, sord);
+		return dao.list(page, limit, sidx, sord);
 	}
 	
 	public List<NnChannel> list(int page, int limit, String sidx, String sord, String filter) {
-		return channelDao.list(page, limit, sidx, sord, filter);
+		return dao.list(page, limit, sidx, sord, filter);
 	}
 	
 	public int total() {
-		return channelDao.total();
+		return dao.total();
 	}
 	
 	public int total(String filter) {
-		return channelDao.total(filter);
+		return dao.total(filter);
 	}
 
 	public String verifyUrl(String url) {
