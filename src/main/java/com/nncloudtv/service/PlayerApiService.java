@@ -1814,7 +1814,7 @@ public class PlayerApiService {
         		"3500", //number of followers        		
                };
         String output = NnStringUtil.getDelimitedStr(ori);
-        if (stack.equals("featured")) {
+        if (stack != null && stack.equals("featured")) {
             String[] a1 = {
             		"2",
             		"Biker",
