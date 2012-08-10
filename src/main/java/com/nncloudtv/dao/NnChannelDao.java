@@ -115,7 +115,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		}
 		return detached;
 	}	
-
+	
 	public NnChannel findBySourceUrl(String url) {
 		if (url == null) {return null;}
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
@@ -135,5 +135,24 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		}
 		return channel;				
 	}		
+
+	public NnChannel findByUserId(long userId) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		NnChannel channel = null;
+		try {
+			Query q = pm.newQuery(NnChannel.class);
+			q.setFilter("userId == userIdParam");
+			q.declareParameters("long userIdParam");
+			@SuppressWarnings("unchecked")
+			List<NnChannel> channels = (List<NnChannel>) q.execute(userId);
+			if (channels.size() > 0) {
+				channel = pm.detachCopy(channels.get(0));
+			}
+		} finally {
+			pm.close();
+		}
+		return channel;				
+	}		
+	
 	
 }
