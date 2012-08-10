@@ -58,6 +58,9 @@ public class NnChannel implements Serializable {
 	
 	@Persistent
 	private int programCnt;
+
+//	@Persistent
+//	private int userId;
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
@@ -82,6 +85,7 @@ public class NnChannel implements Serializable {
 	public static final short CONTENTTYPE_MAPLE_VARIETY = 8;
 	public static final short CONTENTTYPE_MAPLE_SOAP = 9;
 	public static final short CONTENTTYPE_YOUTUBE_SPECIAL_SORTING = 10;
+	public static final short CONTENTTYPE_YOUR_FARORITE = 11;
 	
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -139,6 +143,9 @@ public class NnChannel implements Serializable {
 		this.name = name;
 		this.intro = intro;
 		this.imageUrl = imageUrl;
+		Date now = new Date();
+		this.createDate = now;
+		this.updateDate = now;
 	}
 	
 	public NnChannel(String sourceUrl) {
@@ -352,5 +359,12 @@ public class NnChannel implements Serializable {
 
 	public void setTemp(boolean isTemp) {
 		this.isTemp = isTemp;
-	}	
+	}
+
+//	public int getUserId() {
+//		return userId;
+//	}
+//	public void setUserId(int userId) {
+//		this.userId = userId;
+//	}	
 }

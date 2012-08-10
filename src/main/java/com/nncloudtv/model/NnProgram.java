@@ -107,6 +107,9 @@ public class NnProgram implements Serializable {
 		this.intro = intro;
 		this.imageUrl = imageUrl;
 		this.type = type;
+		Date now = new Date();		
+		this.createDate = now;
+		this.updateDate = now;
 	}
 	
 	public long getId() {
