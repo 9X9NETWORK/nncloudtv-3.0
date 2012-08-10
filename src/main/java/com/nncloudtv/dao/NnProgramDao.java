@@ -58,6 +58,23 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		}
 		return detached;
 	}
+
+	public NnProgram findFavorite(long channelId, String fileUrl) {
+		NnProgram detached = null;
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
+		try {
+			Query query = pm.newQuery(NnProgram.class);
+			query.setFilter("channelId == " + channelId + " && fileUrl == '" + fileUrl + "'");
+			@SuppressWarnings("unchecked")
+			List<NnProgram> results = (List<NnProgram>) query.execute();
+			if (results.size() > 0) {
+				detached = pm.detachCopy(results.get(0));
+			}
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}
 	
 	public List<NnProgram> findPlayerProgramsByChannels(List<Long> channelIds) {
 		List<NnProgram> good = new ArrayList<NnProgram>();
