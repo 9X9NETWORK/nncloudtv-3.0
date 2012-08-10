@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -62,6 +63,7 @@ public class PlayerApiService {
     
     private NnUserManager userMngr = new NnUserManager();    
     private MsoManager msoMngr = new MsoManager();
+    private NnChannelManager chMngr = new NnChannelManager();
     private Locale locale;
     private Mso mso;
         
@@ -74,11 +76,11 @@ public class PlayerApiService {
     }
 
     public String handleException (Exception e) {
-//    	if (e.getClass().equals(NumberFormatException.class)) {
-//    		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);    		
-//    	} else if (e.getClass().equals(CommunicationsException.class)) {
-//    		return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
-//    	} 
+    	if (e.getClass().equals(NumberFormatException.class)) {
+    		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);    		
+    	} else if (e.getClass().equals(CommunicationsException.class)) {
+    		return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
+    	} 
     		
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         NnLogUtil.logException((Exception) e);
@@ -421,12 +423,41 @@ public class PlayerApiService {
 		CntSubscribeManager cntMngr = new CntSubscribeManager();
 		CntSubscribe s= cntMngr.findByChannel(c.getId());							
 		if (s != null) {c.setSubscriptionCnt(s.getCnt());}		
+		Random r = new Random();
+		int viewCount = r.nextInt(300);
+		String[] url1 = {
+			"http://www.choicematters.org/wp-content/uploads/2012/01/tumblr_ku48goxoYS1qatg16o1_4001.jpg",
+		    "http://www.motherearthnews.com/uploadedImages/articles/issues/2010-04-01/chickens1.jpg",
+		    "http://www.organicgardeningfarming.com/wp-content/uploads/2011/12/backyard-chickens.jpg",
+		    "http://i-cdn.apartmenttherapy.com/uimages/kitchen/2009_03_25-BlackChicken02.jpg",
+		    "http://graphics8.nytimes.com/images/blogs/greeninc/chickens.jpeg",
+		    "http://www.slate.com/content/dam/slate/archive/2011/01/1_123125_122975_2243255_2276474_110125_food_chicken_tn.jpg",
+		    "http://www.myessentia.com/blog/wp-content/uploads/2011/03/chicken.jpg",
+		    "http://cdn.blogs.sheknows.com/gardening.sheknows.com/2011/09/free-range-chickens.jpg",
+		    "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buttercup_Chicken1.jpg/250px-Buttercup_Chicken1.jpg",
+		    "http://leesbirdblog.files.wordpress.com/2009/01/you-can-have-her-chickens-by-maji.jpg",
+		};		
+		String[] url2 = {
+			"http://i2.ytimg.com/i/194cPvPaGJjhJBEGwG6vxg/1.jpg",
+			"http://i2.ytimg.com/i/Yjk_zY-iYR8YNfJmuzd70A/1.jpg?v=a5d97c",
+			"http://9x9cache.s3.amazonaws.com/system.jpg",                 
+			"http://i1.ytimg.com/vi/8yuFvqsL-C0/default.jpg",              
+			"http://i1.ytimg.com/i/XNZiORujW__GkIskLb0FNw/1.jpg?v=8401b7", 
+			"http://i2.ytimg.com/i/MKvT0YVLufHMdGLH89J1oA/1.jpg",          
+			"http://i2.ytimg.com/i/5l1Yto5oOIgRXlI4p4VKbw/1.jpg?v=8157b2", 
+			"http://i2.ytimg.com/vi/y367HBFS4hU/default.jpg",              
+			"http://i1.ytimg.com/i/lrEYreVkBee7ZQYei_6Jqg/1.jpg?v=9605e9", 
+			"http://i3.ytimg.com/i/2LqANmM2rTLGO345OuapuA/1.jpg?v=a9a54a",
+		};
+		int img1 = r.nextInt(10);
+		int img2 = r.nextInt(10);
+		String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
 		
         String[] ori = {Integer.toString(c.getSeq()), 
                         String.valueOf(c.getId()),
                         c.getName(),
                         c.getIntro(),
-                        c.getPlayerPrefImageUrl(),
+                        imageUrl, //c.getPlayerPrefImageUrl(),                        
                         String.valueOf(c.getProgramCnt()),
                         String.valueOf(c.getType()),
                         String.valueOf(c.getStatus()),
@@ -437,7 +468,11 @@ public class PlayerApiService {
 					    c.getPiwik(),
 					    String.valueOf(c.getRecentlyWatchedProgram()),
 					    c.getOriName(),
-					    String.valueOf(c.getSubscriptionCnt()),                        
+					    String.valueOf(c.getSubscriptionCnt()),
+					    String.valueOf(viewCount), //view count
+					    "hello,world", //tags
+					    "1", //curator id
+					    "Snowball", //curator name
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);
@@ -534,12 +569,13 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
-    public String channelLineup(String userToken, boolean userInfo, String channelIds, boolean setInfo, boolean isRequired) {
+    public String channelLineup(String userToken, boolean userInfo, String channelIds, boolean setInfo, boolean isRequired, String stack) {
         //verify input    	
         if ((userToken == null && userInfo == true) || 
         	(userToken == null && channelIds == null) || 
         	(userToken == null && setInfo == true)) {
-            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        	if (stack == null)
+        		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
 		List<String> result = new ArrayList<String>();
 		NnUser user = null;
@@ -594,22 +630,22 @@ public class PlayerApiService {
 		//find channels
 		List<NnChannel> channels = new ArrayList<NnChannel>();
 		boolean channelPos = true;
-		if (channelIds == null) {
+		if (channelIds == null && stack == null) {
 			//find subscribed channels 
 			NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
 			channels = subMngr.findSubscribedChannels(user);
 			log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
+		} else if (stack != null){
 		} else {
-			//find specific channels
-			NnChannelManager channelMngr = new NnChannelManager();
+			//find specific channels			
 			channelPos = false;
 			String[] chArr = channelIds.split(",");
 			if (chArr.length > 1) {
 				List<Long> list = new ArrayList<Long>();
 				for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
-				channels = channelMngr.findByChannelIds(list);
+				channels = chMngr.findByChannelIds(list);
 			} else {
-				NnChannel channel = channelMngr.findById(Long.parseLong(channelIds));
+				NnChannel channel = chMngr.findById(Long.parseLong(channelIds));
 				if (channel != null) channels.add(channel);					
 			}
 		}
@@ -638,12 +674,49 @@ public class PlayerApiService {
 				c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
 			}
 			channelOutput += this.composeChannelLineupStr(c, mso) + "\n";
-		}		
-		result.add(channelOutput);
+		}
+
+		if (stack == null) {
+			result.add(channelOutput);
+		}
+		if (stack != null) {			
+			String[] cond = stack.split(",");
+			for (String s : cond) {
+				if (s.equals("featured")) {
+					List<NnChannel> chs = chMngr.findFeatured();
+					String ouput = this.tmp(chs);
+				    result.add(ouput);			   
+				}
+				if (s.equals("recommended")) {
+					List<NnChannel> chs = chMngr.findRecommended();
+					String ouput = this.tmp(chs);
+				    result.add(ouput);			   
+				}
+				if (s.equals("hot")) {
+					List<NnChannel> chs = chMngr.findHot();
+					String ouput = this.tmp(chs);
+				    result.add(ouput);			   
+				}
+				if (s.equals("trending")) {
+					List<NnChannel> chs = chMngr.findTrending();
+					String ouput = this.tmp(chs);
+				    result.add(ouput);			   
+				}
+			}
+		}
+		
 		String size[] = new String[result.size()];
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
     }
         
+    private String tmp(List<NnChannel> channels) {
+    	String output = "";
+    	for (int i=0; i<9; i++) {    	
+    		output += this.composeChannelLineupStr(channels.get(i), mso) + "\n";    		
+    	}
+    	return output;
+    }
+    
 	public String channelSubmit(String categoryIds, String userToken, 
 			                    String url, String grid, 
                                 String tags, String lang, 
@@ -1518,7 +1591,7 @@ public class PlayerApiService {
 		}
 		data.add(userInfo);
 		//1a. channel lineup
-		String lineup = this.channelLineup (token, false, null, true, false);
+		String lineup = this.channelLineup (token, false, null, true, false, null);
 		data.add(lineup);
 		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
 			return this.assembleSections(data);
@@ -1576,6 +1649,26 @@ public class PlayerApiService {
 		return output;				
 	}
 
+	public String favorite(String userToken, String fileUrl, String name, String imageUrl, String type) {
+		if (userToken == null || fileUrl == null || name == null)
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		String[] result = {""};
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+		/*
+		NnUser u = userMngr.findByToken(userToken);
+		if (u == null)
+			return this.assembleMsgs(NnStatusCode.USER_INVALID, null); 
+		chMngr.saveFavorite(u, fileUrl, name, imageUrl, Short.parseShort(type));
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+		*/
+	}
+		
+	public NnChannel getChannel(String channel) {
+		NnChannelManager channelMgnr = new NnChannelManager();
+		NnChannel c = channelMgnr.findById(Long.parseLong(channel));
+		return c;
+	}
+	
 	public String graphSearch(String email, String name) {
 		if (email == null && name == null) {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
@@ -1707,5 +1800,45 @@ public class PlayerApiService {
 		} 		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
-	
+
+	public String curator(String id, String stack) {
+				
+        String[] ori = {
+        		"1",
+        		"Snowball",
+        		"Hi, Welcome to visit my channels",
+        		"http://3.bp.blogspot.com/-zEgDIaFRgXw/T7DpJJASGzI/AAAAAAAADHs/na-zvBM47Fo/s1600/debt-snowball.gif",
+        		"www.9x9.tv/curator/1",
+        		"13", //number of channels
+        		"20", //number of followings
+        		"3500", //number of followers        		
+               };
+        String output = NnStringUtil.getDelimitedStr(ori);
+        if (stack.equals("featured")) {
+            String[] a1 = {
+            		"2",
+            		"Biker",
+            		"Hi, Welcome to my biking channels",
+            		"http://www.robertnkatz.com/photos/cycling.jpg",
+            		"www.9x9.tv/curator/2",
+            		"15", //number of channels
+            		"25", //number of followings
+            		"1500", //number of followers        		
+                   };
+            output += "\n" + NnStringUtil.getDelimitedStr(a1);
+            String[] a2 = {
+            		"3",
+            		"Runner",
+            		"Hi, Join my marathon world",
+            		"http://www.siberianarts.com/runner.jpg",
+            		"www.9x9.tv/curator/3",
+            		"20", //number of channels
+            		"1", //number of followings
+            		"200", //number of followers
+                   };
+            output += "\n" + NnStringUtil.getDelimitedStr(a2);
+        }
+        String[] result = {output};
+		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+	}
 }
