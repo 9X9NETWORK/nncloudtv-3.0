@@ -521,6 +521,7 @@ public class PlayerApiController {
 	 * Get channel information 
 	 * 
 	 * @param user user's unique identifier
+	 * @param stack trending, recommended, hot
 	 * @param userInfo true or false. Whether to return user information as login does. If asked, it will be returned after status code.
 	 * @param channel channel id, optional, can be one or multiple;  example, channel=1 or channel=1,2,3
 	 * @param setInfo true or false. Whether to return set information.  
@@ -549,7 +550,11 @@ public class PlayerApiController {
 	 *         piwik id, <br/> 
 	 *         last watched episode <br/>
 	 *         youtube real channel name <br/>
-	 *         subscription count
+	 *         subscription count <br/>
+	 *         view count <br/>
+	 *         tags, separated by comma. example "run,marathon" <br/>         
+	 *         curator id <br/>
+	 *         curator name <br/>
 	 *         </blockquote>
 	 *         <p>
 	 *         set type: TYPE_USER = 1; TYPE_READONLY = 2;
@@ -583,6 +588,7 @@ public class PlayerApiController {
 			@RequestParam(value="channel", required=false) String channelIds,
 			@RequestParam(value="setInfo", required=false) String setInfo,
 			@RequestParam(value="required", required=false) String required,
+			@RequestParam(value="stack", required=false) String stack,
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
@@ -593,7 +599,7 @@ public class PlayerApiController {
 			boolean isUserInfo = Boolean.parseBoolean(userInfo);
 			boolean isSetInfo = Boolean.parseBoolean(setInfo);
 			boolean isRequired = Boolean.parseBoolean(required);		
-			output = playerApiService.channelLineup(userToken, isUserInfo, channelIds, isSetInfo, isRequired);
+			output = playerApiService.channelLineup(userToken, isUserInfo, channelIds, isSetInfo, isRequired, stack);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -1548,6 +1554,7 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);				 
 	}
 
+	/* ios flipr demo feature*/	
 	@RequestMapping(value="graphSearch")
 	public ResponseEntity<String> graphSearch(
 			@RequestParam(value="email", required=false) String email,			
@@ -1567,6 +1574,7 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 
+	/* ios flipr demo feature*/
 	@RequestMapping(value="userInvite")
 	public ResponseEntity<String> userInvite(
 			@RequestParam(value="user", required=false) String userToken,			                            
@@ -1587,6 +1595,7 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 
+	/* ios flipr demo feature*/
 	@RequestMapping(value="inviteStatus")
 	public ResponseEntity<String> inviteStatus(
 			@RequestParam(value="token", required=false) String token,			                            
@@ -1604,6 +1613,7 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 
+	/* ios flipr demo feature*/
 	@RequestMapping(value="disconnect")
 	public ResponseEntity<String> disconnect(
 			@RequestParam(value="user", required=false) String userToken,			                            
@@ -1623,6 +1633,7 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}
 
+	/* ios flipr demo feature*/
 	@RequestMapping(value="notifySubscriber")
 	public ResponseEntity<String> notifySubscriber(
 			@RequestParam(value="user", required=false) String userToken,
@@ -1633,6 +1644,71 @@ public class PlayerApiController {
 		try {
 			this.prepService(req, true);		
 			output = playerApiService.notifySubscriber(userToken, channel, req);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+
+	/**
+	 * Curator info. If curator is provided, 
+	 * 
+	 * @param curator curator id
+	 * @param stack if specify "featued" will return list of featured curators
+	 * @return list of curator information
+	 */
+	@RequestMapping(value="curator")
+	public ResponseEntity<String> curator(
+			@RequestParam(value="curator", required=false) String userId,
+			@RequestParam(value="stack", required=false) String stack,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);		
+			output = playerApiService.curator(userId, stack);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);
+		}
+		return NnNetUtil.textReturn(output);
+	}
+	/**
+	 * <p> Record user's favorite channel and episode.</p>
+	 * <p> For non-Youtube episode, supply channel and program id. 
+	 * Supply the rest (video, name, image) for Youtube channels.
+	 * </p> 
+	 * 
+	 * @param user user token
+	 * @param channel channel id
+	 * @param program program id
+	 * @param video youtube video url
+	 * @param name video name
+	 * @param image image url
+	 * @param type 1 is video, 2 is audio
+	 * @param del true or false. default is false
+	 * @param req
+	 * @param resp
+	 * @return status
+	 */
+	@RequestMapping(value="favorite")
+	public ResponseEntity<String> favorite(
+			@RequestParam(value="user", required=false) String user,
+			@RequestParam(value="program", required=false) String program,
+			@RequestParam(value="video", required=false) String fileUrl,
+			@RequestParam(value="name", required=false) String name,
+			@RequestParam(value="image", required=false) String imageUrl,
+			@RequestParam(value="type", required=false) String type,			
+			@RequestParam(value="del", required=false) String del,			
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);		
+			output = playerApiService.favorite(user, fileUrl, name, imageUrl, type);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
