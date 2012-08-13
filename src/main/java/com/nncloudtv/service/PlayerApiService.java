@@ -1638,6 +1638,16 @@ public class PlayerApiService {
 			return this.assembleSections(data);
 		}
 		data.add(programInfo);
+		//5. featured curators
+		String curatorInfo = this.curator(token, "featured");
+		data.add(curatorInfo);
+		//6. trending
+		String trending = this.channelLineup (token, false, null, false, false, "trending");
+		data.add(trending);
+		if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
+
 		return this.assembleSections(data);
 	}
 
@@ -1836,7 +1846,7 @@ public class PlayerApiService {
             		"1", //number of followings
             		"200", //number of followers
                    };
-            output += "\n" + NnStringUtil.getDelimitedStr(a2);
+            output += "\n" + NnStringUtil.getDelimitedStr(a2) + "\n";
         }
         String[] result = {output};
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
