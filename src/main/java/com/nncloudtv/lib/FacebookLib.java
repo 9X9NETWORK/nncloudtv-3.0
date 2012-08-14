@@ -4,16 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.logging.Logger;
-
-import org.codehaus.jackson.map.ObjectMapper;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -21,12 +15,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
 import com.nncloudtv.model.MsoConfig;
-import com.nncloudtv.model.SnsAuth;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.web.json.facebook.FBPost;
-import com.nncloudtv.web.json.facebook.FacebookError;
-import com.nncloudtv.web.json.facebook.FacebookPage;
-import com.nncloudtv.web.json.facebook.FacebookResponse;
 
 //import net.sf.json.JSONObject;
 
@@ -133,7 +123,9 @@ public class FacebookLib {
 		twitter.updateStatus(fbPost.getName()+" "+fbPost.getLink());
 	}
 	
-	static public void populatePageList(SnsAuth sns) {
+	
+	static public void populatePageList() {
+		/*
 		if (sns == null) {
 			return;
 		} else if (sns.getType() != SnsAuth.TYPE_FACEBOOK) {
@@ -169,7 +161,6 @@ public class FacebookLib {
 			} else {
 				log.warning("neither no data nor error");
 			}
-			/*
 			if (!root.path("data").equals(JsonToken.NOT_AVAILABLE)) {
 				List<FacebookPage> pages = mapper.readValue(root.path("data"), List.class);
 				log.info("pages count: " + pages.size());
@@ -180,7 +171,6 @@ public class FacebookLib {
 			} else {
 				log.warning("neither no data nor error");
 			}
-			*/
 		} catch (MalformedURLException e) {
 			logException(e);
 		} catch (UnsupportedEncodingException e) {
@@ -190,10 +180,13 @@ public class FacebookLib {
 		} catch (IOException e) {
 			logException(e);
 		}
+		*/
 	}
-	
+
+	/*
 	static private void logException(Exception e) {
 		log.warning(e.getClass().getCanonicalName());
 		NnLogUtil.logException(e);
 	}
+	*/
 }
