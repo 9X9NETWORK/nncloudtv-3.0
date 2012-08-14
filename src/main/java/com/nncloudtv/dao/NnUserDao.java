@@ -265,5 +265,20 @@ public class NnUserDao extends GenericDao<NnUser> {
 		}
 		return detached;
 	}
-	
+
+	public List<NnUser> findFeatured() {
+		PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+		List<NnUser> detached = new ArrayList<NnUser>(); 
+		try {
+			Query q = pm.newQuery(NnUser.class);
+			q.setFilter("featured == featuredParam");
+			q.declareParameters("boolean featuredParam");
+			@SuppressWarnings("unchecked")
+			List<NnUser> users = (List<NnUser>) q.execute(true);
+			detached = (List<NnUser>)pm.detachCopyAll(users);
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}		
 }

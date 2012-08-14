@@ -94,7 +94,8 @@ public class UserInviteDao {
 		    log.info("Sql=" + sql);
 		    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
 		    q.setClass(UserInvite.class);
-		    List<UserInvite> results = (List<UserInvite>) q.execute();
+		    @SuppressWarnings("unchecked")
+			List<UserInvite> results = (List<UserInvite>) q.execute();
 		    if (results.size() > 0) {
 		    	invite = results.get(0);
 		    	invite = pm.detachCopy(invite);

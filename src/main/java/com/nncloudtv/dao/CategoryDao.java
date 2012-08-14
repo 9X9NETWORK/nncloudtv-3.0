@@ -10,6 +10,8 @@ import javax.jdo.Query;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.Category;
+import com.nncloudtv.model.CategoryMap;
+import com.nncloudtv.model.NnChannel;
 
 public class CategoryDao extends GenericDao<Category> {
 		
@@ -46,16 +48,16 @@ public class CategoryDao extends GenericDao<Category> {
 		return detached;
 	}
 	
-	public List<Category> findPlayerCategories(long parentId, String lang) {
+	public List<Category> findPlayerCategories(String lang) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		List<Category> detached = new ArrayList<Category>();
 		try {
 			Query query = pm.newQuery(Category.class);
-			query.setFilter("lang == langParam && parentId == parentIdParam && isPublic == isPublicParam");
-			query.declareParameters("String langParam, long parentIdParam, boolean isPublicParam");
+			query.setFilter("lang == langParam && isPublic == isPublicParam");
+			query.declareParameters("String langParam, boolean isPublicParam");
 			query.setOrdering("seq");
 			@SuppressWarnings("unchecked")
-			List<Category> results = (List<Category>) query.execute(lang, parentId, true);			
+			List<Category> results = (List<Category>) query.execute(lang, true);			
 			detached = (List<Category>)pm.detachCopyAll(results);
 		} finally {
 			pm.close();
@@ -105,6 +107,23 @@ public class CategoryDao extends GenericDao<Category> {
 			pm.close();
 		}
 		return category;		
+	}
+	
+	public List<CategoryMap> findMap(long id) {		
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<CategoryMap> detached = new ArrayList<CategoryMap>();
+		try {
+			Query query = pm.newQuery(CategoryMap.class);
+			query.setFilter("categoryId == categoryIdParam");
+			query.declareParameters("long categoryIdParam");
+			@SuppressWarnings("unchecked")
+			List<CategoryMap> results = (List<CategoryMap>) query.execute(id);
+			detached = (List<CategoryMap>)pm.detachCopyAll(results);			
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();
+		}
+		return detached;		
 	}
 	
 	//!!! contains query

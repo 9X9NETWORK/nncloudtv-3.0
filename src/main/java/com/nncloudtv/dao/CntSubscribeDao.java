@@ -6,10 +6,10 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
-import com.nncloudtv.model.CntSubscribe;
+import com.nncloudtv.model.CntView;
 
 public class CntSubscribeDao {
-	public CntSubscribe save(CntSubscribe log) {		
+	public CntView save(CntView log) {		
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
 			pm.makePersistent(log);
@@ -24,12 +24,12 @@ public class CntSubscribeDao {
 		int totalCount = 0;
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
-			Query q = pm.newQuery(CntSubscribe.class);
+			Query q = pm.newQuery(CntView.class);
 			q.setFilter("channelId == channelIdParam");
 			q.declareParameters("long channelIdParam");
 			@SuppressWarnings("unchecked")
-			List<CntSubscribe> subs = (List<CntSubscribe>)q.execute(channelId);
-			for (CntSubscribe s : subs)
+			List<CntView> subs = (List<CntView>)q.execute(channelId);
+			for (CntView s : subs)
 				totalCount += s.getCnt();
 		} finally {
 			pm.close();
@@ -41,12 +41,12 @@ public class CntSubscribeDao {
 		int totalCount = 0;
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
-			Query q = pm.newQuery(CntSubscribe.class);
+			Query q = pm.newQuery(CntView.class);
 			q.setFilter("setId == setIdParam");
 			q.declareParameters("long setIdParam");
 			@SuppressWarnings("unchecked")
-			List<CntSubscribe> subs = (List<CntSubscribe>)q.execute(setId);
-			for (CntSubscribe s : subs)
+			List<CntView> subs = (List<CntView>)q.execute(setId);
+			for (CntView s : subs)
 				totalCount += s.getCnt();
 		} finally {
 			pm.close();
@@ -54,15 +54,15 @@ public class CntSubscribeDao {
 		return totalCount;
 	}
 	
-	public CntSubscribe findByChannel(long channelId) {
-		CntSubscribe s = null;
+	public CntView findByChannel(long channelId) {
+		CntView s = null;
 		PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
 		try {
-			Query q = pm.newQuery(CntSubscribe.class);
+			Query q = pm.newQuery(CntView.class);
 			q.setFilter("channelId == channelIdParam");
 			q.declareParameters("long channelIdParam");
 			@SuppressWarnings("unchecked")
-			List<CntSubscribe> subs = (List<CntSubscribe>)q.execute(channelId);
+			List<CntView> subs = (List<CntView>)q.execute(channelId);
 			if (subs.size() > 0) {
 				s = subs.get(0);
 				s = pm.detachCopy(s);
