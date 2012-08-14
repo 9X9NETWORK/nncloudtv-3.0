@@ -22,9 +22,6 @@ public class Category implements Serializable {
 	private long id;
 	
 	@Persistent
-	private long parentId; //for structured categories. root category has parent_id 0 
-
-	@Persistent
 	@Column(jdbcType="VARCHAR", length=5)
 	private String lang;	
 	
@@ -41,12 +38,6 @@ public class Category implements Serializable {
 	
 	@Persistent
 	private short seq; //sequence shown in the directory
-
-	@Persistent
-	private int subCatCnt; //sub category count
-	
-	@Persistent
-	private Date createDate;
 	
 	@Persistent
 	private Date updateDate;
@@ -78,12 +69,6 @@ public class Category implements Serializable {
 	public void setPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}	
-	public Date getCreateDate() {
-		return createDate;
-	}
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
 	public Date getUpdateDate() {
 		return updateDate;
 	}
@@ -96,14 +81,6 @@ public class Category implements Serializable {
         buffer.append("name: " + name + ";");
         buffer.append("channelCount: " + channelCnt + ";");
         return buffer.toString();
-	}
-
-	public void setParentId(long parentId) {
-		this.parentId = parentId;
-	}
-
-	public long getParentId() {
-		return parentId;
 	}
 
 	public short getSeq() {
@@ -120,14 +97,6 @@ public class Category implements Serializable {
 
 	public void setChannelCnt(int channelCnt) {
 		this.channelCnt = channelCnt;
-	}
-
-	public int getSubCatCnt() {
-		return subCatCnt;
-	}
-
-	public void setSubCatCnt(int subCatCnt) {
-		this.subCatCnt = subCatCnt;
 	}
 
 	public String getLang() {

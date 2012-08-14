@@ -95,10 +95,22 @@ public class NnUser implements Serializable {
 	@Column(jdbcType="VARCHAR", length=255)
 	private String facebookToken;
 
+	@Persistent
+	private boolean featured; 
+	
 	//used for testing without changing the program logic
     //isTemp set to true means it can be wiped out
 	@Persistent
 	private boolean isTemp; 
+
+	@Persistent
+	private int cntSubscribe;
+	
+	@Persistent
+	private int cntChannel;
+	
+	@Persistent
+	private int cntFollower;
 	
 	public NnUser(String email, String password, String name, short type) {
 		this.email = email;
@@ -283,5 +295,37 @@ public class NnUser implements Serializable {
 
 	public void setTemp(boolean isTemp) {
 		this.isTemp = isTemp;
-	}	
+	}
+
+	public boolean isFeatured() {
+		return featured;
+	}
+
+	public void setFeatured(boolean featured) {
+		this.featured = featured;
+	}
+
+	public int getCntSubscribe() {
+		return cntSubscribe;
+	}
+
+	public void setCntSubscribe(int cntSubscribe) {
+		this.cntSubscribe = cntSubscribe;
+	}
+
+	public int getCntChannel() {
+		return cntChannel;
+	}
+
+	public void setCntChannel(int cntChannel) {
+		this.cntChannel = cntChannel;
+	}
+
+	public int getCntFollower() {
+		return cntFollower;
+	}
+
+	public void setCntFollower(int cntFollower) {
+		this.cntFollower = cntFollower;
+	}
 }

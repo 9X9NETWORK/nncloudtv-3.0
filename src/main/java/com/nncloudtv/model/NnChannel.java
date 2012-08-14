@@ -58,9 +58,6 @@ public class NnChannel implements Serializable {
 	
 	@Persistent
 	private int programCnt;
-
-//	@Persistent
-//	private int userId;
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
@@ -123,18 +120,44 @@ public class NnChannel implements Serializable {
 	@Persistent
 	private short sorting;
 
+	@Persistent
+	private short poolType; //default 0, anything > 0 is "special"
+	public static final short POOL_FEATUERD = 1;
+	public static final short POOL_HOTTEST = 2;
+	public static final short POOL_TRENDING = 3; 
+	
 	@NotPersistent
 	private String recentlyWatchedProgram;  
 
+	@Persistent	
+	private int cntSubscribe; //subscription count
+
 	@NotPersistent	
-	private int subscriptionCnt;
+	private int cntView; //viewing count, in shard table
 	
 	@Persistent 
 	private Date createDate;
 		
 	@Persistent
 	private Date updateDate;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=25)	
+	private String userIdStr; //format: shard-userId, example: 1-1
+
+	@Persistent //maybe removed in the future, instead use view, or cache
+	@Column(jdbcType="VARCHAR", length=255)
+	private String userName;
+
 	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String transcodingUpdateDate; //timestamps from transcoding server			
@@ -289,14 +312,6 @@ public class NnChannel implements Serializable {
 		this.errorReason = errorReason;
 	}	
 
-	public int getSubscriptionCnt() {
-		return subscriptionCnt;
-	}
-
-	public void setSubscriptionCnt(int subscriptionCnt) {
-		this.subscriptionCnt = subscriptionCnt;
-	}
-
 	public void setTranscodingUpdateDate(String transcodingUpdateDate) {
 		this.transcodingUpdateDate = transcodingUpdateDate;
 	}
@@ -361,10 +376,64 @@ public class NnChannel implements Serializable {
 		this.isTemp = isTemp;
 	}
 
-//	public int getUserId() {
-//		return userId;
-//	}
-//	public void setUserId(int userId) {
-//		this.userId = userId;
-//	}	
+	public short getPoolType() {
+		return poolType;
+	}
+
+	public void setPoolType(short poolType) {
+		this.poolType = poolType;
+	}
+
+	public int getCntSubscribe() {
+		return cntSubscribe;
+	}
+
+	public void setCntSubscribe(int cntSubscribe) {
+		this.cntSubscribe = cntSubscribe;
+	}
+
+	public int getCntView() {
+		return cntView;
+	}
+
+	public void setCntView(int cntView) {
+		this.cntView = cntView;
+	}
+
+	public short getShard(String userId) {
+		if (userId == null)
+			return 0;
+		String[] splits = userId.split("-");
+		if (splits.length > 1)
+			return Short.parseShort(splits[0]);
+		else
+			return 1;
+	}
+	
+	public long getUserId(String userId) {
+		if (userId == null)
+			return 0;
+		String[] splits = userId.split("-");
+		if (splits.length > 1)
+			return Short.parseShort(splits[1]);
+		else
+			return Short.parseShort(userId);		
+	}
+	
+	public String getUserIdStr() {
+		return userIdStr;
+	}
+
+	public void setUserIdStr(String userIdStr) {
+		this.userIdStr = userIdStr;
+	}
+
+	public void setUserIdStr(short shard, long userId) {
+		if (shard == 0) {
+			userIdStr = String.valueOf(userId);
+		} else {
+			userIdStr = shard + "-" + userId;
+		}
+	}
+	
 }
