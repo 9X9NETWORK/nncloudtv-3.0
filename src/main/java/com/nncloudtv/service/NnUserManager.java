@@ -17,6 +17,7 @@ import com.nncloudtv.dao.NnUserDao;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
@@ -196,20 +197,7 @@ public class NnUserManager {
 	public NnUser findNNUser() {
 		return nnUserDao.findNNUser();
 	}
- 
-	
-	/*	
-		
-	public NnUser findAuthenticatedMsoUser(String email, String password, long msoId) {
-		return nnUserDao.findAuthenticatedMsoUser(email.toLowerCase(), password, msoId);
-	}
-				
-	public NnUser findByEmailAndMso(String email, Mso mso) {
-		return nnUserDao.findByEmailAndMsoId(email.toLowerCase(), mso.getId());
-	}
-	
-    */
-
+ 	
 	public void subscibeDefaultChannels(NnUser user) {
 		NnChannelManager channelMngr = new NnChannelManager();		
 		List<NnChannel> channels = channelMngr.findMsoDefaultChannels(user.getMsoId(), false);	
@@ -224,8 +212,20 @@ public class NnUserManager {
 		return nnUserDao.findByToken(token);
 	}
 	
-	public NnUser findById(long id) { 
-		return nnUserDao.findById(id);
+	//expect format shard-userId. example 1-1
+	//if "-" is not present, assuming it's shard 1	
+	public NnUser findById(String id) {
+		String[] splits = id.split("-");
+		short shard = 1;
+		long uid = 0;
+		if (splits.length == 2) {
+			uid = Long.parseLong(splits[1]);
+			if (splits[0].equals("2"))
+				shard = 2;
+		} else {
+			uid = Long.parseLong(id);
+		}
+		return this.findById(uid, shard);
 	}
 	
 	public NnUser findById(long id, short shard) {
@@ -251,4 +251,25 @@ public class NnUserManager {
 	public List<NnUser> search(String email, String name) {
 		return nnUserDao.search(email, name);
 	}
+	
+	public List<NnUser> findFeatured() {
+		return nnUserDao.findFeatured();
+	}
+	
+	public String composeCuratorInfo(NnUser user) {
+		String uid = user.getShard() + "-" + user.getId();
+        String[] info = {
+        		uid,
+        		user.getName(),
+        		user.getIntro(),
+        		user.getImageUrl(),
+        		"www.9x9.tv/curator/1",
+        		String.valueOf(user.getCntChannel()),
+        		String.valueOf(user.getCntSubscribe()),
+        		String.valueOf(user.getCntFollower()),
+               };
+        String output = NnStringUtil.getDelimitedStr(info);
+        return output;
+	}
+	
 }

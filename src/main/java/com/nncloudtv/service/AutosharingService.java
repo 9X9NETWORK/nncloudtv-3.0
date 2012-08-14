@@ -7,18 +7,14 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelAutosharingDao;
-import com.nncloudtv.dao.NnSetAutosharingDao;
 import com.nncloudtv.model.NnChannelAutosharing;
-import com.nncloudtv.model.NnSetAutosharing;
 
 @Service
 public class AutosharingService {
 	
 	protected static final Logger log = Logger.getLogger(AutosharingService.class.getName());
 	
-	private NnChannelAutosharingDao channelAutosharingDao = new NnChannelAutosharingDao();
-	private NnSetAutosharingDao setAutosharingDao= new NnSetAutosharingDao();
-	
+	private NnChannelAutosharingDao channelAutosharingDao = new NnChannelAutosharingDao();	
 	///////// channel autosharing /////////
 	
 	public List<NnChannelAutosharing> findByChannel(long channelId) {
@@ -49,30 +45,7 @@ public class AutosharingService {
 	public void delete(NnChannelAutosharing autosharing) {
 		channelAutosharingDao.delete(autosharing);
 	}
-	
-	///////// channel set autosharing /////////
-	
-	public List<NnSetAutosharing> findBySet(long setId) {
-		return setAutosharingDao.findBySet(setId);
-	}
-	
-	public List<NnSetAutosharing> findBySetAndMso(long setId, long msoId) {
-		return setAutosharingDao.findBySetAndMso(setId, msoId);
-	}
-	
-	public NnSetAutosharing findSetAutosharing(long msoId, long setId, short type) {
-		return setAutosharingDao.findSetAutosharing(msoId, setId, type);
-	}
-	
-	public void create(NnSetAutosharing autosharing) {
-		autosharing.setCreateDate(new Date());
-		setAutosharingDao.save(autosharing);
-	}
-	
-	public void delete(NnSetAutosharing autosharing) {
-		setAutosharingDao.delete(autosharing);
-	}
-	
+		
 	public List<NnChannelAutosharing> findByChannelAndType(long channelId, short type) {
 		return channelAutosharingDao.findByChannelAndType(channelId, type);
 		

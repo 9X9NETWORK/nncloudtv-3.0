@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnUserSubscribeDao;
-import com.nncloudtv.model.CntSubscribe;
+import com.nncloudtv.model.CntView;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
@@ -49,9 +49,9 @@ public class NnUserSubscribeManager {
 		s.setUpdateDate(now);
 		subDao.save(user, s);
 		CntSubscribeManager cntMngr = new CntSubscribeManager();
-		CntSubscribe cnt = cntMngr.findByChannel(channelId);
+		CntView cnt = cntMngr.findByChannel(channelId);
 		if (cnt == null) {
-			cnt = new CntSubscribe(channelId);
+			cnt = new CntView(channelId);
 		} else {
 			cnt.setCnt(cnt.getCnt()+1);
 		}
@@ -105,11 +105,10 @@ public class NnUserSubscribeManager {
 			if (c != null) {
 				c.setSeq(s.getSeq());
 				c.setType(s.getType());
-				CntSubscribe cnt = cntMngr.findByChannel(c.getId());			
+				CntView cnt = cntMngr.findByChannel(c.getId());			
 				if (cnt != null) {
-					c.setSubscriptionCnt(cnt.getCnt());
-				}
-								
+					c.setCntSubscribe(cnt.getCnt());
+				}								
 				channels.add(c);
 			}
 		}

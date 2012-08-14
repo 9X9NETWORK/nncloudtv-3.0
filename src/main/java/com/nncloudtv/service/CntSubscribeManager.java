@@ -3,7 +3,7 @@ package com.nncloudtv.service;
 import java.util.logging.Logger;
 
 import com.nncloudtv.dao.CntSubscribeDao;
-import com.nncloudtv.model.CntSubscribe;
+import com.nncloudtv.model.CntView;
 
 public class CntSubscribeManager {
 	
@@ -11,10 +11,10 @@ public class CntSubscribeManager {
 	
 	CntSubscribeDao cntDao = new CntSubscribeDao(); 
 	
-	public void create(CntSubscribe log) {
+	public void create(CntView log) {
 		this.save(log);
 	}
-	public CntSubscribe save(CntSubscribe log) {
+	public CntView save(CntView log) {
 		return cntDao.save(log);
 	}
 		
@@ -26,7 +26,7 @@ public class CntSubscribeManager {
 		return cntDao.findTotalCountBySet(setId);
 	}
 	
-	public CntSubscribe findByChannel(long channelId) {
+	public CntView findByChannel(long channelId) {
 		return cntDao.findByChannel(channelId);
 	}
 	

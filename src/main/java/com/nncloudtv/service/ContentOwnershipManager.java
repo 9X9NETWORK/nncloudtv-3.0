@@ -9,11 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.ContentOwnershipDao;
 import com.nncloudtv.dao.NnChannelDao;
-import com.nncloudtv.dao.NnSetDao;
 import com.nncloudtv.model.ContentOwnership;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnSet;
 
 @Service
 public class ContentOwnershipManager {
@@ -21,21 +19,8 @@ public class ContentOwnershipManager {
 	protected static final Logger log = Logger.getLogger(ContentOwnershipManager.class.getName());
 	
 	private ContentOwnershipDao ownershipDao = new ContentOwnershipDao();
-	private NnSetDao setDao = new NnSetDao();
 	private NnChannelDao channelDao = new NnChannelDao();
-	
-	public List<NnSet> findOwnedSetsByMso(long msoId) {
-		List<ContentOwnership> ownershipList = ownershipDao.findByMsoIdAndContentType(msoId, ContentOwnership.TYPE_SET);
 		
-		ArrayList<Long> setIds = new ArrayList<Long>();
-		for (ContentOwnership ownership : ownershipList) {
-			setIds.add(ownership.getContentId());
-		}
-		
-		return setDao.findAllByIds(setIds);
-		
-	}
-	
 	public List<NnChannel> findOwnedChannelsByMsoId(long msoId) {		
 		List<ContentOwnership> ownershipList = ownershipDao.findByMsoIdAndContentType(msoId, ContentOwnership.TYPE_CHANNEL);
 		
@@ -57,26 +42,20 @@ public class ContentOwnershipManager {
 		ownershipDao.save(own);
 	}
 
-	public void create(ContentOwnership own, Mso mso, NnSet set) {
-		
+	public void create(ContentOwnership own, Mso mso) {		
 		own.setContentType(ContentOwnership.TYPE_SET);
-		own.setContentId(set.getId());
 		own.setMsoId(mso.getId());
 		own.setCreateDate(new Date());
-		own.setCreateMode(ContentOwnership.MODE_CURATE);
-		
+		own.setCreateMode(ContentOwnership.MODE_CURATE);		
 		ownershipDao.save(own);
 	}
 
-	public List<ContentOwnership> findAllByMsoId(long msoId) {
-		
+	public List<ContentOwnership> findAllByMsoId(long msoId) {		
 		return ownershipDao.findAllByMsoId(msoId);
 	}
 
-	public List<NnChannel> create(Mso mso, List<NnChannel> channelList) {
-		
-		List<NnChannel> results = new ArrayList<NnChannel>();
-		
+	public List<NnChannel> create(Mso mso, List<NnChannel> channelList) {		
+		List<NnChannel> results = new ArrayList<NnChannel>();		
 		for (NnChannel channel : channelList) {
 			ContentOwnership ownership = this.findByMsoIdAndChannelId(mso.getId(), channel.getId());
 			if (ownership != null) {

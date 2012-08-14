@@ -20,7 +20,6 @@ import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.model.NnSet;
 
 public class PlayerService {
 	
@@ -43,20 +42,6 @@ public class PlayerService {
 			CookieHelper.deleteCookie(resp, CookieHelper.MSO); //delete brand cookie
 		}
 		return model;		
-	}
-
-	public Model prepareSetInfo(Model model, String name,
-			HttpServletResponse resp) {		
-		NnSetManager setMngr = new NnSetManager();
-		NnSet set = setMngr.findBybeautifulUrl(name);
-		if (set != null) {
-			log.info("found set name = " + name);
-			model.addAttribute("fbName", NnStringUtil.htmlSafeChars(set.getName()));
-			model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(set.getIntro()));
-			model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(set.getImageUrl()));
-		}
-		
-		return model;
 	}
 	
 	public Model prepareEpisode(Model model, String pid,
@@ -189,24 +174,6 @@ public class PlayerService {
 	    if (m.find()) {	    	
 	    	landing = m.group(2);
 	    }
-	    //if none is provided, use a recommended set to begin with
-	    if (landing == null && ch == null) {
-	    	NnSetManager setMngr = new NnSetManager();
-	    	List<NnSet> sets = setMngr.findFeaturedSets(LangTable.LANG_EN);
-	    	landing = sets.get(0).getBeautifulUrl();
-	    }
-	    //if set is not null, ch is set here
-	    if (landing != null) {
-	    	NnSetManager setMngr = new NnSetManager();
-	    	NnSet set = setMngr.findBybeautifulUrl(landing);
-	    	if (set != null) {
-	    		model.addAttribute("crawlSetTitle", set.getName());
-	    		List<NnChannel> channels = setMngr.findPlayerChannels(set);	    		
-	    		if (channels.size() > 0) {
-	    			ch = String.valueOf(channels.get(0).getId());
-	    		}
-	    	}
-	    }
 	    log.info("ch:" + ch + ";ep:" + ep + ";youtubeEp:" + youtubeEp + ";set:" + landing);	    
 	    
 	    //-- channel/episode info --
@@ -269,21 +236,6 @@ public class PlayerService {
 			}
 		}
 		
-		//-- set info -- 
-		String listRecommended = service.listRecommended(lang);		
-		String[] sets = listRecommended.split("\n");
-		for (int i=2; i<sets.length; i++) {
-			String[] ele = sets[i].split("\t");
-			if (!model.containsAttribute("crawlSetTitle") && i==2) {
-				model.addAttribute("crawlSetTitle", ele[1]);
-			}
-			int seq = i -1;
-			model.addAttribute("crawlRecommendTitle" + seq, ele[1]);
-			model.addAttribute("crawlRecommendDesc" + seq, ele[2]);
-			model.addAttribute("crawlRecommendThumb" + seq, ele[3]);
-			model.addAttribute("crawlRecommendCount" + seq, ele[4]);
-		}
-
 		return model;
 	}
 }

@@ -2,6 +2,7 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +14,13 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.NnProgramDao;
+import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CntSubscribe;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnUser;
 
 @Service
@@ -93,7 +92,7 @@ public class NnChannelManager {
 		// piwik
 		if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
 			
-			PiwikLib.createPiwikSite(0, channel.getId());
+			PiwikLib.createPiwikSite(channel.getId());
 		}
 		
 		return channel;
@@ -142,20 +141,6 @@ public class NnChannelManager {
 	}		
 	
 	public void processChannelRelatedCounter(NnChannel[] channels) {
-		NnChannel original = channels[0];
-		NnChannel channel = channels[1];
-		if (original == null && channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
-			NnSetManager setMngr = new NnSetManager();
-			CategoryManager catMngr = new CategoryManager();
-			List<NnSet> sets = setMngr.findSetsByChannel(channel.getId());
-			List<Category> categories = catMngr.findBySets(sets);
-			for (NnSet set : sets) {
-				set.setChannelCnt(set.getChannelCnt()+1);
-			}
-			for (Category c : categories) {
-				c.setChannelCnt(c.getChannelCnt()+1);
-			}
-		}
 	}
 		
 	public static List<NnChannel> search(String queryStr, boolean all) {
@@ -207,7 +192,6 @@ public class NnChannelManager {
 	public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {		
 		//find msoIpg
 		MsoIpgManager msoIpgMngr = new MsoIpgManager();
-		CntSubscribeManager cntMngr = new CntSubscribeManager();		
 		List<MsoIpg>msoIpg = msoIpgMngr.findAllByMsoId(msoId);
 		//retrieve channels
 		List<NnChannel> channels = new ArrayList<NnChannel>();
@@ -216,10 +200,6 @@ public class NnChannelManager {
 			if (channel != null) {
 				channel.setType(i.getType());
 				channel.setSeq(i.getSeq());
-				if (needSubscriptionCnt) {
-					CntSubscribe cnt = cntMngr.findByChannel(channel.getId());
-					channel.setSubscriptionCnt(cnt.getCnt());
-				}
 				channels.add(channel);
 			}
 		}
@@ -260,25 +240,69 @@ public class NnChannelManager {
 		channels.addAll(soap);
 		return channels;
 	}
+
+	/**
+	 * (1)featured: randomized; mutually exclusive from "recommended" or "hottest"; 
+	 *    comes from the 50-100 channels first picked by shawn (ie: "special" channels)
+	 * (2)recommended: initial user - randomize 
+	 *    (same as featured, must be mutually exclusive from "featured" or "hottest"); returning user - based on history
+	 * (3)hottest: most viewed within the last 24 hours 
+	 *    (within the 50-100 channels; ie: "special" channels); 
+	 *    also mutually exclusive from "featured" or "recommended"
+	 */
+	public List<NnChannel> findHot() {
+		List<NnChannel> hot = dao.findSpecial(NnChannel.POOL_HOTTEST);
+		return hot;
+	}
 	
-	public List<NnChannel> findFeatured() {
-		List<NnChannel> channels = new NnSetManager().findChannelsById(3);
-		return channels;
+	//note, recommended goes before featured for "exclusive" result
+	//since recommended might achieve from some engine	
+	public List<NnChannel> findRecommended() {
+		List<NnChannel> channels = dao.findSpecial(NnChannel.POOL_FEATUERD);
+		List<NnChannel> recommended = new ArrayList<NnChannel>();
+		int i=0;
+		for (NnChannel c : channels) {
+			recommended.add(c);
+			i++;
+			if (i > 9)
+				break;
+		}
+		return recommended;
 	}
 	
 	public List<NnChannel> findTrending() {
-		List<NnChannel> channels = new NnSetManager().findChannelsById(4);		
+		List<NnChannel> channels = dao.findSpecial(NnChannel.POOL_TRENDING);	
 		return channels;
 	}
-
-	public List<NnChannel> findHot() {
-		List<NnChannel> channels = new NnSetManager().findChannelsById(5);		
-		return channels;
+	
+	//featured depends on recommended
+	public List<NnChannel> findFeatured(List<NnChannel> exclusive) {
+		List<NnChannel> channels = dao.findSpecial(NnChannel.POOL_FEATUERD);
+		List<NnChannel> featured = new ArrayList<NnChannel>();
+		HashMap<Long, NnChannel> map = new HashMap<Long, NnChannel>();
+		for (NnChannel c : exclusive) {
+			map.put(c.getId(), c);
+		}
+		int i=0;
+		for (NnChannel c : channels) {
+			if (!map.containsKey(c.getId())) {
+				featured.add(c);
+			}
+			i++;
+			if (i > 9)
+				break;
+		}
+		return featured;
 	}
-
-	public List<NnChannel> findRecommended() {
-		List<NnChannel> channels = new NnSetManager().findChannelsById(6);		
-		return channels;
+	
+	public int addCntView(boolean readOnly, long channelId) {		
+		String counterName = "cid" + channelId;
+		CounterFactory factory = new CounterFactory();
+		ShardedCounter counter = factory.getOrCreateCounter(counterName);
+		if (!readOnly) {
+			counter.increment();
+		}
+		return counter.getCount();
 	}
 	
 	public List<NnChannel> findByChannelIds(List<Long> channelIds) {

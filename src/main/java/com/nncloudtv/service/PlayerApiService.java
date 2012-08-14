@@ -32,7 +32,7 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CntSubscribe;
+import com.nncloudtv.model.CntView;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -43,7 +43,6 @@ import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.NnGuest;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserPref;
@@ -252,72 +251,25 @@ public class PlayerApiService {
 		
 		String[] result = {"", "", ""};
 		CategoryManager catMngr = new CategoryManager();
-		NnSetManager setMngr = new NnSetManager();
 		
-		//if it's a set, find channel info
-		result[0] = "id" + "\t" + id + "\n";
-		if (id.startsWith("s")) {
-			long csId = Long.parseLong(id.substring(1, id.length()));
-			NnSet set = setMngr.findById(csId);
-			if (set != null) {
-				result[0] += "piwik" + "\t" + set.getPiwik() + "\n";
-			}
-			List<NnChannel> channels = setMngr.findPlayerChannels(set);			
-			for (NnChannel c : channels) {
-				c.setSorting(NnChannelManager.getDefaultSorting(c));
-				result[2] += this.composeChannelLineupStr(c, mso) + "\n";
-			}
-			return this.assembleMsgs(NnStatusCode.SUCCESS, result);
-		}
-		
-		List<Category> categories = catMngr.findPlayerCategories(Long.parseLong(id), lang);
-		//if it's the end of category leaf, find set info
-		if (categories.size() == 0) {
-			List<NnSet> sets = catMngr.findPlayerSetsByCategory(Long.parseLong(id));
-			for (NnSet s : sets) {
-				String name =  s.getName();
-				int cnt = s.getChannelCnt();
-				String[] str = {"s" + String.valueOf(s.getId()), 
-						        name, 
-						        String.valueOf(cnt), "ch"};				
-				result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
-			}
-			return this.assembleMsgs(NnStatusCode.SUCCESS, result);			
-		}
-		
-		//if it's just categories, find categories
+		result[0] = "id" + "\t" + id + "\n";		
+		List<Category> categories = catMngr.findPlayerCategories(lang);		
 		for (Category c : categories) {
 			String name =  c.getName();
 			int cnt = c.getChannelCnt();
-			String subItemHint = "cat"; //what's under this level
-			if (c.getSubCatCnt() == 0)
-				subItemHint = "set";
+			String subItemHint = "ch"; //what's under this level
 			String[] str = {String.valueOf(c.getId()), 
 					        name, 
 					        String.valueOf(cnt), 
 					        subItemHint};				
 			result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
 		}
+
+		//flatten result process
 		if (id.equals("0") && flatten) {
 			List<String> flattenResult = new ArrayList<String>();
 			flattenResult.add(result[0]);
 			flattenResult.add(result[1]);
-			for (Category c : categories) {				
-				if (c.getName().equals("All") || c.getName().equals("頻道總覽")) { //shortcut
-					List<NnSet> list = catMngr.findPlayerSetsByCategory(c.getId());
-					int setCnt = 0;
-					String s = "";
-					for (NnSet cs : list) {
-						String name =  cs.getName();
-						int cnt = cs.getChannelCnt();
-						String[] str = {"s" + String.valueOf(cs.getId()), name, String.valueOf(cnt), "ch"};				
-						s += NnStringUtil.getDelimitedStr(str) + "\n";
-						setCnt++;
-					}
-					if (s.length() > 0)
-						flattenResult.add(s);
-				}
-			}
 			String size[] = new String[flattenResult.size()];
 			return this.assembleMsgs(NnStatusCode.SUCCESS, flattenResult.toArray(size));
 		} else {
@@ -379,50 +331,7 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}    
     
-    
-    public String setInfo(String id, String beautifulUrl) {
-        if (id == null && beautifulUrl == null) {
-            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-        }
-        if (id != null && id.startsWith("s")) id = id.replace("s", "");
-        NnSetManager setMngr = new NnSetManager();
-        NnSet set = null;
-        if (id != null) {
-            set = setMngr.findById(Long.parseLong(id));
-        } else {
-            set = setMngr.findBybeautifulUrl(beautifulUrl);
-        }
-        if (set == null)
-            return this.assembleMsgs(NnStatusCode.SET_INVALID, null);            
-        
-        List<NnChannel> channels = setMngr.findPlayerChannels(set);
-        String result[] = {"", "", ""};
-
-        Mso csMso = msoMngr.findNNMso();
-        //mso info
-        result[0] += assembleKeyValue("name", csMso.getName());
-        result[0] += assembleKeyValue("imageUrl", csMso.getLogoUrl()); 
-        result[0] += assembleKeyValue("intro", csMso.getIntro());            
-        //set info
-        result[1] += assembleKeyValue("id", String.valueOf(set.getId()));
-        result[1] += assembleKeyValue("name", set.getName());
-        result[1] += assembleKeyValue("imageUrl", set.getImageUrl());
-        result[1] += assembleKeyValue("piwik", set.getPiwik());
-        //channel info
-        for (NnChannel c : channels) {
-			if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic()) { //!!!!
-				c.setSorting(NnChannelManager.getDefaultSorting(c));
-			}
-            result[2] += this.composeChannelLineupStr(c, csMso) + "\n";                                                    
-        }        
-        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
-	}	
-    
-    
-    private String composeChannelLineupStr(NnChannel c, Mso mso) {
-		CntSubscribeManager cntMngr = new CntSubscribeManager();
-		CntSubscribe s= cntMngr.findByChannel(c.getId());							
-		if (s != null) {c.setSubscriptionCnt(s.getCnt());}		
+    private String composeChannelLineupStr(NnChannel c) {
 		Random r = new Random();
 		int viewCount = r.nextInt(300);
 		String[] url1 = {
@@ -468,11 +377,11 @@ public class PlayerApiService {
 					    c.getPiwik(),
 					    String.valueOf(c.getRecentlyWatchedProgram()),
 					    c.getOriName(),
-					    String.valueOf(c.getSubscriptionCnt()),
+					    String.valueOf(c.getCntSubscribe()),
 					    String.valueOf(viewCount), //view count
-					    "hello,world", //tags
-					    "1", //curator id
-					    "Snowball", //curator name
+					    c.getTag(),
+					    c.getUserIdStr(), //curator id
+					    c.getUserName()
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);
@@ -569,6 +478,25 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
+    public String categoryInfo(String id) {
+        if (id == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        CategoryManager catMngr = new CategoryManager();
+        long cid = Long.parseLong(id);
+        Category cat = catMngr.findById(cid);
+        List<NnChannel> channels = catMngr.findChannels(cid, true);
+        String result[] = {"", ""};
+        //category info
+        result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
+        result[0] += assembleKeyValue("name", cat.getName());
+        //channel info
+        for (NnChannel c : channels) {
+			c.setSorting(NnChannelManager.getDefaultSorting(c));
+				result[1] += this.composeChannelLineupStr(c) + "\n";                                                    
+        }
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
+    }
     public String channelLineup(String userToken, boolean userInfo, String channelIds, boolean setInfo, boolean isRequired, String stack) {
         //verify input    	
         if ((userToken == null && userInfo == true) || 
@@ -673,7 +601,7 @@ public class PlayerApiService {
 			if (user != null && watchedMap.containsKey(c.getId())) {
 				c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
 			}
-			channelOutput += this.composeChannelLineupStr(c, mso) + "\n";
+			channelOutput += this.composeChannelLineupStr(c) + "\n";
 		}
 
 		if (stack == null) {
@@ -681,14 +609,18 @@ public class PlayerApiService {
 		}
 		if (stack != null) {			
 			String[] cond = stack.split(",");
-			for (String s : cond) {
-				if (s.equals("featured")) {
-					List<NnChannel> chs = chMngr.findFeatured();
+			List<NnChannel> exclusive = new ArrayList<NnChannel>();
+			for (String s : cond) {			
+				//note, recommended goes before featured for "exclusive" result
+				//since recommended might achieve from some engine
+				if (s.equals("recommended")) {
+					List<NnChannel> chs = chMngr.findRecommended();
+					exclusive.addAll(chs);
 					String ouput = this.tmp(chs);
 				    result.add(ouput);			   
 				}
-				if (s.equals("recommended")) {
-					List<NnChannel> chs = chMngr.findRecommended();
+				if (s.equals("featured")) {
+					List<NnChannel> chs = chMngr.findFeatured(exclusive);
 					String ouput = this.tmp(chs);
 				    result.add(ouput);			   
 				}
@@ -699,6 +631,7 @@ public class PlayerApiService {
 				}
 				if (s.equals("trending")) {
 					List<NnChannel> chs = chMngr.findTrending();
+					System.out.println("chs:" + chs.size());
 					String ouput = this.tmp(chs);
 				    result.add(ouput);			   
 				}
@@ -711,8 +644,8 @@ public class PlayerApiService {
         
     private String tmp(List<NnChannel> channels) {
     	String output = "";
-    	for (int i=0; i<9; i++) {    	
-    		output += this.composeChannelLineupStr(channels.get(i), mso) + "\n";    		
+    	for (int i=0; i<channels.size(); i++) {    	
+    		output += this.composeChannelLineupStr(channels.get(i)) + "\n";    		
     	}
     	return output;
     }
@@ -1082,26 +1015,6 @@ public class PlayerApiService {
 		map.put("u", user);
 		return map;
     }
-	
-	public String listRecommended(String lang) {
-		lang = this.checkLang(lang);	
-        if (lang == null)
-            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);				
-		NnSetManager setMngr = new NnSetManager();
-		List<NnSet> sets = setMngr.findFeaturedSets(lang);
-		String[] result = {""};
-		for (NnSet set : sets) {
-			String[] obj = {
-				String.valueOf(set.getId()),
-				set.getName(),
-				set.getIntro(),
-				set.getImageUrl(),
-				String.valueOf(set.getChannelCnt()),
-			};
-			result[0] += NnStringUtil.getDelimitedStr(obj) + "\n";			
-		}
-		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
-	}
 
 	private int checkCaptcha(NnGuest guest, String fileName, String name) {
 		NnGuestManager guestMngr = new NnGuestManager();
@@ -1407,7 +1320,7 @@ public class PlayerApiService {
 		}		
 		NnChannel channel = new NnChannelManager().findById(share.getChannelId());		
 		if (channel != null) {
-			result[1] = this.composeChannelLineupStr(channel, mso);
+			result[1] = this.composeChannelLineupStr(channel);
 		}
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}
@@ -1459,7 +1372,7 @@ public class PlayerApiService {
 		}
 		if (channelInfo) {
 			for (NnChannel c : channels) {
-				result[1] += this.composeChannelLineupStr(c, mso) + "\n";
+				result[1] += this.composeChannelLineupStr(c) + "\n";
 			}
 		}
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
@@ -1492,7 +1405,7 @@ public class PlayerApiService {
 		List<NnChannel> searchResults = NnChannelManager.search(text, false);
 		String[] result = {""};
 		for (NnChannel c : searchResults) {
-			result[0] += this.composeChannelLineupStr(c, mso) + "\n";
+			result[0] += this.composeChannelLineupStr(c) + "\n";
 		}
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}
@@ -1533,7 +1446,7 @@ public class PlayerApiService {
 		channel.setContentType(NnChannel.CONTENTTYPE_MIXED); // a channel type in podcast does not allow user to add program in it, so change to mixed type
 		channel.setTemp(isTemp);
 		channelMngr.save(channel);
-		String[] result = {this.composeChannelLineupStr(channel, mso)};		
+		String[] result = {this.composeChannelLineupStr(channel)};		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);		
 	}
 	
@@ -1572,8 +1485,6 @@ public class PlayerApiService {
 	/**
 	 * 1. user info
 	 * 2. obtain list of recommended sets for this user's language
-	 * 3. obtain first recommended set
-	 * 4. obtain list of programs in first channel of first recommended set
 	 */
 	public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
 		//1. user info
@@ -1606,48 +1517,6 @@ public class PlayerApiService {
 			lang = LangTable.LANG_EN;
 		}
 		log.info("<<< quick login >>> lang = " + lang);
-		String recommended = this.listRecommended(lang);
-		data.add(recommended);
-		if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}		
-		//3. obtain first recommended set
-		int recommendedIndex = recommended.indexOf("--\n") + 3;
-		String setId = "";
-		String setInfo = this.assembleMsgs(NnStatusCode.SET_INVALID, null);;
-		try { 
-			String setStr = recommended.substring(recommendedIndex);
-			setId = setStr.split("\n")[0].split("\t")[0];
-		} catch (Exception e) {			
-			data.add(setInfo);
-			return this.assembleSections(data);
-		}
-		log.info("<<< quick login >>> setId = " + setId);
-		setInfo = this.setInfo(setId, null);
-		data.add(setInfo);
-		//4. obtain list of programs in first channel of first recommended set					 
-		int channelIndex = setInfo.lastIndexOf("--\n") + 3;
-		String programInfo = this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
-		try {
-			String channelStr = setInfo.substring(channelIndex);
-			String channelId = channelStr.split("\n")[0].split("\t")[0];
-			programInfo = this.programInfo(channelId, null, null, false, "0", "0");
-			log.info("<<< quick login >>> channelId = " + channelId);
-		} catch (Exception e) {
-			data.add(programInfo);
-			return this.assembleSections(data);
-		}
-		data.add(programInfo);
-		//5. featured curators
-		String curatorInfo = this.curator(token, "featured");
-		data.add(curatorInfo);
-		//6. trending
-		String trending = this.channelLineup (token, false, null, false, false, "trending");
-		data.add(trending);
-		if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}
-
 		return this.assembleSections(data);
 	}
 
@@ -1761,6 +1630,7 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
+	@SuppressWarnings({ "rawtypes" })
 	public String notifySubscriber(String userToken, String channel, HttpServletRequest req) {
 		System.out.println("notifySubscriber");
 		NnUser user = userMngr.findByToken(userToken);			
@@ -1802,7 +1672,7 @@ public class PlayerApiService {
 			String ch = (String) cmap.get(u.getEmail());
 			String subject = UserInvite.getNotifySubject(ch);
 			String content = UserInvite.getNotifyContent(ch);
-			log.info("-------------- send to " + u.getEmail() + "-----------------");
+			log.info("send to " + u.getEmail());
 			log.info("subject:" + subject);
 			log.info("content:" + content);
 			NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);		
@@ -1810,45 +1680,24 @@ public class PlayerApiService {
 		} 		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
-
+	
 	public String curator(String id, String stack) {
-				
-        String[] ori = {
-        		"1",
-        		"Snowball",
-        		"Hi, Welcome to visit my channels",
-        		"http://3.bp.blogspot.com/-zEgDIaFRgXw/T7DpJJASGzI/AAAAAAAADHs/na-zvBM47Fo/s1600/debt-snowball.gif",
-        		"www.9x9.tv/curator/1",
-        		"13", //number of channels
-        		"20", //number of followings
-        		"3500", //number of followers        		
-               };
-        String output = NnStringUtil.getDelimitedStr(ori);
-        if (stack != null && stack.equals("featured")) {
-            String[] a1 = {
-            		"2",
-            		"Biker",
-            		"Hi, Welcome to my biking channels",
-            		"http://www.robertnkatz.com/photos/cycling.jpg",
-            		"www.9x9.tv/curator/2",
-            		"15", //number of channels
-            		"25", //number of followings
-            		"1500", //number of followers        		
-                   };
-            output += "\n" + NnStringUtil.getDelimitedStr(a1);
-            String[] a2 = {
-            		"3",
-            		"Runner",
-            		"Hi, Join my marathon world",
-            		"http://www.siberianarts.com/runner.jpg",
-            		"www.9x9.tv/curator/3",
-            		"20", //number of channels
-            		"1", //number of followings
-            		"200", //number of followers
-                   };
-            output += "\n" + NnStringUtil.getDelimitedStr(a2) + "\n";
-        }
-        String[] result = {output};
+		if (id == null && stack == null) {
+			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+		}
+		List<NnUser> users = new ArrayList<NnUser>();
+		if (id != null) {
+			NnUser user = userMngr.findById(id);
+			if (user == null)
+				return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+			users.add(user);
+		} else {		
+			users = userMngr.findFeatured();
+		}
+		String[] result = {""};
+		for (NnUser u :users) {
+			result[0] += userMngr.composeCuratorInfo(u) + "\n";
+		}        
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}
 }

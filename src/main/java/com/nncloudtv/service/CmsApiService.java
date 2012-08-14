@@ -1,21 +1,10 @@
 package com.nncloudtv.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.springframework.stereotype.Service;
-
-import com.nncloudtv.dao.CategoryToNnSetDao;
-import com.nncloudtv.dao.NnSetToNnChannelDao;
-import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryToNnSet;
-import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnSet;
-import com.nncloudtv.model.NnSetToNnChannel;
 
 @Service
 public class CmsApiService {
+	/*
 	protected static final Logger log = Logger.getLogger(CmsApiService.class.getName());
 	
 	private NnSetManager setMngr = new NnSetManager();
@@ -92,4 +81,5 @@ public class CmsApiService {
 		
 		return results;
 	}
+	*/
 }
