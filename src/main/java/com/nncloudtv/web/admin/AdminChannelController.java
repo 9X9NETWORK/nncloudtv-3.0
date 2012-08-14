@@ -26,12 +26,8 @@ import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnSet;
-import com.nncloudtv.model.NnSetToNnChannel;
 import com.nncloudtv.service.CntSubscribeManager;
 import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.NnSetManager;
-import com.nncloudtv.service.NnSetToNnChannelManager;
 
 @Controller
 @RequestMapping("admin/channel")
@@ -293,23 +289,7 @@ public class AdminChannelController {
 			channel.setProgramCnt(programCnt);
 		}		
 		channelMngr.save(channel);
-		
-		if (status != null) {
-			NnSetManager setMngr = new NnSetManager();
-			NnSetToNnChannelManager csMngr = new NnSetToNnChannelManager();
-			List<NnSetToNnChannel> csList = csMngr.findByChannel(channel.getId());
-			List<Long> setIds = new ArrayList<Long>();
-			for (NnSetToNnChannel cs : csList) {
-				setIds.add(cs.getSetId());
-			}
-			List<NnSet> sets = setMngr.findByIds(setIds);
-			for (NnSet s : sets) {
-				List<NnChannel> channels = setMngr.findPublicChannelsById(s.getId());
-				s.setChannelCnt(channels.size());
-				setMngr.save(s);				
-			}			
-		}
-		
+				
 		return "OK";
 	}	
 	

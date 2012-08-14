@@ -24,15 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.model.ContentOwnership;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
-import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.service.ContentOwnershipManager;
 import com.nncloudtv.service.MsoManager;
-import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.NnUserManager;
 
 @Controller
@@ -78,7 +73,6 @@ public class AdminMsoController {
 		
 		NnUserManager userMngr = new NnUserManager();
 		MsoManager msoMngr = new MsoManager();
-		NnSetManager setMngr = new NnSetManager();
 		
 		Mso found = msoMngr.findByName(name);
 		if (found != null) {
@@ -101,16 +95,7 @@ public class AdminMsoController {
 		
 		NnUser user = new NnUser(contactEmail, password, name, userType, mso.getId());
 		userMngr.create(user, req, NnUser.SHARD_DEFAULT);
-		
-		NnSet set = new NnSet(name, name, true);
-		set.setBeautifulUrl(name);
-		set.setPublic(false); // to prevent set to appear to directory
-		setMngr.create(set, new ArrayList<NnChannel>());
-		
-		//channelSet ownership
-		ContentOwnershipManager ownershipMngr = new ContentOwnershipManager();
-		ownershipMngr.create(new ContentOwnership(), mso, set);
-		
+				
 		return "OK";
 	}
 

@@ -21,10 +21,7 @@ import com.nncloudtv.lib.JqgridHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryToNnSet;
-import com.nncloudtv.model.NnSet;
 import com.nncloudtv.service.CategoryManager;
-import com.nncloudtv.service.NnSetManager;
 
 @Controller
 @RequestMapping("admin/category")
@@ -37,7 +34,7 @@ public class AdminCategoryController {
 	@Autowired
 	public AdminCategoryController(CategoryManager categoryMngr) {
 		this.categoryMngr = categoryMngr;
-	}	
+	}
 
 	@ExceptionHandler(Exception.class)
 	public String exception(Exception e) {
@@ -53,19 +50,10 @@ public class AdminCategoryController {
 	 * @return status in text
 	 */
 	@RequestMapping(value="addSet")
-	public @ResponseBody String addSet(
+	public @ResponseBody String addCh(
 			             @RequestParam(required = false) long category,
-			             @RequestParam(required = false) long set,
+			             @RequestParam(required = false) long ch,
 	                     OutputStream out) {
-		System.out.println("category:" + category + ";set=" + set);
-		NnSetManager csMngr = new NnSetManager();
-		NnSet cs = csMngr.findById(set);
-		Category cat = categoryMngr.findById(category);
-		if (cs == null)
-			return "Set does not exist";
-		if (cat == null)
-			return "Category does not exist";
-		categoryMngr.addSet(cat, cs);
 		return "OK";		
 	}
 
@@ -76,15 +64,12 @@ public class AdminCategoryController {
 	 * @param id
 	 * @return status in text
 	 */
-	@RequestMapping(value="deleteSet")
-	public @ResponseBody String deleteSet(
+	@RequestMapping(value="deleteCh")
+	public @ResponseBody String deleteCh(
 			             @RequestParam(required = false) long category,
 			             @RequestParam(required = false) long id,
 	                     OutputStream out) {
-		if(categoryMngr.deleteSet(category, id))
-			return "OK";
-		else
-			return "there are nothing can delete";
+		return "OK";
 	}
 	
 	/**
@@ -104,6 +89,9 @@ public class AdminCategoryController {
 	                    @RequestParam(value = "sidx")     String       sortIndex,
 	                    @RequestParam(value = "sord")     String       sortDirection,
 	                    OutputStream out) {
+		System.out.println("category:" + categoryId + ";page:" + currentPage + ";rows:" + 
+				rowsPerPage + ";sidex:" + sortIndex + ";sortDirection:sortDirection");
+		
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 		
@@ -117,34 +105,12 @@ public class AdminCategoryController {
 			return;
 		}
 		
-		String filter = "categoryId == " + categoryId;
-		int totalRecords = categoryMngr.totalCatToSet(filter);
+		//String filter = "categoryId == " + categoryId;
+		//int totalRecords = categoryMngr.totalCatToSet(filter);
+		int totalRecords = 10;
 		int totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);
 		if (currentPage > totalPages)
 			currentPage = totalPages;
-
-		//check if data exist		
-		List<CategoryToNnSet> listCatToSet =  categoryMngr.listCatToSet(currentPage, rowsPerPage, sortIndex, sortDirection, filter);
-		NnSetManager setMngr = new NnSetManager();
-		NnSet set = null;
-		
-		for (CategoryToNnSet catToSet : listCatToSet) {
-			System.out.println(catToSet.getSetId());
-			set = setMngr.findById(catToSet.getSetId());
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			List<Object> cell = new ArrayList<Object>();
-			if (set != null) {
-				cell.add(categoryId);
-				cell.add(set.getId());
-				cell.add(set.getName());
-				cell.add(set.isPublic());
-				cell.add(set.getLang());
-				map.put("id", set.getId());
-				map.put("cell", cell);
-				dataRows.add(map);
-			}
-		}
 		
 		try {
 			mapper.writeValue(out, JqgridHelper.composeJqgridResponse(currentPage, totalPages, totalRecords, dataRows));
@@ -173,7 +139,7 @@ public class AdminCategoryController {
 	                 @RequestParam(required = false) String       searchOper,
 	                 @RequestParam(required = false) String       searchString,
 	                                                 OutputStream out) {
-		
+		logger.info("==== category listing ====");
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> dataRows = new ArrayList<Map<String, Object>>();
 		
@@ -240,6 +206,7 @@ public class AdminCategoryController {
 									   @RequestParam(required=true) String lang,
 									   @RequestParam short seq,
 									   @RequestParam(required=false) String isPublic) {
+		System.out.println("category create name=" + name);
 		Category category = new Category(name, Boolean.parseBoolean(isPublic));
 		category.setLang(lang);
 		category.setPublic(Boolean.parseBoolean(isPublic));
@@ -247,7 +214,7 @@ public class AdminCategoryController {
 		this.adjustSeq(category, seq);
 		return "OK";
 	}
-
+	
 	/**
 	 * Category deletion
 	 * 
@@ -256,7 +223,7 @@ public class AdminCategoryController {
 	 */
 	@RequestMapping("delete")
 	public @ResponseBody String delete(
-			@RequestParam(required=true) Long id) {
+			        @RequestParam(required=true) Long id) {			
 		Category category = categoryMngr.findById(id);
 		categoryMngr.delete(category);
 		List<Category> toBeSaved = new ArrayList<Category>();
