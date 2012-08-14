@@ -76,7 +76,6 @@ public class PlayerController {
 		try {
 			PlayerService service = new PlayerService();		
 			model = service.prepareBrand(model, mso, resp);
-			model = service.prepareSetInfo(model, name, resp);
 			if (escaped != null) {
 				model = service.prepareCrawled(model, escaped);
 				return "player/crawled";
@@ -111,8 +110,7 @@ public class PlayerController {
 		//actually won't continue
 		try {
 			PlayerService service = new PlayerService();		
-			model = service.prepareBrand(model, mso, resp);
-			model = service.prepareSetInfo(model, name, resp);			
+			model = service.prepareBrand(model, mso, resp);			
 			model = service.preparePlayer(model, js, jsp);			
 			if (jsp != null && jsp.length() > 0) {
 				return "player/" + jsp;

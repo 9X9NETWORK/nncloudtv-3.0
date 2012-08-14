@@ -422,19 +422,33 @@ public class PlayerApiController {
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
-		log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);
-		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);		
+		log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);		
+		return NnNetUtil.textReturn(NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null));		
+	}
+
+	@RequestMapping(value="categoryInfo")
+	public ResponseEntity<String> categoryInfo(
+			@RequestParam(value="category", required=false) String id,
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		log.info("categoryInfo: id =" + id);		
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			this.prepService(req, true);		
-			output = playerApiService.setInfo(id, beautifulUrl);
+			int status = this.prepService(req, true);
+			if (status != NnStatusCode.SUCCESS) {
+				return NnNetUtil.textReturn(
+						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
+			}
+			output = playerApiService.categoryInfo(id);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
 			NnLogUtil.logThrowable(t);			
 		}
-		return NnNetUtil.textReturn(output);
+		return NnNetUtil.textReturn(output);				
 	}
-
+	
 	/**
 	 * User subscribes a channel on a designated grid location.
 	 * 
@@ -526,6 +540,7 @@ public class PlayerApiController {
 	 * @param channel channel id, optional, can be one or multiple;  example, channel=1 or channel=1,2,3
 	 * @param setInfo true or false. Whether to return set information.  
 	 * @param required true or false. Will return error in status block if the requested channel is not found.
+	 * @param stack featured/recommended/hot/trending. Each stack in return is separated by "--\n"
 	 * @return A string of all of requested channel information
 	 *         <p>
 	 *         First block: status. Second block: set information. This block shows only if setInfo is set to true. 
@@ -539,7 +554,7 @@ public class PlayerApiController {
 	 *         channel id, <br/>
 	 *         channel name, <br/> 
 	 *         channel description, <br/> 
-	 *         channel image url, <br/>
+	 *         channel image url, separeted by |, max 3<br/>
 	 *         program count, <br/> 
 	 *         channel type(integer, see note), <br/> 
 	 *         channel status(integer, see note), <br/>
@@ -872,16 +887,7 @@ public class PlayerApiController {
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {				                                
-		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
-		try {
-			this.prepService(req, true);
-			output = playerApiService.listRecommended(lang);
-		} catch (Exception e) {
-			output = playerApiService.handleException(e);
-		} catch (Throwable t) {
-			NnLogUtil.logThrowable(t);
-		}
-		return NnNetUtil.textReturn(output);
+		return NnNetUtil.textReturn(NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null));		
 	}
 
 	/**
@@ -1328,6 +1334,7 @@ public class PlayerApiController {
 	@RequestMapping(value="search")
 	public ResponseEntity<String> search(
 			@RequestParam(value="text", required=false) String text,
+			@RequestParam(value="stack", required=false) String stack,
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {

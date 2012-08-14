@@ -137,7 +137,6 @@ public class DepotController {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		if (set != null) {
-			model = playerService.prepareSetInfo(model, String.valueOf(set), resp);
 			model.addAttribute("type", "set");
 			model.addAttribute("id", String.valueOf(set));
 		} else if (ch != null) {
@@ -209,7 +208,7 @@ public class DepotController {
 						           c.getSourceUrl(), 
 						           c.getTranscodingUpdateDate(), 
 						           "0",
-						           String.valueOf(c.getSubscriptionCnt())));
+						           String.valueOf(c.getCntSubscribe())));
 			}
 			log.info("maple channels:" + channels.size());
 			info.setErrorCode(String.valueOf(NnStatusCode.SUCCESS));

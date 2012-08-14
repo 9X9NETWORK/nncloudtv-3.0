@@ -1,14 +1,16 @@
 package com.nncloudtv.web;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.jdo.JDOFatalDataStoreException;
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,14 +35,11 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
-import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.Pdr;
 import com.nncloudtv.service.DepotService;
 import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
-import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.NnSetManager;
 import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.service.PlayerApiService;
 import com.nncloudtv.web.json.facebook.FBPost;
@@ -55,9 +53,24 @@ public class HelloController {
 	//protected static final Logger log = Logger.getLogger(HelloController.class.getName());
 	protected static final Logger log = Logger.getLogger(HelloController.class);
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String printWelcome(ModelMap model) { 
-		model.addAttribute("message", "Spring Security Hello World");
+
+    @RequestMapping("two")
+    public ModelAndView two(HttpServletRequest req) throws Exception {
+	    PersistenceManager pm = PMF.getContent().getPersistenceManager();
+	    String sql = "select id, name from nnchannel";
+	    log.info("Sql=" + sql);
+	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+	    q.setClass(NnChannel.class);
+	    List<NnChannel> results = (List<NnChannel>) q.execute();
+	    System.out.println("results.size:" + results.size());
+	    return new ModelAndView("hello", "message", "two");
+    }    
+		
+	@RequestMapping("welcome")
+	public @ResponseBody String printWelcome() { 
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Date now = new Date();
+		System.out.println(dateFormat.format(now));
 		return "hello";
 	}
     
@@ -72,6 +85,10 @@ public class HelloController {
 
     @RequestMapping("log")
     public ModelAndView log()  {
+    	for (int i=0; i<100; i++) {
+    		int img = new Random().nextInt(10);
+        	System.out.println("img:" + img);
+    	}
     	log.info("----- hello log -----");
     	log.warn("----- hello warning -----");
     	log.fatal("----- hello severe -----");
@@ -235,19 +252,6 @@ public class HelloController {
 		int cnt = service.addMsoInfoVisitCounter(false);
 		return NnNetUtil.textReturn(String.valueOf(status) + ";" + cnt);
 	}
-
-	@RequestMapping("queue_addChToSet") 
-	public ResponseEntity<String> queue_addChToSet(
-			@RequestParam String sid,
-			@RequestParam String cid) {
-		boolean status = MsoConfigManager.isQueueEnabled(true);
-		NnSetManager setMngr = new NnSetManager();
-		NnSet set = setMngr.findById(Long.parseLong(sid));
-		List<NnChannel> channels = new ArrayList<NnChannel>();
-		channels.add(new NnChannelManager().findById(Long.parseLong(cid)));
-		setMngr.addChannels(set, channels);
-		return NnNetUtil.textReturn(String.valueOf(status));
-	}
 	
 	/**
 	 * MQ / MQCallback - tiny MQ loopback test
@@ -260,8 +264,7 @@ public class HelloController {
 	 */
 	
 	@RequestMapping("MQ")
-	public @ResponseBody String MQ(HttpServletRequest req, @RequestParam(required=false) String msg) {
-		
+	public @ResponseBody String MQ(HttpServletRequest req, @RequestParam(required=false) String msg) {		
 		FacebookError json = new FacebookError(); // none of FB business though
 		json.setType("MQ Test");
 		if (msg != null) {
@@ -278,8 +281,7 @@ public class HelloController {
 	}
 	
 	@RequestMapping("MQCallback")
-	public @ResponseBody void MQCallback(@RequestBody FacebookError err, HttpServletRequest req) {
-		
+	public @ResponseBody void MQCallback(@RequestBody FacebookError err, HttpServletRequest req) {		
 		log.info("MQCallback received message: " + err.getMessage());
 		
 	}
