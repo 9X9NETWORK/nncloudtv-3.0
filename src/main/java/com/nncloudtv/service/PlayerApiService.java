@@ -1484,11 +1484,14 @@ public class PlayerApiService {
 	
 	/**
 	 * 1. user info
-	 * 2. obtain list of recommended sets for this user's language
+	 * 2. channel lineup (grid)
+	 * 3. featured curators
+	 * 4. trending channels
 	 */
 	public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
 		//1. user info
 		List<String> data = new ArrayList<String>();
+		log.info ("[quickLogin] verify user: " + token);
 		String userInfo = "";
 		if (token != null) {
 			userInfo = this.userTokenVerify(token, req, resp);
@@ -1501,22 +1504,24 @@ public class PlayerApiService {
 			return userInfo;
 		}
 		data.add(userInfo);
-		//1a. channel lineup
+		//2. channel lineup
+		log.info ("[quickLogin] channel lineup: " + token);
 		String lineup = this.channelLineup (token, false, null, true, false, null);
 		data.add(lineup);
 		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
 			return this.assembleSections(data);
 		}
-		//2. obtain list of recommended sets for this user's language
-		String lang = LangTable.LANG_EN;
-		try {
-			int sphereIndex = userInfo.indexOf("sphere") + 7;
-			if (sphereIndex > 7)
-				lang = userInfo.substring(sphereIndex, sphereIndex+2);
-		} catch (Exception e){
-			lang = LangTable.LANG_EN;
+		//3. featured curators
+		log.info ("[quickLogin] featured curators");
+		String curatorInfo = this.curator(null, "featured");
+		data.add(curatorInfo);
+		//4. trending
+		log.info ("[quickLogin] trending channels");
+		String trending = this.channelLineup (null, false, null, false, false, "trending");
+		data.add(trending);
+		if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
 		}
-		log.info("<<< quick login >>> lang = " + lang);
 		return this.assembleSections(data);
 	}
 
