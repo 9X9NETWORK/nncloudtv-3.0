@@ -431,8 +431,19 @@ public class PlayerApiController {
 	 * Get list of channels under the category
 	 * 
 	 * @param category category id
-	 * @return First block has category info, id and name. 
-	 *         Second block lists channels under the category. Format please reference channelLineup.  
+	 * @return First block has category info, id and name. <br/>
+	 *         Second block lists the most popular tags. Separated by \n 
+	 *         Second block lists channels under the category. Format please reference channelLineup.
+	 *         <p>  Example:
+	 *         0	SUCCESS<br/>
+	 *         --<br/>
+	 *         id	2<br/>
+	 *         name	Tech & Gaming<br/>
+	 *         --<br/>
+	 *         tech<br/>
+	 *         gaming<br/>
+	 *         --<br/>
+	 *         (channelLineup)         
 	 */
 	@RequestMapping(value="categoryInfo")
 	public ResponseEntity<String> categoryInfo(
@@ -1338,7 +1349,20 @@ public class PlayerApiController {
 	 * Search channel name and description
 	 * 
 	 * @param search search text
-	 * @return matched channels, format please reference channelLineup
+	 * @return matched channels and curators
+	 *         <p>
+	 *         First block: general statistics. Format in the following paragraph <br/>
+	 *         Second block: list of curators. Please reference curator api 
+	 *         Third block: curatos' channels. the number of channels should correspond the number of curators. 
+	 *                      Curators who have no channel shows "empty"<br/>
+	 *         Forth block: List of matched channels. Please reference channelLineup api
+	 *         Fifth block: List of suggested channels. It will only return values when there's no match of curator and channel.              
+	 *         <p>  
+	 *         General statistics: (item name : number of return records : total number of records)<br/>
+	 *         curator	4	4 <br/> 
+	 *         channel	2	2 <br/>
+	 *         suggestion	0  0 <br/> 
+ 
 	 */
 	@RequestMapping(value="search")
 	public ResponseEntity<String> search(
