@@ -363,7 +363,7 @@ public class PlayerApiService {
 		String userImageUrl = "";				
 		String userInfo = c.getUserInfo();
 		if (userInfo != null) {			
-			String[] info = userInfo.split("|");
+			String[] info = userInfo.split("\\|");
 			if (userInfo.length() > 0)
 				userName = info[0];
 			if (userInfo.length() > 1)
