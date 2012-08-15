@@ -303,6 +303,7 @@ public class PlayerApiController {
 	@RequestMapping(value="brandInfo")
 	public ResponseEntity<String> brandInfo(
 			@RequestParam(value="mso", required=false)String brandName,
+			@RequestParam(value="version", required=false)String version,
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
@@ -318,19 +319,18 @@ public class PlayerApiController {
 	}
 
 	/**
-	 * For directory query. Depending on the query level, it returns category, set, or channel info.    
-	 * API returns list of category info until it reaches category leaf.
-	 * API returns list of set info when the query "category" is a set.
-	 * API returns list channel info when the query "category" is a set.
+	 * For directory query. Returns list of categories    
 	 * 
-	 * @param category category id, category id empty indicates top level category query
-	 * @param lang en or zh
-	 * 
-	 * @return <p>Block one, the requested category. Block two, category or set info. Block three, channel info.
-	 *            Block can be blank if such info does not exist.       
-	 *         <p>Category info includes id, name, channel count, sub-category count         
-	 *         <p>Set info includes set id, set name, channel count
-	 *         <p>Channel info please refer to channelLineup
+	 * @param lang en or zh 
+	 * @return <p>Block one, the requested category info. Always one for now. Block two, list of categories.
+	 *            List of categories has category id, cateogory name, channel count, items after category. 
+	 *            Currently items after category will always be "ch" indicating channels.     
+	 *         <p>Example: <br/>
+	 *            id	0 <br/>
+	 *            --<br/>
+	 *            1	News	55	ch <br/>
+	 *            9	Sports	124	ch <br/>
+	 *            22	Music	165	ch
 	 */
 	@RequestMapping(value="category")
 	public ResponseEntity<String> category(
@@ -395,6 +395,7 @@ public class PlayerApiController {
 	/**
 	 * Retrieves set information
 	 * 
+	 * @deprecated
 	 * @param set set id
 	 * @param landing the name used as part of the URL. query with either set or landing 
 	 * @return first block: status <br/>
@@ -426,6 +427,13 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null));		
 	}
 
+	/**
+	 * Get list of channels under the category
+	 * 
+	 * @param category category id
+	 * @return First block has category info, id and name. 
+	 *         Second block lists channels under the category. Format please reference channelLineup.  
+	 */
 	@RequestMapping(value="categoryInfo")
 	public ResponseEntity<String> categoryInfo(
 			@RequestParam(value="category", required=false) String id,
@@ -570,6 +578,7 @@ public class PlayerApiController {
 	 *         tags, separated by comma. example "run,marathon" <br/>         
 	 *         curator id <br/>
 	 *         curator name <br/>
+	 *         curator imageUrl <br/>
 	 *         </blockquote>
 	 *         <p>
 	 *         set type: TYPE_USER = 1; TYPE_READONLY = 2;
@@ -1341,7 +1350,7 @@ public class PlayerApiController {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);
-			output = playerApiService.search(text);
+			output = playerApiService.search(text, stack);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -1664,7 +1673,15 @@ public class PlayerApiController {
 	 * 
 	 * @param curator curator id
 	 * @param stack if specify "featued" will return list of featured curators
-	 * @return list of curator information
+	 * @return list of curator information <br/>
+	 *         curator id, <br/>
+     *         curator name,<br/>
+     *         curator description<br/> 
+     *         curator image url,<br/>
+     *         curator profile url,<br/>
+     *         channel count, (channel count curator create) <br/>
+     *         channel subscription count, <br/>
+     *         follower count <br/> 
 	 */
 	@RequestMapping(value="curator")
 	public ResponseEntity<String> curator(

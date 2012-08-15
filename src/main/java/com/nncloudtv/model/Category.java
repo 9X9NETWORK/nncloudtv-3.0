@@ -38,7 +38,19 @@ public class Category implements Serializable {
 	
 	@Persistent
 	private short seq; //sequence shown in the directory
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String tag; //sequence shown in the directory
 	
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
 	@Persistent
 	private Date updateDate;
 

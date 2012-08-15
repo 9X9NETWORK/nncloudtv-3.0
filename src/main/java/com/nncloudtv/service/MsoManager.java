@@ -80,12 +80,19 @@ public class MsoManager {
 		List<MsoConfig> list = configMngr.findByMso(mso);
 		//config		
 		for (MsoConfig c : list) {
+			System.out.println(c.getItem() + ";" + c.getValue());
 			if (c.getItem().equals(MsoConfig.DEBUG))
 				result[0] += PlayerApiService.assembleKeyValue(MsoConfig.DEBUG, c.getValue());
 			if (c.getItem().equals(MsoConfig.FBTOKEN))
 				result[0] += PlayerApiService.assembleKeyValue(MsoConfig.FBTOKEN, c.getValue());
 			if (c.getItem().equals(MsoConfig.RO)) {
 				result[0] += PlayerApiService.assembleKeyValue(MsoConfig.RO, c.getValue());
+			}			
+			if (c.getItem().equals(MsoConfig.FORCE_UPGRADE)) {
+				result[0] += PlayerApiService.assembleKeyValue(MsoConfig.FORCE_UPGRADE, c.getValue());
+			}			
+			if (c.getItem().equals(MsoConfig.UPGRADE_MSG)) {
+				result[0] += PlayerApiService.assembleKeyValue(MsoConfig.UPGRADE_MSG, c.getValue());
 			}			
 		}
 		if (CacheFactory.isRunning) { 

@@ -248,8 +248,9 @@ public class NnUserManager {
 		return nnUserDao.total(filter);
 	}
 	
-	public List<NnUser> search(String email, String name) {
-		return nnUserDao.search(email, name);
+	//specify email or name is used in flipr, otherwise use generic to match email/name/intro
+	public List<NnUser> search(String email, String name, String generic) {
+		return nnUserDao.search(email, name, generic);
 	}
 	
 	public List<NnUser> findFeatured() {
@@ -263,7 +264,7 @@ public class NnUserManager {
         		user.getName(),
         		user.getIntro(),
         		user.getImageUrl(),
-        		"www.9x9.tv/curator/1",
+        		user.getProfileUrl(),
         		String.valueOf(user.getCntChannel()),
         		String.valueOf(user.getCntSubscribe()),
         		String.valueOf(user.getCntFollower()),

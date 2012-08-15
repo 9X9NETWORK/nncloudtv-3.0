@@ -2,6 +2,8 @@ package com.nncloudtv.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Random;
+
 import javax.jdo.annotations.*;
 
 import com.nncloudtv.lib.AuthLib;
@@ -58,7 +60,7 @@ public class NnUser implements Serializable {
 	private byte[] salt;
 	
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=255)
+	@Column(jdbcType="VARCHAR", length=5)
 	private String sphere; //content region, used with LangTable
 
 	@Persistent
@@ -67,7 +69,7 @@ public class NnUser implements Serializable {
 
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
-	private String ip; //user ip
+	private String profileUrl; //user ip
 	
 	@Persistent
 	private short gender; //0 or 1
@@ -281,12 +283,18 @@ public class NnUser implements Serializable {
 		this.lang = lang;
 	}
 
-	public String getIp() {
-		return ip;
+	public String getProfileUrl() {
+		return profileUrl;
 	}
 
-	public void setIp(String ip) {
-		this.ip = ip;
+	public void setProfileUrl() {
+		Random r = new Random();
+		int num = r.nextInt(99999);
+		String formatted = String.format("%05d", num);				
+		if (name != null)
+			this.profileUrl = formatted + "-" + name;
+		else
+			this.profileUrl = formatted;
 	}
 
 	public boolean isTemp() {

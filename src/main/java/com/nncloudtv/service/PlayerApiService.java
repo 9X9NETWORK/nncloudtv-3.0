@@ -121,7 +121,6 @@ public class PlayerApiService {
         if (result.substring(result.length()-3, result.length()).equals(separatorStr)) {
             result = result.substring(0, result.length()-3);
         }
-                 
         return result;
     }
     
@@ -185,8 +184,7 @@ public class PlayerApiService {
 		NnUser user = new NnUser(email, password, name, NnUser.TYPE_USER, mso.getId());
 		user.setSphere(sphere);
 		user.setLang(lang);		
-		user.setDob(year);
-		user.setIp(req.getRemoteAddr());
+		user.setDob(year);		
 		user.setTemp(isTemp);
 		status = userMngr.create(user, req, (short)0);
 		if (status != NnStatusCode.SUCCESS)
@@ -361,6 +359,16 @@ public class PlayerApiService {
 		int img1 = r.nextInt(10);
 		int img2 = r.nextInt(10);
 		String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
+		String userName = "";
+		String userImageUrl = "";				
+		String userInfo = c.getUserInfo();
+		if (userInfo != null) {			
+			String[] info = userInfo.split("|");
+			if (userInfo.length() > 0)
+				userName = info[0];
+			if (userInfo.length() > 1)
+				userImageUrl = info[1];
+		}
 		
         String[] ori = {Integer.toString(c.getSeq()), 
                         String.valueOf(c.getId()),
@@ -381,7 +389,8 @@ public class PlayerApiService {
 					    String.valueOf(viewCount), //view count
 					    c.getTag(),
 					    c.getUserIdStr(), //curator id
-					    c.getUserName()
+					    userName,
+					    userImageUrl,
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);
@@ -485,15 +494,25 @@ public class PlayerApiService {
         CategoryManager catMngr = new CategoryManager();
         long cid = Long.parseLong(id);
         Category cat = catMngr.findById(cid);
+        if (cat == null)
+        	return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
         List<NnChannel> channels = catMngr.findChannels(cid, true);
-        String result[] = {"", ""};
+        String result[] = {"", "", ""};
         //category info
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
         result[0] += assembleKeyValue("name", cat.getName());
+        //category tag
+        String tags = cat.getTag();
+        if (tags != null) {
+        	String[] tag = tags.split(",");
+            for (String t : tag) {
+            	result[1] += t + "\n";
+            }
+        }
         //channel info
         for (NnChannel c : channels) {
 			c.setSorting(NnChannelManager.getDefaultSorting(c));
-				result[1] += this.composeChannelLineupStr(c) + "\n";                                                    
+				result[2] += this.composeChannelLineupStr(c) + "\n";                                                    
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
@@ -1399,15 +1418,41 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
-	public String search(String text) {
+	//stack not implemented yet
+	public String search(String text, String stack) {
 		if (text == null || text.length() == 0)
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
-		List<NnChannel> searchResults = NnChannelManager.search(text, false);
-		String[] result = {""};
-		for (NnChannel c : searchResults) {
-			result[0] += this.composeChannelLineupStr(c) + "\n";
+		List<NnChannel> channels = NnChannelManager.search(text, false);
+		String[] result = {"", "", "", "", ""};		
+		for (NnChannel c : channels) {
+			result[3] += this.composeChannelLineupStr(c) + "\n";
 		}
+		List<NnUser> users = userMngr.search(null, null, text);
+		for (NnUser u : users) {
+			result[1] += userMngr.composeCuratorInfo(u) + "\n";
+		}
+		for (NnUser u : users) {
+			List<NnChannel> list = chMngr.findByUser(u, 1);
+			if (list.size() > 0) {
+				result[2] += this.composeChannelLineupStr(list.get(0)) + "\n";
+			} else {
+				result[2] += "empty" + "\n";
+			}
+		}
+		List<NnChannel> suggestion = new ArrayList<NnChannel>();
+		if (channels.size() == 0 && users.size() == 0) {
+			suggestion = chMngr.findTrending();
+			for (NnChannel c : suggestion) {
+				result[4] += this.composeChannelLineupStr(c) + "\n";
+			}
+		}
+		
+		result[0] = assembleKeyValue("curator", String.valueOf(users.size()) + "\t" + String.valueOf(users.size()));
+		result[0] += assembleKeyValue("channel", String.valueOf(channels.size()) + "\t" + String.valueOf(channels.size()));
+		result[0] += assembleKeyValue("suggestion", String.valueOf(suggestion.size()) + String.valueOf(suggestion.size()));
+		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+		
 	}
 	
 	public String programRemove(String programId, String userToken, String secret) {
@@ -1558,7 +1603,7 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 		}
 		NnUserManager userMngr = new NnUserManager();
-		List<NnUser> users = userMngr.search(email, name);
+		List<NnUser> users = userMngr.search(email, name, null);
 		String[] result = {""};
 		for (NnUser u : users) {
 			result[0] += u.getEmail() + "\t" + u.getName() + "\n";

@@ -24,21 +24,31 @@ public class NnUserDao extends GenericDao<NnUser> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<NnUser> search(String email, String name) {
+	public List<NnUser> search(String email, String name, String generic) {
 		List<NnUser> detached = new ArrayList<NnUser>();		
 	    PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
-	    String sql = "select * from nnuser " + "where ";	                  
-	    if (email != null) {
-	        sql += " email = '" + email + "'";
-	    } else if (name != null) { 
-	    	sql += " lower(name) like lower('%" + name + "%')";
+	    
+	    String sql = "";
+	    if (generic != null) {
+	    	sql = "select * from nnuser " + 
+	               "where lower(name) like lower('%" + generic + "%') " +  
+	               "   or lower(email) like lower('%" + generic + "%') " +
+	               "   or lower(intro) like lower('%" + generic + "%')";
+	    } else {
+    	   sql = "select * from nnuser " + "where ";	                  
+	       if (email != null) {
+	           sql += " email = '" + email + "'";
+	       } else if (name != null) { 
+	       	sql += " lower(name) like lower('%" + name + "%')";
+	       }
 	    }
 	    log.info("Sql=" + sql);	    
 	    pm = PMF.getNnUser1().getPersistenceManager();
 	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
 	    q.setClass(NnUser.class);
 	    List<NnUser> results = (List<NnUser>) q.execute();
-	    detached = (List<NnUser>)pm.detachCopyAll(results);	    
+	    detached = (List<NnUser>)pm.detachCopyAll(results);
+	    
 	    pm = PMF.getNnUser2().getPersistenceManager();
 	    q= pm.newQuery("javax.jdo.query.SQL", sql);
 	    results = (List<NnUser>) q.execute();

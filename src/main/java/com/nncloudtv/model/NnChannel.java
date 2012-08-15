@@ -147,15 +147,14 @@ public class NnChannel implements Serializable {
 
 	@Persistent //maybe removed in the future, instead use view, or cache
 	@Column(jdbcType="VARCHAR", length=255)
-	private String userName;
-
+	private String userInfo;
 	
-	public String getUserName() {
-		return userName;
+	public String getUserInfo() {
+		return userInfo;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserInfo(String userInfo) {
+		this.userInfo = userInfo;
 	}
 
 	@Persistent

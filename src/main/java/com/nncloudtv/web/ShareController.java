@@ -115,7 +115,6 @@ public class ShareController {
 					user = new NnUser(invite.getInviteeEmail(), "123456", invite.getInviteeName(), NnUser.TYPE_USER, mso.getId());
 					user.setSphere("en");
 					user.setLang("en");		
-					user.setIp(req.getRemoteAddr());
 					user.setTemp(false);
 					userMngr.create(user, req, (short)0);
 					c.setSeq((short)1);

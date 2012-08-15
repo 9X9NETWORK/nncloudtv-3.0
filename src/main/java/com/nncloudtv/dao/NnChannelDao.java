@@ -132,6 +132,22 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		}
 		return detached;
 	}	
+	public List<NnChannel> findByUser(String userIdStr) {
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		List<NnChannel> detached = new ArrayList<NnChannel>(); 
+		try {
+			Query q = pm.newQuery(NnChannel.class);
+			q.setFilter("userIdStr == userIdStrParam");
+			q.declareParameters("String userIdStrParam");
+			q.setOrdering("createDate asc");
+			@SuppressWarnings("unchecked")
+			List<NnChannel> channels = (List<NnChannel>) q.execute(userIdStr);
+			detached = (List<NnChannel>)pm.detachCopyAll(channels);
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}	
 	
 	public NnChannel findBySourceUrl(String url) {
 		if (url == null) {return null;}

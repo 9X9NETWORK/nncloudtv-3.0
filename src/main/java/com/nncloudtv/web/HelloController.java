@@ -52,26 +52,16 @@ public class HelloController {
 
 	//protected static final Logger log = Logger.getLogger(HelloController.class.getName());
 	protected static final Logger log = Logger.getLogger(HelloController.class);
-
-
-    @RequestMapping("two")
-    public ModelAndView two(HttpServletRequest req) throws Exception {
-	    PersistenceManager pm = PMF.getContent().getPersistenceManager();
-	    String sql = "select id, name from nnchannel";
-	    log.info("Sql=" + sql);
-	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-	    q.setClass(NnChannel.class);
-	    List<NnChannel> results = (List<NnChannel>) q.execute();
-	    System.out.println("results.size:" + results.size());
-	    return new ModelAndView("hello", "message", "two");
-    }    
 		
 	@RequestMapping("welcome")
 	public @ResponseBody String printWelcome() { 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date now = new Date();
 		System.out.println(dateFormat.format(now));
-		return "hello";
+		Random r = new Random();
+		int viewCount = r.nextInt(99999);
+		String formatted = String.format("%05d", viewCount);		
+		return formatted;
 	}
     
 	//basic test

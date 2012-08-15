@@ -28,6 +28,8 @@ public class MsoConfig {
 	public static String FBTOKEN = "fbtoken";  //regardless of the brand, for player parsing feed data 
 	public static String REALFBTOKEN = "realfbtoken";
 	public static String RO = "read-only"; //
+	public static String FORCE_UPGRADE = "force-upgrade";
+	public static String UPGRADE_MSG = "upgrade-msg";
 	public static String QUEUED = "queued";
 	
 	@Persistent

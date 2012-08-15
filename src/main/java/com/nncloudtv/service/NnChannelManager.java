@@ -353,6 +353,14 @@ public class NnChannelManager {
 		}
 		return null;
 	}
+
+	public List<NnChannel> findByUser(NnUser user, int number) {
+		String userIdStr = user.getShard() + "-" + user.getId();
+		List<NnChannel> channels = dao.findByUser(userIdStr);
+		if (channels.size() > number)
+			return channels.subList(0, number-1);
+		return channels;
+	}
 	
 	public static short getDefaultSorting(NnChannel c) {
 		short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
