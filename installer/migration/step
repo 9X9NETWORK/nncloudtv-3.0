@@ -1,0 +1,174 @@
+use nncloudtv_content;
+CREATE TABLE title_card (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `color` varchar(10) DEFAULT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `duration` varchar(255) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `programId` bigint(20) NOT NULL,
+  `style` varchar(10) DEFAULT NULL,
+  `type` smallint(6) DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `category_map` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `categoryId` bigint(20) NOT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tag` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tag_map` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tagId` bigint(20) NOT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+alter table category drop column parentId;
+alter table category drop column subCatCnt;
+
+alter table nnchannel add column userName varchar(255);
+alter table nnchannel add column poolType smallint(6);
+alter table nnchannel add column cntSubscribe int(11);
+alter table nnchannel add column userIdStr varchar(25);
+update nnchannel set poolType=0;
+update nnchannel set cntSubscribe=0;
+update nnchannel set tag = null where tag='Enter tags';
+drop table nnchannel_backup;
+create table nnchannel_backup select * from nnchannel;
+<< update nnset set name= >>
+tag.py
+category_map.py
+
+use nncloudtv_nnuser1;
+alter table nnuser add column featured bit(1);
+alter table nnuser add column cntSubscribe int(11);
+alter table nnuser add column cntChannel int(11);
+alter table nnuser add column cntFollower int(11);
+update nnuser set featured=false;
+update nnuser set cntSubscribe=0;
+update nnuser set cntChannel=0;
+update nnuser set cntFollower=0;
+
+=====================
+content
+=====================
+use nncloudtv_content;
+select count(*) cnt, msoId from content_ownership group by msoId order by cnt;
+
+use nncloudtv_nnuser1;
+select id, email from nnuser where msoId in (536, 64, 448,258,337,3, 779,612,6);
+update  nnuser set featured=true where msoId in (536, 64, 448,258,337,3, 779,612,6);
+
+=====================
+Enter tags 梁文音     
+=====================
+update nnset set name = 'lectures'                                 where id=   3; 
+update nnset set name = 'howto'                                     where id=   4; 
+update nnset set name = 'science'                                   where id=   5; 
+update nnset set name = 'tech'                               where id=   6; 
+update nnset set name = 'fashion'                          where id=   7; 
+update nnset set name = '旅遊休閒'                                      where id=  11; 
+update nnset set name = 'people'                     where id=  12;
+update nnset set name = 'gaming'                                    where id=  13; 
+update nnset set name = 'food'                             where id=  14; 
+update nnset set name = '綜合新聞'                                      where id=  17; 
+update nnset set name = '電玩遊戲'                                      where id=  19; 
+update nnset set name = '漫畫'                                        where id=  20; 
+update nnset set name = 'news'                                      where id=  22; 
+update nnset set name = 'movies'                                    where id=  23; 
+update nnset set name = 'comics'                          where id=  24; 
+update nnset set name = '社會脈動'                                      where id=  27; 
+update nnset set name = '電影快報'                                      where id=  29; 
+update nnset set name = '網路名人與創作'                                   where id=  30; 
+update nnset set name = '美妝時尚'                                      where id=  31; 
+update nnset set name = '寵物粉絲'                                      where id=  32; 
+update nnset set name = 'travel'                                    where id=  35; 
+update nnset set name = 'art'                              where id=  36;  
+update nnset set name = '資訊科技'                                      where id=  40; 
+update nnset set name = '藝術文化'                                      where id=  41; 
+update nnset set name = 'sports'                           where id=  42; 
+update nnset set name = 'cartoons'                      where id=  43; 
+update nnset set name = 'diy'                                    where id=  45; 
+update nnset set name = '美食烹飪'                                      where id=  46; 
+update nnset set name = '丁丁電視'                                      where id=  47; 
+update nnset set name = 'pets'                            where id=  48; 
+update nnset set name = '知識講堂'                                      where id=  51; 
+update nnset set name = 'dingding'                          where id=  53; 
+update nnset set name = 'music'                                     where id=  54; 
+update nnset set name = 'auto'                          where id=  55; 
+update nnset set name = '汽機車'                                       where id=  57;  
+update nnset set name = 'variety'                                       where id=  59;  
+update nnset set name = 'comedy'                                    where id=  60; 
+update nnset set name = '體育運動'                                      where id=  62; 
+update nnset set name = '音樂'                                        where id=  63; 
+update nnset set name = '宗教'                                        where id=  64; 
+update nnset set name = 'world journal'  where id=  71; 
+update nnset set name = '矽谷華人傳播公司'                                  where id=  72; 
+update nnset set name = 'tvhs'                                 where id=  75; 
+update nnset set name = '老中新聞'                     where id=  76;  
+update nnset set name = 'nonprofits'                        where id=  79; 
+update nnset set name = 'entertainment'               where id=  80; 
+update nnset set name = '綜藝談話節目'                                    where id=  81; 
+update nnset set name = '台灣中文劇'                                     where id=  82; 
+update nnset set name = '節目更新'                                      where id=  83; 
+update nnset set name = '韓劇'                                        where id=  84; 
+update nnset set name = '閩南語劇'                                      where id=  85; 
+update nnset set name = '粵劇'                                        where id=  86; 
+update nnset set name = 'bollywood'                                 where id=  87; 
+update nnset set name = '9x9電影台'                                    where id=  88; 
+update nnset set name = '大陸中文劇'                                     where id=  89; 
+update nnset set name = '日劇'                                        where id=  90; 
+update nnset set name = '中港台新聞'                                     where id=  91; 
+update nnset set name = '校園策展人'                                     where id=  93; 
+update nnset set name = 'web series'                        where id=  95; 
+update nnset set name = 'musicians'                      where id= 100; 
+update nnset set name = 'vevo'                      where id= 101; 
+update nnset set name = 'fashionistas'                    where id= 102; 
+update nnset set name = 'shorts channels'                     where id= 103; 
+update nnset set name = 'sports channels'             where id= 104; 
+update nnset set name = 'vloggers'                            where id= 105;  
+update nnset set name = 'entertainment'                       where id= 107; 
+update nnset set name = '焦點南北韓'                                     where id= 108; 
+update nnset set name = '復仇者聯盟熱映'                                   where id= 110; 
+update nnset set name = '狂牛風暴延燒'                                    where id= 112; 
+update nnset set name = '韓寒旋風'                                      where id= 122; 
+update nnset set name = '南海主權風波'                                    where id= 123; 
+update nnset set name = '同志婚姻支持說'                                   where id= 124; 
+update nnset set name = '臉書上市新聞總覽'                                  where id= 125; 
+update nnset set name = '520馬總統就職'                                  where id= 126; 
+update nnset set name='fashion' where id=102;
+update nnset set name='viral' where id=106;
+update nnset set name=null where id=37;
+update nnset set name='sports' where id=104;
+
+
+-----------------------------------------------------------
+use nncloudtv_content;
+alter table category add column tag varchar(255);
+alter table nnchannel add column userInfo varchar(255);
+
+update nnchannel set userIdStr = '1-1459', 
+                 userInfo = 'tpdemo|https://encrypted-tbn3.google.com/images?q=tbn:ANd9GcRiHDIVQW6MeAr2Ub68_Va6bUCfbyxZZJi3EzGVo3A_sYu9Nbgn'
+  where contentType=8 or contentType=9
+
+use nncloudtv_nnuser1;
+alter table nnuser drop column ip;
+alter table nnuser add column profileUrl varchar(255);
+update nnuser set profileUrl = (select concat (lpad(floor(1+(rand()*99999)), 5, '00000'), '-', name));
+update nnuser set shard=1;
+update nnuser set cntSubscribe=0;
+update nnuser set cntChannel=0;
+update nnuser set cntFollower=0;
+
