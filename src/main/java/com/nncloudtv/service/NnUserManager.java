@@ -257,14 +257,22 @@ public class NnUserManager {
 		return nnUserDao.findFeatured();
 	}
 	
-	public String composeCuratorInfo(NnUser user) {
+	public NnUser findByProfileUrl(String profileUrl) {
+		return nnUserDao.findByProfileUrl(profileUrl);
+	}
+	
+	public String composeCuratorInfo(NnUser user, HttpServletRequest req) {
 		String uid = user.getShard() + "-" + user.getId();
+		//#!curator=xxx-name
+		String profileUrl = "";
+		if (user.getProfileUrl() != null)
+			profileUrl = NnNetUtil.getUrlRoot(req) + "#!curator=" + user.getProfileUrl();
         String[] info = {
-        		uid,
+        		uid,        		
         		user.getName(),
         		user.getIntro(),
         		user.getImageUrl(),
-        		user.getProfileUrl(),
+        		profileUrl,
         		String.valueOf(user.getCntChannel()),
         		String.valueOf(user.getCntSubscribe()),
         		String.valueOf(user.getCntFollower()),

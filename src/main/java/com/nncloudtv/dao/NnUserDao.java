@@ -27,32 +27,36 @@ public class NnUserDao extends GenericDao<NnUser> {
 	public List<NnUser> search(String email, String name, String generic) {
 		List<NnUser> detached = new ArrayList<NnUser>();		
 	    PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
-	    
-	    String sql = "";
-	    if (generic != null) {
-	    	sql = "select * from nnuser " + 
-	               "where lower(name) like lower('%" + generic + "%') " +  
-	               "   or lower(email) like lower('%" + generic + "%') " +
-	               "   or lower(intro) like lower('%" + generic + "%')";
-	    } else {
-    	   sql = "select * from nnuser " + "where ";	                  
-	       if (email != null) {
-	           sql += " email = '" + email + "'";
-	       } else if (name != null) { 
-	       	sql += " lower(name) like lower('%" + name + "%')";
-	       }
-	    }
-	    log.info("Sql=" + sql);	    
-	    pm = PMF.getNnUser1().getPersistenceManager();
-	    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-	    q.setClass(NnUser.class);
-	    List<NnUser> results = (List<NnUser>) q.execute();
-	    detached = (List<NnUser>)pm.detachCopyAll(results);
-	    
-	    pm = PMF.getNnUser2().getPersistenceManager();
-	    q= pm.newQuery("javax.jdo.query.SQL", sql);
-	    results = (List<NnUser>) q.execute();
-	    detached.addAll((List<NnUser>)pm.detachCopyAll(results));
+		try {
+		    String sql = "";
+		    if (generic != null) {
+		    	sql = "select * from nnuser " + 
+		               "where lower(name) like lower('%" + generic + "%') " +  
+		               "   or lower(email) like lower('%" + generic + "%') " +
+		               "   or lower(intro) like lower('%" + generic + "%')";
+		    } else {
+	    	   sql = "select * from nnuser " + "where ";	                  
+		       if (email != null) {
+		           sql += " email = '" + email + "'";
+		       } else if (name != null) { 
+		       	sql += " lower(name) like lower('%" + name + "%')";
+		       }
+		    }
+		    log.info("Sql=" + sql);	    
+		    pm = PMF.getNnUser1().getPersistenceManager();
+		    Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+		    q.setClass(NnUser.class);
+		    List<NnUser> results = (List<NnUser>) q.execute();
+		    detached = (List<NnUser>)pm.detachCopyAll(results);
+		    //user2
+		    pm = PMF.getNnUser2().getPersistenceManager();
+		    q= pm.newQuery("javax.jdo.query.SQL", sql);
+		    results = (List<NnUser>) q.execute();
+		    detached.addAll((List<NnUser>)pm.detachCopyAll(results));
+		} catch (JDOObjectNotFoundException e) {
+		} finally {
+			pm.close();				
+		}	    
 		return detached;
 	}
 	
@@ -232,6 +236,32 @@ public class NnUserDao extends GenericDao<NnUser> {
 			List<NnUser> results = (List<NnUser>) query.execute(email);
 			if (results.size() > 0) {
 				user = results.get(0);			
+			}
+			user = pm.detachCopy(user);
+		} finally {
+			pm.close();
+		}
+		return user;				
+	}	
+
+	public NnUser findByProfileUrl(String profileUrl) {
+		NnUser user = null;
+		PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+		
+		try {
+			for (int i=0;i<2;i++) {
+				System.out.println("<<<<< enter 1:" + i);
+				Query query = pm.newQuery(NnUser.class);
+				query.setFilter("profileUrl == profileUrlParam");
+				query.declareParameters("String profileUrlParam");		
+				@SuppressWarnings("unchecked")
+				List<NnUser> results = (List<NnUser>) query.execute(profileUrl);
+				if (results.size() > 0) {
+					user = results.get(0);
+					i = 2;
+				} else {
+					pm = PMF.getNnUser2().getPersistenceManager();
+				}
 			}
 			user = pm.detachCopy(user);
 		} finally {

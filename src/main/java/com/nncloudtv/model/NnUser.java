@@ -49,6 +49,7 @@ public class NnUser implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String imageUrl;
+	public static String IMAGE_URL_DEFAULT = "http://www3.ul.ie/llcc/cals/english/nopic.jpg"; //TEMP
 
 	@NotPersistent
 	private String password;
@@ -212,6 +213,8 @@ public class NnUser implements Serializable {
 	}
 
 	public String getImageUrl() {
+		if (imageUrl == null)
+			return NnUser.IMAGE_URL_DEFAULT;
 		return imageUrl;
 	}
 

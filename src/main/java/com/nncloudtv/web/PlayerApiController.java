@@ -1374,7 +1374,7 @@ public class PlayerApiController {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);
-			output = playerApiService.search(text, stack);
+			output = playerApiService.search(text, stack, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -1710,13 +1710,14 @@ public class PlayerApiController {
 	@RequestMapping(value="curator")
 	public ResponseEntity<String> curator(
 			@RequestParam(value="curator", required=false) String userId,
+			@RequestParam(value="profile", required=false) String profile,
 			@RequestParam(value="stack", required=false) String stack,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			this.prepService(req, true);		
-			output = playerApiService.curator(userId, stack);
+			output = playerApiService.curator(userId, profile, stack, req);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {

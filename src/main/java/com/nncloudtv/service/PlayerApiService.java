@@ -359,16 +359,6 @@ public class PlayerApiService {
 		int img1 = r.nextInt(10);
 		int img2 = r.nextInt(10);
 		String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
-		String userName = "";
-		String userImageUrl = "";				
-		String userInfo = c.getUserInfo();
-		if (userInfo != null) {			
-			String[] info = userInfo.split("\\|");
-			if (userInfo.length() > 0)
-				userName = info[0];
-			if (userInfo.length() > 1)
-				userImageUrl = info[1];
-		}
 		
         String[] ori = {Integer.toString(c.getSeq()), 
                         String.valueOf(c.getId()),
@@ -389,8 +379,8 @@ public class PlayerApiService {
 					    String.valueOf(viewCount), //view count
 					    c.getTag(),
 					    c.getUserIdStr(), //curator id
-					    userName,
-					    userImageUrl,
+					    c.getUserName(),
+					    c.getUserImageUrl(),
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);
@@ -1419,7 +1409,7 @@ public class PlayerApiService {
 	}
 
 	//stack not implemented yet
-	public String search(String text, String stack) {
+	public String search(String text, String stack, HttpServletRequest req) {
 		if (text == null || text.length() == 0)
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 		List<NnChannel> channels = NnChannelManager.search(text, false);
@@ -1429,7 +1419,7 @@ public class PlayerApiService {
 		}
 		List<NnUser> users = userMngr.search(null, null, text);
 		for (NnUser u : users) {
-			result[1] += userMngr.composeCuratorInfo(u) + "\n";
+			result[1] += userMngr.composeCuratorInfo(u, req) + "\n";
 		}
 		for (NnUser u : users) {
 			List<NnChannel> list = chMngr.findByUser(u, 1);
@@ -1558,7 +1548,7 @@ public class PlayerApiService {
 		}
 		//3. featured curators
 		log.info ("[quickLogin] featured curators");
-		String curatorInfo = this.curator(null, "featured");
+		String curatorInfo = this.curator(null, null, "featured", req);
 		data.add(curatorInfo);
 		//4. trending
 		log.info ("[quickLogin] trending channels");
@@ -1731,8 +1721,8 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 	
-	public String curator(String id, String stack) {
-		if (id == null && stack == null) {
+	public String curator(String id, String profile, String stack, HttpServletRequest req) {
+		if (id == null && stack == null && profile == null) {
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 		}
 		List<NnUser> users = new ArrayList<NnUser>();
@@ -1741,12 +1731,17 @@ public class PlayerApiService {
 			if (user == null)
 				return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
 			users.add(user);
-		} else {		
+		} else if (profile != null) {
+			NnUser user = userMngr.findByProfileUrl(profile);
+			if (user == null)
+				return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+			users.add(user);
+		} else {
 			users = userMngr.findFeatured();
 		}
 		String[] result = {""};
 		for (NnUser u :users) {
-			result[0] += userMngr.composeCuratorInfo(u) + "\n";
+			result[0] += userMngr.composeCuratorInfo(u, req) + "\n";
 		}        
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 	}

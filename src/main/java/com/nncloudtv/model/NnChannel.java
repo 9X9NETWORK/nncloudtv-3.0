@@ -434,5 +434,26 @@ public class NnChannel implements Serializable {
 			userIdStr = shard + "-" + userId;
 		}
 	}
+
+	public String getUserImageUrl() {
+		if (userInfo != null) {			
+			String[] info = userInfo.split("\\|");
+			if (userInfo.length() > 1) {
+				String userImageUrl = info[1];
+				return userImageUrl;
+			}
+		}
+		return NnUser.IMAGE_URL_DEFAULT; 
+	}
 	
+	public String getUserName() {		
+		if (userInfo != null) {			
+			String[] info = userInfo.split("\\|");
+			if (userInfo.length() > 0) {
+				String userName = info[0];
+				return userName;
+			}
+		}
+		return null;
+	}
 }
