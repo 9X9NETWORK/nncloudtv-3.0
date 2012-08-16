@@ -266,7 +266,7 @@ public class NnUserManager {
 		//#!curator=xxx-name
 		String profileUrl = "";
 		if (user.getProfileUrl() != null)
-			profileUrl = NnNetUtil.getUrlRoot(req) + "#!curator=" + user.getProfileUrl();
+			profileUrl = NnNetUtil.getUrlRoot(req) + "/#!curator=" + user.getProfileUrl();
         String[] info = {
         		uid,        		
         		user.getName(),
