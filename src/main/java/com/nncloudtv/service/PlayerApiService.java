@@ -1439,7 +1439,7 @@ public class PlayerApiService {
 		
 		result[0] = assembleKeyValue("curator", String.valueOf(users.size()) + "\t" + String.valueOf(users.size()));
 		result[0] += assembleKeyValue("channel", String.valueOf(channels.size()) + "\t" + String.valueOf(channels.size()));
-		result[0] += assembleKeyValue("suggestion", String.valueOf(suggestion.size()) + String.valueOf(suggestion.size()));
+		result[0] += assembleKeyValue("suggestion", String.valueOf(suggestion.size()) + "\t" + String.valueOf(suggestion.size()));
 		
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 		
