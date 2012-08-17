@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
-%><!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/">
 <head>
 <meta charset="UTF-8" />
@@ -7,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/9x9playerV104"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock7"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -27,6 +26,8 @@
 <meta property="og:description" content="${fbDescription}"/>
 
 <link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
+<link rel="stylesheet" href="${nroot}/stylesheets/temporary.css" />
+
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
 
 <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
@@ -41,7 +42,7 @@
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player34.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -120,901 +121,895 @@ soundManager.onready(function()
 <div id="blue" style="background: black; width: 100%; height: 100%; display: block; position: absolute; color: white">
 </div>
 
-<div id="bg-layer"><img src="${nroot}/images/bg_body.png"></div>
-
 <div id="audio1" style="display:block;width:750px;height:30px;visibility:hidden" href=""></div>
 <div id="audio2" style="display:block;width:750px;height:30px;visibility:hidden" href=""></div>
 <div id="audio3" style="display:block;width:750px;height:30px;visibility:hidden" href=""></div>
 
-<div id="recent-layer" style="display: none">
-  <div id="recent-holder">
-    <h4><span>Recently Watched</span></h4>
-    <img src="${nroot}/images/btn_winclose.png" id="btn-recent-close">
-    <ul id="recent-list"></ul>
-  </div>
-</div>
-
-<div id="signin-layer">
-  <div id="signin-holder">
-    <p id="btn-signin-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
-    <ul id="signin-tabs">
-      <li id="signin" class="on"><span>Returning Users</span></li>
-      <li id="signup"><span>New Users</span></li>
-    </ul>
-    <div id="signin-panel" class="input-panel">
-      <ul class="input-list">
-        <li>
-          <span>Your 9x9 ID:</span>
-          <p class="signin-input">
-            <input type="text" class="textfield" id="return-email">
-          </p>
-        </li>
-        <li>
-          <span>Password:</span>
-          <p class="signin-input">
-            <input type="password" class="textfield" id="signin-password">
-          </p>
-        </li>
-        <!--li id="btn-forgot-pw"><span>Forgot your password?</span></li-->
-        <!--li id="keep-signin"><p class="btn-check on"><img src="${nroot}/images/btn_check_on.png" class="btn-check-on"><img src="${nroot}/images/btn_check_off.png" class="btn-check-off"><span>Keep me sign in</span></p></li-->
-        <li><p class="btn-hilite" id="btn-signin"><span>Sign in</span></p></li>
-      </ul>
-      <div id="entry-switcher">
-        <p class="head"><span>New to 9x9?</span></p>
-        <p class="content"><span>Tired of searching for videos? Access thousands of curated channels and create your very own programming guide!</span></p>
-        <p class="content"><span>It's free and easy!</span></p>
-        <p class="btn-hilite" id="btn-create-account"><span>Create an Account</span></p>
-      </div>
-    </div>
-    <div id="signup-panel" class="input-panel">
-      <ul class="input-list">
-        <li>
-          <span>Email:</span>
-          <p class="signin-input">
-            <input type="text" class="textfield" id="signup-email">
-          </p>
-        </li>
-        <li>
-          <span>Password:</span>
-          <p class="signin-input">
-            <input type="password" class="textfield" id="signup-password">
-          </p>
-          <span class="hint">6-character minimum</span>
-        </li>
-        <li>
-          <span>Retype Password:</span>
-          <p class="signin-input">
-            <input type="password" class="textfield" id="signup-password2">
-          </p>
-        </li>
-        <li>
-          <span>Name:</span>
-          <p class="signin-input">
-            <input type="text" class="textfield" id="signup-name">
-          </p>
-        </li>
-      </ul>
-      <ul class="input-list-right">
-        <li>
-          <p><span>Gender:</span></p>
-          <p class="radio-item on"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>Male</span></p>
-          <p class="radio-item"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>Female</span></p>
-        </li>
-        <li id="birth-input">
-          <span>Birth Year:</span>
-          <p class="signin-input">
-            <input type="text" class="textfield" value="Example: 1985" id="signup-birthyear">
-          </p>
-        </li>
-        <li id="captcha-input">
-          <span>Word Verification:</span>
-          <p class="signin-input">
-            <input type="text" class="textfield" value="Type the characters in the picture below" id="signup-captcha">
-          </p>
-          <p id="captcha"><img src="${nroot}/images/chptcha.gif"></p>
-          <img src="${nroot}/images/btn_recaptcha.png" id="btn-recaptcha" title="Get a new challenge">
-        </li>
-        <li>
-          <p class="term-text"><span>Clicking I accept means that you agree to the <a href="">9x9 service agreement</a> and <a href="">privacy statement</a>. You also agree to receive email from 9x9 with service updates, special offers, and survey invitations. You can unsubscribe at any time.</span></p>
-        </li>
-        <li><p class="btn-hilite" id="btn-signup"><span>I Accept</span></p></li>
-      </ul>
-    </div>   
-  </div>
-</div>
-
-
-
 <div id="preload-control-images" style="display: none"></div>
 
-<div id="delete-layer">
-  <div class="delete-holder" id="delete-holder">
-    <p id="step1"><span id="suredel">Are you sure you want to delete</span> "<span id="delete-title-1"></span>"?</p>
-    <p id="step2"><span id="havedel">You have deleted channel</span> "<span id="delete-title-2"></span>".</p>
-    <div class="actions"><a class="btn" id="btn-delYes" onclick="delete_enter(1)"><span>Yes</span></a>
-    <a class="btn on" id="btn-delNo" onclick="delete_enter(2)"><span>No</span></a>
-    <a class="btn on" id="btn-returnSG" onclick="delete_enter(1)"><span id="delrsg">Return to Smart Guide</span></a>
-    <a class="btn" id="btn-delMore" onclick="delete_enter(2)"><span id="delmore">Delete More Channels</span></a></div>
-  </div>
+<div id="log-layer" style="position: absolute; left: 0; top: 0; height: 100%; width: 100%; background: white; color: black; text-align: left; padding: 20px; overflow: scroll; z-index: 9999; display: none"></div>
+
+<div id="fb-root"></div>
+
+<div id="relaydiv" style="z-index: 1; position: absolute; top: 0px; left: 0px; width=500px; height=500px">
 </div>
 
 
-<div id="confirm-layer">
-  <div id="confirm-holder">
-    <p><span id="confirm-text"></span></p>
-    <p class="btn" id="btn-confirm-close"><span>Close</span></p>
-  </div>
-</div>
 
-<div id="alert-layer">
-  <div id="alert-holder">
-    <p><span>Are you still watching?</span></p>
-    <ul class="action-list">
-      <li>
-        <p class="btn"><span>Keep watching</span></p>
+<!-- Header Begin -->
+<div id="header">
+  <p id="logo"></p>
+  <ul id="nav">
+    <li id="home"><span>Home</span></li>
+    <li id="guide"><span>Guide</span></li>
+    <li id="browse">
+      <span>Browse</span>
+    </li>
+    <li id="search">
+      <p id="btn-search"></p>
+      <input type="text" class="textfield" value="Search" id="search-field">
+    </li>
+    <li id="profile">
+      <p id="btn-profile"></p>
+      <p id="selected-profile">Snowball</p>
+      <ul id="profile-dropdown" class="dropdown">
+        <li>My page</li>
+        <li>Studio</li>
+        <li>Settings</li>
+        <li>Log out</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<!-- Header End -->
+
+<!-- Curator Bubble Begin -->
+<div id="curator-bubble">
+  <ul id="icon-social">
+    <li id="twitter"></li>
+    <li id="facebook"></li>
+    <li id="blogger"></li>
+    <li id="google"></li>
+  </ul>
+  <div id="curator-info" class="ellipsis multiline">
+    <p id="curator-thumb"><img src="thumbnail/curator_09.png"></p>
+    <p id="curator-name-bubble">Liz Lisa</p>
+    <p id="curator-intro">The idea behind curators & content curation is that here is such a flood of new content through the Internet pipes these days that being aware of all of it.</p>
+  </div>
+  <div id="curator-ch-meta">
+    <p id="top-ch-name">My Top Channel: Coffee Shop</p> 
+    <p>50 Episodes<span class="divider">|</span>1 day ago</p>
+    <p>100 Views</p>
+  </div>
+  <p class="icon-pl"></p>
+  <img src="thumbnail/coffee_01.png" class="thumb1"><img src="thumbnail/coffee_02.png" class="thumb2"><img src="thumbnail/coffee_03.png" class="thumb3">
+</div>
+<!-- Curator Bubble End -->
+
+<!-- Footer Begin -->
+<p id="footer-control"></p>
+<div id="footer">
+  <ul id="curator-list">
+    <li id="list-title">Featured Curators</li>
+    <li><img src="thumbnail/curator_01.png"></li>
+    <li><img src="thumbnail/curator_02.png"></li>
+    <li><img src="thumbnail/curator_03.png"></li>
+    <li><img src="thumbnail/curator_04.png"></li>
+    <li><img src="thumbnail/curator_05.png"></li>
+    <li><img src="thumbnail/curator_06.png"></li>
+    <li><img src="thumbnail/curator_07.png"></li>
+    <li><img src="thumbnail/curator_08.png"></li>
+    <li><img src="thumbnail/curator_09.png"></li>
+  </ul>
+  <ul id="footer-list">
+    <li id="siteinfo">
+      <p id="btn-siteinfo"></p>
+      <p id="selected-siteinfo">Company</p>
+      <ul id="siteinfo-dropdown" class="dropdown">
+        <li class="on">Company</li>
+        <li>Blog</li>
+        <li>Forum</li>
+      </ul>
+    </li>
+    <li id="sitelang">
+      <p id="btn-sitelang"></p>
+      <p id="selected-sitelang">English Site</p>
+      <ul id="sitelang-dropdown" class="dropdown">
+        <li class="on">English Site</li>
+        <li>中文網站</li>
+      </ul>
+    </li>
+  </ul>
+  <p id="copyright"><span>&copy; 2012 9x9.tv.  All right reserved</span></p>
+</div>
+<!-- Footer End -->
+
+<!-- Video Layer Begin -->
+<div id="video-layer" class="stage">
+  <div id="video-constrain">
+    <iframe width="100%" height="100%" src="http://www.youtube.com/v/dySwrhMQdX4?wmode=transparent&version=3&autoplay=0&controls=0&showinfo=0" frameborder="0"></iframe>
+  </div>
+  <div id="video-control">
+    <p id="btn-knob"></p>
+    <div id="progress-bar">
+      <p id="loaded"></p>
+      <p id="played"></p>
+    </div>
+    <ul>
+      <li id="btn-play"></li>
+      <li id="btn-pause"></li>
+      <li id="volume-control">
+        <p id="btn-volume" class="loud"></p>
+        <p id="volume-bar"></p>
+        <p id="btn-dragger"></p>
       </li>
+      <li id="left-edge"></li>
+      <li id="btn-shopping"></li>
+      <li id="btn-expand"></li>
+      <li id="btn-shrink"></li>
+      <li id="play-time">
+        <span id="played-length">0:14</span><span class="divider">/</span><span id="total-length">3:25</span>
+      </li>
+      <li id="right-edge"></li>
+    </ul>
+  </div>
+</div>
+<!-- Video Layer End -->
+
+<!-- Player Layer Begin -->
+<div id="player-layer" class="stage">
+  <div id="player-sidebar">
+    <p id="player-sidebar-shadow"></p>
+    <div id="bar-controller">
+      <p id="bar-arrowup"></p>
+      <p id="bar-arrowdown"></p>
+    </div>
+    <div id="pl-switcher">
+      <ul id="pl-menu"><li id="trending" class="on"></li><li id="recommendation"></li><li id="myfollow1"></li><li id="myfollow2"></li></ul>
+      <p id="pl-type">Trending Stories</p>
+      <p id="pl-note">(Sorted by updated time)</p>
+    </div>
+    <div id="pl-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+    <div id="pl-constrain">
+    <ul id="pl-list">
+      <li class="on">
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">01.</span><span class="pl-title">Mountain Bike</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Moutain Biker</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">02.</span><span class="pl-title">Mountain Bike's Home</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Moutain Biker</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/02-1.png" class="thumb1"><img src="thumbnail/02-2.png" class="thumb2"><img src="thumbnail/02-3.png" class="thumb3">
+        <p class="pl-sign"><span>2 hours ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">03.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/03-1.png" class="thumb1"><img src="thumbnail/03-2.png" class="thumb2"><img src="thumbnail/03-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">04.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/04-1.png" class="thumb1"><img src="thumbnail/04-2.png" class="thumb2"><img src="thumbnail/04-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">05.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/05-1.png" class="thumb1"><img src="thumbnail/05-2.png" class="thumb2"><img src="thumbnail/05-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">06.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">07.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/02-1.png" class="thumb1"><img src="thumbnail/02-2.png" class="thumb2"><img src="thumbnail/02-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">08.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/03-1.png" class="thumb1"><img src="thumbnail/03-2.png" class="thumb2"><img src="thumbnail/03-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+      <li>
+        <p class="btn-quickfollow"></p>
+        <p class="pl-hilite"></p>
+        <p class="pl-title-line"><span class="pl-number">09.</span><span class="pl-title">In The Mountain</span></p>
+        <p class="pl-curator-line"><span>by</span><span class="pl-curator">Andy Lin</span></p>
+        <p class="icon-pl"></p>
+        <img src="thumbnail/03-1.png" class="thumb1"><img src="thumbnail/03-2.png" class="thumb2"><img src="thumbnail/03-3.png" class="thumb3">
+        <p class="pl-sign"><span>1 day ago</span></p>
+      </li>
+    </ul>
+    </div>
+  </div>
+    
+  <div id="player-holder">
+    <div id="player-ch-info">
+      <p id="ch-title">Moutain Bike Channel</p>
+      <p id="ep-title">Mountain Biker gets taken out by BUCK - CRAZY Footage - in Africa</p>
+      <p id="btn-follow"><span>Follow this Channel</span></p>
+      <div class="fb-like">
+	  	<div id="fb-root"></div>
+		<div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
+      </div>
+      <ul class="favorite">
+        <li class="favorite-head"></li>
+        <li class="favorite-body"><span>Favorite</span></li>
+        <li class="favorite-tail"></li>
+        <li class="favorite-bubble-left"></li>
+        <li class="favorite-bubble-center"><span>172K</span></li>
+        <li class="favorite-bubble-right"></li>
+      </ul>
+    </div>
+    <p id="video-placeholder"></p>
+    <div id="player-ep-bar">
+      <p id="btn-ep-left"></p>
+      <p id="btn-ep-right"></p>
+      <p id="player-ep-meta">
+        <span class="ep-title">Mountain Biker gets taken out by BUCK - CRAZY Footage</span>
+        <span class="ep-index">(3/50)</span>
+        <span>-</span>
+        <span class="ep-age">3 months ago</span>
+      </p>
+      <div id="player-ep-constrain">
+        <ul id="player-ep-list">
+        </ul>
+      </div>
+    </div>
+    <div id="player-ep-source">
+      <p id="ch-source">From <span>Mountain Biker gets taken out by BUCK Footage</span></p>
+      <p id="video-source">on <span>YouTube</span></p>
+      <p id="curator-source">by <span>Moutain Biker's News</span></p>
+    </div>
+    <div id="curator-photo"><img src="thumbnail/curator_01.png"></div>
+    <div id="curator-title">
+      <span>Curator:</span>
+      <p id="curator-name">Moutain Biker</p>
+    </div>
+    <p id="curator-description" class="ellipsis multiline">To watch mountain bike videos. Bikes, gear reviews and ratings from other riders. To watch mountain bike videos. Bikes, gear reviews and ratings from other riders. Don't wait no longer. Subscript now.</p>
+    <div id="bubble">
+      <p id="bubble-title">Show me more</p>
+      <p id="bubble-wording" class="ellipsis multiline">Want to buy a new stuff for your bike?</p>
+    </div>
+    <div id="flipr">
+      <p id="flipr-playpause"></p>
+      <p id="flipr-arrowup"></p>
+      <p id="flipr-arrowdown"></p>
+      <p id="flipr-arrowleft"></p>
+      <p id="flipr-arrowright"></p>
+    </div>
+  </div>
+</div>
+<!-- Player Layer End -->
+
+<!-- Curator Layer Begin -->
+<div id="curator-layer" class="stage curator">
+  <div id="curator-sidebar">
+    <p id="curator-sidebar-shadow"></p>
+    <p id="curator-profile-photo"><img src="thumbnail/curator_05.png"></p>
+    <h2>Snowball</h2>
+    <div id="curator-paragraphs">
+      <p id="curator-declaration">Hi,<br>Welcome to visit my channels.<br>I love here!</p>
+      <p id="curator-email">My E-mail:<br>snowball@9x9.tv</p>
+      <p id="curator-blog">My Blog:<br>http://esnowball.blogspot.com</p>
+      <p id="curator-page">My Page's URL:<br>www.9x9.tv/curator/24225524222<br><span class="link">Create customized short URL</span></p>
+    </div>
+    <p class="curator-sidebar-btn" id="btn-edit-curator">Edit</p>
+    <p class="curator-sidebar-btn" id="btn-about-curator">About Snowball</p>
+    <ul id="curator-activity">
+      <li>
+        <p class="number">13</p>
+        <p class="item">channels</p>
+      </li>
+      <li>
+        <p class="number">20</p>
+        <p class="item">followings</p>
+      </li>
+      <li>
+        <p class="number">3,500</p>
+        <p class="item">followers</p>
+      </li>
+    </ul>
+  </div>
+  <ul id="curator-tabs"><li class="left on" id="channel"><span id="btn-manage"></span><div><p><span class="name">Snowball</span>'s Channels<span class="number">(13)</span></p></div></li><li class="right" id="following"><div><p><span class="name">Snowball</span>'s Followings<span class="number">(20)</span></p></div></li></ul>
+  <ul id="manage-tip">
+    <li id="tip-left"></li>
+    <li id="tip-center">Manage your channels</li>
+    <li id="tip-right"></li>
+  </ul>
+  <div class="curator-panel" id="channel-panel">
+    <div id="channel-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+    <div class="curator-panel-constrain" id="channel-constrain">
+      <ul id="channel-list">
+        <li class="default">
+          <p class="channel-title">Snowball's Favorites</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/coffee_01.png" class="thumb1">
+          <img src="thumbnail/coffee_02.png" class="thumb2">
+          <img src="thumbnail/coffee_03.png" class="thumb3">
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="channel-description ellipsis multiline">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
+          <p class="default-channel-title">Snowball's Favorite</p>
+          <ul class="follower-list">
+            <li></li>
+          </ul>
+          <div class="channel-popularity">
+            <p>0 Followers</p>
+            <p>0 Viewers</p>
+          </div>
+        </li>
+        <li class="new-channel">
+          <div><p>Create a<br>new channel</p></div>
+        </li>
+        <li>
+          <p class="channel-title">Coffee Shop</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/coffee_01.png" class="thumb1">
+          <img src="thumbnail/coffee_02.png" class="thumb2">
+          <img src="thumbnail/coffee_03.png" class="thumb3">
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="channel-description">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
+          <p class="default-channel-title">Snowball's Favorite</p>
+          <ul class="follower-list">
+            <li><img src="thumbnail/follower_01.png"></li>
+            <li><img src="thumbnail/follower_02.png"></li>
+            <li><img src="thumbnail/follower_03.png"></li>
+          </ul>
+          <div class="channel-popularity">
+            <p>0 Followers</p>
+            <p>0 Viewers</p>
+          </div>
+        </li>
+        <li>
+          <p class="channel-title">Coffee Shop</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/coffee_01.png" class="thumb1">
+          <img src="thumbnail/coffee_02.png" class="thumb2">
+          <img src="thumbnail/coffee_03.png" class="thumb3">
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="channel-description">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
+          <p class="default-channel-title">Snowball's Favorite</p>
+          <ul class="follower-list">
+            <li><img src="thumbnail/follower_01.png"></li>
+            <li><img src="thumbnail/follower_02.png"></li>
+            <li><img src="thumbnail/follower_03.png"></li>
+          </ul>
+          <div class="channel-popularity">
+            <p>0 Followers</p>
+            <p>0 Viewers</p>
+          </div>
+        </li>
+        <li>
+          <p class="channel-title">Coffee Shop</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/coffee_01.png" class="thumb1">
+          <img src="thumbnail/coffee_02.png" class="thumb2">
+          <img src="thumbnail/coffee_03.png" class="thumb3">
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="channel-description">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
+          <p class="default-channel-title">Snowball's Favorite</p>
+          <ul class="follower-list">
+            <li><img src="thumbnail/follower_01.png"></li>
+            <li><img src="thumbnail/follower_02.png"></li>
+            <li><img src="thumbnail/follower_03.png"></li>
+          </ul>
+          <div class="channel-popularity">
+            <p>0 Followers</p>
+            <p>0 Viewers</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="curator-panel" id="following-panel">
+    <div id="following-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+    <div class="curator-panel-constrain" id="following-constrain">
+      <ul id="following-list">
+        <li>
+          <p class="channel-title">Summer Vacation</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_02.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+        <li>
+          <p class="channel-title">Coffee House</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/coffee_01.png" class="thumb1">
+          <img src="thumbnail/coffee_02.png" class="thumb2">
+          <img src="thumbnail/coffee_03.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_03.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+        <li>
+          <p class="channel-title">Mountain Bike</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1">
+          <img src="thumbnail/01-2.png" class="thumb2">
+          <img src="thumbnail/01-3.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_04.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>1 day ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+        <li>
+          <p class="channel-title">World Class Limited Sport</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/epi_01.png"class="thumb1">
+          <img src="thumbnail/epi_02.png" class="thumb2">
+          <img src="thumbnail/epi_03.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_08.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>1 day ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- Curator Layer End -->
+
+<!-- Search Layer Begin -->
+<div id="search-layer" class="stage">
+  <div id="result-summary">
+    <ul>
+      <li class="term">Results for<span id="search-term">Travel</span></li>
+      <li class="numbers"><span id="curator-found">12</span>Curators<span class="divider">|</span><span id="channel-found">300</span>Channels</li>
+    </ul>
+  </div>
+  <div id="results-constrain">
+    <div class="clip" id="curator-result-clip">
+      <p class="clip-left"></p>
+      <p class="clip-center"><span>12</span>Curators</p>
+      <p class="clip-right"></p>
+    </div>
+    <ul id="curator-pagination">
+      <li class="btn-pagination" id="btn-prev-curator">Prev</li>
+      <li class="page-number">1</li>
+      <li class="page-number">2</li>
+      <li class="page-number">3</li>
+      <li class="btn-pagination" id="btn-next-curator">Next</li>
+    </ul>
+    <div id="curator-result-constrain">
+      <ul id="curator-result">
+        <li>
+          <p class="curator-divider"></p>
+          <p class="searched-curator-photo"><img src="thumbnail/curator_09.png"></p>
+          <p class="curator-name">Liz Lisa</p>
+          <p class="channel-popularity"><span class="viewer-number">3.4K</span>Viewer<span class="divider">|</span><span class="follower-number">1K</span>Followers</p>
+          <p class="channel-owned"><span class="channel-number">13</span>Channels</p>
+          <p class="pl-title-line"><span class="pl-title">Travel in the world</span></p>
+          <p class="pl-curator-line"><span>by</span><span class="pl-curator">Liz lisa</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+          <p class="pl-sign"><span>1 day ago</span></p>
+        </li>
+        <li>
+          <p class="curator-divider"></p>
+          <p class="searched-curator-photo"><img src="thumbnail/curator_09.png"></p>
+          <p class="curator-name">Liz Lisa</p>
+          <p class="channel-popularity"><span class="viewer-number">3.4K</span>Viewer<span class="divider">|</span><span class="follower-number">1K</span>Followers</p>
+          <p class="channel-owned"><span class="channel-number">13</span>Channels</p>
+          <p class="pl-title-line"><span class="pl-title">Travel in the world</span></p>
+          <p class="pl-curator-line"><span>by</span><span class="pl-curator">Liz lisa</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+          <p class="pl-sign"><span>1 day ago</span></p>
+        </li>
+        <li>
+          <p class="curator-divider"></p>
+          <p class="searched-curator-photo"><img src="thumbnail/curator_09.png"></p>
+          <p class="curator-name">Liz Lisa</p>
+          <p class="channel-popularity"><span class="viewer-number">3.4K</span>Viewer<span class="divider">|</span><span class="follower-number">1K</span>Followers</p>
+          <p class="channel-owned"><span class="channel-number">13</span>Channels</p>
+          <p class="pl-title-line"><span class="pl-title">Travel in the world</span></p>
+          <p class="pl-curator-line"><span>by</span><span class="pl-curator">Liz lisa</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+          <p class="pl-sign"><span>1 day ago</span></p>
+        </li>
+        <li>
+          <p class="curator-divider"></p>
+          <p class="searched-curator-photo"><img src="thumbnail/curator_09.png"></p>
+          <p class="curator-name">Liz Lisa</p>
+          <p class="channel-popularity"><span class="viewer-number">3.4K</span>Viewer<span class="divider">|</span><span class="follower-number">1K</span>Followers</p>
+          <p class="channel-owned"><span class="channel-number">13</span>Channels</p>
+          <p class="pl-title-line"><span class="pl-title">Travel in the world</span></p>
+          <p class="pl-curator-line"><span>by</span><span class="pl-curator">Liz lisa</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+          <p class="pl-sign"><span>1 day ago</span></p>
+        </li>
+        <li>
+          <p class="curator-divider"></p>
+          <p class="searched-curator-photo"><img src="thumbnail/curator_09.png"></p>
+          <p class="curator-name">Liz Lisa</p>
+          <p class="channel-popularity"><span class="viewer-number">3.4K</span>Viewer<span class="divider">|</span><span class="follower-number">1K</span>Followers</p>
+          <p class="channel-owned"><span class="channel-number">13</span>Channels</p>
+          <p class="pl-title-line"><span class="pl-title">Travel in the world</span></p>
+          <p class="pl-curator-line"><span>by</span><span class="pl-curator">Liz lisa</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+          <p class="pl-sign"><span>1 day ago</span></p>
+        </li>
+        <li>
+          <p class="curator-divider"></p>
+          <p class="searched-curator-photo"><img src="thumbnail/curator_09.png"></p>
+          <p class="curator-name">Liz Lisa</p>
+          <p class="channel-popularity"><span class="viewer-number">3.4K</span>Viewer<span class="divider">|</span><span class="follower-number">1K</span>Followers</p>
+          <p class="channel-owned"><span class="channel-number">13</span>Channels</p>
+          <p class="pl-title-line"><span class="pl-title">Travel in the world</span></p>
+          <p class="pl-curator-line"><span>by</span><span class="pl-curator">Liz lisa</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1"><img src="thumbnail/01-2.png" class="thumb2"><img src="thumbnail/01-3.png" class="thumb3">
+          <p class="pl-sign"><span>1 day ago</span></p>
+        </li>
+      </ul>
+    </div>
+    <div class="clip" id="channel-result-clip">
+      <p class="clip-left"></p>
+      <p class="clip-center"><span>30</span>Channels</p>
+      <p class="clip-right"></p>
+    </div>
+    <div id="channel-result-constrain">
+      <ul id="channel-result">
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+        <li>
+          <p class="btn-follow">Follow</p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="channel-title">Travel is My Life</p>
+          <p class="channel-meta">
+            <span>75</span>Episodes<br>
+            <span>1</span>hour ago<br>
+            <span>10K</span>Followers<br>
+            <span>90K</span>Views
+          </p>
+          <p class="curator-name">by<span>Someone</span></p>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="noresult-summary">
+    <h3></h3>
+    <div id="research">
+      <p id="btn-research"></p>
+      <input type="text" class="textfield" id="research-field">
+    </div>
+    <p class="msg">Sorry, can't find any results for that search, Please try a difference one.</p>
+  </div>
+  <div id="reco-results">
+    <div class="clip" id="reco-result-clip">
+      <p class="clip-left"></p>
+      <p class="clip-center">You May Like</p>
+      <p class="clip-right"></p>
+    </div>     
+    <div id="reco-shelf"><p></p></div>   
+    <div id="reco-result-constrain">   
+      <ul id="reco-result">
+        <li>
+          <p class="channel-title">Summer Vacation</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/vacation_01.png" class="thumb1">
+          <img src="thumbnail/vacation_02.png" class="thumb2">
+          <img src="thumbnail/vacation_03.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_02.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+        <li>
+          <p class="channel-title">Coffee House</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/coffee_01.png" class="thumb1">
+          <img src="thumbnail/coffee_02.png" class="thumb2">
+          <img src="thumbnail/coffee_03.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_03.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+        <li>
+          <p class="channel-title">Mountain Bike</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/01-1.png" class="thumb1">
+          <img src="thumbnail/01-2.png" class="thumb2">
+          <img src="thumbnail/01-3.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_04.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>1 day ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>
+        <li>
+          <p class="channel-title">World Class Limited Sport</p>
+          <p class="btn-action"><span>Follow</span></p>
+          <p class="icon-pl"></p>
+          <img src="thumbnail/epi_01.png" class="thumb1">
+          <img src="thumbnail/epi_02.png" class="thumb2">
+          <img src="thumbnail/epi_03.png" class="thumb3">
+          <p class="followed-curator-photo"><img src="thumbnail/curator_08.png"></p>
+          <div class="channel-meta">
+            <p>30 Episodes<span class="divider">|</span>1 day ago</p>
+            <p class="next-update">Next Update: Tomorrow</p>
+          </div>
+          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+        </li>  
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- Search Layer End -->
+
+<!-- Temporary Utility Layers -->
+<div id="shazam-layer">
+  <div id="shazam-holder" class="shazam-holder">
+    <ul id="shazam-input">
+      <li><p><input type="text" class="textfield" id="return-email" value="Please enter your email address"></p></li>
+      <li><p><input type="text" class="textfield" id="signin-password" value="Please enter your password"></p></li>
+    </ul>
+    <ul class="action-list">
+      <li><p class="btn" id="btn-shazam-signin"><span>Signin</span></p></li>
+      <li><p class="btn" id="btn-shazam-cancel"><span>Cancel</span></p></li>
+    </ul>
+  </div>
+</div>
+
+<div id="forgot-layer">
+  <div id="forgot-holder" class="forgot-holder">
+    <p id="forgot-input">
+      <input type="text" class="textfield" value="Please enter your email address">
+    </p>
+    <ul class="action-list">
+      <li><p class="btn disable" id="btn-forgot-retrieve"><span>Retrieve</span></p></li>
+      <li><p class="btn" id="btn-forgot-cancel"><span>Cancel</span></p></li>
     </ul>
   </div>
 </div>
 
 <div id="waiting-layer">
   <div id="waiting-holder">
-    <img src="${nroot}/images/loading.gif">
+    <img src="temporary/loading.gif">
     <p>One moment...</p>
   </div>
 </div>
 
-<div id="buffering">
-  <div class="waiting-holder">
-    <img src="${root}/images/loading.gif">
-    <p id="buffering1">Buffering...</p>
-  </div>
-</div>
-
-<div id="dir-waiting">
-  <div class="waiting-holder">
-    <img src="${root}/images/loading.gif">
-    <p id="moment2">One moment...</p>
-  </div>
-</div>
-
-<div id="msg-layer" style="display: none">
+<div id="msg-layer">
   <div id="msg-holder">
-    <p><span id="msg-text"></span></p>
+    <p><span>No program in this channel</span></p>
   </div>
 </div>
 
-<div id="epend-layer" style="display: none">
-  <div id="go-up">Press <span class="enlarge">&uarr;</span> to go to the IPG</div>
-  <div id="go-down">Press <span class="enlarge">&darr;</span> to see all episodes</div>
-  <div id="go-left"><img src="" id="left-tease">Press <span class="enlarge">&larr;</span> to watch previous channel</div>
-  <div id="go-right"><img src="" id="right-tease">Press <span class="enlarge">&rarr;</span> to watch next channel</div>
-</div>
-
-<div id="success-layer">
-  <div class="success-holder" id="success-holder">
-    <p class="greeting"><span>Congratulations!</span></p>
-    <p><span>You have just added a set of <span id="success-data">4 Da Ai</span> channels to your <strong>Smart Guide</strong>.<br>Your Smart Guide is the place for you to add more channels and personalize your channel line-up.</span></p>
-    <ul class="action-list">
-      <li><a class="btn on" id="success-goto"><span>Go to my Smart Guide</span></a></li>
-    </ul>
+<div id="confirm-layer">
+  <div id="confirm-holder">
+    <p><span id="confirm-text">Thank you for using 9x9.tv. You have signed out.</span></p>
+    <p class="btn" id="btn-confirm-close"><span>Close</span></p>
   </div>
 </div>
 
-<div id="sg-bubble"><img src="${root}/images/bg_bubble.png"><div id="btn-bubble-del"><img src="${root}/images/btn_delete_off.png" class="off"><img src="${root}/images/btn_delete_on.png" class="on"></div><p><span id="rsbubble">Return to Smart Guide for more interesting content</span></p></div>
-
-<!--div id="btn-subscribe" style="z-index: 300; display: none"><img src="${root}/images/btn_subscribe_off.png" class="off"><img src="${root}/images/btn_subscribe_on.png" class="on"></div-->
-
-<div id="opening" style="display: block; z-index: 999">
-  <div class="opening-holder" id="splash"></div>
+<div id="error-layer">
+  <div id="error-holder">
+    <img src="temporary/icon_error.png" id="icon-error">
+    <p><span>Ooops....9x9 player has crashed.<br>Please reload the page to try again.</span></p>
+    <p class="btn" id="btn-error-ok"><span>OK</span></p>
+  </div>
 </div>
 
 <div id="yesno-layer">
-  <div class="yesno-holder" id="yesno-holder">
-    <p id="question"></p>
+  <div id="yesno-holder">
+    <p><span>You will be sharing the Public section of your Guide with your Facebook friends. Continue?</span></p>
     <ul class="action-list">
-      <li><a href="javascript:yn_enter(1)" class="btn" id="yesno-btn-yes"><span id="qyes">Yes</span></a></li>
-      <li><a href="javascript:yn_enter(2)" class="btn" id="yesno-btn-no"><span id="qno">No</span></a></li>
-    </ul>
-  </div>
-</div>
-
-<div id="rename-layer">
-  <div id="rename-holder">
-    <p class="instruction"><span>You can change the name of this 3x3 channel set</span></p>
-    <p id="rename-input">
-      <input type="text" class="textfield" id="rename-field" value="Enter a new title for the set">
-    </p>
-    <ul class="action-list">
-      <li><p class="btn disable" id="btn-rename-save"><span>Save</span></p></li>
-      <li><p class="btn" id="btn-rename-cancel"><span>Cancel</span></p></li>
+      <li><p class="btn" id="btn-yesno-yes"><span>Yes</span></p></li>
+      <li><p class="btn" id="btn-yesno-no"><span>No</span></p></li>
     </ul>
   </div>
 </div>
 
 <div id="tribtn-layer">
   <div id="tribtn-holder">
-    <p><span id="addsucc">The channel you follow is added successfully!</span></p>
+    <p><span>The channel you follow is added successfully!</span></p>
     <ul class="action-list">
-      <li><p class="btn" id="btn-watchSet"><span>Watching this Set</span></p></li>
-      <li><p class="btn" id="btn-toFset"><span>Back to Add Featured Sets</span></p></li>
-      <li><p class="btn" id="btn-toSG"><span>Return to Smart Guide</span></p></li>
+      <li><p class="btn"><span>Watching this Set</span></p></li>
+      <li><p class="btn"><span>Back to Add Featured Sets</span></p></li>
+      <li><p class="btn"><span>Return to Smart Guide</span></p></li>
     </ul>
   </div>
 </div>
 
-<div id="email-layer">
-  <div id="email-holder">
-    <ul class="input-list">
-      <li>
-        <span>To:</span>
-        <p id="email-input">
-          <input type="text" class="textfield" value="Enter email address">
-        </p>
-      </li>
-      <li>
-        <span>Message:</span><span class="hint">(150 characters maximum)</span>
-        <p id="msg-input">
-          <textarea class="textfield">Enter message</textarea> 
-        </p>
-      </li>
-      <li>
-        <span>Word Verification:</span>
-        <p id="email-captcha-input">
-          <input type="text" class="textfield" value="Type the characters in the picture below">
-        </p>
-        <p id="email-captcha"><img></p>
-        <img src="${nroot}/images/btn_recaptcha.png" id="btn-email-recaptcha" title="Get a new challenge">
-      </li>
-    </ul>
+<div id="success-layer">
+  <div id="success-holder">
+    <p class="greeting"><span>Success!</span></p>
+    <p><span>Welcome to 9x9! Now you can access thousand of curated channels!</span></p>
+    <p><span>Browse throuth out Channel Store, add new channels to your personalized progamming guide and watch your favorite channelsjust like how you would on a TV!</span></p>
     <ul class="action-list">
-      <li><p class="btn disable" id="btn-email-send"><span>Send</span></p></li>
-      <li><p class="btn" id="btn-email-cancel"><span>Cancel</span></p></li>
+      <li><p class="btn on" id="btn-success2store"><span>Start Adding Channels</span></p></li>
     </ul>
   </div>
 </div>
+<!-- End Temporary Utility Layers -->
 
-<div id="company-layer">
-  <div id="company-holder">
-    <p id="btn-company-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
-    <ul id="company-tabs">
-      <li id="about" class="on"><span>About Us</span></li>
-      <li id="contact"><span>Contact Us</span></li>
-      <li id="legal"><span>Legal</span></li>
-    </ul>
-    <div id="about-panel" class="input-panel">
-      <div id="about-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="about-content" class="constrain">
-        <div id="about-list">
-        </div>
-      </div>
-    </div>
-    <div id="contact-panel" class="input-panel">
-      <div id="contact-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="contact-content" class="constrain">
-        <div id="contact-list">
-        </div>
-      </div>
-    </div>
-    <div id="legal-panel" class="input-panel">
-      <div id="legal-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="legal-content" class="constrain">
-        <div id="legal-list">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div id="help-layer">
-  <div id="help-holder">
-    <p id="btn-help-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
-    <ul id="help-tabs">
-      <li id="tutorial" class="on"><span>New User Tutorial</span></li>
-      <li id="faq"><span>FAQ</span></li>
-      <li id="sync"><span>Diagnostics</span></li>
-      <li id="report"><span>Report Problems</span></li>
-    </ul>
-    <div id="tutorial-panel" class="input-panel">
-      <div id="tutorial-content" class="constrain">
-        <div id="tutorial-list">
-        </div>
-      </div>
-    </div>
-    <div id="faq-panel" class="input-panel accordion">
-      <div id="faq-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="faq-content" class="constrain">
-        <div id="faq-list">
-        </div>
-      </div>
-    </div>
-    <div id="sync-panel" class="input-panel accordion">
-      <div id="sync-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="sync-content" class="constrain">
-        <div id="sync-list">
-        </div>
-      </div>
-    </div>
-    <div id="report-panel" class="input-panel">
-      <div id="report-content" class="constrain">
-        <p id="problem-input">
-          <textarea class="textfield">Enter your problem</textarea> 
-        </p>
-        <p id="btn-report" class="btn"><span>Submit</span></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="forgot-layer">
-  <div id="forgot-holder" class="forgot-holder">
-    <p id="forgot-input">
-      <input type="text" class="textfield" value="Please enter your email address">
-    </p>
-    <ul class="action-list">
-      <li><p class="btn disable" id="btn-forgot-retrieve"><span>Retrieve</span></p></li>
-      <li><p class="btn" id="btn-forgot-cancel"><span>Cancel</span></p></li>
-    </ul>
-  </div>
-</div>
-
-<div id="log-layer" style="position: absolute; left: 0; top: 0; height: 100%; width: 100%; background: white; color: black; text-align: left; padding: 20px; overflow: scroll; z-index: 9999; display: none"></div>
-
-<div id="mask"></div>
-
-<div id="fb-root"></div>
-
-<!--
-<div id="relaydiv" style="z-index: 1; position: absolute; top: 0px; left: 0px; width=500px; height=500px">
-<object id="relay" width=481 height=86>
-<param name=movie value="relay4.swf">
-<embed play=false swliveconnect="true" name="relay" 
-src="http://relay-puppy.9x9.tv/relay4.swf" quality=high bgcolor=#FFFFFF 
-width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="always" allowScripting="on" wmode="transparent">
-</embed>
-</object>
-</div>
--->
-
-<div id="relaydiv" style="z-index: 1; position: absolute; top: 0px; left: 0px; width=500px; height=500px">
-</div>
-
-<!--/div-->
-
-<div id="header">
-  <img src="${nroot}/images/bg_header.gif" id="bg-header">
-  <img src="${nroot}/images/logo.png" id="logo">
-  <p id="slogan"><span>Your Personal Channel Browser</span></p>
-  <ul id="nav">
-    <li id="btn-account">
-      <p><span class="head">Hi,</span><span id="user">Guest</span><img src="${nroot}/images/icon_expand.png" class="icon-expand"></p>
-      <ul id="account-dropdown" class="dropdown">
-      </ul>
-    </li>
-    <li class="divider"></li>
-    <li id="store" class="main"><img src="${nroot}/images/icon_store.png" id="icon-store"><span>Store</span></li>
-    <li class="divider"></li>
-    <li id="guide" class="main"><img src="${nroot}/images/icon_guide.png" id="icon-guide"><span>Guide</span><span id="ch-sum"></span></li>
-    <li class="divider"></li>
-    <li id="player" class="main"><img src="${nroot}/images/icon_player.png" id="icon-player"><span>Player</span></li>
-    <li class="divider"></li>
-    <li id="curate" class="main"><img src="${nroot}/images/icon_curate.png" id="icon-curate"><span>Curate</span></li>
-    <li class="divider" id="curate-divider"></li>
-    <li id="help"><img src="${nroot}/images/icon_help.png" id="icon-help"><span>Help</span></li>
-    <li class="divider"></li>
-    <li id="syncstatus"><img src="${nroot}/images/icon_sync_on.png" id="icon-sync-on" title="with 9x9 sync"><img src="${nroot}/images/icon_sync_off.png" id="icon-sync-off" title="without 9x9 sync"></li>
-  </ul>
-</div>
-
-<div id="setbubble">
-  <img src="${nroot}/images/bubble_tip.png" id="setbubble-tip">
-  <img src="${nroot}/images/bg_bubble.png" class="bg-bubble">
-  <p id="setbubble-content">
-    <span id="setbubble-title"></span>
-    <span id="setbubble-description"></span>
-  </p>
-</div>
-
-<div id="setbubbleclick">
-  <div id="setbubbleclick-slider" class="slider-wrap"><div class="slider-vertical"></div></div> 
-  <img src="${nroot}/images/add_bubble_tip_left.png" class="left-bubble-tip">
-  <img src="${nroot}/images/add_bubble_tip_right.png" class="right-bubble-tip">
-  <p id="btn-setbub-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
-  <div id="setbubbleclick-content">
-    <div class="setbubbleclick-category-content">
-      <ul id="setbubbleclick-list" class="setbubbleclick-level3-list">
-        <li>
-          <span class="setbubbleclick-title">Top 10 TV Show of the World</span>
-          <span class="setbubbleclick-description">Green sails in a television action movie serial shows</span>
-          <span class="setbubbleclick-channel">20 channels</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div id="add-bubble">
-  <img src="${nroot}/images/add_bubble_tip.png" id="add-bubble-tip">
-  <img src="${nroot}/images/bg_add_bubble.png" class="bg-add-bubble">
-  <p id="addbubble-content">
-    <span>Add channels to your personal Guide to receive the latest updates, share on<br><img src="${nroot}/images/icon_fb.png" id="icon-fb">Facebook or Email, watch it in full-screen, and more!</span>
-  </p>
-</div>
-
-<div id="flipr-bubble">
-  <img src="${nroot}/images/add_bubble_tip.png" id="flipr-bubble-tip">
-  <img src="${nroot}/images/bg_add_bubble.png" class="bg-flipr-bubble">
-  <p id="fliprbubble-content">
-    <span>Flip to preview the next channel</span>
-  </p>
-</div>
-
-<div id="flip-bubble" class="draggable ui-widget-content">
-  <img src="${nroot}/images/flip-bubble.png">
-  <p><span>Ch </span><span id="chOrder">1</span><br><span>of </span><span id="chNum">20</span></p>
-</div>
-
-<div id="store-layer" class="stage" style="display: none; background: #f0f0f0">
-  <div id="store-holder">
-    <div id="pool-waiting">
-      <img src="${nroot}/images/loading.gif">
-      <p><span>One moment...</span></p>
-    </div>
-    <div id="preview-waiting">
-      <img src="${nroot}/images/loading.gif">
-      <p><span>One moment...</span></p>
-    </div>
-    <h2><span>Channel Store</span></h2>
-    <ul id="programlang">
-      <li class="on"><span>English Channels</span></li>
-      <li><span>中文頻道</span></li>
-    </ul>
-    <!--img src="${nroot}/images/icon_cart_gray.png" id="btn-cart">
-    <p id="cart-bubble">
-      <img src="${nroot}/images/cart_bubble.png">
-      <span>0</span>
-    </p-->
-    <!--div id="btn-programlang">
-      <p id="selected-programlang"><span>English Channels</span><img src="${nroot}/images/icon_expand.png" class="icon-expand"></p>
-      <ul id="programlang-dropdown" class="dropdown">
-        <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>English Channels</span></li>
-        <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>中文頻道</span></li>
-      </ul>
-    </div-->
-    <p id="search-input">
-      <img src="${nroot}/images/icon_search.png" class="icon-search">
-      <input type="text" class="textfield" value="Search" id="search-field">
-    </p>
-    <div id="preview-area">
-      <ul id="flip-ch-index"></ul>
-      <div id="flip-bubble-constrain"></div>
-      <p id="btn-flip-back"><img src="${nroot}/images/btn_flip_back.png" id="icon-fp-back"></p>
-      <p id="btn-flip-preview">
-        <img src="${nroot}/images/btn_flip_bg.png" id="btn-fp-bg"> 
-        <img src="${nroot}/images/btn_flip_L_off.png" id="btn-fp-off"> 
-        <img src="${nroot}/images/btn_flip_L_on.png" id="btn-fp-on">
-        <img src="${nroot}/images/btn_flip_L_disable.png" id="btn-fp-disable">
-      </p>
-      <!--p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title"></span></p-->
-
-
-
-      <div id="preview-win">
-        <div id="preview-win-top-bar">
-           <p id="preview-index"><span class="head">Previewing Channel:</span><span id="index-ch-title">The Beautiful Universe</span></p>
-        </div>
-        <div id="preview-video-bg">
-           <div id="preview-video"></div>
-        </div>
-        <p id="preview-index-meta">
-          <span id="meta-set-title">Top 10 TV Shows in the World</span><span class="divider">&raquo;</span><span id="meta-ch-title">The Beautyful Universe</span><span class="divider">&raquo;</span><span id="meta-ep-title">Jay Leno's eclectic car collection</span>
-        </p>
-        <p id="ep-switcher">
-          <img src="${nroot}/images/icon_ep.png" id="btn-ep">
-          <span id="ep-show">Show episodes</span>
-        </p>
-        <div id="preview-ep">
-          <img src="${nroot}/images/arrow_right_on.png" id="preview-arrow-right">
-          <img src="${nroot}/images/arrow_left_on.png" id="preview-arrow-left">
-          <ul id="preview-ep-list"></ul>
-        </div>
-
-
-
-        <div id="preview-controller">
-          <ul id="control-list">
-            <li id="btn-info"><img src="${nroot}/images/btn_info.png" id="icon-info" title="Channel Info"></li>
-            <li id="btn-preview-play" class="on"><img src="${nroot}/images/btn_play.png" id="icon-preview-play" title="Play"><img src="${nroot}/images/btn_pause.png" id="icon-preview-pause" title="Pause"></li>
-            <li id="btn-flip-prev"><img src="${nroot}/images/btn_flipup.png" id="icon-flip-prev" title="Prev Channel"></li>
-            <li id="btn-flip-next"><img src="${nroot}/images/btn_flipdown.png" id="icon-flip-next" title="Next Channel"></li>
-            <li id="btn-preview-volume-down"><img src="${nroot}/images/btn_volume_down.png" title="Volume Down"></li>
-            <li id="preview-volume-constrain">
-              <ul id="preview-volume-bars"><li class="on"></li><li class="on"></li><li class="on"></li><li class="on"></li><li></li><li></li><li></li></ul>
-            </li>
-            <li id="btn-preview-volume-up"><img src="${nroot}/images/btn_volume_up.png" title="Volume Up"></li>
-          </ul>
-        </div>
-      </div>
-      <p id="channel-price"><img src="${nroot}/images/tag_free.png" id="icon-tag"><span class="free">FREE</span></p>
-      <!--div id="preview-controller">
-        <ul id="control-list">
-          <li id="btn-info"><img src="${nroot}/images/btn_info.png" id="icon-info" title="Channel Info"></li>
-          <li id="btn-preview-play" class="on"><img src="${nroot}/images/btn_play.png" id="icon-preview-play" title="Play"><img src="${nroot}/images/btn_pause.png" id="icon-preview-pause" title="Pause"></li>
-          <li id="btn-flip-prev"><img src="${nroot}/images/btn_flipup.png" id="icon-flip-prev" title="Prev Channel"></li>
-          <li id="btn-flip-next"><img src="${nroot}/images/btn_flipdown.png" id="icon-flip-next" title="Next Channel"></li>
-        </ul>
-      </div-->
-      <div id="preview-promo">
-        <p><span>Flip through the channels and add your favorites to your Guide</span></p>
-      </div>
-      <div id="channel-bubble">
-        <div id="chbubble-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-        <div id="chbubble-content">
-          <div id="chbubble-list">
-            <p><span></span></p>
-            <p id="chbubble-meta"><span></span><span class="divider">|</span><span></span><br><span id="chbubble-curator"></span></p>
-          </div>
-        </div>
-      </div>
-      <div id="btn-add-ch-L" class="btn-hilite"><img src="${nroot}/images/icon_cart_white.png" class="icon-cart"><p class="btn-text"><span>Add this Channel</span></p></div>
-    </div>    
-    <ul id="tabs">
-      <li id="recommended" class="on"><span>Recommended sets</span></li>
-      <li id="category"><span>Directory</span></li>
-      <li id="yourown"><span>Add your own</span></li>
-    </ul>
-    <div id="channel-pool">
-      <div id="recommended-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="recommended-content" class="tab-content">
-        <ul id="recommended-list">
-        </ul>
-      </div>
-      <div id="category-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="category-content" class="tab-content">
-        <ul class="level1-list">
-        </ul>
-      </div>      
-      <div id="yourown-content" class="tab-content">
-        <h3><span>Add YouTube Channels</span></h3>
-        <p id="yt-intro"><span>Enter YouTube Channel or Playlist URL:</span></p>
-        <div id="yt-input">
-          <input name="" type="text" class="textfield" value="http://www.youtube.com/user/">
-        </div>
-        <p id="yt-note"><span>* We don't accept URLs for single video</span></p>
-        <div id="btn-add-yt" class="btn-hilite"><img src="${nroot}/images/icon_cart_white.png" class="icon-cart"><p class="btn-text"><span>Add this Channel</span></p></div>
-      </div>
-    </div>
-      <div id="search-layer">
-      <p id="btn-search-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
-      <h4><span>Search Result</span></h4>
-     <p id="result-head"></p>
-      <div id="search-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-      <div id="search-content">
-        <div id="no-result">
-          <img src="${nroot}/images/sign_alert.png" id="sign-alert">
-          <p class="alert-msg"><span>Your search did not match any channels.</span></p>
-          <p class="head"><span>Suggestions:</span></p>
-          <p class="suggestions"><span>Please try different keywords<br>Broaden your search terms</span></p>
-        </div>
-        <ul id="search-list">
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="hint-layer">
-  <div id="hint-holder">
-    <img src="${nroot}/images/hint_1.png" id="hint-1"><img src="${nroot}/images/hint_2.png" id="hint-2"><img src="${nroot}/images/hint_3.png" id="hint-3">
-  </div>
-</div>
-
-<div id="hint-bubble">
-  <img src="${nroot}/images/bubble_tip_up.png" id="hint-bubble-tip">
-  <img src="${nroot}/images/bg_bubble_up.png" class="bg-bubble">
-  <div id="hint-bubble-content">
-    <p class="head"><span>New to 9x9?</span></p>
-    <p><span>Click <span class="link">Here</span> to take a quick tutorial!</span></p>
-    <img src="${nroot}/images/tutorial_screenshot.jpg" id="tutorial-screenshot">
-  </div>
-</div>
-
-<div id="guide-layer" class="stage" style="display: none; background: #f0f0f0">
-  <div id="guide-holder">
-    <h2><span>9x9 Guide</span></h2>
-        <div id="guide-content">
-      <img src="${nroot}/images/bg_player.jpg" id="guide-bg">
-      <p id="btn-guide2store"><span>&lt; Back to Store</span></p>
-      <p id="guide-index"><span class="occupied">13/81</span><span>channels in your 9x9 Guide</span></p>
-      <p id="guide-tip"><span class="head">Tips:</span><br><span>Drag and drop channel icons to arrange channels</span></p>
-      <div id="grid">
-      </div>
-      <div id="channel-info">
-        <p class="head"><span>Current Channel:</span></p>
-        <p class="ch-title"><span>Jazz</span></p>
-        <p class="ch-epNum"><span>Episode:</span><span class="amount">12</span></p>
-        <p class="ch-updated"><span>Updated:</span><span class="date new">Today</span></p>
-        <p class="ch-description ellipsis multiline"><span>Last installment from my "Making Money from Podcasting" series...</span></p>
-      </div>
-      
-      <ul id="guide-sync">
-        <li id="btn-guide-sync">
-          <img src="${nroot}/images/btn_sync.png">
-          <ul id="guide-sync-dropdown" class="dropdown">
-            <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>Google TV</span></li>
-            <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>Google TV2</span></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div id="player-layer" class="stage" style="display: none; background: #f0f0f0">
-  <div id="player-video"></div>
-  <ul id="control-bar">
-    <li id="btn-play"><img src="${nroot}/images/btn_play.png" title="Play"></li>
-    <li id="btn-pause"><img src="${nroot}/images/btn_pause.png" title="Pause"></li>
-    <li class="divider"></li>
-    <li id="play-time"><span></span></li>
-    <li class="divider"></li>
-    <li id="progress-constrain">
-      <!--p id="btn-knob" style="display: none"></p-->
-      <div id="progress-bar">
-        <p id="loaded"></p>
-        <p id="played"></p>
-      </div>
-    </li>
-    <li class="divider"></li>
-    <li id="btn-volume-down"><img src="${nroot}/images/btn_volume_down.png" title="Volume Down"></li>
-    <li id="volume-constrain">
-      <ul id="volume-bars"><li class="on"></li><li class="on"></li><li class="on"></li><li class="on"></li><li></li><li></li><li></li></ul>
-    </li>
-    <li id="btn-volume-up"><img src="${nroot}/images/btn_volume_up.png" title="Volume Up"></li>
-    <li class="divider"></li>
-    <li id="btn-full" class="right"><img src="${nroot}/images/btn_full.png" title="Full Screen"></li>
-    <li id="btn-shrink" class="right"><img src="${nroot}/images/btn_shrink.png" title="Exit Full Screen"></li>
-
-
-    <li id="btn-sync" class="right">
-      <img src="${nroot}/images/btn_sync.png" title="9x9 Sync">
-      <ul id="sync-dropdown" class="dropdown">
-      </ul>
-    </li>
-    <li id="btn-share" class="right">
-      <img src="${nroot}/images/btn_share.png" title="Share">
-      <ul id="share-dropdown" class="dropdown">
-        <li class="combo">
-          <span>Channel URL:</span>
-          <p id="share-input"><input type="text" class="textfield" value=""></p>
-        </li>
-        <li><img src="${nroot}/images/icon_mail.png" class="icon-mail"><span>Send by email</span></li>
-        <li><img src="${nroot}/images/icon_fb.png" class="icon-fb"><span>Share to facebook</span></li>
-      </ul>
-    </li>
-    <li id="btn-sort" class="right">
-      <img src="${nroot}/images/btn_sort.png" title="Sort">
-      <ul id="sort-dropdown" class="dropdown">
-        <li class="head"><span>Episodes sort by:</span></li>
-        <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>From Newest to Oldest</span></li>
-        <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>From Left off to Newest</span></li>
-      </ul>
-    </li>
-    <li id="btn-rez" class="right">
-      <span id="selected-rez">360p</span>
-      <ul id="rez-dropdown" class="dropdown">
-        <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>720p</span></li>
-        <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>480p</span></li>
-        <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>360p</span></li>
-        <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>240p</span></li>
-      </ul>
-    </li>
-  </ul>
-  <div id="player-holder">
-    <h2><span>9x9 Player</span></h2>
-    <div id="player-content">
-      <p id="btn-flip-play">
-        <img src="${nroot}/images/btn_flip_bg.png" id="btn-fpl-bg"> 
-        <img src="${nroot}/images/btn_flip_L_off.png" id="btn-fpl-off"> 
-        <img src="${nroot}/images/btn_flip_L_on.png" id="btn-fpl-on">
-      </p>
-      <img src="${nroot}/images/bg_player.jpg" id="player-bg">
-      <p id="btn-player2store"><span>< Back to Store</span></p>
-      <p id="player-index"><span>You are watching</span><span class="ch-title"></span><span>channel</span></p>
-      <img src="${nroot}/images/player_ep_panel.png" id="player-ep-panel">
-      <img src="${nroot}/images/arrow_right_on.png" id="player-arrow-right">
-      <img src="${nroot}/images/arrow_left_on.png" id="player-arrow-left">
-      <ul id="player-ep-list"></ul>-
-      <p id="player-ep-meta">
-        <span class="meta-head">Episode:</span>
-        <span class="ep-title"></span>
-        <span class="amount"></span>
-        <span class="age">- Today</span>
-      </p>
-      <div id="player-ch-flipper">
-        <div id="play-next">
-          <img src="${nroot}/images/arrow_down.png" id="arrow-next">
-          <p class="tooltip"><span>Next Ch</span></p>
-          <img src="" class="thumbnail">
-          <div id="next-title" class="ellipsis multiline"><p class="txt-holder"><span></span></p></div>
-        </div>
-        <div id="play-prev">
-          <img src="${nroot}/images/arrow_up.png" id="arrow-prev">
-          <p class="tooltip"><span>Prev Ch</span></p>
-          <img src="" class="thumbnail">
-          <div id="prev-title" class="ellipsis multiline"><p class="txt-holder"><span></span></p></div>
-        </div>
-        <p id="play-ch-index"><span></span></p>
-      </div>
-      <div id="player-info">
-        <div id="ep-description" class="ellipsis multiline">
-          <p class="head"><span>Episode Description</span></p>
-          <p class="content"><span></span></p>
-        </div>
-        <div id="comment" class="ellipsis multiline">
-          <p class="head"><span>Curator's Comment</span></p>
-          <p class="content"><span></span></p>
-        </div>
-        <div id="ep-uploaded">
-          <p class="head"><span>Uploaded:</span></p>
-          <p class="content"><span></span></p></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<div id="settings-layer">
-  <div id="settings-holder">
-    <p id="btn-settings-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
-    <ul id="settings-tabs">
-      <li id="general" class="on"><span>General</span></li>
-      <!--li id="sharing"><span>Sharing</span></li-->
-      <li id="preload"><span>Preload</span></li>
-      <li id="resolution"><span>Resolution</span></li>
-    </ul>
-    <div id="general-panel" class="input-panel">
-      <ul class="input-list">
-        <li>
-          <p class="head"><span>Name:</span></p>
-          <p id="reset-name" class="editable"><span>John Smith</span></p>
-          <div id="reset-name-input" class="setting-block">
-            <p class="settings-input"><input type="text" class="textfield" value="John Smith"></p>
-          </div>
-        </li>
-        <li>
-          <p class="head"><span>Email:</span></p>
-          <p id="reset-email" class="fixed"><span>john@9x9.tv</span></p>
-        </li>
-        <li>
-          <p class="head"><span>Password:</span></p>
-          <p id="reset-pw" class="editable"><span>*******</span></p>
-          <div id="reset-pw-input" class="setting-block">
-            <p class="settings-input"><input type="text" class="textfield" value="Enter your old password"></p>
-            <p class="settings-input"><input type="text" class="textfield" value="Enter a new password"></p>
-            <p class="settings-input"><input type="text" class="textfield" value="Re-enter the new password"></p>
-          </div>
-        </li>
-        <li>
-          <p class="head"><span>Gender:</span></p>
-          <p id="reset-gender" class="editable"><span>Male</span></p>
-          <div id="reset-gender-input" class="setting-block">
-            <p class="radio-item on"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>Male</span></p>
-            <p class="radio-item"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>Female</span></p>
-          </div>
-        </li>
-        <li>
-          <p class="head"><span>Birth Year:</span></p>
-          <p id="reset-birth" class="editable"><span>1980</span></p>
-          <div id="reset-birth-input" class="setting-block">
-            <p class="settings-input"><input type="text" class="textfield" value="1980"></p>
-          </div>
-        </li>
-        <li>
-          <p class="head"><span>Language:</span></p>
-          <div id="btn-language" class="droppable">
-            <p id="selected-language"><span>English</span></p>
-            <ul id="language-dropdown" class="dropdown">
-              <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>English</span></li>
-              <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>中文</span></li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <p class="head"><span>Region:</span></p>
-          <div id="btn-region" class="droppable">
-            <p id="selected-region"><span>English Channels</span></p>
-            <ul id="region-dropdown" class="dropdown">
-              <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>English Channels</span></li>
-              <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>中文頻道</span></li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-      <ul class="action-list">
-        <li><p id="btn-general-save" class="btn"><span>Save</span></p></li>
-      </ul>
-    </div>
-    <div id="sharing-panel" class="input-panel">
-      <ul class="input-list">
-        <li>
-          <p class="head"><span>Connect Your 9x9 Account with:</span></p>
-          <p class="btn-check on"><img src="${nroot}/images/btn_check_on.png" class="btn-check-on"><img src="${nroot}/images/btn_check_off.png" class="btn-check-off"><span>Facebook</span></p>  
-          <p id="btn-connect-fb" class="btn"><span>Connect with Facebook</span></p>
-        </li>
-        <!--li>
-          <p class="head"><span>Auto share on My Facebook Wall when:</span></p>
-          <p class="btn-check on"><img src="${nroot}/images/btn_check_on.png" class="btn-check-on"><img src="${nroot}/images/btn_check_off.png" class="btn-check-off"><span>I add a new channel to my guide</span></p>
-        </li-->
-      </ul>
-      <ul class="action-list">
-        <li><p id="btn-sharing-save" class="btn"><span>Save</span></p></li>
-      </ul>
-    </div>
-    <div id="preload-panel" class="input-panel">
-      <ul class="input-list">
-        <li>
-          <p class="head"><span>I want to set 9x9's preloading capacity to:</span></p>
-          <p class="radio-item" id="preload-off"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>Off</span><span class="explanation">Disable preloading of videos</span></p>
-          <p class="radio-item" id="preload-on"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>On</span><span class="explanation">Enable preloading of videos</span></p>
-        </li>
-      </ul>
-      <ul class="action-list">
-        <li><p id="btn-preload-save" class="btn"><span>Save</span></p></li>
-      </ul>
-    </div>
-    <div id="resolution-panel" class="input-panel">
-      <ul class="input-list">
-        <li>
-          <p class="head"><span>Set 9x9's default playback resolution at:</span></p>
-          <p class="radio-item" id="rez-hd1080"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>1080p</span></p>
-          <p class="radio-item" id="rez-hd720"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>720p</span></p>
-          <p class="radio-item" id="rez-large"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>large (480px)</span></p>
-          <p class="radio-item" id="rez-medium"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>medium (360px)</span></p>
-          <p class="radio-item" id="rez-small"><img src="${nroot}/images/btn_radio_off.png" class="btn-radio-off"><img src="${nroot}/images/btn_radio_on.png" class="btn-radio-on"><span>small (240px)</span></p>
-        </li>
-      </ul>
-      <ul class="action-list">
-        <li><p id="btn-resolution-save" class="btn"><span>Save</span></p></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div id="forgot-layer">
-  <div id="forgot-holder" class="forgot-holder">
-    <p id="forgot-input">
-      <input type="text" class="textfield" value="Please enter your email address">
-    </p>
-    <ul class="action-list">
-      <li><p class="btn disable" id="btn-forgot-retrieve"><span>Retrieve</span></p></li>
-      <li><p class="btn" id="btn-forgot-cancel"><span>Cancel</span></p></li>
-    </ul>
-  </div>
-</div>
-
-<div id="footer">
-  <ul id="footer-list">
-
-
-    <li id="btn-company"><span>Company</span></li>
-    <li class="divider"></li>
-    <li id="btn-blog"><span>Blog</span></li>
-    <li class="divider"></li>
-    <li id="btn-forum"><span>Forum</span></li>
-    <li class="divider"></li>
-    <li id="btn-sitelang">
-      <p id="selected-sitelang"><span>English Site</span><img src="${nroot}/images/icon_expand.png" class="icon-expand"></p>
-      <ul id="sitelang-dropdown" class="dropdown">
-        <li class="on"><img src="${nroot}/images/icon_check.png" class="icon-check"><span>English Site</span></li>
-        <li><img src="${nroot}/images/icon_check.png" class="icon-check"><span>中文網站</span></li>
-      </ul>
-    </li>
-  </ul>
-  <p id="copyright"><span>&copy; 2012 9x9.tv.  All rights reserved</span></p>
-</div>
 
 </body>
 </html>
