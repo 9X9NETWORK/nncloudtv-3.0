@@ -276,7 +276,7 @@ public class NnUserManager {
         		profileUrl,
         		String.valueOf(user.getCntChannel()),
         		String.valueOf(user.getCntSubscribe()),
-        		String.valueOf(user.getCntFollower()),
+        		String.valueOf(user.getCntFollower()),        		
                };
         String output = NnStringUtil.getDelimitedStr(info);
         return output;

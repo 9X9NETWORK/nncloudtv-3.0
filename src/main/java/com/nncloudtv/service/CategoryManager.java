@@ -2,15 +2,19 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.CategoryDao;
+import com.nncloudtv.dao.TagDao;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.Tag;
+import com.nncloudtv.model.TagMap;
 
 @Service
 public class CategoryManager {
@@ -64,6 +68,26 @@ public class CategoryManager {
 			}
 		}
 		return channels;
+	}
+
+	public List<NnChannel> findChannelsByTag(long id, boolean player, String tagStr) {
+		List<NnChannel> channels = this.findChannels(id, player);	
+		TagDao tagDao = new TagDao();
+		Tag tag = tagDao.findByName(tagStr);
+		HashSet<Long> set = new HashSet<Long>();
+	    List<NnChannel> matched = new ArrayList<NnChannel>();
+		if (tag != null) {
+			List<TagMap> map = tagDao.findMap(tag.getId());
+			for (TagMap m : map) {
+				set.add(m.getChannelId());
+			}
+		    for (NnChannel c : channels) {
+		    	if (set.contains(c.getId()))
+		    		matched.add(c);
+		    }			
+		}
+	    log.info("category matched channels:" + channels.size() + ";tag matched channels:" + matched.size());
+		return matched;
 	}
 	
 	public List<Category> findPlayerCategories(String lang) {

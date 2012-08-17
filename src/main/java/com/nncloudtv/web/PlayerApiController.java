@@ -431,7 +431,7 @@ public class PlayerApiController {
 	 * Get list of channels under the category
 	 * 
 	 * @param category category id
-	 * @param sort valid values including view/subscriber/update/create
+	 * @param sort valid values including view/subscriber/update/create (not implemented yet)
 	 * @param tag only one tag is supported
 	 * @return First block has category info, id and name. <br/>
 	 *         Second block lists the most popular tags. Separated by \n <br/> 
@@ -463,7 +463,7 @@ public class PlayerApiController {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			}
-			output = playerApiService.categoryInfo(id);
+			output = playerApiService.categoryInfo(id, tag, sort);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -525,7 +525,7 @@ public class PlayerApiController {
 	 * giving channel only is valid (for backward compatibility), 
 	 * but since one channel can exist on multiple  locations in a smart guide,
 	 * it could result in unsubscribing on an unexpected grid location. 
-	 * @param set set id.
+	 * @param pos set position
 	 * @return status code and status message
 	 */			
 	@RequestMapping(value="unsubscribe")
@@ -533,11 +533,11 @@ public class PlayerApiController {
 			@RequestParam(value="user", required=false) String userToken, 
 			@RequestParam(value="channel", required=false) String channelId,
 			@RequestParam(value="grid", required=false) String grid,
-			@RequestParam(value="set", required=false) String setId,
+			@RequestParam(value="pos", required=false) String pos,
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {			
-		log.info("userToken=" + userToken + "; channel=" + channelId + "; set=" + setId + "; seq=" + grid);
+		log.info("userToken=" + userToken + "; channel=" + channelId + "; pos=" + pos + "; seq=" + grid);
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
 			int status = this.prepService(req, true);
@@ -545,7 +545,7 @@ public class PlayerApiController {
 				return NnNetUtil.textReturn(
 						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
 			}
-			output = playerApiService.unsubscribe(userToken, channelId, setId, grid);	
+			output = playerApiService.unsubscribe(userToken, channelId, grid, pos);	
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
@@ -557,11 +557,13 @@ public class PlayerApiController {
 	/**
 	 * Get channel information 
 	 * 
-	 * @param user user's unique identifier
+	 * @param user user's unique identifier. 
+	 * @param curator curator's id. giving curator id returns channels the curator creates.
+	 * @param subscriptions curator id. giving subscriptions returns channels the curator subscribes.
 	 * @param stack trending, recommended, hot
 	 * @param userInfo true or false. Whether to return user information as login does. If asked, it will be returned after status code.
 	 * @param channel channel id, optional, can be one or multiple;  example, channel=1 or channel=1,2,3
-	 * @param setInfo true or false. Whether to return set information.  
+	 * @param setInfo true or false. Whether to return subscription set information.  
 	 * @param required true or false. Will return error in status block if the requested channel is not found.
 	 * @param stack featured/recommended/hot/trending. Each stack in return is separated by "--\n"
 	 * @return A string of all of requested channel information
@@ -623,7 +625,9 @@ public class PlayerApiController {
 	 */		
 	@RequestMapping(value="channelLineup")
 	public ResponseEntity<String> channelLineup(
-			@RequestParam(value="user", required=false) String userToken,
+			@RequestParam(value="user", required=false) String userToken, 
+			@RequestParam(value="subcriptions", required=false) String subscriptions,
+			@RequestParam(value="curator", required=false) String curatorIdStr,
 			@RequestParam(value="userInfo", required=false) String userInfo,
 			@RequestParam(value="channel", required=false) String channelIds,
 			@RequestParam(value="setInfo", required=false) String setInfo,
@@ -638,8 +642,8 @@ public class PlayerApiController {
 			this.prepService(req, true);
 			boolean isUserInfo = Boolean.parseBoolean(userInfo);
 			boolean isSetInfo = Boolean.parseBoolean(setInfo);
-			boolean isRequired = Boolean.parseBoolean(required);		
-			output = playerApiService.channelLineup(userToken, isUserInfo, channelIds, isSetInfo, isRequired, stack);
+			boolean isRequired = Boolean.parseBoolean(required);
+			output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, stack);
 		} catch (Exception e){
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {

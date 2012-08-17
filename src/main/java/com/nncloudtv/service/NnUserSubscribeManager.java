@@ -107,10 +107,12 @@ public class NnUserSubscribeManager {
 			if (c != null) {
 				c.setSeq(s.getSeq());
 				c.setType(s.getType());
+				/*
 				CntView cnt = cntMngr.findByChannel(c.getId());			
 				if (cnt != null) {
 					c.setCntSubscribe(cnt.getCnt());
-				}								
+				}
+				*/								
 				channels.add(c);
 			}
 		}

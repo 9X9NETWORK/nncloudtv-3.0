@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
@@ -139,8 +138,6 @@ public class PlayerService {
 			e.printStackTrace();
 		}
 		log.info("escaped=" + escaped);		
-		PlayerApiService service = new PlayerApiService();
-	    String lang = LangTable.LANG_EN; //default value
 		
 		//-- determine channel and episode and set --
 		String ch=null, ep=null, youtubeEp=null, landing=null;
@@ -188,9 +185,7 @@ public class PlayerService {
 				model.addAttribute("crawlEpThumb1", c.getImageUrl());				
 				model.addAttribute("fbName", NnStringUtil.htmlSafeChars(c.getName()));
 				model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));
-				model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getImageUrl()));
-				
-				lang = c.getLang();
+				model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getImageUrl()));				
 				NnProgramManager programMngr = new NnProgramManager();
 				List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
 				if (programs.size() > 0) {

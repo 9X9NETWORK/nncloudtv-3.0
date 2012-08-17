@@ -11,7 +11,6 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
-import com.nncloudtv.model.NnChannel;
 
 public class CategoryDao extends GenericDao<Category> {
 		

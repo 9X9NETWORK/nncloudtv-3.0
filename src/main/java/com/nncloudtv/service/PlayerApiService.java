@@ -413,11 +413,11 @@ public class PlayerApiService {
         return output;
     }
     
-    public String unsubscribe(String userToken, String channelId, String setId, String grid) {
+    public String unsubscribe(String userToken, String channelId, String grid, String pos) {
 		//verify input
 		if (userToken == null || userToken.equals("undefined"))
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-		if (channelId == null && setId == null)
+		if (channelId == null && pos == null)
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         //verify user
         NnUser user = new NnUserManager().findByToken(userToken);
@@ -445,9 +445,9 @@ public class PlayerApiService {
 				log.info("unsubscribe multiple channels");
 			}
 		}
-		if (setId != null) {
+		if (pos != null) {
 			NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
-			NnUserSubscribeGroup group = groupMngr.findByUserAndSeq(user, Short.parseShort(setId));
+			NnUserSubscribeGroup group = groupMngr.findByUserAndSeq(user, Short.parseShort(pos));
 			if (group != null)
 				groupMngr.delete(user, group);
 		}
@@ -487,7 +487,7 @@ public class PlayerApiService {
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
-    public String categoryInfo(String id) {
+    public String categoryInfo(String id, String tagStr, String sort) {
         if (id == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
@@ -496,7 +496,12 @@ public class PlayerApiService {
         Category cat = catMngr.findById(cid);
         if (cat == null)
         	return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
-        List<NnChannel> channels = catMngr.findChannels(cid, true);
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        if (tagStr != null) {
+        	channels = catMngr.findChannelsByTag(cid, true, tagStr);
+        } else {
+        	channels = catMngr.findChannels(cid, true);
+        }
         String result[] = {"", "", ""};
         //category info
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
@@ -517,19 +522,31 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
-    public String channelLineup(String userToken, boolean userInfo, String channelIds, boolean setInfo, boolean isRequired, String stack) {
-        //verify input    	
+    //!!! rewrite
+    public String channelLineup(String userToken,
+    		                    String curatorIdStr,
+    		                    String subscriptions,
+    		                    boolean userInfo, 
+    		                    String channelIds, 
+    		                    boolean setInfo, 
+    		                    boolean isRequired, 
+    		                    String stack) {    		                    
+        //verify input    	    	
         if ((userToken == null && userInfo == true) || 
         	(userToken == null && channelIds == null) || 
-        	(userToken == null && setInfo == true)) {
-        	if (stack == null)
+        	(userToken == null && setInfo == true) ) {
+        	if (stack == null && curatorIdStr == null && subscriptions == null) {
         		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        	}
         }
 		List<String> result = new ArrayList<String>();
 		NnUser user = null;
-		if (userToken != null) {
-			//verify user
-			user = userMngr.findByToken(userToken);
+		if (userToken != null || subscriptions != null) {
+			if (subscriptions != null) {
+				user = userMngr.findByIdStr(subscriptions);
+			} else {
+				user = userMngr.findByToken(userToken);
+			}
 			if (user == null) {
 				NnGuest guest = new NnGuestManager().findByToken(userToken);
 				if (guest == null)
@@ -574,16 +591,27 @@ public class PlayerApiService {
 				watchedMap.put(w.getChannelId(), w.getProgram());
 			}			
 		}
-		
 		//find channels
 		List<NnChannel> channels = new ArrayList<NnChannel>();
 		boolean channelPos = true;
-		if (channelIds == null && stack == null) {
+		if (channelIds == null && stack == null && curatorIdStr == null) {
 			//find subscribed channels 
 			NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
 			channels = subMngr.findSubscribedChannels(user);
 			log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
 		} else if (stack != null){
+		} else if (curatorIdStr != null) {
+			channelPos = false;
+			log.info("find channels curator created");
+			NnUser curator = userMngr.findByIdStr(curatorIdStr);
+			if (curator == null)
+				return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+			List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0);  
+			for (NnChannel c : curatorChannels) {
+				if (c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS) {
+					channels.add(c);
+				}
+			}
 		} else {
 			//find specific channels			
 			channelPos = false;
@@ -606,7 +634,7 @@ public class PlayerApiService {
 				channelMap.put(c.getSeq(), c);				
 			}
 			Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
-	    	channels.clear();
+	    	channels.clear();	  
 		    while (it.hasNext()) {
 		        Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
 		    	channels.add((NnChannel)pairs.getValue());
@@ -1425,19 +1453,22 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
 	}
 
-	//stack not implemented yet
+	//!!! stack not implemented yet
 	public String search(String text, String stack, HttpServletRequest req) {
 		if (text == null || text.length() == 0)
 			return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+		//matched channels
 		List<NnChannel> channels = NnChannelManager.search(text, false);
 		String[] result = {"", "", "", "", ""};		
 		for (NnChannel c : channels) {
 			result[3] += this.composeChannelLineupStr(c) + "\n";
 		}
+		//matched curators
 		List<NnUser> users = userMngr.search(null, null, text);
 		for (NnUser u : users) {
 			result[1] += userMngr.composeCuratorInfo(u, req) + "\n";
 		}
+		//curstor's channls
 		for (NnUser u : users) {
 			List<NnChannel> list = chMngr.findByUser(u, 1);
 			if (list.size() > 0) {
@@ -1446,6 +1477,7 @@ public class PlayerApiService {
 				result[2] += "empty" + "\n";
 			}
 		}
+		//if none matched, return suggestion channels
 		List<NnChannel> suggestion = new ArrayList<NnChannel>();
 		if (channels.size() == 0 && users.size() == 0) {
 			suggestion = chMngr.findTrending();
@@ -1558,7 +1590,7 @@ public class PlayerApiService {
 		data.add(userInfo);
 		//2. channel lineup
 		log.info ("[quickLogin] channel lineup: " + token);
-		String lineup = this.channelLineup (token, false, null, true, false, null);
+		String lineup = this.channelLineup (token, null, null, false, null, true, false, null);
 		data.add(lineup);
 		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
 			return this.assembleSections(data);
@@ -1569,7 +1601,7 @@ public class PlayerApiService {
 		data.add(curatorInfo);
 		//4. trending
 		log.info ("[quickLogin] trending channels");
-		String trending = this.channelLineup (null, false, null, false, false, "trending");
+		String trending = this.channelLineup (null, null, null, false, null, false, false, "trending");
 		data.add(trending);
 		if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
 			return this.assembleSections(data);

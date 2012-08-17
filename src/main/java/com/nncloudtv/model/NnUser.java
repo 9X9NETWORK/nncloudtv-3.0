@@ -15,6 +15,8 @@ import com.nncloudtv.lib.AuthLib;
 public class NnUser implements Serializable {	
 	private static final long serialVersionUID = -708171304411630395L;
 
+	//!!! put back ip 
+	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;

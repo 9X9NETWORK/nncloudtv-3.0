@@ -354,11 +354,18 @@ public class NnChannelManager {
 		return null;
 	}
 
+	//find channels created by the user, aka curator
+	//player true returns only good and public channels
 	public List<NnChannel> findByUser(NnUser user, int number) {
 		String userIdStr = user.getShard() + "-" + user.getId();
-		List<NnChannel> channels = dao.findByUser(userIdStr);
-		if (channels.size() > number)
-			return channels.subList(0, number-1);
+		List<NnChannel> channels = dao.findByUser(userIdStr); //!!! pass the number for limited search
+		System.out.println("channels size:" + channels.size());
+		if (number == 0) {
+			return channels;
+		} else { 			
+			if (channels.size() > number)
+			return channels.subList(0, number);
+		}
 		return channels;
 	}
 	
