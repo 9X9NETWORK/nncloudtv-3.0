@@ -1339,7 +1339,7 @@ public class PlayerApiService {
 		if (program != null) {
 			List<NnProgram> programs = new ArrayList<NnProgram>();
 			programs.add(program);
-			result[0] = programMngr.composeProgramInfoStr(programs);
+			result[0] = programMngr.composeProgramInfo(programs);
 		} else {			
 			result[0] = share.getChannelId() + "\t" + share.getProgramIdStr() + "\n";			
 		}		
