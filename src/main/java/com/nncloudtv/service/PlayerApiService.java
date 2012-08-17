@@ -516,6 +516,7 @@ public class PlayerApiService {
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
+    
     public String channelLineup(String userToken, boolean userInfo, String channelIds, boolean setInfo, boolean isRequired, String stack) {
         //verify input    	
         if ((userToken == null && userInfo == true) || 
