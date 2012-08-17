@@ -431,9 +431,11 @@ public class PlayerApiController {
 	 * Get list of channels under the category
 	 * 
 	 * @param category category id
+	 * @param sort valid values including view/subscriber/update/create
+	 * @param tag only one tag is supported
 	 * @return First block has category info, id and name. <br/>
-	 *         Second block lists the most popular tags. Separated by \n 
-	 *         Second block lists channels under the category. Format please reference channelLineup.
+	 *         Second block lists the most popular tags. Separated by \n <br/> 
+	 *         Third block lists channels under the category. Format please reference channelLineup.
 	 *         <p>  Example:
 	 *         0	SUCCESS<br/>
 	 *         --<br/>
@@ -448,6 +450,8 @@ public class PlayerApiController {
 	@RequestMapping(value="categoryInfo")
 	public ResponseEntity<String> categoryInfo(
 			@RequestParam(value="category", required=false) String id,
+			@RequestParam(value="sort", required=false) String sort,
+			@RequestParam(value="tag", required=false) String tag,
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
@@ -589,6 +593,7 @@ public class PlayerApiController {
 	 *         tags, separated by comma. example "run,marathon" <br/>         
 	 *         curator id <br/>
 	 *         curator name <br/>
+	 *         curator description <br/>
 	 *         curator imageUrl <br/>
 	 *         </blockquote>
 	 *         <p>
@@ -1032,7 +1037,7 @@ public class PlayerApiController {
 	 * Set user profile information
 	 * 
 	 * @param user user token
-	 * @param <p>key keys include "name", "email", "gender", "year", "sphere", "ui-lang", "password", "oldPassword". <br/> 
+	 * @param <p>key keys include "name", "email", "gender", "year", "sphere", "ui-lang", "password", "oldPassword", "description", "image". <br/> 
 	 *               Keys are separated by comma.
 	 * @param <p>value value that pairs with keys. values are separated by comma. The sequence of value has to be the same as 
 	 *        the sequence of keys. 
@@ -1072,7 +1077,7 @@ public class PlayerApiController {
 	 * 
 	 * @param user user token
 	 * @return <p>Data returns in key and value pair. Key and value is tab separated. Each pair is \n separated.<br/>
-	 *            keys include "name", "email", "gender", "year", "sphere" "ui-lang"<br/></p>"
+	 *            keys include "name", "email", "gender", "year", "sphere" "ui-lang", "description", "image"<br/></p>"
 	 *         <p>Example<br/>: name John <br/>email john@example.com<br/>ui-lang en                 
 	 */	
 	@RequestMapping(value="getUserProfile")
@@ -1346,17 +1351,17 @@ public class PlayerApiController {
 	}					
 	
 	/**
-	 * Search channel name and description
+	 * Search channel name and description, curator name and description
 	 * 
 	 * @param search search text
 	 * @return matched channels and curators
 	 *         <p>
 	 *         First block: general statistics. Format in the following paragraph <br/>
-	 *         Second block: list of curators. Please reference curator api 
+	 *         Second block: list of curators. Please reference curator api <br/>
 	 *         Third block: curatos' channels. the number of channels should correspond the number of curators. 
 	 *                      Curators who have no channel shows "empty"<br/>
-	 *         Forth block: List of matched channels. Please reference channelLineup api
-	 *         Fifth block: List of suggested channels. It will only return values when there's no match of curator and channel.              
+	 *         Forth block: List of matched channels. Please reference channelLineup api<br/>
+	 *         Fifth block: List of suggested channels. It will only return values when there's no match of curator and channel.<br/>              
 	 *         <p>  
 	 *         General statistics: (item name : number of return records : total number of records)<br/>
 	 *         curator	4	4 <br/> 
@@ -1693,10 +1698,12 @@ public class PlayerApiController {
 	}
 
 	/**
-	 * Curator info. If curator is provided, 
+	 * Curator info. Use curator id or profile to get specific curator.
+	 * Or specify stack = featured to get list of featured curators. 
 	 * 
 	 * @param curator curator id
 	 * @param stack if specify "featued" will return list of featured curators
+	 * @param profile curator's 9x9 url
 	 * @return list of curator information <br/>
 	 *         curator id, <br/>
      *         curator name,<br/>

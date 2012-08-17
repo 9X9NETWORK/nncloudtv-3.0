@@ -32,7 +32,6 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CntView;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -359,6 +358,16 @@ public class PlayerApiService {
 		int img1 = r.nextInt(10);
 		int img2 = r.nextInt(10);
 		String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
+
+    	NnUser u = userMngr.findByIdStr(c.getUserIdStr());    	
+    	String userName = "";
+    	String userIntro = "";
+    	String userImageUrl = "";
+    	if (u != null) {
+    		userName = u.getName();
+    		userIntro = u.getIntro();
+    		userImageUrl = u.getImageUrl();
+    	}    		
 		
         String[] ori = {Integer.toString(c.getSeq()), 
                         String.valueOf(c.getId()),
@@ -379,8 +388,9 @@ public class PlayerApiService {
 					    String.valueOf(viewCount), //view count
 					    c.getTag(),
 					    c.getUserIdStr(), //curator id
-					    c.getUserName(),
-					    c.getUserImageUrl(),
+					    userName,
+					    userIntro,
+					    userImageUrl,
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);
@@ -1117,7 +1127,7 @@ public class PlayerApiService {
 			return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
 		
 		String[] valid = {"name", "year", "password", 
-                "oldPassword", "sphere", "ui-lang", "gender"};		
+                "oldPassword", "sphere", "ui-lang", "gender", "description", "image"};		
 		HashSet<String> dic = new HashSet<String>();
 		for (int i=0; i<valid.length; i++) {
 			dic.add(valid[i]);
@@ -1130,8 +1140,12 @@ public class PlayerApiService {
 					return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
 				user.setName(value[i]);
 			}
+			if (key[i].equals("image"))
+				user.setImageUrl(value[i]);
 			if (key[i].equals("year"))
 				user.setDob(value[i]);
+			if (key[i].equals("description"))
+				user.setIntro(NnStringUtil.htmlSafeAndTrucated(value[i]));
 			if (key[i].equals("password"))
 				password = value[i];				
 			if (key[i].equals("oldPassword"))
@@ -1181,6 +1195,8 @@ public class PlayerApiService {
 		String[] result = {""};	 
 		result[0] += assembleKeyValue("name", user.getName());
 		result[0] += assembleKeyValue("email", user.getEmail());
+		result[0] += assembleKeyValue("description", user.getIntro());
+		result[0] += assembleKeyValue("image", user.getImageUrl());
 		String gender = "";
 		if (user.getGender() != 2)
 			gender = String.valueOf(user.getGender());
@@ -1727,7 +1743,7 @@ public class PlayerApiService {
 		}
 		List<NnUser> users = new ArrayList<NnUser>();
 		if (id != null) {
-			NnUser user = userMngr.findById(id);
+			NnUser user = userMngr.findByIdStr(id);
 			if (user == null)
 				return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
 			users.add(user);

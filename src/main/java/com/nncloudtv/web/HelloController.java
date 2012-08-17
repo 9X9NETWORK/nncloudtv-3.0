@@ -54,14 +54,10 @@ public class HelloController {
 	protected static final Logger log = Logger.getLogger(HelloController.class);
 		
 	@RequestMapping("welcome")
-	public @ResponseBody String printWelcome() { 
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		Date now = new Date();
-		System.out.println(dateFormat.format(now));
-		Random r = new Random();
-		int viewCount = r.nextInt(99999);
-		String formatted = String.format("%05d", viewCount);		
-		return formatted;
+	public @ResponseBody String welcome() {
+		String url = "|http://www.youtube.com/watch?v=zdZya6yATn0";
+		System.out.println(url.replaceFirst("\\|", ""));		
+		return url;
 	}
     
 	//basic test

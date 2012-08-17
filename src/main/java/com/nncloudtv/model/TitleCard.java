@@ -10,10 +10,9 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /**
- * "title card" 
+ * sub-episode's title card 
  */
-
-@PersistenceCapable(table="nnprogram_card", detachable = "true")
+@PersistenceCapable(table="title_card", detachable = "true")
 public class TitleCard implements Serializable {	
 	
 	private static final long serialVersionUID = 1276804191557423541L;
@@ -26,7 +25,11 @@ public class TitleCard implements Serializable {
 	private long channelId;
 
 	@Persistent
-	private long programId;
+	private long entryId; //from nnprogram: channelId + seq, example: 4300000004 (43: channelId, seq: 00000004)
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=8)
+	private String subSeq;
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
@@ -42,11 +45,25 @@ public class TitleCard implements Serializable {
 
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=10)
+	private String bgcolor;
+	
+	public String getBgcolor() {
+		return bgcolor;
+	}
+
+	public void setBgcolor(String bgcolor) {
+		this.bgcolor = bgcolor;
+	}
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=10)
 	private String style;
 	
 	@Persistent
-	private short type; //0 begin, 1 end
-
+	private short type; //0 begin, 1 end	
+	public static short TYPE_BEGIN = 0;
+	public static short TYPE_END = 1;
+	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
 	private String playerSyntax;
@@ -78,12 +95,12 @@ public class TitleCard implements Serializable {
 		this.channelId = channelId;
 	}
 
-	public long getProgramId() {
-		return programId;
+	public long getEntryId() {
+		return entryId;
 	}
 
-	public void setProgramId(long programId) {
-		this.programId = programId;
+	public void setEntryId(long entryId) {
+		this.entryId = entryId;
 	}
 
 	public String getDuration() {
@@ -132,5 +149,14 @@ public class TitleCard implements Serializable {
 
 	public void setPlayerSyntax(String playerSyntax) {
 		this.playerSyntax = playerSyntax;
-	}	
+	}
+
+	public String getSubSeq() {
+		return subSeq;
+	}
+
+	public void setSubSeq(String subSeq) {
+		this.subSeq = subSeq;
+	}
+
 }

@@ -145,8 +145,7 @@ public class NnUserManager {
 		return nnUserDao.findAuthenticatedMsoUser(email.toLowerCase(), password, msoId);
 	}
 	
-	public NnUser findMsoUser(Mso mso) {
-		
+	public NnUser findMsoUser(Mso mso) {		
 		if (mso.getType() == Mso.TYPE_NN) {
 			return this.findNNUser();
 		} else if (mso.getType() == Mso.TYPE_MSO) {
@@ -214,7 +213,7 @@ public class NnUserManager {
 	
 	//expect format shard-userId. example 1-1
 	//if "-" is not present, assuming it's shard 1	
-	public NnUser findById(String id) {
+	public NnUser findByIdStr(String id) {
 		String[] splits = id.split("-");
 		short shard = 1;
 		long uid = 0;
@@ -260,7 +259,7 @@ public class NnUserManager {
 	public NnUser findByProfileUrl(String profileUrl) {
 		return nnUserDao.findByProfileUrl(profileUrl);
 	}
-	
+		
 	public String composeCuratorInfo(NnUser user, HttpServletRequest req) {
 		String uid = user.getShard() + "-" + user.getId();
 		//#!curator=xxx-name

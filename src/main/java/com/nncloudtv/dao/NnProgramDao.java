@@ -108,7 +108,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		    } else if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {
 				q.setOrdering("seq desc, subSeq asc");	
 			} else if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
-				log.info("ordering by seq asc");
+				log.info("ordering by seq, subSeq asc");
 				q.setOrdering("seq asc");
 			} else if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
 				q.setOrdering("seq desc, subSeq asc");				

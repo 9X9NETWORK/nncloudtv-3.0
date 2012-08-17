@@ -32,7 +32,6 @@ public class NnUserDao extends GenericDao<NnUser> {
 		    if (generic != null) {
 		    	sql = "select * from nnuser " + 
 		               "where lower(name) like lower('%" + generic + "%') " +  
-		               "   or lower(email) like lower('%" + generic + "%') " +
 		               "   or lower(intro) like lower('%" + generic + "%')";
 		    } else {
 	    	   sql = "select * from nnuser " + "where ";	                  

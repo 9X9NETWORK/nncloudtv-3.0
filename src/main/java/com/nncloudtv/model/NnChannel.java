@@ -144,19 +144,7 @@ public class NnChannel implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=25)	
 	private String userIdStr; //format: shard-userId, example: 1-1
-
-	@Persistent //maybe removed in the future, instead use view, or cache
-	@Column(jdbcType="VARCHAR", length=255)
-	private String userInfo;
 	
-	public String getUserInfo() {
-		return userInfo;
-	}
-
-	public void setUserInfo(String userInfo) {
-		this.userInfo = userInfo;
-	}
-
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String transcodingUpdateDate; //timestamps from transcoding server			
@@ -435,6 +423,7 @@ public class NnChannel implements Serializable {
 		}
 	}
 
+	/*
 	public String getUserImageUrl() {
 		if (userInfo != null) {			
 			String[] info = userInfo.split("\\|");
@@ -456,4 +445,5 @@ public class NnChannel implements Serializable {
 		}
 		return null;
 	}
+	*/
 }

@@ -5,22 +5,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnProgramDao;
+import com.nncloudtv.dao.TitleCardDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.TitleCard;
 
 @Service
 public class NnProgramManager {
 	
 	protected static final Logger log = Logger.getLogger(NnProgramManager.class.getName());
-	private static MessageSource messageSource = new ClassPathXmlApplicationContext("locale.xml");
 	
 	private NnProgramDao programDao = new NnProgramDao();
 	
@@ -109,7 +108,7 @@ public class NnProgramManager {
 		log.info("nothing in the cache");		
 		List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
 		log.info("channel id:" + channelId + "; program size:" + programs.size());
-		String str = this.composeProgramInfoStr(programs);
+		String str = this.composeProgramInfo(programs);
 		if (CacheFactory.isRunning) { 
 			CacheFactory.set(cacheKey, str);
 		}
@@ -186,76 +185,126 @@ public class NnProgramManager {
 		return result;
 	}
 	
-	public String composeProgramInfoStr(List<NnProgram> programs) {		
+	//sub-episode implementation
+	public String composeProgramInfo(List<NnProgram> programs) {		
+		if (programs.size() == 0)
+			return "";		
+		String result = "";
+		NnProgram original = programs.get(0);
+		NnChannel c = new NnChannelManager().findById(original.getChannelId());
+		if (c == null) return null;
+		if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
+			for (NnProgram p : programs) {
+				result += this.composeProgramInfoStr(p, null, null);
+			}
+			return result;
+		}
+		long cid = programs.get(0).getChannelId();
+		List<TitleCard> cards = new TitleCardDao().findByChannel(cid); //order by channel id and entry id
+		String seq = programs.get(0).getSeq();
+		int cardIdx = 0;
+		String videoUrl = "";
+		for (int i=0; i<programs.size(); i++) {
+		   NnProgram p = programs.get(i);
+		   if (p.getSeq() == null) {
+			   composeProgramInfoStr(p, p.getFileUrl(), null);
+		   } else { 
+ 			  //it's another program
+			  if (!p.getSeq().equals(seq) || (i == programs.size()-1)) {  
+                 String card = "";
+				 long entryId = Long.parseLong(original.getChannelId() + original.getSeq());
+				 for (int j=cardIdx; j<cards.size(); j++) {
+                    if (cards.get(j).getEntryId() == entryId) {
+                       card += cards.get(j).getPlayerSyntax() + "%0A--%0A";
+				       cardIdx++;
+					}
+				 }				 
+				 videoUrl = videoUrl.replaceFirst("\\|", "");
+			     result += composeProgramInfoStr(original, videoUrl, card);
+				 //reset			     
+				 seq = p.getSeq();
+				 videoUrl = "";
+				 card = "";
+				 original = p;
+			  } else {
+				  //format: videoUrl;startTime;endTime|videoUrl;startTime;endTime
+				  //each video is separated by "|"
+				  videoUrl += "|" + p.getFileUrl();
+				  if (p.getStartTime() != null)
+				     videoUrl += ";" + p.getStartTime();
+				  else
+					 videoUrl += ";" + ""; 
+				  if (p.getEndTime() != null)
+					 videoUrl += ";" + p.getEndTime();
+				  else
+					 videoUrl += ";" + "";				  
+			  }
+		   }
+		}
+		return result;
+	}
+
+	public String composeProgramInfoStr(NnProgram p, String videoUrl, String card) {
 		String output = "";		
 		String regexCache = "^(http|https)://(9x9cache.s3.amazonaws.com|s3.amazonaws.com/9x9cache)";
 		String regexPod = "^(http|https)://(9x9pod.s3.amazonaws.com|s3.amazonaws.com/9x9pod)";
 		String cache = "http://cache.9x9.tv";
 		String pod = "http://pod.9x9.tv";
-		for (NnProgram p : programs) {
-			//file urls
-			String url1 = p.getFileUrl();
-			String url2 = ""; //not used for now
-			String url3 = ""; //not used for now
-			String url4 = p.getAudioFileUrl();
-			String imageUrl = p.getImageUrl();
-			String imageLargeUrl = p.getImageLargeUrl();
-			if (imageUrl == null) {imageUrl = "";}
-			if (imageLargeUrl == null) {imageLargeUrl = "";}
-			//!!!!
-			//if (config.getValue().equals(MsoConfig.CDN_AKAMAI)) {
-			    if (url1 != null) {
-					url1 = url1.replaceFirst(regexCache, cache);
-					url1 = url1.replaceAll(regexPod, pod);
-			    }
-				url2 = url2.replaceFirst(regexCache, cache);
-				url2 = url2.replaceAll(regexPod, pod);
-				url3 = url3.replaceFirst(regexCache, cache);
-				url3 = url3.replaceAll(regexPod, pod);
-				if (url4 != null) {
-					url4 = url4.replaceFirst(regexCache, cache);
-					url4 = url4.replaceAll(regexPod, pod);
-				}
-				if (imageUrl != null) {
-					imageUrl = imageUrl.replaceFirst(regexCache, cache);
-					imageUrl = imageUrl.replaceAll(regexPod, pod);
-				}
-				if (imageLargeUrl != null) {
-					imageLargeUrl = imageLargeUrl.replaceFirst(regexCache, cache);
-					imageLargeUrl = imageLargeUrl.replaceAll(regexPod, pod);
-				}
-			//}
-					
-			//intro
-			String intro = p.getIntro();			
-			if (intro != null) {
-				int introLenth = (intro.length() > 256 ? 256 : intro.length()); 
-				intro = intro.replaceAll("\\s", " ");				
-				intro = intro.substring(0, introLenth);
+		String url1 = p.getFileUrl();
+		String url2 = ""; //not used for now
+		String url3 = ""; //not used for now
+		String url4 = p.getAudioFileUrl();
+		String imageUrl = p.getImageUrl();
+		String imageLargeUrl = p.getImageLargeUrl();
+		if (imageUrl == null) {imageUrl = "";}
+		if (imageLargeUrl == null) {imageLargeUrl = "";}
+		//!!!!
+		//if (config.getValue().equals(MsoConfig.CDN_AKAMAI)) {
+		    if (url1 != null) {
+				url1 = url1.replaceFirst(regexCache, cache);
+				url1 = url1.replaceAll(regexPod, pod);
+		    }
+			if (imageUrl != null) {
+				imageUrl = imageUrl.replaceFirst(regexCache, cache);
+				imageUrl = imageUrl.replaceAll(regexPod, pod);
 			}
-			
-			//the rest
-			String[] ori = {String.valueOf(p.getChannelId()), 
-					        String.valueOf(p.getId()), 
-					        p.getName(), 
-					        intro,
-					        String.valueOf(p.getContentType()), 
-					        p.getDuration(),
-					        imageUrl,
-					        imageLargeUrl,
-					        url1, 
-					        url2, 
-					        url3, 
-					        url4,			
-					        String.valueOf(p.getUpdateDate().getTime()),
-					        p.getComment()};
-			output = output + NnStringUtil.getDelimitedStr(ori);
-			output = output.replaceAll("null", "");
-			output = output + "\n";
+			if (imageLargeUrl != null) {
+				imageLargeUrl = imageLargeUrl.replaceFirst(regexCache, cache);
+				imageLargeUrl = imageLargeUrl.replaceAll(regexPod, pod);
+			}
+		//}
+				
+		//intro
+		String intro = p.getIntro();			
+		if (intro != null) {
+			int introLenth = (intro.length() > 256 ? 256 : intro.length()); 
+			intro = intro.replaceAll("\\s", " ");				
+			intro = intro.substring(0, introLenth);
 		}
-		return output;		
-	}
-	
+		
+		if (videoUrl != null)
+			url1 = videoUrl;
+		//the rest
+		String[] ori = {String.valueOf(p.getChannelId()), 
+				        String.valueOf(p.getId()), 
+				        p.getName(), 
+				        intro,
+				        String.valueOf(p.getContentType()), 
+				        p.getDuration(),
+				        imageUrl,
+				        imageLargeUrl,
+				        url1, 
+				        url2, 
+				        url3, 
+				        url4,			
+				        String.valueOf(p.getUpdateDate().getTime()),
+				        p.getComment(),
+				        card};
+		output = output + NnStringUtil.getDelimitedStr(ori);
+		output = output.replaceAll("null", "");
+		output = output + "\n";
+		return output;
+	}		
 	
 	public NnProgram findByStorageId(String storageId) {
 		return programDao.findByStorageId(storageId);
@@ -286,7 +335,7 @@ public class NnProgramManager {
 		List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
 		log.info("channel id:" + channelId + "; program size:" + programs.size());
 		String cacheKey = this.getCacheKey(channelId);
-		String str = this.composeProgramInfoStr(programs); 
+		String str = this.composeProgramInfo(programs); 
 		CacheFactory.set(cacheKey, str);
 		return str;
 	}	

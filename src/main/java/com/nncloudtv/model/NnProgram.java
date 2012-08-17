@@ -19,7 +19,7 @@ public class NnProgram implements Serializable {
 	
 	@Persistent
 	private long channelId;
-	
+
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String name;
@@ -34,8 +34,7 @@ public class NnProgram implements Serializable {
 	public static final short CONTENTTYPE_YOUTUBE = 1;
 	public static final short CONTENTTYPE_SCRIPT = 2;
 	public static final short CONTENTTYPE_RADIO = 3;
-	
-	
+		
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String intro;
@@ -76,7 +75,15 @@ public class NnProgram implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String duration;
-		
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String startTime;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String endTime;
+	
 	@Persistent
 	private boolean isPublic; 
 	
@@ -276,6 +283,22 @@ public class NnProgram implements Serializable {
 
 	public void setSubSeq(String subSeq) {
 		this.subSeq = subSeq;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 	
 }
