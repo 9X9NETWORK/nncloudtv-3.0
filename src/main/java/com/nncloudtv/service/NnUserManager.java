@@ -214,6 +214,8 @@ public class NnUserManager {
 	//expect format shard-userId. example 1-1
 	//if "-" is not present, assuming it's shard 1	
 	public NnUser findByIdStr(String id) {
+		if (id == null)
+			return null;
 		String[] splits = id.split("-");
 		short shard = 1;
 		long uid = 0;
