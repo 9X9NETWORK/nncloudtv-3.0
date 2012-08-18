@@ -626,7 +626,7 @@ public class PlayerApiController {
 	@RequestMapping(value="channelLineup")
 	public ResponseEntity<String> channelLineup(
 			@RequestParam(value="user", required=false) String userToken, 
-			@RequestParam(value="subcriptions", required=false) String subscriptions,
+			@RequestParam(value="subscriptions", required=false) String subscriptions,
 			@RequestParam(value="curator", required=false) String curatorIdStr,
 			@RequestParam(value="userInfo", required=false) String userInfo,
 			@RequestParam(value="channel", required=false) String channelIds,
