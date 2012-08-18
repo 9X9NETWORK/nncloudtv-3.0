@@ -293,7 +293,7 @@ public class NnProgramManager {
 				        p.getDuration(),
 				        imageUrl,
 				        imageLargeUrl,
-				        url1, 
+				        url1, //video url
 				        url2, 
 				        url3, 
 				        url4,			
