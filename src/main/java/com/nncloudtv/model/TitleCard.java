@@ -25,11 +25,12 @@ public class TitleCard implements Serializable {
 	private long channelId;
 
 	@Persistent
-	private long entryId; //from nnprogram: channelId + seq, example: 4300000004 (43: channelId, seq: 00000004)
+	@Column(jdbcType="VARCHAR", length=8)	
+	private String seq; //from nnprogram: channelId + seq, example: 4300000004 (43: channelId, seq: 00000004)    
 
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=8)
-	private String subSeq;
+	private String subSeq; //subSeq should correspond with nnprogram's subSeq
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
@@ -95,14 +96,6 @@ public class TitleCard implements Serializable {
 		this.channelId = channelId;
 	}
 
-	public long getEntryId() {
-		return entryId;
-	}
-
-	public void setEntryId(long entryId) {
-		this.entryId = entryId;
-	}
-
 	public String getDuration() {
 		return duration;
 	}
@@ -149,6 +142,14 @@ public class TitleCard implements Serializable {
 
 	public void setPlayerSyntax(String playerSyntax) {
 		this.playerSyntax = playerSyntax;
+	}
+
+	public String getSeq() {
+		return seq;
+	}
+
+	public void setSeq(String seq) {
+		this.seq = seq;
 	}
 
 	public String getSubSeq() {

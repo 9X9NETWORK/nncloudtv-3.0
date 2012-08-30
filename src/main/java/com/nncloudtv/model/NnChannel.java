@@ -55,6 +55,10 @@ public class NnChannel implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=5)
 	private String lang; //used with LangTable
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=5)
+	private String sphere; //used with LangTable
 	
 	@Persistent
 	private int programCnt;
@@ -82,7 +86,7 @@ public class NnChannel implements Serializable {
 	public static final short CONTENTTYPE_MAPLE_VARIETY = 8;
 	public static final short CONTENTTYPE_MAPLE_SOAP = 9;
 	public static final short CONTENTTYPE_YOUTUBE_SPECIAL_SORTING = 10;
-	public static final short CONTENTTYPE_YOUR_FARORITE = 11;
+	public static final short CONTENTTYPE_FAVORITE = 11;
 	
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -421,6 +425,14 @@ public class NnChannel implements Serializable {
 		} else {
 			userIdStr = shard + "-" + userId;
 		}
+	}
+
+	public String getSphere() {
+		return sphere;
+	}
+
+	public void setSphere(String sphere) {
+		this.sphere = sphere;
 	}
 
 	/*

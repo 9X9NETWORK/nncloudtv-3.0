@@ -46,7 +46,7 @@ public class NnGuest {
 	public NnGuest(short type) {
 		if (type == TYPE_GUEST) {
 			String random = NnUserManager.generateToken((short)1);
-			this.token = random;		
+			this.token = "g99/"+random;		
 		}
 		this.type = type;
 	}

@@ -34,7 +34,8 @@ public class NnProgram implements Serializable {
 	public static final short CONTENTTYPE_YOUTUBE = 1;
 	public static final short CONTENTTYPE_SCRIPT = 2;
 	public static final short CONTENTTYPE_RADIO = 3;
-		
+	public static final short CONTENTTYPE_REFERENCE = 4;
+	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String intro;
@@ -86,11 +87,6 @@ public class NnProgram implements Serializable {
 	
 	@Persistent
 	private boolean isPublic; 
-	
-	@Persistent
-	private short type;
-	public static short TYPE_VIDEO = 1;
-	public static short TYPE_AUDIO = 2;	
 
 	//used by maplestage channels, 9x9 channels, youtube special sorting channels
 	//please not it is a string instead of digit, make 1 00000001, 8 digits total 
@@ -109,11 +105,11 @@ public class NnProgram implements Serializable {
 	@Persistent
 	private Date updateDate;
 	
-	public NnProgram(String name, String intro, String imageUrl, short type) {
+	public NnProgram(long channelId, String name, String intro, String imageUrl) {
+		this.channelId = channelId;
 		this.name = name;
 		this.intro = intro;
 		this.imageUrl = imageUrl;
-		this.type = type;
 		Date now = new Date();		
 		this.createDate = now;
 		this.updateDate = now;
@@ -151,14 +147,6 @@ public class NnProgram implements Serializable {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
-	}
-
-	public short getType() {
-		return type;
-	}
-
-	public void setType(short type) {
-		this.type = type;
 	}
 
 	public Date getCreateDate() {
@@ -229,6 +217,10 @@ public class NnProgram implements Serializable {
 
 	public String getStorageId() {
 		return storageId;
+	}
+	
+	public String getReferenceStorageId() {
+		return this.getChannelId() + ";" + this.getSeq();		
 	}
 
 	public void setStorageId(String storageId) {

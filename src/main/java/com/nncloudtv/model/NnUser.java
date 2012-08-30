@@ -142,6 +142,10 @@ public class NnUser implements Serializable {
 		this.id = id;
 	}
 
+	public String getIdStr() {
+		return shard + "-" + this.getId();
+	}
+	
 	public String getEmail() {
 		return email;
 	}
