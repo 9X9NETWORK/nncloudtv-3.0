@@ -3,7 +3,6 @@ package com.nncloudtv.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -90,27 +89,53 @@ public class NnChannelManager {
 		}
 		
 		// piwik
-		if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-			
+		if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
+			channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {			
 			PiwikLib.createPiwikSite(channel.getId());
 		}
 		
 		return channel;
 	}
 
-	public void saveFavorite(NnUser user, String fileUrl, String name, String imageUrl, short type) {
-		NnChannel c = dao.findByUserId(user.getId());
+	public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl, boolean del) {
+		NnChannel c = dao.findByUserIdStr(user.getIdStr());
 		if (c == null) {
-			c = new NnChannel("'s Favorite", "", "");
-			c.setContentType(NnChannel.CONTENTTYPE_YOUR_FARORITE);
+			System.out.println("shouldn't enter here" + user.getIdStr());
+			c = new NnChannel(user.getName() + "'s Favorite", "", "");
+			c.setUserIdStr(user.getIdStr());
+			c.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
 			dao.save(c);
 		}
 		NnProgramDao pDao = new NnProgramDao();
-		NnProgram p = pDao.findFavorite(c.getId(), fileUrl);
-		if (p == null) {
-			p = new NnProgram(name, "", imageUrl, type);
-			p.setFileUrl(fileUrl);
-			pDao.save(p);
+		
+		if (fileUrl != null) {
+			NnProgram p = pDao.findByChannelAndFileUrl(c.getId(), fileUrl);
+			if (p == null) {
+				System.out.println("to store new program:" + fileUrl);
+				p = new NnProgram(c.getId(), name, "", imageUrl);
+				p.setFileUrl(fileUrl);
+				p.setPublic(true);
+				p.setStatus(NnProgram.STATUS_OK);				
+				pDao.save(p);				
+			}
+		} else {
+			NnProgram p = pDao.findById(pId);
+			System.out.println("referenceid:" + p.getReferenceStorageId());
+			if (p != null) {
+				NnProgram existed = pDao.findByChannelAndStorageId(c.getId(), p.getReferenceStorageId());
+				if (existed != null)
+					return;
+				System.out.println("not exist, should contineu");
+				NnProgram newP = new NnProgram(c.getId(), p.getName(), p.getIntro(), p.getImageUrl());
+				newP.setPublic(true);
+				newP.setStatus(NnProgram.STATUS_OK);
+				newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
+				String seq = p.getSeq();
+				if (seq == null)
+					seq = "";
+				newP.setStorageId(p.getReferenceStorageId()); //channelId + seq
+				pDao.save(newP);
+			}			
 		}
 	}																																																																																																																																																																																																																																																																																																																																																															
 	
@@ -377,35 +402,5 @@ public class NnChannelManager {
 			sorting = NnChannel.SORT_DESIGNATED;
 		return sorting;
 	}
-	
-	public List<NnChannel> findUnUniqueSourceUrl() {
-		List<NnChannel> channels = this.findAll();
-		HashSet<String> set = new HashSet<String>();
-		List<NnChannel> bad = new ArrayList<NnChannel>();
-		for (NnChannel c : channels) {
-			if (!set.contains(c.getSourceUrl())) {
-				set.add(c.getSourceUrl());
-			} else {
-				log.info("duplicate source url:" + c.getSourceUrl());
-				bad.add(c);
-			}
-		}
-		return bad;
-	}
-	
-	/** unmark if needed
-	public void calibrateProgramCnt(NnChannel channel) {
 		
-		NnProgramManager programMngr = new NnProgramManager();
-		List<NnProgram> programs = programMngr.findByChannel(channel.getId());
-		int counter = 0;
-		for (NnProgram program : programs) {
-			if (program.getStatus() == NnProgram.STATUS_OK) {
-				counter++;
-			}
-		}
-		// not save yet
-		channel.setProgramCnt(counter);
-		log.info("programCnt: " + counter);
-	} **/
 }

@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnUserSubscribeDao;
-import com.nncloudtv.model.CntView;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
@@ -112,7 +111,7 @@ public class NnUserSubscribeManager {
 				if (cnt != null) {
 					c.setCntSubscribe(cnt.getCnt());
 				}
-				*/								
+				*/
 				channels.add(c);
 			}
 		}

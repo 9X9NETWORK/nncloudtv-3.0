@@ -21,14 +21,14 @@ public class NnProgramManager {
 	
 	protected static final Logger log = Logger.getLogger(NnProgramManager.class.getName());
 	
-	private NnProgramDao programDao = new NnProgramDao();
+	private NnProgramDao dao = new NnProgramDao();
 	
 	public void create(NnChannel channel, NnProgram program) {		
 		Date now = new Date();
 		program.setCreateDate(now);
 		program.setUpdateDate(now);
 		program.setChannelId(channel.getId());
-		programDao.save(program);
+		dao.save(program);
 		this.processCache(channel.getId());
 		
 		//!!!!! clean plus "hook, auto share to facebook"
@@ -63,7 +63,7 @@ public class NnProgramManager {
 			if (program.getUpdateDate() == null) {
 				program.setUpdateDate(now);
 			}			
-			program = programDao.save(program);			
+			program = dao.save(program);			
 			if (channelId != program.getChannelId()) {
 				channelId = program.getChannelId();
 				processCache(channelId);
@@ -78,32 +78,36 @@ public class NnProgramManager {
 		if (program.getCreateDate() == null)
 			program.setCreateDate(now);
 		program.setUpdateDate(now); // NOTE: a trying to modify program update time (from admin) will be omitted by this, use "untouched" save() instread
-		program = programDao.save(program);
+		program = dao.save(program);
 		this.processCache(program.getChannelId());
 		return program;
 	}
 
 	public void delete(NnProgram program) {
 		this.processCache(program.getChannelId());		
-		programDao.delete(program);		
+		dao.delete(program);		
 	}
 	
 	public List<NnProgram> findPlayerProgramsByChannel(long channelId) {
+		System.out.println("channelId:" + channelId);
 		List<NnProgram> programs = new ArrayList<NnProgram>();
 		NnChannel c = new NnChannelManager().findById(channelId);
 		if (c == null)
 			return programs;
-		programs = programDao.findPlayerProgramsByChannel(c);
+		programs = dao.findPlayerProgramsByChannel(c);
+		System.out.println("program size??" + programs.size());
 		return programs;
 	}	
 
 	public String findPlayerProgramInfoByChannel(long channelId) {
 		String cacheKey = "nnprogram(" + channelId + ")";
+		/*
 		String result = (String)CacheFactory.get(cacheKey);
 		if (CacheFactory.isRunning && result != null) { 
 			log.info("<<<<< retrieve program info from cache >>>>>");
 			return result;
-		}		
+		}
+		*/		
 		
 		log.info("nothing in the cache");		
 		List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
@@ -132,7 +136,7 @@ public class NnProgramManager {
 		List<NnProgram> programs = new ArrayList<NnProgram>();
 		log.info("remaining channel size not in the cache:" + channelIds.size());
 		if (channelIds.size() > 0) {
-			List<NnProgram> list = programDao.findPlayerProgramsByChannels(channelIds);
+			List<NnProgram> list = dao.findPlayerProgramsByChannels(channelIds);
 			programs.addAll(list);
 		}
 		return programs;
@@ -185,20 +189,27 @@ public class NnProgramManager {
 		return result;
 	}
 	
-	//sub-episode implementation
-	public String composeProgramInfo(List<NnProgram> programs) {		
-		if (programs.size() == 0)
-			return "";		
-		String result = "";
-		NnProgram original = programs.get(0);
-		NnChannel c = new NnChannelManager().findById(original.getChannelId());
-		if (c == null) return null;
-		if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
-			for (NnProgram p : programs) {
-				result += this.composeProgramInfoStr(p, null, null);
-			}
-			return result;
+	public String subEpisode() {
+		return "";
+	}
+	
+	public List<NnProgram> findRealPrograms(String storageId) {
+		List<NnProgram> programs = new ArrayList<NnProgram>();
+		String[] info = storageId.split(";");
+		if (info.length > 0) {
+			long channelId = Long.parseLong(info[0]);
+			String seq = info[1];
+			programs = dao.findByChannelAndSeq(channelId, seq);
 		}
+		return programs;
+		//newP.setStorageId(c.getId() + seq); //channelId + seq
+		
+	}
+	
+	public String processSubEpisode(List<NnProgram> programs) {
+		System.out.println("enter process sub episode");
+		String result = "";
+		NnProgram original = programs.get(0);		
 		long cid = programs.get(0).getChannelId();
 		List<TitleCard> cards = new TitleCardDao().findByChannel(cid); //order by channel id and entry id
 		String seq = programs.get(0).getSeq();
@@ -206,41 +217,121 @@ public class NnProgramManager {
 		String videoUrl = "";
 		for (int i=0; i<programs.size(); i++) {
 		   NnProgram p = programs.get(i);
-		   if (p.getSeq() == null) {
-			   composeProgramInfoStr(p, p.getFileUrl(), null);
-		   } else { 
- 			  //it's another program
-			  if (!p.getSeq().equals(seq) || (i == programs.size()-1)) {  
-                 String card = "";
-				 long entryId = Long.parseLong(original.getChannelId() + original.getSeq());
-				 for (int j=cardIdx; j<cards.size(); j++) {
-                    if (cards.get(j).getEntryId() == entryId) {
-                       card += cards.get(j).getPlayerSyntax() + "%0A--%0A";
-				       cardIdx++;
-					}
-				 }				 
-				 videoUrl = videoUrl.replaceFirst("\\|", "");
-			     result += composeProgramInfoStr(original, videoUrl, card);
-				 //reset			     
-				 seq = p.getSeq();
-				 videoUrl = "";
-				 card = "";
-				 original = p;
-			  } else {
-				  //format: videoUrl;startTime;endTime|videoUrl;startTime;endTime
-				  //each video is separated by "|"
-				  videoUrl += "|" + p.getFileUrl();
-				  if (p.getStartTime() != null)
-				     videoUrl += ";" + p.getStartTime();
-				  else
-					 videoUrl += ";" + ""; 
-				  if (p.getEndTime() != null)
-					 videoUrl += ";" + p.getEndTime();
-				  else
-					 videoUrl += ";" + "";				  
-			  }
+		   if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+			   System.out.println("process reference");
+			   List<NnProgram> reference = this.findRealPrograms(p.getStorageId());
+			   System.out.println("reference size:" + reference.size());
+			   if (reference.size() > 0)
+				   result += this.processSubEpisode(reference);
+		   }
+		   if (p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
+			   if (p.getSeq() == null || p.getSubSeq() == null) {
+				   System.out.println("anotehr one come here");
+				   result += composeProgramInfoStr(p, p.getFileUrl(), null);
+			   } else { 
+	 			  //it's another program
+				  if (!p.getSeq().equals(seq) || (i == programs.size()-1)) {
+	                 String card = "";
+					 String titleSeq = original.getSeq();
+					 for (int j=cardIdx; j<cards.size(); j++) {
+	                    if (cards.get(j).getSeq().equals(titleSeq)) {
+	                       card += cards.get(j).getPlayerSyntax() + "%0A--%0A";
+					       cardIdx++;
+						}
+					 }
+					 videoUrl = videoUrl.replaceFirst("\\|", "");
+				     result += composeProgramInfoStr(original, videoUrl, card); 
+					 //reset
+					 seq = p.getSeq();
+					 videoUrl = "";
+					 card = "";
+					 original = p;
+				  } else {
+					  //format: videoUrl;startTime;endTime|videoUrl;startTime;endTime
+					  //each video is separated by "|"
+					  videoUrl += "|" + p.getFileUrl();
+					  if (p.getStartTime() != null)
+					     videoUrl += ";" + p.getStartTime();
+					  else
+						 videoUrl += ";" + ""; 
+					  if (p.getEndTime() != null)
+						 videoUrl += ";" + p.getEndTime();
+					  else
+						 videoUrl += ";" + "";				  
+				  }
+			   }
 		   }
 		}
+		return result;
+	}
+	
+	//sub-episode implementation
+	public String composeProgramInfo(List<NnProgram> programs) {
+		if (programs.size() == 0)
+			return "";		
+		String result = "";
+		NnProgram original = programs.get(0);
+		NnChannel c = new NnChannelManager().findById(original.getChannelId());
+		if (c == null) return null;
+		if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED &&
+			c.getContentType() != NnChannel.CONTENTTYPE_FAVORITE) {
+			for (NnProgram p : programs) {
+				result += this.composeProgramInfoStr(p, null, null);
+			}
+			return result;
+		}
+		result += this.processSubEpisode(programs);
+//		long cid = programs.get(0).getChannelId();
+//		List<TitleCard> cards = new TitleCardDao().findByChannel(cid); //order by channel id and entry id
+//		String seq = programs.get(0).getSeq();
+//		int cardIdx = 0;
+//		String videoUrl = "";
+//		for (int i=0; i<programs.size(); i++) {
+//		   NnProgram p = programs.get(i);
+//		   if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+//			   List<NnProgram> favorite = this.findRealPrograms(p.getStorageId());
+//			   result += this.processSubEpisode(favorite);
+////			   for (int j=0; j<favorite.size(); j++) {
+////				   NnProgram f = favorite.get(j);
+////				   result += this.processSubEpisode(favorite);				   
+////			   }
+//		   }
+////		   result += this.processSubEpisode(programs, p, i);
+//		   if (p.getSeq() == null || p.getSubSeq() == null) {
+//			   result += composeProgramInfoStr(p, p.getFileUrl(), null);
+//		   } else { 
+// 			  //it's another program
+//			  if (!p.getSeq().equals(seq) || (i == programs.size()-1)) {
+//                 String card = "";
+//				 String titleSeq = original.getSeq();
+//				 for (int j=cardIdx; j<cards.size(); j++) {
+//                    if (cards.get(j).getSeq().equals(titleSeq)) {
+//                       card += cards.get(j).getPlayerSyntax() + "%0A--%0A";
+//				       cardIdx++;
+//					}
+//				 }
+//				 videoUrl = videoUrl.replaceFirst("\\|", "");
+//			     result += composeProgramInfoStr(original, videoUrl, card); 
+//				 //reset
+//				 seq = p.getSeq();
+//				 videoUrl = "";
+//				 card = "";
+//				 original = p;
+//			  } else {
+//				  //format: videoUrl;startTime;endTime|videoUrl;startTime;endTime
+//				  //each video is separated by "|"
+//				  videoUrl += "|" + p.getFileUrl();
+//				  if (p.getStartTime() != null)
+//				     videoUrl += ";" + p.getStartTime();
+//				  else
+//					 videoUrl += ";" + ""; 
+//				  if (p.getEndTime() != null)
+//					 videoUrl += ";" + p.getEndTime();
+//				  else
+//					 videoUrl += ";" + "";				  
+//			  }
+//		   }
+//		}
 		return result;
 	}
 
@@ -307,16 +398,16 @@ public class NnProgramManager {
 	}		
 	
 	public NnProgram findByStorageId(String storageId) {
-		return programDao.findByStorageId(storageId);
+		return dao.findByStorageId(storageId);
 	}
 
 	public NnProgram findById(long id) {
-		NnProgram program = programDao.findById(id);
+		NnProgram program = dao.findById(id);
 		return program;
 	}
 
 	public List<NnProgram> findByChannel(long channelId) {
-		return programDao.findByChannel(channelId);
+		return dao.findByChannel(channelId);
 	}
 	
 	public List<NnProgram> findSubscribedPrograms(NnUser user) {
@@ -353,19 +444,19 @@ public class NnProgramManager {
 	}
 	
 	public int total() {
-		return programDao.total();
+		return dao.total();
 	}
 	
 	public int total(String filter) {
-		return programDao.total(filter);
+		return dao.total(filter);
 	}
 	
 	public List<NnProgram> list(int page, int limit, String sidx, String sord) {
-		return programDao.list(page, limit, sidx, sord);
+		return dao.list(page, limit, sidx, sord);
 	}
 	
 	public List<NnProgram> list(int page, int limit, String sidx, String sord, String filter) {
-		return programDao.list(page, limit, sidx, sord, filter);
+		return dao.list(page, limit, sidx, sord, filter);
 	}
 	
 	// hook, auto share to facebook

@@ -156,7 +156,7 @@ public class DepotService {
 		boolean isNew = false;
 		if (program == null) {
 			isNew = true;
-			program = new NnProgram("", "", "", NnProgram.TYPE_VIDEO);
+			program = new NnProgram(channel.getId(), "", "", "");
 		}
 		if (isNew) {
 			if (item.getTitle() != null) { program.setName(item.getTitle()); }					
@@ -185,11 +185,6 @@ public class DepotService {
 			program.setFileUrl(item.getOther());
 		if (item.getDuration() != null)
 			program.setDuration(item.getDuration());
-		if (item.getAudio() != null) {
-			program.setType(NnProgram.TYPE_AUDIO);
-		} else {
-			program.setType(NnProgram.TYPE_VIDEO);
-		}
 		program.setPublic(true);
 		if (item.getSortId() != null)
 			program.setSeq(item.getSortId());

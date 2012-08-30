@@ -1545,10 +1545,7 @@ public class PlayerApiService {
 		if (ch == null)
 			return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
 		NnProgramManager programMngr = new NnProgramManager();
-		short type = NnProgram.TYPE_VIDEO;
-		if (audio != null)
-			type = NnProgram.TYPE_AUDIO;
-		NnProgram program = new NnProgram(name, description, image, type);
+		NnProgram program = new NnProgram(ch.getId(), name, description, image);
 		program.setChannelId(cid);
 		program.setAudioFileUrl(audio);
 		program.setFileUrl(video);
@@ -1617,18 +1614,24 @@ public class PlayerApiService {
 		return output;				
 	}
 
-	public String favorite(String userToken, String fileUrl, String name, String imageUrl, String type) {
-		if (userToken == null || fileUrl == null || name == null)
+	public String favorite(String userToken, String program, String fileUrl, String name, String imageUrl, boolean del) {
+		if (userToken == null || (program == null && fileUrl == null))
 			return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-		String[] result = {""};
-		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
-		/*
+		String[] result = {""};		
+
 		NnUser u = userMngr.findByToken(userToken);
 		if (u == null)
-			return this.assembleMsgs(NnStatusCode.USER_INVALID, null); 
-		chMngr.saveFavorite(u, fileUrl, name, imageUrl, Short.parseShort(type));
+			return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+		long pid = 0;
+		if (program != null) {
+			pid = Long.parseLong(program);
+			NnProgram p = new NnProgramManager().findById(Long.parseLong(program));
+			if (p == null)
+				return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+		}
+		chMngr.saveFavorite(u, pid, fileUrl, name, imageUrl, del);
 		return this.assembleMsgs(NnStatusCode.SUCCESS, result);
-		*/
+
 	}
 		
 	public NnChannel getChannel(String channel) {
