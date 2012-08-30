@@ -105,23 +105,23 @@ public class NnChannelManager {
 			c.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
 			dao.save(c);
 		}
-		NnProgramDao pDao = new NnProgramDao();
+		NnProgramManager pMngr = new NnProgramManager();
 		
 		if (fileUrl != null) {
-			NnProgram p = pDao.findByChannelAndFileUrl(c.getId(), fileUrl);
+			NnProgram p = pMngr.findByChannelAndFileUrl(c.getId(), fileUrl);
 			if (p == null) {
 				System.out.println("store a new favorite program:" + fileUrl);
 				p = new NnProgram(c.getId(), name, "", imageUrl);
 				p.setFileUrl(fileUrl);
 				p.setPublic(true);
 				p.setStatus(NnProgram.STATUS_OK);				
-				pDao.save(p);				
+				pMngr.save(p);				
 			}
 		} else {
-			NnProgram p = pDao.findById(pId);
+			NnProgram p = pMngr.findById(pId);
 			System.out.println("referenceid:" + p.getReferenceStorageId());
 			if (p != null) {
-				NnProgram existed = pDao.findByChannelAndStorageId(c.getId(), p.getReferenceStorageId());
+				NnProgram existed = pMngr.findByChannelAndStorageId(c.getId(), p.getReferenceStorageId());
 				if (existed != null)
 					return;
 				NnProgram newP = new NnProgram(c.getId(), p.getName(), p.getIntro(), p.getImageUrl());
@@ -132,7 +132,7 @@ public class NnChannelManager {
 				if (seq == null)
 					seq = "";
 				newP.setStorageId(p.getReferenceStorageId()); //channelId + seq
-				pDao.save(newP);
+				pMngr.save(newP);
 			}			
 		}
 	}																																																																																																																																																																																																																																																																																																																																																															

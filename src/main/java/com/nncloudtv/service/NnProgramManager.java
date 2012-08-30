@@ -87,6 +87,14 @@ public class NnProgramManager {
 		dao.delete(program);		
 	}
 	
+	public NnProgram findByChannelAndStorageId(long channelId, String storageId) {
+		return dao.findByChannelAndStorageId(channelId, storageId);
+	}
+	
+	public NnProgram findByChannelAndFileUrl(long channelId, String fileUrl) {
+		return dao.findByChannelAndFileUrl(channelId, fileUrl);
+	}
+	
 	public List<NnProgram> findPlayerProgramsByChannel(long channelId) {
 		List<NnProgram> programs = new ArrayList<NnProgram>();
 		NnChannel c = new NnChannelManager().findById(channelId);
