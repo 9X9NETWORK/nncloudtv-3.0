@@ -42,6 +42,23 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		}		
 	}
 
+	public NnProgram findByChannelAndFileUrl(long channelId, String fileUrl) {
+		NnProgram detached = null;
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
+		try {
+			Query query = pm.newQuery(NnProgram.class);
+			query.setFilter("channelId == " + channelId + " & fileUrl == '" + fileUrl + "'");
+			@SuppressWarnings("unchecked")
+			List<NnProgram> results = (List<NnProgram>) query.execute(channelId, fileUrl);
+			if (results.size() > 0) {
+				detached = pm.detachCopy(results.get(0));
+			}
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}
+	
 	public NnProgram findByStorageId(String storageId) {
 		NnProgram detached = null;
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
@@ -59,6 +76,39 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 		return detached;
 	}
 
+	public List<NnProgram> findByChannelAndSeq(long channelId, String seq) {
+		List<NnProgram> detached = new ArrayList<NnProgram>();
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
+		try {
+			Query query = pm.newQuery(NnProgram.class);
+			query.setFilter("channelId == " + channelId + " & seq == '" + seq + "'");
+			@SuppressWarnings("unchecked")
+			List<NnProgram> results = (List<NnProgram>) query.execute(channelId, seq);
+			detached = (List<NnProgram>)pm.detachCopyAll(results);
+		} finally {
+			pm.close();
+		}
+		return detached;		
+	}
+	
+	public NnProgram findByChannelAndStorageId(long channelId, String storageId) {
+		NnProgram detached = null;
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
+		try {
+			Query query = pm.newQuery(NnProgram.class);
+			query.setFilter("channelId == " + channelId + " && storageId == '" + storageId + "'");
+			@SuppressWarnings("unchecked")
+			List<NnProgram> results = (List<NnProgram>) query.execute();
+			if (results.size() > 0) {
+				detached = pm.detachCopy(results.get(0));
+			}
+		} finally {
+			pm.close();
+		}
+		return detached;
+	}
+	
+	
 	public NnProgram findFavorite(long channelId, String fileUrl) {
 		NnProgram detached = null;
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();		
@@ -86,7 +136,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
 			List<NnProgram> programs = ((List<NnProgram>) q.execute(channelIds));		
 			good = (List<NnProgram>) pm.detachCopyAll(programs);
 			for (NnProgram p : programs) {
-				  if (p.isPublic() && p.getStatus() != NnProgram.STATUS_OK && p.getType() == NnProgram.TYPE_VIDEO) {
+				  if (p.isPublic() && p.getStatus() != NnProgram.STATUS_OK) {
 					  good.add(p);
 				  }			
 			}

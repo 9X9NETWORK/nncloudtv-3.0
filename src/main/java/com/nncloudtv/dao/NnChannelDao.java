@@ -169,15 +169,15 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 		return channel;				
 	}		
 
-	public NnChannel findByUserId(long userId) {
+	public NnChannel findByUserIdStr(String userIdStr) {
 		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		NnChannel channel = null;
 		try {
 			Query q = pm.newQuery(NnChannel.class);
-			q.setFilter("userId == userIdParam");
-			q.declareParameters("long userIdParam");
+			q.setFilter("userIdStr == userIdStrParam");
+			q.declareParameters("String userIdStrParam");
 			@SuppressWarnings("unchecked")
-			List<NnChannel> channels = (List<NnChannel>) q.execute(userId);
+			List<NnChannel> channels = (List<NnChannel>) q.execute(userIdStr);
 			if (channels.size() > 0) {
 				channel = pm.detachCopy(channels.get(0));
 			}
