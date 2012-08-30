@@ -13,8 +13,7 @@ public class ApiGeneric {
 	protected static Logger log = Logger.getLogger(ApiGeneric.class.getName());
 	
 	public static final String MISSING_PARAMETER = "Missing Parameter";
-	public static final String INTERNAL_ERROR = "Internal Error";
-	
+	public static final String BAD_PARAMETER = "Bad Parameter";
 	public static final String PLAIN_TEXT_UTF8 = "plain/text;charset=utf-8";
 	
 	public void unauthorized(HttpServletResponse resp) {
@@ -25,13 +24,18 @@ public class ApiGeneric {
 		}
 	}
 	
+	public void badRequest(HttpServletResponse resp) {
+		badRequest(resp, null);
+	}
+	
 	public void badRequest(HttpServletResponse resp, String message) {
 		
 		log.warning(message);
 		
 		try {
 			resp.reset();
-			resp.getWriter().println(message);
+			if (message != null)
+				resp.getWriter().println(message);
 			resp.setContentType(PLAIN_TEXT_UTF8);
 			resp.setStatus(400);
 			resp.flushBuffer();

@@ -61,6 +61,33 @@ public class AmazonLib {
 		return result;
 	}
 	
+	public static String buildS3Policy(String bucket, String acl, String contentType, long size) {
+		
+		String result = "";
+		result += "{ 'expiration': '" + AmazonLib.getFormattedExpirationDate() + "',";
+		result += "'conditions': [";
+		result += "{ 'bucket': '" + bucket + "' },";
+		result += "[ 'starts-with', '$key', ''],";
+		result += "{ 'acl': '" + acl + "' },";
+		result += "[ 'starts-with', '$Content-Type', '" + contentType + "' ],";
+		result += "{ 'success_action_status': '201' },";
+		result += "[ 'starts-with', '$Filename', '' ],";
+		result += "[ 'content-length-range', 0, " + size + " ],";
+		result += "]";
+		result += "}";
+		
+		log.info(result);
+		byte[] policy;
+		String roundTrip = "";
+		try {
+			policy = Base64.encode(result.getBytes("UTF8"));
+			roundTrip = new String(policy, "UTF8");
+		} catch (UnsupportedEncodingException e) {
+			log.info("unsupported encoding:" + e.getMessage());
+		}
+		return roundTrip;
+	}
+	
 	public static String buildS3Policy(String buket, String acl, String contentType) {
 		
 		String result = "";
