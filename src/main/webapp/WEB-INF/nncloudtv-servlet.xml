@@ -17,7 +17,7 @@
                 
     <mvc:annotation-driven/>
                 
-	<context:component-scan base-package="com.nncloudtv.web, com.nncloudtv.service" />
+	<context:component-scan base-package="com.nncloudtv.web.api, com.nncloudtv.web, com.nncloudtv.service" />
 
     <!--   
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
