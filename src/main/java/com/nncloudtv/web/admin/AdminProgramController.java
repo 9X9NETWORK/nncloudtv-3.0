@@ -96,7 +96,6 @@ public class AdminProgramController {
 			cell.add(new SimpleDateFormat("yyyyMMddHHmmss").format(program.getCreateDate()));
 			cell.add(program.getAudioFileUrl());
 			cell.add(program.getStatus());
-			cell.add(program.getType());
 			cell.add(program.getContentType());
 			cell.add(program.isPublic());
 			cell.add(program.getDuration());

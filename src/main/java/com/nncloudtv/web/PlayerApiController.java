@@ -471,7 +471,7 @@ public class PlayerApiController {
 		}
 		return NnNetUtil.textReturn(output);				
 	}
-	
+		
 	/**
 	 * User subscribes a channel on a designated grid location.
 	 * 
@@ -633,6 +633,8 @@ public class PlayerApiController {
 			@RequestParam(value="setInfo", required=false) String setInfo,
 			@RequestParam(value="required", required=false) String required,
 			@RequestParam(value="stack", required=false) String stack,
+			@RequestParam(value="tag", required=false) String tag,
+			@RequestParam(value="category", required=false) String category,
 			@RequestParam(value="rx", required = false) String rx,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
@@ -1748,7 +1750,6 @@ public class PlayerApiController {
 	 * @param video youtube video url
 	 * @param name video name
 	 * @param image image url
-	 * @param type 1 is video, 2 is audio
 	 * @param del true or false. default is false
 	 * @param req
 	 * @param resp
@@ -1760,15 +1761,15 @@ public class PlayerApiController {
 			@RequestParam(value="program", required=false) String program,
 			@RequestParam(value="video", required=false) String fileUrl,
 			@RequestParam(value="name", required=false) String name,
-			@RequestParam(value="image", required=false) String imageUrl,
-			@RequestParam(value="type", required=false) String type,			
-			@RequestParam(value="del", required=false) String del,			
+			@RequestParam(value="image", required=false) String imageUrl,			
+			@RequestParam(value="del", required=false) String del,
 			HttpServletRequest req,
 			HttpServletResponse resp) {
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
+			boolean delete = Boolean.parseBoolean(del);
 			this.prepService(req, true);		
-			output = playerApiService.favorite(user, fileUrl, name, imageUrl, type);
+			output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, delete);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
 		} catch (Throwable t) {
