@@ -100,7 +100,6 @@ public class NnChannelManager {
 	public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl, boolean del) {
 		NnChannel c = dao.findByUserIdStr(user.getIdStr());
 		if (c == null) {
-			System.out.println("shouldn't enter here" + user.getIdStr());
 			c = new NnChannel(user.getName() + "'s Favorite", "", "");
 			c.setUserIdStr(user.getIdStr());
 			c.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
@@ -111,7 +110,7 @@ public class NnChannelManager {
 		if (fileUrl != null) {
 			NnProgram p = pDao.findByChannelAndFileUrl(c.getId(), fileUrl);
 			if (p == null) {
-				System.out.println("to store new program:" + fileUrl);
+				System.out.println("store a new favorite program:" + fileUrl);
 				p = new NnProgram(c.getId(), name, "", imageUrl);
 				p.setFileUrl(fileUrl);
 				p.setPublic(true);
@@ -125,7 +124,6 @@ public class NnChannelManager {
 				NnProgram existed = pDao.findByChannelAndStorageId(c.getId(), p.getReferenceStorageId());
 				if (existed != null)
 					return;
-				System.out.println("not exist, should contineu");
 				NnProgram newP = new NnProgram(c.getId(), p.getName(), p.getIntro(), p.getImageUrl());
 				newP.setPublic(true);
 				newP.setStatus(NnProgram.STATUS_OK);
@@ -384,7 +382,6 @@ public class NnChannelManager {
 	public List<NnChannel> findByUser(NnUser user, int number) {
 		String userIdStr = user.getShard() + "-" + user.getId();
 		List<NnChannel> channels = dao.findByUser(userIdStr); //!!! pass the number for limited search
-		System.out.println("channels size:" + channels.size());
 		if (number == 0) {
 			return channels;
 		} else { 			

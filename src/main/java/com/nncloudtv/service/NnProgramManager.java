@@ -41,7 +41,6 @@ public class NnProgramManager {
 		//if the channel's original programCount is zero, its count will not be in the category, adding it now.
 		if (count == 1) {
 			CategoryManager categoryMngr = new CategoryManager();
-			System.out.println("mso program manager, channel create, addChannelCount");
 			categoryMngr.addChannelCounter(channel);
 		}
 		this.autoShare(program);
@@ -89,25 +88,21 @@ public class NnProgramManager {
 	}
 	
 	public List<NnProgram> findPlayerProgramsByChannel(long channelId) {
-		System.out.println("channelId:" + channelId);
 		List<NnProgram> programs = new ArrayList<NnProgram>();
 		NnChannel c = new NnChannelManager().findById(channelId);
 		if (c == null)
 			return programs;
 		programs = dao.findPlayerProgramsByChannel(c);
-		System.out.println("program size??" + programs.size());
 		return programs;
 	}	
 
 	public String findPlayerProgramInfoByChannel(long channelId) {
 		String cacheKey = "nnprogram(" + channelId + ")";
-		/*
 		String result = (String)CacheFactory.get(cacheKey);
 		if (CacheFactory.isRunning && result != null) { 
 			log.info("<<<<< retrieve program info from cache >>>>>");
 			return result;
-		}
-		*/		
+		}		
 		
 		log.info("nothing in the cache");		
 		List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
@@ -207,7 +202,6 @@ public class NnProgramManager {
 	}
 	
 	public String processSubEpisode(List<NnProgram> programs) {
-		System.out.println("enter process sub episode");
 		String result = "";
 		NnProgram original = programs.get(0);		
 		long cid = programs.get(0).getChannelId();
@@ -218,7 +212,6 @@ public class NnProgramManager {
 		for (int i=0; i<programs.size(); i++) {
 		   NnProgram p = programs.get(i);
 		   if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
-			   System.out.println("process reference");
 			   List<NnProgram> reference = this.findRealPrograms(p.getStorageId());
 			   System.out.println("reference size:" + reference.size());
 			   if (reference.size() > 0)
@@ -226,7 +219,6 @@ public class NnProgramManager {
 		   }
 		   if (p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
 			   if (p.getSeq() == null || p.getSubSeq() == null) {
-				   System.out.println("anotehr one come here");
 				   result += composeProgramInfoStr(p, p.getFileUrl(), null);
 			   } else { 
 	 			  //it's another program
