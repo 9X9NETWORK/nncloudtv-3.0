@@ -16,6 +16,7 @@ import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.web.api.NnStatusCode;
 import com.nncloudtv.web.json.transcodingservice.PostResponse;
 import com.nncloudtv.web.json.transcodingservice.PostUrl;
 import com.nncloudtv.web.json.transcodingservice.RtnChannel;

@@ -7,6 +7,8 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.web.api.NnStatusCode;
+
 /**
  * Transition implementation before we can switch to real locale instead of mso.
  * 

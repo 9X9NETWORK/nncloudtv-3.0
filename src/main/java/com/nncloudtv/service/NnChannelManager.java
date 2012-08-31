@@ -21,6 +21,7 @@ import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.web.api.NnStatusCode;
 
 @Service
 public class NnChannelManager {

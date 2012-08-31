@@ -53,6 +53,7 @@ import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.UserInvite;
 import com.nncloudtv.validation.BasicValidator;
 import com.nncloudtv.validation.NnUserValidator;
+import com.nncloudtv.web.api.NnStatusCode;
 
 @Service
 public class PlayerApiService {
@@ -817,6 +818,10 @@ public class PlayerApiService {
     	}
 		dao.save(c);
     	return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
+    }
+    
+    public String tagInfo(String id, String name) {
+    	return "";
     }
     
 	public String programInfo(String channelIds, String userToken, 
