@@ -1,4 +1,4 @@
-package com.nncloudtv.web;
+package com.nncloudtv.web.api;
 
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -19,7 +19,6 @@ import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.service.MsoManager;
-import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.NnStatusMsg;
 import com.nncloudtv.service.PlayerApiService;
 
@@ -427,6 +426,26 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null));		
 	}
 
+	@RequestMapping(value="tagInfo")
+	public ResponseEntity<String> tagInfo(
+			@RequestParam(value="tag", required=false) String id,
+			@RequestParam(value="name", required=false) String name,
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		log.info("categoryInfo: id =" + id);		
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		try {
+			this.prepService(req, true);
+			output = playerApiService.tagInfo(id, name);
+		} catch (Exception e) {
+			output = playerApiService.handleException(e);
+		} catch (Throwable t) {
+			NnLogUtil.logThrowable(t);			
+		}
+		return NnNetUtil.textReturn(output);				
+	}
+	
 	/**
 	 * Get list of channels under the category
 	 * 
@@ -458,11 +477,7 @@ public class PlayerApiController {
 		log.info("categoryInfo: id =" + id);		
 		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
 		try {
-			int status = this.prepService(req, true);
-			if (status != NnStatusCode.SUCCESS) {
-				return NnNetUtil.textReturn(
-						playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null));
-			}
+			this.prepService(req, true);
 			output = playerApiService.categoryInfo(id, tag, sort);
 		} catch (Exception e) {
 			output = playerApiService.handleException(e);
@@ -554,6 +569,16 @@ public class PlayerApiController {
 		return NnNetUtil.textReturn(output);
 	}	
 
+	@RequestMapping(value="channelStack")
+	public ResponseEntity<String> channelStack(
+			@RequestParam(value="user", required=false) String userToken, 
+			@RequestParam(value="stack", required=false) String stack,
+			@RequestParam(value="rx", required = false) String rx,
+			HttpServletRequest req,
+			HttpServletResponse resp) {
+		String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+		return NnNetUtil.textReturn(output);
+	}
 	/**
 	 * Get channel information 
 	 * 

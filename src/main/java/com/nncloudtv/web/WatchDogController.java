@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.service.MsoManager;
-import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.api.NnStatusCode;
 
 @Controller
 @RequestMapping("wd")

@@ -66,7 +66,7 @@ public class HelloController {
 		HttpSession session = req.getSession();
 		session.setMaxInactiveInterval(1);
         String message = "Hello NnCloudTv";
-        return new ModelAndView("hello", "message", message);
+        return new ModelAndView("hello/hello", "message", message);
     }    
 
     @RequestMapping("log")
@@ -409,6 +409,40 @@ public class HelloController {
 		QueueFactory.add("/CMSAPI/postToFacebook", fbPost);
 		
     	return NnNetUtil.textReturn("OK");
+    }
+
+    @RequestMapping("fblogin")
+    public @ResponseBody void fblogin(
+    		HttpServletRequest req,
+			@RequestParam(value="stage", required=false) String stage,
+			@RequestParam(value="code", required=false) String code,
+			@RequestParam(value="error", required=false) String error,
+			@RequestParam(value="errorReason", required=false) String errorReason,
+			@RequestParam(value="errorDescription", required=false) String errorDescription,
+			@RequestParam(value="accessToken", required=false) String accessToken,
+			@RequestParam(value="expirse", required=false) String expires
+    		) {    	
+    	System.out.println("--------- fb callback -------------");
+    	System.out.println("stage:" + stage);
+    	System.out.println("code:" + code);
+    	System.out.println("error:" + error);
+    	System.out.println("errorReason:" + errorReason);
+    	System.out.println("errorDescription:" + errorDescription);
+    	System.out.println("accessToken:" + accessToken);
+    	String fbUrl = "https://graph.facebook.com/oauth/access_token?client_id=nbyntest&client_secret=bb96e3578cfb0822796810601d554e97&code=" + code + "&redirect_uri=http://dev1.9x9.tv/hello/fblogin";
+    	System.out.println("fbUrl:" + fbUrl);
+        //NnNetUtil.urlGet () {
+    }
+    
+    
+    @RequestMapping("fbbutton")
+    public @ResponseBody String fbbutton(HttpServletRequest req) {    	    	
+    	return "hello/fbbutton";
+    }
+
+    @RequestMapping("text")
+    public @ResponseBody String text(HttpServletRequest req) {    	
+    	return "text display";
     }
     
 }

@@ -3,7 +3,7 @@ package com.nncloudtv.web.json.transcodingservice;
 import java.io.Serializable;
 import java.util.List;
 
-import com.nncloudtv.service.NnStatusCode;
+import com.nncloudtv.web.api.NnStatusCode;
 
 public class ChannelInfo implements Serializable {
 

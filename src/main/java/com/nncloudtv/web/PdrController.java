@@ -20,11 +20,11 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserReport;
 import com.nncloudtv.model.Pdr;
 import com.nncloudtv.service.NnDeviceManager;
-import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserReportManager;
 import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.api.NnStatusCode;
 
 @Controller
 @RequestMapping("pdr")
