@@ -1,0 +1,1 @@
+<a href="https://www.facebook.com/dialog/oauth?client_id=nbyntest&redirect_uri=http://dev1.9x9.tv/hello/fblogin&&scope=user_likes,user_activities&state=12345">click</a>       
