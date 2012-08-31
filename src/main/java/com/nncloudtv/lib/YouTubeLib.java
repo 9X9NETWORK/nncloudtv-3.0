@@ -22,7 +22,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.Key;
-import com.nncloudtv.service.NnStatusCode;
+import com.nncloudtv.web.api.NnStatusCode;
 
 public class YouTubeLib {
 	

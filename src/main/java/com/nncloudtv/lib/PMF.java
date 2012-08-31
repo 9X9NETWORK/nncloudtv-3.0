@@ -18,6 +18,8 @@ public final class PMF {
 		JDOHelper.getPersistenceManagerFactory("datanucleus_content.properties");		
 	private static final PersistenceManagerFactory pmfInstanceAnalytics = 
 		JDOHelper.getPersistenceManagerFactory("datanucleus_analytics.properties");		                                            
+	private static final PersistenceManagerFactory pmfInstanceRecommend = 
+		JDOHelper.getPersistenceManagerFactory("datanucleus_recommend.properties");		                                            
 	
 	private PMF() {}
 	
@@ -43,6 +45,10 @@ public final class PMF {
 	
 	public static PersistenceManagerFactory getAnalytics() {
 		return pmfInstanceAnalytics;
+	}
+
+	public static PersistenceManagerFactory getRecommend() {
+		return pmfInstanceRecommend;
 	}
 	
 }
