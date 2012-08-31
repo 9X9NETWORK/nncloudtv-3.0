@@ -2,7 +2,7 @@ package com.nncloudtv.validation;
 
 import java.util.logging.Logger;
 
-import com.nncloudtv.service.NnStatusCode;
+import com.nncloudtv.web.api.NnStatusCode;
 
 public class PdrRawValidator {
 	protected static final Logger log = Logger.getLogger(PdrRawValidator.class.getName());

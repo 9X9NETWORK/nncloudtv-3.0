@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.service.NnStatusCode;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.web.api.NnStatusCode;
 
 public class NnUserValidator {
 
