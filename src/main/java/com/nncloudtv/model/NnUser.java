@@ -85,13 +85,13 @@ public class NnUser implements Serializable {
 	
 	@Persistent
 	private short type; //user's type
-	public static short TYPE_ADMIN = 1; 
-	public static short TYPE_TBC = 2;
-	public static short TYPE_TCO = 3; 
+	public static short TYPE_ADMIN = 1;      // Administrator (abandoned)
+	public static short TYPE_TBC = 2;        // a.k.a. Target Brand-name Customer (abandoned)
+	public static short TYPE_TCO = 3;        // a.k.a. Target Content Owner (abandoned)
 	public static short TYPE_USER = 4;
-	public static short TYPE_NN = 5; //default user, must have and only one
-	public static short TYPE_3X3 = 6;
-	public static short TYPE_ENTERPRISE = 7;
+	public static short TYPE_NN = 5;         // default user, must have and only one
+	public static short TYPE_3X3 = 6;        // Taiwan partner
+	public static short TYPE_ENTERPRISE = 7; // U.S. partner
 		
 	public static String GUEST_EMAIL = "guest@9x9.com";
 	public static String GUEST_NAME = "Guest";
