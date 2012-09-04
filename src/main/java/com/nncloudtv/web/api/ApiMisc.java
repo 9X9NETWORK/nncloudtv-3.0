@@ -23,6 +23,8 @@ import com.nncloudtv.service.NnUserManager;
 @RequestMapping("api")
 public class ApiMisc extends ApiGeneric {
 	
+	protected static Logger log = Logger.getLogger(ApiMisc.class.getName());
+		
 	@RequestMapping(value = "s3/attributes", method = RequestMethod.GET)
 	public @ResponseBody Map<String, String> s3Attributes(HttpServletRequest req, HttpServletResponse resp) {
 		
@@ -110,8 +112,6 @@ public class ApiMisc extends ApiGeneric {
 	@RequestMapping("echo")
 	public @ResponseBody Map<String, String> echo(HttpServletRequest req, HttpServletResponse resp) {
 		
-		log = Logger.getLogger(ApiMisc.class.getName());
-		
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> names = req.getParameterMap();
 		Map<String, String> result = new TreeMap<String, String>();
@@ -134,6 +134,13 @@ public class ApiMisc extends ApiGeneric {
 			resp.setStatus(201);
 		
 		return result;
+	}
+	
+	@RequestMapping("*")
+	public @ResponseBody void blackHole(HttpServletRequest req, HttpServletResponse resp) {
+		
+		notFound(resp, "Black Hole");
+		
 	}
 	
 }

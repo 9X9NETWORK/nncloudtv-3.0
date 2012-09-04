@@ -230,6 +230,10 @@ public class NnUserManager {
 		return this.findById(uid, shard);
 	}
 	
+	public NnUser findById(long id) {
+		return nnUserDao.findById(id, (short)0);
+	}
+	
 	public NnUser findById(long id, short shard) {
 		return nnUserDao.findById(id, shard);
 	}

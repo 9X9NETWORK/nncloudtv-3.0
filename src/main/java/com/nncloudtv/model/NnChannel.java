@@ -126,6 +126,7 @@ public class NnChannel implements Serializable {
 
 	@Persistent
 	private short poolType; //default 0, anything > 0 is "special"
+	public static final short POOL_NORMAL = 0;
 	public static final short POOL_FEATUERD = 1;
 	public static final short POOL_HOTTEST = 2;
 	public static final short POOL_TRENDING = 3; 
@@ -399,6 +400,10 @@ public class NnChannel implements Serializable {
 			return Short.parseShort(splits[0]);
 		else
 			return 1;
+	}
+	
+	public long getUserId() {
+		return getUserId(userIdStr);
 	}
 	
 	public long getUserId(String userId) {

@@ -13,6 +13,7 @@ public class ApiGeneric {
 	protected static Logger log = Logger.getLogger(ApiGeneric.class.getName());
 	
 	public static final String MISSING_PARAMETER = "Missing Parameter";
+	public static final String INVALID_PATH_PARAMETER = "Invalid Path Parameter";
 	public static final String BAD_PARAMETER = "Bad Parameter";
 	public static final String PLAIN_TEXT_UTF8 = "plain/text;charset=utf-8";
 	
@@ -22,6 +23,27 @@ public class ApiGeneric {
 		} catch (IOException e) {
 			internalError(resp, e);
 		}
+	}
+	
+	public void notFound(HttpServletResponse resp, String message) {
+		
+		log.warning(message);
+		
+		try {
+			resp.reset();
+			if (message != null)
+				resp.getWriter().println(message);
+			resp.setContentType(PLAIN_TEXT_UTF8);
+			resp.setStatus(404);
+			resp.flushBuffer();
+		} catch (IOException e) {
+			internalError(resp, e);
+		}
+		
+	}
+	
+	public void notFound(HttpServletResponse resp) {
+		notFound(resp, null);
 	}
 	
 	public void badRequest(HttpServletResponse resp) {

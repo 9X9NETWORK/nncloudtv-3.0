@@ -121,11 +121,14 @@ public class NnStringUtil {
 	}
 
 	public static String htmlSafeAndTrucated(String str) {
-		for (int i = MAX_JDO_STRING_LENGTH; i > 0; i--) {
+		return htmlSafeAndTruncated(str, MAX_JDO_STRING_LENGTH);
+	}
+	public static String htmlSafeAndTruncated(String str, int length) {
+		for (int i = length; i > 0; i--) {
 			String truncated = truncateUTF8(str, i);
 			String htmlSafe = htmlSafeChars(truncated);
 			Integer bytelen = htmlSafe.getBytes(Charset.forName("UTF-8")).length;
-			if (bytelen <= MAX_JDO_STRING_LENGTH) {
+			if (bytelen <= length) {
 				log.info("length in bytes: " + bytelen);
 				return htmlSafe;
 			}
