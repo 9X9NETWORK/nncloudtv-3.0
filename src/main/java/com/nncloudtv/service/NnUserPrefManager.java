@@ -33,4 +33,7 @@ public class NnUserPrefManager {
 		return nnUserPrefDao.findByUserAndItem(user, item);
 	}
 	
+	public void delete(NnUser user, NnUserPref pref) {
+		nnUserPrefDao.delete(user, pref);
+	}
 }

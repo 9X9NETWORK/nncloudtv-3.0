@@ -26,11 +26,19 @@ public class NnUserPref implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String item;
+	public static final String FB_USER_ID = "fb-user-id";
+	public static final String FB_TOKEN = "fb-token";
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String value;
 	
+	public NnUserPref(NnUser user, String item, String value) {
+		this.userId = user.getId();
+		this.item = item;
+		this.value = value;
+	}
+
 	@Persistent
 	private Date createDate;
 	

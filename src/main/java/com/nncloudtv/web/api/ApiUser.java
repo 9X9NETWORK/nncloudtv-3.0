@@ -2,6 +2,8 @@ package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +13,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.web.json.facebook.FacebookPage;
 
 @Controller
 @RequestMapping("api")
@@ -26,20 +33,22 @@ public class ApiUser extends ApiGeneric {
 	protected static Logger log = Logger.getLogger(ApiUser.class.getName());
 	
 	@RequestMapping(value = "users/{userId}", method = RequestMethod.GET)
-	public @ResponseBody NnUser userInfo(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+	public @ResponseBody
+	NnUser userInfo(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr, @RequestParam(required = false) Short shard) {
 		
-		Short shard = 0;
-		Long userId;
-		
-		String shardStr = req.getParameter("shard");
-		if (shardStr != null)
-			shard = Short.valueOf(shardStr);
-		
-		userId = Long.valueOf(userIdStr);
-		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
 		if (userId == null) {
 			notFound(resp, INVALID_PATH_PARAMETER);
 			return null;
+		}
+		
+		if (shard == null) {
+			shard = 0;
 		}
 		
 		NnUserManager userMngr = new NnUserManager();
@@ -48,20 +57,22 @@ public class ApiUser extends ApiGeneric {
 	}
 	
 	@RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
-	public @ResponseBody NnUser userInfoUpdate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+	public @ResponseBody
+	NnUser userInfoUpdate(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr, @RequestParam(required = false) Short shard) {
 		
-		Short shard = 0;
-		Long userId;
-		
-		String shardStr = req.getParameter("shard");
-		if (shardStr != null)
-			shard = Short.valueOf(shardStr);
-		
-		userId = Long.valueOf(userIdStr);
-		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
 		if (userId == null) {
 			notFound(resp, INVALID_PATH_PARAMETER);
 			return null;
+		}
+		
+		if (shard == null) {
+			shard = 0;
 		}
 		
 		NnUserManager userMngr = new NnUserManager();
@@ -110,7 +121,11 @@ public class ApiUser extends ApiGeneric {
 		
 		List<NnChannel> result = new ArrayList<NnChannel>();
 		
-		Long userId = Long.valueOf(userIdStr);
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
 		if (userId == null) {
 			notFound(resp, INVALID_PATH_PARAMETER);
 			return null;
@@ -132,7 +147,11 @@ public class ApiUser extends ApiGeneric {
 	@RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)
 	public @ResponseBody NnChannel userChannelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
 		
-		Long userId = Long.valueOf(userIdStr);
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
 		if (userId == null) {
 			notFound(resp, INVALID_PATH_PARAMETER);
 			return null;
@@ -197,19 +216,34 @@ public class ApiUser extends ApiGeneric {
 	        @PathVariable("userId") String userIdStr,
 	        @PathVariable("channelId") String channelIdStr) {		
 		
-		Long channelId = Long.valueOf(channelIdStr);
+		Long channelId = null;
+		try {
+			channelId = Long.valueOf(channelIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (channelId == null) {
+			badRequest(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
 		NnChannelManager channelMngr = new NnChannelManager();
 		NnChannel channel = channelMngr.findById(channelId);
-		
 		if (channel == null) {
 			
 			notFound(resp, "Channel Not Found");
 			return null;
 		}
 		
-		Long userId = Long.valueOf(userIdStr);
-		
-		if (userId != channel.getUserId()) {
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			
+			badRequest(resp, INVALID_PATH_PARAMETER);
+			return null;
+		} else if (userId != channel.getUserId()) {
 			
 			return "Not The Channel Owner";
 		}
@@ -219,4 +253,151 @@ public class ApiUser extends ApiGeneric {
 		
 		return "OK";
 	}
+	
+	@RequestMapping(value = "users/{userId}/sns_auth/facebook", method = RequestMethod.POST)
+	public @ResponseBody
+	String facebookAuthUpdate(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr) {		
+		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserManager userMngr = new NnUserManager();
+		NnUser user = userMngr.findById(userId);
+		if (user == null) {
+			notFound(resp, "User Not Found");
+			return null;
+		}
+		
+		String fbUserId = req.getParameter("userId");
+		String accessToken = req.getParameter("accessToken");
+		if (fbUserId == null || accessToken == null) {
+			
+			badRequest(resp, MISSING_PARAMETER);
+			return null;
+		}
+		
+		NnUserPrefManager prefMngr = new NnUserPrefManager();
+		NnUserPref userPref = null;
+		
+		// fbUserId
+		userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_USER_ID);
+		if (userPref != null) {
+			userPref.setValue(fbUserId);
+		} else {
+			userPref = new NnUserPref(user, NnUserPref.FB_USER_ID, fbUserId);
+		}
+		prefMngr.save(user, userPref);
+		
+		// accessToken
+		userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_TOKEN);
+		if (userPref != null) {
+			userPref.setValue(accessToken);
+		} else {
+			userPref = new NnUserPref(user, NnUserPref.FB_TOKEN, accessToken);
+		}
+		prefMngr.save(user, userPref);
+		
+		return "OK";
+	}
+	
+	@RequestMapping(value = "users/{userId}/sns_auth/facebook", method = RequestMethod.DELETE)
+	public @ResponseBody
+	String facebookAuthDelete(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr) {
+		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserManager userMngr = new NnUserManager();
+		NnUser user = userMngr.findById(userId);
+		if (user == null) {
+			notFound(resp, "User Not Found");
+			return null;
+		}
+		
+		NnUserPrefManager prefMngr = new NnUserPrefManager();
+		NnUserPref userPref = null;
+		
+		// fbUserId
+		userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_USER_ID);
+		if (userPref != null) {
+			prefMngr.delete(user, userPref);
+		}
+		
+		// accessToken
+		userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_TOKEN);
+		if (userPref != null) {
+			prefMngr.delete(user, userPref);
+		}
+		
+		return "OK";
+	}
+	
+	@RequestMapping(value = "users/{userId}/sns_auth/facebook", method = RequestMethod.GET)
+	public @ResponseBody
+	Map<String, Object> facebookAuth(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr) {
+		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserManager userMngr = new NnUserManager();
+		NnUser user = userMngr.findById(userId);
+		if (user == null) {
+			notFound(resp, "User Not Found");
+			return null;
+		}
+		
+		NnUserPrefManager prefMngr = new NnUserPrefManager();
+		NnUserPref userPref = null;
+		Map<String, Object> result = new TreeMap<String, Object>();
+		String fbUserId = null;
+		String accessToken = null;
+		
+		// fbUserId
+		userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_USER_ID);
+		if (userPref != null) {
+			fbUserId = userPref.getValue();
+			result.put("userId", fbUserId);
+		}
+		
+		// accessToken
+		userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_TOKEN);
+		if (userPref != null) {
+			accessToken = userPref.getValue();
+			result.put("accessToken", accessToken);
+		}
+		
+		if (fbUserId != null && accessToken != null) {
+			List<FacebookPage> pages = FacebookLib.populatePageList(fbUserId, accessToken);
+			result.put("pages", pages);
+		} else {
+			return null;
+		}
+		
+		return result;
+	}
+		
 }

@@ -4,21 +4,29 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.logging.Logger;
+
+import org.apache.http.ProtocolException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
+import com.google.api.client.json.JsonToken;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.web.json.facebook.FBPost;
-
-//import net.sf.json.JSONObject;
+import com.nncloudtv.web.json.facebook.FacebookError;
+import com.nncloudtv.web.json.facebook.FacebookPage;
+import com.nncloudtv.web.json.facebook.FacebookResponse;
 
 public class FacebookLib {
 	protected static final Logger log = Logger.getLogger(FacebookLib.class.getName());
@@ -124,25 +132,20 @@ public class FacebookLib {
 	}
 	
 	
-	static public void populatePageList() {
-		/*
-		if (sns == null) {
-			return;
-		} else if (sns.getType() != SnsAuth.TYPE_FACEBOOK) {
-			log.warning("not TYPE_FACEBOOK");
-			return;
-		} else if (sns.getToken() == null || sns.getToken().isEmpty()) {
-			log.warning("token is empty");
-			return;
-		} else if (sns.getSecret() == null || sns.getSecret().isEmpty()) {
-			log.warning("secrete is empty");
-			return;
+	static public List<FacebookPage> populatePageList(String fbUserId, String accessToken) {
+		
+		log.info("fbUserId = " + fbUserId + ", accessToken = " + accessToken);
+		
+		if (fbUserId == null || accessToken == null) {
+			return null;
 		}
+		
+		List<FacebookPage> pages = null;
 		
 		try {
 			String fullpath = 
-					"https://graph.facebook.com/" + sns.getToken() + 
-					"/accounts?access_token=" + URLEncoder.encode(sns.getSecret(), "US-ASCII");
+					"https://graph.facebook.com/" + fbUserId + 
+					"/accounts?access_token=" + URLEncoder.encode(accessToken, "US-ASCII");
 			log.info(fullpath);
 			URL url = new URL(fullpath);
 			
@@ -151,9 +154,8 @@ public class FacebookLib {
 			ObjectMapper mapper = new ObjectMapper();
 			FacebookResponse response = mapper.readValue(connection.getInputStream(), FacebookResponse.class);
 			if (response.getData() != null) {
-				List<FacebookPage> pages = response.getData();
+				pages = response.getData();
 				log.info("pages count: " + pages.size());
-				sns.setPages(pages);
 			} else if (response.getError() != null) {
 				FacebookError error = response.getError();
 				log.warning("error message: " + error.getMessage());
@@ -161,32 +163,19 @@ public class FacebookLib {
 			} else {
 				log.warning("neither no data nor error");
 			}
-			if (!root.path("data").equals(JsonToken.NOT_AVAILABLE)) {
-				List<FacebookPage> pages = mapper.readValue(root.path("data"), List.class);
-				log.info("pages count: " + pages.size());
-			} else if (!root.path("error").equals(JsonToken.NOT_AVAILABLE)) {
-				Map<String,String> error = (Map<String,String>)mapper.readValue(root.path("error"), Map.class);
-				log.warning("error message: " + error.get("message"));
-				log.warning("error type: " + error.get("type"));
-			} else {
-				log.warning("neither no data nor error");
-			}
 		} catch (MalformedURLException e) {
 			logException(e);
 		} catch (UnsupportedEncodingException e) {
 			logException(e);
-		} catch (ProtocolException e) {
-			logException(e);
 		} catch (IOException e) {
 			logException(e);
 		}
-		*/
+		
+		return pages;
 	}
-
-	/*
+	
 	static private void logException(Exception e) {
 		log.warning(e.getClass().getCanonicalName());
 		NnLogUtil.logException(e);
 	}
-	*/
 }

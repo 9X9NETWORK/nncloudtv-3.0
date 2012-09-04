@@ -1283,10 +1283,7 @@ public class PlayerApiService {
 			pref.setValue(value);			
 			prefMngr.save(user, pref);
 		} else {
-			pref = new NnUserPref();
-			pref.setValue(value);
-			pref.setItem(item);			
-			pref.setUserId(user.getId());
+			pref = new NnUserPref(user, item, value);
 			prefMngr.save(user, pref);
 		}
 		return this.assembleMsgs(NnStatusCode.SUCCESS, null);

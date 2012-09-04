@@ -75,5 +75,21 @@ public class NnUserPrefDao extends GenericDao<NnUserPref> {
 		}
 		return pref;
 	}
+
+	public void delete(NnUser user, NnUserPref pref) {
+		
+		if (pref == null) {
+			return;
+		}
+		
+		PersistenceManager pm = this.getPersistenceManager(user);
+		
+		try {
+			pm.deletePersistent(pref);
+		} finally {
+			pm.close();
+		}
+		
+	}
 	
 }
