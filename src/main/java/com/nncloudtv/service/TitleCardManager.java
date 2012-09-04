@@ -36,7 +36,7 @@ public class TitleCardManager {
 			syntax += "style: " + card.getStyle();
 		if (card.getColor() != null)
 			syntax += "color: " + card.getColor();
-		if (card.getBgcolor() != null)
+		if (card.getBgColor() != null)
 			syntax += "bgcolor: " + card.getColor();		
 		try {
 			syntax = URLEncoder.encode(syntax, "UTF-8");

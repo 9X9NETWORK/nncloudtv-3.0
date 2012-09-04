@@ -31,39 +31,47 @@ public class TitleCard implements Serializable {
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=8)
 	private String subSeq; //subSeq should correspond with nnprogram's subSeq
-	
+
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String duration;
-		
+
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=255)
 	private String message;
 
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=10)
-	private String color;
+	@Column(jdbcType="VARVHAR", length=20)
+	private String size; // font size
 
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=10)
-	private String bgcolor;
-	
-	public String getBgcolor() {
-		return bgcolor;
-	}
-
-	public void setBgcolor(String bgcolor) {
-		this.bgcolor = bgcolor;
-	}
+	@Column(jdbcType="VARCHAR", length=20)
+	private String color; // font color
 
 	@Persistent
-	@Column(jdbcType="VARCHAR", length=10)
+	@Column(jdbcType="VARCHAR", length=20)
+	private String effect;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=20)
+	private String align;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=20)
+	private String bgColor;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=20)
 	private String style;
-	
+
 	@Persistent
 	private short type; //0 begin, 1 end	
 	public static short TYPE_BEGIN = 0;
 	public static short TYPE_END = 1;
+
+	@Persistent
+	@Column(jdbcType="VARCHAR", length=255)
+	private String bgImage;
 	
 	@Persistent
 	@Column(jdbcType="VARCHAR", length=500)
@@ -71,13 +79,21 @@ public class TitleCard implements Serializable {
 
 	@Persistent
 	private Date updateDate;
-	
+
 	public Date getUpdateDate() {
 		return updateDate;
 	}
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public String getBgColor() {
+		return bgColor;
+	}
+
+	public void setBgColor(String bgColor) {
+		this.bgColor = bgColor;
 	}
 
 	public long getId() {
@@ -159,5 +175,37 @@ public class TitleCard implements Serializable {
 	public void setSubSeq(String subSeq) {
 		this.subSeq = subSeq;
 	}
+
+	public String getSize() {
+	    return size;
+    }
+
+	public void setSize(String size) {
+	    this.size = size;
+    }
+
+	public String getBgImage() {
+	    return bgImage;
+    }
+
+	public void setBgImage(String bgImage) {
+	    this.bgImage = bgImage;
+    }
+
+	public String getEffect() {
+	    return effect;
+    }
+
+	public void setEffect(String effect) {
+	    this.effect = effect;
+    }
+
+	public String getAlign() {
+	    return align;
+    }
+
+	public void setAlign(String align) {
+	    this.align = align;
+    }
 
 }
