@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelDao;
-import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.PiwikLib;

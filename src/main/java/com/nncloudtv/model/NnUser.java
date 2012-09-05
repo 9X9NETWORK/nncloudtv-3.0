@@ -143,6 +143,9 @@ public class NnUser implements Serializable {
 	}
 
 	public String getIdStr() {
+		if (shard == 0) {
+			return String.valueOf(this.getId());
+		}
 		return shard + "-" + this.getId();
 	}
 	

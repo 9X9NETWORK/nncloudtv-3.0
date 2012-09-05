@@ -12,7 +12,6 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.http.ProtocolException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import twitter4j.Twitter;
@@ -20,7 +19,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
-import com.google.api.client.json.JsonToken;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.web.json.facebook.FBPost;

@@ -20,8 +20,10 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.web.json.facebook.FacebookPage;
@@ -114,6 +116,145 @@ public class ApiUser extends ApiGeneric {
 		}
 		
 		return userMngr.save(user);
+	}
+	
+	@RequestMapping(value = "users/{userId}/my_{repo}", method = RequestMethod.GET)
+	public @ResponseBody
+	List<NnUserLibrary> userUploads(HttpServletRequest req,
+	        HttpServletResponse resp, @PathVariable("userId") String userIdStr,
+	        @PathVariable("repo") String repo) {
+
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserManager userMngr = new NnUserManager();
+		
+		NnUser user = userMngr.findById(userId);
+		if (user == null) {
+			notFound(resp, "User Not Found");
+			return null;
+		}
+		
+		NnUserLibraryManager libMngr = new NnUserLibraryManager();
+		
+		short type = NnUserLibrary.TYPE_UPLOADS;
+		if (repo.equalsIgnoreCase("library")) {
+			type = NnUserLibrary.TYPE_YOUTUBE;
+		}
+		
+		return libMngr.findByUserAndType(user, type);
+	}
+	
+	@RequestMapping(value = { "users/{userId}/my_uploads/{id}", "users/{userId}/my_library/{id}" }, method = RequestMethod.DELETE)
+	public @ResponseBody
+	String userUploadsDelete(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr,
+	        @PathVariable("id") String idStr) {		
+		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserManager userMngr = new NnUserManager();
+		
+		NnUser user = userMngr.findById(userId);
+		if (user == null) {
+			notFound(resp, "User Not Found");
+			return null;
+		}
+		
+		Long id = null;
+		
+		try {
+	        id = Long.valueOf(idStr);
+        } catch (NumberFormatException e) {
+        }
+		if (id == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserLibraryManager libMngr = new NnUserLibraryManager();
+		NnUserLibrary lib = libMngr.findById(id);
+		if (lib == null) {
+			return "Item Not Found";
+		}
+		
+		libMngr.delete(lib);
+		
+		return "OK";
+	}
+	
+	@RequestMapping(value = "users/{userId}/my_{repo}", method = RequestMethod.POST)
+	public @ResponseBody
+	String userUploadsCreate(HttpServletRequest req, HttpServletResponse resp,
+	        @PathVariable("userId") String userIdStr,
+	        @PathVariable("repo") String repo) {
+		
+		Long userId = null;
+		try {
+			userId = Long.valueOf(userIdStr);
+		} catch (NumberFormatException e) {
+		}
+		if (userId == null) {
+			notFound(resp, INVALID_PATH_PARAMETER);
+			return null;
+		}
+		
+		NnUserManager userMngr = new NnUserManager();
+		
+		NnUser user = userMngr.findById(userId);
+		if (user == null) {
+			notFound(resp, "User Not Found");
+			return null;
+		}
+		
+		NnUserLibraryManager libMngr = new NnUserLibraryManager();
+		
+		// name, url
+		String name = req.getParameter("name");
+		String url = req.getParameter("fileUrl");
+		String imageUrl = req.getParameter("imageUrl");
+		
+		if (name == null || url == null) {
+			
+			badRequest(resp, MISSING_PARAMETER);
+			return null;
+		}
+		
+		name = NnStringUtil.htmlSafeAndTrucated(name);
+		// TODO: check for url
+		
+		short type = NnUserLibrary.TYPE_UPLOADS;
+		if (repo.equalsIgnoreCase("library")) {
+			type = NnUserLibrary.TYPE_YOUTUBE;
+		}
+		
+		NnUserLibrary lib = new NnUserLibrary(name, url, type);
+		lib.setUserIdStr(user.getIdStr());
+		if (imageUrl != null) {
+			// TODO: check for imageUrl
+			lib.setImageUrl(imageUrl);
+		} else {
+			lib.setImageUrl(NnChannel.IMAGE_WATERMARK_URL);
+		}
+		
+		libMngr.save(lib);
+		
+		return "OK";
 	}
 	
 	@RequestMapping(value = "users/{userId}/channels", method = RequestMethod.GET)

@@ -34,10 +34,21 @@ public class NnUserLibrary implements Serializable {
 	private String imageUrl;
 	
 	@Persistent
+	private short type;
+	public static final short TYPE_UPLOADS = 1;
+	public static final short TYPE_YOUTUBE = 2;
+	
+	@Persistent
 	private short status; //correspond to NnProgram status
 		
 	@Persistent
 	private Date updateDate;
+	
+	public NnUserLibrary(String name, String fileUrl, short type) {
+		this.name = name;
+		this.fileUrl = fileUrl;
+		this.type = type;
+	}
 
 	public long getId() {
 		return id;
@@ -94,5 +105,13 @@ public class NnUserLibrary implements Serializable {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
+
+	public short getType() {
+	    return type;
+    }
+
+	public void setType(short type) {
+	    this.type = type;
+    }
 	
 }
