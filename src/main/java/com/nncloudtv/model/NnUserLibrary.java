@@ -1,5 +1,6 @@
 package com.nncloudtv.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.Column;
@@ -9,7 +10,9 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(table="nnuser_library", detachable="true")
-public class NnUserLibrary {
+public class NnUserLibrary implements Serializable {
+	private static final long serialVersionUID = -5963982247560373939L;
+
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
