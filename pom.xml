@@ -14,12 +14,12 @@
   <!-- 
     packaging commands 
     packaging:
-    	mvn datanucleus:enhance 
-    	mvn war:war    
+        mvn datanucleus:enhance 
+        mvn war:war    
     test the packaged war with jetty plugin: 
-    	mvn jetty:deploy-war
+        mvn jetty:deploy-war
     packaging and run jetty with jetty plugin: 
-    	mvn jetty:run-war 
+        mvn jetty:run-war 
   -->
   <build>
      <!-- ====================================================================== -->
@@ -55,23 +55,23 @@
                    <keyPassword>nncloudtv</keyPassword>
                 </connector>
              </connectors>
-	         <webAppConfig>
+             <webAppConfig>
                 <contextPath>/</contextPath>
              </webAppConfig>
              <scanIntervalSeconds>3</scanIntervalSeconds>  
              <systemProperties>
-		        <systemProperty>
-		           <name>org.apache.commons.logging.Log</name>
-		           <value>org.apache.commons.logging.impl.Log4JLogger</value>
-		        </systemProperty>
-		        <systemProperty>
-		           <name>slf4j</name>
-		           <value>false</value>
-		        </systemProperty>
-		        <systemProperty>
-		           <name>log4j.configuration</name>
-		           <value>file:./target/classes/log4j.properties</value>		           
-		        </systemProperty>		        
+                <systemProperty>
+                   <name>org.apache.commons.logging.Log</name>
+                   <value>org.apache.commons.logging.impl.Log4JLogger</value>
+                </systemProperty>
+                <systemProperty>
+                   <name>slf4j</name>
+                   <value>false</value>
+                </systemProperty>
+                <systemProperty>
+                   <name>log4j.configuration</name>
+                   <value>file:./target/classes/log4j.properties</value>                   
+                </systemProperty>                
              </systemProperties>                        
            </configuration>  
            <dependencies>
@@ -96,63 +96,63 @@
               </dependency>                            
            </dependencies>
         </plugin>
-		<plugin>
-		   <!-- 
-		     commands: 
-		     mvn datanucleus:enhance
-		     mvn datanucleus:schema-create
-		   -->     
-		   <!-- 
-		     Reference
-		     http://repo1.maven.org/maven2/org/datanucleus/maven-datanucleus-plugin/3.0.0-m1/
-		     http://www.datanucleus.org/products/accessplatform_3_0/guides/maven2/index.html 
-		   -->
-		   <groupId>org.datanucleus</groupId>		   
-		   <artifactId>maven-datanucleus-plugin</artifactId>		   
-		   <version>3.0.1</version>		   		   
-		   <configuration>
-		      <verbose>true</verbose>
-		      <fork>false</fork>
-		      <!-- the last props takes effect, this section is for schema-create -->		      
-		      <!-- 
-		      <props>file:./target/classes/datanucleus_nnuser1.properties</props>		       
-		      <props>${basedir}/src/main/resources/datanucleus_analytics.properties</props>
-		      <props>${basedir}/src/main/resources/datanucleus_content.properties</props>
-		      -->
-			</configuration>	
-			<!-- define dependency specifically here otherwise it'll always pick up the latest version -->
+        <plugin>
+           <!-- 
+             commands: 
+             mvn datanucleus:enhance
+             mvn datanucleus:schema-create
+           -->     
+           <!-- 
+             Reference
+             http://repo1.maven.org/maven2/org/datanucleus/maven-datanucleus-plugin/3.0.0-m1/
+             http://www.datanucleus.org/products/accessplatform_3_0/guides/maven2/index.html 
+           -->
+           <groupId>org.datanucleus</groupId>           
+           <artifactId>maven-datanucleus-plugin</artifactId>           
+           <version>3.0.1</version>                      
+           <configuration>
+              <verbose>true</verbose>
+              <fork>false</fork>
+              <!-- the last props takes effect, this section is for schema-create -->              
+              <!-- 
+              <props>file:./target/classes/datanucleus_nnuser1.properties</props>               
+              <props>${basedir}/src/main/resources/datanucleus_analytics.properties</props>
+              <props>${basedir}/src/main/resources/datanucleus_content.properties</props>
+              -->
+            </configuration>    
+            <!-- define dependency specifically here otherwise it'll always pick up the latest version -->
             <dependencies>
                <dependency>
-		          <groupId>org.datanucleus</groupId>
-		          <artifactId>datanucleus-core</artifactId>
-		          <version>3.0.1</version>
-	           </dependency>
-		       <dependency>
-				  <groupId>org.datanucleus</groupId>
-				  <artifactId>datanucleus-enhancer</artifactId>
-				  <version>3.0.1</version>
-			   </dependency> 
-		       <dependency>
-		          <groupId>mysql</groupId>
-		          <artifactId>mysql-connector-java</artifactId>
-		          <version>5.1.15</version>
-		          <scope>compile</scope>
-		       </dependency>                        
-			   <dependency>
-				  <groupId>org.datanucleus</groupId>
-				  <artifactId>datanucleus-rdbms</artifactId>
-				  <version>3.0.1</version>
-			   </dependency>			   	           	
-            </dependencies>	  
-			<executions>
-			   <execution>
-			      <phase>process-classes</phase>
-				  <goals>
-				     <goal>enhance</goal>
-				  </goals>
-			   </execution>			
-			</executions>
-		</plugin>  
+                  <groupId>org.datanucleus</groupId>
+                  <artifactId>datanucleus-core</artifactId>
+                  <version>3.0.1</version>
+               </dependency>
+               <dependency>
+                  <groupId>org.datanucleus</groupId>
+                  <artifactId>datanucleus-enhancer</artifactId>
+                  <version>3.0.1</version>
+               </dependency> 
+               <dependency>
+                  <groupId>mysql</groupId>
+                  <artifactId>mysql-connector-java</artifactId>
+                  <version>5.1.15</version>
+                  <scope>compile</scope>
+               </dependency>                        
+               <dependency>
+                  <groupId>org.datanucleus</groupId>
+                  <artifactId>datanucleus-rdbms</artifactId>
+                  <version>3.0.1</version>
+               </dependency>                                  
+            </dependencies>      
+            <executions>
+               <execution>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>enhance</goal>
+                  </goals>
+               </execution>            
+            </executions>
+        </plugin>  
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
@@ -160,40 +160,40 @@
           <configuration>
              <warSourceExcludes>images/, stylesheets/, javascripts/, videos/, installer/</warSourceExcludes>
           </configuration>
-        </plugin>		
+        </plugin>        
      </plugins>     
      <pluginManagement>
-     	<plugins>
-     		<!-- For eclipse to ignore datanucleus enhance checking -->
-     		<plugin>
-     			<groupId>org.eclipse.m2e</groupId>
-     			<artifactId>lifecycle-mapping</artifactId>
-     			<version>1.0.0</version>
-     			<configuration>
-     				<lifecycleMappingMetadata>
-     					<pluginExecutions>
-     						<pluginExecution>
-     							<pluginExecutionFilter>
-     								<groupId>org.datanucleus</groupId>
-     								<artifactId>
-     									maven-datanucleus-plugin
-     								</artifactId>
-     								<versionRange>
-     									[3.0.0-m1,)
-     								</versionRange>
-     								<goals>
-     									<goal>enhance</goal>
-     								</goals>
-     							</pluginExecutionFilter>
-     							<action>
-     								<ignore></ignore>
-     							</action>
-     						</pluginExecution>
-     					</pluginExecutions>
-     				</lifecycleMappingMetadata>
-     			</configuration>
-     		</plugin>
-     	</plugins>
+         <plugins>
+             <!-- For eclipse to ignore datanucleus enhance checking -->
+             <plugin>
+                 <groupId>org.eclipse.m2e</groupId>
+                 <artifactId>lifecycle-mapping</artifactId>
+                 <version>1.0.0</version>
+                 <configuration>
+                     <lifecycleMappingMetadata>
+                         <pluginExecutions>
+                             <pluginExecution>
+                                 <pluginExecutionFilter>
+                                     <groupId>org.datanucleus</groupId>
+                                     <artifactId>
+                                         maven-datanucleus-plugin
+                                     </artifactId>
+                                     <versionRange>
+                                         [3.0.0-m1,)
+                                     </versionRange>
+                                     <goals>
+                                         <goal>enhance</goal>
+                                     </goals>
+                                 </pluginExecutionFilter>
+                                 <action>
+                                     <ignore></ignore>
+                                 </action>
+                             </pluginExecution>
+                         </pluginExecutions>
+                     </lifecycleMappingMetadata>
+                 </configuration>
+             </plugin>
+         </plugins>
      </pluginManagement>
   </build>
   
@@ -233,21 +233,21 @@
         <artifactId>spring-orm</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
-	  <dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-core</artifactId>
-		<version>${org.springframework.version}</version>
-	  </dependency>
-	  <dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-web</artifactId>
-		<version>${org.springframework.version}</version>
-	  </dependency> 
       <dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-config</artifactId>
-		<version>${org.springframework.version}</version>
-	  </dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency> 
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
       <!-- logging -->         
       <dependency>
         <groupId>log4j</groupId>
@@ -278,7 +278,7 @@
         <version>1.2</version>
       </dependency>
       <!-- jackson -->      
-	  <dependency>
+      <dependency>
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-mapper-asl</artifactId>
         <version>1.6.1</version>
@@ -300,47 +300,47 @@
       </dependency>
       <dependency>
       <groupId>org.datanucleus</groupId>
-		<artifactId>datanucleus-api-jdo</artifactId>				            
-		<version>3.0.1</version>
-		<type>jar</type>
-		<scope>compile</scope>
-	  </dependency>	     	                 	  	                   
+        <artifactId>datanucleus-api-jdo</artifactId>                            
+        <version>3.0.1</version>
+        <type>jar</type>
+        <scope>compile</scope>
+      </dependency>                                                           
       <dependency>
-		<groupId>org.datanucleus</groupId>
-		<artifactId>datanucleus-core</artifactId>
-		<version>3.0.1</version>
-		<scope>runtime</scope>
-	  </dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-core</artifactId>
+        <version>3.0.1</version>
+        <scope>runtime</scope>
+      </dependency>
       <dependency>
-		<groupId>org.datanucleus</groupId>
-		<artifactId>datanucleus-jdo-query</artifactId>
-		<version>3.0.1</version>
-		<scope>runtime</scope>
-	  </dependency> 
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-jdo-query</artifactId>
+        <version>3.0.1</version>
+        <scope>runtime</scope>
+      </dependency> 
       <dependency>
-		<groupId>org.datanucleus</groupId>
-		<artifactId>datanucleus-enhancer</artifactId>
-		<version>3.0.1</version>
-		<scope>runtime</scope>
-	  </dependency>
-	  <dependency>
-		<groupId>org.datanucleus</groupId>
-		<artifactId>datanucleus-rdbms</artifactId>
-		<version>3.0.1</version>
-		<scope>runtime</scope>
-	  </dependency>
-	  <!-- dbcp -->  
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-enhancer</artifactId>
+        <version>3.0.1</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-rdbms</artifactId>
+        <version>3.0.1</version>
+        <scope>runtime</scope>
+      </dependency>
+      <!-- dbcp -->  
       <dependency>
         <groupId>commons-collections</groupId>
         <artifactId>commons-collections</artifactId>
         <version>3.2.1</version>
-      </dependency>	  
+      </dependency>      
       <dependency>
         <groupId>commons-pool</groupId>
         <artifactId>commons-pool</artifactId>
         <version>1.5.5</version>
-      </dependency>	   
-	  <dependency>
+      </dependency>       
+      <dependency>
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.4</version>
@@ -355,11 +355,11 @@
       <!-- RabbitMQ -->
       <dependency>
          <groupId>com.rabbitmq</groupId>
-    	 <artifactId>amqp-client</artifactId>
-    	 <!-- <version>1.7.2</version> -->
-    	 <version>2.7.1</version>
-      </dependency>	   	 
-	  <!-- Others -->
+         <artifactId>amqp-client</artifactId>
+         <!-- <version>1.7.2</version> -->
+         <version>2.7.1</version>
+      </dependency>            
+      <!-- Others -->
       <dependency>
          <groupId>commons-lang</groupId>
          <artifactId>commons-lang</artifactId>
@@ -370,41 +370,41 @@
          <groupId>com.google.api-client</groupId>
          <artifactId>google-api-client</artifactId>
          <version>1.5.1-beta</version>
-      </dependency>	  
+      </dependency>      
       <!-- atomikos -->
       <!-- 
-	  <dependency>
-		 <groupId>com.atomikos</groupId>
-		 <artifactId>atomikos-util</artifactId>
-		 <version>3.7.0</version>
-	  </dependency>
-	  <dependency>
-		 <groupId>com.atomikos</groupId>
-		 <artifactId>transactions</artifactId>
-		 <version>3.7.0</version>
-	  </dependency>
-	  <dependency>
-		 <groupId>com.atomikos</groupId>
-		 <artifactId>transactions-api</artifactId>
-		 <version>3.7.0</version>
-	  </dependency>
-	  <dependency>
-		 <groupId>com.atomikos</groupId>
-		 <artifactId>transactions-jta</artifactId>
-		 <version>3.7.0</version>
-	  </dependency>
-	<dependency>
-		<groupId>com.atomikos</groupId>
-		<artifactId>transactions-jdbc</artifactId>
-		<version>3.7.0</version>
-	</dependency>
-	 -->
-	<!-- spring transaction dependent -->      
+      <dependency>
+         <groupId>com.atomikos</groupId>
+         <artifactId>atomikos-util</artifactId>
+         <version>3.7.0</version>
+      </dependency>
+      <dependency>
+         <groupId>com.atomikos</groupId>
+         <artifactId>transactions</artifactId>
+         <version>3.7.0</version>
+      </dependency>
+      <dependency>
+         <groupId>com.atomikos</groupId>
+         <artifactId>transactions-api</artifactId>
+         <version>3.7.0</version>
+      </dependency>
+      <dependency>
+         <groupId>com.atomikos</groupId>
+         <artifactId>transactions-jta</artifactId>
+         <version>3.7.0</version>
+      </dependency>
+    <dependency>
+        <groupId>com.atomikos</groupId>
+        <artifactId>transactions-jdbc</artifactId>
+        <version>3.7.0</version>
+    </dependency>
+     -->
+    <!-- spring transaction dependent -->      
     <dependency>
        <groupId>cglib</groupId>
        <artifactId>cglib</artifactId>
        <version>2.2.2</version>
-    </dependency>          	    
+    </dependency>                  
     <!-- memcache -->      
     <dependency>
        <groupId>spy</groupId>
@@ -413,20 +413,20 @@
     </dependency>
     <!-- Apache POI -->        
     <dependency>
-	   <groupId>org.apache.poi</groupId>
-	   <artifactId>poi</artifactId>
-	   <version>3.7</version>
+       <groupId>org.apache.poi</groupId>
+       <artifactId>poi</artifactId>
+       <version>3.7</version>
     </dependency>    
     <dependency>
-	   <groupId>org.apache.poi</groupId>
-	   <artifactId>poi-ooxml</artifactId>
-	   <version>3.7</version>
+       <groupId>org.apache.poi</groupId>
+       <artifactId>poi-ooxml</artifactId>
+       <version>3.7</version>
     </dependency>
     <!-- JavaMail -->     
     <dependency>
-	   <groupId>javax.mail</groupId>
-	   <artifactId>mail</artifactId>
-	   <version>1.4</version>
+       <groupId>javax.mail</groupId>
+       <artifactId>mail</artifactId>
+       <version>1.4</version>
     </dependency>    
     <!-- Twitter --> 
     <dependency>
@@ -435,12 +435,12 @@
        <version>[2.2,)</version>
     </dependency>
     <dependency>
-	   <groupId>rome</groupId>
-	   <artifactId>rome</artifactId>
-	   <version>1.0</version>
+       <groupId>rome</groupId>
+       <artifactId>rome</artifactId>
+       <version>1.0</version>
     </dependency>
   </dependencies>
-  
+
   <!-- ====================================================================== -->
   <!-- Maven Repositories                                                     -->
   <!-- ====================================================================== -->  
