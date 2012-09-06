@@ -7,21 +7,21 @@ import java.io.Serializable;
  */
 public class PostKey implements Serializable {
 
-	private static final long serialVersionUID = -1989278891340544589L;
-	
-	private String key;
-	private String itemKey;
-	
-	public String getKey() {
-		return key;
-	}
-	public void setKey(String key) {
-		this.key = key;
-	}
-	public String getItemKey() {
-		return itemKey;
-	}
-	public void setItemKey(String itemKey) {
-		this.itemKey = itemKey;
-	}		
+    private static final long serialVersionUID = -1989278891340544589L;
+    
+    private String key;
+    private String itemKey;
+    
+    public String getKey() {
+        return key;
+    }
+    public void setKey(String key) {
+        this.key = key;
+    }
+    public String getItemKey() {
+        return itemKey;
+    }
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
+    }        
 }
