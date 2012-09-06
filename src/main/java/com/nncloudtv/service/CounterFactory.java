@@ -25,8 +25,8 @@ import com.nncloudtv.model.Counter;
  *
  */
 public class CounterFactory {
-  protected static final Logger log = Logger.getLogger(CounterFactory.class.getName());		
-	
+  protected static final Logger log = Logger.getLogger(CounterFactory.class.getName());        
+    
   public ShardedCounter getOrCreateCounter(String name) {
     CounterFactory factory = new CounterFactory();
     ShardedCounter counter = factory.getCounter(name);
