@@ -25,66 +25,66 @@ import com.nncloudtv.service.NnContentManager;
 @RequestMapping("admin/content")
 public class AdminContentController {
 
-	protected static final Logger logger = Logger.getLogger(AdminContentController.class.getName());		
-	
-	private final NnContentManager contentMngr;
-	
-	@Autowired
-	public AdminContentController(NnContentManager contentMngr) {
-		this.contentMngr = contentMngr;
-	}
+    protected static final Logger logger = Logger.getLogger(AdminContentController.class.getName());        
+    
+    private final NnContentManager contentMngr;
+    
+    @Autowired
+    public AdminContentController(NnContentManager contentMngr) {
+        this.contentMngr = contentMngr;
+    }
 
-	@ExceptionHandler(Exception.class)
-	public String exception(Exception e) {
-		NnLogUtil.logException(e);
-		return "error/exception";				
-	}	
-	
-	@RequestMapping(value="form", method=RequestMethod.GET)
-	public ModelAndView formEdit(
-			@RequestParam(value="id", required=false)String id,
-			HttpServletRequest req) {	
-		ModelAndView mv = new ModelAndView("admin/static");
-		if (id != null) {
-			NnContent content = contentMngr.findById(Long.parseLong(id));
-			mv.addObject("key", content.getItem());
-			mv.addObject("lang", content.getLang());
-			mv.addObject("text", content.getValue());
-		}
-		return mv;
-	}
+    @ExceptionHandler(Exception.class)
+    public String exception(Exception e) {
+        NnLogUtil.logException(e);
+        return "error/exception";                
+    }    
+    
+    @RequestMapping(value="form", method=RequestMethod.GET)
+    public ModelAndView formEdit(
+            @RequestParam(value="id", required=false)String id,
+            HttpServletRequest req) {    
+        ModelAndView mv = new ModelAndView("admin/static");
+        if (id != null) {
+            NnContent content = contentMngr.findById(Long.parseLong(id));
+            mv.addObject("key", content.getItem());
+            mv.addObject("lang", content.getLang());
+            mv.addObject("text", content.getValue());
+        }
+        return mv;
+    }
 
-	@RequestMapping(value="form", method=RequestMethod.POST)
-	public String formPost(HttpServletRequest req) {			
-		String key = req.getParameter("key");
-		String lang = req.getParameter("lang");
-		String text = req.getParameter("text");
-		NnContent content = contentMngr.findByItemAndLang(key, lang);
-		if (content == null) {
-			content = new NnContent(key, text, lang);
-		}
-		if (lang == null)
-			lang = LangTable.LANG_EN;
-		if (!lang.equals(LangTable.LANG_EN) && !lang.equals(LangTable.LANG_ZH))
-			lang = LangTable.LANG_EN;	
-		
-		content.setValue(text);
-		content.setLang(lang);
-		contentMngr.save(content);
-		return "redirect:/admin/content/list";
-	}
-		
-	@RequestMapping("list")
-	public ResponseEntity<String> list() {
-		//find all programs, including the not public ones
-		List<NnContent> list = contentMngr.findAll();				
-		String output = "<p><INPUT TYPE='button' onClick=\"parent.location='form'\" value='create'></p>";
-		for (NnContent c : list) {
-			output += "<p>" + "<a href='form?id=" + c.getId() + "'>" +
-			          c.getId() + "<a>\t" + c.getItem() + "\t" +
-			          c.getLang() + "</p>";
-		}
-		return NnNetUtil.htmlReturn(output);
-	}	
-	
+    @RequestMapping(value="form", method=RequestMethod.POST)
+    public String formPost(HttpServletRequest req) {            
+        String key = req.getParameter("key");
+        String lang = req.getParameter("lang");
+        String text = req.getParameter("text");
+        NnContent content = contentMngr.findByItemAndLang(key, lang);
+        if (content == null) {
+            content = new NnContent(key, text, lang);
+        }
+        if (lang == null)
+            lang = LangTable.LANG_EN;
+        if (!lang.equals(LangTable.LANG_EN) && !lang.equals(LangTable.LANG_ZH))
+            lang = LangTable.LANG_EN;    
+        
+        content.setValue(text);
+        content.setLang(lang);
+        contentMngr.save(content);
+        return "redirect:/admin/content/list";
+    }
+        
+    @RequestMapping("list")
+    public ResponseEntity<String> list() {
+        //find all programs, including the not public ones
+        List<NnContent> list = contentMngr.findAll();                
+        String output = "<p><INPUT TYPE='button' onClick=\"parent.location='form'\" value='create'></p>";
+        for (NnContent c : list) {
+            output += "<p>" + "<a href='form?id=" + c.getId() + "'>" +
+                      c.getId() + "<a>\t" + c.getItem() + "\t" +
+                      c.getLang() + "</p>";
+        }
+        return NnNetUtil.htmlReturn(output);
+    }    
+    
 }
