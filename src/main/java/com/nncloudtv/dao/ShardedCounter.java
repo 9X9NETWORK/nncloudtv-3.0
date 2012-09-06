@@ -43,7 +43,7 @@ public class ShardedCounter {
         pm.makePersistent(counterEntity);
       } finally {
         pm.close();
-      }	  
+      }      
   }
 
   public ShardedCounter(String counterName) {
@@ -60,7 +60,7 @@ public class ShardedCounter {
         "counterName == nameParam");
     thisCounterQuery.declareParameters("String nameParam");
     @SuppressWarnings("unchecked")
-	List<Counter> counter = (List<Counter>) thisCounterQuery.execute(counterName);        
+    List<Counter> counter = (List<Counter>) thisCounterQuery.execute(counterName);        
     if (counter != null && !counter.isEmpty()) {
       current = counter.get(0);
     }
@@ -89,7 +89,7 @@ public class ShardedCounter {
                                       "counterName == nameParam");
       shardsQuery.declareParameters("String nameParam");
       @SuppressWarnings("unchecked")
-	  List<CounterShard> shards = (List<CounterShard>) shardsQuery.execute(counterName);          
+      List<CounterShard> shards = (List<CounterShard>) shardsQuery.execute(counterName);          
       if (shards != null && !shards.isEmpty()) {
         for (CounterShard current : shards) {
           sum += current.getCount();
@@ -176,7 +176,7 @@ public class ShardedCounter {
           "counterName == nameParam && shardNumber == numParam");
       randomShardQuery.declareParameters("String nameParam, int numParam");
       @SuppressWarnings("unchecked")
-	  List<CounterShard> shards = (List<CounterShard>) randomShardQuery.execute(counterName, shardNum);          
+      List<CounterShard> shards = (List<CounterShard>) randomShardQuery.execute(counterName, shardNum);          
       if (shards != null && !shards.isEmpty()) {
         CounterShard shard = shards.get(0);
         shard.increment(count);
