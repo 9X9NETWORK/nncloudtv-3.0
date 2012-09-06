@@ -1,5 +1,6 @@
 package com.nncloudtv.lib;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
@@ -18,7 +19,12 @@ public class AmazonLib {
 	
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String AWS_KEY = "fdXkONXak8YC8TylX7fVSte5nvhFJ0RB7KnXGhpl";
+	
 	public static final String AWS_ID = "AKIAIUZXV6X5RKSG3QRQ";
+	public static final String AWS_TOKEN = "QWJvdXQtTWU=";
+	public static final String S3_TOKEN = "YWJvdXR5b3U=";
+	public static final String S3_CONTEXT_CODE = "aHR0cDovL2dvby5nbC9lVTNtWg==";
+	public static final String S3_EXT = "WW91IEFyZSBOb3QgQWxvbmU=";
 	
 	/**
 	* Computes RFC 2104-compliant HMAC signature.
@@ -114,6 +120,24 @@ public class AmazonLib {
 		}		        
 		return roundTrip;
 	}
+	
+	public static String decodeS3Token(String token, Date timestamp, byte[] salt, long rand) throws IOException {
+		
+		byte[] encrypt = AuthLib.encryptPassword(token, salt);
+		String pattern = timestamp.toString() + String.valueOf(rand);
+		int radius = pattern.length();
+		String perimeter = pattern.substring(radius) + token;
+		int len1 = encrypt.length, len2 = salt.length;
+		if (len1 < len2) {
+			encrypt[(len2 % len1)] = salt[len1];
+		} else {
+			salt[(len1 % len2)] = encrypt[len2 - 1];
+		}
+		log.info("length = " + perimeter.length());
+		
+		return org.datanucleus.util.Base64.decodeString(perimeter);
+	}
+	
 	public static String getFormattedExpirationDate() {
 		Date now = new Date();
 		Date oneHourFromNow = new Date(now.getTime() + 3600 * 1000);
@@ -123,4 +147,5 @@ public class AmazonLib {
 		String formattedExpirationDate = dfm.format(oneHourFromNow);
 		return formattedExpirationDate;
 	}
+	
 }

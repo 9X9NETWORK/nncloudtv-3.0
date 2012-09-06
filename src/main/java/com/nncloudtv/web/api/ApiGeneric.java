@@ -27,12 +27,12 @@ public class ApiGeneric {
 	
 	public void notFound(HttpServletResponse resp, String message) {
 		
-		log.warning(message);
-		
 		try {
 			resp.reset();
-			if (message != null)
+			if (message != null) {
+				log.warning(message);
 				resp.getWriter().println(message);
+			}
 			resp.setContentType(PLAIN_TEXT_UTF8);
 			resp.setStatus(404);
 			resp.flushBuffer();
@@ -52,12 +52,12 @@ public class ApiGeneric {
 	
 	public void badRequest(HttpServletResponse resp, String message) {
 		
-		log.warning(message);
-		
 		try {
 			resp.reset();
-			if (message != null)
+			if (message != null) {
+				log.warning(message);
 				resp.getWriter().println(message);
+			}
 			resp.setContentType(PLAIN_TEXT_UTF8);
 			resp.setStatus(400);
 			resp.flushBuffer();
