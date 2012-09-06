@@ -18,12 +18,12 @@ import com.nncloudtv.web.api.NnStatusCode;
 @RequestMapping("wd")
 public class WatchDogController {
 
-	protected static final Logger log = Logger.getLogger(WatchDogController.class.getName());
-	
-	@RequestMapping(value="msoInfo")
-	public ResponseEntity<String> msoInfo(HttpServletRequest req) {
-		MsoManager msoMngr = new MsoManager();
-		Mso mso = msoMngr.findNNMso();
+    protected static final Logger log = Logger.getLogger(WatchDogController.class.getName());
+    
+    @RequestMapping(value="msoInfo")
+    public ResponseEntity<String> msoInfo(HttpServletRequest req) {
+        MsoManager msoMngr = new MsoManager();
+        Mso mso = msoMngr.findNNMso();
         String[] result = {""};
         result[0] += PlayerApiService.assembleKeyValue("key", String.valueOf(mso.getId()));
         result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
@@ -35,8 +35,7 @@ public class WatchDogController {
 
         PlayerApiService s = new PlayerApiService();
         String output = s.assembleMsgs(NnStatusCode.SUCCESS, result);
-		return NnNetUtil.textReturn(output);
-	}
-	
+        return NnNetUtil.textReturn(output);
+    }    
 
 }

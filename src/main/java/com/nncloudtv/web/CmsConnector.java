@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 // CmsController is moved to nncms, CmsConnector is for redirection
 @Controller
 public class CmsConnector {
-	
-	protected static final Logger log = Logger.getLogger(CmsConnector.class.getName());
-	
-	@RequestMapping(value = "{msoName}/admin", method = RequestMethod.GET)
-	public String admin(HttpServletRequest request, HttpServletResponse response, @PathVariable("msoName") String msoName, Model model) throws SignatureException {
-		
-		log.info("msoName = " + msoName);
-		
-		if (msoName.equals("cms")) {
-			return "redirect:/cms/admin";
-		} else {
-			return "redirect:/cms/" + msoName + "/admin";
-		}
-	}
+    
+    protected static final Logger log = Logger.getLogger(CmsConnector.class.getName());
+    
+    @RequestMapping(value = "{msoName}/admin", method = RequestMethod.GET)
+    public String admin(HttpServletRequest request, HttpServletResponse response, @PathVariable("msoName") String msoName, Model model) throws SignatureException {
+        
+        log.info("msoName = " + msoName);
+        
+        if (msoName.equals("cms")) {
+            return "redirect:/cms/admin";
+        } else {
+            return "redirect:/cms/" + msoName + "/admin";
+        }
+    }
 }
