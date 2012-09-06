@@ -6,7 +6,10 @@
   <groupId>com.nncloudtv</groupId>
   <artifactId>nncloudtv</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>nncloudtv</name>
+  <name>nncloudtv</name> 
+  <reporting>    
+    <outputDirectory>doc</outputDirectory>
+  </reporting>
   
   <!-- 
     packaging commands 
@@ -23,6 +26,16 @@
      <!-- Plugins                                                                -->
      <!-- ====================================================================== -->       
      <plugins>
+      <plugin>
+        <!-- mvn javadoc:javadoc -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.8.1</version>
+        <configuration>
+           <show>public</show>
+           <sourcepath>${basedir}/src/main/java/com/nncloudtv/web/api</sourcepath> 
+        </configuration>
+      </plugin>     
         <!-- command: mvn jetty:run -->
         <plugin>        
            <groupId>org.mortbay.jetty</groupId>
@@ -72,7 +85,7 @@
               <dependency>
                  <groupId>org.slf4j</groupId>
                  <artifactId>slf4j-jcl</artifactId>
-                 <version>1.0.1</version>
+                 <version>1.6.1</version>
                  <type>jar</type>
               </dependency>
               <dependency>
@@ -190,7 +203,8 @@
   <properties>
      <!-- versions -->
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-     <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
+     <!-- <org.springframework.version>3.0.4.RELEASE</org.springframework.version> -->
+     <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
      <servlet.version>2.5</servlet.version>               
   </properties>
    
@@ -248,7 +262,7 @@
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-jcl</artifactId>
-         <version>1.0.1</version>
+         <version>1.6.1</version>
          <type>jar</type>
       </dependency>                     
       <!-- servlet -->
@@ -414,7 +428,7 @@
 	   <artifactId>mail</artifactId>
 	   <version>1.4</version>
     </dependency>    
-    <!-- Twitter -->
+    <!-- Twitter --> 
     <dependency>
        <groupId>org.twitter4j</groupId>
        <artifactId>twitter4j-core</artifactId>
@@ -431,11 +445,13 @@
   <!-- Maven Repositories                                                     -->
   <!-- ====================================================================== -->  
   <repositories>
+     <!-- 
      <repository>
         <id>DataNucleus_Repos2</id>
         <name>DataNucleus Repository</name>
         <url>http://www.datanucleus.org/downloads/maven2</url>
      </repository>
+      -->
      <!-- 
      <repository>
         <id>atomikos maven-repos</id>
@@ -454,9 +470,11 @@
      </repository>     
   </repositories>
   <pluginRepositories>
+     <!-- 
      <pluginRepository>
         <id>DataNucleus_2</id>
         <url>http://www.datanucleus.org/downloads/maven2/</url>
      </pluginRepository>
+      -->
   </pluginRepositories>  
 </project>
