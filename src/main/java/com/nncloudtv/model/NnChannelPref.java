@@ -37,7 +37,7 @@ public class NnChannelPref implements Serializable {
 		this.item = item;
 		this.value = value;
 	}
-
+	
 	@Persistent
 	private Date createDate;
 	
