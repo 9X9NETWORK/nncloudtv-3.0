@@ -66,7 +66,6 @@ public class DepotService {
         if (!podcast.getErrorCode().equals(String.valueOf(NnChannel.STATUS_SUCCESS))) {
             channel.setPublic(false);
             channel.setStatus(this.convertStatus(Short.valueOf(podcast.getErrorCode())));
-            channel.setErrorReason(podcast.getErrorReason());
             channelMngr.save(channel);
             return new PostResponse(String.valueOf(NnStatusCode.SUCCESS), "SUCCESS"); 
         }
@@ -97,7 +96,6 @@ public class DepotService {
         if (podcast.getLastUpdateTime() != null)
             channel.setTranscodingUpdateDate(podcast.getLastUpdateTime());
         channel.setPublic(true);
-        channel.setErrorReason("");
         
         channelMngr.save(channel);
         return new PostResponse(String.valueOf(NnStatusCode.SUCCESS), "SUCCESS");

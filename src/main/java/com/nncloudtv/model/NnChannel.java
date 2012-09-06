@@ -109,11 +109,12 @@ public class NnChannel implements Serializable {
     public static final short STATUS_TRANSCODING_DB_ERROR = 1000;
     public static final short STATUS_NNVMSO_JSON_ERROR = 1001;        
                             
-    //value mostly passing from transcoding service
+    //status note or pool status note
+    //can be number to indicate any kind of status or text
     @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String errorReason;
-        
+    @Column(jdbcType="VARCHAR", length=10)
+    private String note;
+    
     @NotPersistent
     private short seq; //use with subscription, to specify sequence in IPG. 
     
@@ -296,14 +297,6 @@ public class NnChannel implements Serializable {
         this.contentType = contentType;
     }
 
-    public String getErrorReason() {
-        return errorReason;
-    }
-
-    public void setErrorReason(String errorReason) {
-        this.errorReason = errorReason;
-    }    
-
     public void setTranscodingUpdateDate(String transcodingUpdateDate) {
         this.transcodingUpdateDate = transcodingUpdateDate;
     }
@@ -440,6 +433,14 @@ public class NnChannel implements Serializable {
         this.sphere = sphere;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+    
     /*
     public String getUserImageUrl() {
         if (userInfo != null) {            
