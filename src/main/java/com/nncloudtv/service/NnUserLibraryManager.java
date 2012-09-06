@@ -36,4 +36,10 @@ public class NnUserLibraryManager {
 	public void delete(NnUserLibrary lib) {
 		libDao.delete(lib);
 	}
+	
+	public NnUserLibrary findByUserAndTypeAndFileUrl(NnUser user, short type,
+	        String fileUrl) {
+		
+		return libDao.findByUserIdStrAndTypeAndFileUrl(user.getIdStr(), type, fileUrl);
+	}
 }

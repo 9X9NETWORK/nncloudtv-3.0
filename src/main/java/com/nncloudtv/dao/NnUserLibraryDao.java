@@ -47,17 +47,38 @@ public class NnUserLibraryDao extends GenericDao<NnUserLibrary> {
 		List<NnUserLibrary> result = new ArrayList<NnUserLibrary>();
 		try {
 			Query query = pm.newQuery(NnUserLibrary.class);
-			query.setFilter("userIdStr == userIdStrParam");
-			query.setFilter("type == typeParam");
+			query.setFilter("userIdStr == userIdStrParam && type == typeParam");
 			query.declareParameters("String userIdStrParam, short typeParam");
+			query.setOrdering("updateDate desc");
 			@SuppressWarnings("unchecked")
-			List<NnUserLibrary> libs = (List<NnUserLibrary>) query
-			        .execute(userIdStr, type);
-			result = libs;
-		//} catch (JDOObjectNotFoundException e) {
+			List<NnUserLibrary> libs = (List<NnUserLibrary>) query.execute(
+			        userIdStr, type);
+			result = (List<NnUserLibrary>) pm.detachCopyAll(libs);
 		} finally {
 			pm.close();
 		}
 		return result;
 	}
+	
+	public NnUserLibrary findByUserIdStrAndTypeAndFileUrl(String userIdStr, short type,
+            String fileUrl) {
+		
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
+		
+		NnUserLibrary result = null;
+		try {
+			Query query = pm.newQuery(NnUserLibrary.class);
+			query.setFilter("userIdStr == userIdStrParam && type == typeParam && fileUrl == fileUrlParam");
+			query.declareParameters("String userIdStrParam, short typeParam, String fileUrlParam");
+			@SuppressWarnings("unchecked")
+			List<NnUserLibrary> libs = (List<NnUserLibrary>) query
+			        .execute(userIdStr, type);
+			if (libs.size() > 0) {
+				result = pm.detachCopy(libs.get(0));
+			}
+		} finally {
+			pm.close();
+		}
+		return result;
+    }
 }

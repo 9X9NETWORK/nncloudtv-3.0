@@ -241,9 +241,19 @@ public class ApiUser extends ApiGeneric {
 		short type = NnUserLibrary.TYPE_UPLOADS;
 		if (repo.equalsIgnoreCase("library")) {
 			type = NnUserLibrary.TYPE_YOUTUBE;
+			String pattern = "^http:\\/\\/www\\.youtube\\.com\\/watch\\?v=[^&]+$";
+			if (!url.matches(pattern)) {
+				
+				badRequest(resp, "Invalid YouTube URL");
+				return null;
+			}
 		}
 		
-		NnUserLibrary lib = new NnUserLibrary(name, url, type);
+		NnUserLibrary lib = libMngr
+		        .findByUserAndTypeAndFileUrl(user, type, url);
+		if (lib == null) {
+			lib = new NnUserLibrary(name, url, type);
+		}
 		lib.setUserIdStr(user.getIdStr());
 		if (imageUrl != null) {
 			// TODO: check for imageUrl
