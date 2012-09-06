@@ -13,55 +13,55 @@ import javax.jdo.annotations.PrimaryKey;
 @SuppressWarnings("serial")
 @PersistenceCapable(table="cnt_view", detachable="true")
 public class CntView implements Serializable {
-	
-	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private long id;
-		
-	@Persistent
-	private long channelId;
+    
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private long id;
+        
+    @Persistent
+    private long channelId;
 
-	@Persistent
-	private long date;
-	
-	@Persistent
-	private int cnt;
+    @Persistent
+    private long date;
+    
+    @Persistent
+    private int cnt;
 
-	public CntView(long channelId) {		
-		this.channelId = channelId;
-		this.cnt = 1;
-	}
-	
-	public long getDate() {
-		return date;
-	}
+    public CntView(long channelId) {        
+        this.channelId = channelId;
+        this.cnt = 1;
+    }
+    
+    public long getDate() {
+        return date;
+    }
 
-	public void setDate(long date) {
-		this.date = date;
-	}
+    public void setDate(long date) {
+        this.date = date;
+    }
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public long getChannelId() {
-		return channelId;
-	}
+    public long getChannelId() {
+        return channelId;
+    }
 
-	public void setChannelId(long channelId) {
-		this.channelId = channelId;
-	}
+    public void setChannelId(long channelId) {
+        this.channelId = channelId;
+    }
 
-	public int getCnt() {
-		return cnt;
-	}
+    public int getCnt() {
+        return cnt;
+    }
 
-	public void setCnt(int cnt) {
-		this.cnt = cnt;
-	}
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
 
 }

@@ -5,7 +5,7 @@ package com.nncloudtv.model;
  */
 public class LangTable {
 
-	public static final String LANG_ZH = "zh";
-	public static final String LANG_EN = "en";
-	
+    public static final String LANG_ZH = "zh";
+    public static final String LANG_EN = "en";
+ 
 }
