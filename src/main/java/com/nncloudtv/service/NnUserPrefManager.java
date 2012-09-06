@@ -12,28 +12,28 @@ import com.nncloudtv.model.NnUserPref;
 
 @Service
 public class NnUserPrefManager {
-	
-	protected static final Logger log = Logger.getLogger(NnUserPrefManager.class.getName());
-		
-	private NnUserPrefDao nnUserPrefDao = new NnUserPrefDao();
-	
-	public NnUserPref save(NnUser user, NnUserPref pref) {
-		Date now = new Date();
-		if (pref.getCreateDate() == null)
-			pref.setCreateDate(now);
-		pref.setUpdateDate(now);
-		return nnUserPrefDao.save(user, pref);
-	}
+    
+    protected static final Logger log = Logger.getLogger(NnUserPrefManager.class.getName());
+        
+    private NnUserPrefDao nnUserPrefDao = new NnUserPrefDao();
+    
+    public NnUserPref save(NnUser user, NnUserPref pref) {
+        Date now = new Date();
+        if (pref.getCreateDate() == null)
+            pref.setCreateDate(now);
+        pref.setUpdateDate(now);
+        return nnUserPrefDao.save(user, pref);
+    }
 
-	public List<NnUserPref> findByUser(NnUser user) {
-		return nnUserPrefDao.findByUser(user);
-	}
+    public List<NnUserPref> findByUser(NnUser user) {
+        return nnUserPrefDao.findByUser(user);
+    }
 
-	public NnUserPref findByUserAndItem(NnUser user, String item) {		
-		return nnUserPrefDao.findByUserAndItem(user, item);
-	}
-	
-	public void delete(NnUser user, NnUserPref pref) {
-		nnUserPrefDao.delete(user, pref);
-	}
+    public NnUserPref findByUserAndItem(NnUser user, String item) {        
+        return nnUserPrefDao.findByUserAndItem(user, item);
+    }
+    
+    public void delete(NnUser user, NnUserPref pref) {
+        nnUserPrefDao.delete(user, pref);
+    }
 }
