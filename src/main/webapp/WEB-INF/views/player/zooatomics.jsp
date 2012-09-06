@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock11"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock12"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -53,7 +53,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.ba-hashchange.min.js"></script>
 
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
-                                                                                                                        
+
 <script type="text/javascript">
 var analytz = false;
 var _gaq = _gaq || [];
@@ -211,13 +211,36 @@ soundManager.onready(function()
 </div>
 <!-- Footer End -->
 
+<style type="text/css"> 
+.ui-slider-horizontal .ui-state-default {
+	width: 1.125em;
+	height: 0.625em;
+	border: none;
+	-moz-border-radius: 0.125em;
+	-webkit-border-radius: 0.125em;
+	border-radius: 0.125em;
+	-moz-box-shadow: 0.0625em 0 0.25em #222;
+	-webkit-box-shadow: 0.0625em 0 0.25em #222;
+	box-shadow: 0.0625em 0 0.25em #222;
+	background: #fff;
+	filter: alpha(Opacity=70);
+	opacity: 0.7;
+	position: absolute;
+	top: -0.1875em;
+	left: 0;
+	z-index: 55;
+}
+.ui-slider-horizontal .ui-state-default:hover, .ui-slider-horizontal .ui-state-default:active {
+	filter: alpha(Opacity=100);
+	opacity: 1.0;
+</style> 
+
 <!-- Video Layer Begin -->
 <div id="video-layer" class="stage">
   <div id="video-constrain">
-    <!--iframe width="100%" height="100%" src="http://www.youtube.com/v/dySwrhMQdX4?wmode=transparent&version=3&autoplay=0&controls=0&showinfo=0" frameborder="0"></iframe-->
   </div>
   <div id="video-control">
-    <p id="btn-knob"></p>
+    <!--p id="btn-knob"></p-->
     <div id="progress-bar">
       <p id="loaded"></p>
       <p id="played"></p>
@@ -264,7 +287,12 @@ soundManager.onready(function()
   </div>
     
   <div id="player-holder">
-    <div id="player-ch-info">
+    <div id="player-ch-info" style="display: none">
+      <div id="popmessage-player-info">
+        <p class="popmessage-left"></p>
+        <p class="popmessage-middle"></p>
+        <p class="popmessage-right"></p>
+      </div>
       <p id="ch-title"></p>
       <p id="ep-title"></p>
       <p id="btn-follow"><span>Follow this Channel</span></p>
@@ -648,6 +676,12 @@ soundManager.onready(function()
   <div id="browse-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
   <div id="browse-constrain">
     <div id="browse-list">
+      <!--select>
+        <option>Add Time</option>
+        <option>Update Time</option>
+        <option>Most Viewed Today</option>
+        <option>Most Subscribed Today</option>
+      </select-->
       <ul id="sort-list">
         <li class="head">Sorted by</li>
         <li class="on">Add Time</li>
