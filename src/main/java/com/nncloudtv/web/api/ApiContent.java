@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
 import com.nncloudtv.model.NnProgram;
@@ -437,19 +438,19 @@ public class ApiContent extends ApiGeneric {
             public int compare(Category category1, Category category2) {
                 int seq1 = category1.getSeq();
                 if (category1.getLang() != null
-                        && category1.getLang().equalsIgnoreCase("en")) {
+                        && category1.getLang().equalsIgnoreCase(LangTable.LANG_EN)) {
                     seq1 -= 100;
                 }
                 int seq2 = category2.getSeq();
                 if (category2.getLang() != null
-                        && category2.getLang().equalsIgnoreCase("en")) {
+                        && category2.getLang().equalsIgnoreCase(LangTable.LANG_EN)) {
                     seq2 -= 100;
                 }
                 return (seq1 - seq2);
             }
         }
 
-        String lang = req.getParameter("lang"); // enum check ?
+        String lang = req.getParameter("lang");
         CategoryManager catMngr = new CategoryManager();
         List<Category> categories;
 
