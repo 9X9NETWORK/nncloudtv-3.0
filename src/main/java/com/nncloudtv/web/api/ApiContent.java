@@ -235,46 +235,82 @@ public class ApiContent extends ApiGeneric {
         }
 
         String name = req.getParameter("name");
-        program.setName(NnStringUtil.htmlSafeChars(name));
+        if (name!=null) {
+            program.setName(NnStringUtil.htmlSafeChars(name));
+        }
+        
         String intro = req.getParameter("intro");
-        program.setIntro(NnStringUtil.htmlSafeChars(intro));
+        if (intro!=null) {
+            program.setIntro(NnStringUtil.htmlSafeChars(intro));
+        }
+        
         String comment = req.getParameter("comment");
-        program.setComment(NnStringUtil.htmlSafeChars(comment));
+        if (comment!=null) {
+            program.setComment(NnStringUtil.htmlSafeChars(comment));
+        }
+        
         String imageUrl = req.getParameter("imageUrl"); // format check ?
-        program.setImageUrl(imageUrl);
+        if (imageUrl!=null) {
+            program.setImageUrl(imageUrl);
+        }
 
         String seq = req.getParameter("seq");
         Short seqInt = null;
-        try {
-            seqInt = Short.valueOf(seq);
-        } catch (NumberFormatException e) {
-        }
-        if (seqInt == null) {
-            badRequest(resp, BAD_PARAMETER);
-            return null;
-        } else {
-            String seqStr = seqInt.toString();
-            program.setSeq(String.format("%08d", seqStr));
+        String seqStr = null;
+        if (seq != null) {
+            try {
+                seqInt = Short.valueOf(seq);
+            } catch (NumberFormatException e) {
+            }
+            if (seqInt == null) {
+                badRequest(resp, BAD_PARAMETER);
+                return null;
+            } else {
+                seqStr = seqInt.toString();
+                program.setSeq(String.format("%08d", seqStr));
+            }
         }
 
         String subSeq = req.getParameter("subSeq");
         Short subSeqInt = null;
-        try {
-            subSeqInt = Short.valueOf(subSeq);
-        } catch (NumberFormatException e) {
+        String subSeqStr = null;
+        if (subSeq != null) {
+            try {
+                subSeqInt = Short.valueOf(subSeq);
+            } catch (NumberFormatException e) {
+            }
+            if (subSeqInt == null) {
+                badRequest(resp, BAD_PARAMETER);
+                return null;
+            } else {
+                subSeqStr = subSeqInt.toString();
+                program.setSubSeq(String.format("%08d", subSeqStr));
+            }
         }
-        if (subSeqInt == null) {
-            badRequest(resp, BAD_PARAMETER);
-            return null;
+        
+        if (seq!=null) {
+            if (subSeq!=null) {
+                // handle sort for program(seq, subSeq)
+            } else {
+                // handle sort for program(seq)
+            }
         } else {
-            String subSeqStr = subSeqInt.toString();
-            program.setSubSeq(String.format("%08d", subSeqStr));
+            if (subSeq!=null) {
+                // handle sort for program(subSeq)
+            } else {
+                // don't need sort
+            }
         }
 
         String startTime = req.getParameter("startTime"); // format check ?
-        program.setStartTime(startTime);
+        if(startTime!=null) {
+            program.setStartTime(startTime);
+        }
+        
         String endTime = req.getParameter("endTime"); // format check ?
-        program.setEndTime(endTime);
+        if(endTime!=null) {
+            program.setEndTime(endTime);
+        }
 
         programMngr.save(program);
 
@@ -358,21 +394,49 @@ public class ApiContent extends ApiGeneric {
         }
 
         String name = req.getParameter("name");
-        channel.setName(name);
-        String intro = req.getParameter("intro");
-        channel.setIntro(intro);
-        String lang = req.getParameter("lang"); // enum check ?
-        channel.setLang(lang);
-        String isPublic = req.getParameter("isPublic");
-        if (isPublic.equals("true")) {
-            channel.setPublic(true);
-        } else if (isPublic.equals("false")) {
-            channel.setPublic(false);
-        } else {
-            // report invalid ??
+        if(name!=null) {
+            channel.setName(name);
         }
+        
+        String intro = req.getParameter("intro");
+        if(intro!=null) {
+            channel.setIntro(intro);
+        }
+        
+        String lang = req.getParameter("lang"); // enum check ?
+        if(lang!=null) {
+            if(lang.equals("zh")||lang.equals("en")||lang.equals("others")) {
+                channel.setLang(lang);
+            } else {
+                // 400 return ?
+            }
+        }
+        
+        String sphere = req.getParameter("sphere"); // enum check ?
+        if(sphere!=null) {
+            if(sphere.equals("zh")||sphere.equals("en")||sphere.equals("others")) {
+                channel.setSphere(sphere);
+            } else {
+                // 400 return ?
+            }       
+        }
+        
+        String isPublic = req.getParameter("isPublic");
+        if (isPublic != null) {
+            if (isPublic.equals("true")) {
+                channel.setPublic(true);
+            } else if (isPublic.equals("false")) {
+                channel.setPublic(false);
+            } else {
+                // 400 return ?
+            }
+        }
+        
         String tag = req.getParameter("tag");
-        channel.setTag(tag);
+        if(tag!=null) {
+            channel.setTag(tag);
+        }
+        
 
         channelMngr.save(channel);
         channel = channelMngr.findById(channelId);
@@ -527,6 +591,9 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
 
+    /*
+     * channelId, seq, file URL are required, others optional.
+     */
     @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.POST)
     public @ResponseBody
     NnProgram addProgram(@PathVariable("channelId") String channelIdStr,
@@ -540,6 +607,12 @@ public class ApiContent extends ApiGeneric {
         }
         if (channelId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        String fileUrl = req.getParameter("fileUrl"); // format check ?
+        if (fileUrl==null) {
+            badRequest(resp, BAD_PARAMETER);
             return null;
         }
 
@@ -557,16 +630,25 @@ public class ApiContent extends ApiGeneric {
 
         String subSeq = req.getParameter("subSeq");
         Short subSeqInt = null;
-        try {
-            subSeqInt = Short.valueOf(subSeq);
-        } catch (NumberFormatException e) {
+        String subSeqStr = null;
+        if (subSeq != null) {
+            try {
+                subSeqInt = Short.valueOf(subSeq);
+            } catch (NumberFormatException e) {
+            }
+            if (subSeqInt == null) {
+                badRequest(resp, BAD_PARAMETER);
+                return null;
+            }
+            subSeqStr = subSeqInt.toString();
+            subSeqStr = String.format("%08d", subSeqStr);
+            
+            // handle sort for program(seqStr, subSeqStr)
+        } else {
+            // handle sort for program(seqStr)
         }
-        if (subSeqInt == null) {
-            badRequest(resp, BAD_PARAMETER);
-            return null;
-        }
-        String subSeqStr = subSeqInt.toString();
-        subSeqStr = String.format("%08d", subSeqStr);
+        
+
 
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
@@ -575,23 +657,50 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
 
+        
+        
         String name = req.getParameter("name");
+        if (name==null) {
+            name = "";
+        }
+        
         String intro = req.getParameter("intro");
+        if (intro==null) {
+            intro = "";
+        }
+        
         String imageUrl = req.getParameter("imageUrl"); // format check ?
+        if (imageUrl==null) {
+            imageUrl = "";
+        }
 
         NnProgram program = new NnProgram(channelId,
                 NnStringUtil.htmlSafeChars(name),
                 NnStringUtil.htmlSafeChars(intro), imageUrl);
-
+        
+        program.setFileUrl(fileUrl);
+        // do something to get metadata from youtube and set it up
+        
         program.setSeq(seqStr);
-        program.setSubSeq(subSeqStr);
+        
+        if (subSeqStr!=null) {
+            program.setSubSeq(subSeqStr);
+        }
 
         String comment = req.getParameter("comment");
-        program.setComment(NnStringUtil.htmlSafeChars(comment));
+        if (comment!=null) {
+            program.setComment(NnStringUtil.htmlSafeChars(comment));
+        }
+        
         String startTime = req.getParameter("startTime"); // format check ?
-        program.setStartTime(startTime);
+        if (startTime!=null) {
+            program.setStartTime(startTime);
+        }
+        
         String endTime = req.getParameter("endTime"); // format check ?
-        program.setEndTime(endTime);
+        if (endTime!=null) {
+            program.setEndTime(endTime);
+        }
 
         NnProgramManager programMngr = new NnProgramManager();
         programMngr.create(channel, program);
