@@ -36,6 +36,8 @@ public class NnGuest {
     private short type; //NnUSer use NnGuest for captcha use
     public static short TYPE_GUEST = 1;
     public static short TYPE_USER = 2;
+
+    public static String TOKEN_PREFIX = "g99/";
     
     @Persistent
     private Date createDate;
@@ -46,7 +48,7 @@ public class NnGuest {
     public NnGuest(short type) {
         if (type == TYPE_GUEST) {
             String random = NnUserManager.generateToken((short)1);
-            this.token = "g99/"+random;        
+            this.token = TOKEN_PREFIX + random;        
         }
         this.type = type;
     }
