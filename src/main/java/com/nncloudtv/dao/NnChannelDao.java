@@ -116,14 +116,16 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         return detached;
     }    
 
-    public List<NnChannel> findSpecial(short type) {
+    //select id from nnchannel where poolType > 10 order by rand() limit 10;
+    public List<NnChannel> findSpecial(short type, int limit) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>(); 
         try {
-            Query q = pm.newQuery(NnChannel.class);
-            q.setFilter("poolType == poolTypeParam");
-            q.declareParameters("short poolTypeParam");
-            q.setOrdering("createDate asc");
+            String sql = "select * from nnchannel where poolType >= " + type + " order by rand()";
+            if (limit > 0) 
+                sql += " limit " + limit;
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnChannel.class);
             @SuppressWarnings("unchecked")
             List<NnChannel> channels = (List<NnChannel>) q.execute(type);
             detached = (List<NnChannel>)pm.detachCopyAll(channels);
@@ -131,7 +133,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
             pm.close();
         }
         return detached;
-    }    
+    }
+    
     public List<NnChannel> findByUser(String userIdStr) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>(); 
