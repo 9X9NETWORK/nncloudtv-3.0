@@ -46,10 +46,6 @@ public class NnProgram implements Serializable {
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
-    private String imageLargeUrl; //used for radio programs
-    
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
     private String fileUrl;
 
     @Persistent
@@ -104,6 +100,9 @@ public class NnProgram implements Serializable {
         
     @Persistent
     private Date updateDate;
+
+    @Persistent
+    private Date publishDate;
     
     public NnProgram(long channelId, String name, String intro, String imageUrl) {
         this.channelId = channelId;
@@ -207,14 +206,6 @@ public class NnProgram implements Serializable {
         this.status = status;
     }
 
-    public String getImageLargeUrl() {
-        return imageLargeUrl;
-    }
-
-    public void setImageLargeUrl(String imageLargeUrl) {
-        this.imageLargeUrl = imageLargeUrl;
-    }
-
     public String getStorageId() {
         return storageId;
     }
@@ -291,6 +282,14 @@ public class NnProgram implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
     
 }
