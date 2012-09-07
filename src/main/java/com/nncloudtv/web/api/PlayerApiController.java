@@ -429,14 +429,16 @@ public class PlayerApiController {
         return NnNetUtil.textReturn(NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null));        
     }
 
+    /** 
+     * @param name tag name. currently only one name is supported
+     * @return 
+     */
     @RequestMapping(value="tagInfo")
     public ResponseEntity<String> tagInfo(
-            @RequestParam(value="tag", required=false) String id,
             @RequestParam(value="name", required=false) String name,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
-            HttpServletResponse resp) {
-        log.info("categoryInfo: id =" + id);        
+            HttpServletResponse resp) {        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);
@@ -453,8 +455,7 @@ public class PlayerApiController {
      * Get list of channels under the category
      * 
      * @param category category id
-     * @param sort valid values including view/subscriber/update/create (not implemented yet)
-     * @param tag only one tag is supported
+     * @param tag tag name. only one tag is supported
      * @return First block has category info, id and name. <br/>
      *         Second block lists the most popular tags. Separated by \n <br/> 
      *         Third block lists channels under the category. Format please reference channelLineup.
@@ -572,15 +573,29 @@ public class PlayerApiController {
         return NnNetUtil.textReturn(output);
     }    
 
-    @RequestMapping(value="channelStack")
-    public ResponseEntity<String> channelStack(
-            @RequestParam(value="user", required=false) String userToken, 
+    @RequestMapping(value="channelStack", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String channelStack(
             @RequestParam(value="stack", required=false) String stack,
+            @RequestParam(value="lang", required=false) String lang,
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="channel", required=false) String channel,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
+        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
-        return NnNetUtil.textReturn(output);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.channelStack(stack, lang, userToken, channel);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
     }
     /**
      * Get channel information 
