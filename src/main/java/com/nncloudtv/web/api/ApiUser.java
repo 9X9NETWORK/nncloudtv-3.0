@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
@@ -111,8 +112,11 @@ public class ApiUser extends ApiGeneric {
 		String lang = req.getParameter("lang");
 		if (lang != null) {
 			
-			// TODO: check for lang
-			user.setLang(lang);
+			if (NnStringUtil.validateLangCode(lang) == null) {
+                log.warning("lang is not valid");
+			} else {
+                user.setLang(lang);
+			}
 		}
 		
 		return userMngr.save(user);
@@ -336,12 +340,13 @@ public class ApiUser extends ApiGeneric {
 		channel.setPoolType(NnChannel.POOL_NORMAL);
 		channel.setUserIdStr(user.getShard(), user.getId());
 		
-		// lang
-		String lang = req.getParameter("lang");
-		if (lang != null) {
-			// TODO: check for lang
-			channel.setLang(lang);
-		}
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
+            channel.setLang(lang);
+        } else {
+            channel.setLang(LangTable.LANG_EN);
+        }
 		
 		// isPublic
 		String isPublicStr = req.getParameter("isPublic");

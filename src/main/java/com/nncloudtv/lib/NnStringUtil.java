@@ -156,6 +156,11 @@ public class NnStringUtil {
     }
 
     public static String validateLangCode(String lang) {
+        
+        if (lang == null) {
+            return null;
+        }
+        
         if (lang.equals(LangTable.LANG_ZH)) {
             return LangTable.LANG_ZH;
         } else if (lang.equals(LangTable.LANG_EN)) {
