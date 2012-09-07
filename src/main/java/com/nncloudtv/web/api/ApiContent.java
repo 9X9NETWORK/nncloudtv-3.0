@@ -249,10 +249,11 @@ public class ApiContent extends ApiGeneric {
         } catch (NumberFormatException e) {
         }
         if (seqInt == null) {
-            //
+            badRequest(resp, BAD_PARAMETER);
+            return null;
         } else {
             String seqStr = seqInt.toString();
-            program.setSeq(seqStr);
+            program.setSeq(String.format("%08d", seqStr));
         }
 
         String subSeq = req.getParameter("subSeq");
@@ -262,10 +263,11 @@ public class ApiContent extends ApiGeneric {
         } catch (NumberFormatException e) {
         }
         if (subSeqInt == null) {
-            //
+            badRequest(resp, BAD_PARAMETER);
+            return null;
         } else {
             String subSeqStr = subSeqInt.toString();
-            program.setSubSeq(subSeqStr);
+            program.setSubSeq(String.format("%08d", subSeqStr));
         }
 
         String startTime = req.getParameter("startTime"); // format check ?
@@ -472,6 +474,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         String seqStr = seqInt.toString();
+        seqStr = String.format("%08d", seqStr);
 
         NnProgramManager programMngr = new NnProgramManager();
         NnChannelManager channelMngr = new NnChannelManager();
@@ -522,6 +525,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         String seqStr = seqInt.toString();
+        seqStr = String.format("%08d", seqStr);
 
         String subSeq = req.getParameter("subSeq");
         Short subSeqInt = null;
@@ -534,6 +538,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         String subSeqStr = subSeqInt.toString();
+        subSeqStr = String.format("%08d", subSeqStr);
 
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
@@ -595,6 +600,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         String seqStr = seqInt.toString();
+        seqStr = String.format("%08d", seqStr);
 
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> results = titleCardMngr.findByChannelAndSeq(channelId,
