@@ -301,12 +301,13 @@ public class PlayerApiController {
      *          debug    1<br/>
      *         </p>
      */    
-    @RequestMapping(value="brandInfo", produces = "text/plain; charset=utf-8")
+    @RequestMapping(value="brandInfo"/*, produces = "text/plain; charset=utf-8" // Louis: eclipse tells me an error */)
     public @ResponseBody String brandInfo(
             @RequestParam(value="mso", required=false)String brandName,
             @RequestParam(value="version", required=false)String version,
             @RequestParam(value="rx", required = false) String rx,
-            HttpServletRequest req) {
+            HttpServletRequest req, HttpServletResponse resp) {
+        resp.setContentType(ApiGeneric.PLAIN_TEXT_UTF8); // Louis: this be work as well
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);
