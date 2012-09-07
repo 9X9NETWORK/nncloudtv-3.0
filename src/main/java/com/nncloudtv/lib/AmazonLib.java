@@ -134,8 +134,8 @@ public class AmazonLib {
             salt[(len1 % len2)] = encrypt[len2 - 1];
         }
         log.info("length = " + perimeter.length());
-        return perimeter;
-        //return org.datanucleus.util.Base64.decodeString(perimeter);
+        
+        return org.datanucleus.util.Base64.decodeString(perimeter);
     }
     
     public static String getFormattedExpirationDate() {
