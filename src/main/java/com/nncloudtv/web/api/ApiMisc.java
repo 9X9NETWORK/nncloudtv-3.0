@@ -1,9 +1,12 @@
 package com.nncloudtv.web.api;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.SignatureException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
@@ -15,9 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.api.client.util.ArrayMap;
 import com.nncloudtv.lib.AmazonLib;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
+import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnUserManager;
@@ -139,6 +146,57 @@ public class ApiMisc extends ApiGeneric {
 		
 		return result;
 	}
+	
+    @RequestMapping("i18n")
+    public @ResponseBody
+    Map<String, String> i18n(HttpServletRequest req, HttpServletResponse resp) {
+        
+        Map<String, String> result = new ArrayMap<String, String>();
+        Properties properties = new Properties();
+        
+        String lang = req.getParameter("lang");
+        if (lang == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        } else if (NnStringUtil.validateLangCode(lang) == null) {
+            badRequest(resp, "Invalid lang");
+            return null;
+        }
+        
+        try {
+            properties.load(getClass().getClassLoader().getResourceAsStream(
+                    LangTable.EN_PROPERTIE_FILE));
+            
+            Set<String> keys = properties.stringPropertyNames();
+            
+            if (lang.equals(LangTable.LANG_ZH)) {
+                Properties zhProps = new Properties();
+                zhProps.load(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(
+                        LangTable.ZH_PROPERTIE_FILE), "UTF-8"));
+                
+                for (String key : keys) {
+                    
+                    result.put(properties.getProperty(key), zhProps.getProperty(key));
+                    log.info(zhProps.getProperty(key));
+                }
+            } else {
+                for (Object key : keys) {
+                    String sentence = properties.getProperty((String) key);
+                    result.put(sentence, sentence);
+                }
+            }
+        } catch (IOException e) {
+            
+            NnLogUtil.logException(e);
+            internalError(resp, e);
+            
+            return null;
+        }
+        resp.setContentType(PLAIN_TEXT_UTF8);
+        resp.addDateHeader("Expires", System.currentTimeMillis() + 3600000);
+        resp.addHeader("Cache-Control", "private, max-age=3600");
+        return result;
+    }
 	
 	@RequestMapping("*")
 	public @ResponseBody void blackHole(HttpServletRequest req, HttpServletResponse resp) {

@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import com.nncloudtv.model.LangTable;
+
 public class NnStringUtil {
     protected static final Logger log = Logger.getLogger(NnStringUtil.class.getName());    
     public static final int MAX_JDO_STRING_LENGTH = 255;
@@ -151,6 +153,18 @@ public class NnStringUtil {
                   .replaceAll("<", "&lt;")
                   .replaceAll(">", "&gt;")
                   .replaceAll("\"", "&quot;");
+    }
+
+    public static String validateLangCode(String lang) {
+        if (lang.equals(LangTable.LANG_ZH)) {
+            return LangTable.LANG_ZH;
+        } else if (lang.equals(LangTable.LANG_EN)) {
+            return LangTable.LANG_EN;
+        } else if (lang.equals(LangTable.OTHER)) {
+            return LangTable.OTHER;
+        } else {
+            return null;
+        }
     }
     
 }
