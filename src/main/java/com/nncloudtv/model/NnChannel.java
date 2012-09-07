@@ -125,12 +125,13 @@ public class NnChannel implements Serializable {
     @Persistent
     private short sorting;
 
+    //define channel type. anything > 10 is fdm pool. anything > 20 is browse pool
     @Persistent
-    private short poolType; //default 0, anything > 0 is "special"
-    public static final short POOL_NORMAL = 0;
-    public static final short POOL_FEATUERD = 1;
-    public static final short POOL_HOTTEST = 2;
-    public static final short POOL_TRENDING = 3; 
+    private short poolType;
+    public static final short POOL_BASE = 0;
+    public static final short POOL_FDM = 10;
+    public static final short POOL_BROWSE = 20;
+    public static final short POOL_BILLBOARD = 30; 
     
     @NotPersistent
     private String recentlyWatchedProgram;  
