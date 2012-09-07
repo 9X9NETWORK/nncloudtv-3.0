@@ -135,6 +135,9 @@ public class NnChannel implements Serializable {
     @NotPersistent
     private String recentlyWatchedProgram;  
 
+    @NotPersistent
+    private int cntFollower; // follower count
+    
     @Persistent    
     private int cntSubscribe; //subscription count
 
@@ -439,6 +442,14 @@ public class NnChannel implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public int getCntFollower() {
+        return cntFollower;
+    }
+
+    public void setCntFollower(int cntFollower) {
+        this.cntFollower = cntFollower;
     }
     
     /*
