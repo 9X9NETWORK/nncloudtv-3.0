@@ -281,6 +281,33 @@ public class ApiContent extends ApiGeneric {
 
         return program;
     }
+    
+    @RequestMapping(value = "programs/{programId}", method = RequestMethod.DELETE)
+    public @ResponseBody
+    String deleteProgram(@PathVariable("programId") String programIdStr,
+            HttpServletRequest req, HttpServletResponse resp) {
+
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(programId);
+        if (program == null) {
+            notFound(resp, "the resource program not exist");
+            return null;
+        }
+
+        programMngr.delete(program);
+
+        return "OK";
+    }
 
     @RequestMapping(value = "channels/{channelId}", method = RequestMethod.GET)
     public @ResponseBody
