@@ -1613,43 +1613,68 @@ public class PlayerApiService {
      * 3. featured curators
      * 4. trending channels
      */
-    public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
-        //1. user info
-        List<String> data = new ArrayList<String>();
-        log.info ("[quickLogin] verify user: " + token);
-        String userInfo = "";
-        if (token != null) {
-            userInfo = this.userTokenVerify(token, req, resp);
-        } else if (email != null || password != null) {        
-            userInfo = this.login(email, password, req, resp);            
-        } else {
-            userInfo = this.guestRegister(req, resp);
-        }        
-        if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
-            return userInfo;
-        }
-        data.add(userInfo);
-        //2. channel lineup
-        log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup (token, null, null, false, null, true, false, null);
-        data.add(lineup);
-        if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
-            return this.assembleSections(data);
-        }
-        //3. featured curators
-        log.info ("[quickLogin] featured curators");
-        String curatorInfo = this.curator(null, null, "featured", req);
-        data.add(curatorInfo);
-        //4. trending
-        log.info ("[quickLogin] trending channels");
-        String trending = this.channelLineup (null, null, null, false, null, false, false, "trending");
-        data.add(trending);
-        if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
-            return this.assembleSections(data);
-        }
-        log.info("---- quick login ----");        
-        return this.assembleSections(data);
-    }
+
+	public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+		//1. user info
+		List<String> data = new ArrayList<String>();
+		log.info ("[quickLogin] verify user: " + token);
+		String userInfo = "";
+		if (token != null) {
+			userInfo = this.userTokenVerify(token, req, resp);
+		} else if (email != null || password != null) {		
+			userInfo = this.login(email, password, req, resp);			
+		} else {
+			userInfo = this.guestRegister(req, resp);
+		}		
+		if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
+			return userInfo;
+		}
+		data.add(userInfo);
+		//2. channel lineup
+		log.info ("[quickLogin] channel lineup: " + token);
+		String lineup = this.channelLineup (token, null, null, false, null, true, false, null);
+		data.add(lineup);
+		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
+		//3. featured curators
+		log.info ("[quickLogin] featured curators");
+		String curatorInfo = this.curator(null, null, "featured", req);
+		data.add(curatorInfo);
+		//4. trending
+		log.info ("[quickLogin] trending channels");
+		String trending = this.channelLineup (null, null, null, false, null, false, false, "trending");
+		data.add(trending);
+		if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
+		//5. recommended
+		log.info ("[quickLogin] recommended channels");
+		String recommended = this.channelLineup (null, null, null, false, null, false, false, "recommended");
+		data.add(recommended);
+		if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
+		//6. featured
+		log.info ("[quickLogin] featured channels");
+		String featured = this.channelLineup (null, null, null, false, null, false, false, "featured");
+		data.add(featured);
+		if (this.getStatus(featured) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
+		//7. hottest
+		log.info ("[quickLogin] hot channels");
+		String hot = this.channelLineup (null, null, null, false, null, false, false, "hot");
+		data.add(hot);
+		if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
+			return this.assembleSections(data);
+		}
+		//8. category top level
+		log.info ("[quickLogin] top level categories");
+		String categoryTop = this.category (null, null, false);
+		data.add(categoryTop);
+		return this.assembleSections(data);
+	}
 
     private String assembleSections(List<String> data) {
         String output = "";
