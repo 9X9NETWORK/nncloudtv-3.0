@@ -2,6 +2,7 @@ package com.nncloudtv.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class TitleCardManager {
         return card;
     }
     
+    public List<TitleCard> findByChannelAndSeq(long channelId, String seq) {
+        return dao.findByChannelAndSeq(channelId, seq);
+    }
     
     private String generatePlayerSyntax(TitleCard card) {
         if (card == null) return null;
