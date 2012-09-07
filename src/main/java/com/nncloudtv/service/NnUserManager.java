@@ -20,6 +20,7 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnGuest;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.web.api.NnStatusCode;
 
@@ -292,6 +293,13 @@ public class NnUserManager {
                };
         String output = NnStringUtil.getDelimitedStr(info);
         return output;
+    }
+
+    public static boolean isGuestByToken(String token) {
+        if (token != null && token.contains(NnGuest.TOKEN_PREFIX)) {
+            return true;
+        }
+        return false;
     }
     
 }

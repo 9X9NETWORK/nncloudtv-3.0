@@ -347,7 +347,7 @@ public class NnProgramManager {
         String url3 = ""; //not used for now
         String url4 = p.getAudioFileUrl();
         String imageUrl = p.getImageUrl();
-        String imageLargeUrl = p.getImageLargeUrl();
+        String imageLargeUrl = p.getImageUrl();
         if (imageUrl == null) {imageUrl = "";}
         if (imageLargeUrl == null) {imageLargeUrl = "";}
         //!!!!

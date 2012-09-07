@@ -199,11 +199,7 @@ public class PlayerService {
                             i++;
                         }
                         if (p.getId() == Long.parseLong(ep)) {
-                            if (p.getImageLargeUrl() != null) {
-                                model.addAttribute("crawlVideoThumb", p.getImageLargeUrl());
-                            } else {
-                                model.addAttribute("crawlVideoThumb", p.getImageUrl());
-                            }
+                            model.addAttribute("crawlVideoThumb", p.getImageUrl());
                             model.addAttribute("crawlEpisodeTitle", p.getName());
                             model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
                             if (episodeShare)

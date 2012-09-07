@@ -94,8 +94,6 @@ public class ContentWorkerService {
              return new PostResponse(String.valueOf(NnStatusCode.PROGRAM_INVALID), "PROGRAM INVALID");
          
          program.setFileUrl(content.getVideoUrl());
-         if (content.getImageUrl() != null) 
-             program.setImageLargeUrl(content.getImageUrl());
          programMngr.save(program);
          return new PostResponse(String.valueOf(NnStatusCode.SUCCESS), "SUCCESS");
      }

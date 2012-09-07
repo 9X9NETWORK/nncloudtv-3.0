@@ -2,9 +2,9 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.FacebookLib;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.MsoIpg;
@@ -110,7 +111,6 @@ public class NnChannelManager {
         if (fileUrl != null) {
             NnProgram p = pMngr.findByChannelAndFileUrl(c.getId(), fileUrl);
             if (p == null) {
-                System.out.println("store a new favorite program:" + fileUrl);
                 p = new NnProgram(c.getId(), name, "", imageUrl);
                 p.setFileUrl(fileUrl);
                 p.setPublic(true);
@@ -123,7 +123,7 @@ public class NnChannelManager {
             if (p != null) {
                 NnProgram existed = pMngr.findByChannelAndStorageId(c.getId(), p.getReferenceStorageId());
                 if (existed != null)
-                    return;
+                    return; 
                 NnProgram newP = new NnProgram(c.getId(), p.getName(), p.getIntro(), p.getImageUrl());
                 newP.setPublic(true);
                 newP.setStatus(NnProgram.STATUS_OK);
@@ -264,60 +264,18 @@ public class NnChannelManager {
         return channels;
     }
 
-    /**
-     * (1)featured: randomized; mutually exclusive from "recommended" or "hottest"; 
-     *    comes from the 50-100 channels first picked by shawn (ie: "special" channels)
-     * (2)recommended: initial user - randomize 
-     *    (same as featured, must be mutually exclusive from "featured" or "hottest"); returning user - based on history
-     * (3)hottest: most viewed within the last 24 hours 
-     *    (within the 50-100 channels; ie: "special" channels); 
-     *    also mutually exclusive from "featured" or "recommended"
-     */
-    public List<NnChannel> findHot() {
-        List<NnChannel> hot = dao.findSpecial(NnChannel.POOL_HOTTEST);
-        return hot;
-    }
-    
-    //note, recommended goes before featured for "exclusive" result
-    //since recommended might achieve from some engine    
-    public List<NnChannel> findRecommended() {
-        List<NnChannel> channels = dao.findSpecial(NnChannel.POOL_FEATUERD);
-        List<NnChannel> recommended = new ArrayList<NnChannel>();
-        int i=0;
-        for (NnChannel c : channels) {
-            recommended.add(c);
-            i++;
-            if (i > 9)
-                break;
-        }
-        return recommended;
-    }
-    
-    public List<NnChannel> findTrending() {
-        List<NnChannel> channels = dao.findSpecial(NnChannel.POOL_TRENDING);    
+    //find hot, featured, trending stories
+    public List<NnChannel> findBillboard(String name, String lang) { 
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        if (name == null)
+            return channels;
+        TagManager tagMngr = new TagManager();        
+        name += "(9x9" + lang + ")";
+        log.info("find billboard, tag:" + name);
+        channels = tagMngr.findChannelsByTag(name, true);        
         return channels;
     }
-    
-    //featured depends on recommended
-    public List<NnChannel> findFeatured(List<NnChannel> exclusive) {
-        List<NnChannel> channels = dao.findSpecial(NnChannel.POOL_FEATUERD);
-        List<NnChannel> featured = new ArrayList<NnChannel>();
-        HashMap<Long, NnChannel> map = new HashMap<Long, NnChannel>();
-        for (NnChannel c : exclusive) {
-            map.put(c.getId(), c);
-        }
-        int i=0;
-        for (NnChannel c : channels) {
-            if (!map.containsKey(c.getId())) {
-                featured.add(c);
-            }
-            i++;
-            if (i > 9)
-                break;
-        }
-        return featured;
-    }
-    
+                
     public int addCntView(boolean readOnly, long channelId) {        
         String counterName = "cid" + channelId;
         CounterFactory factory = new CounterFactory();
@@ -400,4 +358,96 @@ public class NnChannelManager {
         return sorting;
     }
 
+    public String composeChannelLineup(List<NnChannel> channels) {
+        String output = "";
+        for (NnChannel c : channels) {
+            output += this.composeChannelLineupStr(c) + "\n";
+        }
+        return output;
+    }
+    public String composeChannelLineupStr(NnChannel c) {
+        Random r = new Random();
+        int viewCount = r.nextInt(300);
+        String[] url1 = {
+            "http://www.choicematters.org/wp-content/uploads/2012/01/tumblr_ku48goxoYS1qatg16o1_4001.jpg",
+            "http://www.motherearthnews.com/uploadedImages/articles/issues/2010-04-01/chickens1.jpg",
+            "http://www.organicgardeningfarming.com/wp-content/uploads/2011/12/backyard-chickens.jpg",
+            "http://i-cdn.apartmenttherapy.com/uimages/kitchen/2009_03_25-BlackChicken02.jpg",
+            "http://graphics8.nytimes.com/images/blogs/greeninc/chickens.jpeg",
+            "http://www.slate.com/content/dam/slate/archive/2011/01/1_123125_122975_2243255_2276474_110125_food_chicken_tn.jpg",
+            "http://www.myessentia.com/blog/wp-content/uploads/2011/03/chicken.jpg",
+            "http://cdn.blogs.sheknows.com/gardening.sheknows.com/2011/09/free-range-chickens.jpg",
+            "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buttercup_Chicken1.jpg/250px-Buttercup_Chicken1.jpg",
+            "http://leesbirdblog.files.wordpress.com/2009/01/you-can-have-her-chickens-by-maji.jpg",
+        };        
+        String[] url2 = {
+            "http://i2.ytimg.com/i/194cPvPaGJjhJBEGwG6vxg/1.jpg",
+            "http://i2.ytimg.com/i/Yjk_zY-iYR8YNfJmuzd70A/1.jpg?v=a5d97c",
+            "http://9x9cache.s3.amazonaws.com/system.jpg",                 
+            "http://i1.ytimg.com/vi/8yuFvqsL-C0/default.jpg",              
+            "http://i1.ytimg.com/i/XNZiORujW__GkIskLb0FNw/1.jpg?v=8401b7", 
+            "http://i2.ytimg.com/i/MKvT0YVLufHMdGLH89J1oA/1.jpg",          
+            "http://i2.ytimg.com/i/5l1Yto5oOIgRXlI4p4VKbw/1.jpg?v=8157b2", 
+            "http://i2.ytimg.com/vi/y367HBFS4hU/default.jpg",              
+            "http://i1.ytimg.com/i/lrEYreVkBee7ZQYei_6Jqg/1.jpg?v=9605e9", 
+            "http://i3.ytimg.com/i/2LqANmM2rTLGO345OuapuA/1.jpg?v=a9a54a",
+        };
+        int img1 = r.nextInt(10);
+        int img2 = r.nextInt(10);
+        String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
+
+        NnUser u = new NnUserManager().findByIdStr(c.getUserIdStr());        
+        String userName = "";
+        String userIntro = "";
+        String userImageUrl = "";
+        if (u != null) {
+            userName = u.getName();
+            userIntro = u.getIntro();
+            userImageUrl = u.getImageUrl();
+        }            
+        
+        String[] ori = {Integer.toString(c.getSeq()), 
+                        String.valueOf(c.getId()),
+                        c.getName(),
+                        c.getIntro(),
+                        imageUrl, //c.getPlayerPrefImageUrl(),                        
+                        String.valueOf(c.getProgramCnt()),
+                        String.valueOf(c.getType()),
+                        String.valueOf(c.getStatus()),
+                        String.valueOf(c.getContentType()),
+                        c.getPlayerPrefSource(),
+                        this.convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
+                        String.valueOf(c.getSorting()),
+                        c.getPiwik(),
+                        String.valueOf(c.getRecentlyWatchedProgram()),
+                        c.getOriName(),
+                        String.valueOf(c.getCntSubscribe()),
+                        String.valueOf(viewCount), //view count
+                        c.getTag(),
+                        c.getUserIdStr(), //curator id
+                        userName,
+                        userIntro,
+                        userImageUrl,
+                       };
+
+        String output = NnStringUtil.getDelimitedStr(ori);
+        return output;
+    }
+
+    private String convertEpochToTime(String transcodingUpdateDate, Date updateDate) {
+        String output = "";
+        try {
+            if (transcodingUpdateDate != null) {
+                long epoch = Long.parseLong(transcodingUpdateDate);
+                Date myDate = new Date (epoch*1000);
+                output = String.valueOf(myDate.getTime());
+            } else if (updateDate != null){
+                output = String.valueOf(updateDate.getTime());
+            }
+        } catch (NumberFormatException e) {
+            log.info("convertEpochToTime fails:" + transcodingUpdateDate + ";" + updateDate);
+        }
+        return output;
+    }
+    
 }

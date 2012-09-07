@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -51,6 +50,7 @@ import com.nncloudtv.model.NnUserShare;
 import com.nncloudtv.model.NnUserSubscribe;
 import com.nncloudtv.model.NnUserSubscribeGroup;
 import com.nncloudtv.model.NnUserWatched;
+import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.UserInvite;
 import com.nncloudtv.validation.BasicValidator;
 import com.nncloudtv.validation.NnUserValidator;
@@ -363,92 +363,7 @@ public class PlayerApiService {
         pdrMngr.processPdr(user, device, session, pdr, ip);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }    
-    
-    private String composeChannelLineupStr(NnChannel c) {
-        Random r = new Random();
-        int viewCount = r.nextInt(300);
-        String[] url1 = {
-            "http://www.choicematters.org/wp-content/uploads/2012/01/tumblr_ku48goxoYS1qatg16o1_4001.jpg",
-            "http://www.motherearthnews.com/uploadedImages/articles/issues/2010-04-01/chickens1.jpg",
-            "http://www.organicgardeningfarming.com/wp-content/uploads/2011/12/backyard-chickens.jpg",
-            "http://i-cdn.apartmenttherapy.com/uimages/kitchen/2009_03_25-BlackChicken02.jpg",
-            "http://graphics8.nytimes.com/images/blogs/greeninc/chickens.jpeg",
-            "http://www.slate.com/content/dam/slate/archive/2011/01/1_123125_122975_2243255_2276474_110125_food_chicken_tn.jpg",
-            "http://www.myessentia.com/blog/wp-content/uploads/2011/03/chicken.jpg",
-            "http://cdn.blogs.sheknows.com/gardening.sheknows.com/2011/09/free-range-chickens.jpg",
-            "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buttercup_Chicken1.jpg/250px-Buttercup_Chicken1.jpg",
-            "http://leesbirdblog.files.wordpress.com/2009/01/you-can-have-her-chickens-by-maji.jpg",
-        };        
-        String[] url2 = {
-            "http://i2.ytimg.com/i/194cPvPaGJjhJBEGwG6vxg/1.jpg",
-            "http://i2.ytimg.com/i/Yjk_zY-iYR8YNfJmuzd70A/1.jpg?v=a5d97c",
-            "http://9x9cache.s3.amazonaws.com/system.jpg",                 
-            "http://i1.ytimg.com/vi/8yuFvqsL-C0/default.jpg",              
-            "http://i1.ytimg.com/i/XNZiORujW__GkIskLb0FNw/1.jpg?v=8401b7", 
-            "http://i2.ytimg.com/i/MKvT0YVLufHMdGLH89J1oA/1.jpg",          
-            "http://i2.ytimg.com/i/5l1Yto5oOIgRXlI4p4VKbw/1.jpg?v=8157b2", 
-            "http://i2.ytimg.com/vi/y367HBFS4hU/default.jpg",              
-            "http://i1.ytimg.com/i/lrEYreVkBee7ZQYei_6Jqg/1.jpg?v=9605e9", 
-            "http://i3.ytimg.com/i/2LqANmM2rTLGO345OuapuA/1.jpg?v=a9a54a",
-        };
-        int img1 = r.nextInt(10);
-        int img2 = r.nextInt(10);
-        String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
-
-        NnUser u = userMngr.findByIdStr(c.getUserIdStr());        
-        String userName = "";
-        String userIntro = "";
-        String userImageUrl = "";
-        if (u != null) {
-            userName = u.getName();
-            userIntro = u.getIntro();
-            userImageUrl = u.getImageUrl();
-        }            
         
-        String[] ori = {Integer.toString(c.getSeq()), 
-                        String.valueOf(c.getId()),
-                        c.getName(),
-                        c.getIntro(),
-                        imageUrl, //c.getPlayerPrefImageUrl(),                        
-                        String.valueOf(c.getProgramCnt()),
-                        String.valueOf(c.getType()),
-                        String.valueOf(c.getStatus()),
-                        String.valueOf(c.getContentType()),
-                        c.getPlayerPrefSource(),
-                        this.convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
-                        String.valueOf(c.getSorting()),
-                        c.getPiwik(),
-                        String.valueOf(c.getRecentlyWatchedProgram()),
-                        c.getOriName(),
-                        String.valueOf(c.getCntSubscribe()),
-                        String.valueOf(viewCount), //view count
-                        c.getTag(),
-                        c.getUserIdStr(), //curator id
-                        userName,
-                        userIntro,
-                        userImageUrl,
-                       };
-
-        String output = NnStringUtil.getDelimitedStr(ori);
-        return output;
-    }
-
-    private String convertEpochToTime(String transcodingUpdateDate, Date updateDate) {
-        String output = "";
-        try {
-            if (transcodingUpdateDate != null) {
-                long epoch = Long.parseLong(transcodingUpdateDate);
-                Date myDate = new Date (epoch*1000);
-                output = String.valueOf(myDate.getTime());
-            } else if (updateDate != null){
-                output = String.valueOf(updateDate.getTime());
-            }
-        } catch (NumberFormatException e) {
-            log.info("convertEpochToTime fails:" + transcodingUpdateDate + ";" + updateDate);
-        }
-        return output;
-    }
-    
     public String unsubscribe(String userToken, String channelId, String grid, String pos) {
         //verify input
         if (userToken == null || userToken.equals("undefined"))
@@ -552,13 +467,44 @@ public class PlayerApiService {
         }
         //channel info
         for (NnChannel c : channels) {
-            c.setSorting(NnChannelManager.getDefaultSorting(c));
-                result[2] += this.composeChannelLineupStr(c) + "\n";                                                    
+            c.setSorting(NnChannelManager.getDefaultSorting(c));                                                    
         }
+        result[2] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
-    //!!! rewrite
+    public String channelStack(String stack, String lang, String userToken, String channel) {
+        if (stack == null)
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+
+        lang = this.checkLang(lang);
+        List<String> result = new ArrayList<String>();
+        String[] cond = stack.split(",");
+        for (String s : cond) {
+            List<NnChannel> chs = new ArrayList<NnChannel>(); 
+            if (s.equals("featured")) {
+                chs = chMngr.findBillboard(Tag.FEATURE, lang);
+            }
+            if (s.equals("hot")) {
+                chs = chMngr.findBillboard(Tag.HOT, lang);               
+            }
+            if (s.equals("trending")) {
+                chs = chMngr.findBillboard(Tag.TRENDING, lang);               
+            }
+            if (s.equals("recommend")) {
+                chs = new RecommendService().findRecommend(userToken);
+            }
+            if (s.equals("mayLike")) {
+                chs = new RecommendService().findMayLike(userToken, channel);                
+            }
+            String output = chMngr.composeChannelLineup(chs);
+            result.add(output);
+        }
+        String size[] = new String[result.size()];
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
+    }
+    
+    //TODO rewrite
     public String channelLineup(String userToken,
                                 String curatorIdStr,
                                 String subscriptions,
@@ -685,55 +631,13 @@ public class PlayerApiService {
             if (user != null && watchedMap.containsKey(c.getId())) {
                 c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
             }
-            channelOutput += this.composeChannelLineupStr(c) + "\n";
         }
-
-        if (stack == null) {
-            result.add(channelOutput);
-        }
-        if (stack != null) {            
-            String[] cond = stack.split(",");
-            List<NnChannel> exclusive = new ArrayList<NnChannel>();
-            for (String s : cond) {            
-                //note, recommended goes before featured for "exclusive" result
-                //since recommended might achieve from some engine
-                if (s.equals("recommended")) {
-                    List<NnChannel> chs = chMngr.findRecommended();
-                    exclusive.addAll(chs);
-                    String ouput = this.tmp(chs);
-                    result.add(ouput);               
-                }
-                if (s.equals("featured")) {
-                    List<NnChannel> chs = chMngr.findFeatured(exclusive);
-                    String ouput = this.tmp(chs);
-                    result.add(ouput);               
-                }
-                if (s.equals("hot")) {
-                    List<NnChannel> chs = chMngr.findHot();
-                    String ouput = this.tmp(chs);
-                    result.add(ouput);               
-                }
-                if (s.equals("trending")) {
-                    List<NnChannel> chs = chMngr.findTrending();
-                    System.out.println("chs:" + chs.size());
-                    String ouput = this.tmp(chs);
-                    result.add(ouput);               
-                }
-            }
-        }
+        channelOutput += chMngr.composeChannelLineup(channels);
         
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
     }
-        
-    private String tmp(List<NnChannel> channels) {
-        String output = "";
-        for (int i=0; i<channels.size(); i++) {        
-            output += this.composeChannelLineupStr(channels.get(i)) + "\n";            
-        }
-        return output;
-    }
-    
+
     public String channelSubmit(String categoryIds, String userToken, 
                                 String url, String grid, 
                                 String tags, String lang, 
@@ -754,14 +658,14 @@ public class PlayerApiService {
         if (user.getEmail().equals(NnUser.GUEST_EMAIL))
             return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
                 
-        NnChannelManager channelMngr = new NnChannelManager();        
+        NnChannelManager chMngr = new NnChannelManager();        
         //verify url, also converge youtube url
-        url = channelMngr.verifyUrl(url);         
+        url = chMngr.verifyUrl(url);         
         if (url == null)
             return this.assembleMsgs(NnStatusCode.CHANNEL_URL_INVALID, null);            
         
         //verify channel status for existing channel
-        NnChannel channel = channelMngr.findBySourceUrl(url);                                        
+        NnChannel channel = chMngr.findBySourceUrl(url);                                        
         if (channel != null && (channel.getStatus() == NnChannel.STATUS_ERROR)) {
             log.info("channel id and status :" + channel.getId()+ ";" + channel.getStatus());
             this.assembleMsgs(NnStatusCode.CHANNEL_STATUS_ERROR, null);
@@ -769,7 +673,7 @@ public class PlayerApiService {
         
         //create a new channel
         if (channel == null) {
-            channel = channelMngr.create(url, null, req);
+            channel = chMngr.create(url, null, req);
             if (channel == null) {
                 return this.assembleMsgs(NnStatusCode.CHANNEL_URL_INVALID, null);
             }            
@@ -800,7 +704,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
-    
+    //TODO if use if fb user, redirect to facebook
     public String login(String email, String password, HttpServletRequest req, HttpServletResponse resp) {        
         log.info("login: email=" + email + "; mso=" + mso.getId() + ";password=" + password);
         if (!BasicValidator.validateRequired(new String[] {email, password}))
@@ -860,9 +764,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         List<NnChannel> channels = new TagManager().findChannelsByTag(name, true);
         String[] result = {""};
-        for (NnChannel c : channels) {
-            result[0] += this.composeChannelLineupStr(c);            
-        }
+        result[0] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
@@ -1415,10 +1317,10 @@ public class PlayerApiService {
             result[0] = programMngr.composeProgramInfo(programs);
         } else {            
             result[0] = share.getChannelId() + "\t" + share.getProgramIdStr() + "\n";            
-        }        
-        NnChannel channel = new NnChannelManager().findById(share.getChannelId());        
+        }
+        NnChannel channel = chMngr.findById(share.getChannelId());        
         if (channel != null) {
-            result[1] = this.composeChannelLineupStr(channel);
+            result[1] = chMngr.composeChannelLineupStr(channel) + "\n";
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1439,7 +1341,6 @@ public class PlayerApiService {
         }
         String[] result = {"", ""};
         NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
-        NnChannelManager channelMngr = new NnChannelManager();
         NnProgramManager programMngr = new NnProgramManager();
         List<NnUserWatched> watched = new ArrayList<NnUserWatched>();
         if (channel == null) {
@@ -1462,16 +1363,14 @@ public class PlayerApiService {
             }
             
             result[0] += w.getChannelId() + "\t" + w.getProgram() + "\t" + index + "\n";
-            NnChannel c = channelMngr.findById(w.getChannelId());
+            NnChannel c = chMngr.findById(w.getChannelId());
             if (c != null) { 
                 channels.add(c);
             }
             i++;
         }
         if (channelInfo) {
-            for (NnChannel c : channels) {
-                result[1] += this.composeChannelLineupStr(c) + "\n";
-            }
+            chMngr.composeChannelLineup(channels);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1497,16 +1396,13 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    //!!! stack not implemented yet
     public String search(String text, String stack, HttpServletRequest req) {
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         //matched channels
         List<NnChannel> channels = NnChannelManager.search(text, false);
-        String[] result = {"", "", "", "", ""};        
-        for (NnChannel c : channels) {
-            result[3] += this.composeChannelLineupStr(c) + "\n";
-        }
+        String[] result = {"", "", "", "", ""};
+        result[3] = chMngr.composeChannelLineup(channels);
         //matched curators
         List<NnUser> users = userMngr.search(null, null, text);
         for (NnUser u : users) {
@@ -1516,7 +1412,7 @@ public class PlayerApiService {
         for (NnUser u : users) {
             List<NnChannel> list = chMngr.findByUser(u, 1);
             if (list.size() > 0) {
-                result[2] += this.composeChannelLineupStr(list.get(0)) + "\n";
+                result[2] += chMngr.composeChannelLineupStr(list.get(0)) + "\n";
             } else {
                 result[2] += "empty" + "\n";
             }
@@ -1524,10 +1420,8 @@ public class PlayerApiService {
         //if none matched, return suggestion channels
         List<NnChannel> suggestion = new ArrayList<NnChannel>();
         if (channels.size() == 0 && users.size() == 0) {
-            suggestion = chMngr.findTrending();
-            for (NnChannel c : suggestion) {
-                result[4] += this.composeChannelLineupStr(c) + "\n";
-            }
+            suggestion = chMngr.findBillboard(Tag.TRENDING, LangTable.LANG_EN);
+            result[4] = chMngr.composeChannelLineup(suggestion);
         }
         
         result[0] = assembleKeyValue("curator", String.valueOf(users.size()) + "\t" + String.valueOf(users.size()));
@@ -1566,15 +1460,14 @@ public class PlayerApiService {
         }
         NnUser user = new NnUserManager().findByToken(token);
         if (user == null)
-            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-        NnChannelManager channelMngr = new NnChannelManager();        
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         NnChannel channel = new NnChannel(name, intro, imageUrl);
         channel.setPublic(false);
         channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
         channel.setContentType(NnChannel.CONTENTTYPE_MIXED); // a channel type in podcast does not allow user to add program in it, so change to mixed type
         channel.setTemp(isTemp);
-        channelMngr.save(channel);
-        String[] result = {this.composeChannelLineupStr(channel)};        
+        chMngr.save(channel);
+        String[] result = {chMngr.composeChannelLineupStr(channel)};        
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
@@ -1583,9 +1476,8 @@ public class PlayerApiService {
             (audio == null && video == null)) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
-        long cid = Long.parseLong(channel);
-        NnChannelManager channelMngr = new NnChannelManager();        
-        NnChannel ch = channelMngr.findById(cid);
+        long cid = Long.parseLong(channel);        
+        NnChannel ch = chMngr.findById(cid);
         if (ch == null)
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         NnProgramManager programMngr = new NnProgramManager();
@@ -1705,8 +1597,7 @@ public class PlayerApiService {
     }
         
     public NnChannel getChannel(String channel) {
-        NnChannelManager channelMgnr = new NnChannelManager();
-        NnChannel c = channelMgnr.findById(Long.parseLong(channel));
+        NnChannel c = chMngr.findById(Long.parseLong(channel));
         return c;
     }
     
@@ -1731,8 +1622,7 @@ public class PlayerApiService {
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
         }
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel c = channelMngr.findById(Long.parseLong(channel));
+        NnChannel c = chMngr.findById(Long.parseLong(channel));
         if (c == null) {
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         }
@@ -1799,14 +1689,14 @@ public class PlayerApiService {
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
-        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannelManager chMngr = new NnChannelManager();
         NnUserManager userMngr = new NnUserManager();
         Map<String, NnUser> umap = new HashMap<String, NnUser>();        
         Map<String, String> cmap = new HashMap<String, String>();
         String[] cid = channel.split(",");
                 
         for (String id : cid) {
-            NnChannel c = channelMngr.findById(Long.parseLong(id));
+            NnChannel c = chMngr.findById(Long.parseLong(id));
             if (c == null) {
                 return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
             }
@@ -1861,10 +1751,18 @@ public class PlayerApiService {
         } else {
             users = userMngr.findFeatured();
         }
-        String[] result = {""};
-        for (NnUser u :users) {
+        String[] result = {"", ""};
+        for (NnUser u : users) {
             result[0] += userMngr.composeCuratorInfo(u, req) + "\n";
-        }        
+        }
+        for (NnUser u : users) {
+            List<NnChannel> channels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
+            if (channels.size() == 0) {
+                result[1] += "empty" + "\n";                
+            } else {
+               result[1] += chMngr.composeChannelLineupStr(channels.get(0)) + "\n";
+            }
+        }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 }

@@ -171,13 +171,7 @@ public class DepotService {
                 program.setImageUrl(item.getThumbnail());
             } else {
                 program.setImageUrl(channel.getImageUrl());
-            }        
-            
-            if (item.getThumbnail()!= null) {
-                program.setImageLargeUrl(item.getThumbnailLarge());
-            } else {
-                program.setImageUrl(channel.getImageUrl());
-            }        
+            }
         }
         program.setStorageId(item.getItemId());            
         if (item.getOther() != null)
