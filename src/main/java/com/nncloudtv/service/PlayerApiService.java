@@ -1405,9 +1405,9 @@ public class PlayerApiService {
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         //matched channels
-        List<NnChannel> channels = NnChannelManager.search(text, false);
-        String[] result = {"", "", "", "", ""};
-        result[3] = chMngr.composeChannelLineup(channels);
+        List<NnChannel> channels = NnChannelManager.search(text, false); 
+        String[] result = {"", "", "", ""}; //count, curator along with channels, channel, suggestion channel
+        result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
         List<NnUser> users = userMngr.search(null, null, text);
         result[1] += userMngr.composeCuratorInfo(users, req);
@@ -1416,7 +1416,7 @@ public class PlayerApiService {
         List<NnChannel> suggestion = new ArrayList<NnChannel>();
         if (channels.size() == 0 && users.size() == 0) {
             suggestion = chMngr.findBillboard(Tag.TRENDING, LangTable.LANG_EN);
-            result[4] = chMngr.composeChannelLineup(suggestion);
+            result[3] = chMngr.composeChannelLineup(suggestion);
         }
         
         result[0] = assembleKeyValue("curator", String.valueOf(users.size()) + "\t" + String.valueOf(users.size()));
