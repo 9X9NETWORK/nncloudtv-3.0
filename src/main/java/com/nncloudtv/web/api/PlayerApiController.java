@@ -1419,8 +1419,7 @@ public class PlayerApiController {
      *         <p>
      *         First block: general statistics. Format in the following paragraph <br/>
      *         Second block: list of curators. Please reference curator api <br/>
-     *         Third block: curatos' channels. the number of channels should correspond the number of curators. 
-     *                      Curators who have no channel shows "empty"<br/>
+     *         Third block: curatos' channels. <br/>
      *         Forth block: List of matched channels. Please reference channelLineup api<br/>
      *         Fifth block: List of suggested channels. It will only return values when there's no match of curator and channel.<br/>              
      *         <p>  
@@ -1765,7 +1764,7 @@ public class PlayerApiController {
      * @param curator curator id
      * @param stack if specify "featued" will return list of featured curators
      * @param profile curator's 9x9 url
-     * @return list of curator information <br/>
+     * @return list of curator information. First block: <br/>
      *         curator id, <br/>
      *         curator name,<br/>
      *         curator description<br/> 
@@ -1773,7 +1772,10 @@ public class PlayerApiController {
      *         curator profile url,<br/>
      *         channel count, (channel count curator create) <br/>
      *         channel subscription count, <br/>
-     *         follower count <br/> 
+     *         follower count, <br/> 
+     *         top channel id <br/>
+     *         <p> Second block: <br/>
+     *         Reference channelLineup
      */
     @RequestMapping(value="curator", produces = "text/plain; charset=utf-8")
     public @ResponseBody String curator(
