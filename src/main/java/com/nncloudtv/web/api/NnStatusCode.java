@@ -79,6 +79,9 @@ public class NnStatusCode {
     public static final int SET_ERROR = 500;
     public static final int SET_INVALID =501;
 
+    public static final int TAG_ERROR = 510;
+    public static final int TAG_INVALID =511;
+    
     //700 server error
     public static final int SERVER_ERROR = 700;
     public static final int SERVER_TIMEOUT = 701;
