@@ -14,13 +14,15 @@ conn = MySQLdb.connect (host = "localhost",
 
 try:
   cursor = conn.cursor ()
-  cursor.execute ("select c.id categoryId, t.id tagId, t.name tagName, count(*) cnt
+  cursor.execute ("""  
+                   select c.id categoryId, t.id tagId, t.name tagName, count(*) cnt
                      from category c, tag t, category_map cm, tag_map tm
                     where c.id = cm.categoryId
                       and t.id = tm.tagId
                       and cm.channelId = tm.channelId
                     group by categoryId, tagId
-                    order by categoryId, cnt desc")
+                    order by categoryId, cnt desc
+                  """)
   data = cursor.fetchone()
   baseCategoryId = data[0]
 	i = 0  
