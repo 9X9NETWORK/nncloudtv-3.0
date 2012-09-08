@@ -281,14 +281,13 @@ public class NnUserManager {
         NnChannelManager chMngr = new NnChannelManager();
         List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
         for (NnUser u : users) {
-            List<NnChannel> channels  = new ArrayList<NnChannel>();
             if (chCntLimit)
                 curatorChannels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
             else
                 curatorChannels = chMngr.findByUser(u, 0);
             String ch = "";
-            if (channels.size() > 0) {
-                ch = String.valueOf(channels.get(0).getId());
+            if (curatorChannels.size() > 0) {
+                ch = String.valueOf(curatorChannels.get(0).getId());
             }
             result += this.composeCuratorInfoStr(u, ch, req) + "\n";
         }
