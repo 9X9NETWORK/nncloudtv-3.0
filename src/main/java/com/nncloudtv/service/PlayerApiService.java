@@ -1410,7 +1410,7 @@ public class PlayerApiService {
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
         List<NnUser> users = userMngr.search(null, null, text);
-        result[1] += userMngr.composeCuratorInfo(users, req);
+        result[1] += userMngr.composeCuratorInfo(users, true, req);
         
         //if none matched, return suggestion channels
         List<NnChannel> suggestion = new ArrayList<NnChannel>();
@@ -1748,19 +1748,7 @@ public class PlayerApiService {
             users = userMngr.findFeatured();
         }
         String[] result = {"", ""};
-        result[0] = userMngr.composeCuratorInfo(users, req);
-//        //result[1] = Mngr.composeChannelLineup(curatorChannels);        
-//        List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
-//        for (NnUser u : users) {
-//            List<NnChannel> channels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
-//            String ch = "";
-//            if (channels.size() > 0) {
-//                ch = String.valueOf(channels.get(0).getId());
-//                curatorChannels.add(channels.get(0));
-//            }
-//            result[0] += userMngr.composeCuratorInfo(u, ch, req) + "\n";
-//        }
-//        result[1] = chMngr.composeChannelLineup(curatorChannels);
+        result[0] = userMngr.composeCuratorInfo(users, false, req);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 }

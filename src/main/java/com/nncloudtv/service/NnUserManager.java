@@ -276,12 +276,16 @@ public class NnUserManager {
         return dao.findByProfileUrl(profileUrl);
     }
 
-    public String composeCuratorInfo(List<NnUser> users, HttpServletRequest req) {
+    public String composeCuratorInfo(List<NnUser> users, boolean chCntLimit, HttpServletRequest req) {
         String result = "";
         NnChannelManager chMngr = new NnChannelManager();
         List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
         for (NnUser u : users) {
-            List<NnChannel> channels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
+            List<NnChannel> channels  = new ArrayList<NnChannel>();
+            if (chCntLimit)
+                channels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
+            else
+                channels = chMngr.findByUser(u, 0);
             String ch = "";
             if (channels.size() > 0) {
                 ch = String.valueOf(channels.get(0).getId());
