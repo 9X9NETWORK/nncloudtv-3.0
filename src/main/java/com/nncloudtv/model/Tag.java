@@ -21,12 +21,13 @@ public class Tag implements Serializable {
     private String name;
 
     //special tag name for internal use
+    public static final String RECOMMEND = "recommend";
     public static final String HOT = "hot";
     public static final String HOT_EN = "hot(9x9en)";
     public static final String HOT_ZH = "hot(9x9zh)";
-    public static final String FEATURE = "feature";
-    public static final String FEATURE_EN = "feature(9x9en)";
-    public static final String FEATURE_ZH = "feature(9x9zh)";
+    public static final String FEATURED = "featured";
+    public static final String FEATURED_EN = "featured(9x9en)";
+    public static final String FEATURED_ZH = "featured(9x9zh)";
     public static final String TRENDING = "trending";
     public static final String TRENDING_EN = "trending(9x9en)";
     public static final String TRENDING_ZH = "trending(9x9zh)";
