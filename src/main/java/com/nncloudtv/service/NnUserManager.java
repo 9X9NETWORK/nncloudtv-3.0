@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -274,8 +275,26 @@ public class NnUserManager {
     public NnUser findByProfileUrl(String profileUrl) {
         return dao.findByProfileUrl(profileUrl);
     }
-        
-    public String composeCuratorInfo(NnUser user, HttpServletRequest req) {
+
+    public String composeCuratorInfo(List<NnUser> users, HttpServletRequest req) {
+        String result = "";
+        NnChannelManager chMngr = new NnChannelManager();
+        List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
+        for (NnUser u : users) {
+            List<NnChannel> channels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
+            String ch = "";
+            if (channels.size() > 0) {
+                ch = String.valueOf(channels.get(0).getId());
+                curatorChannels.add(channels.get(0));
+            }
+            result += this.composeCuratorInfoStr(u, ch, req) + "\n";
+        }
+        result += "--\n";
+        result += chMngr.composeChannelLineup(curatorChannels);
+        return result;
+    }
+    
+    public String composeCuratorInfoStr(NnUser user, String channelId, HttpServletRequest req) {
         String uid = user.getShard() + "-" + user.getId();
         //#!curator=xxx-name
         String profileUrl = "";
@@ -289,7 +308,8 @@ public class NnUserManager {
                 profileUrl,
                 String.valueOf(user.getCntChannel()),
                 String.valueOf(user.getCntSubscribe()),
-                String.valueOf(user.getCntFollower()),                
+                String.valueOf(user.getCntFollower()),              
+                channelId,
                };
         String output = NnStringUtil.getDelimitedStr(info);
         return output;

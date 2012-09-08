@@ -16,7 +16,8 @@ public class TagManager {
 
     protected static final Logger log = Logger.getLogger(TagManager.class.getName());
     private TagDao dao = new TagDao();
-    
+
+    //player=true returns only "good" channels
     public List<NnChannel> findChannelsByTag(String name, boolean player) {        
         Tag tag = dao.findByName(name);
         List<NnChannel> channels = new ArrayList<NnChannel>();
@@ -31,4 +32,9 @@ public class TagManager {
         }        
         return channels;
     }        
+        
+    public Tag findByName(String name) {
+        Tag tag = dao.findByName(name);
+        return tag;
+    }
 }
