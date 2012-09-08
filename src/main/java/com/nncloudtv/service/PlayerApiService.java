@@ -1412,18 +1412,6 @@ public class PlayerApiService {
         List<NnUser> users = userMngr.search(null, null, text);
         result[1] += userMngr.composeCuratorInfo(users, req);
         
-//        for (NnUser u : users) {
-//            result[1] += userMngr.composeCuratorInfo(u, req) + "\n";
-//        }
-        //curstor's channls
-        for (NnUser u : users) {
-            List<NnChannel> list = chMngr.findByUser(u, 1);
-            if (list.size() > 0) {
-                result[2] += chMngr.composeChannelLineupStr(list.get(0)) + "\n";
-            } else {
-                result[2] += "empty" + "\n";
-            }
-        }
         //if none matched, return suggestion channels
         List<NnChannel> suggestion = new ArrayList<NnChannel>();
         if (channels.size() == 0 && users.size() == 0) {
@@ -1760,7 +1748,7 @@ public class PlayerApiService {
             users = userMngr.findFeatured();
         }
         String[] result = {"", ""};
-        result[1] = userMngr.composeCuratorInfo(users, req);
+        result[0] = userMngr.composeCuratorInfo(users, req);
 //        //result[1] = Mngr.composeChannelLineup(curatorChannels);        
 //        List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
 //        for (NnUser u : users) {
