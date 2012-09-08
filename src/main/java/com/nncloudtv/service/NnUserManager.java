@@ -281,10 +281,11 @@ public class NnUserManager {
         NnChannelManager chMngr = new NnChannelManager();
         List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
         for (NnUser u : users) {
-            if (chCntLimit)
-                curatorChannels = chMngr.findByUser(u, 1); //TODO change to curator's good  channel
-            else
-                curatorChannels = chMngr.findByUser(u, 0);
+            if (chCntLimit) {
+                curatorChannels.addAll(chMngr.findByUser(u, 1)); //TODO change to curator's good  channel
+            } else {
+                curatorChannels.addAll(chMngr.findByUser(u, 0));
+            }
             String ch = "";
             if (curatorChannels.size() > 0) {
                 ch = String.valueOf(curatorChannels.get(0).getId());
@@ -292,6 +293,7 @@ public class NnUserManager {
             result += this.composeCuratorInfoStr(u, ch, req) + "\n";
         }
         result += "--\n";
+        System.out.println("curator channel:" + curatorChannels.size());
         result += chMngr.composeChannelLineup(curatorChannels);
         return result;
     }

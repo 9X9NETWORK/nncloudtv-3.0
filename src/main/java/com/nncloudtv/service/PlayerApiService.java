@@ -1748,7 +1748,10 @@ public class PlayerApiService {
             users = userMngr.findFeatured();
         }
         String[] result = {"", ""};
-        result[0] = userMngr.composeCuratorInfo(users, false, req);
+        if (stack != null)
+            result[0] = userMngr.composeCuratorInfo(users, true, req);
+        else
+            result[0] = userMngr.composeCuratorInfo(users, false, req);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 }
