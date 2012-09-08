@@ -91,7 +91,10 @@ public class NnStatusMsg {
     
                 case NnStatusCode.SET_ERROR: return NnStatusMsg.assembleMsg(status, "SET_ERROR");
                 case NnStatusCode.SET_INVALID: return NnStatusMsg.assembleMsg(status, "SET_INVALID");
-    
+
+                case NnStatusCode.TAG_ERROR: return NnStatusMsg.assembleMsg(status, "TAG_ERROR");
+                case NnStatusCode.TAG_INVALID: return NnStatusMsg.assembleMsg(status, "TAG_INVALID");
+                
                 case NnStatusCode.SERVER_ERROR: return NnStatusMsg.assembleMsg(status, "SERVER_ERROR");
                 case NnStatusCode.SERVER_TIMEOUT: return NnStatusMsg.assembleMsg(status, "SERVER_TIMEOUT");
     
