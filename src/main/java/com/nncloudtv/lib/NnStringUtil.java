@@ -122,7 +122,7 @@ public class NnStringUtil {
                    .replaceAll("&amp;", "&");
     }
 
-    public static String htmlSafeAndTrucated(String str) {
+    public static String htmlSafeAndTruncated(String str) {
         return htmlSafeAndTruncated(str, MAX_JDO_STRING_LENGTH);
     }
     public static String htmlSafeAndTruncated(String str, int length) {
@@ -170,6 +170,11 @@ public class NnStringUtil {
         } else {
             return null;
         }
+    }
+
+    public static String seqToStr(Short seq) {
+        
+        return String.format("%08d", seq);
     }
     
 }

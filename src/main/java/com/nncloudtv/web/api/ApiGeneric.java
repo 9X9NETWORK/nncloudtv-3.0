@@ -14,7 +14,7 @@ public class ApiGeneric {
 	
 	public static final String MISSING_PARAMETER = "Missing Parameter";
 	public static final String INVALID_PATH_PARAMETER = "Invalid Path Parameter";
-	public static final String BAD_PARAMETER = "Bad Parameter";
+	public static final String INVALID_PARAMETER = "Invalid Parameter";
 	public static final String PLAIN_TEXT_UTF8 = "plain/text; charset=utf-8";
 	
 	public void unauthorized(HttpServletResponse resp) {

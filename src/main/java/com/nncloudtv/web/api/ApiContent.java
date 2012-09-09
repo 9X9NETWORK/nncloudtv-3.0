@@ -33,190 +33,189 @@ import com.nncloudtv.service.TitleCardManager;
 @Controller
 @RequestMapping("api")
 public class ApiContent extends ApiGeneric {
-	
-	protected static Logger log = Logger.getLogger(ApiContent.class.getName());
-	
-	@RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.DELETE)
-	public @ResponseBody
-	String facebookAutosharingDelete(HttpServletRequest req,
-	        HttpServletResponse resp,
-	        @PathVariable("channelId") String channelIdStr) {
-		
-		Long channelId = null;
-		try {
-			channelId = Long.valueOf(channelIdStr);
-		} catch (NumberFormatException e) {
-		}
-		if (channelId == null) {
-			notFound(resp, INVALID_PATH_PARAMETER);
-			return null;
-		}
-		
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel channel = channelMngr.findById(channelId);
-		if (channel == null) {
-			notFound(resp, "Channel Not Found");
-			return null;
-		}
-		
-		NnChannelPref pref = null;
-		NnChannelPrefManager prefMngr = new NnChannelPrefManager();
-		
-		// fbUserId
-		pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
-		if (pref != null) {
-			prefMngr.delete(pref);
-		}
-		
-		// accessToken
-		pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
-		if (pref != null) {
-			prefMngr.delete(pref);
-		}
-		
-		return "OK";
-	}
-	
-	@RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.POST)
-	public @ResponseBody
-	String facebookAutosharingCreate(HttpServletRequest req,
-	        HttpServletResponse resp,
-	        @PathVariable("channelId") String channelIdStr) {
-		
-		Long channelId = null;
-		try {
-			channelId = Long.valueOf(channelIdStr);
-		} catch (NumberFormatException e) {
-		}
-		if (channelId == null) {
-			notFound(resp, INVALID_PATH_PARAMETER);
-			return null;
-		}
-		
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel channel = channelMngr.findById(channelId);
-		if (channel == null) {
-			notFound(resp, "Channel Not Found");
-			return null;
-		}
-		
-		String fbUserId = req.getParameter("userId");
-		String accessToken = req.getParameter("accessToken");
-		if (fbUserId == null || accessToken == null) {
-			
-			badRequest(resp, MISSING_PARAMETER);
-			return null;
-		}
-		
-		NnChannelPref pref = null;
-		NnChannelPrefManager prefMngr = new NnChannelPrefManager();
-		
-		// fbUserId
-		pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
-		if (pref != null) {
-			pref.setValue(fbUserId);
-		} else {
-			pref = new NnChannelPref(channel, NnUserPref.FB_USER_ID, fbUserId);
-		}
-		prefMngr.save(pref);
-		
-		// accessToken
-		pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
-		if (pref != null) {
-			pref.setValue(accessToken);
-		} else {
-			pref = new NnChannelPref(channel, NnUserPref.FB_TOKEN, accessToken);
-		}
-		prefMngr.save(pref);
-		
-		return "OK";
-	}
-	
-	@RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.GET)
-	public @ResponseBody
-	Map<String, Object> facebookAutosharing(HttpServletRequest req, HttpServletResponse resp,
-	        @PathVariable("channelId") String channelIdStr) {
-		
-		Long channelId = null;
-		try {
-			channelId = Long.valueOf(channelIdStr);
-		} catch (NumberFormatException e) {
-		}
-		if (channelId == null) {
-			notFound(resp, INVALID_PATH_PARAMETER);
-			return null;
-		}
-		
-		NnChannelManager channelMngr = new NnChannelManager();
-		NnChannel channel = channelMngr.findById(channelId);
-		if (channel == null) {
-			notFound(resp, "Channel Not Found");
-			return null;
-		}
-		
-		NnChannelPrefManager prefMngr = new NnChannelPrefManager();
-		NnChannelPref pref = null;
-		Map<String, Object> result = new TreeMap<String, Object>();
-		String fbUserId = null;
-		String accessToken = null;
-		
-		// fbUserId
-		pref = prefMngr.findByChannelIdAndItem(channelId,NnUserPref.FB_USER_ID);
-		if (pref != null) {
-			fbUserId = pref.getValue();
-			result.put("userId", fbUserId);
-		}
-		
-		// accessToken
-		pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
-		if (pref != null) {
-			accessToken = pref.getValue();
-			result.put("accessToken", accessToken);
-		}
-		
-		if (accessToken != null && fbUserId != null) {
-			return result;
-		}
-		
-		return null;
-	}
-	
+    
+    protected static Logger log = Logger.getLogger(ApiContent.class.getName());
+    
+    @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.DELETE)
+    public @ResponseBody
+    String facebookAutosharingDelete(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnChannelPref pref = null;
+        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
+        
+        // fbUserId
+        pref = prefMngr
+                .findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
+        if (pref != null) {
+            prefMngr.delete(pref);
+        }
+        
+        // accessToken
+        pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
+        if (pref != null) {
+            prefMngr.delete(pref);
+        }
+        
+        return "OK";
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.POST)
+    public @ResponseBody
+    String facebookAutosharingCreate(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        String fbUserId = req.getParameter("userId");
+        String accessToken = req.getParameter("accessToken");
+        if (fbUserId == null || accessToken == null) {
+            
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        NnChannelPref pref = null;
+        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
+        
+        // fbUserId
+        pref = prefMngr
+                .findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
+        if (pref != null) {
+            pref.setValue(fbUserId);
+        } else {
+            pref = new NnChannelPref(channel, NnUserPref.FB_USER_ID, fbUserId);
+        }
+        prefMngr.save(pref);
+        
+        // accessToken
+        pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
+        if (pref != null) {
+            pref.setValue(accessToken);
+        } else {
+            pref = new NnChannelPref(channel, NnUserPref.FB_TOKEN, accessToken);
+        }
+        prefMngr.save(pref);
+        
+        return "OK";
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, Object> facebookAutosharing(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
+        NnChannelPref pref = null;
+        Map<String, Object> result = new TreeMap<String, Object>();
+        String fbUserId = null;
+        String accessToken = null;
+        
+        // fbUserId
+        pref = prefMngr
+                .findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
+        if (pref != null) {
+            fbUserId = pref.getValue();
+            result.put("userId", fbUserId);
+        }
+        
+        // accessToken
+        pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
+        if (pref != null) {
+            accessToken = pref.getValue();
+            result.put("accessToken", accessToken);
+        }
+        
+        if (accessToken != null && fbUserId != null) {
+            return result;
+        }
+        
+        return null;
+    }
+    
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.GET)
     public @ResponseBody
-    NnProgram getProgram(@PathVariable("programId") String programIdStr,
+    NnProgram program(@PathVariable("programId") String programIdStr,
             HttpServletRequest req, HttpServletResponse resp) {
-
+        
         Long programId = null;
         try {
             programId = Long.valueOf(programIdStr);
         } catch (NumberFormatException e) {
         }
+        
         if (programId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
+        
         NnProgramManager programMngr = new NnProgramManager();
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
-            notFound(resp, "the resource program not exist");
+            notFound(resp, "Pogram Not Found");
             return null;
         }
-
-        /*
-         * program.setName(NnStringUtil.revertHtml(program.getName()));
-         * program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
-         * program.setComment(NnStringUtil.revertHtml(program.getComment()));
-         */
-
+        
         return program;
     }
-
+    
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.PUT)
     public @ResponseBody
-    NnProgram updateProgram(@PathVariable("programId") String programIdStr,
+    NnProgram programUpdate(@PathVariable("programId") String programIdStr,
             HttpServletRequest req, HttpServletResponse resp) {
-
+        
         Long programId = null;
         try {
             programId = Long.valueOf(programIdStr);
@@ -226,104 +225,108 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
+        
         NnProgramManager programMngr = new NnProgramManager();
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
-            notFound(resp, "the resource program not exist");
+            notFound(resp, "Program Not Found");
             return null;
         }
-
+        
+        // name
         String name = req.getParameter("name");
-        if (name!=null) {
+        if (name != null) {
             program.setName(NnStringUtil.htmlSafeChars(name));
         }
         
+        // intro
         String intro = req.getParameter("intro");
-        if (intro!=null) {
+        if (intro != null) {
             program.setIntro(NnStringUtil.htmlSafeChars(intro));
         }
         
+        // comment
         String comment = req.getParameter("comment");
-        if (comment!=null) {
+        if (comment != null) {
             program.setComment(NnStringUtil.htmlSafeChars(comment));
         }
         
-        String imageUrl = req.getParameter("imageUrl"); // format check ?
-        if (imageUrl!=null) {
+        // imageUrl
+        String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl != null) {
             program.setImageUrl(imageUrl);
         }
-
-        String seq = req.getParameter("seq");
-        Short seqInt = null;
-        String seqStr = null;
-        if (seq != null) {
+        
+        // seq
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            Short seq = null;
             try {
-                seqInt = Short.valueOf(seq);
+                seq = Short.valueOf(seqStr);
             } catch (NumberFormatException e) {
             }
-            if (seqInt == null) {
-                badRequest(resp, BAD_PARAMETER);
+            if (seq == null) {
+                badRequest(resp, INVALID_PARAMETER);
                 return null;
             } else {
-                seqStr = seqInt.toString();
-                program.setSeq(String.format("%08d", seqStr));
-            }
-        }
-
-        String subSeq = req.getParameter("subSeq");
-        Short subSeqInt = null;
-        String subSeqStr = null;
-        if (subSeq != null) {
-            try {
-                subSeqInt = Short.valueOf(subSeq);
-            } catch (NumberFormatException e) {
-            }
-            if (subSeqInt == null) {
-                badRequest(resp, BAD_PARAMETER);
-                return null;
-            } else {
-                subSeqStr = subSeqInt.toString();
-                program.setSubSeq(String.format("%08d", subSeqStr));
+                program.setSeq(seq);
             }
         }
         
-        if (seq!=null) {
-            if (subSeq!=null) {
-                // handle sort for program(seq, subSeq)
-            } else {
-                // handle sort for program(seq)
+        // subSeq
+        String subSeqStr = req.getParameter("subSeq");
+        if (subSeqStr != null) {
+            Short subSeq = null;
+            try {
+                subSeq = Short.valueOf(seqStr);
+            } catch (NumberFormatException e) {
             }
-        } else {
-            if (subSeq!=null) {
-                // handle sort for program(subSeq)
+            if (subSeq == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
             } else {
-                // don't need sort
+                program.setSeq(subSeq);
             }
         }
-
-        String startTime = req.getParameter("startTime"); // format check ?
-        if(startTime!=null) {
+        
+        // startTime
+        String startTimeStr = req.getParameter("startTime");
+        if (startTimeStr != null) {
+            Integer startTime = null;
+            try {
+                startTime = Integer.valueOf(startTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startTime == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             program.setStartTime(startTime);
         }
         
-        String endTime = req.getParameter("endTime"); // format check ?
-        if(endTime!=null) {
-            program.setEndTime(endTime);
+        // endTime
+        String endTimeStr = req.getParameter("endTime");
+        if (endTimeStr != null) {
+            Integer endTime = null;
+            try {
+                endTime = Integer.valueOf(endTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endTime == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            program.setStartTime(endTime);
         }
-
-        programMngr.save(program);
-
-        program = programMngr.findById(programId);
-
-        return program;
+        
+        return programMngr.save(program);
     }
     
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.DELETE)
     public @ResponseBody
-    String deleteProgram(@PathVariable("programId") String programIdStr,
-            HttpServletRequest req, HttpServletResponse resp) {
-
+    String programDelete(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("programId") String programIdStr) {
+        
         Long programId = null;
         try {
             programId = Long.valueOf(programIdStr);
@@ -333,24 +336,23 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
+        
         NnProgramManager programMngr = new NnProgramManager();
         NnProgram program = programMngr.findById(programId);
-        if (program == null) {
-            notFound(resp, "the resource program not exist");
-            return null;
+        if (program != null) {
+            return "Program Not Found";
         }
-
+        
         programMngr.delete(program);
-
+        
         return "OK";
     }
-
+    
     @RequestMapping(value = "channels/{channelId}", method = RequestMethod.GET)
     public @ResponseBody
-    NnChannel getChannel(@PathVariable("channelId") String channelIdStr,
-            HttpServletRequest req, HttpServletResponse resp) {
-
+    NnChannel channel(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -360,97 +362,89 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel result = channelMngr.findById(channelId);
-        if (result == null) {
-            notFound(resp, "the resource channel not exist");
-            return null;
-        }
-
-        return result;
-    }
-
-    @RequestMapping(value = "channels/{channelId}", method = RequestMethod.PUT)
-    public @ResponseBody
-    NnChannel updateChannel(@PathVariable("channelId") String channelIdStr,
-            HttpServletRequest req, HttpServletResponse resp) {
-
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (channelId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-
+        
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
-            notFound(resp, "the resource channel not exist");
+            notFound(resp, "Channel Not Found");
             return null;
         }
-
+        
+        return channel;
+    }
+    
+    @RequestMapping(value = "channels/{channelId}", method = RequestMethod.PUT)
+    public @ResponseBody
+    NnChannel updateChannel(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        // name
         String name = req.getParameter("name");
-        if(name!=null) {
-            channel.setName(name);
+        if (name != null) {
+            channel.setName(NnStringUtil.htmlSafeAndTruncated(name));
         }
         
+        // intro
         String intro = req.getParameter("intro");
-        if(intro!=null) {
-            channel.setIntro(intro);
+        if (intro != null) {
+            channel.setIntro(NnStringUtil.htmlSafeAndTruncated(intro));
         }
         
-        String lang = req.getParameter("lang"); // enum check ?
-        if(lang!=null) {
-            if(lang.equals("zh")||lang.equals("en")||lang.equals("others")) {
-                channel.setLang(lang);
-            } else {
-                // 400 return ?
-            }
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
+            
+            channel.setLang(lang);
         }
         
-        String sphere = req.getParameter("sphere"); // enum check ?
-        if(sphere!=null) {
-            if(sphere.equals("zh")||sphere.equals("en")||sphere.equals("others")) {
-                channel.setSphere(sphere);
-            } else {
-                // 400 return ?
-            }       
+        // sphere
+        String sphere = req.getParameter("sphere");
+        if (sphere != null && NnStringUtil.validateLangCode(sphere) != null) {
+            
+            channel.setSphere(sphere);
         }
         
-        String isPublic = req.getParameter("isPublic");
-        if (isPublic != null) {
-            if (isPublic.equals("true")) {
-                channel.setPublic(true);
-            } else if (isPublic.equals("false")) {
-                channel.setPublic(false);
-            } else {
-                // 400 return ?
-            }
+        // isPublic
+        String isPublicStr = req.getParameter("isPublic");
+        if (isPublicStr != null) {
+            Boolean isPublic = Boolean.valueOf(isPublicStr);
+            channel.setPublic(isPublic);
         }
         
+        // tag
         String tag = req.getParameter("tag");
-        if(tag!=null) {
+        if (tag != null) {
             channel.setTag(tag);
         }
         
-
-        channelMngr.save(channel);
-        channel = channelMngr.findById(channelId);
-
-        return channel;
+        return channelMngr.save(channel);
     }
-
+    
     @RequestMapping(value = "channels/{channelId}/programs", method = RequestMethod.GET)
     public @ResponseBody
     List<NnProgram> getProgramList(
             @PathVariable("channelId") String channelIdStr,
             HttpServletRequest req, HttpServletResponse resp) {
-
+        
         class NnProgramSeqComparator implements Comparator<NnProgram> {
+            
             public int compare(NnProgram program1, NnProgram program2) {
                 int seq1 = (program1.getSeq() == null) ? 0 : Integer
                         .valueOf(program1.getSeq());
@@ -467,7 +461,7 @@ public class ApiContent extends ApiGeneric {
                 }
             }
         }
-
+        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -477,65 +471,67 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
+        
         NnProgramManager programMngr = new NnProgramManager();
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
-
+        
         if (channel == null) {
-            notFound(resp, "the resource channel not exist");
+            notFound(resp, "Channel Not Found");
             return null;
         }
-
+        
         List<NnProgram> results = programMngr.findByChannel(channelId);
         Collections.sort(results, new NnProgramSeqComparator());
-
+        
         return results;
     }
-
+    
     @RequestMapping(value = "categories", method = RequestMethod.GET)
     public @ResponseBody
     List<Category> getCategories(HttpServletRequest req,
             HttpServletResponse resp) {
-
+        
         class CategoryComparator implements Comparator<Category> {
             public int compare(Category category1, Category category2) {
                 int seq1 = category1.getSeq();
                 if (category1.getLang() != null
-                        && category1.getLang().equalsIgnoreCase(LangTable.LANG_EN)) {
+                        && category1.getLang().equalsIgnoreCase(
+                                LangTable.LANG_EN)) {
                     seq1 -= 100;
                 }
                 int seq2 = category2.getSeq();
                 if (category2.getLang() != null
-                        && category2.getLang().equalsIgnoreCase(LangTable.LANG_EN)) {
+                        && category2.getLang().equalsIgnoreCase(
+                                LangTable.LANG_EN)) {
                     seq2 -= 100;
                 }
                 return (seq1 - seq2);
             }
         }
-
+        
         String lang = req.getParameter("lang");
         CategoryManager catMngr = new CategoryManager();
         List<Category> categories;
-
+        
         if (lang != null) {
             categories = catMngr.findByLang(lang);
         } else {
             categories = catMngr.findAll();
         }
-
+        
         Collections.sort(categories, new CategoryComparator());
-
+        
         return categories;
     }
-
+    
     @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.GET)
     public @ResponseBody
-    List<NnProgram> getProgramListBySeq(
+    List<NnProgram> getProgramListBySeq(HttpServletResponse resp,
+            HttpServletRequest req,
             @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seq, HttpServletRequest req,
-            HttpServletResponse resp) {
-
+            @PathVariable("seq") String seqStr) {
+        
         class NnProgramSeqComparator implements Comparator<NnProgram> {
             public int compare(NnProgram program1, NnProgram program2) {
                 int subSeq1 = (program1.getSubSeq() == null) ? 0 : Integer
@@ -545,7 +541,7 @@ public class ApiContent extends ApiGeneric {
                 return (subSeq1 - subSeq2);
             }
         }
-
+        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -555,51 +551,43 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
-        Short seqInt = null;
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        Short seq = null;
         try {
-            seqInt = Short.valueOf(seq);
+            seq = Short.valueOf(seqStr);
         } catch (NumberFormatException e) {
         }
-        if (seqInt == null) {
+        if (seq == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-        String seqStr = seqInt.toString();
-        seqStr = String.format("%08d", seqStr);
-
+        
         NnProgramManager programMngr = new NnProgramManager();
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel channel = channelMngr.findById(channelId);
         List<NnProgram> results;
-
-        if (channel == null) {
-            notFound(resp, "the resource channel not exist");
-            return null;
-        } else {
-            results = programMngr.findByChannelAndSeq(channelId, seqStr);
-            // edit note : as empty array return
-            /*
-             * if(results.isEmpty()) { notFound(resp,
-             * "the resource channel exist but it's sequence you requested not exist"
-             * ); return null; }
-             */
-        }
-
+        
+        results = programMngr.findByChannelIdAndSeq(channelId, seq);
+        
         Collections.sort(results, new NnProgramSeqComparator());
-
+        
         return results;
     }
-
-    /*
+    
+    /**
      * channelId, seq, file URL are required, others optional.
      */
+    // dirty
     @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.POST)
     public @ResponseBody
-    NnProgram addProgram(@PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seq, HttpServletRequest req,
-            HttpServletResponse resp) {
-
+    NnProgram addProgram(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr,
+            @PathVariable("seq") String seqStr) {
+        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -609,71 +597,45 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-        
-        String fileUrl = req.getParameter("fileUrl"); // format check ?
-        if (fileUrl==null) {
-            badRequest(resp, BAD_PARAMETER);
-            return null;
-        }
-
-        Short seqInt = null;
-        try {
-            seqInt = Short.valueOf(seq);
-        } catch (NumberFormatException e) {
-        }
-        if (seqInt == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        String seqStr = seqInt.toString();
-        seqStr = String.format("%08d", seqStr);
-
-        String subSeq = req.getParameter("subSeq");
-        Short subSeqInt = null;
-        String subSeqStr = null;
-        if (subSeq != null) {
-            try {
-                subSeqInt = Short.valueOf(subSeq);
-            } catch (NumberFormatException e) {
-            }
-            if (subSeqInt == null) {
-                badRequest(resp, BAD_PARAMETER);
-                return null;
-            }
-            subSeqStr = subSeqInt.toString();
-            subSeqStr = String.format("%08d", subSeqStr);
-            
-            // handle sort for program(seqStr, subSeqStr)
-        } else {
-            // handle sort for program(seqStr)
-        }
-        
-
-
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
-            notFound(resp, "the resource channel not exist");
+            notFound(resp, "Channel Not Found");
             return null;
         }
-
         
+        // fileUrl
+        String fileUrl = req.getParameter("fileUrl");
+        if (fileUrl == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        Short seq = null;
+        try {
+            seq = Short.valueOf(seqStr);
+        } catch (NumberFormatException e) {
+        }
+        if (seq == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
         
         String name = req.getParameter("name");
-        if (name==null) {
+        if (name == null) {
             name = "";
         }
         
         String intro = req.getParameter("intro");
-        if (intro==null) {
+        if (intro == null) {
             intro = "";
         }
         
         String imageUrl = req.getParameter("imageUrl"); // format check ?
-        if (imageUrl==null) {
+        if (imageUrl == null) {
             imageUrl = "";
         }
-
+        
         NnProgram program = new NnProgram(channelId,
                 NnStringUtil.htmlSafeChars(name),
                 NnStringUtil.htmlSafeChars(intro), imageUrl);
@@ -683,40 +645,37 @@ public class ApiContent extends ApiGeneric {
         
         program.setSeq(seqStr);
         
-        if (subSeqStr!=null) {
-            program.setSubSeq(subSeqStr);
-        }
-
         String comment = req.getParameter("comment");
-        if (comment!=null) {
+        if (comment != null) {
             program.setComment(NnStringUtil.htmlSafeChars(comment));
         }
         
         String startTime = req.getParameter("startTime"); // format check ?
-        if (startTime!=null) {
+        if (startTime != null) {
             program.setStartTime(startTime);
         }
         
         String endTime = req.getParameter("endTime"); // format check ?
-        if (endTime!=null) {
+        if (endTime != null) {
             program.setEndTime(endTime);
         }
-
+        
         NnProgramManager programMngr = new NnProgramManager();
         programMngr.create(channel, program);
-
+        
         // how to get newly created program at this moment
-
+        
         return program;
     }
-
+    
+    // dirty
     @RequestMapping(value = "title_cards/{channelId}/{seq}", method = RequestMethod.GET)
     public @ResponseBody
     List<TitleCard> getTitleCards(
             @PathVariable("channelId") String channelIdStr,
             @PathVariable("seq") String seq, HttpServletRequest req,
             HttpServletResponse resp) {
-
+        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -726,7 +685,7 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-
+        
         Short seqInt = null;
         try {
             seqInt = Short.valueOf(seq);
@@ -738,13 +697,12 @@ public class ApiContent extends ApiGeneric {
         }
         String seqStr = seqInt.toString();
         seqStr = String.format("%08d", seqStr);
-
+        
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> results = titleCardMngr.findByChannelAndSeq(channelId,
                 seqStr);
-
+        
         return results;
     }
-
+    
 }
-// program.setSeq(String.format("%08d", seq));

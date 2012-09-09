@@ -77,18 +77,22 @@ public class NnProgramDao extends GenericDao<NnProgram> {
     }
 
     public List<NnProgram> findByChannelAndSeq(long channelId, String seq) {
+        
         List<NnProgram> detached = new ArrayList<NnProgram>();
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
         try {
             Query query = pm.newQuery(NnProgram.class);
-            query.setFilter("channelId == " + channelId + " & seq == '" + seq + "'");
+            query.setFilter("channelId == channelIdParam && seq == seqParam");
+            query.declareParameters("long channelIdParam, String seqParam");
             @SuppressWarnings("unchecked")
-            List<NnProgram> results = (List<NnProgram>) query.execute(channelId, seq);
-            detached = (List<NnProgram>)pm.detachCopyAll(results);
+            List<NnProgram> results = (List<NnProgram>) query.execute(
+                    channelId, seq);
+            detached = (List<NnProgram>) pm.detachCopyAll(results);
         } finally {
             pm.close();
         }
-        return detached;        
+        return detached;
     }
     
     public NnProgram findByChannelAndStorageId(long channelId, String storageId) {

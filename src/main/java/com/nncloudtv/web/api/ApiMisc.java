@@ -58,7 +58,7 @@ public class ApiMisc extends ApiGeneric {
 		    (!type.equals("audio") && !type.equals("image")) ||
 		    (!acl.equals("public-read"))) {
 			
-			badRequest(resp, BAD_PARAMETER);
+			badRequest(resp, INVALID_PARAMETER);
 			return result;
 		} 
 		

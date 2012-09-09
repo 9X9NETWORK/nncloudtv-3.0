@@ -1128,7 +1128,7 @@ public class PlayerApiService {
             if (key[i].equals("year"))
                 user.setDob(value[i]);
             if (key[i].equals("description"))
-                user.setIntro(NnStringUtil.htmlSafeAndTrucated(value[i]));
+                user.setIntro(NnStringUtil.htmlSafeAndTruncated(value[i]));
             if (key[i].equals("password"))
                 password = value[i];                
             if (key[i].equals("oldPassword"))

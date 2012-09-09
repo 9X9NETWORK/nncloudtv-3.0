@@ -362,8 +362,8 @@ public class NnProgramManager {
         return dao.findByChannel(channelId);
     }
     
-    public List<NnProgram> findByChannelAndSeq(long channelId, String seq) {
-        return dao.findByChannelAndSeq(channelId, seq);
+    public List<NnProgram> findByChannelIdAndSeq(long channelId, Short seq) {
+        return dao.findByChannelAndSeq(channelId, NnStringUtil.seqToStr(seq));
     }
     
     public List<NnProgram> findSubscribedPrograms(NnUser user) {

@@ -256,9 +256,13 @@ public class NnProgram implements Serializable {
     public String getSeq() {
         return seq;
     }
-
+    
     public void setSeq(String seq) {
         this.seq = seq;
+    }
+    
+    public void setSeq(int seq) {
+        this.seq = String.format("%08d", seq);
     }
 
     public String getSubSeq() {
@@ -269,6 +273,14 @@ public class NnProgram implements Serializable {
         this.subSeq = subSeq;
     }
 
+    public void setStartTime(int startTime) {
+        this.startTime = String.format("%d", startTime);
+    }
+    
+    public void setEndTime(int endTime) {
+        this.endTime = String.format("%d", endTime);
+    }
+    
     public String getStartTime() {
         return startTime;
     }
