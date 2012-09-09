@@ -83,8 +83,8 @@ public class NnProgramManager {
     }
 
     public void delete(NnProgram program) {
-        this.processCache(program.getChannelId());        
         dao.delete(program);        
+        this.processCache(program.getChannelId());        
     }
     
     public NnProgram findByChannelAndStorageId(long channelId, String storageId) {
@@ -204,9 +204,7 @@ public class NnProgramManager {
             String seq = info[1];
             programs = dao.findByChannelAndSeq(channelId, seq);
         }
-        return programs;
-        //newP.setStorageId(c.getId() + seq); //channelId + seq
-        
+        return programs;        
     }
     
     public String processSubEpisode(List<NnProgram> programs) {
@@ -220,11 +218,15 @@ public class NnProgramManager {
         String videoUrl = "";
         for (int i=0; i<programs.size(); i++) {
            NnProgram p = programs.get(i);
-           if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+           if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {               
                List<NnProgram> reference = this.findRealPrograms(p.getStorageId());
                System.out.println("reference size:" + reference.size());
-               if (reference.size() > 0)
+               if (reference.size() > 0) { //keep the stored program id, for deletion
+                   for (NnProgram ref : reference) {
+                       ref.setId(p.getId());
+                   }
                    result += this.processSubEpisode(reference);
+               }
            }
            if (p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
                if (p.getSeq() == null || p.getSubSeq() == null) {
@@ -282,57 +284,6 @@ public class NnProgramManager {
             return result;
         }
         result += this.processSubEpisode(programs);
-//        long cid = programs.get(0).getChannelId();
-//        List<TitleCard> cards = new TitleCardDao().findByChannel(cid); //order by channel id and entry id
-//        String seq = programs.get(0).getSeq();
-//        int cardIdx = 0;
-//        String videoUrl = "";
-//        for (int i=0; i<programs.size(); i++) {
-//           NnProgram p = programs.get(i);
-//           if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
-//               List<NnProgram> favorite = this.findRealPrograms(p.getStorageId());
-//               result += this.processSubEpisode(favorite);
-////               for (int j=0; j<favorite.size(); j++) {
-////                   NnProgram f = favorite.get(j);
-////                   result += this.processSubEpisode(favorite);                   
-////               }
-//           }
-////           result += this.processSubEpisode(programs, p, i);
-//           if (p.getSeq() == null || p.getSubSeq() == null) {
-//               result += composeProgramInfoStr(p, p.getFileUrl(), null);
-//           } else { 
-//               //it's another program
-//              if (!p.getSeq().equals(seq) || (i == programs.size()-1)) {
-//                 String card = "";
-//                 String titleSeq = original.getSeq();
-//                 for (int j=cardIdx; j<cards.size(); j++) {
-//                    if (cards.get(j).getSeq().equals(titleSeq)) {
-//                       card += cards.get(j).getPlayerSyntax() + "%0A--%0A";
-//                       cardIdx++;
-//                    }
-//                 }
-//                 videoUrl = videoUrl.replaceFirst("\\|", "");
-//                 result += composeProgramInfoStr(original, videoUrl, card); 
-//                 //reset
-//                 seq = p.getSeq();
-//                 videoUrl = "";
-//                 card = "";
-//                 original = p;
-//              } else {
-//                  //format: videoUrl;startTime;endTime|videoUrl;startTime;endTime
-//                  //each video is separated by "|"
-//                  videoUrl += "|" + p.getFileUrl();
-//                  if (p.getStartTime() != null)
-//                     videoUrl += ";" + p.getStartTime();
-//                  else
-//                     videoUrl += ";" + ""; 
-//                  if (p.getEndTime() != null)
-//                     videoUrl += ";" + p.getEndTime();
-//                  else
-//                     videoUrl += ";" + "";                  
-//              }
-//           }
-//        }
         return result;
     }
 

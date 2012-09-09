@@ -585,7 +585,7 @@ public class PlayerApiService {
             NnUser curator = userMngr.findByIdStr(curatorIdStr);
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-            List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0);  
+            List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, true);  
             for (NnChannel c : curatorChannels) {
                 if (c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS) {
                     channels.add(c);
@@ -1572,14 +1572,14 @@ public class PlayerApiService {
         return output;                
     }
 
-    public String favorite(String userToken, String program, String fileUrl, String name, String imageUrl, boolean del) {
+    public String favorite(String userToken, String program, String fileUrl, String name, String imageUrl, boolean delete) {
         if (userToken == null || (program == null && fileUrl == null))
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         String[] result = {""};        
 
         NnUser u = userMngr.findByToken(userToken);
         if (u == null)
-            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         long pid = 0;
         if (program != null) {
             pid = Long.parseLong(program);
@@ -1587,7 +1587,11 @@ public class PlayerApiService {
             if (p == null)
                 return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
         }
-        chMngr.saveFavorite(u, pid, fileUrl, name, imageUrl, del);
+        if (delete) {
+            chMngr.deleteFavorite(u, pid);
+        } else {
+            chMngr.saveFavorite(u, pid, fileUrl, name, imageUrl);
+        }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 
     }

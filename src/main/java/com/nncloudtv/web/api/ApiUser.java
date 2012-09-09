@@ -294,7 +294,7 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
-        result = channelMngr.findByUser(user, 0);
+        result = channelMngr.findByUser(user, 0, false);
         
         return result;
     }

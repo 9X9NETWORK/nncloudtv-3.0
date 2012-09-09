@@ -21,6 +21,8 @@ import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.Tag;
+import com.nncloudtv.model.TagMap;
 import com.nncloudtv.web.api.NnStatusCode;
 
 @Service
@@ -93,48 +95,102 @@ public class NnChannelManager {
         if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
             channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {            
             PiwikLib.createPiwikSite(channel.getId());
-        }
-        
+        }        
         return channel;
     }
 
-    public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl, boolean del) {
-        NnChannel c = dao.findByUserIdStr(user.getIdStr());
-        if (c == null) {
-            c = new NnChannel(user.getName() + "'s Favorite", "", "");
-            c.setUserIdStr(user.getIdStr());
-            c.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
-            dao.save(c);
+    //TODO remove unwanted text from tag
+    public void processTag(NnChannel c) {
+        String tag = c.getTag();
+        String[] multiples = tag.split(",");
+        TagManager tagMngr = new TagManager();
+        for (String m : multiples) {
+            m = m.trim();            
+            Tag t = tagMngr.findByName(m);
+            if (t == null) {
+                t = new Tag(m);
+                tagMngr.save(t);
+            }
+            TagMap tm = tagMngr.findByTagAndChannel(t.getId(), c.getId());
+            if (tm == null)
+                tagMngr.createTagMap(t.getId(), c.getId());
+        }
+    }
+    
+    public void deleteFavorite(NnUser user, long pId) {
+        NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
+        if (favoriteCh == null)
+            return;
+        NnProgramManager pMngr = new NnProgramManager();
+        NnProgram p = pMngr.findById(pId);
+        if (p != null) {
+            if (p.getChannelId() == favoriteCh.getId())
+                pMngr.delete(p);
+        }
+    }
+    
+    public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl) {
+        NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
+        if (favoriteCh == null) {
+            favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
+            favoriteCh.setUserIdStr(user.getIdStr());
+            favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
+            dao.save(favoriteCh);
         }
         NnProgramManager pMngr = new NnProgramManager();
-        
-        if (fileUrl != null) {
-            NnProgram p = pMngr.findByChannelAndFileUrl(c.getId(), fileUrl);
-            if (p == null) {
-                p = new NnProgram(c.getId(), name, "", imageUrl);
-                p.setFileUrl(fileUrl);
-                p.setPublic(true);
-                p.setStatus(NnProgram.STATUS_OK);                
-                pMngr.save(p);                
+        NnProgram toBeFavorite = null;
+        if (pId != 0) {
+            toBeFavorite = pMngr.findById(pId);
+            if (toBeFavorite == null) {
+                log.info("program invalid:" + pId);
+                return;
             }
-        } else {
-            NnProgram p = pMngr.findById(pId);
-            System.out.println("referenceid:" + p.getReferenceStorageId());
-            if (p != null) {
-                NnProgram existed = pMngr.findByChannelAndStorageId(c.getId(), p.getReferenceStorageId());
-                if (existed != null)
-                    return; 
-                NnProgram newP = new NnProgram(c.getId(), p.getName(), p.getIntro(), p.getImageUrl());
-                newP.setPublic(true);
-                newP.setStatus(NnProgram.STATUS_OK);
-                newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
-                String seq = p.getSeq();
-                if (seq == null)
-                    seq = "";
-                newP.setStorageId(p.getReferenceStorageId()); //channelId + seq
-                pMngr.save(newP);
-            }            
+            NnChannel c = new NnChannelManager().findById(toBeFavorite.getChannelId());
+            if (c == null) {
+                log.info("program doesn't have channel info:" + toBeFavorite.getChannelId());
+                return;
+            }
+            if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
+                if (toBeFavorite.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
+                    fileUrl = toBeFavorite.getFileUrl();
+                    name = toBeFavorite.getName();
+                    imageUrl = toBeFavorite.getImageUrl();
+                }
+            }
         }
+        if (fileUrl != null) {
+            NnProgram existed = pMngr.findByChannelAndFileUrl(favoriteCh.getId(), fileUrl);
+            if (existed == null) {
+                existed = new NnProgram(favoriteCh.getId(), name, "", imageUrl);
+                existed.setFileUrl(fileUrl);
+                existed.setPublic(true);
+                existed.setStatus(NnProgram.STATUS_OK);                
+                pMngr.save(existed);                
+            }
+            return;
+        }
+        //only 9x9 channel or reference of 9x9 channel should hit here, 
+        //and only under this circumstance the refferenceStorageId would work (doesn't work for maplestage channels)
+        String storageId = "";
+        if (toBeFavorite.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+            storageId = toBeFavorite.getStorageId();
+            
+        } else {                     
+            storageId = toBeFavorite.getReferenceStorageId();
+        }
+        NnProgram existed = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);
+        if (existed != null)
+            return;
+        
+        NnProgram newP = new NnProgram(favoriteCh.getId(), toBeFavorite.getName(), toBeFavorite.getIntro(), toBeFavorite.getImageUrl());
+        newP.setPublic(true);
+        newP.setStatus(NnProgram.STATUS_OK);
+        newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
+        String seq = toBeFavorite.getSeq();
+        if (seq == null)
+            seq = "";
+        newP.setStorageId(storageId); //channelId + seq
+        pMngr.save(newP);            
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     
     public NnChannel save(NnChannel channel) {
@@ -160,6 +216,7 @@ public class NnChannelManager {
         } else {
             this.processChannelRelatedCounter(channels);
         }
+        this.processTag(channel);
         return channel;
     }        
     
@@ -337,14 +394,14 @@ public class NnChannelManager {
 
     //find channels created by the user, aka curator
     //player true returns only good and public channels
-    public List<NnChannel> findByUser(NnUser user, int number) {
+    public List<NnChannel> findByUser(NnUser user, int limit, boolean isPlayer) {
         String userIdStr = user.getShard() + "-" + user.getId();
-        List<NnChannel> channels = dao.findByUser(userIdStr); //!!! pass the number for limited search
-        if (number == 0) {
+        List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
+        if (limit == 0) {
             return channels;
         } else {             
-            if (channels.size() > number)
-            return channels.subList(0, number);
+            if (channels.size() > limit)
+            return channels.subList(0, limit);
         }
         return channels;
     }

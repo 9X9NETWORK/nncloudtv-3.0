@@ -17,7 +17,19 @@ public class TagDao extends GenericDao<Tag> {
     public TagDao() {
         super(Tag.class);
     }
-        
+
+    public TagMap saveMap(TagMap tm) {
+        if (tm == null) {return null;}
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        try {
+            pm.makePersistent(tm);
+            tm = pm.detachCopy(tm);
+        } finally {
+            pm.close();
+        }
+        return tm;
+    }
+    
     public Tag findByName(String name) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         Tag detached = null;
@@ -35,7 +47,7 @@ public class TagDao extends GenericDao<Tag> {
         return detached;
     }
         
-    public List<TagMap> findMap(long id) {        
+    public List<TagMap> findMapByTag(long tagId) {        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<TagMap> detached = new ArrayList<TagMap>();
         try {
@@ -43,7 +55,7 @@ public class TagDao extends GenericDao<Tag> {
             query.setFilter("tagId == tagIdParam");
             query.declareParameters("long tagIdParam");
             @SuppressWarnings("unchecked")
-            List<TagMap> results = (List<TagMap>) query.execute(id);
+            List<TagMap> results = (List<TagMap>) query.execute(tagId);
             detached = (List<TagMap>)pm.detachCopyAll(results);            
         } catch (JDOObjectNotFoundException e) {
         } finally {
@@ -51,5 +63,23 @@ public class TagDao extends GenericDao<Tag> {
         }
         return detached;        
     }
-        
+
+    public TagMap findMapByTagAndChannel(long tagId, long channelId) {        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        TagMap detached = null;
+        try {
+            Query query = pm.newQuery(TagMap.class);
+            query.setFilter("tagId == tagIdParam && channelId == channelIdParam");
+            query.declareParameters("long tagIdParam, long channelIdParam");
+            @SuppressWarnings("unchecked")
+            List<TagMap> results = (List<TagMap>) query.execute(tagId, channelId);
+            if (results.size() > 0)
+                detached = pm.detachCopy(results.get(0));            
+        } catch (JDOObjectNotFoundException e) {
+        } finally {
+            pm.close();
+        }
+        return detached;        
+    }
+    
 }

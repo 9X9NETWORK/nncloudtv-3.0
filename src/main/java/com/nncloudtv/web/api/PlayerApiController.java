@@ -1800,6 +1800,8 @@ public class PlayerApiController {
      * <p> For non-Youtube episode, supply channel and program id. 
      * Supply the rest (video, name, image) for Youtube channels.
      * </p> 
+     * <p> delete equalst to true will delete the exising favorite program.
+     * For deletion, user and program is expected.
      * 
      * @param user user token
      * @param channel channel id
@@ -1807,7 +1809,7 @@ public class PlayerApiController {
      * @param video youtube video url
      * @param name video name
      * @param image image url
-     * @param del true or false. default is false
+     * @param delete true or false. default is false
      * @param req
      * @param resp
      * @return status
@@ -1819,14 +1821,15 @@ public class PlayerApiController {
             @RequestParam(value="video", required=false) String fileUrl,
             @RequestParam(value="name", required=false) String name,
             @RequestParam(value="image", required=false) String imageUrl,            
-            @RequestParam(value="del", required=false) String del,
+            @RequestParam(value="delete", required=false) String delete,
             HttpServletRequest req,
             HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
-            boolean delete = Boolean.parseBoolean(del);
+            boolean del = Boolean.parseBoolean(delete);
+            System.out.println("delete:" + delete);
             this.prepService(req, true);        
-            output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, delete);
+            output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, del);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

@@ -209,7 +209,8 @@ public class NnProgram implements Serializable {
     public String getStorageId() {
         return storageId;
     }
-    
+
+    //used in favorite program, to reference the real 9x9 program (maplestage, youtube channel do not apply here) 
     public String getReferenceStorageId() {
         return this.getChannelId() + ";" + this.getSeq();        
     }

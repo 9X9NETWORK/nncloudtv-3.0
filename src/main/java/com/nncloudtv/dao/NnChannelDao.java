@@ -135,21 +135,30 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         return detached;
     }
     
-    public List<NnChannel> findByUser(String userIdStr) {
+    @SuppressWarnings("unchecked")
+    public List<NnChannel> findByUser(String userIdStr, int limit, boolean isPlayer) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<NnChannel> detached = new ArrayList<NnChannel>(); 
+        List<NnChannel> channels = new ArrayList<NnChannel>(); 
         try {
             Query q = pm.newQuery(NnChannel.class);
-            q.setFilter("userIdStr == userIdStrParam");
-            q.declareParameters("String userIdStrParam");
-            q.setOrdering("createDate asc");
-            @SuppressWarnings("unchecked")
-            List<NnChannel> channels = (List<NnChannel>) q.execute(userIdStr);
-            detached = (List<NnChannel>)pm.detachCopyAll(channels);
+            q.setOrdering("cntSubscribe desc");
+            if (limit != 0)
+                q.setRange(0, limit);            
+            if (isPlayer) {
+                q.setFilter("userIdStr == userIdStrParam && isPublic == isPublicParam && status == statusParam");
+                q.declareParameters("String userIdStrParam, boolean isPublicParam, short statusParam");
+                channels = (List<NnChannel>) q.execute(userIdStr, true, NnChannel.STATUS_SUCCESS);
+            } else {
+                q.setFilter("userIdStr == userIdStrParam");
+                q.declareParameters("String userIdStrParam");
+                channels = (List<NnChannel>) q.execute(userIdStr);
+            }
+            
+            channels = (List<NnChannel>)pm.detachCopyAll(channels);
         } finally {
             pm.close();
         }
-        return detached;
+        return channels;
     }    
     
     public NnChannel findBySourceUrl(String url) {
@@ -172,15 +181,16 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         return channel;                
     }        
 
-    public NnChannel findByUserIdStr(String userIdStr) {
+    public NnChannel findFavorite(String userIdStr) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         NnChannel channel = null;
         try {
             Query q = pm.newQuery(NnChannel.class);
-            q.setFilter("userIdStr == userIdStrParam");
-            q.declareParameters("String userIdStrParam");
+            q.setFilter("userIdStr == userIdStrParam && contentType == contentTypeParam");
+            q.declareParameters("String userIdStrParam, short contentTypeParam");
+            q.setOrdering("cntSubscribe");
             @SuppressWarnings("unchecked")
-            List<NnChannel> channels = (List<NnChannel>) q.execute(userIdStr);
+            List<NnChannel> channels = (List<NnChannel>) q.execute(userIdStr, NnChannel.CONTENTTYPE_FAVORITE);
             if (channels.size() > 0) {
                 channel = pm.detachCopy(channels.get(0));
             }

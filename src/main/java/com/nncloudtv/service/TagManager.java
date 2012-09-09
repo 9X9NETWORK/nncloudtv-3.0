@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,7 +16,7 @@ import com.nncloudtv.model.TagMap;
 public class TagManager {
 
     protected static final Logger log = Logger.getLogger(TagManager.class.getName());
-    private TagDao dao = new TagDao();
+    private TagDao dao = new TagDao();    
 
     //player=true returns only "good" channels
     public List<NnChannel> findChannelsByTag(String name, boolean player) {        
@@ -23,7 +24,7 @@ public class TagManager {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnChannelManager chMngr = new NnChannelManager();
         if (tag != null) {            
-            List<TagMap> map = dao.findMap(tag.getId());
+            List<TagMap> map = dao.findMapByTag(tag.getId());
             for (TagMap m : map) {
                 NnChannel c = chMngr.findById(m.getChannelId());
                 if (c != null)
@@ -36,5 +37,20 @@ public class TagManager {
     public Tag findByName(String name) {
         Tag tag = dao.findByName(name);
         return tag;
+    }
+    
+    public void save(Tag tag) {
+        tag.setUpdateDate(new Date());
+        dao.save(tag);
+    }
+
+    public void createTagMap(long tagId, long channelId) {
+        TagMap map = new TagMap(tagId, channelId);
+        dao.saveMap(map);
+    }
+    
+    
+    public TagMap findByTagAndChannel(long tagId, long channelId) {
+        return dao.findMapByTagAndChannel(tagId, channelId);
     }
 }

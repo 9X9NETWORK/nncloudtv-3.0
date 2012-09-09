@@ -78,7 +78,7 @@ public class CategoryManager {
         HashSet<Long> set = new HashSet<Long>();
         List<NnChannel> matched = new ArrayList<NnChannel>();
         if (tag != null) {
-            List<TagMap> map = tagDao.findMap(tag.getId());
+            List<TagMap> map = tagDao.findMapByTag(tag.getId());
             for (TagMap m : map) {
                 set.add(m.getChannelId());
             }
