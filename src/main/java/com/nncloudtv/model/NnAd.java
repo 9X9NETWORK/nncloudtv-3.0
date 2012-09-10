@@ -38,6 +38,10 @@ public class NnAd implements Serializable {
     @Persistent
     private Date updateDate;
     
+    public NnAd(long programId) {
+        this.programId = programId;
+    }
+
     public Date getCreateDate() {
         return createDate;
     }

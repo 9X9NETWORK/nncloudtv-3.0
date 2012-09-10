@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.NnAd;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
+import com.nncloudtv.service.NnAdManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
 import com.nncloudtv.service.NnProgramManager;
@@ -489,8 +491,7 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "categories", method = RequestMethod.GET)
     public @ResponseBody
-    List<Category> getCategories(HttpServletRequest req,
-            HttpServletResponse resp) {
+    List<Category> categories(HttpServletRequest req, HttpServletResponse resp) {
         
         class CategoryComparator implements Comparator<Category> {
             public int compare(Category category1, Category category2) {
@@ -705,4 +706,93 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.DELETE)
+    public @ResponseBody String shoppingInfoDelete(HttpServletRequest req, HttpServletResponse resp,@PathVariable(value = "programId") String programIdStr) {
+        
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnAdManager adMngr = new NnAdManager();
+        
+        NnAd nnad = adMngr.findByProgramId(programId);
+        if (nnad != null) {
+            adMngr.delete(nnad);
+            return "OK";
+        } else {
+            return "Not Found";
+        }
+        
+    }
+    
+    @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.POST)
+    public @ResponseBody
+    NnAd shoppingInfoCreate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable(value = "programId") String programIdStr) {        
+        
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnAdManager adMngr = new NnAdManager();
+        
+        NnAd nnad = adMngr.findByProgramId(programId);
+        if (nnad == null) {
+            nnad = new NnAd(programId);
+        }
+        
+        // merchantEmail
+        String merchantEmail = req.getParameter("merchantEmail");
+        if (merchantEmail != null) {
+            nnad.setMerchantEmail(merchantEmail);
+        }
+        
+        // message
+        String message = req.getParameter("message");
+        if (message != null) {
+            nnad.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
+        }
+        
+        // url
+        String url = req.getParameter("url");
+        if (url != null) {
+            nnad.setUrl(url);
+        }
+        
+        resp.setStatus(201);
+        
+        return adMngr.save(nnad);
+    }
+    
+    @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.GET)
+    public @ResponseBody
+    NnAd shoppingInfo(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable(value = "programId") String programIdStr) {
+        
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnAdManager adMngr = new NnAdManager();
+        
+        return adMngr.findByProgramId(programId);
+    }
 }
