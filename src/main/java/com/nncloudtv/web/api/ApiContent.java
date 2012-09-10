@@ -377,7 +377,7 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "channels/{channelId}", method = RequestMethod.PUT)
     public @ResponseBody
-    NnChannel updateChannel(HttpServletRequest req, HttpServletResponse resp,
+    NnChannel channelUpdate(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable("channelId") String channelIdStr) {
         
         Long channelId = null;
