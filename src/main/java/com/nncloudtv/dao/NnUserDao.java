@@ -66,7 +66,9 @@ public class NnUserDao extends GenericDao<NnUser> {
             NnUser user = (NnUser)pm.getObjectById(NnUser.class, id);
             if (user == null)
                 pm = NnUserDao.getPersistenceManager((short)2, null);
-            detached = (NnUser)pm.detachCopy(user);
+            else
+                detached = user;
+            //detached = (NnUser)pm.detachCopy(user); // Louis: this line cause internal error
         } catch (JDOObjectNotFoundException e) {
         } finally {
             pm.close();
