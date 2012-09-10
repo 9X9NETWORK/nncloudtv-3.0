@@ -439,9 +439,9 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "channels/{channelId}/programs", method = RequestMethod.GET)
     public @ResponseBody
-    List<NnProgram> getProgramList(
-            @PathVariable("channelId") String channelIdStr,
-            HttpServletRequest req, HttpServletResponse resp) {
+    List<NnProgram> channelPrograms(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
         
         class NnProgramSeqComparator implements Comparator<NnProgram> {
             
