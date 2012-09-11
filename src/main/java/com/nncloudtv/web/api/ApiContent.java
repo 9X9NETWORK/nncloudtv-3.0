@@ -932,5 +932,63 @@ public class ApiContent extends ApiGeneric {
         
         return titleCardMngr.save(titleCard);
     }
+    
+    @RequestMapping(value = "title_cards/{channelId}/{seq}/{subSeq}", method = RequestMethod.DELETE)
+    public @ResponseBody
+    String titleCardDelete(HttpServletResponse resp, HttpServletRequest req,
+            @PathVariable("channelId") String channelIdStr,
+            @PathVariable("seq") String seqStr,
+            @PathVariable("subSeq") String subSeqStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        Short seq = null;
+        try {
+            seq = Short.valueOf(seqStr);
+        } catch (NumberFormatException e) {
+        }
+        if (seq == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        Short subSeq = null;
+        try {
+            subSeq = Short.valueOf(subSeqStr);
+        } catch (NumberFormatException e) {
+        }
+        if (subSeq == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        
+        
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> titleCards = titleCardMngr.findByChannelAndSeqAndSubSeq(channelId, seq, subSeq);
+        if (titleCards.size()==0) {
+            notFound(resp, "TitleCard Not Found");
+            return null;
+        }
+        for (int i = 0; i < titleCards.size(); i++) {
+            titleCardMngr.delete(titleCards.get(i));
+        }
+        
+        return "OK";
+    }
                         
 }

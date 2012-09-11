@@ -19,6 +19,9 @@ public class TitleCardManager {
     private TitleCardDao dao = new TitleCardDao();
     
     public TitleCard save(TitleCard card) {
+        if (card==null) {
+            return null;
+        }
         Date now = new Date();
         card.setUpdateDate(now);
         card.setPlayerSyntax(this.generatePlayerSyntax(card));
@@ -26,8 +29,14 @@ public class TitleCardManager {
     }
     
     public TitleCard create(TitleCard card) {
-        this.save(card);
-        return card;
+        return this.save(card);
+    }
+    
+    public void delete(TitleCard card) {
+        if (card == null) {
+            return;
+        }
+        dao.delete(card);
     }
     
     public List<TitleCard> findByChannelAndSeq(long channelId, String seq) {
