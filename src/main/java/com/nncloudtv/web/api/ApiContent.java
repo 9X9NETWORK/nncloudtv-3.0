@@ -883,6 +883,53 @@ public class ApiContent extends ApiGeneric {
         
         // do set and save
         
+        String duration = req.getParameter("duration");
+        if (duration != null) {
+            titleCard.setMessage(duration);
+        }
+        
+        String message = req.getParameter("message");
+        if (message != null) {
+            titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
+        }
+        
+        String size = req.getParameter("size");
+        if (size != null) {
+            titleCard.setMessage(size);
+        }
+        
+        String color = req.getParameter("color");
+        if (color != null) {
+            titleCard.setMessage(color);
+        }
+        
+        String effect = req.getParameter("effect");
+        if (effect != null) {
+            titleCard.setMessage(effect);
+        }
+        
+        String align = req.getParameter("align");
+        if (align != null) {
+            titleCard.setMessage(align);
+        }
+        
+        String bgColor = req.getParameter("bgColor");
+        if (bgColor != null) {
+            titleCard.setMessage(bgColor);
+        }
+        
+        String style = req.getParameter("style");
+        if (style != null) {
+            titleCard.setMessage(style);
+        }
+        
+        String bgImage = req.getParameter("bgImage");
+        if (bgImage != null) {
+            titleCard.setMessage(bgImage);
+        }
+        
+        
+        
         return titleCardMngr.save(titleCard);
     }
                         

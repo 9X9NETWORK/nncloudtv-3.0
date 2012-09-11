@@ -2,6 +2,7 @@ package com.nncloudtv.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -18,9 +19,10 @@ public class TitleCardManager {
     private TitleCardDao dao = new TitleCardDao();
     
     public TitleCard save(TitleCard card) {
+        Date now = new Date();
+        card.setUpdateDate(now);
         card.setPlayerSyntax(this.generatePlayerSyntax(card));
-        dao.save(card);
-        return card;
+        return dao.save(card);
     }
     
     public TitleCard create(TitleCard card) {
