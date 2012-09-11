@@ -17,7 +17,8 @@ public class NnUserLibraryManager {
     
     private NnUserLibraryDao libDao = new NnUserLibraryDao();
     
-    public NnUserLibrary save(NnUserLibrary lib) {        
+    public NnUserLibrary save(NnUserLibrary lib) {
+        if (lib == null) {return null;}
         Date now = new Date();
         lib.setUpdateDate(now);        
         return libDao.save(lib);

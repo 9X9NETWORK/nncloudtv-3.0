@@ -279,6 +279,108 @@ public class ApiUser extends ApiGeneric {
         return "OK";
     }
     
+    @RequestMapping(value = "users/{userId}/my_uploads/{id}", method = RequestMethod.GET)
+    public @ResponseBody
+    NnUserLibrary userUpload(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("userId") String userIdStr,
+            @PathVariable("id") String idStr) {
+        
+        Long userId = null;
+        try {
+            userId = Long.valueOf(userIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (userId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        
+        NnUser user = userMngr.findById(userId);
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        Long id = null;
+        
+        try {
+            id = Long.valueOf(idStr);
+        } catch (NumberFormatException e) {
+        }
+        if (id == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserLibraryManager libMngr = new NnUserLibraryManager();
+        NnUserLibrary lib = libMngr.findById(id);
+        if (lib == null) {
+            notFound(resp, "Item Not Found");
+            return null;
+        }
+        
+        return lib;
+    }
+    
+    @RequestMapping(value = "users/{userId}/my_uploads/{id}", method = RequestMethod.PUT)
+    public @ResponseBody
+    NnUserLibrary userUploadUpdate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("userId") String userIdStr,
+            @PathVariable("id") String idStr) {
+        
+        Long userId = null;
+        try {
+            userId = Long.valueOf(userIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (userId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        
+        NnUser user = userMngr.findById(userId);
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        Long id = null;
+        
+        try {
+            id = Long.valueOf(idStr);
+        } catch (NumberFormatException e) {
+        }
+        if (id == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserLibraryManager libMngr = new NnUserLibraryManager();
+        NnUserLibrary lib = libMngr.findById(id);
+        if (lib == null) {
+            notFound(resp, "Item Not Found");
+            return null;
+        }
+        
+        
+        
+        String name = req.getParameter("name");
+        if (name != null) {
+            lib.setName(name);
+        }
+        
+        String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl != null) {
+            lib.setImageUrl(imageUrl);
+        }
+                
+        return libMngr.save(lib);
+    }
+    
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.GET)
     public @ResponseBody List<NnChannel> userChannels(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
