@@ -16,6 +16,8 @@ public class ApiGeneric {
 	public static final String INVALID_PATH_PARAMETER = "Invalid Path Parameter";
 	public static final String INVALID_PARAMETER = "Invalid Parameter";
 	public static final String PLAIN_TEXT_UTF8 = "plain/text; charset=utf-8";
+	public static final String MESSAGE = "Wrong cannot afford defeat but right can";
+	public static final String TAGORE = "Tagore";
 	
 	public void unauthorized(HttpServletResponse resp) {
 		try {
@@ -29,11 +31,12 @@ public class ApiGeneric {
 		
 		try {
 			resp.reset();
+            resp.setContentType(PLAIN_TEXT_UTF8);
+            resp.setHeader(TAGORE, MESSAGE);
 			if (message != null) {
 				log.warning(message);
 				resp.getWriter().println(message);
 			}
-			resp.setContentType(PLAIN_TEXT_UTF8);
 			resp.setStatus(404);
 			resp.flushBuffer();
 		} catch (IOException e) {
@@ -54,11 +57,12 @@ public class ApiGeneric {
 		
 		try {
 			resp.reset();
+            resp.setContentType(PLAIN_TEXT_UTF8);
+            resp.setHeader(TAGORE, MESSAGE);
 			if (message != null) {
 				log.warning(message);
 				resp.getWriter().println(message);
 			}
-			resp.setContentType(PLAIN_TEXT_UTF8);
 			resp.setStatus(400);
 			resp.flushBuffer();
 		} catch (IOException e) {
@@ -73,9 +77,10 @@ public class ApiGeneric {
 		
 		try {
 			resp.reset();
+            resp.setContentType(PLAIN_TEXT_UTF8);
+            resp.setHeader(TAGORE, MESSAGE);
 			PrintWriter writer = resp.getWriter();
 			writer.println(e.getMessage());
-			resp.setContentType(PLAIN_TEXT_UTF8);
 			resp.setStatus(500);
 			resp.flushBuffer();
 		} catch (IOException ex) {
