@@ -341,7 +341,7 @@ public class ApiContent extends ApiGeneric {
         
         NnProgramManager programMngr = new NnProgramManager();
         NnProgram program = programMngr.findById(programId);
-        if (program != null) {
+        if (program == null) {
             return "Program Not Found";
         }
         
@@ -672,7 +672,7 @@ public class ApiContent extends ApiGeneric {
     // dirty
     @RequestMapping(value = "title_cards/{channelId}/{seq}", method = RequestMethod.GET)
     public @ResponseBody
-    List<TitleCard> getTitleCards(
+    List<TitleCard> TitleCards(
             @PathVariable("channelId") String channelIdStr,
             @PathVariable("seq") String seq, HttpServletRequest req,
             HttpServletResponse resp) {
@@ -706,6 +706,7 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+
     @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.DELETE)
     public @ResponseBody String shoppingInfoDelete(HttpServletRequest req, HttpServletResponse resp,@PathVariable(value = "programId") String programIdStr) {
         
@@ -795,4 +796,92 @@ public class ApiContent extends ApiGeneric {
         
         return adMngr.findByProgramId(programId);
     }
+
+    @RequestMapping(value = "title_cards/{channelId}/{seq}/{subSeq}", method = RequestMethod.POST)
+    public @ResponseBody
+    TitleCard titleCardAdd(HttpServletResponse resp, HttpServletRequest req,
+            @PathVariable("channelId") String channelIdStr,
+            @PathVariable("seq") String seqStr,
+            @PathVariable("subSeq") String subSeqStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        Short seq = null;
+        try {
+            seq = Short.valueOf(seqStr);
+        } catch (NumberFormatException e) {
+        }
+        if (seq == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        Short subSeq = null;
+        try {
+            subSeq = Short.valueOf(subSeqStr);
+        } catch (NumberFormatException e) {
+        }
+        if (subSeq == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // type
+        String typeStr = req.getParameter("type");
+        if (typeStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        Short type = null;
+        try {
+            type = Short.valueOf(typeStr);
+        } catch (NumberFormatException e) {
+        }
+        if (type == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        if ((type == TitleCard.TYPE_BEGIN) || (type == TitleCard.TYPE_END)) {
+            // pass
+        } else {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        
+        
+        TitleCard titleCard = null;
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> titleCards = titleCardMngr.findByChannelAndSeqAndSubSeq(channelId, seq, subSeq);
+        for (int i = 0; i < titleCards.size(); i++) {
+            if (titleCards.get(i).getType() == type) {
+                titleCard = titleCards.get(i); // read as it already exist, update operation
+                break;
+            }
+        }
+        if (titleCard == null) {
+            titleCard = new TitleCard(channelId, seq, subSeq, type); // create as it not exist, add operation
+            titleCard = titleCardMngr.create(titleCard);
+        }
+        
+        
+        // do set and save
+        
+        return titleCardMngr.save(titleCard);
+    }
+                        
 }

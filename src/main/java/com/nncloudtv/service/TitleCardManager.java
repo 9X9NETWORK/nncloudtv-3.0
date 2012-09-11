@@ -23,8 +23,17 @@ public class TitleCardManager {
         return card;
     }
     
+    public TitleCard create(TitleCard card) {
+        this.save(card);
+        return card;
+    }
+    
     public List<TitleCard> findByChannelAndSeq(long channelId, String seq) {
         return dao.findByChannelAndSeq(channelId, seq);
+    }
+    
+    public List<TitleCard> findByChannelAndSeqAndSubSeq(long channelId, int seq, int subSeq) {
+        return dao.findByChannelAndSeqAndSubSeq(channelId, String.format("%08d", seq), String.format("%08d", subSeq));
     }
     
     private String generatePlayerSyntax(TitleCard card) {

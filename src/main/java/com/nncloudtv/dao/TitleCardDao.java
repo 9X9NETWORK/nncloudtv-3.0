@@ -51,4 +51,19 @@ public class TitleCardDao extends GenericDao<TitleCard> {
         return detached;
     }
     
+    public List<TitleCard> findByChannelAndSeqAndSubSeq(long channelId, String seq, String subSeq) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<TitleCard> detached = new ArrayList<TitleCard>();
+        try {
+            Query q = pm.newQuery(TitleCard.class);
+            q.setFilter("channelId == " + channelId + " & seq == '" + seq + "'" + " & subSeq == '" + subSeq + "'");
+            @SuppressWarnings("unchecked")
+            List<TitleCard> cards = (List<TitleCard>) q.execute(channelId, seq, subSeq);
+            detached = (List<TitleCard>) pm.detachCopyAll(cards);
+        } finally {
+            pm.close();
+        }
+        return detached;
+    }
+    
 }

@@ -79,6 +79,15 @@ public class TitleCard implements Serializable {
 
     @Persistent
     private Date updateDate;
+    
+    public TitleCard(long channelId, int seq, int subSeq, short type) {
+        this.channelId = channelId;
+        this.setSeq(seq);
+        this.setSubSeq(subSeq);
+        this.type = type;
+        Date now = new Date();        
+        this.updateDate = now;
+    }
 
     public Date getUpdateDate() {
         return updateDate;
@@ -167,6 +176,10 @@ public class TitleCard implements Serializable {
     public void setSeq(String seq) {
         this.seq = seq;
     }
+    
+    public void setSeq(int seq) {
+        this.seq = String.format("%08d", seq);
+    }
 
     public String getSubSeq() {
         return subSeq;
@@ -174,6 +187,10 @@ public class TitleCard implements Serializable {
 
     public void setSubSeq(String subSeq) {
         this.subSeq = subSeq;
+    }
+    
+    public void setSubSeq(int subSeq) {
+        this.subSeq = String.format("%08d", subSeq);
     }
 
     public String getSize() {
