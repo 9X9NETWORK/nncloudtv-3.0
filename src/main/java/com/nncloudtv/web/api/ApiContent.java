@@ -347,6 +347,8 @@ public class ApiContent extends ApiGeneric {
         
         programMngr.delete(program);
         
+        // TODO: reorder other programs
+        
         return "OK";
     }
     
@@ -528,7 +530,7 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.GET)
     public @ResponseBody
-    List<NnProgram> getProgramListBySeq(HttpServletResponse resp,
+    List<NnProgram> episodePrograms(HttpServletResponse resp,
             HttpServletRequest req,
             @PathVariable("channelId") String channelIdStr,
             @PathVariable("seq") String seqStr) {
@@ -672,10 +674,10 @@ public class ApiContent extends ApiGeneric {
     // dirty
     @RequestMapping(value = "title_cards/{channelId}/{seq}", method = RequestMethod.GET)
     public @ResponseBody
-    List<TitleCard> TitleCards(
+    List<TitleCard> titleCards(HttpServletRequest req,
+            HttpServletResponse resp,
             @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seq, HttpServletRequest req,
-            HttpServletResponse resp) {
+            @PathVariable("seq") String seq) {
         
         Long channelId = null;
         try {
@@ -799,7 +801,7 @@ public class ApiContent extends ApiGeneric {
 
     @RequestMapping(value = "title_cards/{channelId}/{seq}/{subSeq}", method = RequestMethod.POST)
     public @ResponseBody
-    TitleCard titleCardAdd(HttpServletResponse resp, HttpServletRequest req,
+    TitleCard titleCardCreate(HttpServletResponse resp, HttpServletRequest req,
             @PathVariable("channelId") String channelIdStr,
             @PathVariable("seq") String seqStr,
             @PathVariable("subSeq") String subSeqStr) {

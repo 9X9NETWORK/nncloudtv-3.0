@@ -50,13 +50,21 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        NnUserManager userMngr = new NnUserManager();
+        NnUser user = null;
+        
         if (shard == null) {
-            shard = 0;
+            user = userMngr.findById(userId);
+        } else {
+            user = userMngr.findById(userId, (short) shard);
         }
         
-        NnUserManager userMngr = new NnUserManager();
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
         
-        return userMngr.findById(userId, shard);
+        return user;
     }
     
     @RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
@@ -272,7 +280,7 @@ public class ApiUser extends ApiGeneric {
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.GET)
-    public @ResponseBody List<NnChannel> userChannelList(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+    public @ResponseBody List<NnChannel> userChannels(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
         List<NnChannel> result = new ArrayList<NnChannel>();
         

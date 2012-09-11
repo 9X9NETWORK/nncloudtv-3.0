@@ -238,9 +238,9 @@ public class NnUserManager {
         return dao.findByFbId(fbId);
     }
     
-    //TODO removed
+    // find user by ID without providing shard number
     public NnUser findById(long id) {
-        return dao.findById(id, (short)0);
+        return dao.findById(id);
     }
     
     public NnUser findById(long id, short shard) {

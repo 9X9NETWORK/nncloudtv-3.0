@@ -59,6 +59,43 @@ public class NnUserDao extends GenericDao<NnUser> {
         return detached;
     }
     
+    @Override // looks both two shard DB
+    public NnUser findById(long id) {
+        
+        NnUser user = null;
+        user = findById(id, (short) 1);
+        if (user == null) {
+            return findById(id, (short) 2);
+        } else {
+            return user;
+        }
+    }
+    
+    public NnUser findById(long id, short shard) {
+        
+        NnUser user = null;
+        PersistenceManager pm = null;
+        if (shard == 0) {
+            return findById(id);
+        } else if (shard > 1) {
+            pm = PMF.getNnUser2().getPersistenceManager();
+        } else {
+            pm = PMF.getNnUser1().getPersistenceManager();
+        }
+        
+        try {
+            
+            user = pm.getObjectById(NnUser.class, id);
+            
+        } catch (JDOObjectNotFoundException e) {
+        } finally {
+            pm.close();
+        }
+        
+        return user;
+    }
+    
+    /**
     public NnUser findById(long id, short shard) {
         PersistenceManager pm = NnUserDao.getPersistenceManager((short) shard, null);
         NnUser detached = null;
@@ -75,6 +112,7 @@ public class NnUserDao extends GenericDao<NnUser> {
         }
         return detached;        
     }    
+    **/
     
     //use either shard or token to determine partition, default shard 1 if nothing
     public static PersistenceManager getPersistenceManager(short shard, String token) {
