@@ -882,7 +882,7 @@ public class ApiContent extends ApiGeneric {
         
         
         // do set and save
-        
+        // TODO: need to fix
         String duration = req.getParameter("duration");
         if (duration != null) {
             titleCard.setMessage(duration);
