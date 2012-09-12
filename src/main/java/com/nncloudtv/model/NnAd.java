@@ -9,16 +9,13 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable(table="nn_ad", detachable="true")
+@PersistenceCapable(table="nnad", detachable="true")
 public class NnAd implements Serializable {
     private static final long serialVersionUID = 4726458513900433576L;
-
+    
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
-
-    @Persistent
-    private long programId;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -38,10 +35,6 @@ public class NnAd implements Serializable {
     @Persistent
     private Date updateDate;
     
-    public NnAd(long programId) {
-        this.programId = programId;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -64,14 +57,6 @@ public class NnAd implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(long programId) {
-        this.programId = programId;
     }
 
     public String getMerchantEmail() {

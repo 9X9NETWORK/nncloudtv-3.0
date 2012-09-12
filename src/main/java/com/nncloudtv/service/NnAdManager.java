@@ -10,14 +10,14 @@ public class NnAdManager {
     
     protected static final Logger log = Logger.getLogger(NnAdManager.class.getName());
     
-    private NnAdDao adDao = new NnAdDao();
+    private NnAdDao dao = new NnAdDao();
     
     public NnAd findByProgramId(long programId) {
-        return adDao.findByProgramId(programId);
+        return dao.findByProgramId(programId);
     }
     
     public void delete(NnAd nnad) {
-        adDao.delete(nnad);
+        dao.delete(nnad);
     }
     
     public NnAd save(NnAd nnad) {
@@ -29,7 +29,7 @@ public class NnAdManager {
         }
         nnad.setUpdateDate(now);
         
-        return adDao.save(nnad);
+        return dao.save(nnad);
     }
     
 }

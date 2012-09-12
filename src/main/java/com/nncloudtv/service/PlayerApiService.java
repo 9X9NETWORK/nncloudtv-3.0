@@ -134,7 +134,8 @@ public class PlayerApiService {
             output += assembleKeyValue("lastLogin", String.valueOf(user.getUpdateDate().getTime()));
             output += assembleKeyValue("sphere", user.getSphere());
             output += assembleKeyValue("ui-lang", user.getLang());            
-            output += assembleKeyValue("userid", String.valueOf(user.getId()));
+            output += assembleKeyValue("userid", String.valueOf(user.getIdStr()));
+            output += assembleKeyValue("curator", String.valueOf(user.getProfileUrl()));
             String fbUser = "0";
             if (user.getFbId() != null)
                 fbUser = "1";
@@ -492,10 +493,10 @@ public class PlayerApiService {
                 chs = chMngr.findBillboard(Tag.TRENDING, lang);               
             }
             if (s.equals("recommend")) {
-                chs = new RecommendService().findRecommend(userToken);
+                chs = new RecommendService().findRecommend(userToken, lang);
             }
             if (s.equals("mayLike")) {
-                chs = new RecommendService().findMayLike(userToken, channel);                
+                chs = new RecommendService().findMayLike(userToken, channel, lang);                
             }
             String output = chMngr.composeChannelLineup(chs);
             result.add(output);
@@ -513,11 +514,12 @@ public class PlayerApiService {
                                 boolean setInfo, 
                                 boolean isRequired) { 
                                                                
-        //verify input                
-        if ((userToken == null && userInfo == true) || 
+        //verify input                        
+        if (((userToken == null && userInfo == true) || 
             (userToken == null && channelIds == null) || 
-            (userToken == null && setInfo == true) ) {
-            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+            (userToken == null && setInfo == true))) {
+            if (curatorIdStr == null && subscriptions == null)
+                return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
         List<String> result = new ArrayList<String>();
         NnUser user = null;
@@ -1401,11 +1403,25 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String search(String text, String stack, HttpServletRequest req) {
+    public String search(String text, String stack, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         //matched channels
-        List<NnChannel> channels = NnChannelManager.search(text, false); 
+        //List<NnChannel> channels = NnChannelManager.search(text, false);
+        String userToken = CookieHelper.getCookie(req, CookieHelper.USER);
+        boolean guest = NnUserManager.isGuestByToken(userToken);
+        short userShard = 1;
+        long userId = 1;
+        String sphere = LangTable.LANG_EN;
+        if (!guest) {
+            NnUser u = userMngr.findByToken(userToken);
+            if (u != null) {
+                userShard = u.getShard();
+                userId = u.getId();
+                sphere = u.getSphere();
+            }            
+        }        
+        List<NnChannel> channels = chMngr.searchBySvi(text, userShard, userId, sphere);
         String[] result = {"", "", "", ""}; //count, curator along with channels, channel, suggestion channel
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
@@ -1526,7 +1542,7 @@ public class PlayerApiService {
 		}
 		//3. featured curators
 		log.info ("[quickLogin] featured curators");
-		String curatorInfo = this.curator(null, null, "featured", req);
+		String curatorInfo = this.curator(null, "featured", req);
 		data.add(curatorInfo);
 		//4. trending
 		log.info ("[quickLogin] trending channels");
@@ -1733,17 +1749,12 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
-    public String curator(String id, String profile, String stack, HttpServletRequest req) {
-        if (id == null && stack == null && profile == null) {
+    public String curator(String profile, String stack, HttpServletRequest req) {
+        if (stack == null && profile == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
         List<NnUser> users = new ArrayList<NnUser>();
-        if (id != null) {
-            NnUser user = userMngr.findByIdStr(id);
-            if (user == null)
-                return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-            users.add(user);
-        } else if (profile != null) {
+        if (profile != null) {
             NnUser user = userMngr.findByProfileUrl(profile);
             if (user == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);

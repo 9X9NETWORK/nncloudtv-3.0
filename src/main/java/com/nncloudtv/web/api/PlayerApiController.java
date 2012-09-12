@@ -1779,15 +1779,14 @@ public class PlayerApiController {
      */
     @RequestMapping(value="curator", produces = "text/plain; charset=utf-8")
     public @ResponseBody String curator(
-            @RequestParam(value="curator", required=false) String userId,
-            @RequestParam(value="profile", required=false) String profile,
+            @RequestParam(value="curator", required=false) String profile,             
             @RequestParam(value="stack", required=false) String stack,
             HttpServletRequest req,
             HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);        
-            output = playerApiService.curator(userId, profile, stack, req);
+            output = playerApiService.curator(profile, stack, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

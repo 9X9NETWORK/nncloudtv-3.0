@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.FacebookLib;
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
@@ -159,37 +160,33 @@ public class NnChannelManager {
             }
         }
         if (fileUrl != null) {
-            NnProgram existed = pMngr.findByChannelAndFileUrl(favoriteCh.getId(), fileUrl);
-            if (existed == null) {
-                existed = new NnProgram(favoriteCh.getId(), name, "", imageUrl);
-                existed.setFileUrl(fileUrl);
-                existed.setPublic(true);
-                existed.setStatus(NnProgram.STATUS_OK);                
-                pMngr.save(existed);                
+            NnProgram existFavorite = pMngr.findByChannelAndFileUrl(favoriteCh.getId(), fileUrl);
+            if (existFavorite == null) {
+                existFavorite = new NnProgram(favoriteCh.getId(), name, "", imageUrl);
+                existFavorite.setFileUrl(fileUrl);
+                existFavorite.setPublic(true);
+                existFavorite.setStatus(NnProgram.STATUS_OK);                
+                pMngr.save(existFavorite);                
             }
             return;
         }
-        //only 9x9 channel or reference of 9x9 channel should hit here, 
-        //and only under this circumstance the refferenceStorageId would work (doesn't work for maplestage channels)
+        //only 9x9 channel or reference of 9x9 channel should hit here,  
         String storageId = "";
         if (toBeFavorite.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
             storageId = toBeFavorite.getStorageId();
-            
         } else {                     
-            storageId = toBeFavorite.getReferenceStorageId();
+            storageId = String.valueOf(toBeFavorite.getEpisodeId());
         }
-        NnProgram existed = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);
-        if (existed != null)
+        NnProgram existFavorite = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);        
+        if (existFavorite != null)
             return;
         
         NnProgram newP = new NnProgram(favoriteCh.getId(), toBeFavorite.getName(), toBeFavorite.getIntro(), toBeFavorite.getImageUrl());
         newP.setPublic(true);
         newP.setStatus(NnProgram.STATUS_OK);
         newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
-        String seq = toBeFavorite.getSeq();
-        if (seq == null)
-            seq = "";
-        newP.setStorageId(storageId); //channelId + seq
+        newP.setStorageId(storageId);
+        newP.setUpdateDate(new Date());
         pMngr.save(newP);            
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     
@@ -223,6 +220,27 @@ public class NnChannelManager {
     public void processChannelRelatedCounter(NnChannel[] channels) {
     }
         
+    public List<NnChannel> searchBySvi(String queryStr, short userShard, long userId, String sphere) {
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        String url = "http://svi.9x9.tv/api/search.php?";
+        url += "shard=" + userShard;
+        url += "&userid=" + userId;
+        url += "&lang=" + sphere;        
+        url += "&s=queryStr";
+        log.info("svi query url:" + url);
+        String chStr = NnNetUtil.urlGet(url);
+        log.info("return from svi:" + chStr);
+        if (chStr != null) {
+            String chs[] = chStr.split(",");
+            for (String cId : chs) {
+                NnChannel c = this.findById(Long.parseLong(cId));
+                if (c != null)
+                    channels.add(c);
+            }
+        }
+        return channels;
+    }
+    
     public static List<NnChannel> search(String queryStr, boolean all) {
         return NnChannelDao.search(queryStr, all);        
     }
@@ -321,15 +339,22 @@ public class NnChannelManager {
         return channels;
     }
 
-    //find hot, featured, trending stories
+    //find hot, featured, trending stories    
     public List<NnChannel> findBillboard(String name, String lang) { 
         List<NnChannel> channels = new ArrayList<NnChannel>();
+        RecommendService service = new RecommendService();
         if (name == null)
             return channels;
-        TagManager tagMngr = new TagManager();        
-        name += "(9x9" + lang + ")";
-        log.info("find billboard, tag:" + name);
-        channels = tagMngr.findChannelsByTag(name, true);        
+        if (name.equals(Tag.TRENDING)) {            
+            TagManager tagMngr = new TagManager();        
+            name += "(9x9" + lang + ")";
+            log.info("find billboard, tag:" + name);
+            channels = tagMngr.findChannelsByTag(name, true);
+        } else if (name.equals(Tag.FEATURED)) {
+            channels = service.findBillboardPool(9, lang);
+        } else if (name.equals(Tag.HOT)) {
+            channels = service.findBillboardPool(9, lang);
+        }
         return channels;
     }
                 
@@ -425,42 +450,18 @@ public class NnChannelManager {
     public String composeChannelLineupStr(NnChannel c) {
         Random r = new Random();
         int viewCount = r.nextInt(300);
-        String[] url1 = {
-            "http://www.choicematters.org/wp-content/uploads/2012/01/tumblr_ku48goxoYS1qatg16o1_4001.jpg",
-            "http://www.motherearthnews.com/uploadedImages/articles/issues/2010-04-01/chickens1.jpg",
-            "http://www.organicgardeningfarming.com/wp-content/uploads/2011/12/backyard-chickens.jpg",
-            "http://i-cdn.apartmenttherapy.com/uimages/kitchen/2009_03_25-BlackChicken02.jpg",
-            "http://graphics8.nytimes.com/images/blogs/greeninc/chickens.jpeg",
-            "http://www.slate.com/content/dam/slate/archive/2011/01/1_123125_122975_2243255_2276474_110125_food_chicken_tn.jpg",
-            "http://www.myessentia.com/blog/wp-content/uploads/2011/03/chicken.jpg",
-            "http://cdn.blogs.sheknows.com/gardening.sheknows.com/2011/09/free-range-chickens.jpg",
-            "http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Buttercup_Chicken1.jpg/250px-Buttercup_Chicken1.jpg",
-            "http://leesbirdblog.files.wordpress.com/2009/01/you-can-have-her-chickens-by-maji.jpg",
-        };        
-        String[] url2 = {
-            "http://i2.ytimg.com/i/194cPvPaGJjhJBEGwG6vxg/1.jpg",
-            "http://i2.ytimg.com/i/Yjk_zY-iYR8YNfJmuzd70A/1.jpg?v=a5d97c",
-            "http://9x9cache.s3.amazonaws.com/system.jpg",                 
-            "http://i1.ytimg.com/vi/8yuFvqsL-C0/default.jpg",              
-            "http://i1.ytimg.com/i/XNZiORujW__GkIskLb0FNw/1.jpg?v=8401b7", 
-            "http://i2.ytimg.com/i/MKvT0YVLufHMdGLH89J1oA/1.jpg",          
-            "http://i2.ytimg.com/i/5l1Yto5oOIgRXlI4p4VKbw/1.jpg?v=8157b2", 
-            "http://i2.ytimg.com/vi/y367HBFS4hU/default.jpg",              
-            "http://i1.ytimg.com/i/lrEYreVkBee7ZQYei_6Jqg/1.jpg?v=9605e9", 
-            "http://i3.ytimg.com/i/2LqANmM2rTLGO345OuapuA/1.jpg?v=a9a54a",
-        };
-        int img1 = r.nextInt(10);
-        int img2 = r.nextInt(10);
-        String imageUrl = c.getPlayerPrefImageUrl() + "|" + url1[img1] + "|" + url2[img2];
+        String imageUrl = c.getPlayerPrefImageUrl();
 
         NnUser u = new NnUserManager().findByIdStr(c.getUserIdStr());        
         String userName = "";
         String userIntro = "";
         String userImageUrl = "";
+        String curatorProfile = "";
         if (u != null) {
             userName = u.getName();
             userIntro = u.getIntro();
             userImageUrl = u.getImageUrl();
+            curatorProfile = u.getProfileUrl();
         }            
         
         String[] ori = {Integer.toString(c.getSeq()), 
@@ -481,7 +482,7 @@ public class NnChannelManager {
                         String.valueOf(c.getCntSubscribe()),
                         String.valueOf(viewCount), //view count
                         c.getTag(),
-                        c.getUserIdStr(), //curator id
+                        curatorProfile, //curator id
                         userName,
                         userIntro,
                         userImageUrl,

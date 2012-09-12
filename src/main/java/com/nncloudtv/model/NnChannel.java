@@ -81,7 +81,7 @@ public class NnChannel implements Serializable {
     public static final short CONTENTTYPE_YOUTUBE_CHANNEL = 3;
     public static final short CONTENTTYPE_YOUTUBE_PLAYLIST = 4;
     public static final short CONTENTTYPE_FACEBOOK = 5;
-    public static final short CONTENTTYPE_MIXED = 6;
+    public static final short CONTENTTYPE_MIXED = 6; //9x9 channel
     public static final short CONTENTTYPE_SLIDE = 7;
     public static final short CONTENTTYPE_MAPLE_VARIETY = 8;
     public static final short CONTENTTYPE_MAPLE_SOAP = 9;
@@ -157,7 +157,7 @@ public class NnChannel implements Serializable {
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
-    private String transcodingUpdateDate; //timestamps from transcoding server            
+    private String transcodingUpdateDate; //timestamps from transcoding server
         
     public NnChannel(String name, String intro, String imageUrl) {
         this.name = name;

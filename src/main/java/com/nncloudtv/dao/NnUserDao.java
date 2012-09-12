@@ -74,6 +74,7 @@ public class NnUserDao extends GenericDao<NnUser> {
     public NnUser findById(long id, short shard) {
         
         NnUser user = null;
+        NnUser detached = null;
         PersistenceManager pm = null;
         if (shard == 0) {
             return findById(id);
@@ -83,16 +84,15 @@ public class NnUserDao extends GenericDao<NnUser> {
             pm = PMF.getNnUser1().getPersistenceManager();
         }
         
-        try {
-            
+        try {            
             user = pm.getObjectById(NnUser.class, id);
-            
+            detached = (NnUser)pm.detachCopy(user);            
         } catch (JDOObjectNotFoundException e) {
         } finally {
             pm.close();
         }
-        
-        return user;
+        return detached;
+        //return user;
     }
     
     /**
@@ -142,6 +142,7 @@ public class NnUserDao extends GenericDao<NnUser> {
         } finally {
             pm.close();
         }
+        System.out.println("?????????????");
         return user;
     }
     

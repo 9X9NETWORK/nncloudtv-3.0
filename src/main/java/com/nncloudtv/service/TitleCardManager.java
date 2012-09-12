@@ -27,7 +27,8 @@ public class TitleCardManager {
         card.setPlayerSyntax(this.generatePlayerSyntax(card));
         return dao.save(card);
     }
-    
+
+    //TODO, going to remove
     public TitleCard create(TitleCard card) {
         return this.save(card);
     }
@@ -39,29 +40,29 @@ public class TitleCardManager {
         dao.delete(card);
     }
     
-    public List<TitleCard> findByChannelAndSeq(long channelId, String seq) {
-        return dao.findByChannelAndSeq(channelId, seq);
-    }
     
-    public List<TitleCard> findByChannelAndSeqAndSubSeq(long channelId, int seq, int subSeq) {
-        return dao.findByChannelAndSeqAndSubSeq(channelId, String.format("%08d", seq), String.format("%08d", subSeq));
+    public List<TitleCard> findByProgram(long programId) {
+        return dao.findByProgram(programId);
     }
-    
+        
+    //IMPORTANT: subepisode: (number) is moved out from here and can only retrieved from NnProgram, 
+    //           since the seq could be changed often
     private String generatePlayerSyntax(TitleCard card) {
         if (card == null) return null;
-        if (card.getSubSeq() == null || card.getMessage() == null) 
+        if (card.getMessage() == null) 
             return null;
         String syntax = "";
-        syntax += "subepisode: " + Long.parseLong(card.getSubSeq());
-        syntax += "message: " + card.getSubSeq();
+        //TODO move to player to assemble
+        //syntax += "subepisode: " + Long.parseLong(card.getSubSeq());
+        syntax += "message: " + card.getMessage() + "\n";
         if (card.getDuration() != null)
-            syntax += "duration: " + card.getDuration();
+            syntax += "duration: " + card.getDuration() + "\n";
         if (card.getStyle() != null)
-            syntax += "style: " + card.getStyle();
+            syntax += "style: " + card.getStyle() + "\n";
         if (card.getColor() != null)
-            syntax += "color: " + card.getColor();
+            syntax += "color: " + card.getColor() + "\n";
         if (card.getBgColor() != null)
-            syntax += "bgcolor: " + card.getColor();        
+            syntax += "bgcolor: " + card.getColor() + "\n";        
         try {
             syntax = URLEncoder.encode(syntax, "UTF-8");
             log.info("syntax:" + syntax);

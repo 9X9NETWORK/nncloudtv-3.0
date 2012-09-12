@@ -46,10 +46,27 @@ public class NnUserManager {
         Date now = new Date();
         user.setCreateDate(now);
         user.setUpdateDate(now);
+        if (user.getProfileUrl() == null) {
+            user.setProfileUrl(this.generateProfile(user.getName()));            
+        }            
+            
         dao.save(user);
         return NnStatusCode.SUCCESS;
     }
 
+    //TODO replace name with none-digit/characters
+    public String generateProfile(String name) {
+        String profile = "";
+        if (name != null) {
+            String random = RandomStringUtils.randomNumeric(5);
+            name.replace(" ", "");
+            profile = random + "-" + name;
+        } else {
+            profile = RandomStringUtils.randomAlphabetic(10);
+        }
+        return profile;
+    }
+    
     //Default is 1; Asia (tw, cn, hk) is 2
     public static short getShardByLocale(HttpServletRequest req) {
         String locale = NnUserManager.findLocaleByHttpRequest(req);
@@ -305,7 +322,7 @@ public class NnUserManager {
         if (user.getProfileUrl() != null)
             profileUrl = NnNetUtil.getUrlRoot(req) + "/#!curator=" + user.getProfileUrl();
         String[] info = {
-                uid,                
+                user.getProfileUrl(),                
                 user.getName(),
                 user.getIntro(),
                 user.getImageUrl(),
@@ -320,6 +337,8 @@ public class NnUserManager {
     }
 
     public static boolean isGuestByToken(String token) {
+        if (token == null || token.length() > 0)
+            return true;
         if (token != null && token.contains(NnGuest.TOKEN_PREFIX)) {
             return true;
         }

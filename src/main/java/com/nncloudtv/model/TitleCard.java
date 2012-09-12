@@ -25,13 +25,8 @@ public class TitleCard implements Serializable {
     private long channelId;
 
     @Persistent
-    @Column(jdbcType="VARCHAR", length=8)    
-    private String seq; //from nnprogram: channelId + seq, example: 4300000004 (43: channelId, seq: 00000004)    
-
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=8)
-    private String subSeq; //subSeq should correspond with nnprogram's subSeq
-
+    private long programId;
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String duration;
@@ -80,10 +75,9 @@ public class TitleCard implements Serializable {
     @Persistent
     private Date updateDate;
     
-    public TitleCard(long channelId, int seq, int subSeq, short type) {
+    public TitleCard(long channelId, long programId, short type) {
         this.channelId = channelId;
-        this.setSeq(seq);
-        this.setSubSeq(subSeq);
+        this.programId = programId;
         this.type = type;
         Date now = new Date();        
         this.updateDate = now;
@@ -169,30 +163,6 @@ public class TitleCard implements Serializable {
         this.playerSyntax = playerSyntax;
     }
 
-    public String getSeq() {
-        return seq;
-    }
-
-    public void setSeq(String seq) {
-        this.seq = seq;
-    }
-    
-    public void setSeq(int seq) {
-        this.seq = String.format("%08d", seq);
-    }
-
-    public String getSubSeq() {
-        return subSeq;
-    }
-
-    public void setSubSeq(String subSeq) {
-        this.subSeq = subSeq;
-    }
-    
-    public void setSubSeq(int subSeq) {
-        this.subSeq = String.format("%08d", subSeq);
-    }
-
     public String getSize() {
         return size;
     }
@@ -225,4 +195,12 @@ public class TitleCard implements Serializable {
         this.align = align;
     }
 
+    public long getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(long programId) {
+        this.programId = programId;
+    }
+    
 }

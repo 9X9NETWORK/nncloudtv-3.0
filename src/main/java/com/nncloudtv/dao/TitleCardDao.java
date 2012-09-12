@@ -25,7 +25,6 @@ public class TitleCardDao extends GenericDao<TitleCard> {
             Query q = pm.newQuery(TitleCard.class);
             q.setFilter("channelId == channelIdParam");
             q.declareParameters("long channelIdParam");
-            q.setOrdering("seq");
             @SuppressWarnings("unchecked")
             List<TitleCard> cards = (List<TitleCard>) q.execute(channelId);
             detached = (List<TitleCard>)pm.detachCopyAll(cards);
@@ -35,35 +34,19 @@ public class TitleCardDao extends GenericDao<TitleCard> {
         return detached;
     }    
     
-    public List<TitleCard> findByChannelAndSeq(long channelId, String seq) {
+    public List<TitleCard> findByProgram(long programId) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<TitleCard> detached = new ArrayList<TitleCard>(); 
         try {
             Query q = pm.newQuery(TitleCard.class);
-            q.setFilter("channelId == " + channelId + " & seq == '" + seq + "'");
-            q.setOrdering("subSeq");
+            q.setFilter("programId == " + programId);
             @SuppressWarnings("unchecked")
-            List<TitleCard> cards = (List<TitleCard>) q.execute(channelId, seq);
+            List<TitleCard> cards = (List<TitleCard>) q.execute(programId);
             detached = (List<TitleCard>) pm.detachCopyAll(cards);
         } finally {
             pm.close();
         }
         return detached;
     }
-    
-    public List<TitleCard> findByChannelAndSeqAndSubSeq(long channelId, String seq, String subSeq) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<TitleCard> detached = new ArrayList<TitleCard>();
-        try {
-            Query q = pm.newQuery(TitleCard.class);
-            q.setFilter("channelId == " + channelId + " & seq == '" + seq + "'" + " & subSeq == '" + subSeq + "'");
-            @SuppressWarnings("unchecked")
-            List<TitleCard> cards = (List<TitleCard>) q.execute(channelId, seq, subSeq);
-            detached = (List<TitleCard>) pm.detachCopyAll(cards);
-        } finally {
-            pm.close();
-        }
-        return detached;
-    }
-    
+
 }

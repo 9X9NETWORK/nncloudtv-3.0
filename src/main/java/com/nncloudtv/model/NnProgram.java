@@ -7,7 +7,11 @@ import javax.jdo.annotations.*;
 import com.nncloudtv.lib.NnStringUtil;
 
 /**
- * Programs(shows) under a NnChannel.
+ * Programs under a NnChannel.
+ * 
+ * Terminology: 
+ * Program: aka NnProgram. where video file is stored.
+ * Episode: aka NnEpisode. Only 9x9 programs has "episode". It is "super-program", store each sub-episode's metadata.    
  */
 @PersistenceCapable(table="nnprogram", detachable="true")
 public class NnProgram implements Serializable {
@@ -20,6 +24,9 @@ public class NnProgram implements Serializable {
     @Persistent
     private long channelId;
 
+    @Persistent
+    private long episodeId;
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String name;
@@ -52,9 +59,14 @@ public class NnProgram implements Serializable {
     @Column(jdbcType="VARCHAR", length=255)
     private String audioFileUrl;
     
+    /**
+     * used in 2 places:
+     * 1. from channel parsing service, it's where the physical file stores, to avoid duplication.
+     * 2. for "favorite" feature, used when the program type is "reference". in this case, programId will be stored  
+     */
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
-    private String storageId; // id of where the file physically stores, from channel parsing service
+    private String storageId;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -210,11 +222,18 @@ public class NnProgram implements Serializable {
         return storageId;
     }
 
-    //used in favorite program, to reference the real 9x9 program (maplestage, youtube channel do not apply here) 
+    //used in favorite program, to reference the real 9x9 program (maplestage, youtube channel do not apply here)
+    /*
     public String getReferenceStorageId() {
-        return this.getChannelId() + ";" + this.getSeq();        
+        return this.getChannelId() + ";" + "00000000";
     }
 
+    //compatibility with old scheme. 
+    public String getReferenceStorageIdOldScheme() {
+        return this.getChannelId() + ";" + "00000001";        
+    }
+    */
+    
     public void setStorageId(String storageId) {
         this.storageId = storageId;
     }
@@ -303,6 +322,14 @@ public class NnProgram implements Serializable {
 
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public long getEpisodeId() {
+        return episodeId;
+    }
+
+    public void setEpisodeId(long episodeId) {
+        this.episodeId = episodeId;
     }
     
 }

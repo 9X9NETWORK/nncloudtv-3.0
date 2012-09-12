@@ -2,6 +2,7 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import com.nncloudtv.dao.TitleCardDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.TitleCard;
@@ -105,20 +107,20 @@ public class NnProgramManager {
     }    
 
     public String findPlayerProgramInfoByChannel(long channelId) {
-        String cacheKey = "nnprogram(" + channelId + ")";
-        String result = (String)CacheFactory.get(cacheKey);
-        if (CacheFactory.isRunning && result != null) { 
-            log.info("<<<<< retrieve program info from cache >>>>>");
-            return result;
-        }        
+//        String cacheKey = "nnprogram(" + channelId + ")";
+//        String result = (String)CacheFactory.get(cacheKey);
+//        if (CacheFactory.isRunning && result != null) { 
+//            log.info("<<<<< retrieve program info from cache >>>>>");
+//            return result;
+//        }        
         
         log.info("nothing in the cache");        
         List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
         log.info("channel id:" + channelId + "; program size:" + programs.size());
         String str = this.composeProgramInfo(programs);
-        if (CacheFactory.isRunning) { 
-            CacheFactory.set(cacheKey, str);
-        }
+//        if (CacheFactory.isRunning) { 
+//            CacheFactory.set(cacheKey, str);
+//        }
         return str;
     }    
     
@@ -191,19 +193,11 @@ public class NnProgramManager {
         }        
         return result;
     }
-    
-    public String subEpisode() {
-        return "";
-    }
-    
+            
     public List<NnProgram> findRealPrograms(String storageId) {
         List<NnProgram> programs = new ArrayList<NnProgram>();
-        String[] info = storageId.split(";");
-        if (info.length > 0) {
-            long channelId = Long.parseLong(info[0]);
-            String seq = info[1];
-            programs = dao.findByChannelAndSeq(channelId, seq);
-        }
+        programs = dao.findProgramsByEpisode(Long.parseLong(storageId));
+        System.out.println("--------find real programs--------" + programs.size());        
         return programs;        
     }
     
@@ -212,41 +206,74 @@ public class NnProgramManager {
         NnProgram original = programs.get(0);        
         long cid = programs.get(0).getChannelId();
         List<TitleCard> cards = new TitleCardDao().findByChannel(cid); //order by channel id and entry id
-        System.out.println("--- title card size ---" + cards.size());
+        HashMap<String, TitleCard> cardMap = new HashMap<String, TitleCard>();        
+        for (TitleCard c : cards) {
+            String key = String.valueOf(c.getProgramId() + ";" + c.getType());
+            cardMap.put(key, c);
+        }
         String seq = programs.get(0).getSeq();
-        int cardIdx = 0;
         String videoUrl = "";
-        for (int i=0; i<programs.size(); i++) {
+        String name = "";
+        String imageUrl = "";
+        String card = "";
+        for (int i=0; i<programs.size(); i++) { 
            NnProgram p = programs.get(i);
+           String cardKey1 = String.valueOf(original.getId() + ";" + TitleCard.TYPE_BEGIN); 
+           String cardKey2 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_END);
+           if (cardMap.containsKey(cardKey1)) {
+               card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
+               card += cardMap.get(cardKey1).getPlayerSyntax() + "%0A--%0A";
+               cardMap.remove(cardKey1);
+           }
+           if (cardMap.containsKey(cardKey2)) {
+               card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
+               card += cardMap.get(cardKey2).getPlayerSyntax() + "%0A--%0A";
+               cardMap.remove(cardKey2);
+           }
+           
            if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {               
                List<NnProgram> reference = this.findRealPrograms(p.getStorageId());
                System.out.println("reference size:" + reference.size());
-               if (reference.size() > 0) { //keep the stored program id, for deletion
-                   for (NnProgram ref : reference) {
-                       ref.setId(p.getId());
-                   }
-                   result += this.processSubEpisode(reference);
+               if (reference.size() > 0) {
+                   String referenceResult = this.processSubEpisode(reference);
+                   referenceResult = referenceResult.replaceFirst(String.valueOf(reference.get(0).getId()), String.valueOf(p.getId()));
+                   result += referenceResult;
                }
-           }
-           if (p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
+           } else {
                if (p.getSeq() == null || p.getSubSeq() == null) {
-                   result += composeProgramInfoStr(p, p.getFileUrl(), null);
+                   result += composeProgramInfoStr(p, null, null, null, null, null);
                } else { 
                    //it's another program
-                  if (!p.getSeq().equals(seq) || (i == programs.size()-1)) {
-                     String card = "";
-                     String titleSeq = original.getSeq();
-                     for (int j=cardIdx; j<cards.size(); j++) {
-                        if (cards.get(j).getSeq().equals(titleSeq)) {
-                           card += cards.get(j).getPlayerSyntax() + "%0A--%0A";
-                           cardIdx++;
-                        }
-                     }
+                  if ((!p.getSeq().equals(seq)) || (i == (programs.size()-1))) {
                      videoUrl = videoUrl.replaceFirst("\\|", "");
-                     result += composeProgramInfoStr(original, videoUrl, card); 
+                     name = name.replaceFirst("\\|", "");
+                     imageUrl = imageUrl.replaceFirst("\\|", "");
+                     String intro = original.getIntro();
+                     NnEpisode episode = new NnEpisodeManager().findById(original.getEpisodeId());
+                     if (episode != null)
+                         intro = episode.getIntro();
+                     if ((i == programs.size()-1) && p.getSeq().equals(seq)) {
+                         videoUrl += "|" + p.getFileUrl();
+                         if (p.getStartTime() != null)
+                            videoUrl += ";" + p.getStartTime();
+                         else
+                            videoUrl += ";"; 
+                         if (p.getEndTime() != null)
+                            videoUrl += ";" + p.getEndTime();
+                         else
+                            videoUrl += ";";         
+                         name += "|" + p.getName();
+                         imageUrl += "|" + p.getImageUrl();                         
+                     }
+                     result += composeProgramInfoStr(original, name, intro, imageUrl, videoUrl, card);
+                     if ((i == programs.size()-1) && !p.getSeq().equals(seq)) {
+                         result += composeProgramInfoStr(p, p.getName(), p.getIntro(), p.getImageUrl(), p.getFileUrl(), card);
+                     }
                      //reset
-                     seq = p.getSeq();
-                     videoUrl = "";
+                     seq = p.getSeq();                     
+                     name = p.getName() + "|";
+                     imageUrl = p.getImageUrl() + "|";
+                     videoUrl = p.getFileUrl() + "|";
                      card = "";
                      original = p;
                   } else {
@@ -256,11 +283,13 @@ public class NnProgramManager {
                       if (p.getStartTime() != null)
                          videoUrl += ";" + p.getStartTime();
                       else
-                         videoUrl += ";" + ""; 
+                         videoUrl += ";"; 
                       if (p.getEndTime() != null)
                          videoUrl += ";" + p.getEndTime();
                       else
-                         videoUrl += ";" + "";                  
+                         videoUrl += ";";         
+                      name += "|" + p.getName();
+                      imageUrl += "|" + p.getImageUrl();
                   }
                }
            }
@@ -279,7 +308,7 @@ public class NnProgramManager {
         if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED &&
             c.getContentType() != NnChannel.CONTENTTYPE_FAVORITE) {
             for (NnProgram p : programs) {
-                result += this.composeProgramInfoStr(p, null, null);
+                result += this.composeProgramInfoStr(p, null, null, null, null, null);
             }
             return result;
         }
@@ -287,7 +316,8 @@ public class NnProgramManager {
         return result;
     }
 
-    public String composeProgramInfoStr(NnProgram p, String videoUrl, String card) {
+    //TODO clean up a little bit
+    public String composeProgramInfoStr(NnProgram p, String name, String intro, String imageUrl, String videoUrl, String card) {
         String output = "";        
         String regexCache = "^(http|https)://(9x9cache.s3.amazonaws.com|s3.amazonaws.com/9x9cache)";
         String regexPod = "^(http|https)://(9x9pod.s3.amazonaws.com|s3.amazonaws.com/9x9pod)";
@@ -297,28 +327,28 @@ public class NnProgramManager {
         String url2 = ""; //not used for now
         String url3 = ""; //not used for now
         String url4 = p.getAudioFileUrl();
-        String imageUrl = p.getImageUrl();
+        if (imageUrl == null)
+            imageUrl = p.getImageUrl();
         String imageLargeUrl = p.getImageUrl();
         if (imageUrl == null) {imageUrl = "";}
         if (imageLargeUrl == null) {imageLargeUrl = "";}
-        //!!!!
-        //if (config.getValue().equals(MsoConfig.CDN_AKAMAI)) {
-            if (url1 != null) {
-                url1 = url1.replaceFirst(regexCache, cache);
-                url1 = url1.replaceAll(regexPod, pod);
-            }
-            if (imageUrl != null) {
-                imageUrl = imageUrl.replaceFirst(regexCache, cache);
-                imageUrl = imageUrl.replaceAll(regexPod, pod);
-            }
-            if (imageLargeUrl != null) {
-                imageLargeUrl = imageLargeUrl.replaceFirst(regexCache, cache);
-                imageLargeUrl = imageLargeUrl.replaceAll(regexPod, pod);
-            }
-        //}
+        //TODO if (config.getValue().equals(MsoConfig.CDN_AKAMAI)) { 
+        if (url1 != null) {
+            url1 = url1.replaceFirst(regexCache, cache);
+            url1 = url1.replaceAll(regexPod, pod);
+        }
+        if (imageUrl != null) {
+            imageUrl = imageUrl.replaceFirst(regexCache, cache);
+            imageUrl = imageUrl.replaceAll(regexPod, pod);
+        }
+        if (imageLargeUrl != null) {
+            imageLargeUrl = imageLargeUrl.replaceFirst(regexCache, cache);
+            imageLargeUrl = imageLargeUrl.replaceAll(regexPod, pod);
+        }
                 
         //intro
-        String intro = p.getIntro();            
+        if (intro == null)            
+            intro = p.getIntro();            
         if (intro != null) {
             int introLenth = (intro.length() > 256 ? 256 : intro.length()); 
             intro = intro.replaceAll("\\s", " ");                
@@ -327,15 +357,17 @@ public class NnProgramManager {
         
         if (videoUrl != null)
             url1 = videoUrl;
+        if (name == null)
+            name = p.getName();
         //the rest
         String[] ori = {String.valueOf(p.getChannelId()), 
                         String.valueOf(p.getId()), 
-                        p.getName(), 
+                        name, 
                         intro,
                         String.valueOf(p.getContentType()), 
                         p.getDuration(),
                         imageUrl,
-                        imageLargeUrl,
+                        "",
                         url1, //video url
                         url2, 
                         url3, 

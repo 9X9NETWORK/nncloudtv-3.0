@@ -2,9 +2,13 @@ package com.nncloudtv.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Random;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 import com.nncloudtv.lib.AuthLib;
 
@@ -320,14 +324,8 @@ public class NnUser implements Serializable {
         return profileUrl;
     }
 
-    public void setProfileUrl() {
-        Random r = new Random();
-        int num = r.nextInt(99999);
-        String formatted = String.format("%05d", num);                
-        if (name != null)
-            this.profileUrl = formatted + "-" + name;
-        else
-            this.profileUrl = formatted;
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 
     public boolean isTemp() {

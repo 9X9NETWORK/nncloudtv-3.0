@@ -26,14 +26,14 @@ public class RecommendService {
      * for GUESTs and FRESHMAN USERs, SHALLOW RECOMMENDATION,
      * but for USERs, DEEP RECOMMENDATIONS
      */
-    public List<NnChannel> findMayLike(String userToken, String channel) {      
+    public List<NnChannel> findMayLike(String userToken, String channel, String lang) {      
         List<NnChannel> channels = new ArrayList<NnChannel>();
         long cid = 0;
         if (channel != null)
             cid = Long.parseLong(channel);
         if (userToken == null && channel == null) {
             log.info("maylike: nothing provided. get channel from billboard");
-            channels = this.findBillboard(9);
+            channels = this.findBillboardPool(9, lang);
         } else if (NnUserManager.isGuestByToken(userToken)) {
             log.info("maylike: guest user find from shallow");
             channels = this.findShallowChannels(cid);
@@ -56,7 +56,7 @@ public class RecommendService {
         }
         if (channels.size() == 0) {
             log.info("maylike: final frontier: nothing hits, try billboard");
-            channels = this.findBillboard(9);
+            channels = this.findBillboardPool(9, lang);
         }
        
         return channels;
@@ -66,11 +66,11 @@ public class RecommendService {
      * if GUEST or FRESHMAN USER, channels selected from the BILLBOARD POOL; 
      * if USER, channels selected from the FDM POOL; 
      */
-    public List<NnChannel> findRecommend(String userToken) {
+    public List<NnChannel> findRecommend(String userToken, String lang) {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (userToken == null || NnUserManager.isGuestByToken(userToken)) {
             log.info("recommend: guest user find from billboard");
-            channels = this.findBillboard(9);
+            channels = this.findBillboardPool(9, lang);
         } else {
             NnUser user = new NnUserManager().findByToken(userToken);
             if (user != null) {
@@ -80,19 +80,19 @@ public class RecommendService {
                     channels = this.findFdm(9);
                 } else {
                     log.info("recommend: freshman user get recommendation from billboard pool " + userToken);
-                    channels = this.findBillboard(9);
+                    channels = this.findBillboardPool(9, lang);
                 }
             }
         }
         if (channels.size() == 0) {//invalid user
             log.info("recommend: maybe invalid user, same as guest " + userToken);
-            channels = this.findBillboard(9);
+            channels = this.findBillboardPool(9, lang);
         }
         return channels;        
     }
     
-    //randomly pick from billboard
-    public List<NnChannel> findBillboard(int limit) {
+    //randomly pick from billboard, based on language
+    public List<NnChannel> findBillboardPool(int limit, String lang) {
         List<NnChannel> channels = chDao.findSpecial(NnChannel.POOL_BILLBOARD, limit);
         List<NnChannel> recommended = new ArrayList<NnChannel>();
         int i=0;
