@@ -107,20 +107,20 @@ public class NnProgramManager {
     }    
 
     public String findPlayerProgramInfoByChannel(long channelId) {
-//        String cacheKey = "nnprogram(" + channelId + ")";
-//        String result = (String)CacheFactory.get(cacheKey);
-//        if (CacheFactory.isRunning && result != null) { 
-//            log.info("<<<<< retrieve program info from cache >>>>>");
-//            return result;
-//        }        
+        String cacheKey = "nnprogram(" + channelId + ")";
+        String result = (String)CacheFactory.get(cacheKey);
+        if (CacheFactory.isRunning && result != null) { 
+            log.info("<<<<< retrieve program info from cache >>>>>");
+            return result;
+        }        
         
         log.info("nothing in the cache");        
         List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
         log.info("channel id:" + channelId + "; program size:" + programs.size());
         String str = this.composeProgramInfo(programs);
-//        if (CacheFactory.isRunning) { 
-//            CacheFactory.set(cacheKey, str);
-//        }
+        if (CacheFactory.isRunning) { 
+            CacheFactory.set(cacheKey, str);
+        }
         return str;
     }    
     
