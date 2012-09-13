@@ -58,6 +58,10 @@ public class TitleCard implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=20)
     private String style;
+    
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=20)
+    private String weight;
 
     @Persistent
     private short type; //0 begin, 1 end    
@@ -203,4 +207,14 @@ public class TitleCard implements Serializable {
         this.programId = programId;
     }
     
+    public String getWeight() {
+    
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+    
+        this.weight = weight;
+    }
+
 }

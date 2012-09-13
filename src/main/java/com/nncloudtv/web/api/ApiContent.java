@@ -864,8 +864,6 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        
-        
         TitleCard titleCard = null;
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> titleCards = titleCardMngr.findByChannelAndSeqAndSubSeq(channelId, seq, subSeq);
@@ -879,7 +877,6 @@ public class ApiContent extends ApiGeneric {
             titleCard = new TitleCard(channelId, seq, subSeq, type); // create as it not exist, add operation
             titleCard = titleCardMngr.create(titleCard);
         }
-        
         
         // do set and save
         
@@ -923,12 +920,15 @@ public class ApiContent extends ApiGeneric {
             titleCard.setStyle(style);
         }
         
+        String weight = req.getParameter("weight");
+        if (style != null) {
+            titleCard.setWeight(weight);
+        }
+        
         String bgImage = req.getParameter("bgImage");
         if (bgImage != null) {
             titleCard.setBgImage(bgImage);
         }
-        
-        
         
         return titleCardMngr.save(titleCard);
     }
