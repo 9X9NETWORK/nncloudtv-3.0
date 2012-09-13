@@ -226,7 +226,7 @@ public class NnChannelManager {
         url += "shard=" + userShard;
         url += "&userid=" + userId;
         url += "&lang=" + sphere;        
-        url += "&s=queryStr";
+        url += "&s=" + queryStr;
         log.info("svi query url:" + url);
         String chStr = NnNetUtil.urlGet(url);
         log.info("return from svi:" + chStr);
@@ -339,7 +339,8 @@ public class NnChannelManager {
         return channels;
     }
 
-    //find hot, featured, trending stories    
+    //find hot, featured, trending stories
+    //featured and recommended can not be overlapped
     public List<NnChannel> findBillboard(String name, String lang) { 
         List<NnChannel> channels = new ArrayList<NnChannel>();
         RecommendService service = new RecommendService();
