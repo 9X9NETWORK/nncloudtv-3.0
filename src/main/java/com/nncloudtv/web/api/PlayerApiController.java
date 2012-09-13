@@ -1758,7 +1758,7 @@ public class PlayerApiController {
     }
 
     /**
-     * Curator info. Use curator id or profile to get specific curator.
+     * Curator info. Use "curator" to get specific curator information.
      * Or specify stack = featured to get list of featured curators. 
      * 
      * @param curator curator id
