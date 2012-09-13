@@ -154,6 +154,13 @@ public class NnChannel implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=25)    
     private String userIdStr; //format: shard-userId, example: 1-1
+
+    //can be removed if player making a separate query
+    //format: shard-userId, example: 1-1, separated by ";"
+    //up to 3 subscribers
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=25)    
+    private String subscribersIdStr; 
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -451,6 +458,14 @@ public class NnChannel implements Serializable {
 
     public void setCntFollower(int cntFollower) {
         this.cntFollower = cntFollower;
+    }
+
+    public String getSubscribersIdStr() {
+        return subscribersIdStr;
+    }
+
+    public void setSubscribersIdStr(String subscribersIdStr) {
+        this.subscribersIdStr = subscribersIdStr;
     }
     
     /*
