@@ -1,3 +1,5 @@
+#process billboard channels
+
 import urllib, urllib2
 import os
 from array import *

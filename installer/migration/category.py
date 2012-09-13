@@ -1,3 +1,4 @@
+# create categories
 import urllib, urllib2
 import os
 from array import *

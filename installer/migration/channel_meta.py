@@ -1,3 +1,5 @@
+# get latest youtube update from tom's feed.out
+
 import urllib, urllib2
 import os
 from array import *
