@@ -1,3 +1,38 @@
+- nnuser:
+use nncloudtv_nnuser1;
+alter table nnuser modify gender smallint(6) null;
+alter table nnuser modify isTemp bit(1) null;
+alter table nnuser modify msoId smallint(6) null;
+alter table nnuser modify type smallint(6) null;
+alter table nnuser alter gender set default 0;
+alter table nnuser alter isTemp set default false;
+alter table nnuser alter msoId set default 1;
+alter table nnuser alter type set default 4;
+alter table nnuser change createDate createDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table nnuser change updateDate updateDate TIMESTAMP default 0;
+alter table nnuser alter cntSubscribe set default 0;
+alter table nnuser alter cntChannel set default 0;
+alter table nnuser alter cntFollower set default 0;
+alter table nnuser alter expires set default 0;
+alter table nnuser alter featured set default false;
+alter table nnuser alter featured set default false;
+use nncloudtv_content;
+alter table nnepisode modify adId bigint(20) null;
+alter table nnepisode modify channelId bigint(20) null;
+alter table nnepisode alter adId set default 0;
+alter table nnepisode alter channelId set default 0;
+alter table nnepisode change updateDate updateDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table nnepisode change publishDate publishDate TIMESTAMP default 0;
+alter table nnchannel alter cntSubscribe set default 0;
+alter table nnchannel alter poolType set default 0;
+alter table tag change updateDate updateDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table tag_map change updateDate updateDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table tag_map add unique index(tagId, channelId);
+alter table category_map change updateDate updateDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table category_map add unique index(categoryId, channelId);
+alter table category change createDate createDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table category change updateDate updateDate TIMESTAMP default 0;
+
 - category.py
 - content.py
 - channel_meta.py            
@@ -26,5 +61,5 @@ insert into nnuser (type, shard, featured, profileUrl, name, email, intro, image
 insert into nnuser (type, shard, featured, profileUrl, name, email, intro, imageUrl) values (4, 1, true, 'kingw', '金木義則', 'curator19@9x9.tv', '嚴選音樂，就在Music Day', 'http://profile.ak.fbcdn.net/hprofile-ak-snc7/368861_100002766796163_971690919_n.jpg');
 insert into nnuser (name, email, intro, imageUrl) values ('', 'curator16@9x9.tv', '', '');                                        
 
-* migrate nnuser profile data
-* 
+* migrate nnuser profile data            
+*                                            
