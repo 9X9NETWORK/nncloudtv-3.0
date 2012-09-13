@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock12"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock15"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -42,7 +42,7 @@
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai0.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -200,10 +200,18 @@ soundManager.onready(function()
     </li>
     <li id="sitelang">
       <p id="btn-sitelang"></p>
-      <p id="selected-sitelang">English Site</p>
+      <p id="selected-sitelang">Language</p>
       <ul id="sitelang-dropdown" class="dropdown">
         <li class="on">English Site</li>
         <li>中文網站</li>
+      </ul>
+    </li>
+    <li id="sitelocation">
+      <p id="btn-sitelocation"></p>
+      <p id="selected-sitelocation">Location</p>
+      <ul id="sitelocation-dropdown" class="dropdown">
+        <li class="on">USA</li>
+        <li>台灣</li>
       </ul>
     </li>
   </ul>
@@ -211,36 +219,13 @@ soundManager.onready(function()
 </div>
 <!-- Footer End -->
 
-<style type="text/css"> 
-.ui-slider-horizontal .ui-state-default {
-	width: 1.125em;
-	height: 0.625em;
-	border: none;
-	-moz-border-radius: 0.125em;
-	-webkit-border-radius: 0.125em;
-	border-radius: 0.125em;
-	-moz-box-shadow: 0.0625em 0 0.25em #222;
-	-webkit-box-shadow: 0.0625em 0 0.25em #222;
-	box-shadow: 0.0625em 0 0.25em #222;
-	background: #fff;
-	filter: alpha(Opacity=70);
-	opacity: 0.7;
-	position: absolute;
-	top: -0.1875em;
-	left: 0;
-	z-index: 55;
-}
-.ui-slider-horizontal .ui-state-default:hover, .ui-slider-horizontal .ui-state-default:active {
-	filter: alpha(Opacity=100);
-	opacity: 1.0;
-</style> 
 
 <!-- Video Layer Begin -->
 <div id="video-layer" class="stage">
   <div id="video-constrain">
   </div>
   <div id="video-control">
-    <!--p id="btn-knob"></p-->
+    <p id="btn-knob"></p>
     <div id="progress-bar">
       <p id="loaded"></p>
       <p id="played"></p>
@@ -363,19 +348,19 @@ soundManager.onready(function()
       <p id="curator-page">My Page's URL:<br><span id="curator-url">www.9x9.tv/curator/24225524222</span><br><span class="link">Create customized short URL</span></p>
     </div>
     <p class="curator-sidebar-btn" id="btn-edit-curator">Edit</p>
-    <p class="curator-sidebar-btn" id="btn-about-curator">About Snowball</p>
+    <p class="curator-sidebar-btn" id="btn-about-curator"></p>
     <ul id="curator-activity">
       <li>
-        <p class="number">13</p>
+        <p class="number" id="curator-activity-channels"></p>
         <p class="item">channels</p>
       </li>
       <li>
-        <p class="number">20</p>
-        <p class="item">followings</p>
+        <p class="number" id="curator-activity-following"></p>
+        <p class="item">I'm following</p>
       </li>
       <li>
-        <p class="number">3,500</p>
-        <p class="item">followers</p>
+        <p class="number" id="curator-activity-followers"></p>
+        <p class="item">Following me</p>
       </li>
     </ul>
   </div>
@@ -389,99 +374,6 @@ soundManager.onready(function()
     <div id="channel-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
     <div class="curator-panel-constrain" id="channel-constrain">
       <ul id="channel-list">
-        <li class="default">
-          <p class="channel-title">Snowball's Favorites</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/coffee_01.png" class="thumb1">
-          <img src="thumbnail/coffee_02.png" class="thumb2">
-          <img src="thumbnail/coffee_03.png" class="thumb3">
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="channel-description ellipsis multiline">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
-          <p class="default-channel-title">Snowball's Favorite</p>
-          <ul class="follower-list">
-            <li></li>
-          </ul>
-          <div class="channel-popularity">
-            <p>0 Followers</p>
-            <p>0 Viewers</p>
-          </div>
-        </li>
-        <li class="new-channel">
-          <div><p>Create a<br>new channel</p></div>
-        </li>
-        <li>
-          <p class="channel-title">Coffee Shop</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/coffee_01.png" class="thumb1">
-          <img src="thumbnail/coffee_02.png" class="thumb2">
-          <img src="thumbnail/coffee_03.png" class="thumb3">
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="channel-description">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
-          <p class="default-channel-title">Snowball's Favorite</p>
-          <ul class="follower-list">
-            <li><img src="thumbnail/follower_01.png"></li>
-            <li><img src="thumbnail/follower_02.png"></li>
-            <li><img src="thumbnail/follower_03.png"></li>
-          </ul>
-          <div class="channel-popularity">
-            <p>0 Followers</p>
-            <p>0 Viewers</p>
-          </div>
-        </li>
-        <li>
-          <p class="channel-title">Coffee Shop</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/coffee_01.png" class="thumb1">
-          <img src="thumbnail/coffee_02.png" class="thumb2">
-          <img src="thumbnail/coffee_03.png" class="thumb3">
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="channel-description">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
-          <p class="default-channel-title">Snowball's Favorite</p>
-          <ul class="follower-list">
-            <li><img src="thumbnail/follower_01.png"></li>
-            <li><img src="thumbnail/follower_02.png"></li>
-            <li><img src="thumbnail/follower_03.png"></li>
-          </ul>
-          <div class="channel-popularity">
-            <p>0 Followers</p>
-            <p>0 Viewers</p>
-          </div>
-        </li>
-        <li>
-          <p class="channel-title">Coffee Shop</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/coffee_01.png" class="thumb1">
-          <img src="thumbnail/coffee_02.png" class="thumb2">
-          <img src="thumbnail/coffee_03.png" class="thumb3">
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="channel-description">Coffee reviews and article by coffee group and experts. Coffee is a brewed beverage with a flavor prepared from roasted seeds of the coffee plant.</p>
-          <p class="default-channel-title">Snowball's Favorite</p>
-          <ul class="follower-list">
-            <li><img src="thumbnail/follower_01.png"></li>
-            <li><img src="thumbnail/follower_02.png"></li>
-            <li><img src="thumbnail/follower_03.png"></li>
-          </ul>
-          <div class="channel-popularity">
-            <p>0 Followers</p>
-            <p>0 Viewers</p>
-          </div>
-        </li>
       </ul>
     </div>
   </div>
@@ -489,62 +381,6 @@ soundManager.onready(function()
     <div id="following-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
     <div class="curator-panel-constrain" id="following-constrain">
       <ul id="following-list">
-        <li>
-          <p class="channel-title">Summer Vacation</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/vacation_01.png" class="thumb1">
-          <img src="thumbnail/vacation_02.png" class="thumb2">
-          <img src="thumbnail/vacation_03.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_02.png"></p>
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="followed-curator">by<span>Cunnie Pan</span></p>
-        </li>
-        <li>
-          <p class="channel-title">Coffee House</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/coffee_01.png" class="thumb1">
-          <img src="thumbnail/coffee_02.png" class="thumb2">
-          <img src="thumbnail/coffee_03.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_03.png"></p>
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="followed-curator">by<span>Cunnie Pan</span></p>
-        </li>
-        <li>
-          <p class="channel-title">Mountain Bike</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/01-1.png" class="thumb1">
-          <img src="thumbnail/01-2.png" class="thumb2">
-          <img src="thumbnail/01-3.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_04.png"></p>
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>1 day ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="followed-curator">by<span>Cunnie Pan</span></p>
-        </li>
-        <li>
-          <p class="channel-title">World Class Limited Sport</p>
-          <p class="btn-action"><span>Follow</span></p>
-          <p class="icon-pl"></p>
-          <img src="thumbnail/epi_01.png"class="thumb1">
-          <img src="thumbnail/epi_02.png" class="thumb2">
-          <img src="thumbnail/epi_03.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_08.png"></p>
-          <div class="channel-meta">
-            <p>30 Episodes<span class="divider">|</span>1 day ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
-          </div>
-          <p class="followed-curator">by<span>Cunnie Pan</span></p>
-        </li>
       </ul>
     </div>
   </div>
@@ -559,34 +395,30 @@ soundManager.onready(function()
       <li class="numbers"><span id="curator-found">12</span>Curators<span class="divider">|</span><span id="channel-found">300</span>Channels</li>
     </ul>
   </div>
+  <div id="results-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
   <div id="results-constrain">
-  <div id="results-list">
-    <div class="clip" id="curator-result-clip">
-      <p class="clip-left"></p>
-      <p class="clip-center"><span>12</span>Curators</p>
-      <p class="clip-right"></p>
-    </div>
-    <ul id="curator-pagination">
-      <li class="btn-pagination" id="btn-prev-curator">Prev</li>
-      <li class="page-number">1</li>
-      <li class="page-number">2</li>
-      <li class="page-number">3</li>
-      <li class="btn-pagination" id="btn-next-curator">Next</li>
-    </ul>
-    <div id="curator-result-constrain">
-      <ul id="curator-result">
+    <div id="results-list">
+      <div class="clip" id="curator-result-clip">
+        <p class="clip-left"></p>
+        <p class="clip-center"><span>12</span>Curators</p>
+        <p class="clip-right"></p>
+      </div>
+      <ul id="curator-pagination">
       </ul>
+      <div id="curator-result-constrain">
+        <ul id="curator-result">
+        </ul>
+      </div>
+      <div class="clip" id="channel-result-clip">
+        <p class="clip-left"></p>
+        <p class="clip-center"><span>30</span>Channels</p>
+        <p class="clip-right"></p>
+      </div>
+      <div id="channel-result-constrain">
+        <ul id="channel-result">
+        </ul>
+      </div>
     </div>
-    <div class="clip" id="channel-result-clip">
-      <p class="clip-left"></p>
-      <p class="clip-center"><span>30</span>Channels</p>
-      <p class="clip-right"></p>
-    </div>
-    <div id="channel-result-constrain">
-      <ul id="channel-result">
-      </ul>
-    </div>
-  </div>
   </div>
   <div id="noresult-summary">
     <h3></h3>
@@ -673,15 +505,8 @@ soundManager.onready(function()
     <ul id="categ-list">
     </ul>
   </div>
-  <div id="browse-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-  <div id="browse-constrain">
-    <div id="browse-list">
-      <!--select>
-        <option>Add Time</option>
-        <option>Update Time</option>
-        <option>Most Viewed Today</option>
-        <option>Most Subscribed Today</option>
-      </select-->
+
+ <div id="browse-sort">
       <ul id="sort-list">
         <li class="head">Sorted by</li>
         <li class="on">Add Time</li>
@@ -692,8 +517,12 @@ soundManager.onready(function()
       <div id="tag-area">
         <p id="tag-head">The most popular tags:</p>
         <ul id="tag-list">
-        </ul>
+        </ul> 
       </div>
+  </div>
+  <div id="browse-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+  <div id="browse-constrain">
+    <div id="browse-list">
       <ul id="ch-list">
       </ul>
     </div>
@@ -798,47 +627,12 @@ soundManager.onready(function()
         </ul>
       </div>
       
-      <div id="guide-trading">
+      <div id="guide-trending">
         <h3><span>Trending Stories (</span><span id="trading-chNum">9</span><span>)</span></h3>
         <p id="trending-up"></p>
         <p id="trending-down"></p>
         <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
         <ul id="gt-list">
-          <li>
-            <img src="${nroot}/thumbnail/player.png" class="thumbnail">
-            <p class="min-title"><span>Sport Channel</span></p>
-            <p class="min-description ellipsis multiline">
-              <span>The captivating strand of Jeremy Lin mystique is from nowhere to be a star.</span>
-            </p>
-            <p class="min-meta">
-              <span>150 Episodes</span><span class="divider">|</span><span>2 days ago</span>
-            </p>
-            <p class="min-curator"><span>by</span><span class="name">9x9.tv</span></p>
-          </li>
-<!--
-          <li>
-            <img src="${nroot}/thumbnail/coffee/01.jpg" class="thumbnail">
-            <p class="min-title"><span>Coffee</span></p>
-            <p class="min-description ellipsis multiline">
-              <span>The captivating strand of Jeremy Lin mystique is from nowhere to be a star.</span>
-            </p>
-            <p class="min-meta">
-              <span>150 Episodes</span><span class="divider">|</span><span>2 days ago</span>
-            </p>
-            <p class="min-curator"><span>by</span><span class="name">9x9.tv</span></p>
-          </li>
-          <li>
-            <img src="${nroot}/thumbnail/11.jpg" class="thumbnail">
-            <p class="min-title"><span>Wedding</span></p>
-            <p class="min-description ellipsis multiline">
-              <span>The captivating strand of Jeremy Lin mystique is from nowhere to be a star.</span>
-            </p>
-            <p class="min-meta">
-              <span>150 Episodes</span><span class="divider">|</span><span>2 days ago</span>
-            </p>
-            <p class="min-curator"><span>by</span><span class="name">9x9.tv</span></p>
-          </li>
--->
         </ul>    
       </div>
       
@@ -848,41 +642,7 @@ soundManager.onready(function()
         <p id="maylike-down"></p>
         <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
         <ul id="gr-list">
-          <li>
-            <img src="${nroot}/thumbnail/photo.png" class="thumbnail">
-            <p class="min-title"><span>The Beautiful Day</span></p>
-            <p class="min-description ellipsis multiline">
-              <span>The captivating strand of Jeremy Lin mystique is from nowhere to be a star.</span>
-            </p>
-            <p class="min-meta">
-              <span>150 Episodes</span><span class="divider">|</span><span>2 days ago</span>
-            </p>
-            <p class="min-curator"><span>by</span><span class="name">9x9.tv</span></p>
-          </li>
-          <li>
-            <img src="${nroot}/thumbnail/photo/07.jpg" class="thumbnail">
-            <p class="min-title"><span>Shore</span></p>
-            <p class="min-description ellipsis multiline">
-              <span>The captivating strand of Jeremy Lin mystique is from nowhere to be a star.</span>
-            </p>
-            <p class="min-meta">
-              <span>150 Episodes</span><span class="divider">|</span><span>2 days ago</span>
-            </p>
-            <p class="min-curator"><span>by</span><span class="name">9x9.tv</span></p>
-          </li>
-          <li>
-            <img src="${nroot}/thumbnail/japan-tourist-594-2.png" class="thumbnail">
-            <p class="min-title"><span>Japan</span></p>
-            <p class="min-description ellipsis multiline">
-              <span>The captivating strand of Jeremy Lin mystique is from nowhere to be a star.</span>
-            </p>
-            <p class="min-meta">
-              <span>150 Episodes</span><span class="divider">|</span><span>2 days ago</span>
-            </p>
-            <p class="min-curator"><span>by</span><span class="name">9x9.tv</span></p>
-          </li>
         </ul>
-      
     </div>
   </div>
 </div>
@@ -896,9 +656,10 @@ soundManager.onready(function()
 
 
 
-<!-- Home Layer Begin -->
-<div id="home-layer" class="stage" style="display: none">
-  <div id="home-constrain">
+<div id="home-layer" class="stage">
+<div id="home-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+<div id="home-constrain">
+    <div id="home-list">
     <div id="banner">
       <p class="l"></p>
       <p class="r"></p>
@@ -912,9 +673,9 @@ soundManager.onready(function()
       <p id="home-arrow-down"></p>
       <div id="trending-stories">
         <div class="trending-box"> 
-          <p class="trending-box-tab"></p>
+          <p class="trending-box-tab"><span>Follow</span></p>
           <p class="trending-box-play"></p>
-          <img src="${nroot}/thumbnail/player.jpg" class="mainpic" height="100%" width="100%">
+          <img src="" class="mainpic" height="100%" width="100%">
           <div class="trending-box-footer"> 
             <p class="trending-box-footer-l"></p> 
             <div class="trending-box-footer-c">
@@ -932,70 +693,27 @@ soundManager.onready(function()
           <h2>Jeremy Lin's rise from ordinary guy to sensation</h2>
           <p class="msg-p-left">The most captivating strand of the Jeremy Lin mystique is that he came from nowhere, emerging overnight to become a star.</p>
           <p class="msg-p-right">by <b>Liz lisa</b></p>
-          <img src="${nroot}/thumbnail/curator_09.png" class="msg-pic">
+          <img src="" class="msg-pic">
         </div>
       </div>
       <ul id="trending-stories-right">
       </ul>
       <hr>
       <div id="followings-wrap">
-        <h1>My Followings (20/81)</h1>
-        <div class="followings-box">
-          <p class="followings-play"></p>
-          <p class="followings-tab"></p>
-          <img src="thumbnail/followings1.png" class="followings-box-pic-1">
-          <img src="thumbnail/followings2.png" class="followings-box-pic-2">
-          <img src="thumbnail/followings3.png" class="followings-box-pic-3">
-          <p class="followings-name">Travel is My Life</p>
-          <p class="followings-note">75 Episodes<br>
-            1 hour ago<br>
-            10K Followers<br>
-            90K Views </p>
-          <p class="followings-ar">by <b>Someone</b></p>
-          <img src="thumbnail/curator_09.png" class="followings-pic">
-        </div>
-        <div class="followings-box"> 
-          <p class="followings-play"></p>
-          <p class="followings-tab"></p>
-          <img src="thumbnail/followings1.png" class="followings-box-pic-1">
-          <img src="thumbnail/followings2.png" class="followings-box-pic-2">
-          <img src="thumbnail/followings3.png" class="followings-box-pic-3">
-          <p class="followings-name">Travel is My Life</p>
-          <p class="followings-note">75 Episodes<br>
-            1 hour ago<br>
-            10K Followers<br>
-            90K Views </p>
-          <p class="followings-ar">by <b>Someone</b></p>
-          <img src="thumbnail/curator_09.png" class="followings-pic">
-        </div>
-        <div class="followings-box"> 
-          <p class="followings-play"></p>
-          <p class="followings-tab"></p>
-          <img src="thumbnail/followings1.png" class="followings-box-pic-1">
-          <img src="thumbnail/followings2.png" class="followings-box-pic-2"> 
-          <img src="thumbnail/followings3.png" class="followings-box-pic-3">
-          <p class="followings-name">Travel is My Life</p>
-          <p class="followings-note">75 Episodes<br>
-            1 hour ago<br>
-            10K Followers<br>
-            90K Views </p>
-          <p class="followings-ar">by <b>Someone</b></p>
-          <img src="thumbnail/curator_09.png" class="followings-pic">
-        </div>
       </div>
     </div>
     <div id="homerightbox">
       <p id="home-type">Hottest</p>
       <ul id="home-menu">
-        <li id="hottest" title="Hottest"></li>
-        <li id="featured" title="Featured"></li>
-        <li id="recommended" title="You May Like"></li>
+        <li id="hottest" class="on"></li>
+        <li id="featured"></li>
+        <li id="recommended"></li>
       </ul>
-      <ul id="home-list">
-        <li>
+      <ul id="home-billboard">
       </ul>
-    </div>
+    </div>  
   </div>
+</div>
 </div>
 <!-- Home Layer End --> 
 
@@ -1003,81 +721,53 @@ soundManager.onready(function()
 
 
 
-
 <!-- Setting Layer Begin -->
-<div id="settings-layer" class="stage" style="display: none">
+<div id="settings-layer" class="stage">
   <div id="settings-wrap">
     <div class="settings-bar">
       <h1 class="settings-h1">Settings</h1>
     </div> 
-    <div class="popmessage-settings-status1">
-      <p class="popmessage-style1-left"></p>
-      <p class="popmessage-style1-middle">Password changed successfully!</p>
-      <p class="popmessage-style1-right"></p>
-    </div>  
-    <div class="popmessage-settings-status2">
-      <p class="popmessage-style1-left"></p>
-      <p class="popmessage-style1-middle">Your changes have been saved successfully.</p>
-      <p class="popmessage-style1-right"></p>
-    </div>
-    <div class="popmessage-settings-status3">
-      <p class="popmessage-style1-left"></p>
-      <p class="popmessage-style1-middle">Old password is incorrect.</p>
-      <p class="popmessage-style1-right"></p>
-    </div>
-    <div class="popmessage-settings-status4">
-      <p class="popmessage-style1-left"></p>
-      <p class="popmessage-style1-middle">Notification settings changed successfully!</p>
-      <p class="popmessage-style1-right"></p>
-    </div>
     <div id="settings-content">    
       <p id="title">Settings</p>
       <ul id="left">
         <li>
           <div class="title">Email</div>
-          <div class="data">cunnie@gmail.com</div>
+          <div class="data" id="settings-email"></div>
         </li>
         <li>
-          <p class="title title-position">Username</p>
+          <p class="title title-position">Name</p>
           <div class="data"> 
             <div class="input-wrap"> 
               <p class="input-l"></p>
-              <input value="Cunnie" class="input-c" id="settings-username">
+              <input value="" class="input-c" id="settings-username">
               <p class="input-r"></p>
             </div>
-            <div id="btn-settings-check" class="btn-gray">
+            <!--div id="btn-settings-check" class="btn-gray">
               <p class="btn-gray-left"></p>
               <p class="btn-gray-middle">Check</p>
               <p class="btn-gray-right"></p>
-            </div>
-            <p class="username-p-position">The username is composed of 8-16 English letters or numbers or low line</span> <span class="username-p-position-note">Only can use 8-­‐16 English letters, number, low line.<br>
-            This username has already been used, please type another one.</p>
+            </div-->
+            <!--p class="username-p-position">The username is composed of 8-16 English letters or numbers or low line.</span><br>
+            This username has already been used, please type another one.</p-->
           </div>
-        </li>
+        </li-->
         <li>
           <p class="title title-position">Password</p>
           <div class="data">
-            <div id="btn-change-password"> 
-              <div class="btn-gray">
-                <p class="btn-gray-left"></p>
-                <p class="btn-gray-middle">Change password</p>
-                <p class="btn-gray-right"></p>
-              </div>
-            </div>
-          	<div class="popmessage-settings-status5">
-              <p class="popmessage-style2-left"></p>
-              <p class="popmessage-style2-middle">Password changed successfully!</p>
-              <p class="popmessage-style2-right"></p>
+            <div id="btn-change-password" class="btn-gray"> 
+              <p class="btn-gray-left"></p>
+              <p class="btn-gray-middle">Change password</p>
+              <p class="btn-gray-right"></p>
             </div>
           </div>
         </li>
         <li>
           <p class="title">About</p>
           <p class="data">
-            <textarea class="about-textarea"></textarea>
+            <textarea class="about-textarea" id="settings-about"></textarea>
           </p>
         </li>
-        <li>
+        <!--li>
           <p class="title title-position">Notification</p>
           <div class="data">
             <div id="btn-notification" class="btn-gray"> 
@@ -1086,32 +776,32 @@ soundManager.onready(function()
               <p class="btn-gray-right"></p>
             </div>
           </div>
-        </li>
-        <li>
+        </li-->
+        <!--li>
           <div class="title">Facebook</div>
           <div class="data">
             <div class="settings-list">
-              <p class="icon"><img src="images/icon_facebook.png"></p>
+              <p class="icon"><img src="${nroot}/images/icon_facebook.png"></p>
               <p class="settings-control"></p>
               <p>Connect to Facebook</p>
             </div>
             <div class="settings-list">
-              <p class="icon"><img src="images/icon_facebook.png"></p>
+              <p class="icon"><img src="${nroot}/images/icon_facebook.png"></p>
               <p class="settings-control"></p>
               <p>Publish activity to your Facebook Timeline</p>
             </div>
           </div>
-        </li>
-        <li>
+        </li-->
+        <!--li>
           <p class="title">Youtube</p>
           <div class="data">
             <div class="settings-list">
-              <p class="icon"><img src="images/icon_youtube.png"></p>
+              <p class="icon"><img src="${nroot}/images/icon_youtube.png"></p>
               <p class="settings-control"></p>
               <p>Connect to Youtube</p>
             </div>
           </div>
-        </li>
+        </li-->
       </ul>
       <div id="right">
         <p class="title">Image</p>
@@ -1119,22 +809,22 @@ soundManager.onready(function()
           <p class="l"></p>
           <div class="c">
             <div id="imagebox-upload-box">
-        	  <div id="imagebox-upload-wrap">
+        	<div id="imagebox-upload-wrap">
                 <span id="per">50%</span>
                 <div id="bar">
                   <p class="bar_l"></p>
                   <p class="bar_m"></p>
                   <p class="bar_r"></p>
-				</div>
+	        </div>
               </div>
               <p class="imagebox-upload-wrap-p">Sample.jpg<br><br>00:52 remaining</p>
-        	  <div id="btn-cancel-upload-image" class="btn-gray">
-                <p class="btn-gray-left"></p>
-                <p class="btn-gray-middle">Cancel</p>
-                <p class="btn-gray-right"></p>
+        	  <div id="btn-cancel-upload-image" class="btn-white">
+                <p class="btn-white-left"></p>
+                <p class="btn-white-middle">Cancel</p>
+                <p class="btn-white-right"></p>
               </div>
             </div>
-            <img src="thumbnail/curator_05.png">
+            <img src="${nroot}/thumbnail/curator_05.png">
           </div>
           <p class="r"></p>
           <div id="btn-upload" class="btn-gray">
@@ -1146,11 +836,6 @@ soundManager.onready(function()
       </div>
     </div>
   </div>
-  <div class="popmessage-settings-status6">
-    <p class="popmessage-style2-left"></p>
-    <p class="popmessage-style2-middle">Your changes have been saved successfully.</p>
-    <p class="popmessage-style2-right"></p>
-  </div>
   <div id="btn-save-profile" class="btn-gray">
     <p class="btn-gray-left"></p>
     <p class="btn-gray-middle">Save profile</p>
@@ -1158,6 +843,7 @@ soundManager.onready(function()
   </div>
 </div>
 <!-- Setting Layer End --> 
+
 <!-- Setting Layer Change password Begin-->
 <div id="settings-change-layer">
   <div id="settings-change-holder"> 
@@ -1165,13 +851,13 @@ soundManager.onready(function()
     <div class="m"> 
       <p id="btn-change-close"></p>
       <div id="settings-panel-change"> 
-        <img src="images/change_password.png" class="changepic">
+        <img src="${nroot}/images/change_password.png" class="changepic">
         <ul>
           <li> 
             <p class="input-l"></p>
             <p class="input-m-set">
               <span class="hint">Old Password</span>
-              <img src="images/icon_password.png" class="icon-set">
+              <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="settings-old-pw" value="" />
             </p>
             <p class="input-r"></p>
@@ -1180,7 +866,7 @@ soundManager.onready(function()
             <p class="input-l"></p>
             <p class="input-m-set">
               <span class="hint">New Password</span>
-              <img src="images/icon_password.png" class="icon-set">
+              <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="settings-new-pw1" value="" />
             </p>
             <p class="input-r"></p>
@@ -1189,7 +875,7 @@ soundManager.onready(function()
             <p class="input-l"></p>
             <p class="input-m-set">
               <span class="hint">Repeat New Password</span>
-              <img src="images/icon_password.png" class="icon-set">
+              <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="settings-new-pw2" value="" />
             </p>
             <p class="input-r"></p>
@@ -1214,120 +900,125 @@ soundManager.onready(function()
   </div>
 </div>
 <!-- Setting Layer Change password End --> 
+
 <!-- Settings notification Begin-->
-<div id="settings-notification-layer">
+<div id="settings-notification-layer"  class="stage">
   <div id="settings-wrap">
     <div class="settings-bar">
       <h1 class="settings-h1">Settings</h1>
     </div>
     <div id="settings-content">
       <div id="title">Settings > Change notification</div>
-      <ul id="notification">
-        <li>
-          <div class="title">All</div>
-          <div class="data"> <span class="settings-control"></span>
-            <p>Any emails</p>
-          </div>
-        </li>
-        <p class="shadow-h"></p>
-        <li><b>We will send you email of channel updates weekly</b></li>
-        <li>
-          <div class="title">Treanding stories</div>
-          <div class="data">
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>When a new episode is added to "Trending Stories"</p>
+    <div id="notification-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+        <div id="notification-constrain">
+            <div id="notification-list"> 
+              <ul id="notification">
+                <li>
+                  <div class="title">All</div>
+                  <div class="data"> <span class="settings-control"></span>
+                    <p>Any emails</p>
+                  </div>
+                </li>
+                <p class="shadow-h"></p>
+                <li><b>We will send you email of channel updates weekly</b></li>
+                <li>
+                  <div class="title">Treanding stories</div>
+                  <div class="data">
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>When a new episode is added to "Trending Stories"</p>
+                    </div>
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>When a new channel is added to “Trending Stories”</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="title">Followings</div>
+                  <div class="data">
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>When a new channel is added to your followings</p>
+                    </div>
+                  </div>
+                </li>
+                <p class="shadow-h"></p>
+                <li>
+                  <div class="title">Followers</div>
+                  <div class="data">
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>When a new person follows your channel</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="title">Favorite</div>
+                  <div class="data">
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>When someone favorite episode in your channel</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="title">Frequency</div>
+                  <div class="data">
+                    <div class="settings-list h40">
+                      <p>How often you receive emails about above information:</p>
+                      <div class="settings-radio">
+                        <p class="btn-radio on"></p>
+                        <p class="radio-p">Once Daily</p>
+                      </div>
+                      <div class="settings-radio">
+                        <p class="btn-radio"></p>
+                        <p class="radio-p">Once Weekly</p>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <p class="shadow-h"></p>
+                <li>
+                  <div class="title">Statistics</div>
+                  <div class="data">
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>Emails summarizimg your weekly activity</p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="title">News</div>
+                  <div class="data">
+                    <div class="settings-list">
+                      <p class="settings-control"></p>
+                      <p>Occasional 9x9 news and updates</p>
+                    </div>
+                  </div>
+                </li>
+                <p class="shadow-h"></p>       
+              </ul>
+            <div id="notification-btn">
+                <div class="notification-wrap-btn">
+                  <div id="btn-save-notification" class="btn-gray">
+                    <p class="btn-gray-left"></p>
+                    <p class="btn-gray-middle">Save</p>
+                    <p class="btn-gray-right"></p>
+                  </div>
+                  <div id="btn-cancel-notification" class="btn-gray">
+                    <p class="btn-gray-left"></p>
+                    <p class="btn-gray-middle">Cancel</p>
+                    <p class="btn-gray-right"></p>
+                  </div>
+                </div>
             </div>
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>When a new channel is added to “Trending Stories”</p>
-            </div>
           </div>
-        </li>
-        <li>
-          <div class="title">Followings</div>
-          <div class="data">
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>When a new channel is added to your followings</p>
-            </div>
-          </div>
-        </li>
-        <p class="shadow-h"></p>
-        <li>
-          <div class="title">Followers</div>
-          <div class="data">
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>When a new person follows your channel</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="title">Favorite</div>
-          <div class="data">
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>When someone favorite episode in your channel</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="title">Frequency</div>
-          <div class="data">
-            <div class="settings-list h40">
-              <p>How often you receive emails about above information:</p>
-              <div class="settings-radio">
-                <p class="btn-radio on"></p>
-                <p class="radio-p">Once Daliy</p>
-              </div>
-              <div class="settings-radio">
-                <p class="btn-radio"></p>
-                <p class="radio-p">Once Weekly</p>
-              </div>
-            </div>
-          </div>
-        </li>
-        <p class="shadow-h"></p>
-        <li>
-          <div class="title">Statitlcs</div>
-          <div class="data">
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>Emails summarizimg your weelky activity</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="title">News</div>
-          <div class="data">
-            <div class="settings-list">
-              <p class="settings-control"></p>
-              <p>Occasional 9x9 news and updates</p>
-            </div>
-          </div>
-        </li>
-        <p class="shadow-h"></p>
-        
-      </ul>
-    </div>
-    <div class="notification-wrap-btn">
-      <div id="btn-save-notification" class="btn-gray">
-        <p class="btn-gray-left"></p>
-        <p class="btn-gray-middle">Save</p>
-        <p class="btn-gray-right"></p>
-      </div>
-      <div id="btn-cancel-notification" class="btn-gray">
-        <p class="btn-gray-left"></p>
-        <p class="btn-gray-middle">Cancel</p>
-        <p class="btn-gray-right"></p>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
+	</div>
+	</div>
 </div>
 <!-- Settings notification End -->
-
 
 
 
