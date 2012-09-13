@@ -366,25 +366,25 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        
-        
         String name = req.getParameter("name");
         if (name != null) {
-            lib.setName(name);
+            lib.setName(NnStringUtil.htmlSafeAndTruncated(name));
         }
         
         String imageUrl = req.getParameter("imageUrl");
         if (imageUrl != null) {
             lib.setImageUrl(imageUrl);
         }
-                
+        
         return libMngr.save(lib);
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.GET)
-    public @ResponseBody List<NnChannel> userChannels(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
-        
-        List<NnChannel> result = new ArrayList<NnChannel>();
+    public @ResponseBody
+    List<NnChannel> userChannels(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+
+    List<NnChannel> result = new ArrayList<NnChannel>();
         
         Long userId = null;
         try {
