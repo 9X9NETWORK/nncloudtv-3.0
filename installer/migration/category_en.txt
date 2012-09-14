@@ -1,3 +1,4 @@
+All
 Animals & Pets 
 Art & Design 
 Autos & Vehicles 
@@ -15,3 +16,4 @@ Science
 Sports & Health 
 Tech & Apps 
 TV & Film
+Others

@@ -16,14 +16,30 @@ contentCursor.execute("""truncate tag """)
 contentCursor.execute("""truncate tag_map """)
 
 contentCursor.execute("""insert into tag (name, updateDate) values ('hot(9x9en)', now()); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 1); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 2); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 3); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 4); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 5); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 6); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 7); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 8); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (1, 9); """)
 contentCursor.execute("""insert into tag (name, updateDate) values ('hot(9x9zh)', now()); """)  
-contentCursor.execute("""insert into tag (name, updateDate) values ('featured(9x9en)', now()); """)
-contentCursor.execute("""insert into tag (name, updateDate) values ('featured(9x9zh)', now()); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 1); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 2); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 3); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 4); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 5); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 6); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 7); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 8); """)
+contentCursor.execute("""insert into tag_map (channelId, tagId) values (2, 9); """)
 contentCursor.execute("""insert into tag (name, updateDate) values ('trending(9x9en)', now()); """) 
 contentCursor.execute("""insert into tag (name, updateDate) values ('trending(9x9zh)', now()); """) 
                                                                                                
                                                                                                
-feed = open("content_zh.txt", "rU")                                                            
+feed = open("contentPool.txt", "rU")                                                            
 i = 0
 for line in feed:
   i = i+1
@@ -53,6 +69,7 @@ for line in feed:
      """, (cName, lang, sphere, cId)) 
   dbcontent.commit()
   ### update category info
+  print "categoryName: " + categoryName
   contentCursor.execute("""
     select id 
       from category
@@ -114,3 +131,4 @@ for line in feed:
 
 print "record done:" + str(i)
 feed.close()
+dbcontent.close()
