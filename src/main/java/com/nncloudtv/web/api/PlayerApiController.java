@@ -784,13 +784,14 @@ public class PlayerApiController {
         
         log.info("player input - userToken=" + userToken+ "; url=" + url + 
                  ";grid=" + grid + ";categoryId=" + categoryIds +
-                 ";rx=" + rx);                
+                 ";rx=" + rx + ";tags" + tags + ";lang=" + lang);
+        return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+        /*
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
         try {
             int status = this.prepService(req, true);
             if (status != NnStatusCode.SUCCESS) {
-                return 
-                        playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
             output = playerApiService.channelSubmit(categoryIds, userToken, url, grid, tags, lang, req);
         } catch (Exception e){
@@ -798,7 +799,8 @@ public class PlayerApiController {
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);
         }
-        return output;        
+        return output;
+        */        
     }
 
     /**
@@ -1618,19 +1620,12 @@ public class PlayerApiController {
     }
 
     /**
-     * It's merged of 4 APIs, userTokenVerify(login, guestRegister), listRecommended, setInfo and programInfo.
+     * Mix of account authentication and directory listing  
      * 
      * If token is provided, will do userTokenVerify.
      * If token is not provided, will do login
      * If token and email/password is not provided, will do guestRegister.
-     * 
-     * Return text includes 4 sections. 
-     * 
-     * first: userTokenVerify, or login, or guestRegister
-     * second: listRecommended
-     * third: setInfo
-     * fourth: programInfo 
-     * 
+     *  
      * @param token if not empty, will do userTokenVerify
      * @param email if token is not provided, will do login check with email and password
      * @param password password 
@@ -1659,6 +1654,37 @@ public class PlayerApiController {
         return output;                 
     }
 
+    /**
+     * Mix of sphere related content listing 
+     *   
+     * @param token if not empty, will do userTokenVerify
+     * @param email if token is not provided, will do login check with email and password
+     * @param password password 
+     * @param rx rx
+     * @return please reference api introduction
+     */    
+    @RequestMapping(value="sphereData", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String sphereData(
+            @RequestParam(value="token", required=false) String token,
+            @RequestParam(value="email", required=false) String email,
+            @RequestParam(value="password", required=false) String password,            
+            @RequestParam(value="rx", required = false) String rx,            
+            HttpServletRequest req,
+            HttpServletResponse resp) {        
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS)
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            output = playerApiService.sphereData(token, email, password, req, resp);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;                 
+    }
+    
     /* ios flipr demo feature*/    
     @RequestMapping(value="graphSearch", produces = "text/plain; charset=utf-8")
     public @ResponseBody String graphSearch(
