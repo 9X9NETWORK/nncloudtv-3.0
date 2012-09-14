@@ -18,6 +18,8 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.Category;
+import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
@@ -283,7 +285,18 @@ public class NnChannelManager {
     }
     
     public NnChannel findById(long id) {
+        
         NnChannel channel = dao.findById(id);
+        if (channel == null) {
+            return null;
+        }
+        
+        CategoryMapManager catMapMngr = new CategoryMapManager();
+        CategoryMap categoryMap = catMapMngr.findByChannelId(id);
+        if (categoryMap!=null) {
+            channel.setCategoryId(categoryMap.getCategoryId());
+        }
+        
         return channel;
     }
 
