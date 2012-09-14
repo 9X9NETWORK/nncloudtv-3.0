@@ -489,6 +489,36 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "tags", method = RequestMethod.GET)
+    public @ResponseBody String[] tags(HttpServletRequest req, HttpServletResponse resp) {
+        
+        String categoryIdStr = req.getParameter("categoryId");
+        if (categoryIdStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (categoryId == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        CategoryManager catMngr = new CategoryManager();
+        Category category = catMngr.findById(categoryId);
+        if (category == null) {
+            
+            badRequest(resp, "Category Not Found");
+            return null;
+        }
+        
+        return category.getTag().split(",");
+    }
+    
     @RequestMapping(value = "categories", method = RequestMethod.GET)
     public @ResponseBody
     List<Category> categories(HttpServletRequest req, HttpServletResponse resp) {
@@ -797,6 +827,7 @@ public class ApiContent extends ApiGeneric {
         return adMngr.findByEpisode(episode);
     }
     
+    // TODO: refine
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.POST)
     public @ResponseBody
     TitleCard titleCardCreate(HttpServletResponse resp, HttpServletRequest req,
@@ -929,8 +960,6 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-        
-        
         
         TitleCardManager titleCardMngr = new TitleCardManager();
         TitleCard titleCard = titleCardMngr.findById(id);
