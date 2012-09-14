@@ -32,6 +32,10 @@ public class NnUserLibraryManager {
         return libDao.findByUserIdStrAndType(user.getIdStr(), type);
     }
     
+    public List<NnUserLibrary> findByUserAndType(NnUser user, Short type, Short page, Short rows) {
+        return libDao.findByUserIdStrAndType(user.getIdStr(), type);
+    }
+    
     public void delete(NnUserLibrary lib) {
         libDao.delete(lib);
     }

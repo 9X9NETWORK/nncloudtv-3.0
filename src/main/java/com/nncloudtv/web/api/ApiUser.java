@@ -161,7 +161,35 @@ public class ApiUser extends ApiGeneric {
             type = NnUserLibrary.TYPE_YOUTUBE;
         }
         
-        return libMngr.findByUserAndType(user, type);
+        String pageStr = req.getParameter("page");
+        String rowsStr =  req.getParameter("rows");
+        if ((pageStr!=null) && (rowsStr!=null)) {
+            
+            Short page = null;
+            try {
+                page = Short.valueOf(pageStr);
+            } catch (NumberFormatException e) {
+            }
+            if (page == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            Short rows = null;
+            try {
+                rows = Short.valueOf(rowsStr);
+            } catch (NumberFormatException e) {
+            }
+            if (rows == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            return libMngr.findByUserAndType(user, type, page, rows);
+            
+        } else {
+            return libMngr.findByUserAndType(user, type);
+        }      
     }
     
     @RequestMapping(value = { "users/{userId}/my_uploads/{id}", "users/{userId}/my_library/{id}" }, method = RequestMethod.DELETE)
