@@ -93,7 +93,7 @@ public class NnUserLibraryDao extends GenericDao<NnUserLibrary> {
 			query.declareParameters("String userIdStrParam, short typeParam, String fileUrlParam");
 			@SuppressWarnings("unchecked")
 			List<NnUserLibrary> libs = (List<NnUserLibrary>) query
-			        .execute(userIdStr, type); // fileUrl ??
+			        .execute(userIdStr, type, fileUrl);
 			if (libs.size() > 0) {
 				result = pm.detachCopy(libs.get(0));
 			}

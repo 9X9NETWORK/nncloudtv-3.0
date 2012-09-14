@@ -24,6 +24,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
@@ -33,6 +34,7 @@ import com.nncloudtv.service.NnChannelPrefManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnProgramSeqComparator;
+import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.TitleCardManager;
 
 @Controller
@@ -972,5 +974,90 @@ public class ApiContent extends ApiGeneric {
         
         return "OK";
     }
-                        
+    
+    @RequestMapping(value = "my_uploads/{id}", method = RequestMethod.GET)
+    public @ResponseBody
+    NnUserLibrary userUpload(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("id") String idStr) {
+        
+        Long id = null;
+        try {
+            id = Long.valueOf(idStr);
+        } catch (NumberFormatException e) {
+        }
+        if (id == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserLibraryManager libMngr = new NnUserLibraryManager();
+        NnUserLibrary lib = libMngr.findById(id);
+        if (lib == null) {
+            notFound(resp, "Item Not Found");
+            return null;
+        }
+        
+        return lib;
+    }
+    
+    @RequestMapping(value = "my_uploads/{id}", method = RequestMethod.PUT)
+    public @ResponseBody
+    NnUserLibrary userUploadUpdate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("id") String idStr) {
+        
+        Long id = null;
+        try {
+            id = Long.valueOf(idStr);
+        } catch (NumberFormatException e) {
+        }
+        if (id == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserLibraryManager libMngr = new NnUserLibraryManager();
+        NnUserLibrary lib = libMngr.findById(id);
+        if (lib == null) {
+            notFound(resp, "Item Not Found");
+            return null;
+        }
+        
+        String name = req.getParameter("name");
+        if (name != null) {
+            lib.setName(NnStringUtil.htmlSafeAndTruncated(name));
+        }
+        
+        String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl != null) {
+            lib.setImageUrl(imageUrl);
+        }
+        
+        return libMngr.save(lib);
+    }
+    
+    @RequestMapping(value = { "my_uploads/{id}", "my_library/{id}" }, method = RequestMethod.DELETE)
+    public @ResponseBody
+    String userUploadsDelete(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("id") String idStr) {        
+        
+        Long id = null;
+        try {
+            id = Long.valueOf(idStr);
+        } catch (NumberFormatException e) {
+        }
+        if (id == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserLibraryManager libMngr = new NnUserLibraryManager();
+        NnUserLibrary lib = libMngr.findById(id);
+        if (lib == null) {
+            return "Item Not Found";
+        }
+        
+        libMngr.delete(lib);
+        
+        return "OK";
+    }
 }

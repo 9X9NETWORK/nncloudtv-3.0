@@ -201,52 +201,6 @@ public class ApiUser extends ApiGeneric {
         }      
     }
     
-    @RequestMapping(value = { "users/{userId}/my_uploads/{id}", "users/{userId}/my_library/{id}" }, method = RequestMethod.DELETE)
-    public @ResponseBody
-    String userUploadsDelete(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable("userId") String userIdStr,
-            @PathVariable("id") String idStr) {        
-        
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (userId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnUserManager userMngr = new NnUserManager();
-        
-        NnUser user = userMngr.findById(userId);
-        if (user == null) {
-            notFound(resp, "User Not Found");
-            return null;
-        }
-        
-        Long id = null;
-        
-        try {
-            id = Long.valueOf(idStr);
-        } catch (NumberFormatException e) {
-        }
-        if (id == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnUserLibraryManager libMngr = new NnUserLibraryManager();
-        NnUserLibrary lib = libMngr.findById(id);
-        if (lib == null) {
-            return "Item Not Found";
-        }
-        
-        libMngr.delete(lib);
-        
-        return "OK";
-    }
-    
     @RequestMapping(value = "users/{userId}/my_{repo}", method = RequestMethod.POST)
     public @ResponseBody
     String userUploadsCreate(HttpServletRequest req, HttpServletResponse resp,
@@ -285,7 +239,6 @@ public class ApiUser extends ApiGeneric {
         }
         
         name = NnStringUtil.htmlSafeAndTruncated(name);
-        // TODO: check for url
         
         short type = NnUserLibrary.TYPE_UPLOADS;
         if (repo.equalsIgnoreCase("library")) {
@@ -303,6 +256,8 @@ public class ApiUser extends ApiGeneric {
         if (lib == null) {
             lib = new NnUserLibrary(name, url, type);
         }
+        lib.setName(name);
+        lib.setFileUrl(url);
         lib.setUserIdStr(user.getIdStr());
         if (imageUrl != null) {
             // TODO: check for imageUrl
@@ -316,112 +271,12 @@ public class ApiUser extends ApiGeneric {
         return "OK";
     }
     
-    @RequestMapping(value = "users/{userId}/my_uploads/{id}", method = RequestMethod.GET)
-    public @ResponseBody
-    NnUserLibrary userUpload(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable("userId") String userIdStr,
-            @PathVariable("id") String idStr) {
-        
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (userId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnUserManager userMngr = new NnUserManager();
-        
-        NnUser user = userMngr.findById(userId);
-        if (user == null) {
-            notFound(resp, "User Not Found");
-            return null;
-        }
-        
-        Long id = null;
-        
-        try {
-            id = Long.valueOf(idStr);
-        } catch (NumberFormatException e) {
-        }
-        if (id == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnUserLibraryManager libMngr = new NnUserLibraryManager();
-        NnUserLibrary lib = libMngr.findById(id);
-        if (lib == null) {
-            notFound(resp, "Item Not Found");
-            return null;
-        }
-        
-        return lib;
-    }
-    
-    @RequestMapping(value = "users/{userId}/my_uploads/{id}", method = RequestMethod.PUT)
-    public @ResponseBody
-    NnUserLibrary userUploadUpdate(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable("userId") String userIdStr,
-            @PathVariable("id") String idStr) {
-        
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (userId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnUserManager userMngr = new NnUserManager();
-        
-        NnUser user = userMngr.findById(userId);
-        if (user == null) {
-            notFound(resp, "User Not Found");
-            return null;
-        }
-        
-        Long id = null;
-        
-        try {
-            id = Long.valueOf(idStr);
-        } catch (NumberFormatException e) {
-        }
-        if (id == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnUserLibraryManager libMngr = new NnUserLibraryManager();
-        NnUserLibrary lib = libMngr.findById(id);
-        if (lib == null) {
-            notFound(resp, "Item Not Found");
-            return null;
-        }
-        
-        String name = req.getParameter("name");
-        if (name != null) {
-            lib.setName(NnStringUtil.htmlSafeAndTruncated(name));
-        }
-        
-        String imageUrl = req.getParameter("imageUrl");
-        if (imageUrl != null) {
-            lib.setImageUrl(imageUrl);
-        }
-        
-        return libMngr.save(lib);
-    }
-    
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.GET)
     public @ResponseBody
     List<NnChannel> userChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
-
-    List<NnChannel> result = new ArrayList<NnChannel>();
+    
+        List<NnChannel> result = new ArrayList<NnChannel>();
         
         Long userId = null;
         try {
