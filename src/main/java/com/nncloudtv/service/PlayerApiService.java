@@ -340,6 +340,9 @@ public class PlayerApiService {
         if (pdr == null || pdr.length() == 0) 
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);    
         
+        //pdr process
+        PdrManager pdrMngr = new PdrManager();
+        pdrMngr.processWatched(userToken, deviceToken, pdr); 
         NnUser user = null;
         if (userToken != null) { 
             //verify input
@@ -358,8 +361,6 @@ public class PlayerApiService {
         if (device == null && user == null)
             return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
         
-        //pdr process
-        PdrManager pdrMngr = new PdrManager();
         String ip = NnNetUtil.getIp(req);         
         pdrMngr.processPdr(user, device, session, pdr, ip);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
@@ -483,16 +484,16 @@ public class PlayerApiService {
         String[] cond = stack.split(",");
         for (String s : cond) {
             List<NnChannel> chs = new ArrayList<NnChannel>(); 
-            if (s.equals("featured")) {
+            if (s.equals(Tag.FEATURED)) {
                 chs = chMngr.findBillboard(Tag.FEATURED, lang);
             }
-            if (s.equals("hot")) {
+            if (s.equals(Tag.HOT)) {
                 chs = chMngr.findBillboard(Tag.HOT, lang);               
             }
             if (s.equals("trending")) {
                 chs = chMngr.findBillboard(Tag.TRENDING, lang);               
             }
-            if (s.equals("recommend")) {
+            if (s.equals(Tag.RECOMMEND)) {
                 chs = new RecommendService().findRecommend(userToken, lang);
             }
             if (s.equals("mayLike")) {
@@ -707,7 +708,7 @@ public class PlayerApiService {
     
     //TODO if use if fb user, redirect to facebook
     public String login(String email, String password, HttpServletRequest req, HttpServletResponse resp) {        
-        log.info("login: email=" + email + "; mso=" + mso.getId() + ";password=" + password);
+        log.info("login: email=" + email + ";password=" + password);
         if (!BasicValidator.validateRequired(new String[] {email, password}))
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);;        
 
@@ -1509,7 +1510,11 @@ public class PlayerApiService {
             return Short.valueOf(status[0]);
         return NnStatusCode.ERROR;
     }
-    
+
+    public String sphereData(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+        List<String> data = new ArrayList<String>();
+        return this.assembleSections(data);
+    }
     /**
      * 1. user info
      * 2. channel lineup (grid)
@@ -1517,74 +1522,71 @@ public class PlayerApiService {
      * 4. trending channels
      */
 
-	public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
-		//1. user info
-		List<String> data = new ArrayList<String>();
-		log.info ("[quickLogin] verify user: " + token);
-		String userInfo = "";
-        	NnUser user = null;
-		if (token != null) {
-			userInfo = this.userTokenVerify(token, req, resp);
-        		user = userMngr.findByToken(token);
-		} else if (email != null || password != null) {		
-			userInfo = this.login(email, password, req, resp);			
-        		user = userMngr.findAuthenticatedUser(email, password, req);
-		} else {
-			userInfo = this.guestRegister(req, resp);
-		}		
-		if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
-			return userInfo;
-		}
-		data.add(userInfo);
-		//2. channel lineup
-		log.info ("[quickLogin] channel lineup: " + token);
-		String lineup = this.channelLineup (token, null, null, false, null, true, false);
-		data.add(lineup);
-		if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}
-		//3. featured curators
-		log.info ("[quickLogin] featured curators");
-		String curatorInfo = this.curator(null, "featured", req);
-		data.add(curatorInfo);
-		//4. trending
-		log.info ("[quickLogin] trending channels");
-		
-		String trending = this.channelStack(Tag.TRENDING, null, token, null);
-		data.add(trending);
-		if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}
-		//5. recommended
-		log.info ("[quickLogin] recommended channels");
-		String recommended = this.channelStack(Tag.RECOMMEND, null, token, null);		
-		data.add(recommended);
-		if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}
-		//6. featured
-		log.info ("[quickLogin] featured channels");
-		String featured = this.channelStack(Tag.FEATURED, null, token, null);
-		data.add(featured);
-		if (this.getStatus(featured) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}
-		//7. hottest
-		log.info ("[quickLogin] hot channels");
-		String hot = this.channelStack(Tag.HOT, null, token, null);
-		data.add(hot);
-		if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
-			return this.assembleSections(data);
-		}
-		//8. category top level
-		String sphere = null;
-		if (user != null)
-			sphere = user.getSphere();
-		log.info ("[quickLogin] top level categories: " + ((sphere == null) ? "default" : sphere));
-		String categoryTop = this.category (null, sphere, false);
-		data.add(categoryTop);
-		return this.assembleSections(data);
-	}
+    public String quickLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+        //1. user info
+        List<String> data = new ArrayList<String>();
+        log.info ("[quickLogin] verify user: " + token);
+        String userInfo = "";
+        String sphere = "en";
+        if (token != null) {
+            userInfo = this.userTokenVerify(token, req, resp);
+        } else if (email != null || password != null) {        
+            userInfo = this.login(email, password, req, resp);            
+        } else {
+            userInfo = this.guestRegister(req, resp);
+        }
+        if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
+            return userInfo;
+        }
+        int sphereIndex = userInfo.indexOf("sphere");
+        sphere = userInfo.substring(sphereIndex+7, sphereIndex+9);
+        data.add(userInfo);
+        //2. channel lineup
+        log.info ("[quickLogin] channel lineup: " + token);
+        String lineup = this.channelLineup(token, null, null, false, null, true, false);
+        data.add(lineup);
+        if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
+        //3. featured curators
+        log.info ("[quickLogin] featured curators");
+        String curatorInfo = this.curator(null, "featured", req);
+        data.add(curatorInfo);
+        //4. trending
+        log.info ("[quickLogin] trending channels");
+        
+        String trending = this.channelStack(Tag.TRENDING, null, token, null);
+        data.add(trending);
+        if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
+        //5. recommended
+        log.info ("[quickLogin] recommended channels");
+        String recommended = this.channelStack(Tag.RECOMMEND, null, token, null);        
+        data.add(recommended);
+        if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
+        //6. featured
+        log.info ("[quickLogin] featured channels");
+        String featured = this.channelStack(Tag.FEATURED, null, token, null);
+        data.add(featured);
+        if (this.getStatus(featured) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
+        //7. hottest
+        log.info ("[quickLogin] hot channels");
+        String hot = this.channelStack(Tag.HOT, null, token, null);
+        data.add(hot);
+        if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
+        //8. category top level
+        log.info ("[quickLogin] top level categories: " + ((sphere == null) ? "default" : sphere));
+        String categoryTop = this.category (null, sphere, false);
+        data.add(categoryTop);
+        return this.assembleSections(data);
+    }
 
     private String assembleSections(List<String> data) {
         String output = "";
