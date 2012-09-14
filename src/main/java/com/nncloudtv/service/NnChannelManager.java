@@ -18,7 +18,9 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
@@ -290,10 +292,35 @@ public class NnChannelManager {
             return null;
         }
         
+        Category category = null;
+        CategoryManager catMngr = new CategoryManager();
         CategoryMapManager catMapMngr = new CategoryMapManager();
-        CategoryMap categoryMap = catMapMngr.findByChannelId(id);
-        if (categoryMap!=null) {
-            channel.setCategoryId(categoryMap.getCategoryId());
+        List<CategoryMap> categoryMaps = catMapMngr.findByChannelId(id);
+        channel.setCategoryId(0);
+        
+        /*
+         * if duplicate in en or zh categories, the newly updated CategoryMap will pick up. 
+         */
+        if (channel.getSphere().equals(LangTable.OTHER)) {
+            for (int i=0; i<categoryMaps.size(); i++) {
+                category = catMngr.findById(categoryMaps.get(i).getCategoryId());
+                if (category.getLang().equals(LangTable.LANG_EN)) {
+                    channel.setCategoryId(category.getId());
+                    break;
+                }
+            }
+        } else {
+            for (int i=0; i<categoryMaps.size(); i++) {
+                category = catMngr.findById(categoryMaps.get(i).getCategoryId());
+                if (channel.getSphere().equals(category.getLang())) {
+                    channel.setCategoryId(category.getId());
+                    break;
+                }
+            }
+        }
+        
+        if (channel.getCategoryId()==0) {
+            // when CategoryId not set
         }
         
         return channel;

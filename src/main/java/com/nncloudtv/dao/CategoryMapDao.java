@@ -1,5 +1,6 @@
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,26 +18,23 @@ public class CategoryMapDao extends GenericDao<CategoryMap> {
         super(CategoryMap.class);
     }
     
-    public CategoryMap findByChannelId(long channelId) {
+    public List<CategoryMap> findByChannelId(long channelId) {
         
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         
-        CategoryMap categoryMap = null;
+        List<CategoryMap> results = new ArrayList<CategoryMap>();
         try {
-            
             Query query = pm.newQuery(CategoryMap.class);
             query.setFilter("channelId == channelIdParam");
-            query.declareParameters("long userIdStrParam");
+            query.declareParameters("long channelIdParam");
+            query.setOrdering("updateDate desc");
             @SuppressWarnings("unchecked")
-            List<CategoryMap> categoryMaps = (List<CategoryMap>) query
-                    .execute(channelId);
-            if (categoryMaps.size() > 0) {
-                categoryMap = pm.detachCopy(categoryMaps.get(0));
-            }
+            List<CategoryMap> categoryMaps = (List<CategoryMap>) query.execute(channelId);
+            results = (List<CategoryMap>) pm.detachCopyAll(categoryMaps);
         } finally {
             pm.close();
         }
-        return categoryMap;
+        return results;
     }
 
 }

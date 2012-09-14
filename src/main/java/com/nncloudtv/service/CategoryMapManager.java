@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -14,9 +15,28 @@ public class CategoryMapManager {
     
     private CategoryMapDao catMapDao = new CategoryMapDao();
     
-    public CategoryMap findByChannelId(Long channelId) {       
-        CategoryMap categoryMap = catMapDao.findByChannelId(channelId);  
-        return categoryMap;
+    public List<CategoryMap> findByChannelId(Long channelId) {       
+        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);  
+        return categoryMaps;
     }
-
+    
+    public void create(CategoryMap categoryMap) {
+        
+        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(categoryMap.getChannelId());
+        int i;
+        for (i=0; i<categoryMaps.size(); i++) {
+            if (categoryMaps.get(i).getCategoryId()==categoryMap.getCategoryId()) {
+                this.save(categoryMaps.get(i)); // the database already has one, only change the updateDate.
+                break;
+            }
+        }
+        if (i==categoryMaps.size()) {
+            this.save(categoryMap); // not found in database, newly created.
+        }
+    }
+    
+    public void save(CategoryMap categoryMap) {
+        catMapDao.save(categoryMap);
+    }
+    
 }
