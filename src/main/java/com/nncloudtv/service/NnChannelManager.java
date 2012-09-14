@@ -378,8 +378,13 @@ public class NnChannelManager {
         return channels;
     }
 
-    //find hot, featured, trending stories
-    //featured and recommended can not be overlapped
+    /**
+     * Find hot, featured, trending stories.
+     * Featured and recommended can not be overlapped
+     * 
+     * Hot: 9 channels automatically selected from the BILLBOARD POOL according to the number-of-views (on 9x9.tv)
+     * Featured: 9 channels randomly selected from the BILLBOARD POOL; can overlap with HOTTEST, but not RECOMMENDED
+     */
     public List<NnChannel> findBillboard(String name, String lang) { 
         List<NnChannel> channels = new ArrayList<NnChannel>();
         RecommendService service = new RecommendService();
@@ -492,7 +497,8 @@ public class NnChannelManager {
         int viewCount = r.nextInt(300);
         String imageUrl = c.getPlayerPrefImageUrl();
 
-        NnUser u = new NnUserManager().findByIdStr(c.getUserIdStr());        
+        NnUserManager userMngr = new NnUserManager();
+        NnUser u = userMngr.findByIdStr(c.getUserIdStr());        
         String userName = "";
         String userIntro = "";
         String userImageUrl = "";
@@ -503,6 +509,26 @@ public class NnChannelManager {
             userImageUrl = u.getImageUrl();
             curatorProfile = u.getProfileUrl();
         }            
+       
+        String subscriberProfile = "";
+        String subscriberImage = "";
+        String subscribersIdStr = c.getSubscribersIdStr();
+        if (subscribersIdStr != null) {
+            String[] list = subscribersIdStr.split(";");
+            for (String l : list ) {
+                NnUser sub = userMngr.findByIdStr(l);
+                if (sub != null) {
+                    subscriberProfile += "|" + sub.getProfileUrl();
+                    subscriberImage += "|" + sub.getImageUrl();                    
+                }
+            }
+            if (subscriberProfile.length() > 0) {
+                subscriberProfile = subscriberProfile.replaceFirst("\\|", "");
+            }
+            if (subscriberImage.length() > 0) {
+                subscriberImage = subscriberImage.replaceFirst("\\|", "");
+            }
+        }
         
         String[] ori = {Integer.toString(c.getSeq()), 
                         String.valueOf(c.getId()),
@@ -526,6 +552,8 @@ public class NnChannelManager {
                         userName,
                         userIntro,
                         userImageUrl,
+                        subscriberProfile,
+                        subscriberImage,
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);
