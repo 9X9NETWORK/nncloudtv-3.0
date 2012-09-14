@@ -32,7 +32,7 @@ public class NnStatusMsg {
                 case NnStatusCode.FATAL: return NnStatusMsg.assembleMsg(status, "FATAL");
                 case NnStatusCode.ERROR: return NnStatusMsg.assembleMsg(status, "ERROR");
     
-                case NnStatusCode.API_DEPRECATED: return NnStatusMsg.assembleMsg(status, "API_DEPRECATED");
+                case NnStatusCode.API_DEPRECATED: return NnStatusMsg.assembleMsg(status, "THIS FEATURE IS TEMPORAILY DISABLED");
                 case NnStatusCode.API_UNDER_CONSTRUCTION: return NnStatusMsg.assembleMsg(status, "API_UNDER_CONSTRUCTION");
     
                 case NnStatusCode.INPUT_ERROR: return NnStatusMsg.assembleMsg(status, "INPUT_ERROR");
