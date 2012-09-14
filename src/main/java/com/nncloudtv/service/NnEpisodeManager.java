@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.nncloudtv.dao.NnEpisodeDao;
@@ -14,5 +15,19 @@ public class NnEpisodeManager {
     public NnEpisode findById(long id) {
         return dao.findById(id);
     }
+    
+    public void save(NnEpisode episode) {
         
+        Date now = new Date();
+        
+        episode.setUpdateDate(now);
+        
+        dao.save(episode);
+        
+    }
+    
+    public NnEpisode findByAdId(long adId) {
+        return dao.findByAdId(adId);
+    }
+    
 }

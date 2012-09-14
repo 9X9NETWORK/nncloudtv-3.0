@@ -22,6 +22,7 @@ import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnAd;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.TitleCard;
@@ -29,6 +30,7 @@ import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.NnAdManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
+import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnProgramSeqComparator;
 import com.nncloudtv.service.TitleCardManager;
@@ -679,50 +681,67 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
-
-    @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.DELETE)
-    public @ResponseBody String shoppingInfoDelete(HttpServletRequest req, HttpServletResponse resp,@PathVariable(value = "programId") String programIdStr) {
+    @RequestMapping(value = "programs/{episodeId}/shopping_info", method = RequestMethod.DELETE)
+    public @ResponseBody
+    String shoppingInfoDelete(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable(value = "episodeId") String episodeIdStr) {
         
-        Long programId = null;
+        Long episodeId = null;
         try {
-            programId = Long.valueOf(programIdStr);
+            episodeId = Long.valueOf(episodeIdStr);
         } catch (NumberFormatException e) {
         }
-        if (programId == null) {
+        if (episodeId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
         
         NnAdManager adMngr = new NnAdManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        NnAd nnad = adMngr.findByProgramId(programId);
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        episode.setAdId(0);
+        episodeMngr.save(episode);
+        
+        NnAd nnad = adMngr.findByEpisode(episode);
         if (nnad != null) {
             adMngr.delete(nnad);
-            return "OK";
-        } else {
-            return "Not Found";
         }
         
+        return "OK";
     }
     
-    @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.POST)
+    @RequestMapping(value = "programs/{episodeId}/shopping_info", method = RequestMethod.POST)
     public @ResponseBody
     NnAd shoppingInfoCreate(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable(value = "programId") String programIdStr) {        
+            @PathVariable(value = "episodeId") String episodeIdStr) {        
         
-        Long programId = null;
+        Long episodeId = null;
         try {
-            programId = Long.valueOf(programIdStr);
+            episodeId = Long.valueOf(episodeIdStr);
         } catch (NumberFormatException e) {
         }
-        if (programId == null) {
+        if (episodeId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
         
         NnAdManager adMngr = new NnAdManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        NnAd nnad = adMngr.findByProgramId(programId);
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        NnAd nnad = adMngr.findByEpisode(episode);
         if (nnad == null) {
             nnad = new NnAd();
         }
@@ -747,29 +766,37 @@ public class ApiContent extends ApiGeneric {
         
         resp.setStatus(201);
         
-        return adMngr.save(nnad);
+        return adMngr.save(nnad, episode);
     }
     
-    @RequestMapping(value = "programs/{programId}/shopping_info", method = RequestMethod.GET)
+    @RequestMapping(value = "programs/{episodeId}/shopping_info", method = RequestMethod.GET)
     public @ResponseBody
     NnAd shoppingInfo(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable(value = "programId") String programIdStr) {
+            @PathVariable(value = "episodeId") String episodeIdStr) {
         
-        Long programId = null;
+        Long episodeId = null;
         try {
-            programId = Long.valueOf(programIdStr);
+            episodeId = Long.valueOf(episodeIdStr);
         } catch (NumberFormatException e) {
         }
-        if (programId == null) {
+        if (episodeId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
         
         NnAdManager adMngr = new NnAdManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        return adMngr.findByProgramId(programId);
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        return adMngr.findByEpisode(episode);
     }
-
+    
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.POST)
     public @ResponseBody
     TitleCard titleCardCreate(HttpServletResponse resp, HttpServletRequest req,

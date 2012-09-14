@@ -509,7 +509,7 @@ public class ApiUser extends ApiGeneric {
         return channelMngr.save(channel);
     }
     
-    @RequestMapping(value = "users/{userId}/channels/{channelId}", method = RequestMethod.POST)
+    @RequestMapping(value = "users/{userId}/channels/{channelId}", method = RequestMethod.DELETE)
     public @ResponseBody
     String userChannelUnlink(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable("userId") String userIdStr,
