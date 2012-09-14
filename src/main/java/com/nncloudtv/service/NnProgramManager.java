@@ -359,10 +359,12 @@ public class NnProgramManager {
             intro = intro.substring(0, introLenth);
         }
         
-        if (videoUrl != null)
-            url1 = videoUrl;
-        if (name == null)
+        url1 = (videoUrl != null) ? videoUrl : null;
+        if (name == null) {
             name = p.getName();
+            if (name != null)
+            	name = name.replace("|", "\\|");
+        }
         //the rest
         String[] ori = {String.valueOf(p.getChannelId()), 
                         String.valueOf(p.getId()), 
