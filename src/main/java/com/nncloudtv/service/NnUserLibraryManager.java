@@ -33,7 +33,7 @@ public class NnUserLibraryManager {
     }
     
     public List<NnUserLibrary> findByUserAndType(NnUser user, Short type, Short page, Short rows) {
-        return libDao.findByUserIdStrAndType(user.getIdStr(), type);
+        return libDao.findByUserIdStrAndType(user.getIdStr(), type, page, rows);
     }
     
     public void delete(NnUserLibrary lib) {

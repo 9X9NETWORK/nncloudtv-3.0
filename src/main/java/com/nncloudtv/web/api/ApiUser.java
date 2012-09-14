@@ -185,6 +185,11 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
+            if ((page<1)||(rows<1)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
             return libMngr.findByUserAndType(user, type, page, rows);
             
         } else {
