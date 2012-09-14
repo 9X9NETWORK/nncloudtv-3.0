@@ -61,7 +61,7 @@ public class TitleCard implements Serializable {
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=20)
-    private String weight;
+    private String weight; // font weight
 
     @Persistent
     private short type; //0 begin, 1 end    
@@ -85,6 +85,18 @@ public class TitleCard implements Serializable {
         this.type = type;
         Date now = new Date();        
         this.updateDate = now;
+        
+        // default options       
+        this.message = "My Video";
+        this.align = "center";
+        this.effect = "none";
+        this.duration = "7";
+        this.size = "20";
+        this.color = "white";
+        this.style = "normal";
+        this.weight = "normal";
+        this.bgColor = "black";
+        this.bgImage = "";
     }
 
     public Date getUpdateDate() {
@@ -208,13 +220,11 @@ public class TitleCard implements Serializable {
     }
     
     public String getWeight() {
-    
         return weight;
     }
 
     public void setWeight(String weight) {
-    
         this.weight = weight;
     }
-
+    
 }

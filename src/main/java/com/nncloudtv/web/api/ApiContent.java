@@ -345,6 +345,12 @@ public class ApiContent extends ApiGeneric {
             return "Program Not Found";
         }
         
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> titleCards = titleCardMngr.findByProgram(programId);
+        for (int i=0; i<titleCards.size(); i++) {
+            titleCardMngr.delete(titleCards.get(i));
+        }
+        
         programMngr.delete(program);
         
         // TODO: reorder other programs
@@ -672,38 +678,24 @@ public class ApiContent extends ApiGeneric {
     }
     
     // dirty
-    @RequestMapping(value = "title_cards/{channelId}/{seq}", method = RequestMethod.GET)
+    @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
     public @ResponseBody
     List<TitleCard> titleCards(HttpServletRequest req,
             HttpServletResponse resp,
-            @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seq) {
+            @PathVariable("programId") String programIdStr) {
         
-        Long channelId = null;
+        Long programId = null;
         try {
-            channelId = Long.valueOf(channelIdStr);
+            programId = Long.valueOf(programIdStr);
         } catch (NumberFormatException e) {
         }
-        if (channelId == null) {
+        if (programId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-        
-        Short seqInt = null;
-        try {
-            seqInt = Short.valueOf(seq);
-        } catch (NumberFormatException e) {
-        }
-        if (seqInt == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        String seqStr = seqInt.toString();
-        seqStr = String.format("%08d", seqStr);
         
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> results = titleCardMngr.findByChannelAndSeq(channelId,
-                seqStr);
+        List<TitleCard> results = titleCardMngr.findByProgram(programId);
         
         return results;
     }
@@ -753,7 +745,7 @@ public class ApiContent extends ApiGeneric {
         
         NnAd nnad = adMngr.findByProgramId(programId);
         if (nnad == null) {
-            nnad = new NnAd(programId);
+            nnad = new NnAd();
         }
         
         // merchantEmail
@@ -799,46 +791,24 @@ public class ApiContent extends ApiGeneric {
         return adMngr.findByProgramId(programId);
     }
 
-    @RequestMapping(value = "title_cards/{channelId}/{seq}/{subSeq}", method = RequestMethod.POST)
+    @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.POST)
     public @ResponseBody
     TitleCard titleCardCreate(HttpServletResponse resp, HttpServletRequest req,
-            @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seqStr,
-            @PathVariable("subSeq") String subSeqStr) {
+            @PathVariable("programId") String programIdStr) {
         
-        Long channelId = null;
+        Long programId = null;
         try {
-            channelId = Long.valueOf(channelIdStr);
+            programId = Long.valueOf(programIdStr);
         } catch (NumberFormatException e) {
         }
-        if (channelId == null) {
+        if (programId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel channel = channelMngr.findById(channelId);
-        if (channel == null) {
-            notFound(resp, "Channel Not Found");
-            return null;
-        }
-        
-        Short seq = null;
-        try {
-            seq = Short.valueOf(seqStr);
-        } catch (NumberFormatException e) {
-        }
-        if (seq == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        Short subSeq = null;
-        try {
-            subSeq = Short.valueOf(subSeqStr);
-        } catch (NumberFormatException e) {
-        }
-        if (subSeq == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(programId);
+        if (program == null) {
+            notFound(resp, "Program Not Found");
             return null;
         }
         
@@ -864,9 +834,17 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        String message = req.getParameter("message");
+        if (message == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        
+        
         TitleCard titleCard = null;
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> titleCards = titleCardMngr.findByChannelAndSeqAndSubSeq(channelId, seq, subSeq);
+        List<TitleCard> titleCards = titleCardMngr.findByProgram(programId);
         for (int i = 0; i < titleCards.size(); i++) {
             if (titleCards.get(i).getType() == type) {
                 titleCard = titleCards.get(i); // read as it already exist, update operation
@@ -874,7 +852,8 @@ public class ApiContent extends ApiGeneric {
             }
         }
         if (titleCard == null) {
-            titleCard = new TitleCard(channelId, seq, subSeq, type); // create as it not exist, add operation
+            long channelId = program.getChannelId();
+            titleCard = new TitleCard(channelId, programId, type); // create as it not exist, add operation
             titleCard = titleCardMngr.create(titleCard);
         }
         
@@ -885,10 +864,7 @@ public class ApiContent extends ApiGeneric {
             titleCard.setDuration(duration);
         }
         
-        String message = req.getParameter("message");
-        if (message != null) {
-            titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
-        }
+        titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
         
         String size = req.getParameter("size");
         if (size != null) {
@@ -933,45 +909,17 @@ public class ApiContent extends ApiGeneric {
         return titleCardMngr.save(titleCard);
     }
     
-    @RequestMapping(value = "title_cards/{channelId}/{seq}/{subSeq}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "title_card/{id}", method = RequestMethod.DELETE)
     public @ResponseBody
     String titleCardDelete(HttpServletResponse resp, HttpServletRequest req,
-            @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seqStr,
-            @PathVariable("subSeq") String subSeqStr) {
+            @PathVariable("id") String idStr) {
         
-        Long channelId = null;
+        Long id = null;
         try {
-            channelId = Long.valueOf(channelIdStr);
+            id = Long.valueOf(idStr);
         } catch (NumberFormatException e) {
         }
-        if (channelId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel channel = channelMngr.findById(channelId);
-        if (channel == null) {
-            notFound(resp, "Channel Not Found");
-            return null;
-        }
-        
-        Short seq = null;
-        try {
-            seq = Short.valueOf(seqStr);
-        } catch (NumberFormatException e) {
-        }
-        if (seq == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        Short subSeq = null;
-        try {
-            subSeq = Short.valueOf(subSeqStr);
-        } catch (NumberFormatException e) {
-        }
-        if (subSeq == null) {
+        if (id == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -979,14 +927,13 @@ public class ApiContent extends ApiGeneric {
         
         
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> titleCards = titleCardMngr.findByChannelAndSeqAndSubSeq(channelId, seq, subSeq);
-        if (titleCards.size()==0) {
+        TitleCard titleCard = titleCardMngr.findById(id);
+        if (titleCard==null) {
             notFound(resp, "TitleCard Not Found");
             return null;
         }
-        for (int i = 0; i < titleCards.size(); i++) {
-            titleCardMngr.delete(titleCards.get(i));
-        }
+        
+        titleCardMngr.delete(titleCard);
         
         return "OK";
     }

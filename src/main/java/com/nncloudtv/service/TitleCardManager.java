@@ -44,6 +44,10 @@ public class TitleCardManager {
     public List<TitleCard> findByProgram(long programId) {
         return dao.findByProgram(programId);
     }
+    
+    public TitleCard findById(long id) {
+        return dao.findById(id);
+    }
         
     //IMPORTANT: subepisode: (number) is moved out from here and can only retrieved from NnProgram, 
     //           since the seq could be changed often
