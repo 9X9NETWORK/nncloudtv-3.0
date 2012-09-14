@@ -7,12 +7,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.nncloudtv.dao.PdrDao;
+import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.model.Pdr;
 import com.nncloudtv.model.NnUserWatched;
-import com.nncloudtv.service.NnUserWatchedManager;
-import com.nncloudtv.service.PdrManager;
+import com.nncloudtv.model.Pdr;
 
 public class PdrManager {
 
@@ -36,6 +35,22 @@ public class PdrManager {
             NnUser user, NnDevice device, String session,
             String ip, Date since) {
         return pdrDao.findDebugging(user, device, session, ip, since);
+    }
+
+    //TODO should verify user/device token, but hell later  
+    public void processWatched(String userToken, String deviceToken, String pdr) {
+        CounterFactory factory = new CounterFactory();        
+        String reg = "w\t(\\d++)\t(\\w++)";     
+        Pattern pattern = Pattern.compile(reg);
+        Matcher m = pattern.matcher(pdr);
+        while (m.find()) {          
+            long channelId = Long.parseLong(m.group(1));
+            if (channelId != 0) {
+                String counterName = "ch" + channelId;
+                ShardedCounter counter = factory.getOrCreateCounter(counterName);
+                counter.increment();
+            }
+        }
     }
     
     public void processPdr(NnUser user, NnDevice device, String sessionId, String pdr, String ip) {        
