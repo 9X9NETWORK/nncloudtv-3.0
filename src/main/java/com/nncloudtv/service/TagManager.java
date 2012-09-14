@@ -33,7 +33,17 @@ public class TagManager {
         }        
         return channels;
     }        
-        
+
+    public static String getValidTag(String tag) {
+    	if (tag == null)
+    		return null;
+        tag = tag.replaceAll("[^\\w\\s\\p{L}]", "");
+        tag = tag.replaceAll("[\\t\\n\\x0B\\f\\r]", " ");        
+        tag = tag.replaceAll("[\\s]+", " ");
+        tag = tag.trim();
+    	return tag;
+    }
+    
     public Tag findByName(String name) {
         Tag tag = dao.findByName(name);
         return tag;
