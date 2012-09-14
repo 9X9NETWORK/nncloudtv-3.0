@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import com.nncloudtv.dao.NnEpisodeDao;
 import com.nncloudtv.model.NnEpisode;
 
-public class NnEpisodeManager{
+public class NnEpisodeManager {
     
     protected static final Logger log = Logger.getLogger(NnEpisodeManager.class.getName());
     

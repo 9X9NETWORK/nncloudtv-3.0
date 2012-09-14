@@ -1,6 +1,8 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +23,13 @@ import com.nncloudtv.model.TitleCard;
 @Service
 public class NnProgramManager {
     
-    protected static final Logger log = Logger.getLogger(NnProgramManager.class.getName());
+    protected static final Logger log = Logger.getLogger(NnProgramManager.class
+                                              .getName());
     
     private NnProgramDao dao = new NnProgramDao();
     
-    public void create(NnChannel channel, NnProgram program) {        
+    public void create(NnChannel channel, NnProgram program) {
+        
         Date now = new Date();
         program.setCreateDate(now);
         program.setUpdateDate(now);
@@ -501,4 +505,27 @@ public class NnProgramManager {
         }
        */
     }
+    
+    public List<NnProgram> findByEpisodeId(long episodeId) {
+        
+        return dao.findProgramsByEpisode(episodeId);
+    }
+    
+    public void reorderEpisodePrograms(long episodeId) {
+        
+        List<NnProgram> programs = findByEpisodeId(episodeId);
+        
+        Collections.sort(programs, new NnProgramSeqComparator());
+        
+        log.info("programs.size() = " + programs.size());
+        
+        for (int i = 0; i < programs.size(); i++) {
+            programs.get(i).setSubSeq(i + 1);
+        }
+        
+        save(programs);
+        
+    }
 }
+
+

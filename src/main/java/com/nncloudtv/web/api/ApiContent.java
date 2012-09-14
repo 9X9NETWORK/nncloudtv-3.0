@@ -30,6 +30,7 @@ import com.nncloudtv.service.NnAdManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
 import com.nncloudtv.service.NnProgramManager;
+import com.nncloudtv.service.NnProgramSeqComparator;
 import com.nncloudtv.service.TitleCardManager;
 
 @Controller
@@ -340,20 +341,28 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnProgramManager programMngr = new NnProgramManager();
+        
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
             return "Program Not Found";
         }
         
+        long episodeId = program.getEpisodeId();
+        
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> titleCards = titleCardMngr.findByProgram(programId);
-        for (int i=0; i<titleCards.size(); i++) {
+        
+        List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
+        for (int i = 0; i < titleCards.size(); i++) {
             titleCardMngr.delete(titleCards.get(i));
         }
         
         programMngr.delete(program);
         
-        // TODO: reorder other programs
+        if (episodeId > 0) {
+            
+            programMngr.reorderEpisodePrograms(episodeId);
+            
+        }
         
         return "OK";
     }
@@ -453,25 +462,6 @@ public class ApiContent extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("channelId") String channelIdStr) {
         
-        class NnProgramSeqComparator implements Comparator<NnProgram> {
-            
-            public int compare(NnProgram program1, NnProgram program2) {
-                int seq1 = (program1.getSeq() == null) ? 0 : Integer
-                        .valueOf(program1.getSeq());
-                int seq2 = (program2.getSeq() == null) ? 0 : Integer
-                        .valueOf(program2.getSeq());
-                if ((seq1 - seq2) == 0) {
-                    int subSeq1 = (program1.getSubSeq() == null) ? 0 : Integer
-                            .valueOf(program1.getSubSeq());
-                    int subSeq2 = (program2.getSubSeq() == null) ? 0 : Integer
-                            .valueOf(program2.getSubSeq());
-                    return (subSeq1 - subSeq2);
-                } else {
-                    return (seq1 - seq2);
-                }
-            }
-        }
-        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -541,16 +531,6 @@ public class ApiContent extends ApiGeneric {
             @PathVariable("channelId") String channelIdStr,
             @PathVariable("seq") String seqStr) {
         
-        class NnProgramSeqComparator implements Comparator<NnProgram> {
-            public int compare(NnProgram program1, NnProgram program2) {
-                int subSeq1 = (program1.getSubSeq() == null) ? 0 : Integer
-                        .valueOf(program1.getSubSeq());
-                int subSeq2 = (program2.getSubSeq() == null) ? 0 : Integer
-                        .valueOf(program2.getSubSeq());
-                return (subSeq1 - subSeq2);
-            }
-        }
-        
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -590,7 +570,7 @@ public class ApiContent extends ApiGeneric {
     /**
      * channelId, seq, file URL are required, others optional.
      */
-    // dirty
+    // TODO: need to rewrite
     @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.POST)
     public @ResponseBody
     NnProgram addProgram(HttpServletRequest req, HttpServletResponse resp,
@@ -677,7 +657,6 @@ public class ApiContent extends ApiGeneric {
         return program;
     }
     
-    // dirty
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
     public @ResponseBody
     List<TitleCard> titleCards(HttpServletRequest req,
@@ -695,7 +674,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> results = titleCardMngr.findByProgram(programId);
+        List<TitleCard> results = titleCardMngr.findByProgramId(programId);
         
         return results;
     }
@@ -844,7 +823,7 @@ public class ApiContent extends ApiGeneric {
         
         TitleCard titleCard = null;
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> titleCards = titleCardMngr.findByProgram(programId);
+        List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
         for (int i = 0; i < titleCards.size(); i++) {
             if (titleCards.get(i).getType() == type) {
                 titleCard = titleCards.get(i); // read as it already exist, update operation

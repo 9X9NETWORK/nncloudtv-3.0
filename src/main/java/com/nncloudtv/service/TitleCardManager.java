@@ -40,15 +40,16 @@ public class TitleCardManager {
         dao.delete(card);
     }
     
-    
-    public List<TitleCard> findByProgram(long programId) {
-        return dao.findByProgram(programId);
+    public List<TitleCard> findByProgramId(long programId) {
+        return dao.findByProgramId(programId);
     }
     
     public TitleCard findById(long id) {
         return dao.findById(id);
     }
-        
+    
+    // TODO: findByEpisode()
+    
     //IMPORTANT: subepisode: (number) is moved out from here and can only retrieved from NnProgram, 
     //           since the seq could be changed often
     private String generatePlayerSyntax(TitleCard card) {

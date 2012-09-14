@@ -113,7 +113,7 @@ public class NnStringUtil {
         }
         return stringBuilder.toString();
     }
-
+    
     public static String revertHtml(String str) {
         if (str == null) return null;
         return str.replaceAll("&quot;", "\"")
@@ -121,10 +121,11 @@ public class NnStringUtil {
                    .replaceAll("&lt;", "<")
                    .replaceAll("&amp;", "&");
     }
-
+    
     public static String htmlSafeAndTruncated(String str) {
         return htmlSafeAndTruncated(str, MAX_JDO_STRING_LENGTH);
     }
+    
     public static String htmlSafeAndTruncated(String str, int length) {
         for (int i = length; i > 0; i--) {
             String truncated = truncateUTF8(str, i);
@@ -145,16 +146,19 @@ public class NnStringUtil {
      * @return
      */
     public static String htmlSafeChars(String str) {
-        if (str == null)
+    
+        if (str == null) {
             return null;
+        }
+        
         return str.replaceAll("\n", " ")
-                  .replaceAll("\t", " ")
-                  .replaceAll("&", "&amp;")
-                  .replaceAll("<", "&lt;")
-                  .replaceAll(">", "&gt;")
-                  .replaceAll("\"", "&quot;");
+                   .replaceAll("\t", " ")
+                   .replaceAll("&",  "&amp;")
+                   .replaceAll("<",  "&lt;")
+                   .replaceAll(">",  "&gt;")
+                   .replaceAll("\"", "&quot;");
     }
-
+    
     public static String validateLangCode(String lang) {
         
         if (lang == null) {
@@ -171,8 +175,8 @@ public class NnStringUtil {
             return null;
         }
     }
-
-    public static String seqToStr(Short seq) {
+    
+    public static String seqToStr(int seq) {
         
         return String.format("%08d", seq);
     }

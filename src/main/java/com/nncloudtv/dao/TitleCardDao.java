@@ -34,7 +34,7 @@ public class TitleCardDao extends GenericDao<TitleCard> {
         return detached;
     }    
     
-    public List<TitleCard> findByProgram(long programId) {
+    public List<TitleCard> findByProgramId(long programId) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<TitleCard> detached = new ArrayList<TitleCard>(); 
         try {

@@ -271,23 +271,45 @@ public class NnProgram implements Serializable {
     public void setContentType(short contentType) {
         this.contentType = contentType;
     }
-
+    
+    public int getSeqInt() {
+        short seq = 0;
+        try {
+            seq = Short.valueOf(this.seq);
+        } catch (NumberFormatException e) {
+        }
+        return seq;
+    }
+    
     public String getSeq() {
         return seq;
+    }
+    
+    public void setSeq(int seq) {
+        this.seq = NnStringUtil.seqToStr(seq);
     }
     
     public void setSeq(String seq) {
         this.seq = seq;
     }
     
-    public void setSeq(int seq) {
-        this.seq = String.format("%08d", seq);
+    public int getSubSeqInt() {
+        short subSeq = 0;
+        try {
+            subSeq = Short.valueOf(this.subSeq);
+        } catch (NumberFormatException e) {
+        }
+        return subSeq;
     }
-
+    
     public String getSubSeq() {
         return subSeq;
     }
-
+    
+    public void setSubSeq(int i) {
+        this.subSeq = NnStringUtil.seqToStr(i);
+    }
+    
     public void setSubSeq(String subSeq) {
         this.subSeq = subSeq;
     }
