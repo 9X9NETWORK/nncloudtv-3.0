@@ -1522,10 +1522,13 @@ public class PlayerApiService {
 		List<String> data = new ArrayList<String>();
 		log.info ("[quickLogin] verify user: " + token);
 		String userInfo = "";
+        	NnUser user = null;
 		if (token != null) {
 			userInfo = this.userTokenVerify(token, req, resp);
+        		user = userMngr.findByToken(token);
 		} else if (email != null || password != null) {		
 			userInfo = this.login(email, password, req, resp);			
+        		user = userMngr.findAuthenticatedUser(email, password, req);
 		} else {
 			userInfo = this.guestRegister(req, resp);
 		}		
@@ -1554,7 +1557,7 @@ public class PlayerApiService {
 		}
 		//5. recommended
 		log.info ("[quickLogin] recommended channels");
-        String recommended = this.channelStack(Tag.RECOMMEND, null, token, null);		
+		String recommended = this.channelStack(Tag.RECOMMEND, null, token, null);		
 		data.add(recommended);
 		if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
 			return this.assembleSections(data);
@@ -1574,8 +1577,11 @@ public class PlayerApiService {
 			return this.assembleSections(data);
 		}
 		//8. category top level
-		log.info ("[quickLogin] top level categories");
-		String categoryTop = this.category (null, null, false);
+		String sphere = null;
+		if (user != null)
+			sphere = user.getSphere();
+		log.info ("[quickLogin] top level categories: " + ((sphere == null) ? "default" : sphere));
+		String categoryTop = this.category (null, sphere, false);
 		data.add(categoryTop);
 		return this.assembleSections(data);
 	}
