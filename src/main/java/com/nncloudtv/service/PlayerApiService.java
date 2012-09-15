@@ -149,6 +149,7 @@ public class PlayerApiService {
             output += assembleKeyValue("token", guest.getToken());
             output += assembleKeyValue("name", NnUser.GUEST_NAME);
             output += assembleKeyValue("lastLogin", "");            
+            output += assembleKeyValue("sphere", "en"); //TODO should depend on ip
         }
             
         return output;
