@@ -40,14 +40,19 @@ for line in feed:
   cId = data[0]
   username = data[1]
   userEmail = username + "@9x9.tv"
-  thumbnail = data[2]
-  url1 = data[3]
-  url2 = data[4]
-  url3 = data[5]
-  updateDate = data[6]
-  print "updateDate:" + str(updateDate)
-  if (i > 0):
-     break
+  thumbnail = data[3]
+  url1 = data[4]
+  url2 = data[5]
+  url3 = data[6]
+  updateDate = data[9]
+  #print "username:" + username
+  #print "thumbnail:" + thumbnail
+  #print "url1" + url1
+  #print "url2" + url2
+  #print "url3" + url3
+  #print "updateDate:" + str(updateDate)
+  #if (i > 0):
+  #   break
   imageUrl = url1 + "|" + url2 + "|" + url3  
   userCursor = dbuser.cursor()
   userCursor.execute("""                                                    
@@ -62,8 +67,8 @@ for line in feed:
         insert into nncloudtv_nnuser1.nnuser
           (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl)
         values
-          (%s, %s, %s, %s, %s, %s, %s, now(), now(), 0, false, username)              
-        """, (userEmail, 1, username, thumbnail, epoch, 1, 8))
+          (%s, 1, %s, %s, %s, 1, 8, now(), now(), 0, false, %s)              
+        """, (userEmail, username, thumbnail, epoch, username))
      dbuser.commit()
   userCursor.execute("""
     select id 
