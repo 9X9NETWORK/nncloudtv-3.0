@@ -159,7 +159,7 @@ public class NnChannel implements Serializable {
     //format: shard-userId, example: 1-1, separated by ";"
     //up to 3 subscribers
     @Persistent
-    @Column(jdbcType="VARCHAR", length=25)    
+    @Column(jdbcType="VARCHAR", length=255)    
     private String subscribersIdStr; 
     
     @Persistent
