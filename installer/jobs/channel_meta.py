@@ -53,7 +53,12 @@ for line in feed:
   #print "updateDate:" + str(updateDate)
   #if (i > 0):
   #   break
-  imageUrl = url1 + "|" + url2 + "|" + url3  
+  #imageUrl = url1 + "|" + url2 + "|" + url3
+  imageUrl = url1
+  if len(url2) > 0:
+     imageUrl = imageUrl + "|" + url2
+  if len(url3) > 0:
+     imageUrl = imageUrl + "|" + url3 
   userCursor = dbuser.cursor()
   userCursor.execute("""                                                    
     select id 
@@ -83,7 +88,7 @@ for line in feed:
      update nnchannel 
         set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s)
       where id = %s
-      """, (imageUrl, userIdStr, cId, updateDate))     
+      """, (imageUrl, userIdStr, updateDate, cId))     
   rows = userCursor.fetchall()
     
   dbcontent.commit()  
