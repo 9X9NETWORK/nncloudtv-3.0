@@ -119,6 +119,7 @@ CREATE TABLE `nnad` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -----------------------------------------------------
+use nncloudtv_content;
 drop table nnuser;   
 drop table nnuser_pref;
 drop table nnuser_report;
@@ -134,14 +135,12 @@ drop table nnset_to_nnchannel_backup;
 drop table nnuser_channel_sorting;
 drop table nnuser_watched;
 drop table nnguest;
-drop table nndevice;
 drop table nnchannel_autosharing;
 drop table category_backup;
 drop table sns_auth;
 drop table cnt_subscribe;
 
 -----------------------------------------------------
-use nncloudtv_nnuser1;
 use nncloudtv_nnuser1;
 drop table pdr;
 drop table sns_auth;
@@ -220,6 +219,7 @@ alter table nnuser alter featured set default false;
 update nnuser set cntSubscribe = 0;
 update nnuser set cntFollower = 0;
 update nnuser set cntChannel = 0;
+update nnuser set profileUrl = (select round(rand() * 10000000000)) where profileUrl is null;
 
 use nncloudtv_content;
 alter table nnchannel alter cntSubscribe set default 0;
@@ -244,6 +244,23 @@ update nnprogram set episodeId=0;
 alter table counter_shard alter count set default 0;
 alter table counter_shard alter shardNumber set default 0;
 
+insert into nnepisode (name, imageUrl, intro, publishDate, updateDate, channelId)  
+(select p.name, p.imageUrl, p.intro, now(), now(), p.id 
+   from nnprogram p, nnchannel c 
+  where c.contentType = 6
+    and c.id = p.channelId)
+
+update nnprogram
+   set seq = '00000001', subSeq = '00000001'
+ where seq is null
+   and channelId in (select id from nnchannel where contentType = 6)
+   
+update nnprogram
+   set subSeq = '00000001'
+ where subSeq is null
+   and channelId in (select id from nnchannel where contentType = 6)
+   
+
 delete from mso_config where id in (2,4);
 
 -----------------------------------------------------
@@ -257,5 +274,6 @@ modify to zh and do again
 - subscribe.py
 - jobs/hot.py
 - curator.py
-
+- curator_nn.py
+- delete from mso where id > 2; 
 
