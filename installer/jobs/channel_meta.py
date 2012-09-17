@@ -21,18 +21,18 @@ dbuser = MySQLdb.connect (host = "localhost",
                           db = "nncloudtv_nnuser1")
 
 
-#url = 'http://channelwatch.9x9.tv/dan/feed.out'
-#user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-#values = {'language' : 'Python' }
-#headers = { 'User-Agent' : user_agent }
-#
-#data = urllib.urlencode(values)
-#req = urllib2.Request(url, data, headers)
-#response = urllib2.urlopen(req)
-#feed = response.read()
-#print feed
+url = 'http://channelwatch.9x9.tv/dan/feed.out'
+user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+values = {'language' : 'Python' }
+headers = { 'User-Agent' : user_agent }
+data = urllib.urlencode(values)
+req = urllib2.Request(url, data, headers)
+response = urllib2.urlopen(req)
+feed = response.readlines()
 
-feed = open("feed.out", "rU")
+#print feed
+#feed = open("feed.out", "rU")
+
 i = 0
 for line in feed:
   i = i+1
@@ -45,12 +45,12 @@ for line in feed:
   url2 = data[5]
   url3 = data[6]
   updateDate = data[9]
-  #print "username:" + username
-  #print "thumbnail:" + thumbnail
-  #print "url1" + url1
-  #print "url2" + url2
-  #print "url3" + url3
-  #print "updateDate:" + str(updateDate)
+  print "username:" + username
+  print "thumbnail:" + thumbnail
+  print "url1" + url1
+  print "url2" + url2
+  print "url3" + url3
+  print "updateDate:" + str(updateDate)
   #if (i > 0):
   #   break
   #imageUrl = url1 + "|" + url2 + "|" + url3
@@ -83,18 +83,25 @@ for line in feed:
   user = userCursor.fetchone()
   userId = user[0]
   userIdStr = "1-" + str(userId)
-  contentCursor = dbcontent.cursor()     
+  contentCursor = dbcontent.cursor()  
+
   contentCursor.execute("""
-     update nnchannel 
-        set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s)
+     select userIdStr  
+       from nnchannel 
       where id = %s
-      """, (imageUrl, userIdStr, updateDate, cId))     
-  rows = userCursor.fetchall()
-    
+      """, cId)      
+  oriUserIdStr = contentCursor.fetchone()[0]  
+  if oriUserIdStr == None:
+     print "ch: " + cId + " oriUserId is null, add new user:" + userIdStr 
+     contentCursor.execute("""    
+        update nnchannel 
+           set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s)
+         where id = %s                                 
+         """, (imageUrl, userIdStr, updateDate, cId))      
   dbcontent.commit()  
   userCursor.close ()
   contentCursor.close ()
 
 print "record done:" + str(i)
-feed.close()
+#feed.close()
 

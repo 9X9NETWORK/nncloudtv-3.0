@@ -14,8 +14,9 @@ contentCursor = dbcontent.cursor()
 contentCursor.execute("""
    select c.id 
      from nnchannel c, counter_shard s 
-    where (c.lang = 'en' or c.lang='other')
-      and s.counterName = concat('ch',c.id) 
+    where (c.sphere = 'en' or c.sphere='other')
+      and c.poolType>=30
+      and s.counterName = concat('ch',c.id)      
     order by count desc 
     limit 9;     
    """)
@@ -39,11 +40,12 @@ for h in hotList:
        where id = %s
       """, (h, i))
    i = i+1
-#########################################################ˇ
+#########################################################   
 contentCursor.execute("""
    select c.id 
      from nnchannel c, counter_shard s 
-    where (c.lang = 'zh' or c.lang='other')
+    where (c.sphere = 'zh' or c.sphere='other')
+      and c.poolType>=30
       and s.counterName = concat('ch',c.id) 
     order by count desc 
     limit 9;     
@@ -69,7 +71,7 @@ for h in hotList:
       """, (h, i))
    i = i+1
 
-#########################################################ˇ
+#########################################################
 dbcontent.commit()  
 contentCursor.close ()
 
