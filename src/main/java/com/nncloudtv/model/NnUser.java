@@ -116,13 +116,13 @@ public class NnUser implements Serializable {
     private boolean isTemp; 
 
     @Persistent
-    private int cntSubscribe;
+    private int cntSubscribe; //the number of channels the user subscribes
     
     @Persistent
-    private int cntChannel;
+    private int cntChannel; //the number of channels the user creates
     
     @Persistent
-    private int cntFollower;
+    private int cntFollower; //the number of users who subscribe to this user's channels  
     
     public NnUser(String email, String password, String name, short type) {
         this.email = email;
