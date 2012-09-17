@@ -301,7 +301,7 @@ public class NnChannelManager {
         /*
          * if duplicate in en or zh categories, the newly updated CategoryMap will pick up. 
          */
-        if (channel.getSphere().equals(LangTable.OTHER)) {
+        if (channel.getSphere() != null && channel.getSphere().equals(LangTable.OTHER)) {
             for (int i=0; i<categoryMaps.size(); i++) {
                 category = catMngr.findById(categoryMaps.get(i).getCategoryId());
                 if (category.getLang().equals(LangTable.LANG_EN)) {
