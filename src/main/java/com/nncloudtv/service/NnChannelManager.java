@@ -255,7 +255,7 @@ public class NnChannelManager {
         
     }
     
-    public void saveChannelToCategoryWithSphereJudgement (String sphere, long channelId, long categoryId) {
+    public void saveChannelToCategoryWithSphereJudgement (long channelId, String sphere, long categoryId) {
         
         CategoryManager catMngr = new CategoryManager();
         Category category = catMngr.findById(categoryId);
@@ -283,6 +283,26 @@ public class NnChannelManager {
         }
         
         saveChannelToCategory(channelId, categoryId, 0);
+    }
+    
+    public void saveChannelToCategoryWithSphereJudgement (long channelId, String sphere, String oldSphere, long CategoryId, long oldCategoryId) {
+        
+        if (CategoryId == oldCategoryId) {
+            return ;
+        }
+        
+        if (oldSphere.equals(sphere)) {
+            if (sphere.equals(LangTable.OTHER)) { // other -> other
+                //TODO the opposite category need change with sync ?
+                saveChannelToCategory(channelId, CategoryId, oldCategoryId);
+            } else { // zh -> zh, en -> en
+                saveChannelToCategory(channelId, CategoryId, oldCategoryId);
+            }
+        } else { // other -> zh, other -> en, en -> zh, en -> other, zh -> en, zh -> other
+            //TODO need more judgement
+            saveChannelToCategory(channelId, CategoryId, oldCategoryId);
+        }
+        
     }
     
     public void processChannelRelatedCounter(NnChannel[] channels) {
@@ -357,39 +377,55 @@ public class NnChannelManager {
             return null;
         }
         
-        List<Category> categories = findCategoriesByChannelId(id);
-        channel.setCategoryId(0);
+        Category category = findCategoryByChannelId(id);
+        if (category != null) {
+            channel.setCategoryId(category.getId());
+        }
+        
+        return channel;
+    }
+    
+    public Category findCategoryByChannelId(long channelId) {
+        
+        NnChannel channel = dao.findById(channelId);
+        if (channel == null) {
+            return null;
+        }
+        
+        List<Category> categories = findCategoriesByChannelId(channelId);
         
         /*
-         * if duplicate in en or zh categories, the newly updated categoryId will be setting.
+         * if duplicate in en or zh categories, the newly updated category will be return.
          */
         if (channel.getSphere() != null) {
             if (channel.getSphere().equals(LangTable.OTHER)) {
                 for (int i = 0; i < categories.size(); i++) {
                     if (categories.get(i).getLang().equals(LangTable.LANG_EN)) {
-                        channel.setCategoryId(categories.get(i).getId());
-                        break;
+                        return categories.get(i);
                     }
                 }
             } else {
                 for (int i = 0; i < categories.size(); i++) {
                     if (channel.getSphere().equals(categories.get(i).getLang())) {
-                        channel.setCategoryId(categories.get(i).getId());
-                        break;
+                        return categories.get(i);
                     }
                 }
             }
+            
+            if (categories != null) {
+                return categories.get(0); // if sphere set but match fail, the newly updated category will return.
+            } else {
+                return null;
+            }
+            
         } else {
             if (categories != null) {
-                channel.setCategoryId(categories.get(0).getId()); // if sphere not set, the newly updated categoryId will be setting.
+                return categories.get(0); // if sphere not set, the newly updated category will return.
+            } else {
+                return null;
             }
         }
         
-        if (channel.getCategoryId()==0) {
-            // when CategoryId not set
-        }
-        
-        return channel;
     }
     
     public List<Category> findCategoriesByChannelId(Long channelId) {

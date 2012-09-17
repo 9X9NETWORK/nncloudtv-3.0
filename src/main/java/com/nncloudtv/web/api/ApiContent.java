@@ -413,6 +413,7 @@ public class ApiContent extends ApiGeneric {
         
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
+        NnChannel originalChannel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
             return null;
@@ -442,6 +443,31 @@ public class ApiContent extends ApiGeneric {
         if (sphere != null && NnStringUtil.validateLangCode(sphere) != null) {
             
             channel.setSphere(sphere);
+        }
+        
+        // categoryId, this should do after sphere setting done or it will cause logic error.
+        String categoryIdStr = req.getParameter("categoryId");
+        if (categoryIdStr != null) {
+
+            Long categoryId = null;
+            try {
+                categoryId = Long.valueOf(categoryIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (categoryId == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+
+            CategoryManager catMngr = new CategoryManager();
+            Category category = catMngr.findById(categoryId);
+            if (category == null) {
+                notFound(resp, "Category Not Found");
+                return null;
+            }
+            
+            channelMngr.saveChannelToCategoryWithSphereJudgement (channelId, channel.getSphere(),
+                    originalChannel.getSphere(), categoryId, originalChannel.getCategoryId());
         }
         
         // isPublic

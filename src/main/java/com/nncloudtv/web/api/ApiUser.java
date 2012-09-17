@@ -393,7 +393,7 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
-            channelMngr.saveChannelToCategoryWithSphereJudgement(channel.getSphere(), channel.getId(), categoryId);
+            channelMngr.saveChannelToCategoryWithSphereJudgement(channel.getId(), channel.getSphere(), categoryId);
         }
         
         return channelMngr.save(channel);
