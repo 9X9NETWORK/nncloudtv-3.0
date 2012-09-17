@@ -127,6 +127,9 @@ public class NnUserManager {
     }
     
     public NnUser save(NnUser user) {
+        if (user == null) {
+            return null;
+        }
         if (user.getPassword() != null) {
             user.setSalt(AuthLib.generateSalt());
             user.setCryptedPassword(AuthLib.encryptPassword(user.getPassword(), user.getSalt()));

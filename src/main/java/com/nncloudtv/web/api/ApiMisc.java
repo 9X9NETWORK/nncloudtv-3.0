@@ -115,6 +115,11 @@ public class ApiMisc extends ApiGeneric {
 		} else {
 			badRequest(resp, MISSING_PARAMETER);
 		}
+        
+        if (user != null) {
+            user.setCryptedPassword(null);
+            user.setSalt(null);
+        }
 		
 		return user;
 	}
