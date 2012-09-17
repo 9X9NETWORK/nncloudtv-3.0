@@ -141,6 +141,8 @@ public class NnChannelManager {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
             favoriteCh.setUserIdStr(user.getIdStr());
             favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
+            favoriteCh.setSphere(user.getSphere());
+            
             dao.save(favoriteCh);
         }
         NnProgramManager pMngr = new NnProgramManager();
