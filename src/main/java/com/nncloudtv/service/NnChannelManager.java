@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.dao.CategoryMapDao;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.FacebookLib;
@@ -35,6 +36,7 @@ public class NnChannelManager {
     protected static final Logger log = Logger.getLogger(NnChannelManager.class.getName());
     
     private NnChannelDao dao = new NnChannelDao();
+    private CategoryMapDao catMapDao = new CategoryMapDao();
     
     public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
         if (sourceUrl == null) 
@@ -210,6 +212,7 @@ public class NnChannelManager {
             channel.setName(channel.getName().replaceAll("\t", " "));
         }
         channel = dao.save(channel);
+        
         NnChannel[] channels = {original, channel};
         if (MsoConfigManager.isQueueEnabled(true)) {
             //new QueueMessage().fanout("localhost",QueueMessage.CHANNEL_CUD_RELATED, channels);
@@ -218,7 +221,69 @@ public class NnChannelManager {
         }
         this.processTag(channel);
         return channel;
-    }        
+    }
+    
+    public void saveChannelToCategory (long channelId, long categoryId, long oldCategoryId) {
+        
+        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
+        if (oldCategoryId == 0) { // newly created
+            int i;
+            for (i=0; i<categoryMaps.size(); i++) {
+                if (categoryMaps.get(i).getCategoryId() == categoryId) {
+                    // the database already has one, do nothing.
+                    break;
+                }
+            }
+            if (i == categoryMaps.size()) {
+                CategoryMap catMap = new CategoryMap(categoryId, channelId);
+                catMapDao.save(catMap); // not found in database, newly created.
+            }
+        } else { // modify origin one
+            int i;
+            for (i=0; i<categoryMaps.size(); i++) {
+                if (categoryMaps.get(i).getCategoryId() == oldCategoryId) {
+                    categoryMaps.get(i).setCategoryId(categoryId);
+                    categoryMaps.get(i).setUpdateDate(new Date());
+                    catMapDao.save(categoryMaps.get(i));
+                    break;
+                }
+            }
+            if (i == categoryMaps.size()) {
+                // not found in database, do nothing.
+            }
+        }
+        
+    }
+    
+    public void saveChannelToCategoryWithSphereJudgement (String sphere, long channelId, long categoryId) {
+        
+        CategoryManager catMngr = new CategoryManager();
+        Category category = catMngr.findById(categoryId);
+        if (category == null) {
+            return ;
+        }
+        
+        /*
+         * always set categoryId that the user pick up, despite if sphere not match category's lang.
+         */
+        if (sphere.equals(LangTable.OTHER)) { // pick up opposite lang's category
+            Category category_opposite = null;                
+            if (category.getLang().equals(LangTable.LANG_EN)) {
+                category_opposite = catMngr.findByLangAndSeq(LangTable.LANG_ZH, category.getSeq());
+                if (category_opposite != null) {
+                    saveChannelToCategory(channelId, category_opposite.getId(), 0);
+                }
+            }
+            if (category.getLang().equals(LangTable.LANG_ZH)) {
+                category_opposite = catMngr.findByLangAndSeq(LangTable.LANG_EN, category.getSeq());
+                if (category_opposite != null) {
+                    saveChannelToCategory(channelId, category_opposite.getId(), 0);
+                }
+            }
+        }
+        
+        saveChannelToCategory(channelId, categoryId, 0);
+    }
     
     public void processChannelRelatedCounter(NnChannel[] channels) {
     }
@@ -292,30 +357,31 @@ public class NnChannelManager {
             return null;
         }
         
-        Category category = null;
-        CategoryManager catMngr = new CategoryManager();
-        CategoryMapManager catMapMngr = new CategoryMapManager();
-        List<CategoryMap> categoryMaps = catMapMngr.findByChannelId(id);
+        List<Category> categories = findCategoriesByChannelId(id);
         channel.setCategoryId(0);
         
         /*
-         * if duplicate in en or zh categories, the newly updated CategoryMap will pick up. 
+         * if duplicate in en or zh categories, the newly updated categoryId will be setting.
          */
-        if (channel.getSphere() != null && channel.getSphere().equals(LangTable.OTHER)) {
-            for (int i=0; i<categoryMaps.size(); i++) {
-                category = catMngr.findById(categoryMaps.get(i).getCategoryId());
-                if (category.getLang().equals(LangTable.LANG_EN)) {
-                    channel.setCategoryId(category.getId());
-                    break;
+        if (channel.getSphere() != null) {
+            if (channel.getSphere().equals(LangTable.OTHER)) {
+                for (int i = 0; i < categories.size(); i++) {
+                    if (categories.get(i).getLang().equals(LangTable.LANG_EN)) {
+                        channel.setCategoryId(categories.get(i).getId());
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < categories.size(); i++) {
+                    if (channel.getSphere().equals(categories.get(i).getLang())) {
+                        channel.setCategoryId(categories.get(i).getId());
+                        break;
+                    }
                 }
             }
         } else {
-            for (int i=0; i<categoryMaps.size(); i++) {
-                category = catMngr.findById(categoryMaps.get(i).getCategoryId());
-                if (channel.getSphere().equals(category.getLang())) {
-                    channel.setCategoryId(category.getId());
-                    break;
-                }
+            if (categories != null) {
+                channel.setCategoryId(categories.get(0).getId()); // if sphere not set, the newly updated categoryId will be setting.
             }
         }
         
@@ -324,6 +390,16 @@ public class NnChannelManager {
         }
         
         return channel;
+    }
+    
+    public List<Category> findCategoriesByChannelId(Long channelId) {
+        CategoryManager catMngr = new CategoryManager();
+        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
+        List<Category> categories = new ArrayList<Category>();
+        for (int i=0; i<categoryMaps.size(); i++) {
+            categories.add(catMngr.findById(categoryMaps.get(i).getCategoryId()));
+        }
+        return categories;
     }
 
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        

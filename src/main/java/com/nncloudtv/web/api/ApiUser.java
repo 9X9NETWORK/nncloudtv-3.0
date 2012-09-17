@@ -19,14 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.CategoryManager;
-import com.nncloudtv.service.CategoryMapManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
@@ -304,6 +302,8 @@ public class ApiUser extends ApiGeneric {
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)
     public @ResponseBody NnChannel userChannelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
+        NnChannelManager channelMngr = new NnChannelManager();
+        
         Long userId = null;
         try {
             userId = Long.valueOf(userIdStr);
@@ -372,7 +372,7 @@ public class ApiUser extends ApiGeneric {
             channel.setSphere(LangTable.LANG_EN);
         }
         
-        // categoryId
+        // categoryId, this setting depends on sphere, do this before sphere setting done will cause logic error.
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
             
@@ -385,36 +385,16 @@ public class ApiUser extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-                        
-            CategoryMap categoryMap = new CategoryMap(categoryId, channel.getId());
-            CategoryMapManager catMapMngr = new CategoryMapManager();
+            
             CategoryManager catMngr = new CategoryManager();
-            
-            /*
-             * always set categoryId that the user pick up, despite if sphere not match category's lang.
-             */
-            if (sphere != null && NnStringUtil.validateLangCode(sphere) != null) {
-                if (sphere.equals(LangTable.OTHER)) { // pick up opposite lang's category
-                    Category category_opposite;
-                    CategoryMap categoryMap_opposite;
-                    Category category = catMngr.findById(categoryId);
-                    if (category.getLang().equals(LangTable.LANG_EN)) {
-                        category_opposite = catMngr.findByLangAndSeq(LangTable.LANG_ZH, category.getSeq());
-                        categoryMap_opposite = new CategoryMap(category_opposite.getId(), channel.getId());
-                        catMapMngr.create(categoryMap_opposite);
-                    }
-                    if (category.getLang().equals(LangTable.LANG_ZH)) {
-                        category_opposite = catMngr.findByLangAndSeq(LangTable.LANG_EN, category.getSeq());
-                        categoryMap_opposite = new CategoryMap(category_opposite.getId(), channel.getId());
-                        catMapMngr.create(categoryMap_opposite);
-                    }
-                }                   
+            Category category = catMngr.findById(categoryId);
+            if (category == null) {
+                notFound(resp, "Category Not Found");
+                return null;
             }
-            catMapMngr.create(categoryMap);    
             
+            channelMngr.saveChannelToCategoryWithSphereJudgement(channel.getSphere(), channel.getId(), categoryId);
         }
-        
-        NnChannelManager channelMngr = new NnChannelManager();
         
         return channelMngr.save(channel);
     }
