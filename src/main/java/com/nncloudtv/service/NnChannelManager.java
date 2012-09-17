@@ -170,6 +170,9 @@ public class NnChannelManager {
             NnProgram existFavorite = pMngr.findByChannelAndFileUrl(favoriteCh.getId(), fileUrl);
             if (existFavorite == null) {
                 existFavorite = new NnProgram(favoriteCh.getId(), name, "", imageUrl);
+                if (!fileUrl.contains("http")) {
+                	fileUrl = "http://www.youtube.com/watch?v=" + fileUrl;
+                }
                 existFavorite.setFileUrl(fileUrl);
                 existFavorite.setPublic(true);
                 existFavorite.setStatus(NnProgram.STATUS_OK);                
