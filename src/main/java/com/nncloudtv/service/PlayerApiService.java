@@ -527,7 +527,7 @@ public class PlayerApiService {
         NnUser user = null;
         if (userToken != null || subscriptions != null) {
             if (subscriptions != null) {
-                user = userMngr.findByIdStr(subscriptions);
+                user = userMngr.findByProfileUrl(subscriptions);
             } else {
                 user = userMngr.findByToken(userToken);
             }
