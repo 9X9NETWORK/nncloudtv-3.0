@@ -1,0 +1,1577 @@
+3765	12 News	http://www.youtube.com/user/wisn	News?	"local news, abc, wisconsin"	EN	US	Q1			Art & Design?
+5112	2 Bucks	http://www.youtube.com/user/amazingfilms247	Gaming?	"game commentaries, first person shooters"	EN	US	Q2			Autos & Vehicles?
+533	2K Sports	http://www.youtube.com/user/2ksports	Gaming?	"game trailers, sports games"	EN	US	Q2			Cartoons & Animation?
+1601	2NE1	http://www.youtube.com/user/2ne1	Music	kpop	Others	Worldwide	Q1			Comedy
+7656	7 News	http://www.youtube.com/user/7news	News?	world news	EN	Worldwide	Q1			"Fashion, Food & Living?"
+6387	9XM Bollywood Music	http://www.youtube.com/user/9xm	Music	bollywood	Others	Worldwide	Q1			Gaming?
+272	A3Network Nightlife	http://www.youtube.com/user/a3network	Music	electro	EN	Worldwide	Q2			How-To?
+45	ABC News	http://www.youtube.com/user/abcnews	News?	"abc, us news"	EN	US	Q1			Education & Lectures?
+3483	Adam Lambert VEVO	http://www.youtube.com/user/adamlambertvevo	Music	"vevo, pop, rock"	EN	Worldwide	Q1			Music
+6884	ADA Sport	http://www.youtube.com/user/adasport	Cartoons & Animation?	contest	EN	US	Q2			News?
+2071	Adele VEVO	http://www.youtube.com/user/adelevevo	Music	"vevo, soul, r&b, pop"	EN	Worldwide	Q1			Nonprofits & Faith?
+235	Adidas Football 官方	http://www.youtube.com/user/adidasfootballtv	"Fashion, Food & Living?"	"sportswear, soccer, football"	EN	Worldwide	Q2			"People, Blogs & Shorts?"
+42	Adidas Originals 	http://www.youtube.com/user/adidasoriginals	"Fashion, Food & Living?"	sportswear	EN	Worldwide	Q1			Science?
+3781	Adult Swim	http://www.youtube.com/user/adultswim	Cartoons & Animation?	"cartoon network, funny"	EN	US	Q1			Sports & Health?
+3514	Ahanhbarbie Beauty	http://www.youtube.com/user/ahanhbarbie34	"Fashion, Food & Living?"	"outfits, hairstyle, beauty products"	EN	Worldwide	Q2			Tech & Apps?
+4975	AH Media	http://www.youtube.com/user/lilhittelvideos	Sports & Health?	football	EN	Worldwide	Q1			TV & Film
+119	ahmir TV	http://www.youtube.com/user/ahmirtv	Music	"indie, song covers, r&b, soul"	EN	Worldwide	Q1			
+7574	Alli Sports	http://www.youtube.com/user/allisports	Sports & Health?	"action sports, skateboarding, bmx, motorcross"	EN	Worldwide	Q1			
+7405	Alloy TV	http://www.youtube.com/user/alloy	"People, Blogs & Shorts?"	"web shorts, vlog"	EN	US	Q1			
+7622	All Things By Alli	http://www.youtube.com/user/allthingsbyalli	"Fashion, Food & Living?"	"makeup, hairstyle, beauty products"	EN	Worldwide	Q2			
+8499	Amazon.com	http://www.youtube.com/user/amazon	Tech & Apps?	consumer websites	EN	Worldwide	Q3			
+7356	AMC	http://www.youtube.com/user/amc	TV & Film	"tv trailers, tv shows"	EN	US	Q1			
+7614	American Idol	http://www.youtube.com/user/americanidol	TV & Film	"audition, song covers, fox"	EN	Worldwide	Q1			
+3588	American Museum Of Natural History	http://www.youtube.com/user/amnhorg	Art & Design?	"culture, history, museums"	EN	Worldwide	Q2			
+234	American Parkour	http://www.youtube.com/user/americanparkour	Sports & Health?	"action sports, parkour"	EN	Worldwide	Q2			
+7323	Amoeba Music	http://www.youtube.com/user/amoeba	Music	indie	EN	US	Q2			
+3742	Andrew Garcia	http://www.youtube.com/user/andrewagarcia	Music	"song covers, indie, soul, vlog, ytf"	EN	Worldwide	Q2			
+14	Android Central	http://www.youtube.com/user/androidcentral	Tech & Apps?	"android, tech reviews"	EN	US	Q2			
+3589	AniBoom	http://www.youtube.com/user/aniboom	Cartoons & Animation?	"funny, kids"	EN	Worldwide	Q1			
+64	Animal Planet	http://www.youtube.com/user/animalplanettv	Animals & Pets?	"wild animals, tv shows"	EN	Worldwide	Q1			
+7610	Annie Jaffrey	http://www.youtube.com/user/anniejaffrey	"Fashion, Food & Living?"	"makeup, outfits, beauty products"	EN	Worldwide	Q2			
+7944	Apollo Grave	http://www.youtube.com/user/apollograve	"People, Blogs & Shorts?"	vlog	EN	US	Q2			
+66	Apple	http://www.youtube.com/user/apple	Tech & Apps?	"consumer electronics, apple"	EN	Worldwide	Q3			
+3484	Arden Cho	http://www.youtube.com/user/ardenbcho	Music	"indie, song covers, vlog"	EN	Worldwide	Q2			
+3630	AR Drone	http://www.youtube.com/user/ardrone	Autos & Vehicles?	"aviation, robotics"	EN	Worldwide	Q1			
+3631	Arirang News	http://www.youtube.com/user/arirangnews	News?	world news	EN	Worldwide	Q1			
+254	Armada  Music	http://www.youtube.com/user/armadamusic	Music	electro	EN	Worldwide	Q2			
+6756	Art Centervideo	http://www.youtube.com/user/artcentervideo	Art & Design?	"paintings, sculptures"	EN	Worldwide	Q2			
+3783	Artisan News	http://www.youtube.com/user/artisannewsservice	TV & Film	"entertainment, celebrity"	EN	US	Q1			
+8347	Asap Science	http://www.youtube.com/user/asapscience	Science?		EN	US	Q1			
+3784	Ashanti VEVO	http://www.youtube.com/user/ashantivevo	Music	"vevo, r&b, hip hop"	EN	Worldwide	Q2			
+3762	Ask a Leader	http://www.youtube.com/user/thedavosquestion	Education & Lectures?	politics	EN	US	Q2			
+639	Associated Press	http://www.youtube.com/user/associatedpress	News?	"world news, us news"	EN	Worldwide	Q1			
+60	Atlantic Videos	http://www.youtube.com/user/atlanticvideos	Music	"r&b, hip hop, reggae, music label"	EN	Worldwide	Q1			
+186	ATP World Tour - Men's Tennis	http://www.youtube.com/user/atpworldtour	Sports & Health?	tennis	EN	Worldwide	Q1			
+7887	AT&T Tech	http://www.youtube.com/user/atttechchannel	Tech & Apps?	history	EN	US	Q1			
+23	Audi	http://www.youtube.com/user/audi	Autos & Vehicles?	car make	Others	Worldwide	Q2			
+364	Autocar	http://www.youtube.com/user/autocar	Autos & Vehicles?	car reviews	EN	Worldwide	Q1			
+227	Auto Express Magazine	http://www.youtube.com/user/autoexpress	Autos & Vehicles?	car reviews	EN	Worldwide	Q1			
+4846	Avril Lavigne VEVO	http://www.youtube.com/user/avrillavignevevo	Music	"vevo, rock, pop, punk"	EN	Worldwide	Q1			
+7322	AVweb	http://www.youtube.com/user/avweb	Autos & Vehicles?	aviation	EN	Worldwide	Q3			
+7598	Awesome Artists Live	http://www.youtube.com/user/awesomeartistslive	TV & Film	audition	EN	Worldwide	Q1			
+3590	Awesome Sauce Films	http://www.youtube.com/user/awesomesaucefilms	Gaming?	"game commentaries, first person shooters, funny"	EN	Worldwide	Q2			
+6469	B2M Entertainment	http://www.youtube.com/user/b2ment	Music	kpop	Others	Worldwide	Q2			
+321	Baby Raising	http://www.youtube.com/user/devinanderica	"People, Blogs & Shorts?"	"family, vlog"	EN	US	Q2			
+3504	Bad Astronomy	http://www.youtube.com/user/thebadastronomer	Science?	astronomy	EN	US	Q3			
+7262	Bad Guy Films	http://www.youtube.com/user/badguyfilmsdotcom	"People, Blogs & Shorts?"	web shorts	EN	US	Q2			
+8333	Band Parades	http://www.youtube.com/user/bandxparades	Music	marching band	EN	Worldwide	Q3			
+8335	Band Video Clips	http://www.youtube.com/user/garygdlk	Music	marching band	EN	Worldwide	Q3			
+8043	Barcroft TV	http://www.youtube.com/user/barcroftmedia	"People, Blogs & Shorts?"	"viral, action sports"	EN	Worldwide	Q2			
+384	Barely Political	http://www.youtube.com/user/barelypolitical	"People, Blogs & Shorts?"	"web shorts, funny"	EN	Worldwide	Q1			
+6099	Bass Heavy Music	http://www.youtube.com/user/dubsteptunez	Music	electro	EN	Worldwide	Q3			
+7270	Bat In the Sun	http://www.youtube.com/user/batinthesun	"People, Blogs & Shorts?"	web shorts	EN	Worldwide	Q1			
+5261	Battlefield 3	http://www.youtube.com/user/battlefield	Gaming?	"game trailers, first person shooters"	EN	Worldwide	Q3			
+673	BBC America	http://www.youtube.com/user/bbcamericatv	TV & Film	"tv trailers, tv shows"	EN	US	Q1			
+664	BBC Earth	http://www.youtube.com/user/bbcearth	Animals & Pets?	"wild animals, tv shows"	EN	Worldwide	Q1			
+7395	BBC	http://www.youtube.com/user/bbc	TV & Film	tv shows	EN	Worldwide	Q1			
+108	BBC Worldwide	http://www.youtube.com/user/bbcworldwide	TV & Film	tv shows	EN	Worldwide	Q1			
+1623	BBQ Pit Boys	http://www.youtube.com/user/barbecueweb	How-To?	recipes	EN	Worldwide	Q1			
+7603	Beautybaby44	http://www.youtube.com/user/beautybaby44	"Fashion, Food & Living?"	"beauty products, outfits"	EN	Worldwide	Q2			
+6755	BeautyBroadcast	http://www.youtube.com/user/emilynoel83	"Fashion, Food & Living?"	"makeup, beauty products"	EN	Worldwide	Q2			
+7456	Beijing Cream	http://www.youtube.com/user/beijingcream	"People, Blogs & Shorts?"	viral	EN	Worldwide	Q3			
+7581	Belated Media	http://www.youtube.com/user/belatedmedia	TV & Film	movie reviews	EN	US	Q2			
+7289	Bellator MMA	http://www.youtube.com/user/bellatormma	Sports & Health?	combat	EN	Worldwide	Q1			
+7595	BestAds	http://www.youtube.com/user/bestads	Art & Design?	tv commercials	EN	Worldwide	Q2			
+289	Best Dunkers in the World 	http://www.youtube.com/user/teamflightbrothers	Sports & Health?	basketball	EN	Worldwide	Q3			
+3702	Beyonce VEVO	http://www.youtube.com/user/beyoncevevo	Music	"vevo, r&b, hip hop, soul, pop"	EN	Worldwide	Q1			
+7373	BFvsGF	http://www.youtube.com/user/bfvsgf	"People, Blogs & Shorts?"	"pranks, funny"	EN	Worldwide	Q2			
+423	Big Bang	http://www.youtube.com/user/bigbang	Music	kpop	Others	Worldwide	Q1			
+6732	Big Sean VEVO	http://www.youtube.com/user/bigseanvevo	Music	"vevo, hip hop"	EN	Worldwide	Q1			
+3744	Big Think	http://www.youtube.com/user/bigthink	Education & Lectures?	experts	EN	Worldwide	Q2			
+7254	Bikeskills.com	http://www.youtube.com/user/bikeskills	Sports & Health?	"action sports, mountain biking, bmx, motorcross"	EN	Worldwide	Q1			
+133	Bikini.com	http://www.youtube.com/user/bikinicom	"Fashion, Food & Living?"	"girls, outfits"	EN	Worldwide	Q1			
+5008	Billboard Classic	http://www.youtube.com/user/billboardclassic	Music	countdowns	EN	Worldwide	Q1			
+430	Billboard.com	http://www.youtube.com/user/billboardmagazine	Music	"live performances, music news"	EN	Worldwide	Q1			
+116	Billboard Hot 100	http://www.youtube.com/user/billboardgoddess	Music	countdowns	EN	Worldwide	Q2			
+8412	Bimmer Post	http://www.youtube.com/user/bimmerpost	Autos & Vehicles?	car make	EN	Worldwide	Q2			
+170	bing	http://www.youtube.com/user/bing	Tech & Apps?	consumer websites	EN	Worldwide	Q3			
+12	BlackBerry	http://www.youtube.com/user/blackberry	Tech & Apps?	"consumer electronics, blackberry"	EN	Worldwide	Q3			
+3670	Black Eyed Peas VEVO	http://www.youtube.com/user/blackeyedpeasvevo	Music	"vevo, hip hop, r&b, electro "	EN	Worldwide	Q1			
+7575	BlacktipHFishing	http://www.youtube.com/user/blacktiph	Sports & Health?	fishing	EN	Worldwide	Q2			
+3591	Black Tuezday (Producer Boon Doc)	http://www.youtube.com/user/blacktuezday	Music	"indie, hip hop"	EN	Worldwide	Q1			
+1484	Bloomberg	http://www.youtube.com/user/bloomberg	News?	world news	EN	Worldwide	Q1			
+22	BMW	http://www.youtube.com/user/bmw	Autos & Vehicles?	car make	EN	Worldwide	Q2			
+433	BodyRock.TV	http://www.youtube.com/user/charliejames1975	Sports & Health?	"workouts, bodybuilding"	EN	Worldwide	Q1			
+96	Boston Celtics	http://www.youtube.com/user/bostonceltics	Sports & Health?	"basketball, nba, boston celtics"	EN	Worldwide	Q2			
+7252	Boston Dynamics	http://www.youtube.com/user/bostondynamics	Tech & Apps?	robotics	EN	Worldwide	Q3			
+3671	Boyce Avenue	http://www.youtube.com/user/boyceavenue	Music	"song covers, rock"	EN	Worldwide	Q1			
+3592	Brandon Carter TV	http://www.youtube.com/user/brandoncartertv	Sports & Health?	bodybuilding	EN	Worldwide	Q2			
+7269	Break	http://www.youtube.com/user/break	Comedy	"funny, viral"	EN	Worldwide	Q1			
+8189	Break Originals	http://www.youtube.com/user/breakoriginals	"People, Blogs & Shorts?"	"funny, web shorts"	EN	Worldwide	Q1			
+4974	Britian's Got Talent	http://www.youtube.com/user/12345djbridger	TV & Film	audition	EN	Worldwide	Q2			
+762	Britney Spears VEVO	http://www.youtube.com/user/britneyspearsvevo	Music	"vevo, pop"	EN	Worldwide	Q1			
+3672	Brit Pop Princess	http://www.youtube.com/user/britpopprincess	"Fashion, Food & Living?"	outfits	EN	Worldwide	Q2			
+6706	Brittani Louise Taylor	http://www.youtube.com/user/brittanilouisetaylor	"People, Blogs & Shorts?"	"vlog, web shorts"	EN	US	Q1			
+3516	Brooklyn Museum	http://www.youtube.com/user/brooklynmuseum	Art & Design?	"museums, culture"	EN	Worldwide	Q2			
+7368	Bruno's Kitchen	http://www.youtube.com/user/brunoalbouze	"Fashion, Food & Living?"	recipes	EN	Worldwide	Q2			
+6368	Brussup Illusion Science	http://www.youtube.com/user/brusspup	Art & Design?	visual	EN	Worldwide	Q2			
+6678	Bubzbeauty	http://www.youtube.com/user/bubzbeauty	"Fashion, Food & Living?"	"outfits, makeup, hairstyle"	EN	Worldwide	Q2			
+765	Bubz Beauty	http://www.youtube.com/user/bubzvlogz	"People, Blogs & Shorts?"	vlog	EN	US	Q3			
+24	Burberry	http://www.youtube.com/user/burberry	"Fashion, Food & Living?"	high fashion	EN	Worldwide	Q3			
+6819	Calvin Harris VEVO	http://www.youtube.com/user/calvinharrisvevo	Music	"vevo, electro"	EN	Worldwide	Q1			
+323	Cambridge University	http://www.youtube.com/user/cambridgeuniversity	Education & Lectures?	colleges	EN	Worldwide	Q2			
+3745	Camera Lab	http://www.youtube.com/user/cameralabs	Tech & Apps?	cameras	EN	Worldwide	Q2			
+7470	Capcom Unity	http://www.youtube.com/user/capcomunityvideos	Gaming?	"game trailers, game commentaries"	EN	Worldwide	Q1			
+6754	Captain Sparklez	http://www.youtube.com/user/captainsparklez	Gaming?	"game commentaries, vlog"	EN	Worldwide	Q2			
+3517	Carlos Douh	http://www.youtube.com/user/carlosdouh	"People, Blogs & Shorts?"	"vlog, culture"	EN	Worldwide	Q2			
+8171	Carly Rae Jepsen VEVO	http://www.youtube.com/user/carlyraejepsenvevo	Music	"vevo, pop"	EN	Worldwide	Q1			
+29	Car Show Classic	http://www.youtube.com/user/carshowclassic	Autos & Vehicles?	car reviews	EN	Worldwide	Q3			
+6270	Cartoon2013	http://www.youtube.com/user/cartoon2013	TV & Film	tv shows	EN	US	Q1			
+7153	Cartoon Network	http://www.youtube.com/user/cartoonnetwork	Cartoons & Animation?	"tv shows, cartoon network, kids"	EN	US	Q1			
+5012	Cathy Nguyen	http://www.youtube.com/user/lilcdawg	"People, Blogs & Shorts?"	"indie, song covers, vlog"	EN	Worldwide	Q3			
+7326	CBC	http://www.youtube.com/user/cbc	"People, Blogs & Shorts?"	podcasts	EN	US	Q3			
+7246	CBC The National	http://www.youtube.com/user/cbcthenational	News?	world news	EN	Worldwide	Q2			
+109	CBS	http://www.youtube.com/user/cbs	TV & Film	tv shows	EN	US	Q1			
+382	CBS News Online	http://www.youtube.com/user/cbsnewsonline	News?	us news	EN	US	Q1			
+3485	CED	http://www.youtube.com/user/canaleducatif	Art & Design?	paintings	EN	Worldwide	Q2			
+8420	CelebTV	http://www.youtube.com/user/celebtv	TV & Film	"entertainment, celebrity"	EN	Worldwide	Q1			
+5113	Celine Dion VEVO	http://www.youtube.com/user/celinedionvevo	Music	"vevo, pop, rock"	EN	Worldwide	Q1			
+6150	Celtics Productions	http://www.youtube.com/user/celticsproduction	Sports & Health?	"nba, basketball, boston celtics"	EN	Worldwide	Q2			
+6352	CES Official	http://www.youtube.com/user/cesonthetube	Tech & Apps?	consumer electronics	EN	Worldwide	Q2			
+6309	Channel 4	http://www.youtube.com/user/channel4	TV & Film	documentaries	EN	Worldwide	Q1			
+6	Channel ASAHI	http://www.youtube.com/user/asahicom	News?	world news	Others	Worldwide	Q1			
+3787	Charles Trippy	http://www.youtube.com/user/charlestrippy	"People, Blogs & Shorts?"	web shorts	EN	Worldwide	Q2			
+199	Charlie McDonnell 	http://www.youtube.com/user/charlieissocoollike	"People, Blogs & Shorts?"	vlog	EN	Worldwide	Q2			
+1496	Chef Tips	http://www.youtube.com/user/cheftips	How-To?	recipes	EN	Worldwide	Q2			
+3789	Chestersee	http://www.youtube.com/user/chestersee	"People, Blogs & Shorts?"	"web shorts, indie, ytf"	EN	Worldwide	Q2			
+276	Chevrolet	http://www.youtube.com/user/chevrolet	Autos & Vehicles?	car make	EN	Worldwide	Q3			
+7334	Chow	http://www.youtube.com/user/chow	How-To?	recipes	EN	Worldwide	Q1			
+3674	Chris Stuckmann	http://www.youtube.com/user/chrisstuckmann	TV & Film	movie reviews	EN	US	Q2			
+436	Christina Aguilera VEVO	http://www.youtube.com/user/caguileravevo	Music	"vevo, pop"	EN	Worldwide	Q1			
+4039	Christina Grimmie 	http://www.youtube.com/user/zeldaxlove64	"People, Blogs & Shorts?"	"indie, song covers, pop"	EN	Worldwide	Q2			
+3675	Chronicle Books	http://www.youtube.com/user/chroniclebooks	Art & Design?	books	EN	US	Q3			
+7120	Cimorelli	http://www.youtube.com/user/cimorellitheband	"People, Blogs & Shorts?"	"indie, song covers, vlog"	EN	US	Q2			
+7425	Cincinnati Zoo	http://www.youtube.com/user/cincinnatizootube	Animals & Pets?	wild animals	EN	Worldwide	Q2			
+7048	Cirque du Soleil	http://www.youtube.com/user/cirquedusoleil	Art & Design?	live performances	EN	Worldwide	Q1			
+6380	city42tv Pakistani News	http://www.youtube.com/user/city042tv	News?	world news	EN	Worldwide	Q1			
+7407	City and Makeup	http://www.youtube.com/user/cityandmakeup	"Fashion, Food & Living?"	"makeup, beauty products"	EN	Worldwide	Q2			
+3703	Clara C 	http://www.youtube.com/user/claracmusic	Music	"indie, song covers"	EN	Worldwide	Q2			
+310	Classic Game Room	http://www.youtube.com/user/inecomcompany	Gaming?	"game commentaries, game reviews"	EN	Worldwide	Q2			
+6931	Clevver Games	http://www.youtube.com/user/clevvergames	Gaming?	"game reviews, game news"	EN	Worldwide	Q1			
+442	Clevver Movies	http://www.youtube.com/user/clevvermovies	TV & Film	"movie reviews, entertainment, movie news"	EN	Worldwide	Q1			
+6928	Clevver Music	http://www.youtube.com/user/clevvermusic	Music	"entertainment, music news"	EN	Worldwide	Q1			
+6929	Clevver News	http://www.youtube.com/user/clevvernews	TV & Film	"celebrity, gossip"	EN	Worldwide	Q1			
+6938	Clevver Style	http://www.youtube.com/user/clevverstyle	"Fashion, Food & Living?"	"outfits, entertainment, high fashion"	EN	Worldwide	Q1			
+3594	Clevver TV	http://www.youtube.com/user/clevvertv	TV & Film	"entertainment, gossip"	EN	Worldwide	Q1			
+6727	Club Penguin	http://www.youtube.com/user/clubpenguin	Gaming?	kids	EN	Worldwide	Q3			
+2037	cnblue	http://www.youtube.com/user/cnblue	Music	kpop	Others	Worldwide	Q1			
+211	CNET	http://www.youtube.com/user/cnettv	Tech & Apps?	"tech news, consumer electronics, tech reviews"	EN	Worldwide	Q1			
+422	CNN	http://www.youtube.com/user/cnn	News?	us news	EN	US	Q1			
+1497	Coca Cola	http://www.youtube.com/user/cocacola	"Fashion, Food & Living?"	beverages	EN	Worldwide	Q3			
+3791	Coldplay VEVO	http://www.youtube.com/user/coldplayvevo	Music	"vevo, rock"	EN	Worldwide	Q1			
+3634	College Humor	http://www.youtube.com/user/collegehumor	Comedy	"funny, web shorts"	EN	US	Q1			
+7331	College Makeup Girl	http://www.youtube.com/user/collegemakeupgirl	"Fashion, Food & Living?"	"makeup, beauty products"	EN	Worldwide	Q2			
+6980	Combat Footage	http://www.youtube.com/user/funker530	Tech & Apps?	combat	EN	Worldwide	Q2			
+5009	Comedy Central	http://www.youtube.com/user/comedycentral	Comedy	"funny, standup comedy"	EN	Worldwide	Q1			
+3677	Comedy Time	http://www.youtube.com/user/comedytimedir	Comedy	standup comedy	EN	Worldwide	Q1			
+3793	Community Channel	http://www.youtube.com/user/communitychannel	"People, Blogs & Shorts?"	"web shorts, vlog"	EN	Worldwide	Q2			
+3746	Computer History Museum	http://www.youtube.com/user/computerhistory	Tech & Apps?	"history, museums"	EN	Worldwide	Q3			
+3596	Cooking With Dog	http://www.youtube.com/user/cookingwithdog	How-To?	recipes	EN	Worldwide	Q2			
+7572	Cooking With Jack	http://www.youtube.com/user/jakatak69	How-To?	recipes	EN	Worldwide	Q1			
+7292	Corbett Report	http://www.youtube.com/user/corbettreport	News?	politics	EN	US	Q2			
+3794	Corridor Digital	http://www.youtube.com/user/corridordigital	"People, Blogs & Shorts?"	web shorts	EN	Worldwide	Q2			
+6879	Cosplay-Mag	http://www.youtube.com/user/cosplaymag	"Fashion, Food & Living?"	cosplay	EN	Worldwide	Q3			
+6446	C.P.G. Grey	http://www.youtube.com/user/cgpgrey	Science?		EN	US	Q2			
+7464	Crazy Breaking News	http://www.youtube.com/user/crazybreakingnews	Autos & Vehicles?	aviation	EN	Worldwide	Q3			
+6305	CrossFit HQ	http://www.youtube.com/user/crossfithq	Sports & Health?	workouts	EN	Worldwide	Q2			
+6507	C-SPAN	http://www.youtube.com/user/cspan	News?	us news	EN	US	Q2			
+7816	Culture Pub	http://www.youtube.com/user/culturepub	Art & Design?	tv commercials	EN	Worldwide	Q1			
+8385	Chengdu PAW	http://www.youtube.com/user/chengdupaw	Animals & Pets?	campaigns	Others	Worldwide	Q3			
+3704	CuteWinFail	http://www.youtube.com/user/cutewinfail	Comedy	"viral, funny"	EN	Worldwide	Q2			
+567	CW Television	http://www.youtube.com/user/cwtelevision	TV & Film	"tv shows, tv trailers"	EN	US	Q1			
+146	Daily NBA videos	http://www.youtube.com/user/nbaerik	Sports & Health?	"basketball, nba"	EN	Worldwide	Q1			
+7234	DanceOn	http://www.youtube.com/user/danceon	"People, Blogs & Shorts?"	"audition, vlog"	EN	US	Q3			
+6670	Daneboe	http://www.youtube.com/user/daneboe	"People, Blogs & Shorts?"	web shorts	EN	Worldwide	Q2			
+3795	Dang Films TV	http://www.youtube.com/user/dangfilmstv	Music	"indie, hip hop"	EN	Worldwide	Q1			
+7549	DARPAtv	http://www.youtube.com/user/darpatv	Tech & Apps?	robotics	EN	Worldwide	Q3			
+6682	Dave Days	http://www.youtube.com/user/davedays	"People, Blogs & Shorts?"	web shorts	EN	Worldwide	Q2			
+3796	David Choi	http://www.youtube.com/user/davidchoimusic	Music	"song covers, indie, soul"	EN	Worldwide	Q2			
+6778	David Ghetta	http://www.youtube.com/user/davidguetta	Music	"live performances, electro"	EN	Worldwide	Q1			
+6797	David Guetta VEVO	http://www.youtube.com/user/davidguettavevo	Music	"vevo, electro"	EN	Worldwide	Q1			
+6825	David So Comedy	http://www.youtube.com/user/davidsocomedy	Comedy	"funny, vlog"	EN	Worldwide	Q2			
+8490	DC Shoes Film	http://www.youtube.com/user/dcshoesfilm	Sports & Health?	"sportswear, action sports"	EN	Worldwide	Q2			
+7276	Demi Lovato VEVO	http://www.youtube.com/user/demilovatovevo	Music	"vevo, pop"	EN	Worldwide	Q1			
+7600	DesignPD	http://www.youtube.com/user/designpd	Art & Design?	sculptures	EN	Worldwide	Q2			
+6698	DeStorm Power	http://www.youtube.com/user/destorm	Music	"indie, hip hop"	EN	Worldwide	Q2			
+7250	Devin Super Tramp	http://www.youtube.com/user/devinsupertramp	"People, Blogs & Shorts?"	viral	EN	Worldwide	Q1			
+6749	DevVEVO	http://www.youtube.com/user/devvevo	Music	"vevo, electro, pop"	EN	Worldwide	Q1			
+222	D&G	http://www.youtube.com/user/dolcegabbanachannel	"Fashion, Food & Living?"	high fashion	EN	Worldwide	Q3			
+7881	Diablo	http://www.youtube.com/user/diablo								
+980	Diet Health	http://www.youtube.com/user/diethealth								
+5681	DigInfo News	http://www.youtube.com/user/diginfonews								
+5642	DigInfo News Japan	http://www.youtube.com/user/diginfonewsjapan								
+5613	DigitalRev TV	http://www.youtube.com/user/digitalrevcom								
+1645	Ding Ding TV	http://www.youtube.com/user/dianaamazing								
+3607	Discount Juicer Demo	http://www.youtube.com/user/rawfoods								
+121	Discovery Channel	http://www.youtube.com/user/discoverynetworks								
+3705	Discovery International	http://www.youtube.com/user/discoverytv								
+7233	DiscoveryWorld	http://www.youtube.com/user/discoveryworld								
+6661	Disney	http://www.youtube.com/user/disney								
+218	Disney Parks	http://www.youtube.com/user/disneyparks								
+3747	Disney Pixar	http://www.youtube.com/user/disneypixar								
+7001	DivasCanCook	http://www.youtube.com/user/divascancook								
+6743	DJKhaledVEVO	http://www.youtube.com/user/djkhaledvevo								
+5984	DJ Nestor Cruz	http://www.youtube.com/user/djnestorcruz								
+3393	dLife	http://www.youtube.com/user/dlifedotcom								
+6213	Dlink	http://www.youtube.com/user/dlink								
+7682	DoveUS	http://www.youtube.com/user/doveunitedstates								
+3678	D-Pryde	http://www.youtube.com/user/dprydemusic								
+6565	Dream Girls 官方專區	http://www.youtube.com/user/dreamgirls201103								
+80	Drive Movie	http://www.youtube.com/user/drivemovie								
+6737	DrunkenTiger	http://www.youtube.com/user/drunkentiger								
+7305	D-trix	http://www.youtube.com/user/thedominicshow								
+7389	DulceCandy'sMakeup	http://www.youtube.com/user/dulcecandy87								
+3706	Dumbfoundead	http://www.youtube.com/user/dumbfoundead								
+6779	DXP	http://www.youtube.com/user/dxpxpressxp								
+5010	EA France	http://www.youtube.com/user/eafrance								
+3635	Eat The Weeds	http://www.youtube.com/user/eattheweeds								
+8290	EdBassmaster	http://www.youtube.com/user/edbassmaster								
+3486	Edds World	http://www.youtube.com/user/eddsworld								
+8090	EffortlessSwimming	http://www.youtube.com/user/effortlessswimming								
+3797	ehow Fitness	http://www.youtube.com/user/ehowhealth								
+8341	eHowPets	http://www.youtube.com/user/ehowpets								
+2146	Electrika Records	http://www.youtube.com/user/elektrarecords								
+6782	Elkodsy	http://www.youtube.com/user/elkodsy								
+17	ELLE TV Fashion	http://www.youtube.com/user/elletvfashion								
+5155	Emeli Sande VEVO	http://www.youtube.com/user/emelisandevevo								
+5552	EMI???????????	http://www.youtube.com/user/emimusicjapan								
+3487	Eminem VEVO	http://www.youtube.com/user/eminemvevo								
+130	Emirates Experience	http://www.youtube.com/user/emiratesexperience								
+8038	enferm?tico	http://www.youtube.com/user/enfermatico1								
+7602	EnglishWarrior500	http://www.youtube.com/user/englishwarrior500								
+191	Enminem Skatebording	http://www.youtube.com/user/enminem								
+8426	ENTV	http://www.youtube.com/user/entv								
+6731	EpicFailMan12	http://www.youtube.com/user/epicfailman12								
+2	EpicMealTime	http://www.youtube.com/user/epicmealtime								
+7230	EpikViral	http://www.youtube.com/user/epikviral								
+6868	ERB EpicRapBattle	http://www.youtube.com/user/erb								
+3748	Erin Paulaa	http://www.youtube.com/user/erinpaulaa								
+490	ESPN Boston: Celtics videos	http://www.youtube.com/user/espnforsberg								
+812	ESPN	http://www.youtube.com/user/espn								
+3488	ESPN Media Zone	http://www.youtube.com/user/espnmediazone								
+7265	EsquireMagazine	http://www.youtube.com/user/esquiremag								
+3492	Everything Tibet	http://www.youtube.com/user/ikhamo								
+505	Expert NBA Breakdowns	http://www.youtube.com/user/bballbreakdown								
+1672	Expert Village	http://www.youtube.com/user/expertvillage								
+3636	Extremity TV	http://www.youtube.com/user/extremitytv								
+3598	Fabolous VEVO	http://www.youtube.com/user/fabolousvevo								
+4511	FaderTV	http://www.youtube.com/user/thefaderteam								
+3798	FailBlog	http://www.youtube.com/user/failblog								
+8183	FandangoMovies	http://www.youtube.com/user/fandangomovies								
+8003	FarEastMovementVEVO	http://www.youtube.com/user/fareastmovementvevo								
+594	Fashion DIY	http://www.youtube.com/user/anneorshine								
+178	FashionGuide影音美人教室	http://www.youtube.com/user/fashionguide								
+18	Fashion TV	http://www.youtube.com/user/fashiontv								
+3799	Fatloss Lifestyle	http://www.youtube.com/user/fatlosslifestyle								
+6750	FeastofFiction	http://www.youtube.com/user/feastoffiction								
+7698	FernandoBruccoleri	http://www.youtube.com/user/ferbrucoit								
+220	FHM男人幫雜誌	http://www.youtube.com/user/fhmtw								
+431	Fifth Gear	http://www.youtube.com/user/fifthgearuk								
+3676	Film Buff	http://www.youtube.com/user/cinetic								
+3507	Film XTRA	http://www.youtube.com/user/tomsperkins								
+5757	FishingEx.com	http://www.youtube.com/user/fishingextv								
+7444	FleurDeForce	http://www.youtube.com/user/fleurdeforce								
+3519	Flight Global	http://www.youtube.com/user/flightglobal								
+7597	FlippinTheScript	http://www.youtube.com/user/flippinthescript								
+3800	Floorstatik (Daniel Cloud Campos)	http://www.youtube.com/user/floorstatik								
+5058	FloRida	http://www.youtube.com/user/officialflo								
+7360	FlyingPanda1990	http://www.youtube.com/user/flyingpanda1990								
+1584	FoodNetwork	http://www.youtube.com/user/foodnetworktv								
+591	FoodWishes	http://www.youtube.com/user/foodwishes								
+6652	footwearfoot	http://www.youtube.com/user/footwearfoot								
+3679	For a TV	http://www.youtube.com/user/foratv								
+136	Ford	http://www.youtube.com/user/ford								
+7912	ForeverKPopGirlHD3	http://www.youtube.com/user/4everkpopgirlhd3								
+3638	Formula One Hot Wheels	http://www.youtube.com/user/formulaonehotwheel								
+3808	For the Love of Awesome	http://www.youtube.com/user/liketotallyawesome								
+162	Fox Broadcasting	http://www.youtube.com/user/foxbroadcasting								
+3707	FoxNewsChannel	http://www.youtube.com/user/foxnewschannel								
+560	Fox Soccer	http://www.youtube.com/user/foxsoccer								
+3708	Fox Soccer Plus	http://www.youtube.com/user/foxsoccerplus								
+435	FOX Sports	http://www.youtube.com/user/foxsports								
+6695	FPS Russia	http://www.youtube.com/user/fpsrussia								
+6675	FreddieW2	http://www.youtube.com/user/freddiew2								
+197	FreddieW	http://www.youtube.com/user/freddiew								
+3593	Frederator	http://www.youtube.com/user/channelfrederator								
+3801	Fred	http://www.youtube.com/user/fred								
+3639	FromHeadToToe	http://www.youtube.com/user/frmheadtotoe								
+253	FueledByRamen	http://www.youtube.com/user/fueledbyramen								
+4127	Fuji TV	http://www.youtube.com/user/fujitv								
+7394	FunInTheRun	http://www.youtube.com/user/funintherun								
+3802	Funny or Die	http://www.youtube.com/user/funnyordie								
+5952	FutureShorts	http://www.youtube.com/user/futureshorts								
+3490	Gab and Dad	http://www.youtube.com/user/gabndad								
+3521	Galavanting	http://www.youtube.com/user/gogalavanting								
+5114	GameSpot	http://www.youtube.com/user/gamespot								
+3709	Game Sprout	http://www.youtube.com/user/gamesprout								
+3749	Garden Girl TV	http://www.youtube.com/user/gardengirltv								
+5971	Garu	http://www.youtube.com/user/garu2612								
+6915	GeekAndSundry	http://www.youtube.com/user/geekandsundry								
+5230	Gefilte Fish	http://www.youtube.com/user/uberhaxornova								
+7594	GeorgeWatsky	http://www.youtube.com/user/gwatsky								
+6503	Geo TV	http://www.youtube.com/user/geotv								
+425	Get Married	http://www.youtube.com/user/getmarriedtv								
+7530	GetOutTheBox	http://www.youtube.com/user/getoutthebox1								
+3680	Girls Mixing Drinks	http://www.youtube.com/user/girlsmixingdrinks								
+8332	"Glasgow Rangers Song Didn't You Know , Didn't You Know"	http://www.youtube.com/user/david1966dc								
+7503	Glitterdollz7	http://www.youtube.com/user/glitterdollz7								
+7316	GlobalNational	http://www.youtube.com/user/globalnational								
+6666	gmatv	http://www.youtube.com/user/gmatv								
+230	Go Lakers!	http://www.youtube.com/user/lalakersfan88								
+520	Golden State Warriors	http://www.youtube.com/user/goldenstatewarriors								
+5812	Golfing World	http://www.youtube.com/user/golfingworld								
+5057	Gonzossm	http://www.youtube.com/user/gonzossm								
+67	Google Developers	http://www.youtube.com/user/googledevelopers								
+13	Google	http://www.youtube.com/user/google								
+7623	GoogleTaiwan	http://www.youtube.com/user/googletaiwan								
+256	@Google Talks	http://www.youtube.com/user/atgoogletalks								
+1246	GoPro	http://www.youtube.com/user/goprocamera								
+7386	GourmetButcher	http://www.youtube.com/user/gourmetbutcher								
+183	Go車誌	http://www.youtube.com/user/buycartv								
+1175	GQ TV	http://www.youtube.com/user/gqtaiwan								
+6728	GrooveWar	http://www.youtube.com/user/groovewar								
+6279	GroupPowerMovie	http://www.youtube.com/user/grouppowermovie								
+3710	Growing Your Greens	http://www.youtube.com/user/growingyourgreens								
+5809	GuamTravel	http://www.youtube.com/user/guamtravel								
+3506	Guerrilla Gardener	http://www.youtube.com/user/theguerrillagardener								
+167	Guitar Center TV	http://www.youtube.com/user/guitarcentertv								
+260	Gundam.tk	http://www.youtube.com/user/rrobbert184								
+3612	Hairworld & Beautyworld	http://www.youtube.com/user/switchscissors								
+7296	HalfbrickStudios	http://www.youtube.com/user/halfbrickstudios								
+98	Happy Magic Skateboarding 	http://www.youtube.com/user/happymagicskateboard								
+3601	Harvest Eating	http://www.youtube.com/user/keithsnow								
+6772	HatsuneMiku	http://www.youtube.com/user/hatsunemiku								
+8387	HavanaBrownVEVO	http://www.youtube.com/user/havanabrownvevo								
+3690	Hazard Cinema	http://www.youtube.com/user/thehazardcinema								
+1590	HBOsports	http://www.youtube.com/user/hbosports								
+3640	Healthy Food	http://www.youtube.com/user/healthierliving								
+231	HeatTeo	http://www.youtube.com/user/heatteo								
+564	HIM華研國際音樂	http://www.youtube.com/user/himservice								
+7582	HipHopOfficial	http://www.youtube.com/user/hiphopofficial								
+7222	HK News by hkRaymond	http://www.youtube.com/user/hkraymond2012								
+7123	HK TVB & Mixed News by evergreen	http://www.youtube.com/user/evergreen8883								
+274	H&M	http://www.youtube.com/user/hennesandmauritz								
+7833	HockeyWebCaster	http://www.youtube.com/user/hockeywebcaster								
+3522	Hollyannaeree	http://www.youtube.com/user/hollyannaeree								
+8423	HollyscoopTV	http://www.youtube.com/user/hollyscooptv								
+7568	HollywoodCIA	http://www.youtube.com/user/hollywoodcia								
+204	Hollywood.com	http://www.youtube.com/user/hollywoodstreams								
+8424	HollywoodOnDemand	http://www.youtube.com/user/hollywoodondemand								
+134	Honda	http://www.youtube.com/user/honda								
+8125	HoopMixTape3:The Extras	http://www.youtube.com/user/hmtextras								
+326	Hoop Mixtape	http://www.youtube.com/user/hoopmixtape								
+510	Hoops Encyclopedia	http://www.youtube.com/user/hoopsencyclopedia								
+3803	Hoops Mixtape 2: The Blog	http://www.youtube.com/user/hoopmixtapeblog								
+4931	HOPE高球周報	http://www.youtube.com/user/hopegolfweekly								
+7831	HotBrilliance	http://www.youtube.com/user/hautebrilliance								
+6690	HOUSEHOLD HACKER	http://www.youtube.com/user/householdhacker								
+3641	HowdiniGuru	http://www.youtube.com/user/howdiniguru								
+4442	HowItShouldHaveEnded	http://www.youtube.com/user/hishedotcom								
+4747	HTC	http://www.youtube.com/user/htc								
+5811	?????????	http://www.youtube.com/user/kanaloco								
+6502	Huffington Post	http://www.youtube.com/user/huffingtonpost								
+5262	Humza Productions	http://www.youtube.com/user/humzaproductions								
+7180	Hungama	http://www.youtube.com/user/hungama								
+49	HuskyStarcraft - RPGl	http://www.youtube.com/user/huskystarcraft								
+3346	I am BNN	http://www.youtube.com/user/bnn0705								
+3711	Ian H	http://www.youtube.com/user/ianh								
+3681	Ian MacDon	http://www.youtube.com/user/ianmacdon								
+307	IBM	http://www.youtube.com/user/ibm								
+3788	ICanHasCheezburger	http://www.youtube.com/user/cheezburger								
+7172	iCD銀河愛音樂	http://www.youtube.com/user/iwanticd								
+7239	iDownloadBlog	http://www.youtube.com/user/myjailbreakmovies								
+532	iFilm FLICKS傳影互動	http://www.youtube.com/user/ifilmfilmware								
+7300	iFixit	http://www.youtube.com/user/ifixityourself								
+7573	iFlyTV	http://www.youtube.com/user/iflymagazine								
+72	IGN Entertainment	http://www.youtube.com/user/ignentertainment								
+5115	Ignor-a-Musky	http://www.youtube.com/user/ignoramusky								
+6689	iJustine	http://www.youtube.com/user/ijustine								
+7227	IlDivoVEVO	http://www.youtube.com/user/ildivovevo								
+228	I Love Korean	http://www.youtube.com/user/arirangkorean								
+6656	imKKBOX	http://www.youtube.com/user/imkkbox								
+3523	ImprovEverywhere	http://www.youtube.com/user/improveverywhere								
+5263	Incubus	http://www.youtube.com/user/incubusvevo								
+6718	India	http://www.youtube.com/user/india								
+7536	IndianPremierLeague	http://www.youtube.com/user/ipl								
+2485	iNmusic音樂	http://www.youtube.com/user/iloveinmusic								
+3599	InShape4U	http://www.youtube.com/user/inshape4u								
+7280	InsidePool	http://www.youtube.com/user/insidepoolmag								
+6922	Inside the Magic	http://www.youtube.com/user/insidethemagic								
+7206	InTheMoneyStocks	http://www.youtube.com/user/inthemoneystocks								
+1116	IntoMobile	http://www.youtube.com/user/intomobile								
+6799	Invisible Children	http://www.youtube.com/user/invisiblechildreninc								
+6765	IovovI	http://www.youtube.com/user/iovovi								
+308	iPhone4 TW	http://www.youtube.com/user/iphone4tw								
+572	iPhone & Android App Reviews!	http://www.youtube.com/user/appjudgment								
+212	iPhone Ninja	http://www.youtube.com/user/jima6636								
+3682	Irishpolyglot	http://www.youtube.com/user/irishpolyglot								
+6806	IronmanTriathlon	http://www.youtube.com/user/ironmantriathlon								
+6808	ironmoon2006	http://www.youtube.com/user/ironmoon2006								
+7576	ITNNews	http://www.youtube.com/user/itnnews								
+6489	Jabbarlo	http://www.youtube.com/user/jabbarlo								
+7546	JamesMorrison	http://www.youtube.com/user/jamesmorrisononline								
+373	Japanese Pod 101	http://www.youtube.com/user/japanesepod101								
+1233	Jason Chen	http://www.youtube.com/user/miniachilles								
+5551	JAXA Channel	http://www.youtube.com/user/jaxachannel								
+1004	Jayesslee	http://www.youtube.com/user/jayesslee								
+6786	JayZVEVO	http://www.youtube.com/user/jayzvevo								
+6100	Jazz de lastsamurai55	http://www.youtube.com/user/lastsamurai55								
+6762	JColeVEVO	http://www.youtube.com/user/jcolevevo								
+25	Jeep	http://www.youtube.com/user/thejeepchannel								
+6800	JennaMarbles	http://www.youtube.com/user/jennamarbles								
+3493	Jennifer J Chung 	http://www.youtube.com/user/jenniferjchung								
+7312	JeremiahWarren	http://www.youtube.com/user/jeremiahjw								
+3524	Jeremy Jahn	http://www.youtube.com/user/jeremyjahns								
+7116	Jeremy Lin Highlights	http://www.youtube.com/user/jeremylinhighlight								
+7119	Jeremy Lin New York Knicks	http://www.youtube.com/user/zaxjia1217								
+7580	JessicaHarlow	http://www.youtube.com/user/missjessicaharlow								
+3600	Jetdaisuke (Random Gadgets)	http://www.youtube.com/user/jetdaisuke								
+3751	JFK Library and Museum	http://www.youtube.com/user/jfklf								
+3805	JimmyKimmelLive	http://www.youtube.com/user/jimmykimmellive								
+6245	Jing Si Aphorisms	http://www.youtube.com/user/dujingsi								
+6880	JLE	http://www.youtube.com/user/oojleoo								
+7349	JoBloMovieNetwork	http://www.youtube.com/user/joblomovienetwork								
+7607	JoesOrigami	http://www.youtube.com/user/jonakashima								
+6788	jonlajoie	http://www.youtube.com/user/jonlajoie								
+3804	JosephVincent	http://www.youtube.com/user/hoorahjencar								
+3806	Journal TV	http://www.youtube.com/user/journaltv								
+1468	JourneyManPictures 	http://www.youtube.com/user/journeymanpictures								
+352	J.R.A.TV  	http://www.youtube.com/user/jraquinomusic								
+3642	JReyez	http://www.youtube.com/user/jreyez								
+187	JR Sport Brief	http://www.youtube.com/user/jrsportbrief								
+6686	Juicystar	http://www.youtube.com/user/juicystar07								
+6710	Julian Smith	http://www.youtube.com/user/juliansmith87								
+6785	JumbaFund	http://www.youtube.com/user/jumbafund								
+5691	JuntosWorldwide	http://www.youtube.com/user/juntosworldwide								
+3734	Just Eat Real Food	http://www.youtube.com/user/undergroundwellness								
+3525	JustForLaughs	http://www.youtube.com/user/justforlaughstv								
+5011	Justin Bieber	http://www.youtube.com/user/kidrauhl								
+104	JustinBieberVEVO	http://www.youtube.com/user/justinbiebervevo								
+3752	JustKiddingFilms	http://www.youtube.com/user/justkiddingfilms								
+7010	JuxtaposingBinaries	http://www.youtube.com/user/juxtaposingbinaries								
+1920	Jwcfree (Guitar Child Prodigy)	http://www.youtube.com/user/jwcfree								
+6593	kaiger6	http://www.youtube.com/user/kaiger6								
+7380	Kanal 5	http://www.youtube.com/user/kanal5								
+6288	KanekiMusic	http://www.youtube.com/user/kanekimusic								
+3753	Kanye West VEVO	http://www.youtube.com/user/kanyewestvevo								
+6783	KarminCovers	http://www.youtube.com/user/karmincovers								
+6700	KassemG	http://www.youtube.com/user/kassemg								
+7531	KatyPerryOfficial	http://www.youtube.com/user/katyperrymusic								
+928	KatyPerryVEVO	http://www.youtube.com/user/katyperryvevo								
+506	KB24	http://www.youtube.com/user/kobe								
+3643	KCRA 3 HD News	http://www.youtube.com/user/kcratv								
+7346	KCRW FM	http://www.youtube.com/user/kcrw								
+3664	KCVB Boston News	http://www.youtube.com/user/wcvbtv								
+3526	Kelly Clarkson VEVO	http://www.youtube.com/user/kellyclarksonvevo								
+329	Kendo Time	http://www.youtube.com/user/letskendo								
+7913	KendoWorld	http://www.youtube.com/user/kendoworld								
+386	KevJumba	http://www.youtube.com/user/kevjumba								
+4570	KhanAcademy	http://www.youtube.com/user/khanacademy								
+5116	Kid Rock Videos	http://www.youtube.com/user/kidrockvideos								
+6458	Kim Hyun Joong	http://www.youtube.com/user/kimhyunjoong606								
+6681	Kingsley	http://www.youtube.com/user/itskingsleybitch								
+6680	"Kipkays Hacks, Pranks & How-to"	http://www.youtube.com/user/kipkay								
+6465	KJOfficial Music	http://www.youtube.com/user/b2mkjofficial								
+6667	KKBOX	http://www.youtube.com/user/kkbox								
+3712	KMBC TV News	http://www.youtube.com/user/kmbctv								
+3713	KOAT Action News	http://www.youtube.com/user/koattv								
+3714	Koch Records	http://www.youtube.com/user/kochrecords								
+440	KOEI Warriors (Official)	http://www.youtube.com/user/koeiwarriorsmedia								
+7396	KoreanFood by Maangchi	http://www.youtube.com/user/maangchi								
+7447	K-POP最強生死戰 / K-POP - The Ultimate Audition	http://www.maplestage.net/drama/K-POP最強生死戰/								
+1564	Kpop音樂大雜燴ver.2	http://www.youtube.com/user/kpopmv2011v2								
+7914	??????? krulotmifa	http://www.youtube.com/user/krulotmifa								
+194	KurtHugoSchneider	http://www.youtube.com/user/kurthugoschneider								
+1177	KUSO馬英九	http://www.youtube.com/user/ma19kuso								
+3716	KXAN News	http://www.youtube.com/user/kxan								
+558	K電影情報網	http://www.youtube.com/user/2010kmovie								
+6146	La Blogotheque | Take Away Shows	http://www.youtube.com/user/lablogotheque								
+392	LadyGagaVEVO	http://www.youtube.com/user/ladygagavevo								
+6065	LakersAllAccess	http://www.youtube.com/user/lakersallaccess								
+7894	Lamborghini	http://www.youtube.com/user/lamborghini								
+8191	LateNightWithJimmyFallon	http://www.youtube.com/user/latenight								
+8362	LaurenLuke	http://www.youtube.com/user/panacea81								
+6818	League of Legends	http://www.youtube.com/user/riotgamesinc								
+6322	Learn Quranic Arabic	http://www.youtube.com/user/learnquranicarabic								
+7378	LedaMonsterBunny	http://www.youtube.com/user/hailedabear								
+3495	Leem Hayward	http://www.youtube.com/user/leemhayward								
+7898	LeighannSays	http://www.youtube.com/user/leighannsays								
+5702	Let's Painting！電繪示範錄影	http://www.youtube.com/user/yintuosi								
+275	Lexus	http://www.youtube.com/user/lexusvehicles								
+7274	LianneLaHavas	http://www.youtube.com/user/liannelahavas								
+1289	Library of Congress	http://www.youtube.com/user/libraryofcongress								
+5844	LightBackpacking	http://www.youtube.com/user/lightbackpacking								
+5226	Light Show	http://www.youtube.com/user/kj92508								
+6863	LindseyStirling	http://www.youtube.com/user/lindseystomp								
+601	Linkin Park VEVO	http://www.youtube.com/user/linkinparktv								
+1362	LiquidGenerationTube	http://www.youtube.com/user/liquidgenerationtube								
+8512	LittleFred	http://www.youtube.com/user/littlefred2008								
+2036	LMFAOVEVO	http://www.youtube.com/user/lmfaovevo								
+327	Loaded Boards & Orangatang	http://www.youtube.com/user/loadednewsletter								
+1335	Lonely Planet	http://www.youtube.com/user/lonelyplanet								
+7986	LonestarVEVO	http://www.youtube.com/user/lonestarvevo								
+83	L'Or?al Paris	http://www.youtube.com/user/lorealparis								
+84	Lowe's Home Solution Center	http://www.youtube.com/user/lowes								
+8334	LoyalistMarchingBands	http://www.youtube.com/user/cyberprod1690								
+427	lsmovietw 的電影頻道	http://www.youtube.com/user/lsmovietw								
+6747	LudacrisVEVO	http://www.youtube.com/user/ludacrisvevo								
+7106	LukaDinamo	http://www.youtube.com/user/lukadinamo								
+7122	MacBros	http://www.youtube.com/user/macbros								
+8243	MachineGunKelly	http://www.youtube.com/user/machinegunkellyak								
+402	Machinima	http://www.youtube.com/user/machinima								
+6697	Machinima Respawn	http://www.youtube.com/user/machinimarespawn								
+3602	Machinima Sports	http://www.youtube.com/user/machinimasports								
+6927	Mac Miller	http://www.youtube.com/user/treejtv								
+584	Macotakara	http://www.youtube.com/user/macotakara								
+7080	MadonnaVEVO	http://www.youtube.com/user/madonnavevo								
+3378	Maggie 魔法料理	http://www.maplestage.net/show/Maggie 魔法料理/								
+6519	Maggie 魔法料理	http://www.maplestage.net/show/Maggie 魔法料理/								
+8540	MakeMagazine	http://www.youtube.com/user/makemagazine								
+3603	Make Me Bad	http://www.youtube.com/user/makemebad35								
+7260	MakeupGeekTV	http://www.youtube.com/user/makeupgeektv								
+5951	ManvsFood	http://www.youtube.com/user/brendenfraser								
+548	Mariah Carey VEVO	http://www.youtube.com/user/mariahcareyvevo								
+6308	Mark Crilley	http://www.youtube.com/user/markcrilley								
+375	Markisaco Skateboarding	http://www.youtube.com/user/nkalexander7								
+7599	Marvel2	http://www.youtube.com/user/marveluk								
+7218	Marvel	http://www.youtube.com/user/marvel								
+6353	Mary Doodles	http://www.youtube.com/user/marydoodles								
+5648	Mashable	http://www.youtube.com/user/mashable								
+369	Massachusetts Institute of Technology	http://www.youtube.com/user/mit								
+5117	Maximo	http://www.youtube.com/user/maximotv								
+3718	Mayo Clinic	http://www.youtube.com/user/mayoclinic								
+7929	MBCEntertainment	http://www.youtube.com/user/mbcentertainment								
+5823	MBS?????	http://www.youtube.com/user/mbs								
+5157	Media Cows	http://www.youtube.com/user/themediacows								
+561	Media IN News	http://www.youtube.com/user/mediainnews								
+6804	Meekakitty	http://www.youtube.com/user/meekakitty								
+4216	MeganNicole	http://www.youtube.com/user/megannicolesite								
+6568	MeloMore	http://www.youtube.com/user/melomore								
+7991	MEMRIT	http://www.youtube.com/user/memritvvideos								
+295	Mercedes-Benz TV	http://www.youtube.com/user/mercedesbenztv								
+6567	Mercedes Benz TW	http://www.youtube.com/user/mercedesbenztw								
+7505	MetaDesignAgency	http://www.youtube.com/user/meta								
+3604	Met Museum	http://www.youtube.com/user/metmuseum								
+5156	Michelle Branch	http://www.youtube.com/user/michellebranchtv								
+237	MichellePhan	http://www.youtube.com/user/michellephan								
+3809	Michigan State Spartans	http://www.youtube.com/user/msuspartanathletics								
+3312	Mike Tompkins Music	http://www.youtube.com/user/pbpproductions								
+3644	Military Channel	http://www.youtube.com/user/militarychannel								
+3430	Military Documentary	http://www.youtube.com/user/cctv7military								
+3719	Military News Network	http://www.youtube.com/user/militarynewsnetwork								
+91	Military Videos	http://www.youtube.com/user/3rdid8487								
+135	Mini	http://www.youtube.com/user/mini								
+61	Ministry of Sound	http://www.youtube.com/user/datarecordsuk								
+7497	miniTVCLUB	http://www.youtube.com/user/minitvclub								
+7490	MinutePhysics	http://www.youtube.com/user/minutephysics								
+85	Mishka's Dog Vlog	http://www.youtube.com/user/gardea23								
+7578	MissWooHoo	http://www.youtube.com/user/misswoohoo11								
+524	MLB	http://www.youtube.com/user/mlb								
+7414	MMOChampion	http://www.youtube.com/user/mmochampionwow								
+3645	MoMA	http://www.youtube.com/user/momavideos								
+316	momallnet活動表演頻道	http://www.youtube.com/user/momallnet								
+3497	Mondo Media	http://www.youtube.com/user/mondomedia								
+3528	Monkey See Videos	http://www.youtube.com/user/monkeyseevideos								
+4976	Monmonsnow	http://www.youtube.com/user/monmonsnowseason3								
+6134	MonstercatMedia	http://www.youtube.com/user/monstercatmedia								
+7592	MonthlyFails	http://www.youtube.com/user/monthlyfails								
+2870	Moto GP	http://www.youtube.com/user/motogp								
+319	Motorcycle News	http://www.youtube.com/user/motorcyclenewsdotcom								
+87	Motorcycle USA	http://www.youtube.com/user/motousa								
+365	Motors	http://www.youtube.com/user/motorscouk								
+28	Motors TV	http://www.youtube.com/user/motorstelevision								
+1421	MotorTrend	http://www.youtube.com/user/motortrend								
+6391	Moutain Bike Skills	http://www.youtube.com/user/mtbskillsau								
+8089	MoutainBikingTips	http://www.youtube.com/user/mtbtips								
+6445	MovieClips Mashups	http://www.youtube.com/user/movieclipsmashups								
+5631	MOVIE Collection [????] 動??????	http://www.youtube.com/user/moviecollectionjp								
+5264	MrBochChoi	http://www.youtube.com/user/mrbochchoi								
+5288	Mr. Comedy Central	http://www.youtube.com/user/short334								
+8239	MrFabioDiamante	http://www.youtube.com/user/mrfabiodiamante								
+6520	Mr. J頻道	http://www.maplestage.net/show/Mr. J頻道/								
+7566	MSGOnline	http://www.youtube.com/user/msgonline								
+8292	MTV	http://www.youtube.com/user/mtv								
+6347	MusicBoxForever	http://www.youtube.com/user/musicboxforever								
+250	Musicians Institute	http://www.youtube.com/user/musiciansinstitute								
+7291	MyGeekShow	http://www.youtube.com/user/mygeekshowdotcom								
+3724	My OrganicTexas	http://www.youtube.com/user/organictexas								
+4354	Mystery Guitar Name	http://www.youtube.com/user/mysteryguitarman								
+7241	MyTVHK	http://www.youtube.com/user/mytvhk								
+3755	My Yoga Online	http://www.youtube.com/user/myyogaonline								
+3498	Nalts	http://www.youtube.com/user/nalts								
+412	Namco Bandai Games Europe	http://www.youtube.com/user/namcobandaigameseu								
+7219	Nardwuar	http://www.youtube.com/user/nardwuarserviette								
+3720	NASA TV	http://www.youtube.com/user/nasatelevision								
+3499	Natalia Muntean	http://www.youtube.com/user/nataliamuntean								
+7601	NatGeoShows by Int3rvent1on	http://www.youtube.com/user/int3rvent1on								
+5203	NatGeoWild	http://www.youtube.com/user/natgeowild								
+3529	National Film Board of Canada	http://www.youtube.com/user/nfb								
+163	NationalGeographic	http://www.youtube.com/user/nationalgeographic								
+3750	Natual Health Videos	http://www.youtube.com/user/ihealthtube								
+7030	NatureBox	http://www.youtube.com/user/naturalbox1								
+7805	NBAClipz	http://www.youtube.com/user/nbaclipz								
+145	NBAHighlights	http://www.youtube.com/user/nbahiighlights								
+7223	NBA Highlight TV	http://www.youtube.com/user/varcitymediaconcepts								
+298	NBA	http://www.youtube.com/user/nba								
+461	NBA Jerry	http://www.youtube.com/user/jerrysnbatalktv								
+539	NBA Moments	http://www.youtube.com/user/thenbahistory								
+7124	NBA Orbit	http://www.youtube.com/user/nbaorbit								
+7226	NBAUpdates 中文版	http://www.youtube.com/user/musicmusic4me								
+6752	NBA Videos Now 2	http://www.youtube.com/user/nbavideosnow2								
+642	NBC	http://www.youtube.com/user/nbc								
+3605	NeiMindFreak	http://www.youtube.com/user/neimindfreak								
+3606	Nelly VEVO	http://www.youtube.com/user/nellyvevo								
+7461	Nerdist	http://www.youtube.com/user/nerdist								
+3496	Netbooks and More!	http://www.youtube.com/user/minipcpro								
+7564	NetworkA	http://www.youtube.com/user/networka								
+554	newapplearial 的美妝頻道	http://www.youtube.com/user/newapplearial								
+3810	News Channel 15	http://www.youtube.com/user/newschannel15								
+3646	New Scientist	http://www.youtube.com/user/newscientistvideo								
+6639	newsforchinese	http://www.youtube.com/user/newsforchinese								
+8266	NewsPoliticsNow	http://www.youtube.com/user/newspoliticsnow1								
+7590	NewVideoDigital	http://www.youtube.com/user/newvideodigital								
+465	New York Knicks	http://www.youtube.com/user/nyknicks								
+71	Next Gen Tactics	http://www.youtube.com/user/nextgentactics								
+3811	NeYo VEVO	http://www.youtube.com/user/neyovevo								
+56	NHKonline	http://www.youtube.com/user/nhkonline								
+7629	NiceKicks	http://www.youtube.com/user/nicekicks								
+3721	NicePeter	http://www.youtube.com/user/nicepeter								
+7462	NickiMinajVEVO	http://www.youtube.com/user/nickiminajatvevo								
+389	Nigahiga	http://www.youtube.com/user/nigahiga								
+312	Night Club Search	http://www.youtube.com/user/tw078413								
+8344	NikeBasketball	http://www.youtube.com/user/nikebasketball								
+43	Nike Soccer	http://www.youtube.com/user/nikesoccer								
+8351	NikkieTutorials	http://www.youtube.com/user/nikkietutorials								
+5286	Nintendo  Capri Sun	http://www.youtube.com/user/nintendocaprisun								
+7201	NMAtv	http://www.youtube.com/user/nmatv								
+610	NMA World Edition	http://www.youtube.com/user/nmaworldedition								
+3691	Nobel Prize	http://www.youtube.com/user/thenobelprize								
+6506	Noblemusictw	http://www.youtube.com/user/noblemusictw								
+122	Nokia	http://www.youtube.com/user/nokia								
+7035	NTBS Tricking	http://www.youtube.com/user/towlie2110								
+637	NTDTV	http://www.youtube.com/user/ntdtv								
+7424	NylahKitty	http://www.youtube.com/user/nylahkitty								
+8349	NYPost	http://www.youtube.com/user/nypost								
+6224	Oasis Official Band Channel	http://www.youtube.com/user/oasisinetofficial								
+6040	Obiwan1103 Music	http://www.youtube.com/user/obiwan1103								
+534	Official New Orleans Hornets Channel	http://www.youtube.com/user/nbahornets								
+1751	OMGFacts	http://www.youtube.com/user/omgfactsofficial								
+3460	OMGmeiyu	http://www.youtube.com/user/omgmeiyu								
+6843	OneDirectionChannel	http://www.youtube.com/user/onedirectionchannel								
+88	One Girl's Thoughts on All Things Beauty	http://www.youtube.com/user/makeupbytiffanyd								
+3722	OneRepublic VEVO	http://www.youtube.com/user/onerepublicvevo								
+8017	OneWorldOneOcean	http://www.youtube.com/user/oneworldoneocean								
+7078	OneyNG	http://www.youtube.com/user/oneyng								
+70	Operation Sports Games	http://www.youtube.com/user/mroperationsports								
+3723	Organic Jar	http://www.youtube.com/user/organicjar								
+485	Orlando Magic	http://www.youtube.com/user/nbaorlandomagic								
+1747	Oscars 	http://www.youtube.com/user/oscars								
+6461	Otorgando orgasmos	http://www.youtube.com/user/todoelmonteesorgasmo								
+1580	Overlander	http://www.youtube.com/user/overlander								
+7358	PalVco	http://www.youtube.com/user/palvco								
+7571	Papiaani	http://www.youtube.com/user/papiaani								
+3756	Parry Gripp	http://www.youtube.com/user/parrygripp								
+3757	Passion	http://www.youtube.com/user/passionsf								
+3500	Paul Hamilton CFI Pilot	http://www.youtube.com/user/pauldhamilton								
+3530	PBS	http://www.youtube.com/user/pbs								
+7419	PBSNewsHour	http://www.youtube.com/user/pbsnewshour								
+6195	Pelonsoldies	http://www.youtube.com/user/pelonsoldies								
+7671	PeopleTV	http://www.youtube.com/user/people								
+159	PeoPo公民新聞平台	http://www.youtube.com/user/peoponews								
+362	Pepsi	http://www.youtube.com/user/pepsi								
+3647	Peter Chao	http://www.youtube.com/user/pyrobooby								
+7973	Petsami	http://www.youtube.com/user/petsami								
+6801	PewDiePie	http://www.youtube.com/user/pewdiepie								
+5635	PGA TOUR	http://www.youtube.com/user/pgatour								
+515	Philadelphia 76ers	http://www.youtube.com/user/philadelphia76ers								
+2145	PhilipDeFranco (sxephil)	http://www.youtube.com/user/sxephil								
+3597	Phillip Scott Johnson	http://www.youtube.com/user/eggman913								
+7448	PistolShrimps	http://www.youtube.com/user/pistolshrimps								
+6791	PitbullVEVO	http://www.youtube.com/user/pitbullvevo								
+7376	PitchforkTV	http://www.youtube.com/user/pitchforktv								
+7765	PiximooMadness	http://www.youtube.com/user/pixiwoomadness								
+8363	Playboy	http://www.youtube.com/user/playboy								
+1164	PlayStation	http://www.youtube.com/user/playstation								
+679	PNN--公視新聞議題中心	http://www.youtube.com/user/pnnpts								
+3758	Pocketnow.com	http://www.youtube.com/user/pocketnowvideo								
+3730	Poetry Read by Tom O'Bedlam	http://www.youtube.com/user/spokenverse								
+8422	PopStopTV	http://www.youtube.com/user/popstoptv								
+8421	PopSugarTV	http://www.youtube.com/user/popsugartv								
+182	Porsche	http://www.youtube.com/user/porsche								
+6559	POWER 星期天	http://www.maplestage.net/show/POWER 星期天/								
+7255	PrankvsPrank	http://www.youtube.com/user/prankvsprank								
+5287	Programmer	http://www.youtube.com/user/progammer119								
+6939	PrometheusNews	http://www.youtube.com/user/prometheusnews								
+571	Promise Tamang Phan Make-up Tutorials	http://www.youtube.com/user/dope2111								
+6660	PRVantageVideo	http://www.youtube.com/user/prvantagevideo								
+7351	PsycheTruth	http://www.youtube.com/user/psychetruth								
+55	PTS公共電視台	http://www.youtube.com/user/pts								
+3759	Pulitzer Center on Crisis Reporting	http://www.youtube.com/user/pulitzercenter								
+7345	PutThisOn	http://www.youtube.com/user/pthiso								
+7562	Pwnisher	http://www.youtube.com/user/pwnisher								
+7715	QiasOmarProductions	http://www.youtube.com/user/qiasomar								
+441	Queensland	http://www.youtube.com/user/queensland								
+3648	Quest Crew   	http://www.youtube.com/user/questdancecrew								
+7417	RachhLoves	http://www.youtube.com/user/rachhloves								
+7535	RaduC	http://www.youtube.com/user/radux5								
+131	RamenNoodleDiary	http://www.youtube.com/user/tontantin								
+7185	Randall'sWildAnimals	http://www.youtube.com/user/czg123								
+7412	RandomStudioHD	http://www.youtube.com/user/randomstudiohd								
+6527	ranger2007 Chinese Dance	http://www.youtube.com/user/ranger20070207								
+6955	RatedRR by Richard Ryan	http://www.youtube.com/user/ratedrr								
+404	RayWilliamJohnson	http://www.youtube.com/user/raywilliamjohnson								
+6794	RecklessTortuga	http://www.youtube.com/user/recklesstortuga								
+6959	RecordMakers	http://www.youtube.com/user/recordmakers								
+374	RedBull	http://www.youtube.com/user/redbull								
+3685	Reelz	http://www.youtube.com/user/reelzchannel								
+990	Regenerate Your Life	http://www.youtube.com/user/liferegenerator								
+4537	Remi Gaillard	http://www.youtube.com/user/nqtv								
+141	Reo Rara Cat Channel	http://www.youtube.com/user/haijiq								
+3812	Research Channel	http://www.youtube.com/user/researchchannel								
+643	Reuters	http://www.youtube.com/user/reutersvideo								
+6916	ReutersTV	http://www.youtube.com/user/reuterstv								
+105	Revision3	http://www.youtube.com/user/revision3								
+318	RevZilla TV	http://www.youtube.com/user/revzillatv								
+6802	Rhett and Link	http://www.youtube.com/user/rhettandlink								
+5227	Rhino Entertainment	http://www.youtube.com/user/rhinoentertainment								
+196	Richard Dawkins	http://www.youtube.com/user/richarddawkinsdotnet								
+3532	RihannaVEVO	http://www.youtube.com/user/rihannavevo								
+5228	R.Kelly VEVO	http://www.youtube.com/user/rkellyvevo								
+7909	RoadrunnerRecords	http://www.youtube.com/user/roadrunnerrecords								
+3725	Road & Track	http://www.youtube.com/user/roadandtrack								
+8409	RobertScoble	http://www.youtube.com/user/scobleizer								
+252	Rock it Out! 	http://www.youtube.com/user/rockitoutblog								
+3726	Rolling Stone	http://www.youtube.com/user/rollingstone								
+8557	RomanAtwoodsSketchEmpire	http://www.youtube.com/user/romanatwood								
+3686	Ronald Jenkees	http://www.youtube.com/user/ronaldjenkees								
+3813	RoosterTeeth	http://www.youtube.com/user/roosterteeth								
+1370	RovioMobile	http://www.youtube.com/user/roviomobile								
+3814	Rubik's Cube & Sport Stacking	http://www.youtube.com/user/rubikclub								
+641	RussiaToday	http://www.youtube.com/user/russiatoday								
+513	Sacramento Kings	http://www.youtube.com/user/kingsflix								
+3649	Sadie Nardini	http://www.youtube.com/user/sadienardini								
+5657	SakuraSakuraSoTV日本文化??????	http://www.youtube.com/user/sakurasotv								
+7561	SamKangMusic	http://www.youtube.com/user/geunjinmusic								
+6942	SamMacaroni	http://www.youtube.com/user/sammacaroni								
+5462	SAMSUNG TOMORROW TV	http://www.youtube.com/user/samsungtomorrow								
+35	SBL【百年，拼好球】	http://www.youtube.com/user/jimmylin121								
+5643	SBS（?岡放送） Official Channel 	http://www.youtube.com/user/sbs6ch								
+62	Scantraxx Recordz Official	http://www.youtube.com/user/scantraxxrecordz								
+7624	Sccastaneda	http://www.youtube.com/user/sccastaneda								
+3533	Schmoes Know Movies	http://www.youtube.com/user/schmoesknow								
+6694	Schmoyoho	http://www.youtube.com/user/schmoyoho								
+3727	Science Channel	http://www.youtube.com/user/sciencechannel								
+3501	ScienCentral News	http://www.youtube.com/user/sciencentral								
+3608	Scott Herman Fitness	http://www.youtube.com/user/scotthermanfitness								
+3729	Scott's Miracle-Gro Almanac	http://www.youtube.com/user/smgalmanac								
+3609	Sea Nanners	http://www.youtube.com/user/seananners								
+7794	Season 4 Episode 02 - Call of the Wild	http://www.youtube.com/user/cosbyshow								
+189	SecondsOut.com	http://www.youtube.com/user/secondsout								
+2991	Secret Millionaire's Club	http://www.youtube.com/user/secretmillionaires								
+5658	SEGA MOVIE CHANNEL	http://www.youtube.com/user/sega								
+8352	SegerTube	http://www.youtube.com/user/segertube								
+5265	SelenaGomez	http://www.youtube.com/user/selgomez								
+3610	Selena Gomez VEVO	http://www.youtube.com/user/selenagomezvevo								
+77	Seoul City	http://www.youtube.com/user/seouldreamseries								
+5059	SesameStreet	http://www.youtube.com/user/sesamestreet								
+3760	Shane Dawson TV 2	http://www.youtube.com/user/shanedawsontv2								
+3611	ShaneDawsonTV	http://www.youtube.com/user/shanedawsontv								
+6703	shane's Channel	http://www.youtube.com/user/shane								
+3650	Shay Carl	http://www.youtube.com/user/shaycarl								
+3985	Shaytards	http://www.youtube.com/user/shaytards								
+7169	SheGeekShow	http://www.youtube.com/user/shegeekshow								
+3502	Shimmycocopuffsss	http://www.youtube.com/user/shimmycocopuffsss								
+271	Show Girl 實錄	http://www.youtube.com/user/ikkiknoles								
+3815	Show Me How	http://www.youtube.com/user/showmehowi								
+1499	ShowMeTheCurry	http://www.youtube.com/user/showmethecurry								
+3687	Simon and Martina	http://www.youtube.com/user/simonandmartina								
+3534	SimonsCat	http://www.youtube.com/user/simonscat								
+3728	SimplePickup	http://www.youtube.com/user/simplepickup								
+120	Singer ortoPilot	http://www.youtube.com/user/ortopilot								
+7175	SirensVocalBand	http://www.youtube.com/user/sirensvocalband								
+3688	SixpackShortcuts	http://www.youtube.com/user/sixpackshortcuts								
+6787	Skrillex	http://www.youtube.com/user/theofficialskrillex								
+3816	Skyming	http://www.youtube.com/user/skyming2008								
+3651	Slate	http://www.youtube.com/user/slatester								
+351	S.M. Entertainment	http://www.youtube.com/user/sment								
+4720	Smosh	http://www.youtube.com/user/smosh								
+1741	SM Town	http://www.youtube.com/user/smtown								
+8388	SoccerEssentials	http://www.youtube.com/user/thesocceressentials								
+255	Sony Electronics	http://www.youtube.com/user/sonyelectronics								
+65	Sony Ericsson	http://www.youtube.com/user/sonyericsson								
+2030	SonyMusicTaiwan	http://www.youtube.com/user/sonymusictaiwan								
+7387	SortedFood	http://www.youtube.com/user/sortedfood								
+3535	Soundly Awake	http://www.youtube.com/user/soundlyawake								
+6998	SourceFed	http://www.youtube.com/user/sourcefed								
+5738	SouthAmDotTravel	http://www.youtube.com/user/southamdottravel								
+8340	Space.com	http://www.youtube.com/user/videofromspace								
+8350	SpacesTV	http://www.youtube.com/user/spacestv								
+3655	Sparta and Loki	http://www.youtube.com/user/themeankitty								
+3761	Spencer Hughes Flight	http://www.youtube.com/user/spencerhughes2255								
+3817	Spill	http://www.youtube.com/user/spillcom								
+8425	SplashNewsTV	http://www.youtube.com/user/splashnews								
+6803	SpokenReasons	http://www.youtube.com/user/spokenreasons								
+5706	SQUARE ENIX CHANNEL	http://www.youtube.com/user/squareenix								
+3448	SS小燕之夜	http://www.maplestage.net/show/SS小燕之夜/								
+3652	Stand Firm	http://www.youtube.com/user/standfirm								
+92	Stanford Graduate School of Business	http://www.youtube.com/user/stanfordbusiness								
+324	Stanford University	http://www.youtube.com/user/stanforduniversity								
+259	StarCraft 2 Broadcasting	http://www.youtube.com/user/hdstarcraft								
+7133	StarPlus	http://www.youtube.com/user/starplus								
+7408	START from IGN	http://www.youtube.com/user/start								
+460	Steiner Sports	http://www.youtube.com/user/steinersports								
+7766	Stepultura	http://www.youtube.com/user/stepultura								
+6170	Steve Aoki	http://www.youtube.com/user/steveaoki								
+7500	StilaBabe09	http://www.youtube.com/user/stilababe09								
+7716	StillGlamorus	http://www.youtube.com/user/stillglamorus								
+3653	Stones Throw Records	http://www.youtube.com/user/stonesthrow								
+3689	Style.com	http://www.youtube.com/user/style								
+7390	StyleSuzi	http://www.youtube.com/user/stylesuzi								
+6009	Sunburn Festival	http://www.youtube.com/user/sunburnfestival								
+3537	Sundance	http://www.youtube.com/user/sundancechannel								
+214	SuperEAMAN Games	http://www.youtube.com/user/supereaman								
+7366	SweetFurr	http://www.youtube.com/user/sweetfurx4								
+3	System Channel	http://www.youtube.com/user/9x9cloud								
+7126	SystemsInBlue	http://www.youtube.com/user/systemsinblue								
+6253	Sytowa	http://www.youtube.com/user/sytowa								
+494	Taiwan Indie Music	http://www.youtube.com/user/totororo0202								
+541	Taiwan Talks 台灣脫口秀4	http://www.youtube.com/user/taiwantalks4								
+6332	TaiwanWatch2	http://www.youtube.com/user/taiwanwatch2								
+3527	Talking Animals	http://www.youtube.com/user/klaatu42								
+6260	TaylorSwiftVEVO	http://www.youtube.com/user/taylorswiftvevo								
+7499	TBSEurope	http://www.youtube.com/user/turnerbenelux								
+7315	TBSVeryFunny	http://www.youtube.com/user/tbs								
+3578	TBWTV	http://www.youtube.com/user/tbwtv								
+7263	TeamCoco by Conan	http://www.youtube.com/user/teamcoco								
+5118	Team Silverback	http://www.youtube.com/user/ssohpkc								
+565	Tech Made Easy	http://www.youtube.com/user/larrygreenberg								
+172	TechnoBuffalo	http://www.youtube.com/user/jon4lakers								
+447	TECMO KOEI Europe LTD.	http://www.youtube.com/user/mykoeitv								
+6795	TEDEducation	http://www.youtube.com/user/tededucation								
+258	TEDTalks	http://www.youtube.com/user/tedtalksdirector								
+3503	TEDx Talks	http://www.youtube.com/user/tedxtalks								
+7259	Teen.com	http://www.youtube.com/user/teencom								
+7257	TelegraphTV	http://www.youtube.com/user/telegraphtv								
+232	Tennis Australia	http://www.youtube.com/user/tennisaustralia								
+3701	Tennis TV	http://www.youtube.com/user/atp								
+7400	TessChristine	http://www.youtube.com/user/tesschristine123								
+7258	TheAllAmericanRejectsVEVO	http://www.youtube.com/user/allamericanrjctsvevo								
+654	TheAnnoyingOrange	http://www.youtube.com/user/realannoyingorange								
+363	The Art of Travel by Louis Vuitton	http://www.youtube.com/user/louisvuitton								
+7362	TheAVClub	http://www.youtube.com/user/theavclub								
+173	The Best iPhone and iPod Touch Help	http://www.youtube.com/user/tysiphonehelp								
+3613	TheChengMan	http://www.youtube.com/user/thechengman								
+7229	TheChineseNews (CNTV)	http://www.youtube.com/user/xinwennews								
+20	The Colorful Taiwan	http://www.youtube.com/user/gionettaiwan								
+3792	The Commonwealth Club	http://www.youtube.com/user/commonwealthclub								
+6790	TheComputerNerd01	http://www.youtube.com/user/thecomputernerd01								
+1029	TheEllenDeGeneresShow	http://www.youtube.com/user/theellenshow								
+7375	TheEscapist	http://www.youtube.com/user/theescapistmagazine								
+7216	The Film Archive	http://www.youtube.com/user/nologorecords								
+1753	TheFineBros	http://www.youtube.com/user/thefinebros								
+3505	The Flick Pick	http://www.youtube.com/user/theflickpick								
+7969	TheGadgetShow	http://www.youtube.com/user/thegadgetshow								
+6764	TheGameVEVO	http://www.youtube.com/user/thegamevevo								
+6549	The Guardian	http://www.youtube.com/user/theguardian								
+322	The Hobby Box!	http://www.youtube.com/user/chri5784								
+6962	TheHungerGamesMovie	http://www.youtube.com/user/thehungergamesmovie								
+7117	The Linsanity Show	http://www.youtube.com/user/thelinsanityshow								
+749	The Live Quest	http://www.youtube.com/user/thelivequest								
+2024	The Lonely Island	http://www.youtube.com/user/thelonelyisland								
+7474	TheMakeupChair	http://www.youtube.com/user/themakeupchair								
+521	The Minnesota Timberwolves	http://www.youtube.com/user/mnwolves								
+7044	The Modern Mom	http://www.youtube.com/user/modernmom								
+6023	the NBA on ESPN	http://www.youtube.com/user/thenbaonespn								
+3684	The New Yorker	http://www.youtube.com/user/newyorkerdotcom								
+574	The New York Times	http://www.youtube.com/user/thenewyorktimes								
+470	The Official Channel of the San Antonio Spurs	http://www.youtube.com/user/saspursvideos								
+192	TheOfficialJordanChannel	http://www.youtube.com/user/jumpman23								
+7299	TheOfficialNASCAR	http://www.youtube.com/user/theofficialnascar								
+457	The Official Utah Jazz You Tube Channel	http://www.youtube.com/user/officialutahjazz								
+484	The Official YouTube Channel of Nets Basketball	http://www.youtube.com/user/nbanets								
+3818	The Onion / 新聞	http://www.youtube.com/user/theonion								
+4868	The Open University	http://www.youtube.com/user/oulearn								
+339	The Real News Network	http://www.youtube.com/user/therealnews								
+7372	TheSaturdaysVEVO	http://www.youtube.com/user/thesaturdaysvevo								
+7243	TheSlowMoGuys	http://www.youtube.com/user/theslowmoguys								
+7718	TheStyleDiet	http://www.youtube.com/user/thestylediet								
+5229	The Syndicated Project	http://www.youtube.com/user/thesyndicateproject								
+7211	TheVerge	http://www.youtube.com/user/theverge								
+6530	The Wall Street Journal	http://www.youtube.com/user/wsjdigitalnetwork								
+668	TheWhiteHouse	http://www.youtube.com/user/whitehouse								
+8326	TheWorldAccordingtoStu	http://www.youtube.com/user/accordionstu								
+3692	The X Factor	http://www.youtube.com/user/thexfactorusa								
+5306	The X Factor UK	http://www.youtube.com/user/thexfactoruk								
+3819	The Young Turks	http://www.youtube.com/user/theyoungturks								
+7294	ThinkGeek	http://www.youtube.com/user/thinkgeek								
+7440	ThinkProgress	http://www.youtube.com/user/thinkprogressvideo								
+3657	Thirteen WNET	http://www.youtube.com/user/thirteenwnet								
+7487	ThousandPoundsAction	http://www.youtube.com/user/rivenx3i								
+1547	Thousand Years Apparel 	http://www.youtube.com/user/thousandyearsltd								
+40	Thrasher Magazine	http://www.youtube.com/user/thrashermagazine								
+208	Tiesto Official	http://www.youtube.com/user/officialtiesto								
+6798	T.I.	http://www.youtube.com/user/tivstip								
+6758	TimbalandVEVO	http://www.youtube.com/user/timbalandvevo								
+3538	Timonthy Dela Geto	http://www.youtube.com/user/timothydelaghetto2								
+280	Tim's Car Channel	http://www.youtube.com/user/shmee150								
+5056	Tiny Facts	http://www.youtube.com/user/102196543								
+7008	TipsyBartender	http://www.youtube.com/user/tipsybartender								
+217	TLC	http://www.youtube.com/user/tlc								
+306	T-Mobile Life's for Sharing	http://www.youtube.com/user/lifesforsharing								
+418	TMZ	http://www.youtube.com/user/tmz								
+5307	Tobuscus	http://www.youtube.com/user/tobuscus								
+4978	Toby Games	http://www.youtube.com/user/tobygames								
+7228	ToCatchAPredator by RashadT	http://www.youtube.com/user/rashadt								
+4378	TOKYO MX	http://www.youtube.com/user/tokyomx								
+7401	Top10 by Odissey	http://www.youtube.com/user/odissey505								
+7882	Top5Roundup	http://www.youtube.com/user/top5roundup								
+294	Top Gear	http://www.youtube.com/user/topgear								
+7062	TotalBiscuit	http://www.youtube.com/user/totalhalibut								
+6796	TotallySketch	http://www.youtube.com/user/totallysketch								
+7628	TouchGamplay	http://www.youtube.com/user/touchgameplay								
+7170	ToughMudder	http://www.youtube.com/user/toughmudder								
+269	Tourism Victoria	http://www.youtube.com/user/visitvictoria								
+5225	Trains-form3rs by jamesrfarr	http://www.youtube.com/user/jamesrfarr								
+8237	TravdanVideo	http://www.youtube.com/user/travdanvideos								
+1617	Travel Channel	http://www.youtube.com/user/travelchanneltv								
+3763	travel Film Archive	http://www.youtube.com/user/travelfilmarchive								
+3733	Travel Video	http://www.youtube.com/user/travelvideo								
+3693	Trend Hunter	http://www.youtube.com/user/trendhuntertv								
+6807	TriEvents	http://www.youtube.com/user/trievents								
+3614	Trumoo007	http://www.youtube.com/user/trumoo007								
+6275	TungStephy	http://www.youtube.com/user/tungstephy								
+3673	Turbulence Training	http://www.youtube.com/user/cbathletics								
+4356	tv asahi	http://www.youtube.com/user/tvasahi								
+3556	TVBS哈新?	http://www.maplestage.net/show/TVBS哈新?/								
+599	TVBS新聞	http://www.youtube.com/user/tvbs								
+3461	TVHS	http://www.youtube.com/user/tvhs109								
+3416	TVQQ堂	http://www.maplestage.net/show/TVQQ堂/								
+4410	TV TOKYO（???東京）	http://www.youtube.com/user/tvtokyo								
+52	TWIMI | 獨立媒體	http://www.youtube.com/user/twimitv								
+1315	TWiTNetcastNetwork	http://www.youtube.com/user/twit								
+3658	Two Jews on Film	http://www.youtube.com/user/twojewsonfilm								
+6721	TygaTygaTV	http://www.youtube.com/user/tygatygatv								
+1992	TylerWardMusic	http://www.youtube.com/user/tylerwardmusic								
+7282	TyrannyTV	http://www.youtube.com/user/tyrannytv								
+7553	TzviErezOfficial	http://www.youtube.com/user/tzvierez								
+747	T客邦的影片播放室	http://www.youtube.com/user/tkbang								
+372	UC Berkeley Events	http://www.youtube.com/user/ucberkeleyevents								
+34	UC Berkeley	http://www.youtube.com/user/ucberkeley								
+371	UCLA	http://www.youtube.com/user/ucla								
+257	UDN數位資訊	http://www.youtube.com/user/udndigital								
+1473	udn 聯合新聞網	http://www.youtube.com/user/udncom								
+6687	UKF Dubstep	http://www.youtube.com/user/ukfdubstep								
+535	U Loud Music 有料音樂	http://www.youtube.com/user/uloud								
+3508	Ultimate Island Escape	http://www.youtube.com/user/ultimateislandescape								
+209	UltraRecords	http://www.youtube.com/user/ultrarecords								
+5927	UnidiscMusic	http://www.youtube.com/user/unidiscmusic								
+304	Universal Music Japan	http://www.youtube.com/user/universalmusicjapan								
+370	University of California Television	http://www.youtube.com/user/uctelevision								
+6492	Uploads by abbavevo	http://www.youtube.com/user/abbavevo								
+5602	Uploads by chouloh	http://www.youtube.com/user/chouloh								
+6432	Uploads by colessupermarkets	http://www.youtube.com/user/colessupermarkets								
+6428	Uploads by crazypinoy	http://www.youtube.com/user/crazypinoy								
+5711	Uploads by fashiontube2011	http://www.youtube.com/user/fashiontube2011								
+6411	Uploads by finalfantasyxi	http://www.youtube.com/user/finalfantasyxi								
+6450	Uploads by fwbh	http://www.youtube.com/user/fwbh								
+6419	Uploads by ktsfproduction	http://www.youtube.com/user/ktsfproduction								
+6404	Uploads by oceanho3000	http://www.youtube.com/user/oceanho3000								
+6482	Uploads by sexxxybloodvideoblog	http://www.youtube.com/user/sexxxybloodvideoblog								
+5982	Uploads by shota109	http://www.youtube.com/user/shota109								
+6453	Uploads by talktonight26	http://www.youtube.com/user/talktonight26								
+6455	Uploads by thewhammy83	http://www.youtube.com/user/thewhammy83								
+6436	Uploads by tiffanybrissettefan	http://www.youtube.com/user/tiffanybrissettefan								
+6415	Uploads by tjpete1983	http://www.youtube.com/user/tjpete1983								
+7702	UrbanOG	http://www.youtube.com/user/urbanogcom								
+3659	US FDA	http://www.youtube.com/user/usfoodanddrugadmin								
+3615	Vah Chef	http://www.youtube.com/user/vahchef								
+3821	Vanity Fair	http://www.youtube.com/user/vanityfairmagazine								
+6709	VenetianPrincess	http://www.youtube.com/user/venetianprincess								
+625	vevo	http://www.youtube.com/user/vevo								
+361	Victoria's Secret	http://www.youtube.com/user/victoriassecret								
+3822	Victor Kim	http://www.youtube.com/user/victorvictorkim								
+3735	Video Fashion	http://www.youtube.com/user/videofashion								
+3660	Vince Del Monte	http://www.youtube.com/user/vincedelmonte								
+8240	ViperRoomTV	http://www.youtube.com/user/viperroomtv								
+3661	VISO Cinema	http://www.youtube.com/user/visocinema								
+3662	VISO Gamer	http://www.youtube.com/user/visogamer								
+355	VISO Games	http://www.youtube.com/user/games								
+201	VISOTrailers	http://www.youtube.com/user/trailers								
+3694	VISO TV	http://www.youtube.com/user/visotv								
+8464	VlogBrothers	http://www.youtube.com/user/vlogbrothers								
+179	VOGUE.TV	http://www.youtube.com/user/voguetv								
+82	Volkswagen 	http://www.youtube.com/user/myvolkswagen								
+3695	vsauce	http://www.youtube.com/user/vsauce								
+6853	vsshare	http://www.youtube.com/user/vsshare								
+6729	Waka Flocka	http://www.youtube.com/user/wakaflocka1017								
+6886	WalkofftheEarth	http://www.youtube.com/user/walkofftheearth								
+536	WALL TV | TheWALL Music	http://www.youtube.com/user/thewalltw								
+4209	WarnerBrosPictures	http://www.youtube.com/user/warnerbrospictures								
+6577	WashingtonPost	http://www.youtube.com/user/washingtonpost								
+7275	WaysideCreations	http://www.youtube.com/user/waysidecreations								
+3616	WDSU News	http://www.youtube.com/user/wdsutv								
+7261	WebSeriesPlanets	http://www.youtube.com/user/webseriesplanets								
+551	Wedding 大日子 	http://www.youtube.com/user/dariziwedding								
+5779	WeeklyASCII	http://www.youtube.com/user/wamweb								
+8392	WeepingProphetProductions	http://www.youtube.com/user/weepingprophet								
+7625	WelcomeHomeBlog	http://www.youtube.com/user/thebobjohnson1984								
+139	We're for Dogs	http://www.youtube.com/user/wearefordogs								
+3617	WESH 2 News	http://www.youtube.com/user/weshtv								
+268	WestJet Vacation	http://www.youtube.com/user/westjet								
+7311	Weylie	http://www.youtube.com/user/ilikeweylie								
+3509	WGAL 8	http://www.youtube.com/user/wgaltv								
+7353	WGNtv	http://www.youtube.com/user/wgn								
+6696	What The Buck?!	http://www.youtube.com/user/whatthebuckshow								
+3618	Wheels TV	http://www.youtube.com/user/wheelstvnetwork								
+3764	Wheezy Waiter	http://www.youtube.com/user/wheezywaiter								
+6673	WhiteBoy7thst	http://www.youtube.com/user/whiteboy7thst								
+7591	WIDSIX	http://www.youtube.com/user/widsix								
+171	Windows	http://www.youtube.com/user/windowsvideos								
+3732	Winekone	http://www.youtube.com/user/thewinekone								
+6823	WizKhalifa	http://www.youtube.com/user/taylorgangent								
+7662	WKRGNews	http://www.youtube.com/user/wkrgnews								
+3510	WLWT Cincinnati	http://www.youtube.com/user/wlwttv								
+3379	WOMAN愛旅行	http://www.maplestage.net/show/WOMAN愛旅行/								
+2757	Wondergirls	http://www.youtube.com/user/wondergirls								
+107	WongFuProductions	http://www.youtube.com/user/wongfuproductions								
+3824	World Economic Forum	http://www.youtube.com/user/worldeconomicforum								
+7348	WorldMediaus	http://www.youtube.com/user/worldmediaus								
+7864	World Tai Chi Day Auckland 2012 Tai Chi Chuan 42 form	http://www.youtube.com/user/taichiqigong18								
+3665	WPBF 25	http://www.youtube.com/user/wpbf								
+39	WRC	http://www.youtube.com/user/wrc								
+3557	WTO姐妹會	http://www.maplestage.net/show/WTO姐妹會/								
+3825	WYFF 4 News	http://www.youtube.com/user/wyfftv								
+262	XBOX	http://www.youtube.com/user/xbox								
+5576	XboxJapan	http://www.youtube.com/user/xboxjapan								
+3782	X-Factor US 2011	http://www.youtube.com/user/americanidol2011tv								
+570	Xteeener Makeup Artist	http://www.youtube.com/user/xteeener								
+41	XtremeVideo	http://www.youtube.com/user/xtremevideo								
+3736	Yad Vasham (Holocaust)	http://www.youtube.com/user/yadvashem								
+3737	YAKfilms	http://www.youtube.com/user/yakfilms								
+2514	Yale University Courses	http://www.youtube.com/user/yalecourses								
+284	Yale University	http://www.youtube.com/user/yaleuniversity								
+702	yaya2000 音樂風景	http://www.youtube.com/user/yaya2000matrix								
+6532	Yellow Mellow	http://www.youtube.com/user/yellowmellowmg								
+7324	Yellowsaffron	http://www.youtube.com/user/yellowsaffron								
+286	YES Network	http://www.youtube.com/user/yesnetwork								
+1575	YGEntertainment	http://www.youtube.com/user/ygentertainment								
+3786	YOGSCast	http://www.youtube.com/user/bluexephos								
+7570	YoungHollywoodNetwork	http://www.youtube.com/user/younghollywood								
+445	YourDailyLaughz	http://www.youtube.com/user/yourdailylaughz								
+6702	Your Favorite Martian	http://www.youtube.com/user/yourfavoritemartian								
+6564	Youtube Advertising	http://www.youtube.com/user/advertise								
+4608	YoutubeOfficial	http://www.youtube.com/user/youtube								
+6361	Youtube Trends	http://www.youtube.com/user/trends								
+5556	???????????YouTube公式?????	http://www.youtube.com/user/nbgi								
+7915	Y-STAR ??5 [sports]	http://www.youtube.com/user/ystarchannel5								
+7916	Y-STAR ??6 [etc]	http://www.youtube.com/user/ystarchannel6								
+86	Yukke貓頻道	http://www.youtube.com/user/brunello1997								
+5291	Z-Club Dio	http://www.youtube.com/user/zclubdio								
+6570	ZMOT Zero Moment of Truth	http://www.youtube.com/user/zeromomentoftruth								
+7402	Zoella	http://www.youtube.com/user/zoella280390								
+6950	ZuzkaLight	http://www.youtube.com/user/zuzkalight								
+7164	一吻定情 / Kiss	http://www.maplestage.net/drama/一吻定情/								
+7994	一天壹蘋果	http://www.maplestage.net/show/一天壹蘋果/								
+7889	一百分的吻 / 100 Kiss	http://www.maplestage.net/drama/一百分的吻/								
+3380	一袋女王	http://www.maplestage.net/show/一袋女王/								
+7998	七俠五義人間道 / Seven variant WuYi human way	http://www.maplestage.net/drama/七俠五義人間道/								
+8440	三國 / Three Kingdoms	http://www.maplestage.net/drama/三國/								
+246	三立電視SETTV	http://www.youtube.com/user/settv								
+1767	三藩市星島	http://www.youtube.com/user/sfsingtao								
+3417	上班這黨事	http://www.maplestage.net/show/上班這黨事/								
+6550	下一站，幸福	http://www.maplestage.net/drama/下一站，幸福/								
+3332	不正常事件研究中心	http://www.maplestage.net/show/不正常事件研究中心/								
+7155	不需要愛情的夏天 / I don't need love	http://www.maplestage.net/drama/不需要愛情的夏天/								
+44	世新大學新聞學系	http://www.youtube.com/user/journalismshu								
+5158	世界廣播電台	http://www.youtube.com/user/andstuff31								
+1773	世界新聞網	http://www.youtube.com/user/worldjournalnews								
+3449	世界第一等	http://www.maplestage.net/show/世界第一等/								
+3558	世界那麼大	http://www.maplestage.net/show/世界那麼大/								
+301	中國電視公司	http://www.youtube.com/user/chinatv								
+7	中天新媒體影音頻道	http://www.youtube.com/user/ctitv								
+648	中央通訊社影音頻道	http://www.youtube.com/user/cnataiwan								
+346	中時電子報	http://www.youtube.com/user/chinatimes								
+241	中華民國建國一百年基金會	http://www.youtube.com/user/taiwanroc100								
+8542	中華白絲帶關懷協會	http://www.youtube.com/user/0802win								
+325	中華職棒影音頻道	http://www.youtube.com/user/sheng98news								
+94	中華職棒精華	http://www.youtube.com/user/yowmingchen								
+6634	中視新聞6一下	http://www.maplestage.net/show/中視新聞6一下/								
+6576	乾坤影視 ckrecords	http://www.youtube.com/user/ckrecords								
+349	二十世紀福斯影片	http://www.youtube.com/user/twfoxmovies								
+8427	亞洲天團爭霸戰	http://www.maplestage.net/show/亞洲天團爭霸戰/								
+480	亞神音樂	http://www.youtube.com/user/asiamuseentertainme								
+7891	仁顯王后的男人 / Queen In Hyun's Man	http://www.maplestage.net/drama/仁顯王后的男人/								
+3450	今晚誰當家	http://www.maplestage.net/show/今晚誰當家/								
+3369	他們在畢業的前一天爆炸	http://www.maplestage.net/drama/他們在畢業的前一天爆炸/								
+6605	仙劍奇俠傳 III / Chinese Paladin 3	http://www.maplestage.net/drama/仙劍奇俠傳 III/								
+8437	你是春風我是雨 / Love in the Wind	http://www.maplestage.net/drama/你是春風我是雨/								
+6735	你為我著迷 / Heart Strings	http://www.maplestage.net/drama/你為我著迷/								
+3833	你猜你猜你猜猜猜	http://www.maplestage.net/show/你猜你猜你猜猜猜/								
+538	佳映娛樂	http://www.youtube.com/user/jointanna								
+6627	佳期如夢	http://www.maplestage.net/drama/佳期如夢/								
+3559	佼?朋友吧	http://www.maplestage.net/show/佼?朋友吧/								
+3440	倪亞達	http://www.maplestage.net/drama/倪亞達/								
+7128	偏偏愛上你 / Destined to Love You	http://www.maplestage.net/drama/偏偏愛上你/								
+6587	健康好簡單	http://www.maplestage.net/show/健康好簡單/								
+3549	偷心大聖PS男	http://www.maplestage.net/drama/偷心大聖PS男/								
+3406	傾世皇妃	http://www.maplestage.net/drama/傾世皇妃/								
+6781	光与影 / Lights and Shadows	http://www.maplestage.net/drama/光与影/								
+6579	光陰的故事 / Story of Time	http://www.maplestage.net/drama/光陰的故事/								
+3381	全民最大黨	http://www.maplestage.net/show/全民最大黨/								
+5760	八方論談 Dialogue 360 電視	http://www.youtube.com/user/dialogue360								
+7655	再一次心跳 / Heartbeat Love	http://www.maplestage.net/drama/再一次心跳/								
+3418	冒險奇兵	http://www.maplestage.net/show/冒險奇兵/								
+3560	冒險王	http://www.maplestage.net/show/冒險王/								
+3419	冰冰好料理	http://www.maplestage.net/show/冰冰好料理/								
+6580	凰圖騰	http://www.maplestage.net/drama/凰圖騰/								
+19	凱渥 CATWALK	http://www.youtube.com/user/catwalk2009								
+8432	刁蠻俏御醫 / Diao Man Qiao Yu Yi	http://www.maplestage.net/drama/刁蠻俏御醫/								
+8253	【初音??(40?)】 君?手、僕?手 【?????】	http://www.youtube.com/user/exerion8913								
+507	前景娛樂	http://www.youtube.com/user/ffetaipei								
+6629	前男友 / Ex-boyfriend	http://www.maplestage.net/drama/前男友/								
+16	剛彈電玩	http://www.youtube.com/user/shingin								
+3322	勇士們	http://www.maplestage.net/drama/勇士們/								
+317	動物星球頻道	http://www.youtube.com/user/dogs101tw								
+6619	北京愛情故事	http://www.maplestage.net/drama/北京愛情故事/								
+1782	北美新浪	http://www.youtube.com/user/ussina								
+4509	北美視頻	http://www.youtube.com/user/sinapremium								
+8430	十點名人堂	http://www.maplestage.net/show/十點名人堂/								
+3407	千山暮雪	http://www.maplestage.net/drama/千山暮雪/								
+7403	半熟戀人 / In Between 	http://www.maplestage.net/drama/半熟戀人/								
+438	原住民ABOPaiwan館	http://www.youtube.com/user/dreampaiwan								
+8458	原來愛就是甜蜜 / Once Upon A Love 	http://www.maplestage.net/drama/原來愛就是甜蜜/								
+3458	原子映象	http://www.youtube.com/user/atomcinema								
+6153	原巨人２０１２　躍動	http://www.youtube.com/user/matukazu23								
+3408	又見一帘幽夢	http://www.maplestage.net/drama/又見一帘幽夢/								
+6620	古今大戰秦俑情 / A Terracotta Warrior	http://www.maplestage.net/drama/古今大戰秦俑情/								
+512	台北當代藝術館 MOCATaipei	http://www.youtube.com/user/mocatp								
+3858	台??示?	http://www.maplestage.net/show/台??示?/								
+3834	台?大明星	http://www.maplestage.net/show/台?大明星/								
+3561	台?真好康	http://www.maplestage.net/show/台?真好康/								
+345	台灣動物緊急救援小組 	http://www.youtube.com/user/savedogs2009								
+1126	台灣原住民族電視台	http://www.youtube.com/user/taiwanindigenoustv								
+8070	台灣呷透透	http://www.youtube.com/user/eltafood								
+113	台灣大地文教基金會	http://www.youtube.com/user/twtati								
+5899	台灣天空影音旅遊網	http://www.youtube.com/user/linvisaa								
+6402	台灣數位出版 TaiwanDigital	http://www.youtube.com/user/taiwandigital								
+266	台灣樂活新聞	http://www.youtube.com/user/lohas88louis								
+3420	台灣演?	http://www.maplestage.net/show/台灣演?/								
+597	台灣索尼影業	http://www.youtube.com/user/sonytw2009								
+143	台灣經貿網	http://www.youtube.com/user/taiwantrade								
+3303	台灣腳逛大陸	http://www.maplestage.net/show/台灣腳逛大陸/								
+100	台灣醒報	http://www.youtube.com/user/awakeningtw								
+4458	台灣電視公司	http://www.youtube.com/user/ttv								
+37	台灣青棒賽	http://www.youtube.com/user/ilovebaseballforever								
+95	台灣騎士精神	http://www.youtube.com/user/taiwansr								
+3313	台股最錢線	http://www.youtube.com/user/wealthworldfilm								
+243	台視新聞	http://www.youtube.com/user/ttvnewsview								
+4738	叱?903 (CR2)	http://www.youtube.com/user/allabout903								
+5934	史派西樂團 SpyC Band	http://www.youtube.com/user/spycband								
+3859	吃飯皇帝大	http://www.maplestage.net/show/吃飯皇帝大/								
+6536	《后?·甄嬛?》?述了清雍正年?，甄嬛的大起大落充??奇性的人生。?是一部?廷情感大?，更注重描?“后?女人”的真?情感，?中“甄嬛”凝?了千百年???后?女子的?影。?一?不?世事的??少女成??一?善于??的深??人，她??次跌入谷底，几乎不能翻身，最??借自己的善良和?明才智，登峰造极，成?一朝太后。??光?限，但看?心上人十七?死在自己怀里，她?究不?是一千古?心人?了。<br /><br	http://www.maplestage.net/drama/后宮·甄嬛傳/								
+3826	后宮	http://www.maplestage.com/drama/后?/								
+8445	吸血鬼檢察官 / Vampire Prosecutor	http://www.maplestage.net/drama/吸血鬼檢察官/								
+7985	【味全TV】味全經典廣告歌曲	http://www.youtube.com/user/weichuantvchannel								
+3853	呼叫大明星	http://www.maplestage.net/drama/呼叫大明星/								
+6552	命中註定我愛你	http://www.maplestage.net/drama/命中註定我愛你/								
+3828	命運交響曲	http://www.maplestage.net/drama/命運交響曲/								
+8442	命運好好玩	http://www.maplestage.net/show/命運好好玩/								
+144	商業週刊	http://www.youtube.com/user/bwnet								
+2659	喜歡音樂Enjoy Music	http://www.youtube.com/user/enjoymusicrec								
+128	嘉義市影音	http://www.youtube.com/user/chiayigov								
+5554	四?新聞公式?????	http://www.youtube.com/user/shikokunews								
+8446	四大名捕會京師 / Four Captors in the Capital	http://www.maplestage.net/drama/四大名捕會京師/								
+8462	回到三國 / Three Kingdoms RPG	http://www.maplestage.net/drama/回到三國/								
+7118	?防?事?道	http://www.youtube.com/user/guofangjunshi								
+3421	國光幫幫忙	http://www.maplestage.net/show/國光幫幫忙/								
+3562	國民女王	http://www.maplestage.net/show/國民女王/								
+3550	國民英雄	http://www.maplestage.net/drama/國民英雄/								
+3422	在中國的故事	http://www.maplestage.net/show/在中國的故事/								
+3304	型男大主廚	http://www.maplestage.net/show/型男大主廚/								
+3333	城公富產科	http://www.maplestage.net/show/城功富產科/								
+708	壹電視-NextTV分流頻道	http://www.youtube.com/user/h8086next								
+6606	夏家三千金(把愛搶回來)	http://www.maplestage.net/drama/夏家三千金(把愛搶回來)/								
+7995	夢想街57號	http://www.maplestage.net/show/夢想街57號/								
+3441	大兵日記	http://www.maplestage.net/drama/大兵日?/								
+3451	大學生了沒	http://www.maplestage.net/show/大學生了沒/								
+378	大小創意	http://www.youtube.com/user/dxmonline								
+7190	大愛劇場 / DaAi TV	http://www.maplestage.net/drama/大愛劇場/								
+768	大愛新聞 	http://www.youtube.com/user/tzuchisg								
+9	大愛電視 DaAi TV	http://www.youtube.com/user/daaivideo								
+4	大華嚴寺	http://www.youtube.com/user/lisahou62								
+185	天下雜誌群影音頻道	http://www.youtube.com/user/cwtv								
+8436	天外飛仙 / Seven of the Sky	http://www.maplestage.net/drama/天外飛仙/								
+3563	天才答不答	http://www.maplestage.net/show/天才答不答/								
+3564	天才衝衝衝	http://www.maplestage.net/show/天才衝衝衝/								
+8450	天涯明月刀 / The Magic Blade	http://www.maplestage.net/drama/天涯明月刀/								
+8439	天涯織女(神話織女) / Tian Ya Zhi Nu	http://www.maplestage.net/drama/天涯織女(神話織女)/								
+3334	天黑請閉眼	http://www.maplestage.net/show/天黑請閉眼/								
+7197	太平公主秘史 / The Legend of Princess Tai Ping	http://www.maplestage.net/drama/太平公主秘史/								
+7182	夫妻那些事 / Husband and Wife	http://www.maplestage.net/drama/夫妻那些事/								
+8001	奢香夫人 / Excessive Sweet Lady	http://www.maplestage.net/drama/奢香夫人/								
+3305	女人好犀利	http://www.maplestage.net/show/女人好犀利/								
+3860	女人我最大	http://www.maplestage.net/show/女人我最大/								
+6745	女人花 / Women Flower	http://www.maplestage.net/drama/女人花/								
+3370	女王不下班	http://www.maplestage.net/drama/女王不下班/								
+7381	女警愛作戰 / Sergeant Tabloid	http://www.maplestage.net/drama/女警愛作戰/								
+302	好消息電視台	http://www.youtube.com/user/goodtv								
+6607	如意 / RuYi	http://www.maplestage.net/drama/如意/								
+3293	妻子們的戰爭	http://www.maplestage.net/drama/妻子們的戰爭/								
+3323	姊妹	http://www.maplestage.net/drama/姊妹/								
+3335	姊妹淘心話	http://www.maplestage.net/show/姊妹淘心話/								
+200	姐妹淘	http://www.youtube.com/user/zimeitao								
+3423	娛樂@亞洲	http://www.maplestage.net/show/娛樂@亞洲/								
+3452	娛樂大風暴	http://www.maplestage.net/show/娛樂大風暴/								
+3336	娛樂百分百	http://www.maplestage.net/show/娛樂百分百/								
+7253	媳婦是怎樣煉成的	http://www.maplestage.net/drama/媳婦是怎樣煉成的/								
+5598	宇宙????	http://www.youtube.com/user/txspacenews								
+7321	守望的天空 / Watching The Sky	http://www.maplestage.net/drama/守望的天空/								
+6621	守著陽光守著你	http://www.maplestage.net/drama/守著陽光守著你/								
+6546	完全娛樂	http://www.maplestage.net/show/完全娛樂/								
+347	客家電視	http://www.youtube.com/user/hakkatv								
+3442	宮鎖心玉	http://www.maplestage.net/drama/宮鎖心玉/								
+6608	宮鎖珠簾	http://www.maplestage.net/drama/宮鎖珠簾/								
+3371	家有四千金	http://www.maplestage.net/drama/家有四千金/								
+3409	射鵰英雄傳(2003)	http://www.maplestage.net/drama/射鵰英雄傳(2003)/								
+8002	小夫妻時代 / Young Couple Times	http://www.maplestage.net/drama/小夫妻時代/								
+3453	小姐?旅行	http://www.maplestage.net/show/小姐?旅行/								
+7940	小孩大人 / Man . Boy	http://www.maplestage.net/drama/小孩大人/								
+3565	小孩很忙	http://www.maplestage.net/show/小孩很忙/								
+6501	小白兔唱片 wwrmusic	http://www.youtube.com/user/wwrmusic								
+7996	小菊的春天 / Xiao Ju's Spring	http://www.maplestage.net/drama/小菊的春天/								
+7999	小菊的秋天 / Xiao Ju's Autumn	http://www.maplestage.net/drama/小菊的秋天/								
+3854	小資女孩向前衝	http://www.maplestage.net/drama/小資女孩向前衝/								
+251	少女時代頻道	http://www.youtube.com/user/vul3a04snsding								
+264	尖端出版	http://www.youtube.com/user/sppweb								
+3829	就想賴著你	http://www.maplestage.net/drama/就想賴著妳/								
+3424	就是玩科?	http://www.maplestage.net/show/就是玩科?/								
+7149	就是要香戀 / Scent of Love	http://www.maplestage.net/drama/就是要香戀/								
+7161	山楂樹之戀 / Hawthorn Tree Forever	http://www.maplestage.net/drama/山楂樹之戀/								
+6512	巔峰時代 / Peak Times	http://www.maplestage.net/drama/巔峰時代/								
+426	巴哈姆特 GNN TVG 影音頻道 Ch.2	http://www.youtube.com/user/samgnn2								
+124	巴哈姆特 GNN 影音頻道	http://www.youtube.com/user/bahamutgnn								
+3551	帶子英雄	http://www.maplestage.net/drama/帶子英雄/								
+6374	年代電視台 ERANews	http://www.youtube.com/user/eranews								
+7166	幸福3?星 / Happy Michelin Kitchen	http://www.maplestage.net/drama/幸福3?星/								
+6631	幸福三?星	http://www.maplestage.net/drama/幸福三?星/								
+3372	幸福最晴天	http://www.maplestage.net/drama/幸福最晴天/								
+3861	幸福相談所	http://www.maplestage.net/show/幸福相談所/								
+177	幸福空間	http://www.youtube.com/user/gorgeousspace								
+3835	康熙來了	http://www.maplestage.net/show/康熙來了/								
+3294	彩虹甜心	http://www.maplestage.net/drama/彩虹甜心/								
+7890	心術 / Angel Heart	http://www.maplestage.net/drama/心術/								
+8453	怪俠歐陽德 / Flying Wooden Donkey	http://www.maplestage.net/drama/怪俠歐陽德/								
+6278	悠遊墾丁	http://www.youtube.com/user/uuktsir								
+6609	惡作劇2吻	http://www.maplestage.net/drama/惡作劇2吻/								
+6538	惡作劇之吻	http://www.maplestage.net/drama/惡作劇之吻/								
+8447	惡作劇之吻(韓版) / Playful Kiss	http://www.maplestage.net/drama/惡作劇之吻(韓版)/								
+7354	愛上巧克力 / Tiamo Chocolate	http://www.maplestage.net/drama/愛上巧克力/								
+3324	愛似百匯	http://www.maplestage.net/drama/愛似百匯/								
+8452	愛啊哎呀我願意(台版) / Ia Ia I Do	http://www.maplestage.net/drama/愛啊哎呀我願意(台版)/								
+3454	愛喲我的媽	http://www.maplestage.net/show/愛喲我的媽/								
+3295	愛。回來 / Way Back Into Love	http://www.maplestage.net/drama/愛。回來/								
+3443	愛在桐花紛飛時	http://www.maplestage.net/drama/愛在桐花紛飛時/								
+8438	愛就宅一起 / ToGetHer	http://www.maplestage.net/drama/愛就宅一起/								
+7343	愛情公寓 / i PARTMENT	http://www.maplestage.net/drama/愛情公寓/								
+3373	愛情睡醒了	http://www.maplestage.net/drama/愛情睡醒了/								
+7355	愛情雨 / Love Rain	http://www.maplestage.net/drama/愛情雨/								
+311	愛派網	http://www.youtube.com/user/ipapr								
+3410	愛∞無限	http://www.maplestage.net/drama/愛∞無限/								
+3836	愛玩客	http://www.maplestage.net/show/愛玩客/								
+5707	???愛知YouTube???????????	http://www.youtube.com/user/tvaichi10ch								
+3339	愛秀大明星	http://www.maplestage.net/show/?秀大明星/								
+5807	感受澳門	http://www.youtube.com/user/mgto								
+6671	懷玉公主 / Huaiyu Princess	http://www.maplestage.com/drama/懷玉公主/								
+3325	戀戀阿里山	http://www.maplestage.net/drama/戀戀阿里山/								
+7165	成均館緋聞 / Sungkyunkwan Scandal	http://www.maplestage.net/drama/成均館緋聞/								
+3566	我?一家??人	http://www.maplestage.net/show/我?一家??人/								
+8449	我們發財了 / GUNG HAY FAT CHOY	http://www.maplestage.net/drama/我們發財了/								
+3444	我可能不會愛你 / In Time with You	http://www.maplestage.net/drama/我可能不會愛你/								
+3374	我和我的兄弟。恩	http://www.maplestage.net/drama/我和我的兄弟‧恩/								
+5723	我想去旅行 I want to TRAVEL	http://www.youtube.com/user/uwanttotravel								
+3567	我愛大小姐	http://www.maplestage.net/show/我愛大小姐/								
+8434	我愛李泰利 / I Love Lee Tae Ri	http://www.maplestage.net/drama/我愛李泰利/								
+6588	我愛男子漢	http://www.maplestage.net/show/我愛男子漢/								
+3425	我愛黑澀棒棒堂	http://www.maplestage.net/show/我愛黑澀棒棒堂/								
+3296	我的完美男人	http://www.maplestage.net/drama/我的完美男人/								
+3326	我的排隊情人	http://www.maplestage.net/drama/我的排隊情人/								
+6623	我的燦爛人生	http://www.maplestage.net/drama/我的燦爛人生/								
+175	手機王 Sogi enriches you!	http://www.youtube.com/user/sogitv								
+3426	打擊出去	http://www.maplestage.net/show/打擊出去/								
+6589	拉芳星光大會	http://www.maplestage.net/show/拉芳星光大會/								
+3445	拜金女王	http://www.maplestage.net/drama/拜金女王/								
+7577	拳王 / Gloves Come Off	http://www.maplestage.net/drama/拳王/								
+6596	??保姆	http://www.maplestage.net/drama/??保姆/								
+7587	摩登新人類 / New Morden People	http://www.maplestage.net/drama/摩登新人類/								
+659	攏係假俱樂部	http://www.youtube.com/user/tw1974633								
+6514	敗犬女王	http://www.maplestage.net/drama/敗犬女王/								
+6611	敲敲愛上你	http://www.maplestage.net/drama/敲敲愛上你/								
+132	數位 時尚 性感 流行	http://www.youtube.com/user/2ojux								
+3837	數位遊戲王	http://www.maplestage.net/show/數位遊戲王/								
+330	文建會	http://www.youtube.com/user/ccanews								
+3375	料理情人夢	http://www.maplestage.net/drama/料理情人夢/								
+8459	新三? / Three Kingdoms	http://www.maplestage.net/drama/新三?/								
+3838	新兵?行曲	http://www.maplestage.net/show/新兵?行曲/								
+6555	新星星知我心	http://www.maplestage.net/drama/新星星知我心/								
+3382	新聞深呼吸	http://www.maplestage.net/show/新聞深呼吸/								
+3297	新還珠格格	http://www.maplestage.net/drama/新還珠格格/								
+7888	新龍門客棧 / New Dragon Inn	http://www.maplestage.net/drama/新龍門客棧/								
+3306	旅行應援團	http://www.maplestage.net/show/旅行應援團/								
+3862	明日之星	http://www.maplestage.net/show/明日之星/								
+3337	明星大暴走	http://www.maplestage.net/show/明星大暴走/								
+3307	明星開麥拉	http://www.maplestage.net/show/明星開麥拉/								
+6730	明艷動人的她 / My Shining Girl	http://www.maplestage.net/drama/明艷動人的她/								
+3830	星光下的童話	http://www.maplestage.net/drama/星光下的童話/								
+5326	星島中文電台	http://www.youtube.com/user/demo9x9								
+6560	星聞蒐得妙	http://www.maplestage.net/show/星聞蒐得妙/								
+4236	時事?????	http://www.youtube.com/user/jiji								
+8441	智勝鮮師 / Confucius	http://www.maplestage.net/drama/智勝鮮師/								
+6683	暴力羅曼史 / Wild Romance	http://www.maplestage.net/drama/暴力羅曼史/								
+114	有話好說	http://www.youtube.com/user/ptstalk								
+4527	杰威爾音樂 JVR Music International	http://www.youtube.com/user/jvrmuzic								
+5791	???東京 旅tv	http://www.youtube.com/user/tabitv								
+75	東台灣新聞	http://www.youtube.com/user/starfuntv								
+6597	東方茱麗葉	http://www.maplestage.net/drama/東方茱麗葉/								
+6340	東森新聞 ETTV CH51	http://www.youtube.com/user/newsebc								
+8190	東森財經新聞台《夢想街57號》2012/5/24 Part 1 of 5	http://www.youtube.com/user/57dreamst								
+6685	東西宮略 / Queens of Diamonds and Hearts	http://www.maplestage.net/drama/東西宮略/								
+7156	林師傅在首爾 / Master Lin in Seoul	http://www.maplestage.net/drama/林師傅在首爾/								
+3308	校園Superman	http://www.maplestage.net/show/校園Superman/								
+6515	?野3加1	http://www.maplestage.net/drama/?野3加1/								
+3309	梁陳即時	http://www.maplestage.net/show/梁陳即?/								
+6556	楊貴妃秘史	http://www.maplestage.net/drama/楊貴妃秘史/								
+3394	次男	http://www.youtube.com/user/panicoma								
+3411	歡迎愛光臨	http://www.maplestage.net/drama/歡迎愛光臨/								
+3395	正妹影音頻道 	http://www.youtube.com/user/shamhing								
+3298	步步驚心	http://www.maplestage.net/drama/步步驚心/								
+3548	武則天秘史	http://www.maplestage.com/drama/武則天祕史/								
+3299	死神少女	http://www.maplestage.net/drama/死神少女/								
+244	民視HQ新聞綜藝戲劇影音	http://www.youtube.com/user/ftvcp								
+313	氣象即時消息	http://www.youtube.com/user/weatherrisk								
+3328	水滸傳	http://www.maplestage.net/drama/水滸傳/								
+8463	水滸傳(新版) / Water Margin	http://www.maplestage.net/drama/水滸傳(新版)/								
+6684	求婚大作戰 / Operation Proposal	http://www.maplestage.net/drama/求婚大作戰/								
+3338	沈春華Lifeshow	http://www.maplestage.net/show/沈春華Lifeshow/								
+6636	沈春華我們秀	http://www.maplestage.net/show/沈春華我們秀/								
+3428	沒問題小姐	http://www.maplestage.net/show/沒問題小姐/								
+5630	沖?????動?	http://www.youtube.com/user/theokinawatimes								
+3412	泡沫之夏	http://www.maplestage.net/drama/泡沫之夏/								
+267	洄瀾網	http://www.youtube.com/user/webwave970								
+6612	流星花園	http://www.maplestage.net/drama/流星花園/								
+3855	流氓校長	http://www.maplestage.net/drama/流氓校長/								
+8443	流淚的新娘 / Tears of a Bride	http://www.maplestage.net/drama/流淚的新娘/								
+6640	流行in House 	http://www.maplestage.net/show/流行in House /								
+7281	浴火鳳凰 / Phoenix from the Ashes	http://www.maplestage.net/drama/浴火鳳凰/								
+3863	海爸王見王	http://www.maplestage.net/show/海爸王見王/								
+516	海鵬電影，處處真情	http://www.youtube.com/user/swallowwingsfilm								
+6705	深宮諜影 / Mystery in the Palace	http://www.maplestage.net/drama/深宮諜影/								
+483	添翼創越工作室	http://www.youtube.com/user/teamear								
+5290	溫哥華星島	http://www.youtube.com/user/singtaovancouver								
+6583	溫柔的慈悲 / Gentle Mercy	http://www.maplestage.net/drama/溫柔的慈悲/								
+628	滾石唱片官方頻道	http://www.youtube.com/user/rockrecordstaipei								
+156	無國界醫生	http://www.youtube.com/user/msfhk								
+6541	無懈可擊之美女如雲	http://www.maplestage.net/drama/無懈可擊之美女如雲/								
+6632	無懈可擊之高手如林	http://www.maplestage.net/drama/無懈可擊之高手如林/								
+3568	熟女不滿族	http://www.maplestage.net/show/熟女不滿族/								
+7997	??回家 / The Way Home	http://www.maplestage.net/drama/??回家/								
+6542	父與子 / Fathers and Sons	http://www.maplestage.net/drama/父與子/								
+3839	爸媽囧很大	http://www.maplestage.net/show/爸媽囧很大/								
+6637	特別節目	http://www.maplestage.net/show/特別節目/								
+8444	特殊案件專案組 / Special cases of the task force TEN	http://www.maplestage.net/drama/特殊案件專案組/								
+6624	牽手 / Hold Your Hand	http://www.maplestage.net/drama/牽手/								
+8000	牽牛的夏天(我的野蠻女友) / My Sassy Girlfriend	http://www.maplestage.net/drama/牽牛的夏天(我的野蠻女友)/								
+3831	犀利人妻	http://www.maplestage.net/drama/犀利人妻/								
+390	??? Blog	http://www.youtube.com/user/shironekoshiro								
+3383	王牌大明星	http://www.maplestage.net/show/王牌大明星/								
+3340	王牌大賤諜	http://www.maplestage.net/show/王牌大賤諜/								
+3552	珍愛林北	http://www.maplestage.net/drama/珍愛林北/								
+7138	"瑪莉外宿中 / Marry Me, Mary"	http://www.maplestage.net/drama/瑪莉外宿中/								
+6599	瑪莉外宿中 (韓劇)	http://www.maplestage.net/drama/瑪莉外宿中 (韓劇)/								
+3413	瑰寶1949	http://www.maplestage.net/drama/瑰寶1949/								
+11	環球華語音樂官方影片日誌	http://www.youtube.com/user/universaltwn								
+7992	生命花園 / Garden Of Life	http://www.maplestage.net/drama/生命花園/								
+4309	??新聞?????	http://www.youtube.com/user/sankeinews								
+6584	田庄英雄	http://www.maplestage.net/drama/田庄英雄/								
+3856	男女生了沒	http://www.maplestage.net/drama/男女生了沒/								
+6557	?皮	http://www.maplestage.net/drama/?皮/								
+7184	《當旺爸爸》（英?：Daddy Good Deeds），香港電視廣播有限公司時裝電視劇，由夏雨、馬浚偉、鍾嘉欣領銜主演，監製為梅小青。本劇為2012無?節目巡禮劇集之一。此劇亦是監製梅小青離開無?前的最後作品。<br />當舖《德廣押》老闆高義文（夏雨飾）常高舉「救急幫人」作當舖精神，生活大小事他都總有辦法，唯獨三個寶貝兒女，最令廿四孝老豆最傷神。大仔高威庭（麥長青飾）與家嫂溫婉嫻（胡定欣飾）恩	http://www.maplestage.net/drama/當旺爸爸/								
+3405	痞子英雄	http://www.maplestage.com/drama/痞子英雄/								
+3392	瘋台灣	http://www.youtube.com/user/dan201wen								
+6626	瘋神無雙	http://www.maplestage.net/show/瘋神無雙/								
+3310	百萬大歌星	http://www.maplestage.net/show/百萬大歌星/								
+3384	百萬小學堂	http://www.maplestage.net/show/百萬小學堂/								
+7593	盛世仁傑 / The Greatness Of A Hero	http://www.maplestage.net/drama/盛世仁傑/								
+2014	相信音樂官方頻道	http://www.youtube.com/user/binmusictaipei								
+3385	看板人物	http://www.maplestage.net/show/看板人物/								
+7245	看看新聞網 (SMG News)	http://www.youtube.com/user/kankanews								
+6614	真命天女	http://www.maplestage.net/drama/真命天女/								
+3832	真心請按兩次鈴	http://www.maplestage.net/drama/真心請按兩次鈴/								
+6558	《真愛找麻煩》（英文：Inborn Pair） ，2011年由三立電視台製作的台灣偶像劇，「華人電視劇」系列的第一部作品。由宥勝、陳庭妮、謝坤達、王思平等人主演。	http://www.maplestage.net/drama/真愛找麻煩/								
+3553	真的漢子	http://www.maplestage.net/drama/真的漢子/								
+8431	真相HOLD得住	http://www.maplestage.net/show/真相HOLD得住/								
+6572	瞇瞇眼音樂工作室	http://www.youtube.com/user/mimieyestaiwan								
+6543	神話	http://www.maplestage.net/drama/神話/								
+8456	禎甄高興見到你	http://www.maplestage.net/show/禎甄高興見到你/								
+1763	福茂唱片音樂股份有限公司	http://www.youtube.com/user/linfairrecords								
+7251	秘密天使 / The Secret Angel	http://www.maplestage.net/drama/秘密天使/								
+598	穀得電影有限公司	http://www.youtube.com/user/gooddayfilms1								
+7807	穆桂英掛帥 / Mu Guiying Takes Command	http://www.maplestage.net/drama/穆桂英掛帥/								
+6521	窈窕大作戰	http://www.maplestage.net/show/窈窕大作戰 /								
+7684	笑紅顏 / Laugh Roots	http://www.maplestage.net/drama/笑紅顏/								
+7139	第8號當舖 / The Pawnshop NO 8	http://www.maplestage.net/drama/第8號當舖/								
+6625	粉愛粉愛你 / I Love You So Much	http://www.maplestage.net/drama/粉愛粉愛你/								
+8429	紅白紅白我勝利	http://www.maplestage.net/show/紅白紅白我勝利/								
+5063	紐約星島	http://www.youtube.com/user/singtaonewyork								
+6708	終極三國 / K.O.3an Guo	http://www.maplestage.net/drama/終極三國/								
+6615	結·分@謊情式 / Til Love Do Us Lie	http://www.maplestage.net/drama/結·分@謊情式/								
+7377	絕對達令 / Absolute Boyfriend	http://www.maplestage.net/drama/絕對達令/								
+7658	絕對達令（日版） / Absolute Boyfriend	http://www.maplestage.net/drama/絕對達令（日版）/								
+3386	給你哈音樂	http://www.maplestage.net/show/給你哈音樂/								
+7984	給愛麗絲的奇蹟 / Alice in Wonder City	http://www.maplestage.net/drama/給愛麗絲的奇蹟/								
+3569	綜藝大哥大	http://www.maplestage.net/show/綜藝大哥大/								
+3840	綜藝大國民	http://www.maplestage.net/show/綜藝大國民/								
+3341	綜藝大本營	http://www.maplestage.net/show/綜藝大本營/								
+6590	綜藝大集合 	http://www.maplestage.net/show/綜藝大集合 /								
+6649	綜藝大集合 	http://www.maplestage.net/show/綜藝大集合 /								
+8460	網球王子2 / The Prince of Tennis II	http://www.maplestage.net/drama/網球王子2/								
+7565	?典??	http://www.youtube.com/user/gtreeyi								
+7194	美?人生 / Beautiful Life	http://www.maplestage.net/drama/美?人生/								
+3377	美人心計	http://www.maplestage.net/drama/美人心計/								
+216	美人誌	http://www.youtube.com/user/beauty321								
+3570	美少女時代	http://www.maplestage.net/show/美少女時代/								
+3300	美樂加油	http://www.maplestage.net/drama/美樂加油/								
+99	美的因世界 HD	http://www.youtube.com/user/winyeda								
+6522	美食大三通	http://www.maplestage.net/show/美食大三通/								
+3571	美食新?	http://www.maplestage.net/show/美食新?/								
+30	美麗無限制－ 陳莉敏	http://www.youtube.com/user/beautyqq								
+5917	美麗華旅遊~精彩南非之旅	http://www.youtube.com/user/miramarsouthafrica								
+6692	翻糖花園 / Fondant Garden	http://www.maplestage.net/drama/翻糖花園/								
+7893	耀舞長安 / House of Harmony and Vengeance	http://www.maplestage.net/drama/耀舞長安/								
+3850	老中地方新聞	http://www.youtube.com/user/yamashita916								
+6648	老中灣區新聞	http://www.youtube.com/user/laozhongnews								
+6561	老板多少錢	http://www.maplestage.net/show/老板多少錢/								
+31	聚財講座	http://www.youtube.com/user/wearnnews								
+4400	自由發揮專屬頻道	http://www.youtube.com/user/otfonetwofree								
+3455	至尊百家樂	http://www.maplestage.net/show/至尊百家樂/								
+468	臺北市電影委員會 Taipei Film Commission	http://www.youtube.com/user/taipeifilmcommission								
+3329	艋舺燿輝	http://www.maplestage.net/drama/艋舺燿輝/								
+6704	艾成 Eison Program	http://www.youtube.com/user/eisonprogram								
+7162	?光的在仁 / Man of Honor	http://www.maplestage.net/drama/?光的在仁/								
+263	華人世界時報TV	http://www.youtube.com/user/cwntv								
+3387	華人星光大道	http://www.maplestage.net/show/華人星光大道/								
+334	華岡電視台第九屆 JNN	http://www.youtube.com/user/pccujnn9th								
+63	華納音樂	http://www.youtube.com/user/warnertaiwan								
+245	華視新聞	http://www.youtube.com/user/tbscts								
+6517	華麗的挑戰 / SKIP BEAT！	http://www.maplestage.net/drama/華麗的挑戰/								
+3447	萌學園之萌騎士傳奇	http://www.maplestage.net/drama/萌學園之萌騎士傳奇/								
+3827	萬凰之王(粵語) / Curse of the Royal Harem 	http://www.maplestage.com/drama/萬凰之王(粵語)/								
+1106	蔡阿嘎	http://www.youtube.com/user/kyoko38								
+3577	蔡黃汝(豆花妹)官方YouTube頻道	http://www.youtube.com/user/luckyboommini								
+7892	薛平貴與王寶釧 / Love Amongst War	http://www.maplestage.net/drama/薛平貴與王寶釧/								
+3554	藍海1加1	http://www.maplestage.net/drama/?海1加1/								
+331	藝流網-Floating	http://www.youtube.com/user/ntcharts								
+165	蘇打綠官方頻道	http://www.youtube.com/user/achun5								
+3342	蘋果娛樂新聞	http://www.maplestage.net/show/蘋果娛樂新聞/								
+300	蘋果日報動新聞 Apple Daily	http://www.youtube.com/user/nmanews								
+6672	虎符傳奇 / Legend of the Military Seal	http://www.maplestage.net/drama/虎符傳奇/								
+942	行政院影音新聞	http://www.youtube.com/user/cabinet3356								
+79	街??地域情報動????	http://www.youtube.com/user/machilogmovie								
+6518	《被遺棄的秘密》	http://www.maplestage.net/drama/被遺棄的秘密(藏心術)/								
+6691	西施秘史 / Legend of Xi Shi	http://www.maplestage.net/drama/西施秘史/								
+332	見證大團誕生	http://www.youtube.com/user/thenextbigthingtw								
+7249	親愛的，回家	http://www.maplestage.net/drama/親愛的，回家/								
+407	觸電網	http://www.youtube.com/user/truemovie1								
+5567	??新聞	http://www.youtube.com/user/yomiurishimbun								
+8454	護花危情 / Witness Insecurity 	http://www.maplestage.net/drama/護花危情/								
+6571	豪記唱片 hcmmusic	http://www.youtube.com/user/hcmmusic								
+3841	豬哥會社	http://www.maplestage.net/show/豬哥會社/								
+7983	賞金獵人 / Bounty Hunter	http://www.maplestage.net/drama/賞金獵人/								
+149	賽博頻道@淡江大學網路校園	http://www.youtube.com/user/cybertku								
+3343	超級偶像	http://www.maplestage.net/show/超級偶像/								
+7543	"超級偶像/超級星光大道 2008, 2009"	http://www.youtube.com/user/bluesky8599								
+7160	超級夜總會	http://www.maplestage.net/show/超級夜總會/								
+6650	超級夜總會 (Super Night Club)	http://www.maplestage.net/show/超級夜總會 (Super Night Club)/								
+3344	超級好神	http://www.maplestage.net/show/超級好神/								
+3864	超級星光大道	http://www.maplestage.net/show/超級星光大道/								
+6741	超級模王大道	http://www.maplestage.net/show/超級模王大道/								
+3572	超級電玩瘋	http://www.maplestage.net/show/超級電玩瘋/								
+7511	跑馬場 / Race Course	http://www.maplestage.net/drama/跑馬場/								
+8457	軒轅劍之天之痕 / Xuan Yuan Sword	http://www.maplestage.net/drama/軒轅劍之天之痕/								
+7696	轉角*遇到愛 / Corner with Love	http://www.maplestage.net/drama/轉角*遇到愛/								
+411	迪士尼電影	http://www.youtube.com/user/bvitw2009								
+6562	週末快樂頌	http://www.maplestage.net/show/週末快樂頌/								
+488	遙寄思念 - 原住民表演藝術	http://www.youtube.com/user/hector33tw								
+229	遠見‧天下文化事業群	http://www.youtube.com/user/cwgv								
+3857	還珠格格	http://www.maplestage.net/drama/還珠格格/								
+6544	那一年的幸福時光	http://www.maplestage.net/drama/那一年的幸福時光/								
+203	那傳媒 - 全活動記錄媒體	http://www.youtube.com/user/nagootv								
+3330	那年，雨不停國	http://www.maplestage.net/drama/那年，雨不停國/								
+3414	醉後決定愛上你	http://www.maplestage.net/drama/醉後決定愛上你/								
+8428	金太狼的幸福生活 / The happy life of the Golden Wolf	http://www.maplestage.net/drama/金太狼的幸福生活/								
+3388	金曲超級星	http://www.maplestage.net/show/金曲超級星/								
+5790	?道?門?????	http://www.youtube.com/user/railwaymovies								
+6548	錞藝音樂 Zoom Muzik	http://www.youtube.com/user/zoommuzik2008								
+3331	鐘無艷	http://www.maplestage.net/drama/鐘無艷/								
+233	鐵拳格鬥運動館	http://www.youtube.com/user/topmma								
+3311	鑽石夜總會	http://www.maplestage.net/show/鑽石夜總會/								
+6679	閉嘴 花美男樂隊 / Shut Up Flower Boy Band 	http://www.maplestage.net/drama/閉嘴 花美男樂隊/								
+424	開眼電影 @movies	http://www.youtube.com/user/atmovies88								
+7993	關於愛情的7件事 / 7 Things About Love	http://www.maplestage.net/drama/關於愛情的7件事/								
+7982	關鍵時刻	http://www.maplestage.net/show/關鍵時刻/								
+7370	關鍵時刻	http://www.youtube.com/user/mmshop888								
+33	阿宅反抗軍	http://www.youtube.com/user/otakuarmy								
+3573	陶子藝言堂	http://www.maplestage.net/show/陶子藝言堂/								
+3555	陽光天使	http://www.maplestage.net/drama/陽光天使/								
+180	雄獅旅遊影音頻道	http://www.youtube.com/user/lioncyber								
+8451	雍正王朝 / Yong Zheng Dynasty	http://www.maplestage.net/drama/雍正王朝/								
+6545	離愛	http://www.maplestage.net/drama/離愛/								
+3415	難為女兒紅	http://www.maplestage.net/drama/難為女兒紅/								
+7432	雨夜花 / Rainy Night Flower	http://www.maplestage.net/drama/雨夜花/								
+503	雷公電影影音頻道	http://www.youtube.com/user/zeusfilm2011								
+559	電影雙周刊	http://www.youtube.com/user/2cekidhk								
+3842	電玩大牌黨	http://www.maplestage.net/show/電玩大牌黨/								
+3456	電玩大聯盟	http://www.maplestage.net/show/電玩大聯盟/								
+176	電玩宅速配	http://www.youtube.com/user/efuntv								
+3843	電玩快打	http://www.maplestage.net/show/電玩快打/								
+3457	電競 All Star	http://www.maplestage.net/show/電競 All Star/								
+8455	需要浪漫 / Need A Romatic	http://www.maplestage.net/drama/需要浪漫/								
+261	霹靂創世錄	http://www.youtube.com/user/pilicreateworld								
+589	青平台 -夜之巴別塔	http://www.youtube.com/user/yswetube								
+3574	青春全員集合	http://www.maplestage.net/show/青春全員集合/								
+3389	青春猛回頭	http://www.maplestage.net/show/青春猛回頭/								
+8435	青瓷 / Green Porcelain	http://www.maplestage.net/drama/青瓷/								
+477	靜思晨語。法譬如水	http://www.youtube.com/user/moyatseng								
+1517	非凡大探索	http://www.youtube.com/user/neoking5168								
+478	非池中藝術網	http://www.youtube.com/user/artemperor888								
+8283	非?勿扰	http://www.youtube.com/user/jstvfeichengwurao								
+3429	非關命運	http://www.maplestage.net/show/非關命運/								
+6600	音樂強力佼	http://www.maplestage.net/show/音樂強力佼/								
+463	音樂時代影音網	http://www.youtube.com/user/allmusicpublisher								
+3390	音樂萬萬歲	http://www.maplestage.net/show/音樂萬萬歲/								
+3844	音樂飆榜	http://www.maplestage.net/show/音樂飆榜/								
+7532	順藤而上的你 / My Husband Got A Family	http://www.maplestage.net/drama/順藤而上的你/								
+6617	頒獎典禮	http://www.maplestage.net/show/頒獎典禮/								
+499	風和日麗唱片行	http://www.youtube.com/user/aagoodday								
+6547	風水!有關係	http://www.maplestage.net/show/風水!有關係/								
+7588	風車 / Windmill	http://www.maplestage.net/drama/風車/								
+7712	風雨桃花鎮 / Stephy Tang & Alex Fong	http://www.maplestage.net/drama/風雨桃花鎮/								
+8448	飛虎 / Tiger Cubs	http://www.maplestage.net/drama/飛虎/								
+3301	飛行少年	http://www.maplestage.net/drama/飛行少年/								
+3391	食在有健康	http://www.maplestage.net/show/食在有健康/								
+3575	食尚玩家	http://www.maplestage.net/show/食尚玩家/								
+3845	首爾酷旅行	http://www.maplestage.net/show/首爾酷旅行/								
+7224	香港人網	http://www.youtube.com/user/hkreportermyradio12								
+7238	香港天樂媒體	http://www.youtube.com/user/dhkchannel								
+7212	香港新聞台 HKBN	http://www.youtube.com/user/hkbnnews								
+3129	香港環球音樂	http://www.youtube.com/user/universalmusichk								
+8	香港電台 / RTHK	http://www.youtube.com/user/rthk								
+285	馬英九總統國是焦點影音	http://www.youtube.com/user/presidentialoffice								
+6633	鬥牛. 要不要 / Hooping Dulcinea	http://www.maplestage.net/drama/鬥牛. 要不要/								
+444	魔獸世界	http://www.youtube.com/user/twworldofwarcraft								
+7244	鳳凰視頻	http://www.youtube.com/user/goldencarptavern								
+3576	麻辣天后宮	http://www.maplestage.net/show/麻辣天后宮/								
+3345	黃金舞台	http://www.maplestage.net/show/黃金舞台/								
+6563	黃韻玲KAY H. 音樂生活	http://www.youtube.com/user/kayhuang2001								
+429	齊石傳播的影音總匯	http://www.youtube.com/user/keystone0318								
+7687	龍巡天下 / King Inspects The World	http://www.maplestage.net/drama/龍巡天下/								

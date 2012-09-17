@@ -46,7 +46,7 @@ CREATE TABLE `category` (
   `lang` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `seq` smallint(6) NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `updateDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updateDate`  DEFAULT NULL,
   `tag` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8
@@ -58,7 +58,7 @@ CREATE TABLE `nnepisode` (
   `intro` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `channelId` bigint(20) DEFAULT '0',
   `adId` bigint(20) DEFAULT '0',
-  `publishDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `publishDate` timestamp,
   `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
@@ -96,7 +96,7 @@ CREATE TABLE `tag_map` (
   `channelId` bigint(20) NOT NULL,
   `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `tagId` (`tagId`,`channelId`)
+  UNIQUE KEY `tagMap` (`tagId`,`channelId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2428 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `category_map` (
@@ -105,7 +105,7 @@ CREATE TABLE `category_map` (
   `channelId` bigint(20) NOT NULL,
   `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),              
-  UNIQUE KEY `categoryId` (`categoryId`,`channelId`)
+  UNIQUE KEY `categoryMap` (`categoryId`,`channelId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=439 DEFAULT CHARSET=utf8; 
 
 CREATE TABLE `nnad` (
@@ -113,8 +113,8 @@ CREATE TABLE `nnad` (
   `merchantEmail` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `createDate` datetime DEFAULT NULL,
-  `updateDate` datetime DEFAULT NULL,
+  `createDate` datetime  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateDate` datetime not null,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
@@ -204,6 +204,7 @@ alter table nnuser add column cntFollower int(11) default 0;
 alter table nnuser add column profileUrl varchar(255);
 alter table nnuser add column expires bigint(20) default 0;
 alter table nnuser add column fbId varchar(255);
+alter table nnuser add column featured bit(1) default false;
 
 alter table nnuser modify gender smallint(6) null;
 alter table nnuser modify isTemp bit(1) null;
@@ -214,19 +215,20 @@ alter table nnuser alter isTemp set default false;
 alter table nnuser alter msoId set default 1;
 alter table nnuser alter type set default 4;
 alter table nnuser change createDate createDate TIMESTAMP default CURRENT_TIMESTAMP;
-alter table nnuser change updateDate updateDate TIMESTAMP default 0;
 alter table nnuser alter featured set default false;
-alter table nnuser alter featured set default false;
+
+update nnuser set cntSubscribe = 0;
+update nnuser set cntFollower = 0;
+update nnuser set cntChannel = 0;
 
 use nncloudtv_content;
 alter table nnchannel alter cntSubscribe set default 0;
-alter table nnchannel alter poolType set default 0;
-alter table nnchannel add column sphere varchar(5);
+alter table nnchannel add column poolType smallint(6)  default 0;
+alter table nnchannel add column sphere varchar(5) default 'en';
 alter table nnchannel drop column errorReason;
 alter table nnchannel add column cntSubscribe int(11) not null default 0;
 alter table nnchannel add column userIdStr varchar(25);
-alter table nnchannel add column sphere varchar(5) default 'en';
-alter table nnchanenel add column note varchar(10);
+alter table nnchannel add column note varchar(10);
 alter table nnchannel add subscribersIdStr varchar(255);
 update nnchannel set sphere = lang;
 update nnchannel set lang='en', sphere='en' where lang is null;
@@ -235,13 +237,24 @@ alter table nnprogram drop column type;
 alter table nnprogram add column publishDate datetime;
 alter table nnprogram add column startTime varchar(255);
 alter table nnprogram add column endTime varchar(255);
-alter table add column episodeId bigint(20);
+alter table add column episodeId bigint(20) default 0;
+update nnprogram set publishDate = updateDate;
+update nnprogram set episodeId=0;
+
+alter table counter_shard alter count set default 0;
+alter table counter_shard alter shardNumber set default 0;
+
+delete from mso_config where id in (2,4);
 
 -----------------------------------------------------
 - category.py
 - content.py
 - jobs/category_tag.py
-- channel_meta.py            
-- billboard
+- jobs/channel_meta.py            
+- billboard.py
+- trending.py
+- subscribe.py
+- jobs/hot.py
+- curator.py
 
 
