@@ -67,23 +67,24 @@ curators.append([8612])
 
 i = 1
 for curator in curators:
-   print i
+   #print i    
    email = 'curator' + str(i) + '@9x9.tv'
+   userCursor.execute("""
+     select id                              
+       from nnuser                          
+      where email = %s
+      """, (email))
+   user = userCursor.fetchone()
+   userId = user[0]
+   userIdStr = "1-" + str(userId)
+   print "userIdStr: " + userIdStr   
    for channel in curator:
-      print channel
-      userCursor.execute("""
-        select id                              
-          from nnuser                          
-         where email = %s
-         """, (email))
-      user = userCursor.fetchone()
-      userId = user[0]
-      userIdStr = "1-" + str(userId)
-      print userIdStr
+      print channel           
       userCursor.execute("""
         update nncloudtv_content.nnchannel                              
-          set userIdStr = %s                          
-         """, (userIdStr))
+          set userIdStr = %s
+        where id = %s 
+         """, (userIdStr, channel))
       
    i = i+1
 dbuser.commit()      
