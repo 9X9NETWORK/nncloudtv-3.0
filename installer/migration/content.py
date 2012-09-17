@@ -1,9 +1,14 @@
+# initialize tag information
+# 1) basic value for hot and thrending
+# 2) give channel tags
+
 import urllib, urllib2
 import os
 from array import *
 import MySQLdb
 import time
 import string
+import codecs
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
@@ -15,7 +20,7 @@ contentCursor = dbcontent.cursor()
 contentCursor.execute("""truncate tag """)
 contentCursor.execute("""truncate tag_map """)
 contentCursor.execute("""insert into tag (name, updateDate) values ('hot(9x9en)', now()); """)
-contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 1); """)
+contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 1); """)         
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 2); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 3); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 4); """)
@@ -34,7 +39,7 @@ contentCursor.execute("""insert into tag_map (tagId, channelId) values (2, 15); 
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (2, 16); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (2, 17); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (2, 18); """)
-contentCursor.execute("""insert into tag (name, updateDate) values ('trending(9x9en)', now()); """) 
+contentCursor.execute("""insert into tag (name, updateDate) values ('trending(9x9en)', now()); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (3, 19); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (3, 20); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (3, 21); """)
@@ -54,10 +59,32 @@ contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 33); 
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 34); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 35); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 36); """)
+#hot english from thrending
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch5058', 1); """)      
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3722', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch116', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch928', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3606', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3811', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3610', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch1992', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3487', 1); """)
+#hot chinese from trending
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch144', 1); """)           
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch229', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch185', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch538', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch516', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch512', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch349', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch37', 1); """)
+contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch507', 1); """)
+                                                               
 
-feed = open("contentPool.txt", "rU")                                                            
-i = 0
-for line in feed:
+i = 0                  
+feed = open("contentPool_en.txt", "rU")
+for line in feed:  
+  line = line.decode("utf-8-sig")
   i = i+1
   data = line.split('\t')
   cId = data[0].rstrip().lstrip()   
@@ -77,6 +104,8 @@ for line in feed:
      sphere = 'zh'
   if sphere == 'worldwide':
      sphere = 'other'
+  if sphere == 'us':
+     sphere = 'en'
   print "i: " + str(i) + ";cid: " + str(cId) + "; name:" + cName + "; categoryName: " + categoryName + "; lang:" + lang + "; sphere:" + sphere  
   contentCursor.execute ("""             
      select id from nnchannel 
