@@ -249,6 +249,7 @@ delete from mso_config where id in (2,4);
 -----------------------------------------------------
 - category.py
 - content.py
+modify to zh and do again
 - jobs/category_tag.py
 - jobs/channel_meta.py            
 - billboard.py
