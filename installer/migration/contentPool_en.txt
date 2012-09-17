@@ -2,22 +2,22 @@
 5112	2 Bucks	http://www.youtube.com/user/amazingfilms247	Gaming 	"game commentaries, first person shooters"	EN	US	Q2			Autos & Vehicles 
 533	2K Sports	http://www.youtube.com/user/2ksports	Gaming 	"game trailers, sports games"	EN	US	Q2			Cartoons & Animation 
 1601	2NE1	http://www.youtube.com/user/2ne1	Music	kpop	Others	Worldwide	Q1			Comedy
-7656	7 News	http://www.youtube.com/user/7news	News 	world news	EN	Worldwide	Q1			"Fashion, Food & Living"
+7656	7 News	http://www.youtube.com/user/7news	News 	world news	EN	Worldwide	Q1			Fashion, Food & Living
 6387	9XM Bollywood Music	http://www.youtube.com/user/9xm	Music	bollywood	Others	Worldwide	Q1			Gaming 
 272	A3Network Nightlife	http://www.youtube.com/user/a3network	Music	electro	EN	Worldwide	Q2			How-To 
 45	ABC News	http://www.youtube.com/user/abcnews	News 	"abc, us news"	EN	US	Q1			Education & Lectures 
 3483	Adam Lambert VEVO	http://www.youtube.com/user/adamlambertvevo	Music	"vevo, pop, rock"	EN	Worldwide	Q1			Music
 6884	ADA Sport	http://www.youtube.com/user/adasport	Cartoons & Animation 	contest	EN	US	Q2			News 
 2071	Adele VEVO	http://www.youtube.com/user/adelevevo	Music	"vevo, soul, r&b, pop"	EN	Worldwide	Q1			Nonprofits & Faith 
-235	Adidas Football 官方	http://www.youtube.com/user/adidasfootballtv	"Fashion, Food & Living"	"sportswear, soccer, football"	EN	Worldwide	Q2			"People, Blogs & Shorts "
-42	Adidas Originals 	http://www.youtube.com/user/adidasoriginals	"Fashion, Food & Living"	sportswear	EN	Worldwide	Q1			Science 
+235	Adidas Football 官方	http://www.youtube.com/user/adidasfootballtv	Fashion, Food & Living	"sportswear, soccer, football"	EN	Worldwide	Q2			"People, Blogs & Shorts "
+42	Adidas Originals 	http://www.youtube.com/user/adidasoriginals	Fashion, Food & Living	sportswear	EN	Worldwide	Q1			Science 
 3781	Adult Swim	http://www.youtube.com/user/adultswim	Cartoons & Animation 	"cartoon network, funny"	EN	US	Q1			Sports & Health 
-3514	Ahanhbarbie Beauty	http://www.youtube.com/user/ahanhbarbie34	"Fashion, Food & Living"	"outfits, hairstyle, beauty products"	EN	Worldwide	Q2			Tech & Apps 
+3514	Ahanhbarbie Beauty	http://www.youtube.com/user/ahanhbarbie34	Fashion, Food & Living	"outfits, hairstyle, beauty products"	EN	Worldwide	Q2			Tech & Apps 
 4975	AH Media	http://www.youtube.com/user/lilhittelvideos	Sports & Health 	football	EN	Worldwide	Q1			TV & Film
 119	ahmir TV	http://www.youtube.com/user/ahmirtv	Music	"indie, song covers, r&b, soul"	EN	Worldwide	Q1			
 7574	Alli Sports	http://www.youtube.com/user/allisports	Sports & Health 	"action sports, skateboarding, bmx, motorcross"	EN	Worldwide	Q1			
 7405	Alloy TV	http://www.youtube.com/user/alloy	"People, Blogs & Shorts "	"web shorts, vlog"	EN	US	Q1			
-7622	All Things By Alli	http://www.youtube.com/user/allthingsbyalli	"Fashion, Food & Living"	"makeup, hairstyle, beauty products"	EN	Worldwide	Q2			
+7622	All Things By Alli	http://www.youtube.com/user/allthingsbyalli	Fashion, Food & Living	"makeup, hairstyle, beauty products"	EN	Worldwide	Q2			
 8499	Amazon.com	http://www.youtube.com/user/amazon	Tech & Apps 	consumer websites	EN	Worldwide	Q3			
 7356	AMC	http://www.youtube.com/user/amc	TV & Film	"tv trailers, tv shows"	EN	US	Q1			
 7614	American Idol	http://www.youtube.com/user/americanidol	TV & Film	"audition, song covers, fox"	EN	Worldwide	Q1			
@@ -28,7 +28,7 @@
 14	Android Central	http://www.youtube.com/user/androidcentral	Tech & Apps 	"android, tech reviews"	EN	US	Q2			
 3589	AniBoom	http://www.youtube.com/user/aniboom	Cartoons & Animation 	"funny, kids"	EN	Worldwide	Q1			
 64	Animal Planet	http://www.youtube.com/user/animalplanettv	Animals & Pets 	"wild animals, tv shows"	EN	Worldwide	Q1			
-7610	Annie Jaffrey	http://www.youtube.com/user/anniejaffrey	"Fashion, Food & Living"	"makeup, outfits, beauty products"	EN	Worldwide	Q2			
+7610	Annie Jaffrey	http://www.youtube.com/user/anniejaffrey	Fashion, Food & Living	"makeup, outfits, beauty products"	EN	Worldwide	Q2			
 7944	Apollo Grave	http://www.youtube.com/user/apollograve	"People, Blogs & Shorts "	vlog	EN	US	Q2			
 66	Apple	http://www.youtube.com/user/apple	Tech & Apps 	"consumer electronics, apple"	EN	Worldwide	Q3			
 3484	Arden Cho	http://www.youtube.com/user/ardenbcho	Music	"indie, song covers, vlog"	EN	Worldwide	Q2			
@@ -67,8 +67,8 @@
 7395	BBC	http://www.youtube.com/user/bbc	TV & Film	tv shows	EN	Worldwide	Q1			
 108	BBC Worldwide	http://www.youtube.com/user/bbcworldwide	TV & Film	tv shows	EN	Worldwide	Q1			
 1623	BBQ Pit Boys	http://www.youtube.com/user/barbecueweb	How-To 	recipes	EN	Worldwide	Q1			
-7603	Beautybaby44	http://www.youtube.com/user/beautybaby44	"Fashion, Food & Living"	"beauty products, outfits"	EN	Worldwide	Q2			
-6755	BeautyBroadcast	http://www.youtube.com/user/emilynoel83	"Fashion, Food & Living"	"makeup, beauty products"	EN	Worldwide	Q2			
+7603	Beautybaby44	http://www.youtube.com/user/beautybaby44	Fashion, Food & Living	"beauty products, outfits"	EN	Worldwide	Q2			
+6755	BeautyBroadcast	http://www.youtube.com/user/emilynoel83	Fashion, Food & Living	"makeup, beauty products"	EN	Worldwide	Q2			
 7456	Beijing Cream	http://www.youtube.com/user/beijingcream	"People, Blogs & Shorts "	viral	EN	Worldwide	Q3			
 7581	Belated Media	http://www.youtube.com/user/belatedmedia	TV & Film	movie reviews	EN	US	Q2			
 7289	Bellator MMA	http://www.youtube.com/user/bellatormma	Sports & Health 	combat	EN	Worldwide	Q1			
@@ -80,7 +80,7 @@
 6732	Big Sean VEVO	http://www.youtube.com/user/bigseanvevo	Music	"vevo, hip hop"	EN	Worldwide	Q1			
 3744	Big Think	http://www.youtube.com/user/bigthink	Education & Lectures 	experts	EN	Worldwide	Q2			
 7254	Bikeskills.com	http://www.youtube.com/user/bikeskills	Sports & Health 	"action sports, mountain biking, bmx, motorcross"	EN	Worldwide	Q1			
-133	Bikini.com	http://www.youtube.com/user/bikinicom	"Fashion, Food & Living"	"girls, outfits"	EN	Worldwide	Q1			
+133	Bikini.com	http://www.youtube.com/user/bikinicom	Fashion, Food & Living	"girls, outfits"	EN	Worldwide	Q1			
 5008	Billboard Classic	http://www.youtube.com/user/billboardclassic	Music	countdowns	EN	Worldwide	Q1			
 430	Billboard.com	http://www.youtube.com/user/billboardmagazine	Music	"live performances, music news"	EN	Worldwide	Q1			
 116	Billboard Hot 100	http://www.youtube.com/user/billboardgoddess	Music	countdowns	EN	Worldwide	Q2			
@@ -101,14 +101,14 @@
 8189	Break Originals	http://www.youtube.com/user/breakoriginals	"People, Blogs & Shorts "	"funny, web shorts"	EN	Worldwide	Q1			
 4974	Britian's Got Talent	http://www.youtube.com/user/12345djbridger	TV & Film	audition	EN	Worldwide	Q2			
 762	Britney Spears VEVO	http://www.youtube.com/user/britneyspearsvevo	Music	"vevo, pop"	EN	Worldwide	Q1			
-3672	Brit Pop Princess	http://www.youtube.com/user/britpopprincess	"Fashion, Food & Living"	outfits	EN	Worldwide	Q2			
+3672	Brit Pop Princess	http://www.youtube.com/user/britpopprincess	Fashion, Food & Living	outfits	EN	Worldwide	Q2			
 6706	Brittani Louise Taylor	http://www.youtube.com/user/brittanilouisetaylor	"People, Blogs & Shorts "	"vlog, web shorts"	EN	US	Q1			
 3516	Brooklyn Museum	http://www.youtube.com/user/brooklynmuseum	Art & Design 	"museums, culture"	EN	Worldwide	Q2			
-7368	Bruno's Kitchen	http://www.youtube.com/user/brunoalbouze	"Fashion, Food & Living"	recipes	EN	Worldwide	Q2			
+7368	Bruno's Kitchen	http://www.youtube.com/user/brunoalbouze	Fashion, Food & Living	recipes	EN	Worldwide	Q2			
 6368	Brussup Illusion Science	http://www.youtube.com/user/brusspup	Art & Design 	visual	EN	Worldwide	Q2			
-6678	Bubzbeauty	http://www.youtube.com/user/bubzbeauty	"Fashion, Food & Living"	"outfits, makeup, hairstyle"	EN	Worldwide	Q2			
+6678	Bubzbeauty	http://www.youtube.com/user/bubzbeauty	Fashion, Food & Living	"outfits, makeup, hairstyle"	EN	Worldwide	Q2			
 765	Bubz Beauty	http://www.youtube.com/user/bubzvlogz	"People, Blogs & Shorts "	vlog	EN	US	Q3			
-24	Burberry	http://www.youtube.com/user/burberry	"Fashion, Food & Living"	high fashion	EN	Worldwide	Q3			
+24	Burberry	http://www.youtube.com/user/burberry	Fashion, Food & Living	high fashion	EN	Worldwide	Q3			
 6819	Calvin Harris VEVO	http://www.youtube.com/user/calvinharrisvevo	Music	"vevo, electro"	EN	Worldwide	Q1			
 323	Cambridge University	http://www.youtube.com/user/cambridgeuniversity	Education & Lectures 	colleges	EN	Worldwide	Q2			
 3745	Camera Lab	http://www.youtube.com/user/cameralabs	Tech & Apps 	cameras	EN	Worldwide	Q2			
@@ -145,23 +145,23 @@
 7425	Cincinnati Zoo	http://www.youtube.com/user/cincinnatizootube	Animals & Pets 	wild animals	EN	Worldwide	Q2			
 7048	Cirque du Soleil	http://www.youtube.com/user/cirquedusoleil	Art & Design 	live performances	EN	Worldwide	Q1			
 6380	city42tv Pakistani News	http://www.youtube.com/user/city042tv	News 	world news	EN	Worldwide	Q1			
-7407	City and Makeup	http://www.youtube.com/user/cityandmakeup	"Fashion, Food & Living"	"makeup, beauty products"	EN	Worldwide	Q2			
+7407	City and Makeup	http://www.youtube.com/user/cityandmakeup	Fashion, Food & Living	"makeup, beauty products"	EN	Worldwide	Q2			
 3703	Clara C 	http://www.youtube.com/user/claracmusic	Music	"indie, song covers"	EN	Worldwide	Q2			
 310	Classic Game Room	http://www.youtube.com/user/inecomcompany	Gaming 	"game commentaries, game reviews"	EN	Worldwide	Q2			
 6931	Clevver Games	http://www.youtube.com/user/clevvergames	Gaming 	"game reviews, game news"	EN	Worldwide	Q1			
 442	Clevver Movies	http://www.youtube.com/user/clevvermovies	TV & Film	"movie reviews, entertainment, movie news"	EN	Worldwide	Q1			
 6928	Clevver Music	http://www.youtube.com/user/clevvermusic	Music	"entertainment, music news"	EN	Worldwide	Q1			
 6929	Clevver News	http://www.youtube.com/user/clevvernews	TV & Film	"celebrity, gossip"	EN	Worldwide	Q1			
-6938	Clevver Style	http://www.youtube.com/user/clevverstyle	"Fashion, Food & Living"	"outfits, entertainment, high fashion"	EN	Worldwide	Q1			
+6938	Clevver Style	http://www.youtube.com/user/clevverstyle	Fashion, Food & Living	"outfits, entertainment, high fashion"	EN	Worldwide	Q1			
 3594	Clevver TV	http://www.youtube.com/user/clevvertv	TV & Film	"entertainment, gossip"	EN	Worldwide	Q1			
 6727	Club Penguin	http://www.youtube.com/user/clubpenguin	Gaming 	kids	EN	Worldwide	Q3			
 2037	cnblue	http://www.youtube.com/user/cnblue	Music	kpop	Others	Worldwide	Q1			
 211	CNET	http://www.youtube.com/user/cnettv	Tech & Apps 	"tech news, consumer electronics, tech reviews"	EN	Worldwide	Q1			
 422	CNN	http://www.youtube.com/user/cnn	News 	us news	EN	US	Q1			
-1497	Coca Cola	http://www.youtube.com/user/cocacola	"Fashion, Food & Living"	beverages	EN	Worldwide	Q3			
+1497	Coca Cola	http://www.youtube.com/user/cocacola	Fashion, Food & Living	beverages	EN	Worldwide	Q3			
 3791	Coldplay VEVO	http://www.youtube.com/user/coldplayvevo	Music	"vevo, rock"	EN	Worldwide	Q1			
 3634	College Humor	http://www.youtube.com/user/collegehumor	Comedy	"funny, web shorts"	EN	US	Q1			
-7331	College Makeup Girl	http://www.youtube.com/user/collegemakeupgirl	"Fashion, Food & Living"	"makeup, beauty products"	EN	Worldwide	Q2			
+7331	College Makeup Girl	http://www.youtube.com/user/collegemakeupgirl	Fashion, Food & Living	"makeup, beauty products"	EN	Worldwide	Q2			
 6980	Combat Footage	http://www.youtube.com/user/funker530	Tech & Apps 	combat	EN	Worldwide	Q2			
 5009	Comedy Central	http://www.youtube.com/user/comedycentral	Comedy	"funny, standup comedy"	EN	Worldwide	Q1			
 3677	Comedy Time	http://www.youtube.com/user/comedytimedir	Comedy	standup comedy	EN	Worldwide	Q1			
@@ -171,7 +171,7 @@
 7572	Cooking With Jack	http://www.youtube.com/user/jakatak69	How-To 	recipes	EN	Worldwide	Q1			
 7292	Corbett Report	http://www.youtube.com/user/corbettreport	News 	politics	EN	US	Q2			
 3794	Corridor Digital	http://www.youtube.com/user/corridordigital	"People, Blogs & Shorts "	web shorts	EN	Worldwide	Q2			
-6879	Cosplay-Mag	http://www.youtube.com/user/cosplaymag	"Fashion, Food & Living"	cosplay	EN	Worldwide	Q3			
+6879	Cosplay-Mag	http://www.youtube.com/user/cosplaymag	Fashion, Food & Living	cosplay	EN	Worldwide	Q3			
 6446	C.P.G. Grey	http://www.youtube.com/user/cgpgrey	Science 		EN	US	Q2			
 7464	Crazy Breaking News	http://www.youtube.com/user/crazybreakingnews	Autos & Vehicles 	aviation	EN	Worldwide	Q3			
 6305	CrossFit HQ	http://www.youtube.com/user/crossfithq	Sports & Health 	workouts	EN	Worldwide	Q2			
@@ -196,4 +196,4 @@
 6698	DeStorm Power	http://www.youtube.com/user/destorm	Music	"indie, hip hop"	EN	Worldwide	Q2			
 7250	Devin Super Tramp	http://www.youtube.com/user/devinsupertramp	"People, Blogs & Shorts "	viral	EN	Worldwide	Q1			
 6749	DevVEVO	http://www.youtube.com/user/devvevo	Music	"vevo, electro, pop"	EN	Worldwide	Q1			
-222	D&G	http://www.youtube.com/user/dolcegabbanachannel	"Fashion, Food & Living"	high fashion	EN	Worldwide	Q3			
+222	D&G	http://www.youtube.com/user/dolcegabbanachannel	Fashion, Food & Living	high fashion	EN	Worldwide	Q3			
