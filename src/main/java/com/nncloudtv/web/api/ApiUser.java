@@ -1,6 +1,7 @@
 package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -295,6 +296,8 @@ public class ApiUser extends ApiGeneric {
         
         NnChannelManager channelMngr = new NnChannelManager();
         result = channelMngr.findByUser(user, 0, false);
+        
+        Collections.sort(result, channelMngr.getChannelUpdateDateComparator());
         
         return result;
     }

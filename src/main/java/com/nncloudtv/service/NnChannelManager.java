@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -693,6 +694,21 @@ public class NnChannelManager {
             log.info("convertEpochToTime fails:" + transcodingUpdateDate + ";" + updateDate);
         }
         return output;
+    }
+    
+    public Comparator<NnChannel> getChannelUpdateDateComparator() {
+        
+        class ChannelUpdateDateComparator implements Comparator<NnChannel> {
+            
+            public int compare(NnChannel channel1, NnChannel channel2) {
+                Date date1 = channel1.getUpdateDate();
+                Date date2 = channel2.getUpdateDate();
+                
+                return date2.compareTo(date1);
+            }
+        }
+        
+        return new ChannelUpdateDateComparator();
     }
     
 }
