@@ -398,6 +398,8 @@ public class NnChannelManager {
         }
         
         List<Category> categories = findCategoriesByChannelId(channelId);
+        if (categories.size() == 0)
+        	return null;
         
         /*
          * if duplicate in en or zh categories, the newly updated category will be return.
