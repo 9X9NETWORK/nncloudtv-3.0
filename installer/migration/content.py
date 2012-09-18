@@ -79,10 +79,15 @@ contentCursor.execute("""insert into counter_shard (shardNumber, counterName, co
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch349', 1); """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch37', 1); """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch507', 1); """)
-                                                               
 
-i = 0                  
-feed = open("contentPool_en.txt", "rU")
+current = "en" 
+#current = "zh"
+fileName = "contentPool_" + current + ".txt"
+feed = open(fileName, "rU")
+allCategoryId = 1 
+if current == "zh":
+   allCategoryId = 20
+i = 0
 for line in feed:  
   line = line.decode("utf-8-sig")
   i = i+1
@@ -106,7 +111,7 @@ for line in feed:
      sphere = 'other'
   if sphere == 'us':
      sphere = 'en'
-  print "i: " + str(i) + ";cid: " + str(cId) + "; name:" + cName + "; categoryName: " + categoryName + "; lang:" + lang + "; sphere:" + sphere  
+  print "i: " + str(i) + ";cid: " + str(cId) + "; name:" + cName + "; categoryName: " + categoryName + "; lang:" + lang + "; sphere:" + sphere + "; tags:" + tags   
   contentCursor.execute ("""             
      select id from nnchannel 
       where id = %s 
@@ -117,9 +122,9 @@ for line in feed:
 
   ### update channel metadata               
   contentCursor.execute ("""             
-		 update nnchannel set name = %s, lang = %s, sphere = %s
+		 update nnchannel set name = %s, lang = %s, sphere = %s, tag = %s
 		  where id = %s
-     """, (cName, lang, sphere, cId)) 
+     """, (cName, lang, sphere, cId, tags)) 
   dbcontent.commit()
   ### update category info                
   print "categoryName: " + categoryName
@@ -130,19 +135,42 @@ for line in feed:
      """, (categoryName))
   categoryRow = contentCursor.fetchone()
   categoryId = categoryRow[0]
-  print "categoryId:" + str(categoryId)        
+  print "categoryId:" + str(categoryId)       
   print "channelId:" + str(cId)
+  #contentCursor.execute("""
+  #   select id
+  #    from category_map
+  #   where categoryId = %s and channelId = %s
+  #   """, (categoryId, cId))
+  #count = contentCursor.rowcount          
+  #if count == 0:           
   contentCursor.execute("""
-     select id
-      from category_map
-     where categoryId = %s and channelId = %s
+     insert into category_map (categoryId, channelId, updateDate)
+                       values (%s, %s, now()) 
      """, (categoryId, cId))
-  count = contentCursor.rowcount          
-  if count == 0:           
+  contentCursor.execute("""
+     insert into category_map (categoryId, channelId, updateDate)
+                       values (%s, %s, now()) 
+     """, (allCategoryId, cId))
+    
+  if sphere == 'other':
+     otherCategoryId = 0
+     otherAllCategoryId = 0
+     if current == "en":
+        otherCategoryId = categoryId + 19
+        otherAllCategoryId = 20
+     if current == "zh":
+        otherCategoryId = categoryId - 19
+        otherAllCategoryId = 1
      contentCursor.execute("""
         insert into category_map (categoryId, channelId, updateDate)
                           values (%s, %s, now()) 
-        """, (categoryId, cId))
+        """, (otherCategoryId, cId))     
+     contentCursor.execute("""
+        insert into category_map (categoryId, channelId, updateDate)
+                          values (%s, %s, now()) 
+        """, (otherAllCategoryId, cId))
+  
   ### update tag info
   for t in tag:    
      t = t.lower()  
