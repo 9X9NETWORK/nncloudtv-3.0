@@ -48,17 +48,6 @@ public class TitleCardManager {
         return dao.findByProgramId(programId);
     }
     
-    public List<TitleCard> findByEpisodeId(long episodeId) {
-        List<NnProgram> programs = programDao.findProgramsByEpisode(episodeId);
-        List<TitleCard> titleCardsFromEpisode = new ArrayList<TitleCard>();
-        List<TitleCard> titleCardsFromProgram;
-        for (int i=0; i<programs.size(); i++) {
-            titleCardsFromProgram = findByProgramId(programs.get(i).getId());
-            titleCardsFromEpisode.addAll(titleCardsFromProgram);
-        }
-        return titleCardsFromEpisode;
-    }
-    
     public TitleCard findById(long id) {
         return dao.findById(id);
     }

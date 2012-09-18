@@ -2,7 +2,6 @@ package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -710,7 +709,7 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
     public @ResponseBody
-    List<TitleCard> titleCardsFromProgram(HttpServletRequest req,
+    List<TitleCard> programTitleCards(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("programId") String programIdStr) {
         
@@ -732,10 +731,10 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "episodes/{episodeId}/title_cards", method = RequestMethod.GET)
     public @ResponseBody
-    List<TitleCard> titleCardsFromEpisode(HttpServletRequest req,
+    List<TitleCard> episodeTitleCards(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("episodeId") String episodeIdStr) {
-        
+    
         Long episodeId = null;
         try {
             episodeId = Long.valueOf(episodeIdStr);
@@ -747,7 +746,14 @@ public class ApiContent extends ApiGeneric {
         }
         
         TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> results = titleCardMngr.findByEpisodeId(episodeId);
+        NnProgramManager programMngr = new NnProgramManager();
+        
+        List<NnProgram> programs = programMngr.findByEpisodeId(episodeId);
+        List<TitleCard> results = new ArrayList<TitleCard>();
+        
+        for (NnProgram program : programs) {
+            results.addAll(titleCardMngr.findByProgramId(program.getId()));
+        }
         
         return results;
     }
