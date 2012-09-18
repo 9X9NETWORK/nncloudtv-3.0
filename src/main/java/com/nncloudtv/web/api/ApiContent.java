@@ -694,7 +694,7 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
     public @ResponseBody
-    List<TitleCard> titleCards(HttpServletRequest req,
+    List<TitleCard> titleCardsFromProgram(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("programId") String programIdStr) {
         
@@ -710,6 +710,28 @@ public class ApiContent extends ApiGeneric {
         
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> results = titleCardMngr.findByProgramId(programId);
+        
+        return results;
+    }
+    
+    @RequestMapping(value = "episodes/{episodeId}/title_cards", method = RequestMethod.GET)
+    public @ResponseBody
+    List<TitleCard> titleCardsFromEpisode(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> results = titleCardMngr.findByEpisodeId(episodeId);
         
         return results;
     }
