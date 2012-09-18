@@ -675,4 +675,9 @@ public class NnChannelManager {
         channel.setMoreImageUrl(org.apache.commons.lang.StringUtils.join(imgs, "|"));
     }
     
+    public void populateCntEpisode(NnChannel channel) {
+    
+        // TODO: cntEpisode
+    }
+    
 }

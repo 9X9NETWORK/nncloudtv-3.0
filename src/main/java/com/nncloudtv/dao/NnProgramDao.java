@@ -214,6 +214,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
             Query q = pm.newQuery(NnProgram.class);
             q.setFilter("channelId == channelIdParam");
             q.declareParameters("long channelIdParam");
+            q.setOrdering("seq, subSeq asc");
             @SuppressWarnings("unchecked")
             List<NnProgram> programs = (List<NnProgram>)q.execute(channelId);        
             detached = (List<NnProgram>)pm.detachCopyAll(programs);

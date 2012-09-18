@@ -300,6 +300,7 @@ public class ApiUser extends ApiGeneric {
         
         for (NnChannel channel : results) {
             channelMngr.populateMoreImageUrl(channel);
+            channelMngr.populateCntEpisode(channel);
         }
         
         Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
