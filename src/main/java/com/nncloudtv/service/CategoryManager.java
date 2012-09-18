@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +13,7 @@ import com.nncloudtv.dao.CategoryDao;
 import com.nncloudtv.dao.TagDao;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.TagMap;
@@ -28,7 +30,6 @@ public class CategoryManager {
         category = dao.save(category);
         return category;
     }
-            
     
     public List<Category> findCategoriesByIdStr(String categoryIds) {
         List<Long> categoryIdList = new ArrayList<Long>();    
@@ -89,6 +90,29 @@ public class CategoryManager {
         }
         log.info("category matched channels:" + channels.size() + ";tag matched channels:" + matched.size());
         return matched;
+    }
+    
+    public Comparator<Category> getCategorySeqComparator() {
+        
+        class CategorySeqComparator implements Comparator<Category> {
+            public int compare(Category category1, Category category2) {
+                int seq1 = category1.getSeq();
+                if (category1.getLang() != null
+                        && category1.getLang().equalsIgnoreCase(
+                                LangTable.LANG_EN)) {
+                    seq1 -= 100;
+                }
+                int seq2 = category2.getSeq();
+                if (category2.getLang() != null
+                        && category2.getLang().equalsIgnoreCase(
+                                LangTable.LANG_EN)) {
+                    seq2 -= 100;
+                }
+                return (seq1 - seq2);
+            }
+        }
+        
+        return new CategorySeqComparator();
     }
     
     public List<Category> findPlayerCategories(String lang) {

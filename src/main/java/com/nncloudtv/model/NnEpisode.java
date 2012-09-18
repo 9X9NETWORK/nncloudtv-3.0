@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -40,7 +41,10 @@ public class NnEpisode implements Serializable {
     
     @Persistent
     private Date updateDate;
-
+    
+    @NotPersistent
+    private int seq;
+    
     public NnEpisode(long channelId, long programId) {
         this.channelId = channelId;
         Date now = new Date();
@@ -110,6 +114,16 @@ public class NnEpisode implements Serializable {
 
     public void setChannelId(long channelId) {
         this.channelId = channelId;
+    }
+
+    public int getSeq() {
+    
+        return seq;
+    }
+
+    public void setSeq(int seq) {
+    
+        this.seq = seq;
     }
     
 }

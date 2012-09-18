@@ -1,5 +1,7 @@
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -8,6 +10,9 @@ import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnEpisode;
+import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.service.NnEpisodeManager;
+import com.nncloudtv.service.NnProgramManager;
 
 public class NnEpisodeDao extends GenericDao<NnEpisode> {
     protected static final Logger log = Logger.getLogger(NnEpisodeDao.class.getName());
@@ -35,4 +40,25 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
         }
         return detached;
     }
+    
+    public List<NnEpisode> findByChannelId(long channelId) {
+    
+        List<NnEpisode> detached = new ArrayList<NnEpisode>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
+        try {
+            Query query = pm.newQuery(NnEpisode.class);
+            query.setFilter("channelId == channelIdParam");
+            query.declareParameters("long channelIdParam");
+            @SuppressWarnings("unchecked")
+            List<NnEpisode> episodes = (List<NnEpisode>)query.execute(channelId);
+            if (episodes.size() > 0) {
+                detached = (List<NnEpisode>) pm.detachCopyAll(episodes);
+            }
+        } finally {
+            pm.close();
+        }
+        return detached;
+    }
+    
 }

@@ -33,7 +33,6 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
-import com.nncloudtv.service.NnProgramSeqComparator;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.TitleCardManager;
 
@@ -512,7 +511,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         List<NnProgram> results = programMngr.findByChannel(channelId);
-        Collections.sort(results, new NnProgramSeqComparator());
+        Collections.sort(results, programMngr.getProgramSeqComparator());
         
         return results;
     }
@@ -555,24 +554,6 @@ public class ApiContent extends ApiGeneric {
     public @ResponseBody
     List<Category> categories(HttpServletRequest req, HttpServletResponse resp) {
         
-        class CategoryComparator implements Comparator<Category> {
-            public int compare(Category category1, Category category2) {
-                int seq1 = category1.getSeq();
-                if (category1.getLang() != null
-                        && category1.getLang().equalsIgnoreCase(
-                                LangTable.LANG_EN)) {
-                    seq1 -= 100;
-                }
-                int seq2 = category2.getSeq();
-                if (category2.getLang() != null
-                        && category2.getLang().equalsIgnoreCase(
-                                LangTable.LANG_EN)) {
-                    seq2 -= 100;
-                }
-                return (seq1 - seq2);
-            }
-        }
-        
         String lang = req.getParameter("lang");
         CategoryManager catMngr = new CategoryManager();
         List<Category> categories;
@@ -583,18 +564,17 @@ public class ApiContent extends ApiGeneric {
             categories = catMngr.findAll();
         }
         
-        Collections.sort(categories, new CategoryComparator());
+        Collections.sort(categories, catMngr.getCategorySeqComparator());
         
         return categories;
     }
     
-    @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.GET)
+    @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.GET)
     public @ResponseBody
-    List<NnProgram> episodePrograms(HttpServletResponse resp,
+    List<NnEpisode> episodePrograms(HttpServletResponse resp,
             HttpServletRequest req,
-            @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seqStr) {
-        
+            @PathVariable("channelId") String channelIdStr) {
+    
         Long channelId = null;
         try {
             channelId = Long.valueOf(channelIdStr);
@@ -604,29 +584,19 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
         NnChannelManager channelMngr = new NnChannelManager();
+        
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
             return null;
         }
         
-        Short seq = null;
-        try {
-            seq = Short.valueOf(seqStr);
-        } catch (NumberFormatException e) {
-        }
-        if (seq == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        NnProgramManager programMngr = new NnProgramManager();
-        List<NnProgram> results;
-        
-        results = programMngr.findByChannelIdAndSeq(channelId, seq);
-        
-        Collections.sort(results, new NnProgramSeqComparator());
+        List<NnEpisode> results = episodeMngr.findByChannelId(channelId);
+        Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
         
         return results;
     }
@@ -831,7 +801,7 @@ public class ApiContent extends ApiGeneric {
         return adMngr.save(nnad, episode);
     }
     
-    @RequestMapping(value = "programs/{episodeId}/shopping_info", method = RequestMethod.GET)
+    @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.GET)
     public @ResponseBody
     NnAd shoppingInfo(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable(value = "episodeId") String episodeIdStr) {
