@@ -1,5 +1,6 @@
 package com.nncloudtv.web.api;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -544,8 +545,8 @@ public class ApiContent extends ApiGeneric {
         }
         
         String result = category.getTag();
-        if (result == null) {
-            result = "";
+        if (result == null || result.length() == 0) {
+            return new String[0];
         }
         return result.split(",");
     }
