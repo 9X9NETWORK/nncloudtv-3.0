@@ -45,20 +45,24 @@ for line in feed:
   url2 = data[5]
   url3 = data[6]
   updateDate = data[9]
+  programCnt = data[10]
   print "username:" + username
   print "thumbnail:" + thumbnail
   print "url1" + url1
   print "url2" + url2
   print "url3" + url3
   print "updateDate:" + str(updateDate)
+  print "programCnt:" + programCnt
   #if (i > 0):
   #   break
   #imageUrl = url1 + "|" + url2 + "|" + url3
-  imageUrl = url1
-  if len(url2) > 0:
-     imageUrl = imageUrl + "|" + url2
-  if len(url3) > 0:
-     imageUrl = imageUrl + "|" + url3 
+  imageUrl = thumbnail + "|" + url1 + "|" + url2 + "|" + url3
+  #if len(url1) > 0:
+  #   imageUrl = imageUrl + "|" + url1
+  #if len(url2) > 0:
+  #   imageUrl = imageUrl + "|" + url2
+  #if len(url3) > 0:
+  #   imageUrl = imageUrl + "|" + url3 
   userCursor = dbuser.cursor()
   userCursor.execute("""                                                    
     select id 
@@ -70,10 +74,10 @@ for line in feed:
      epoch = time.mktime(time.gmtime()) 
      userCursor.execute("""
         insert into nncloudtv_nnuser1.nnuser
-          (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl)
+          (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl, programCnt)
         values
-          (%s, 1, %s, %s, %s, 1, 8, now(), now(), 0, false, %s)              
-        """, (userEmail, username, thumbnail, epoch, username))
+          (%s, 1, %s, %s, %s, 1, 8, now(), now(), 0, false, %s, programCnt)              
+        """, (userEmail, username, thumbnail, epoch, username, programCnt))
      dbuser.commit()
   userCursor.execute("""
     select id 

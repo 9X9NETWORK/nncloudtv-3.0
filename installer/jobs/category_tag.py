@@ -32,6 +32,7 @@ try:
     tagName = d[2]    
     if categoryId > baseCategoryId:
        fullTagName = fullTagName.rstrip(",")
+       fullTagName = fullTagName.lstrip(",")
        print "categoryId:" + str(baseCategoryId) + ";" + fullTagName
        cursor.execute ("""            
             update category set tag = %s where id = %s 
