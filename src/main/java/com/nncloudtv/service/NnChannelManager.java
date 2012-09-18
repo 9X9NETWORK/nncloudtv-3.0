@@ -419,14 +419,14 @@ public class NnChannelManager {
                 }
             }
             
-            if (categories != null) {
+            if (categories.size() > 0) {
                 return categories.get(0); // if sphere set but match fail, the newly updated category will return.
             } else {
                 return null;
             }
             
         } else {
-            if (categories != null) {
+            if (categories.size() > 0) {
                 return categories.get(0); // if sphere not set, the newly updated category will return.
             } else {
                 return null;
