@@ -658,4 +658,21 @@ public class NnChannelManager {
         return new ChannelUpdateDateComparator();
     }
     
+    public void populateMoreImageUrl(NnChannel channel) {
+    
+        NnProgramManager programMngr = new NnProgramManager();
+        
+        List<NnProgram> programs = programMngr.findByChannelId(channel.getId());
+        
+        List<String> imgs = new ArrayList<String>();
+        for (int i = 0; i < programs.size() && imgs.size() < 3; i++) {
+            String img = programs.get(i).getImageUrl();
+            if (img != null && img.length() > 0) {
+                imgs.add(img);
+            }
+        }
+        
+        channel.setMoreImageUrl(org.apache.commons.lang.StringUtils.join(imgs, "|"));
+    }
+    
 }

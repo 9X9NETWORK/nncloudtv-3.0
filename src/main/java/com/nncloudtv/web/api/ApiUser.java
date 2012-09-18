@@ -276,7 +276,7 @@ public class ApiUser extends ApiGeneric {
     List<NnChannel> userChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
     
-        List<NnChannel> result = new ArrayList<NnChannel>();
+        List<NnChannel> results = new ArrayList<NnChannel>();
         
         Long userId = null;
         try {
@@ -296,11 +296,15 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
-        result = channelMngr.findByUser(user, 0, false);
+        results = channelMngr.findByUser(user, 0, false);
         
-        Collections.sort(result, channelMngr.getChannelUpdateDateComparator());
+        for (NnChannel channel : results) {
+            channelMngr.populateMoreImageUrl(channel);
+        }
         
-        return result;
+        Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
+        
+        return results;
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)

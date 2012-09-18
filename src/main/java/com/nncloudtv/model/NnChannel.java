@@ -44,6 +44,9 @@ public class NnChannel implements Serializable {
     public static String IMAGE_FB_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif";
     public static String IMAGE_WATERMARK_URL= "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
     
+    @NotPersistent
+    private String moreImageUrl;
+    
     @Persistent
     private boolean isPublic;
 
@@ -479,6 +482,16 @@ public class NnChannel implements Serializable {
 
     public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getMoreImageUrl() {
+    
+        return moreImageUrl;
+    }
+
+    public void setMoreImageUrl(String moreImageUrl) {
+    
+        this.moreImageUrl = moreImageUrl;
     }
     
     /*

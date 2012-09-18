@@ -396,7 +396,7 @@ public class NnProgramManager {
         return program;
     }
 
-    public List<NnProgram> findByChannel(long channelId) {
+    public List<NnProgram> findByChannelId(long channelId) {
         return dao.findByChannelId(channelId);
     }
     
