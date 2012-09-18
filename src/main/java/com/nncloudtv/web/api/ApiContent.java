@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Category;
+import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnAd;
 import com.nncloudtv.model.NnChannel;
@@ -413,7 +414,6 @@ public class ApiContent extends ApiGeneric {
         
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
-        NnChannel originalChannel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
             return null;
@@ -445,31 +445,6 @@ public class ApiContent extends ApiGeneric {
             channel.setSphere(sphere);
         }
         
-        // categoryId, this should do after sphere setting done or it will cause logic error.
-        String categoryIdStr = req.getParameter("categoryId");
-        if (categoryIdStr != null) {
-
-            Long categoryId = null;
-            try {
-                categoryId = Long.valueOf(categoryIdStr);
-            } catch (NumberFormatException e) {
-            }
-            if (categoryId == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-
-            CategoryManager catMngr = new CategoryManager();
-            Category category = catMngr.findById(categoryId);
-            if (category == null) {
-                notFound(resp, "Category Not Found");
-                return null;
-            }
-            
-            channelMngr.saveChannelToCategoryWithSphereJudgement (channelId, channel.getSphere(),
-                    originalChannel.getSphere(), categoryId, originalChannel.getCategoryId());
-        }
-        
         // isPublic
         String isPublicStr = req.getParameter("isPublic");
         if (isPublicStr != null) {
@@ -481,6 +456,47 @@ public class ApiContent extends ApiGeneric {
         String tag = req.getParameter("tag");
         if (tag != null) {
             channel.setTag(tag);
+        }
+        
+        // categoryId
+        String categoryIdStr = req.getParameter("categoryId");
+        if (categoryIdStr != null) {
+            
+            Long categoryId = null;
+            try {
+                categoryId = Long.valueOf(categoryIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (categoryId == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            CategoryManager catMngr = new CategoryManager();
+            Category category = catMngr.findById(categoryId);
+            if (category == null) {
+                badRequest(resp, "Category Not Found");
+                return null;
+            }
+            
+            // category mapping
+            if (categoryId != channel.getCategoryId()) {
+                
+                List<Category> origCategories = catMngr.findByChannelId(channelId);
+                
+                for (Category cat : origCategories) {
+                    catMngr.delete(cat);
+                }
+                
+                catMngr.save(new CategoryMap(categoryId, channelId));
+                if (channel.getSphere() != null && channel.getSphere().equalsIgnoreCase(LangTable.OTHER)) {
+                    
+                    Category twin = catMngr.findTwin(category);
+                    if (twin != null) {
+                        catMngr.save(new CategoryMap(twin.getId(), channelId));
+                    }
+                }
+            }
         }
         
         return channelMngr.save(channel);

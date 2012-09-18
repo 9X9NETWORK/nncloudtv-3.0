@@ -165,6 +165,8 @@ public class NnStringUtil {
             return null;
         }
         
+        lang = lang.toLowerCase();
+        
         if (lang.equals(LangTable.LANG_ZH)) {
             return LangTable.LANG_ZH;
         } else if (lang.equals(LangTable.LANG_EN)) {

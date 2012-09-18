@@ -403,9 +403,9 @@ public class ApiUser extends ApiGeneric {
             }
             
             // category mapping
-            CategoryMap map = new CategoryMap(categoryId, channelId);
-            catMngr.save(map);
+            catMngr.save(new CategoryMap(categoryId, channelId));
             if (sphere != null && sphere.equalsIgnoreCase(LangTable.OTHER)) {
+                
                 Category twin = catMngr.findTwin(category);
                 if (twin != null) {
                     catMngr.save(new CategoryMap(twin.getId(), channelId));
