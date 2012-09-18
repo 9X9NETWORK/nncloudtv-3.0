@@ -544,7 +544,11 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        return category.getTag().split(",");
+        String result = category.getTag();
+        if (result == null) {
+            result = "";
+        }
+        return result.split(",");
     }
     
     @RequestMapping(value = "categories", method = RequestMethod.GET)
