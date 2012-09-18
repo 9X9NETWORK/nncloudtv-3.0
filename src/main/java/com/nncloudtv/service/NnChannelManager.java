@@ -383,69 +383,16 @@ public class NnChannelManager {
             return null;
         }
         
-        Category category = findCategoryByChannelId(id);
-        if (category != null) {
-            channel.setCategoryId(category.getId());
+        CategoryManager catMngr = new CategoryManager();
+        List<Category> categories = catMngr.findByChannelId(id);
+        
+        if (categories.size() > 0) {
+            channel.setCategoryId(categories.get(0).getId());
         }
         
         return channel;
     }
     
-    public Category findCategoryByChannelId(long channelId) {
-        
-        NnChannel channel = dao.findById(channelId);
-        if (channel == null) {
-            return null;
-        }
-        
-        List<Category> categories = findCategoriesByChannelId(channelId);
-        if (categories.size() == 0)
-        	return null;
-        
-        /*
-         * if duplicate in en or zh categories, the newly updated category will be return.
-         */
-        if (channel.getSphere() != null) {
-            if (channel.getSphere().equals(LangTable.OTHER)) {
-                for (int i = 0; i < categories.size(); i++) {
-                    if (categories.get(i).getLang().equals(LangTable.LANG_EN)) {
-                        return categories.get(i);
-                    }
-                }
-            } else {
-                for (int i = 0; i < categories.size(); i++) {
-                    if (channel.getSphere().equals(categories.get(i).getLang())) {
-                        return categories.get(i);
-                    }
-                }
-            }
-            
-            if (categories.size() > 0) {
-                return categories.get(0); // if sphere set but match fail, the newly updated category will return.
-            } else {
-                return null;
-            }
-            
-        } else {
-            if (categories.size() > 0) {
-                return categories.get(0); // if sphere not set, the newly updated category will return.
-            } else {
-                return null;
-            }
-        }
-        
-    }
-    
-    public List<Category> findCategoriesByChannelId(Long channelId) {
-        CategoryManager catMngr = new CategoryManager();
-        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
-        List<Category> categories = new ArrayList<Category>();
-        for (int i=0; i<categoryMaps.size(); i++) {
-            categories.add(catMngr.findById(categoryMaps.get(i).getCategoryId()));
-        }
-        return categories;
-    }
-
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        
         //find msoIpg
         MsoIpgManager msoIpgMngr = new MsoIpgManager();

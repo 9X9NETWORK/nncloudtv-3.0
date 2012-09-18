@@ -71,20 +71,25 @@ public class ApiGeneric {
 		
 	}
 	
+	public void internalError(HttpServletResponse resp) {
+	    internalError(resp, null);
+	}
+	
 	public void internalError(HttpServletResponse resp, Exception e) {
-		
-		NnLogUtil.logException(e);
 		
 		try {
 			resp.reset();
             resp.setContentType(PLAIN_TEXT_UTF8);
             resp.setHeader(TAGORE, MESSAGE);
 			PrintWriter writer = resp.getWriter();
-			writer.println(e.getMessage());
+			if (e != null) {
+                NnLogUtil.logException(e);
+	            writer.println(e.getMessage());
+			}
 			resp.setStatus(500);
 			resp.flushBuffer();
 		} catch (IOException ex) {
-			// nothing can do
+			NnLogUtil.logException(ex);
 		}
 	}
 }

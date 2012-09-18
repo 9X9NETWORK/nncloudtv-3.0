@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.CategoryDao;
+import com.nncloudtv.dao.CategoryMapDao;
 import com.nncloudtv.dao.TagDao;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
@@ -23,7 +25,15 @@ public class CategoryManager {
     
     protected static final Logger log = Logger.getLogger(CategoryManager.class.getName());
     private CategoryDao dao = new CategoryDao();
-        
+    private CategoryMapDao mapDao = new CategoryMapDao();
+    
+    public CategoryMap save(CategoryMap map) {
+        Date now = new Date();
+        map.setUpdateDate(now);
+        map = mapDao.save(map);
+        return map;
+    }
+    
     public Category save(Category category) {
         Date now = new Date();
         category.setUpdateDate(now);        
@@ -90,6 +100,23 @@ public class CategoryManager {
         }
         log.info("category matched channels:" + channels.size() + ";tag matched channels:" + matched.size());
         return matched;
+    }
+    
+    public List<Category> findByChannelId(long channelId) {
+        
+        List<CategoryMap> maps = mapDao.findByChannelId(channelId);
+        List<Category> categories = new ArrayList<Category>();
+        
+        for (CategoryMap map : maps) {
+            Category cat = dao.findById(map.getCategoryId());
+            if (cat != null) {
+                categories.add(cat);
+            }
+        }
+        
+        Collections.sort(categories, getCategorySeqComparator());
+        
+        return categories;
     }
     
     public Comparator<Category> getCategorySeqComparator() {
@@ -160,8 +187,29 @@ public class CategoryManager {
     public void delete(Category c) {
         dao.delete(c);
     }
-
+    
     public void saveAll(List<Category> categories) {
         dao.saveAll(categories);
-    }    
+    }
+    
+    /**
+     * for zh to find en, and for en to find zh
+     * 
+     * @param category
+     * @return
+     */
+    public Category findTwin(Category category) {
+    
+        if (category == null) {
+            return null;
+        }
+        
+        String lang = "en";
+        if (category.getLang() != null
+                && category.getLang().equalsIgnoreCase(LangTable.LANG_EN)) {
+            lang = "zh";
+        }
+        
+        return findByLangAndSeq(lang, category.getSeq());
+    }
 }
