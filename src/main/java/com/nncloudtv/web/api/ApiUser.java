@@ -71,6 +71,9 @@ public class ApiUser extends ApiGeneric {
         user.setName(NnStringUtil.revertHtml(user.getName()));
         user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
         
+        user.setSalt(null);
+        user.setCryptedPassword(null);
+        
         return user;
     }
     
@@ -200,16 +203,16 @@ public class ApiUser extends ApiGeneric {
             }
             
             results = libMngr.findByUserAndType(user, type, page, rows);
-            for (int i=0; i<results.size(); i++) {
-                results.get(i).setName(NnStringUtil.revertHtml(results.get(i).getName()));
+            for (NnUserLibrary result : results) {
+                result.setName(NnStringUtil.revertHtml(result.getName()));
             }
             
             return results;
             
         } else {
             results = libMngr.findByUserAndType(user, type);
-            for (int i=0; i<results.size(); i++) {
-                results.get(i).setName(NnStringUtil.revertHtml(results.get(i).getName()));
+            for (NnUserLibrary result : results) {
+                result.setName(NnStringUtil.revertHtml(result.getName()));
             }
             
             return results;
@@ -319,9 +322,9 @@ public class ApiUser extends ApiGeneric {
         
         Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
         
-        for (int i=0; i<results.size(); i++) {
-            results.get(i).setName(NnStringUtil.revertHtml(results.get(i).getName()));
-            results.get(i).setIntro(NnStringUtil.revertHtml(results.get(i).getIntro()));
+        for (NnChannel result : results) {
+            result.setName(NnStringUtil.revertHtml(result.getName()));
+            result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
         }
         
         return results;
