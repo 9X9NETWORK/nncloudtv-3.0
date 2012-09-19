@@ -221,7 +221,7 @@ public class AdminChannelController {
                 cell.add(channel.getPiwik());
                 cell.add(channel.getImageUrl());
                 cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(channel.getUpdateDate()));
-                cell.add(channel.getProgramCnt());
+                cell.add(channel.getCntEpisode());
                 cell.add(subMngr.findTotalCountByChannel(channel.getId()));
                 map.put("id", channel.getId());
                 map.put("cell", cell);
@@ -286,7 +286,7 @@ public class AdminChannelController {
         }
         if (programCnt != null) {
             logger.info("programCnt = " + programCnt);
-            channel.setProgramCnt(programCnt);
+            channel.setCntEpisode(programCnt);
         }        
         channelMngr.save(channel);
                 
