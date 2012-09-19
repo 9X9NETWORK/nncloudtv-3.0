@@ -457,6 +457,12 @@ public class ApiContent extends ApiGeneric {
             channel.setTag(tag);
         }
         
+        // imageUrl
+        String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl != null) {
+            channel.setImageUrl(imageUrl);
+        }
+        
         // categoryId
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
