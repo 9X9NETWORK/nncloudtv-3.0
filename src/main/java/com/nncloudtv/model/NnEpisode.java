@@ -35,14 +35,13 @@ public class NnEpisode implements Serializable {
 
     @Persistent
     private long adId;   
+
+    @Persistent
+    private boolean isPublic; 
     
     @Persistent
     private Date publishDate;
-    
-    // Hi Yiwen, please help make it persistent
-    @NotPersistent
-    private boolean isPublic;
-    
+        
     @Persistent
     private Date updateDate;
     
@@ -120,24 +119,20 @@ public class NnEpisode implements Serializable {
         this.channelId = channelId;
     }
 
-    public int getSeq() {
-    
-        return seq;
-    }
+	public boolean isPublic() {
+		return isPublic;
+	}
 
-    public void setSeq(int seq) {
-    
-        this.seq = seq;
-    }
+	public void setPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
 
-    public boolean isPublic() {
-    
-        return isPublic;
-    }
+	public int getSeq() {
+		return seq;
+	}
 
-    public void setPublic(boolean isPublic) {
-    
-        this.isPublic = isPublic;
-    }
-    
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+     
 }
