@@ -3,8 +3,11 @@ package com.nncloudtv.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -106,21 +109,53 @@ public class NnChannelManager {
         return channel;
     }
 
-    //TODO remove unwanted text from tag
-    public void processTag(NnChannel c) {
-        String tag = c.getTag();
-        String[] multiples = tag.split(",");
+    //process tag text enter by users
+    //TODO or move to TagManager
+    public String processTagText(String channelTag) {
+    	String result = "";
+    	String[] multiples = channelTag.split(",");
+    	for (String m : multiples) {
+    		String tag = TagManager.getValidTag(m);
+    		if (tag != null && tag.length() > 0 && tag.length() < 20)
+    			result += "," + tag;
+    	}
+    	result = result.replaceFirst(",", "");
+    	if (result.length() == 0)
+    		return null;
+    	return result;
+    }
+    
+    //IMPORTANT: use processTagText first 
+    public void processChannelTag(NnChannel c) {
         TagManager tagMngr = new TagManager();
+    	List<Tag> originalTags = tagMngr.findByChannel(c.getId());
+    	Map<Long, String> map = new HashMap<Long, String>();
+    	for (Tag t : originalTags) {
+    		map.put(t.getId(), t.getName());
+    	}
+        String tag = c.getTag();
+        if (tag == null)
+        	return;
+        String[] multiples = tag.split(",");
         for (String m : multiples) {
             m = m.trim();            
             Tag t = tagMngr.findByName(m);
             if (t == null) {
                 t = new Tag(m);
                 tagMngr.save(t);
+            } else {
+            	map.remove(t.getId());
             }
             TagMap tm = tagMngr.findByTagAndChannel(t.getId(), c.getId());
             if (tm == null)
-                tagMngr.createTagMap(t.getId(), c.getId());
+                tagMngr.createTagMap(t.getId(), c.getId()); 
+        }
+        
+        Iterator<Entry<Long, String>> it = map.entrySet().iterator();      
+        while (it.hasNext()) {
+            Map.Entry<Long, String> pairs = (Map.Entry<Long, String>)it.next();
+            log.info("remove tag_map: key:" + pairs.getKey());
+            tagMngr.deleteChannel(pairs.getKey(), c.getId());
         }
     }
     
@@ -136,6 +171,22 @@ public class NnChannelManager {
         }
     }
     
+    //create an empty favorite channel
+    public NnChannel createFavorite(NnUser user) {
+    	log.info("create empty favorite channel for whom want to subscribe an empty channel");
+    	NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
+        if (favoriteCh == null) {
+            favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
+            favoriteCh.setUserIdStr(user.getIdStr());
+            favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
+            favoriteCh.setSphere(user.getSphere());
+            
+            dao.save(favoriteCh);
+        }
+        return favoriteCh;
+    }
+    
+    //save favorite channel along with the program
     public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl) {
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
@@ -217,6 +268,10 @@ public class NnChannelManager {
             channel.setName(channel.getName().replaceAll("\n", ""));
             channel.setName(channel.getName().replaceAll("\t", " "));
         }
+        //TODO will be inconsistent with those stored in tag table
+        if (channel.getTag() != null) {
+        	channel.setTag(this.processTagText(channel.getTag()));
+        }
         channel = dao.save(channel);
         
         NnChannel[] channels = {original, channel};
@@ -225,12 +280,11 @@ public class NnChannelManager {
         } else {
             this.processChannelRelatedCounter(channels);
         }
-        this.processTag(channel);
+        this.processChannelTag(channel);
         return channel;
     }
     
-    public void saveChannelToCategory (long channelId, long categoryId, long oldCategoryId) {
-        
+    public void saveChannelToCategory (long channelId, long categoryId, long oldCategoryId) {        
         List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
         if (oldCategoryId == 0) { // newly created
             int i;
@@ -364,7 +418,7 @@ public class NnChannelManager {
     public boolean isCounterQualified(NnChannel channel) {
         boolean qualified = false;
         if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
-            channel.getProgramCnt() > 0 &&
+            channel.getCntEpisode() > 0 &&
             channel.isPublic()) {
             qualified = true;
         }
@@ -376,8 +430,7 @@ public class NnChannelManager {
         return dao.findBySourceUrl(url);
     }
     
-    public NnChannel findById(long id) {
-        
+    public NnChannel findById(long id) {        
         NnChannel channel = dao.findById(id);
         if (channel == null) {
             return null;
@@ -393,6 +446,16 @@ public class NnChannelManager {
         return channel;
     }
     
+    public List<Category> findCategoriesByChannelId(Long channelId) {
+        CategoryManager catMngr = new CategoryManager();
+        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
+        List<Category> categories = new ArrayList<Category>();
+        for (int i=0; i<categoryMaps.size(); i++) {
+            categories.add(catMngr.findById(categoryMaps.get(i).getCategoryId()));
+        }
+        return categories;
+    }
+
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        
         //find msoIpg
         MsoIpgManager msoIpgMngr = new MsoIpgManager();
@@ -542,6 +605,28 @@ public class NnChannelManager {
         }
         return channels;
     }
+
+    //used only in player for specific occasion
+    public List<NnChannel> findByUserAndHisFavorite(NnUser user) {
+        String userIdStr = user.getShard() + "-" + user.getId();
+        List<NnChannel> channels = dao.findByUser(userIdStr, 0, true);
+        boolean needToFake = true;
+        for (NnChannel c : channels) {
+        	if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE)
+        		needToFake = false;
+        }
+        if (needToFake) {
+        	log.info("---- need to fake-----");
+        	String name = user.getName() + "'s favorite";
+        	NnChannel c = new NnChannel(name, "", "");
+        	c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
+        	c.setUserIdStr(user.getIdStr());
+        	c.setStatus(NnChannel.STATUS_SUCCESS);
+        	c.setPublic(true);
+        	channels.add(c);
+        }
+        return channels;
+    }
     
     public static short getDefaultSorting(NnChannel c) {
         short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
@@ -576,7 +661,17 @@ public class NnChannelManager {
             userImageUrl = u.getImageUrl();
             curatorProfile = u.getProfileUrl();
         }            
-       
+        if (c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL && 
+            c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+        	List<NnProgram> programs = new NnProgramManager().findByChannel(c.getId());
+        	for (int i=0; i<3; i++) {
+        		if (i < programs.size())
+        			imageUrl += "|" + programs.get(i).getImageUrl();
+        		else
+        			i=4;
+        	}
+        }
+
         String subscriberProfile = "";
         String subscriberImage = "";
         String subscribersIdStr = c.getSubscribersIdStr();
@@ -597,12 +692,16 @@ public class NnChannelManager {
             }
         }
         
-        String[] ori = {Integer.toString(c.getSeq()), 
+        String id = Integer.toString(c.getSeq());
+        if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
+        	id = "f" + "-" + curatorProfile;
+        }
+        String[] ori = {id, 
                         String.valueOf(c.getId()),
                         c.getName(),
                         c.getIntro(),
                         imageUrl, //c.getPlayerPrefImageUrl(),                        
-                        String.valueOf(c.getProgramCnt()),
+                        String.valueOf(c.getCntEpisode()),
                         String.valueOf(c.getType()),
                         String.valueOf(c.getStatus()),
                         String.valueOf(c.getContentType()),
@@ -662,7 +761,7 @@ public class NnChannelManager {
     
         NnProgramManager programMngr = new NnProgramManager();
         
-        List<NnProgram> programs = programMngr.findByChannelId(channel.getId());
+        List<NnProgram> programs = programMngr.findByChannel(channel.getId());
         
         List<String> imgs = new ArrayList<String>();
         for (int i = 0; i < programs.size() && imgs.size() < 3; i++) {
@@ -670,9 +769,7 @@ public class NnChannelManager {
             if (img != null && img.length() > 0) {
                 imgs.add(img);
             }
-        }
-        
-        channel.setMoreImageUrl(org.apache.commons.lang.StringUtils.join(imgs, "|"));
+        }                
     }
     
 }
