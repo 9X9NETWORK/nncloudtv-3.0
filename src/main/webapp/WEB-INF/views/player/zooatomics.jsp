@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock15"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock17"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -137,6 +137,7 @@ soundManager.onready(function()
 <!-- Header Begin -->
 <div id="header">
   <p id="logo"></p>
+  <span id="secret-message" style="left: 10%; position: absolute"></span>
   <ul id="nav">
     <li id="home"><span>Home</span></li>
     <li id="guide"><span>Guide</span></li>
@@ -263,6 +264,7 @@ soundManager.onready(function()
       <ul id="pl-menu"><li id="trending" title="Trending"></li><li id="recommendation" title="Recommended"></li><li id="myfollow1" title="Featured"></li><li id="myfollow2" title="Your Subscriptions"></li></ul>
       <p id="pl-type">Trending Stories</p>
       <p id="pl-note">(Sorted by updated time)</p>
+      <div id="popmessage-player-list" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">Added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>
     </div>
     <div id="pl-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
     <div id="pl-constrain">
@@ -273,17 +275,11 @@ soundManager.onready(function()
     
   <div id="player-holder">
     <div id="player-ch-info" style="display: none">
-      <div id="popmessage-player-info">
-        <p class="popmessage-left"></p>
-        <p class="popmessage-middle"></p>
-        <p class="popmessage-right"></p>
-      </div>
       <p id="ch-title"></p>
       <p id="ep-title"></p>
       <p id="btn-follow"><span>Follow this Channel</span></p>
-      <div class="fb-like">
-	  	<div id="fb-root"></div>
-		<div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
+      <div id="fb-like-container" style="display: none">
+        <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href=""></div>
       </div>
       <ul class="favorite">
         <li class="favorite-head"></li>
@@ -293,6 +289,7 @@ soundManager.onready(function()
         <li class="favorite-bubble-center"><span>172K</span></li>
         <li class="favorite-bubble-right"></li>
       </ul>
+      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">This channel has been added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>"
     </div>
     <p id="video-placeholder"></p>
     <div id="player-ep-bar">
@@ -509,10 +506,9 @@ soundManager.onready(function()
  <div id="browse-sort">
       <ul id="sort-list">
         <li class="head">Sorted by</li>
-        <li class="on">Add Time</li>
-        <li>Update Time</li>
-        <li>Most Viewed Today</li>
-        <li>Most Subscribed Today</li>
+        <li id="sort-by-update" class="on">Update Time</li>
+        <li id="sort-by-sub">Most Subscribed</li>
+        <li id="sort-by-alpha">Alphabetical</li>
       </ul>
       <div id="tag-area">
         <p id="tag-head">The most popular tags:</p>
@@ -563,7 +559,7 @@ soundManager.onready(function()
   
   <div id="guide-holder">
       <div class="col">
-        <div class="group-input on">
+        <div class="group-input">
           <p><img src="${nroot}/images/bg_group_name.png" class="bg-group-input"><span class="group-name"></span></p>
           <input type="text" class="group-field">
         </div>
@@ -571,7 +567,7 @@ soundManager.onready(function()
         </ul>
       </div>
       <div class="col">
-        <div class="group-input on">
+        <div class="group-input">
           <p><img src="${nroot}/images/bg_group_name.png" class="bg-group-input"><span class="group-name"></span></p>
           <input type="text" class="group-field">
         </div>
@@ -579,7 +575,7 @@ soundManager.onready(function()
         <ul>
       </div>
       <div class="col">
-        <div class="group-input on">
+        <div class="group-input">
           <p><img src="${nroot}/images/bg_group_name.png" class="bg-group-input"><span class="group-name"></span></p>
           <input type="text" class="group-field">
         </div>
@@ -626,24 +622,78 @@ soundManager.onready(function()
         <ul id="col-8-list">
         </ul>
       </div>
-      
-      <div id="guide-trending">
-        <h3><span>Trending Stories (</span><span id="trading-chNum">9</span><span>)</span></h3>
-        <p id="trending-up"></p>
-        <p id="trending-down"></p>
-        <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
-        <ul id="gt-list">
-        </ul>    
-      </div>
-      
-      <div id="guide-maylike"> 
-        <h3><span>You May Like (</span><span id="recommend-chNum">9</span><span>)</span></h3>
-        <p id="maylike-up"></p>
-        <p id="maylike-down"></p>
-        <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
-        <ul id="gr-list">
+
+      <div id="guide-bubble-l">
+        <img src="${nroot}/images/bg_guide_bubble_l.png" class="min-bg">
+        <ul id="bubble-list">
+        <li class="on" id="bubble-normal">
+          <h3><span></span></h3>
+          <img src="" class="thumbnail1">
+          <img src="" class="thumbnail2">
+          <img src="" class="thumbnail3">
+          <span id="ch-meta">
+              <p><span>10 Episodes</span></p>
+              <p><span>2 day ago</span></p>
+              <p><span>by</span><span class="name">Vialo</span></p>
+           </span>
+          <p id="ch-brief" class="ellipsis multiline"><span>It is involved in range of activities to promot travel to Japan by the activities oversea as well as these tourists to promot their best activities.</span></p>
+        </li>
+        <li class="default" id="bubble-default">
+          <h3><span></span></h3>
+          <div class="default-thumbnail1">
+            	<div class="default-no">No Episodes</div>
+                <img src="${nroot}/images/guide_ep_default1.png" class="thumbnail1">
+          </div>
+          <img src="${nroot}/images/guide_ep_default2.png" class="thumbnail2">
+          <img src="${nroot}/images/guide_ep_default2.png" class="thumbnail3">
+          <span id="ch-meta">
+              <p><span>0 Episodes</span></p>
+              <p><span></span></p>
+              <p><span>by</span><span class="name">Vialo</span></p>
+           </span>
+          <p id="ch-brief" class="ellipsis multiline"><span>It is involved in range of activities to promot travel to Japan by the activities oversea as well as these tourists to promot their best activities.</span></p>
+	</li>
         </ul>
-    </div>
+      </div>
+      <div id="guide-tm">
+        <div id="guide-trending">
+          <h3><span>Trending Stories (</span><span id="trading-chNum">9</span><span>)</span></h3>
+          <div id="trending-arrows">
+            <!--div id="trending-arrows-down" style="display: none">
+              <p id="trending-down"></p>
+            </div-->
+            <div id="trending-arrows-ud" style="display: block">
+              <p id="trending-up"></p>
+              <p id="trending-down"></p>
+            </div>
+            <!--div id="trending-arrows-up" style="display: none">
+              <p id="trending-up"></p>
+            </div-->
+          </div>
+
+          <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
+          <ul id="gt-list">
+          </ul>    
+        </div>
+        <div id="guide-maylike"> 
+          <h3><span>You May Like (</span><span id="recommend-chNum">9</span><span>)</span></h3>
+          <div id="maylike-arrows">
+            <!--div id="maylike-arrows-down" style="display: none">
+              <p id="maylike-down"></p>
+            </div-->
+            <div id="maylike-arrows-ud" style="display: block">
+              <p id="maylike-up"></p>
+              <p id="maylike-down"></p>
+            </div>
+            <!--div id="maylike-arrows-up" style="display: none">
+              <p id="maylike-up"></p>
+            </div-->
+          </div>
+          <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
+          <ul id="gr-list">
+          </ul>
+        </div>
+     </div>
   </div>
 </div>
 <!-- Guide Layer End -->
