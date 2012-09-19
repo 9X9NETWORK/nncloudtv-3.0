@@ -393,6 +393,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        channel.setName(NnStringUtil.revertHtml(channel.getName()));
+        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        
         return channel;
     }
     
@@ -732,6 +735,10 @@ public class ApiContent extends ApiGeneric {
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> results = titleCardMngr.findByProgramId(programId);
         
+        for (int i=0; i<results.size(); i++) {
+            results.get(i).setMessage(NnStringUtil.revertHtml(results.get(i).getMessage()));
+        }
+        
         return results;
     }
     
@@ -759,6 +766,10 @@ public class ApiContent extends ApiGeneric {
         
         for (NnProgram program : programs) {
             results.addAll(titleCardMngr.findByProgramId(program.getId()));
+        }
+        
+        for (int i=0; i<results.size(); i++) {
+            results.get(i).setMessage(NnStringUtil.revertHtml(results.get(i).getMessage()));
         }
         
         return results;
@@ -877,7 +888,10 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        return adMngr.findByEpisode(episode);
+        NnAd nnad = adMngr.findByEpisode(episode);
+        nnad.setMessage(NnStringUtil.revertHtml(nnad.getMessage()));
+        
+        return nnad;
     }
     
     // TODO: refine
@@ -1047,6 +1061,8 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, "Item Not Found");
             return null;
         }
+        
+        lib.setName(NnStringUtil.revertHtml(lib.getName()));
         
         return lib;
     }

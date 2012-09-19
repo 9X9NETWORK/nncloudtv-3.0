@@ -68,6 +68,9 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        user.setName(NnStringUtil.revertHtml(user.getName()));
+        user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
+        
         return user;
     }
     
@@ -139,6 +142,8 @@ public class ApiUser extends ApiGeneric {
     List<NnUserLibrary> userUploads(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("userId") String userIdStr,
             @PathVariable("repo") String repo) {
+        
+        List<NnUserLibrary> results;
 
         Long userId = null;
         try {
@@ -194,10 +199,20 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
-            return libMngr.findByUserAndType(user, type, page, rows);
+            results = libMngr.findByUserAndType(user, type, page, rows);
+            for (int i=0; i<results.size(); i++) {
+                results.get(i).setName(NnStringUtil.revertHtml(results.get(i).getName()));
+            }
+            
+            return results;
             
         } else {
-            return libMngr.findByUserAndType(user, type);
+            results = libMngr.findByUserAndType(user, type);
+            for (int i=0; i<results.size(); i++) {
+                results.get(i).setName(NnStringUtil.revertHtml(results.get(i).getName()));
+            }
+            
+            return results;
         }      
     }
     
@@ -303,6 +318,11 @@ public class ApiUser extends ApiGeneric {
         }
         
         Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
+        
+        for (int i=0; i<results.size(); i++) {
+            results.get(i).setName(NnStringUtil.revertHtml(results.get(i).getName()));
+            results.get(i).setIntro(NnStringUtil.revertHtml(results.get(i).getIntro()));
+        }
         
         return results;
     }
