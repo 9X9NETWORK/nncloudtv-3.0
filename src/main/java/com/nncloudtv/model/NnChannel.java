@@ -43,10 +43,8 @@ public class NnChannel implements Serializable {
     public static String IMAGE_ERROR_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/error.png";
     public static String IMAGE_FB_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif";
     public static String IMAGE_WATERMARK_URL= "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
-    
-    @NotPersistent
-    private String moreImageUrl;
-    
+    public static String IMAGE_DEFAULT_URL= "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
+        
     @Persistent
     private boolean isPublic;
 
@@ -64,7 +62,7 @@ public class NnChannel implements Serializable {
     private String sphere; //used with LangTable
     
     @Persistent
-    private int programCnt;
+    private int cntEpisode; //episode count
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=500)
@@ -90,6 +88,7 @@ public class NnChannel implements Serializable {
     public static final short CONTENTTYPE_MAPLE_SOAP = 9;
     public static final short CONTENTTYPE_YOUTUBE_SPECIAL_SORTING = 10;
     public static final short CONTENTTYPE_FAVORITE = 11;
+    public static final short CONTENTTYPE_FAKE_FAVORITE = 12;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -236,7 +235,10 @@ public class NnChannel implements Serializable {
              getStatus() != NnChannel.STATUS_SUCCESS && 
              getStatus() != NnChannel.STATUS_PROCESSING)) {    
             imageUrl = IMAGE_ERROR_URL;
-        } 
+        } else if (getImageUrl() == null) {
+            imageUrl = NnChannel.IMAGE_DEFAULT_URL; 
+        }        
+            
         return imageUrl;
     }
     
@@ -270,14 +272,6 @@ public class NnChannel implements Serializable {
 
     public void setType(short type) {
         this.type = type;
-    }
-
-    public int getProgramCnt() {
-        return programCnt;
-    }
-
-    public void setProgramCnt(int cnt) {
-        this.programCnt = cnt;
     }
     
     public int getStatus() {
@@ -483,38 +477,13 @@ public class NnChannel implements Serializable {
     public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
     }
-
-    public String getMoreImageUrl() {
     
-        return moreImageUrl;
+    public int getCntEpisode() {
+       return cntEpisode;
+    }
+    
+    public void setCntEpisode(int cntEpisode) {
+        this.cntEpisode = cntEpisode;
     }
 
-    public void setMoreImageUrl(String moreImageUrl) {
-    
-        this.moreImageUrl = moreImageUrl;
-    }
-    
-    /*
-    public String getUserImageUrl() {
-        if (userInfo != null) {            
-            String[] info = userInfo.split("\\|");
-            if (userInfo.length() > 1) {
-                String userImageUrl = info[1];
-                return userImageUrl;
-            }
-        }
-        return NnUser.IMAGE_URL_DEFAULT; 
-    }
-    
-    public String getUserName() {        
-        if (userInfo != null) {            
-            String[] info = userInfo.split("\\|");
-            if (userInfo.length() > 0) {
-                String userName = info[0];
-                return userName;
-            }
-        }
-        return null;
-    }
-    */
 }
