@@ -421,10 +421,17 @@ public class PlayerApiService {
         NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
         //verify channel and grid
         if (channelId == null)
-            return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
-            
+            return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);        
+        if (channelId.contains("f-")) {
+        	String profileUrl = channelId.replaceFirst("f-", "");
+        	NnUser curator = userMngr.findByProfileUrl(profileUrl);
+        	if (curator == null)
+        		return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
+        	NnChannel favoriteCh = chMngr.createFavorite(curator);
+        	channelId = String.valueOf(favoriteCh.getId());
+        }
         long cId = Long.parseLong(channelId);            
-        NnChannel channel = new NnChannelManager().findById(cId);            
+        NnChannel channel = chMngr.findById(cId);            
         if (channel == null || channel.getStatus() == NnChannel.STATUS_ERROR)
             return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
         
@@ -432,13 +439,14 @@ public class PlayerApiService {
         NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
         if (s != null)
             return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_POS_OCCUPIED, null);        
-        boolean status = subMngr.subscribeChannel(user, cId, seq, MsoIpg.TYPE_GENERAL);
-        if (!status) {
-            //the general status shows error even there's only one error
-            return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);
-        }                
+        s = subMngr.findByUserAndChannel(user, cId);        
+        if (s != null)
+            return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);        
+        s = subMngr.subscribeChannel(user, cId, seq, MsoIpg.TYPE_GENERAL);
+        String result[] = {""};
+        result[0] = s.getSeq() + "\t" + s.getChannelId();
         
-        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
     public String categoryInfo(String id, String tagStr, String sort) {
@@ -516,7 +524,7 @@ public class PlayerApiService {
                                 boolean setInfo, 
                                 boolean isRequired) { 
                                                                
-        //verify input                        
+        //verify input
         if (((userToken == null && userInfo == true) || 
             (userToken == null && channelIds == null) || 
             (userToken == null && setInfo == true))) {
@@ -586,10 +594,11 @@ public class PlayerApiService {
         } else if (curatorIdStr != null) {
             channelPos = false;
             log.info("find channels curator created");
-            NnUser curator = userMngr.findByIdStr(curatorIdStr);
+            NnUser curator = userMngr.findByProfileUrl(curatorIdStr);
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-            List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, true);  
+            //List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, true);
+            List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator);
             for (NnChannel c : curatorChannels) {
                 if (c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS) {
                     channels.add(c);
@@ -686,9 +695,9 @@ public class PlayerApiService {
         
         //subscribe
         NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-        boolean success = subMngr.subscribeChannel(user, channel.getId(), Short.parseShort(grid), MsoIpg.TYPE_GENERAL);
+        NnUserSubscribe s = subMngr.subscribeChannel(user, channel.getId(), Short.parseShort(grid), MsoIpg.TYPE_GENERAL);
         String result[] = {""};
-        if (!success) {
+        if (s != null) {
             return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);
         } else {
             String channelName = "";
@@ -749,7 +758,7 @@ public class PlayerApiService {
         if (c == null)
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         if (property.equals("count")) {
-            c.setProgramCnt(Integer.valueOf(value));
+            c.setCntEpisode(Integer.valueOf(value));
         } else if (property.equals("updateDate")) {
             long epoch = Long.parseLong(value);
             Date date = new Date (epoch*1000);
@@ -1090,8 +1099,20 @@ public class PlayerApiService {
         NnUserReportManager reportMngr = new NnUserReportManager();
         String[] result = {""};
         NnUserReport report = reportMngr.save(user, device, session, comment);
-        if (report != null)
+        if (report != null) {
             result[0] = PlayerApiService.assembleKeyValue("id", String.valueOf(report.getId()));
+            EmailService service = new EmailService();
+            String toEmail = "feedback@9x9.tv";
+            String toName = "feedback";
+            String subject = "User send a report";
+            String content = "user ui-lang:" + user.getLang() + "\n";
+            content += "user region:" + user.getSphere() + "\n";
+            content += "user report:" + comment;
+            NnEmail mail = new NnEmail(toEmail, toName,user.getName(), user.getEmail(), user.getEmail(), subject, content);
+            
+            service.sendEmail(mail);
+            
+        }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
@@ -1421,8 +1442,8 @@ public class PlayerApiService {
                 userShard = u.getShard();
                 userId = u.getId();
                 sphere = u.getSphere();
-            }            
-        }        
+            }
+        }
         List<NnChannel> channels = chMngr.searchBySvi(text, userShard, userId, sphere);
         String[] result = {"", "", "", ""}; //count, curator along with channels, channel, suggestion channel
         result[2] = chMngr.composeChannelLineup(channels);
