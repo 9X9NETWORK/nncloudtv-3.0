@@ -242,7 +242,7 @@ public class NnProgramManager {
     public List<NnProgram> findRealPrograms(String storageId) {
         List<NnProgram> programs = new ArrayList<NnProgram>();
         programs = dao.findProgramsByEpisode(Long.parseLong(storageId));
-        System.out.println("--------find real programs--------" + programs.size());        
+        log.info("find reference's real programs size:" + programs.size());        
         return programs;        
     }
     
