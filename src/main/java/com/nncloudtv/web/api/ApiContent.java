@@ -760,6 +760,149 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.DELETE)
+    public @ResponseBody
+    String episodeDelete(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+    
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            
+            return "Episode Not Found";
+        }
+        
+        // delete shopping_info
+        NnAdManager adMngr = new NnAdManager();
+        NnAd nnAd = adMngr.findByEpisode(episode);
+        if(nnAd != null) {
+            adMngr.delete(nnAd);
+        }
+        
+        // delete programs
+        NnProgramManager programMngr = new NnProgramManager();
+        List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
+        if (programs.size() > 0) {
+            
+            programMngr.delete(programs);
+            
+        }
+        
+        // delete episode
+        episodeMngr.delete(episode);
+        
+        return "OK";
+    }
+    
+    @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.GET)
+    public @ResponseBody NnEpisode episode(HttpServletRequest req, HttpServletResponse resp, @PathVariable("episodeId") String episodeIdStr) {
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        return episode;
+    }
+    
+    @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.PUT)
+    public @ResponseBody
+    NnEpisode episodeUpdate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null) {
+            episode.setName(NnStringUtil.htmlSafeAndTruncated(name));
+        }
+        
+        // intro
+        String intro = req.getParameter("intro");
+        if (intro != null) {
+            episode.setIntro(NnStringUtil.htmlSafeAndTruncated(intro));
+        }
+        
+        // imageUrl
+        String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl != null) {
+            episode.setImageUrl(imageUrl);
+        }
+        
+        // publishDate
+        String publishDateStr = req.getParameter("publishDate");
+        if (publishDateStr != null) {
+            
+            Long publishDateLong = null;
+            try {
+                publishDateLong = Long.valueOf(publishDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (publishDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            Date publishDate = new Date(publishDateLong);
+            episode.setPublishDate(publishDate);
+        }
+        
+        // isPublic
+        String isPublicStr = req.getParameter("isPublic");
+        if (isPublicStr != null) {
+            Boolean isPublic = Boolean.valueOf(isPublicStr);
+            if (isPublic != null) {
+                episode.setPublic(isPublic);
+            }
+        }
+        
+        // TODO: re-run ?
+        
+        return episodeMngr.save(episode);
+    }
+    
     @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.POST)
     public @ResponseBody NnEpisode episodeCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("channelId") String channelIdStr) {
         
@@ -772,7 +915,9 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
         NnChannelManager channelMngr = new NnChannelManager();
+        
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
@@ -809,7 +954,7 @@ public class ApiContent extends ApiGeneric {
             
             Long publishDateLong = null;
             try {
-                publishDateLong = Long.valueOf(channelIdStr);
+                publishDateLong = Long.valueOf(publishDateStr);
             } catch (NumberFormatException e) {
             }
             if (publishDateLong == null) {

@@ -109,7 +109,7 @@ public class NnEpisodeManager {
         NnProgramManager programMngr = new NnProgramManager();
         List<NnEpisode> episodes = findByChannelIdSorted(channelId);
         
-        // remove empty episode
+        // remove empty episode which is not be sorted
         for (NnEpisode episode : episodes) {
             
             if (episode.getSeq() == 0 && getProgramCnt(episode) == 0) {
@@ -128,5 +128,10 @@ public class NnEpisodeManager {
             programMngr.save(programs);
         }
         
+    }
+    
+    public void delete(NnEpisode episode) {
+    
+        dao.delete(episode);
     }
 }

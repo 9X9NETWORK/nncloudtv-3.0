@@ -111,10 +111,27 @@ public class NnProgramManager {
         this.processCache(program.getChannelId());
         return program;
     }
-
+    
     public void delete(NnProgram program) {
         dao.delete(program);        
         this.processCache(program.getChannelId());        
+    }
+    
+    public void delete(List<NnProgram> programs) {
+    
+        long channelId = 0;
+        
+        for (NnProgram program : programs) {
+            
+            long tempChannelId = program.getChannelId();
+            
+            delete(program);
+            
+            if (channelId != tempChannelId) {
+                channelId = tempChannelId;
+                processCache(channelId);
+            }
+        }
     }
     
     public NnProgram findByChannelAndStorageId(long channelId, String storageId) {
