@@ -384,6 +384,9 @@ public class ApiContent extends ApiGeneric {
         intro = NnStringUtil.htmlSafeAndTruncated(intro);
         
         String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl == null) {
+            imageUrl = NnChannel.IMAGE_WATERMARK_URL;
+        }
         
         NnProgram program = new NnProgram(episode.getChannelId(), episodeId, name, intro, imageUrl);
         
@@ -941,6 +944,9 @@ public class ApiContent extends ApiGeneric {
         
         // imageUrl
         String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl == null) {
+            imageUrl = NnChannel.IMAGE_WATERMARK_URL;
+        }
         
         NnEpisode episode = new NnEpisode(channelId);
         episode.setName(name);

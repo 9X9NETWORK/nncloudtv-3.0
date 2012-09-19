@@ -278,7 +278,6 @@ public class ApiUser extends ApiGeneric {
         lib.setFileUrl(url);
         lib.setUserIdStr(user.getIdStr());
         if (imageUrl != null) {
-            // TODO: check for imageUrl
             lib.setImageUrl(imageUrl);
         } else {
             lib.setImageUrl(NnChannel.IMAGE_WATERMARK_URL);
@@ -331,7 +330,7 @@ public class ApiUser extends ApiGeneric {
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)
-    public @ResponseBody NnChannel userChannelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+    public @ResponseBody NnChannel channelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
         NnChannelManager channelMngr = new NnChannelManager();
         
@@ -369,6 +368,9 @@ public class ApiUser extends ApiGeneric {
         
         // imageUrl
         String imageUrl = req.getParameter("imageUrl");
+        if (imageUrl == null) {
+            imageUrl = NnChannel.IMAGE_WATERMARK_URL;
+        }
         
         NnChannel channel = new NnChannel(name, intro, imageUrl);
         channel.setContentType(NnChannel.CONTENTTYPE_MIXED);
