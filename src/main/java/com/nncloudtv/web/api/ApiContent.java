@@ -744,21 +744,33 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        
-        List<NnEpisode> episodes = episodeMngr.findByChannelIdSorted(channelId);
-        
-        ArrayList<NnEpisode> results = new ArrayList<NnEpisode>();
-        
-        for (NnEpisode episode : episodes) {
-            if (!episode.isPublic()) {
-                episodes.remove(episode);
-                results.add(episode);
+        // paging
+        long page = 0, rows = 0;
+        try {
+            String pageStr = req.getParameter("page");
+            String rowsStr = req.getParameter("rows");
+            if (pageStr != null && rowsStr != null) {
+                page = Long.valueOf(pageStr);
+                rows = Long.valueOf(rowsStr);
             }
+        } catch (NumberFormatException e) {
         }
         
-        log.info("non-public count = " + results.size());
-        results.addAll(episodes);
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        List<NnEpisode> results = new ArrayList<NnEpisode>();
+        
+        if (page > 0 && rows > 0) {
+            
+            results = episodeMngr.list(page, rows, null, null, "channelId = " + channelId);
+            
+        } else {
+            
+            results = episodeMngr.findByChannelId(channelId);
+            
+        }
+        
+        episodeMngr.populateEpisodesSeq(results);
+        Collections.sort(results, episodeMngr.getEpisodePublicSeqComparator());
         
         return results;
     }
@@ -1157,7 +1169,7 @@ public class ApiContent extends ApiGeneric {
         return "OK";
     }
     
-    @RequestMapping(value = "programs/{episodeId}/shopping_info", method = RequestMethod.POST)
+    @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.POST)
     public @ResponseBody
     NnAd shoppingInfoCreate(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable(value = "episodeId") String episodeIdStr) {        

@@ -81,6 +81,29 @@ public class NnEpisodeManager {
         return programs.size();
     }
     
+    public Comparator<NnEpisode> getEpisodePublicSeqComparator() {
+    
+        class NnEpisodePublicSeqComparator implements Comparator<NnEpisode> {
+            
+            public int compare(NnEpisode episode1, NnEpisode episode2) {
+                
+                if (episode1.isPublic() == episode2.isPublic()) {
+                    
+                    return (episode1.getSeq() - episode2.getSeq());
+                    
+                } else if (episode1.isPublic() == false) {
+                    
+                    return -1;
+                            
+                }
+                
+                return 1;
+            }
+        }
+        
+        return new NnEpisodePublicSeqComparator();
+    }
+    
     public Comparator<NnEpisode> getEpisodeSeqComparator() {
         
         class NnEpisodeSeqComparator implements Comparator<NnEpisode> {
@@ -133,5 +156,11 @@ public class NnEpisodeManager {
     public void delete(NnEpisode episode) {
     
         dao.delete(episode);
+    }
+    
+    public List<NnEpisode> list(long page, long rows, String sidx, String sord,
+            String filter) {
+    
+        return dao.list(page, rows, sidx, sord, filter);
     }
 }
