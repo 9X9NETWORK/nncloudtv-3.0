@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
@@ -261,10 +262,9 @@ public class ApiUser extends ApiGeneric {
         short type = NnUserLibrary.TYPE_UPLOADS;
         if (repo.equalsIgnoreCase("library")) {
             type = NnUserLibrary.TYPE_YOUTUBE;
-            String pattern = "^http:\\/\\/www\\.youtube\\.com\\/watch\\?v=[^&]+$";
-            if (!url.matches(pattern)) {
+            if (!YouTubeLib.isVideoUrlNormalized(url)) {
                 
-                badRequest(resp, "Invalid YouTube URL");
+                badRequest(resp, INVALID_YOUTUBE_URL);
                 return null;
             }
         }

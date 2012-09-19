@@ -15,9 +15,10 @@ public class ApiGeneric {
 	public static final String MISSING_PARAMETER = "Missing Parameter";
 	public static final String INVALID_PATH_PARAMETER = "Invalid Path Parameter";
 	public static final String INVALID_PARAMETER = "Invalid Parameter";
+	public static final String INVALID_YOUTUBE_URL = "Invalid YouTube URL";
 	public static final String PLAIN_TEXT_UTF8 = "plain/text; charset=utf-8";
-	public static final String MESSAGE = "Wrong cannot afford defeat but right can";
-	public static final String TAGORE = "Tagore";
+	public static final String API_DOC = "API-DOC";
+	public static final String API_DOC_URL = "http://goo.gl/H7Jzl";
 	
 	public void unauthorized(HttpServletResponse resp) {
 		try {
@@ -32,7 +33,7 @@ public class ApiGeneric {
 		try {
 			resp.reset();
             resp.setContentType(PLAIN_TEXT_UTF8);
-            resp.setHeader(TAGORE, MESSAGE);
+            resp.setHeader(API_DOC, API_DOC_URL);
 			if (message != null) {
 				log.warning(message);
 				resp.getWriter().println(message);
@@ -58,7 +59,7 @@ public class ApiGeneric {
 		try {
 			resp.reset();
             resp.setContentType(PLAIN_TEXT_UTF8);
-            resp.setHeader(TAGORE, MESSAGE);
+            resp.setHeader(API_DOC, API_DOC_URL);
 			if (message != null) {
 				log.warning(message);
 				resp.getWriter().println(message);
@@ -80,7 +81,7 @@ public class ApiGeneric {
 		try {
 			resp.reset();
             resp.setContentType(PLAIN_TEXT_UTF8);
-            resp.setHeader(TAGORE, MESSAGE);
+            resp.setHeader(API_DOC, API_DOC_URL);
 			PrintWriter writer = resp.getWriter();
 			if (e != null) {
                 NnLogUtil.logException(e);

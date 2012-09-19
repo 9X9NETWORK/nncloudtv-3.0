@@ -2,6 +2,7 @@ package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
@@ -252,32 +254,10 @@ public class ApiContent extends ApiGeneric {
             program.setIntro(NnStringUtil.htmlSafeChars(intro));
         }
         
-        // comment
-        String comment = req.getParameter("comment");
-        if (comment != null) {
-            program.setComment(NnStringUtil.htmlSafeChars(comment));
-        }
-        
         // imageUrl
         String imageUrl = req.getParameter("imageUrl");
         if (imageUrl != null) {
             program.setImageUrl(imageUrl);
-        }
-        
-        // seq
-        String seqStr = req.getParameter("seq");
-        if (seqStr != null) {
-            Short seq = null;
-            try {
-                seq = Short.valueOf(seqStr);
-            } catch (NumberFormatException e) {
-            }
-            if (seq == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            } else {
-                program.setSeq(seq);
-            }
         }
         
         // subSeq
@@ -285,7 +265,7 @@ public class ApiContent extends ApiGeneric {
         if (subSeqStr != null) {
             Short subSeq = null;
             try {
-                subSeq = Short.valueOf(seqStr);
+                subSeq = Short.valueOf(subSeqStr);
             } catch (NumberFormatException e) {
             }
             if (subSeq == null) {
@@ -620,21 +600,11 @@ public class ApiContent extends ApiGeneric {
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        List<NnEpisode> results = episodeMngr.findByChannelId(channelId);
-        Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
-        
-        return results;
+        return episodeMngr.findByChannelIdSorted(channelId);
     }
     
-    /**
-     * channelId, seq, file URL are required, others optional.
-     */
-    // TODO: need to rewrite
-    @RequestMapping(value = "channels/{channelId}/programs/{seq}", method = RequestMethod.POST)
-    public @ResponseBody
-    NnProgram addProgram(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable("channelId") String channelIdStr,
-            @PathVariable("seq") String seqStr) {
+    @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.POST)
+    public @ResponseBody NnEpisode episodeCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("channelId") String channelIdStr) {
         
         Long channelId = null;
         try {
@@ -652,68 +622,204 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        // name
+        String name = req.getParameter("name");
+        if (name == null || name.isEmpty()) {
+            
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        // intro
+        String intro = req.getParameter("intro");
+        if (intro != null && intro.length() > 0) {
+            intro = NnStringUtil.htmlSafeAndTruncated(intro);
+        }
+        
+        // imageUrl
+        String imageUrl = req.getParameter("imageUrl");
+        
+        NnEpisode episode = new NnEpisode(channelId);
+        episode.setName(name);
+        episode.setIntro(intro);
+        episode.setImageUrl(imageUrl);
+        episode.setChannelId(channel.getId());
+        
+        // publishDate
+        String publishDateStr = req.getParameter("publishDate");
+        if (publishDateStr != null) {
+            
+            Long publishDateLong = null;
+            try {
+                publishDateLong = Long.valueOf(channelIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (publishDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            Date publishDate = new Date(publishDateLong);
+            episode.setPublishDate(publishDate);
+        }
+        
+        // isPublic
+        String isPublicStr = req.getParameter("isPublic");
+        if (isPublicStr != null) {
+            Boolean isPublic = Boolean.valueOf(isPublicStr);
+            if (isPublic != null) {
+                episode.setPublic(isPublic);
+            }
+        }
+        
+        // TODO: re-run ?
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
+        return episodeMngr.save(episode);
+    }
+    
+    @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.POST)
+    public @ResponseBody
+    NnProgram programCreate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        String intro = req.getParameter("intro");
+        intro = NnStringUtil.htmlSafeAndTruncated(intro);
+        
+        String imageUrl = req.getParameter("imageUrl");
+        
+        NnProgram program = new NnProgram(episode.getChannelId(), episodeId, name, intro, imageUrl);
+        
         // fileUrl
         String fileUrl = req.getParameter("fileUrl");
         if (fileUrl == null) {
             badRequest(resp, MISSING_PARAMETER);
             return null;
         }
+        program.setFileUrl(fileUrl);
         
-        Short seq = null;
-        try {
-            seq = Short.valueOf(seqStr);
-        } catch (NumberFormatException e) {
+        // contentType
+        program.setContentType(NnProgram.CONTENTTYPE_YOUTUBE);
+        String contentTypeStr = req.getParameter("contentType");
+        if (contentTypeStr != null) {
+            
+            Short contentType = Short.valueOf(contentTypeStr);
+            if (contentType == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            program.setContentType(contentType);
         }
-        if (seq == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
+        if (program.getContentType() == NnProgram.CONTENTTYPE_YOUTUBE && !YouTubeLib.isVideoUrlNormalized(fileUrl)) {
+            badRequest(resp, INVALID_YOUTUBE_URL);
             return null;
         }
         
-        String name = req.getParameter("name");
-        if (name == null) {
-            name = "";
+        // duration
+        String durationStr = req.getParameter("duration");
+        if (durationStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
         }
-        
-        String intro = req.getParameter("intro");
-        if (intro == null) {
-            intro = "";
+        Short duration = null;
+        try {
+            duration = Short.valueOf(durationStr);
+        } catch (NumberFormatException e) {
         }
-        
-        String imageUrl = req.getParameter("imageUrl"); // format check ?
-        if (imageUrl == null) {
-            imageUrl = "";
+        if (duration == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
         }
+        program.setDuration(duration);
         
-        NnProgram program = new NnProgram(channelId,
-                NnStringUtil.htmlSafeChars(name),
-                NnStringUtil.htmlSafeChars(intro), imageUrl);
-        
-        program.setFileUrl(fileUrl);
-        // do something to get metadata from youtube and set it up
-        
-        program.setSeq(seqStr);
-        
-        String comment = req.getParameter("comment");
-        if (comment != null) {
-            program.setComment(NnStringUtil.htmlSafeChars(comment));
-        }
-        
-        String startTime = req.getParameter("startTime"); // format check ?
-        if (startTime != null) {
+        // startTime
+        String startTimeStr = req.getParameter("startTime");
+        if (startTimeStr == null) {
+            
+            program.setStartTime(0);
+            
+        } else {
+            
+            Short startTime = null;
+            try {
+                startTime = Short.valueOf(startTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startTime == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             program.setStartTime(startTime);
         }
         
-        String endTime = req.getParameter("endTime"); // format check ?
-        if (endTime != null) {
+        // endTime
+        String endTimeStr = req.getParameter("endTime");
+        if (endTimeStr == null) {
+            
+            program.setEndTime(0);
+            
+        } else {
+            
+            Short endTime = null;
+            try {
+                endTime = Short.valueOf(endTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endTime == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             program.setEndTime(endTime);
         }
         
         NnProgramManager programMngr = new NnProgramManager();
-        programMngr.create(channel, program);
         
-        // how to get newly created program at this moment
+        // subSeq
+        String subSeqStr = req.getParameter("subSeq");
+        if (subSeqStr == null) {
+            
+            program.setSubSeq(0);
+        } else {
+            Short subSeq = null;
+            try {
+                subSeq = Short.valueOf(subSeqStr);
+            } catch (NumberFormatException e) {
+            }
+            if (subSeq == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            program.setSubSeq(subSeq);
+        }
         
-        return program;
+        return programMngr.create(episode, program);
     }
     
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)

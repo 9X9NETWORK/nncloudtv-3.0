@@ -27,6 +27,8 @@ import com.nncloudtv.web.api.NnStatusCode;
 public class YouTubeLib {
     
     protected static final Logger log = Logger.getLogger(YouTubeLib.class.getName());
+    
+    public static final String regexNormalizedVideoUrl = "^http:\\/\\/www\\.youtube\\.com\\/watch\\?v=[^&]+$";
         
     /** 
      * 1. remove those invalid keywords we already know.
@@ -297,6 +299,15 @@ public class YouTubeLib {
             return false;
         }
         return true;
+    }
+    
+    public static boolean isVideoUrlNormalized(String url) {
+        
+        if (url == null) {
+            return false;
+        }
+        
+        return url.matches(regexNormalizedVideoUrl);
     }
     
 }

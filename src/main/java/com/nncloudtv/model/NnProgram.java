@@ -114,19 +114,34 @@ public class NnProgram implements Serializable {
     private Date updateDate;
 
     @Persistent
-    private Date publishDate;
+    private Date              publishDate;
     
     public NnProgram(long channelId, String name, String intro, String imageUrl) {
+    
         this.channelId = channelId;
         this.name = name;
         this.intro = intro;
         this.imageUrl = imageUrl;
-        Date now = new Date();        
+        Date now = new Date();
+        this.createDate = now;
+        this.updateDate = now;
+    }
+    
+    public NnProgram(long channelId, long episodeId, String name, String intro,
+            String imageUrl) {
+    
+        this.channelId = channelId;
+        this.episodeId = episodeId;
+        this.name = name;
+        this.intro = intro;
+        this.imageUrl = imageUrl;
+        Date now = new Date();
         this.createDate = now;
         this.updateDate = now;
     }
     
     public long getId() {
+    
         return id;
     }
 
@@ -208,6 +223,10 @@ public class NnProgram implements Serializable {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public void setDuration(short duration) {
+        this.duration = String.valueOf(duration);
     }
 
     public short getStatus() {

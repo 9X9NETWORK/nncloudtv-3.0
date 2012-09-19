@@ -28,6 +28,30 @@ public class NnProgramManager {
     
     private NnProgramDao dao = new NnProgramDao();
     
+    public NnProgram create(NnEpisode episode, NnProgram program) {
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
+        int seq = episodeMngr.getEpisodeSeq(episode);
+        
+        program.setSeq(seq);
+        program = save(program);
+        
+        // first program join episode
+        if (seq == 0) {
+            
+            episodeMngr.reorderChannelEpisodes(episode.getChannelId());
+            
+        }
+        
+        // non-specified sub-position
+        if (program.getSeqInt() == 0) {
+            reorderEpisodePrograms(episode.getId());
+        }
+        
+        return program;
+    }
+    
     public void create(NnChannel channel, NnProgram program) {
         
         Date now = new Date();
