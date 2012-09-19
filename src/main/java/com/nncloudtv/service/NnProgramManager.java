@@ -265,17 +265,18 @@ public class NnProgramManager {
            NnProgram p = programs.get(i);
            String cardKey1 = String.valueOf(original.getId() + ";" + TitleCard.TYPE_BEGIN); 
            String cardKey2 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_END);
-           if (cardMap.containsKey(cardKey1)) {
-               card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
-               card += cardMap.get(cardKey1).getPlayerSyntax() + "%0A--%0A";
-               cardMap.remove(cardKey1);
-           }
-           if (cardMap.containsKey(cardKey2)) {
-               card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
-               card += cardMap.get(cardKey2).getPlayerSyntax() + "%0A--%0A";
-               cardMap.remove(cardKey2);
-           }
-           
+           if (p.getSubSeq() != null && p.getSubSeq().length() > 0) {
+               if (cardMap.containsKey(cardKey1)) {
+                   card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
+                   card += cardMap.get(cardKey1).getPlayerSyntax() + "%0A--%0A";
+                   cardMap.remove(cardKey1);
+               }
+               if (cardMap.containsKey(cardKey2)) {
+                   card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
+                   card += cardMap.get(cardKey2).getPlayerSyntax() + "%0A--%0A";
+                   cardMap.remove(cardKey2);
+               }
+           }           
            if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {               
                List<NnProgram> reference = this.findRealPrograms(p.getStorageId());
                System.out.println("reference size:" + reference.size());
