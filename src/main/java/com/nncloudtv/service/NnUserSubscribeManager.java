@@ -36,12 +36,7 @@ public class NnUserSubscribeManager {
         return true;
     }
 
-    public boolean subscribeChannel(NnUser user, long channelId, short seq, short type) {
-        NnUserSubscribe existed = subDao.findByUserAndChannel(user, channelId);
-        if (existed != null) {
-            log.info("user trying to subscribe a channel that has been subscribed." + channelId);
-            return false;
-        }
+    public NnUserSubscribe subscribeChannel(NnUser user, long channelId, short seq, short type) {
         NnUserSubscribe s = new NnUserSubscribe(user.getId(), channelId, seq, type);
         Date now = new Date();
         s.setCreateDate(now);
@@ -57,7 +52,7 @@ public class NnUserSubscribeManager {
         }
         cntMngr.save(cnt);
         */        
-        return true;
+        return s;
     }        
     
     public boolean subscribeSet(NnUser user, NnUserSubscribeGroup subSet, List<NnChannel> channels) {
@@ -100,7 +95,7 @@ public class NnUserSubscribeManager {
         List<NnUserSubscribe> subs = subDao.findAllByUser(user);
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnChannelManager channelMngr = new NnChannelManager();
-        CntSubscribeManager cntMngr = new CntSubscribeManager();
+        //CntSubscribeManager cntMngr = new CntSubscribeManager();
         for (NnUserSubscribe s : subs) {
             NnChannel c = channelMngr.findById(s.getChannelId()); //!!!
             if (c != null) {
