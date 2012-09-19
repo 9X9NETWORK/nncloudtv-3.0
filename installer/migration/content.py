@@ -17,8 +17,9 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              use_unicode = True,
                              db = "nncloudtv_content")
 contentCursor = dbcontent.cursor()
-contentCursor.execute("""truncate tag """)
-contentCursor.execute("""truncate tag_map """)
+contentCursor.execute("""truncate tag """)               
+contentCursor.execute("""truncate tag_map """) 
+contentCursor.execute("""truncate category_map """)
 contentCursor.execute("""insert into tag (name, updateDate) values ('hot(9x9en)', now()); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 1); """)         
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (1, 2); """)
@@ -60,6 +61,7 @@ contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 34); 
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 35); """)
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 36); """)
 #hot english from thrending
+contentCursor.execute("""delete from counter_shard where id > 1 ; """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch5058', 1); """)      
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3722', 1); """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch116', 1); """)
@@ -80,8 +82,7 @@ contentCursor.execute("""insert into counter_shard (shardNumber, counterName, co
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch37', 1); """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch507', 1); """)
 
-current = "en" 
-#current = "zh"
+current = "en"        
 fileName = "contentPool_" + current + ".txt"
 feed = open(fileName, "rU")
 allCategoryId = 1 
@@ -124,7 +125,7 @@ for line in feed:
   contentCursor.execute ("""             
 		 update nnchannel set name = %s, lang = %s, sphere = %s, tag = %s
 		  where id = %s
-     """, (cName, lang, sphere, cId, tags)) 
+     """, (cName, lang, sphere, tags, cId)) 
   dbcontent.commit()
   ### update category info                
   print "categoryName: " + categoryName
@@ -177,35 +178,36 @@ for line in feed:
      t = t.rstrip().lstrip().lstrip("\t")
      print (t)
      tagId = 0
-     contentCursor.execute("""
-       select id 
-         from tag
-        where name = %s
-        """, (t))
-     count = contentCursor.rowcount
-     if count == 0:   
+     if t != "":
         contentCursor.execute("""
-           insert into tag (name, updateDate)
-                    values (%s, now()) 
-           """, (t))                
-        contentCursor.execute("""         
           select id 
             from tag
            where name = %s
            """, (t))
-     tagRow = contentCursor.fetchone()
-     tagId = tagRow[0]        
-     contentCursor.execute("""
-       select id
-         from tag_map                          
-        where tagId = %s and channelId = %s
-        """, (tagId, cId))
-     count = contentCursor.rowcount
-     if count == 0:           
+        count = contentCursor.rowcount
+        if count == 0:   
+           contentCursor.execute("""
+              insert into tag (name, updateDate)
+                       values (%s, now()) 
+              """, (t))                
+           contentCursor.execute("""         
+             select id 
+               from tag
+              where name = %s
+              """, (t))
+        tagRow = contentCursor.fetchone()
+        tagId = tagRow[0]        
         contentCursor.execute("""
-           insert into tag_map (tagId, channelId, updateDate)
-                        values (%s, %s, now()) 
-           """, (tagId, cId))               
+          select id
+            from tag_map                          
+           where tagId = %s and channelId = %s
+           """, (tagId, cId))
+        count = contentCursor.rowcount
+        if count == 0:           
+           contentCursor.execute("""
+              insert into tag_map (tagId, channelId, updateDate)
+                           values (%s, %s, now()) 
+              """, (tagId, cId))               
   dbcontent.commit()      
   #if i > 2:                              
   #   break
