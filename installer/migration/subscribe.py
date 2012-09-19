@@ -89,8 +89,12 @@ for ur in userRow:
    i = i+1
    #if i > 2:
    #   break
-      
 
+userCursor.execute("""                      
+		delete from nnuser_subscribe
+		 where seq > 72
+		 """)
+dbuser.commit()
 userCursor.close ()
 print "record done:" + str(i)
 
