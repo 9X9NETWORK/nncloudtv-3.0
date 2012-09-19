@@ -1102,7 +1102,7 @@ public class PlayerApiService {
         if (report != null) {
             result[0] = PlayerApiService.assembleKeyValue("id", String.valueOf(report.getId()));
             EmailService service = new EmailService();
-            String toEmail = "feedback@9x9.tv";
+            String toEmail = "userfeedback@9x9.tv";
             String toName = "feedback";
             String subject = "User send a report";
             String content = "user ui-lang:" + user.getLang() + "\n";
