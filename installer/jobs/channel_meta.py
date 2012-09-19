@@ -74,11 +74,11 @@ for line in feed:
      epoch = time.mktime(time.gmtime()) 
      userCursor.execute("""
         insert into nncloudtv_nnuser1.nnuser
-          (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl, programCnt)
+          (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl)
         values
-          (%s, 1, %s, %s, %s, 1, 8, now(), now(), 0, false, %s, programCnt)              
-        """, (userEmail, username, thumbnail, epoch, username, programCnt))
-     dbuser.commit()
+          (%s, 1, %s, %s, %s, 1, 8, now(), now(), 0, false, %s)              
+        """, (userEmail, username, thumbnail, epoch, username))
+     dbuser.commit()                                     
   userCursor.execute("""
     select id 
       from nncloudtv_nnuser1.nnuser
@@ -99,9 +99,16 @@ for line in feed:
      print "ch: " + cId + " oriUserId is null, add new user:" + userIdStr 
      contentCursor.execute("""    
         update nnchannel 
-           set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s)
+           set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s), cntEpisode = %s
          where id = %s                                 
-         """, (imageUrl, userIdStr, updateDate, cId))      
+         """, (imageUrl, userIdStr, updateDate, programCnt, cId))
+  else:
+     contentCursor.execute("""    
+        update nnchannel 
+           set imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
+         where id = %s                                 
+         """, (imageUrl, updateDate, programCnt, cId))
+   
   dbcontent.commit()  
   userCursor.close ()
   contentCursor.close ()
