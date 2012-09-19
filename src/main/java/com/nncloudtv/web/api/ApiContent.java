@@ -351,6 +351,148 @@ public class ApiContent extends ApiGeneric {
         return "OK";
     }
     
+    @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.POST)
+    public @ResponseBody
+    NnProgram programCreate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        String intro = req.getParameter("intro");
+        intro = NnStringUtil.htmlSafeAndTruncated(intro);
+        
+        String imageUrl = req.getParameter("imageUrl");
+        
+        NnProgram program = new NnProgram(episode.getChannelId(), episodeId, name, intro, imageUrl);
+        
+        // fileUrl
+        String fileUrl = req.getParameter("fileUrl");
+        if (fileUrl == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        program.setFileUrl(fileUrl);
+        
+        // contentType
+        program.setContentType(NnProgram.CONTENTTYPE_YOUTUBE);
+        String contentTypeStr = req.getParameter("contentType");
+        if (contentTypeStr != null) {
+            
+            Short contentType = Short.valueOf(contentTypeStr);
+            if (contentType == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            program.setContentType(contentType);
+        }
+        if (program.getContentType() == NnProgram.CONTENTTYPE_YOUTUBE && !YouTubeLib.isVideoUrlNormalized(fileUrl)) {
+            badRequest(resp, INVALID_YOUTUBE_URL);
+            return null;
+        }
+        
+        // duration
+        String durationStr = req.getParameter("duration");
+        if (durationStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        Short duration = null;
+        try {
+            duration = Short.valueOf(durationStr);
+        } catch (NumberFormatException e) {
+        }
+        if (duration == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        program.setDuration(duration);
+        
+        // startTime
+        String startTimeStr = req.getParameter("startTime");
+        if (startTimeStr == null) {
+            
+            program.setStartTime(0);
+            
+        } else {
+            
+            Short startTime = null;
+            try {
+                startTime = Short.valueOf(startTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startTime == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            program.setStartTime(startTime);
+        }
+        
+        // endTime
+        String endTimeStr = req.getParameter("endTime");
+        if (endTimeStr == null) {
+            
+            program.setEndTime(0);
+            
+        } else {
+            
+            Short endTime = null;
+            try {
+                endTime = Short.valueOf(endTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endTime == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            program.setEndTime(endTime);
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        
+        // subSeq
+        String subSeqStr = req.getParameter("subSeq");
+        if (subSeqStr == null) {
+            
+            program.setSubSeq(0);
+        } else {
+            Short subSeq = null;
+            try {
+                subSeq = Short.valueOf(subSeqStr);
+            } catch (NumberFormatException e) {
+            }
+            if (subSeq == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            program.setSubSeq(subSeq);
+        }
+        
+        return programMngr.create(episode, program);
+    }
+
     @RequestMapping(value = "channels/{channelId}", method = RequestMethod.GET)
     public @ResponseBody
     NnChannel channel(HttpServletRequest req, HttpServletResponse resp,
@@ -574,9 +716,10 @@ public class ApiContent extends ApiGeneric {
         return categories;
     }
     
+    // TODO: paging 
     @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.GET)
     public @ResponseBody
-    List<NnEpisode> episodePrograms(HttpServletResponse resp,
+    List<NnEpisode> channelEpisodes(HttpServletResponse resp,
             HttpServletRequest req,
             @PathVariable("channelId") String channelIdStr) {
     
@@ -600,7 +743,21 @@ public class ApiContent extends ApiGeneric {
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        return episodeMngr.findByChannelIdSorted(channelId);
+        List<NnEpisode> episodes = episodeMngr.findByChannelIdSorted(channelId);
+        
+        ArrayList<NnEpisode> results = new ArrayList<NnEpisode>();
+        
+        for (NnEpisode episode : episodes) {
+            if (!episode.isPublic()) {
+                episodes.remove(episode);
+                results.add(episode);
+            }
+        }
+        
+        log.info("non-public count = " + results.size());
+        results.addAll(episodes);
+        
+        return results;
     }
     
     @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.POST)
@@ -680,11 +837,11 @@ public class ApiContent extends ApiGeneric {
         return episodeMngr.save(episode);
     }
     
-    @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.POST)
+    @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.GET)
     public @ResponseBody
-    NnProgram programCreate(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable("episodeId") String episodeIdStr) {
-        
+    List<NnProgram> episodePrograms(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable(value = "episodeId") String episodeIdStr) {
+    
         Long episodeId = null;
         try {
             episodeId = Long.valueOf(episodeIdStr);
@@ -694,78 +851,11 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
-            notFound(resp, "Episode Not Found");
-            return null;
-        }
-        
-        // name
-        String name = req.getParameter("name");
-        if (name == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            return null;
-        }
-        name = NnStringUtil.htmlSafeAndTruncated(name);
-        
-        String intro = req.getParameter("intro");
-        intro = NnStringUtil.htmlSafeAndTruncated(intro);
-        
-        String imageUrl = req.getParameter("imageUrl");
-        
-        NnProgram program = new NnProgram(episode.getChannelId(), episodeId, name, intro, imageUrl);
-        
-        // fileUrl
-        String fileUrl = req.getParameter("fileUrl");
-        if (fileUrl == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            return null;
-        }
-        program.setFileUrl(fileUrl);
-        
-        // contentType
-        program.setContentType(NnProgram.CONTENTTYPE_YOUTUBE);
-        String contentTypeStr = req.getParameter("contentType");
-        if (contentTypeStr != null) {
-            
-            Short contentType = Short.valueOf(contentTypeStr);
-            if (contentType == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            
-            program.setContentType(contentType);
-        }
-        if (program.getContentType() == NnProgram.CONTENTTYPE_YOUTUBE && !YouTubeLib.isVideoUrlNormalized(fileUrl)) {
-            badRequest(resp, INVALID_YOUTUBE_URL);
-            return null;
-        }
-        
-        // duration
-        String durationStr = req.getParameter("duration");
-        if (durationStr == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            return null;
-        }
-        Short duration = null;
-        try {
-            duration = Short.valueOf(durationStr);
-        } catch (NumberFormatException e) {
-        }
-        if (duration == null) {
-            badRequest(resp, INVALID_PARAMETER);
-            return null;
-        }
-        program.setDuration(duration);
-        
-        // startTime
-        String startTimeStr = req.getParameter("startTime");
-        if (startTimeStr == null) {
-            
-            program.setStartTime(0);
-            
-        } else {
             
             Short startTime = null;
             try {
@@ -864,7 +954,6 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        TitleCardManager titleCardMngr = new TitleCardManager();
         NnProgramManager programMngr = new NnProgramManager();
         
         List<NnProgram> programs = programMngr.findByEpisodeId(episodeId);
@@ -881,7 +970,7 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
-    @RequestMapping(value = "programs/{episodeId}/shopping_info", method = RequestMethod.DELETE)
+    @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.DELETE)
     public @ResponseBody
     String shoppingInfoDelete(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable(value = "episodeId") String episodeIdStr) {
@@ -1000,6 +1089,57 @@ public class ApiContent extends ApiGeneric {
         return nnad;
     }
     
+    @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
+    public @ResponseBody
+    List<TitleCard> programTitleCards(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("programId") String programIdStr) {
+        
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> results = titleCardMngr.findByProgramId(programId);
+        
+        return results;
+    }
+
+    @RequestMapping(value = "episodes/{episodeId}/title_cards", method = RequestMethod.GET)
+    public @ResponseBody
+    List<TitleCard> episodeTitleCards(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+    
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        NnProgramManager programMngr = new NnProgramManager();
+        
+        List<NnProgram> programs = programMngr.findByEpisodeId(episodeId);
+        List<TitleCard> results = new ArrayList<TitleCard>();
+        
+        for (NnProgram program : programs) {
+            results.addAll(titleCardMngr.findByProgramId(program.getId()));
+        }
+        
+        return results;
+    }
+
     // TODO: refine
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.POST)
     public @ResponseBody
