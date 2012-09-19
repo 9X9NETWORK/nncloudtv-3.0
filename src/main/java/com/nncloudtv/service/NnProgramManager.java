@@ -63,8 +63,8 @@ public class NnProgramManager {
         
         //!!!!! clean plus "hook, auto share to facebook"
         //set channel count
-        int count = channel.getProgramCnt() + 1;
-        channel.setProgramCnt(count);
+        int count = channel.getCntEpisode() + 1;
+        channel.setCntEpisode(count);
         NnChannelManager channelMngr = new NnChannelManager();
         channelMngr.save(channel);
 
@@ -437,8 +437,8 @@ public class NnProgramManager {
         return program;
     }
 
-    public List<NnProgram> findByChannelId(long channelId) {
-        return dao.findByChannelId(channelId);
+    public List<NnProgram> findByChannel(long channelId) {
+        return dao.findByChannel(channelId);
     }
     
     public List<NnProgram> findByChannelIdAndSeq(long channelId, Short seq) {
