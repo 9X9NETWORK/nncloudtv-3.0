@@ -69,12 +69,6 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        user.setName(NnStringUtil.revertHtml(user.getName()));
-        user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
-        
-        user.setSalt(null);
-        user.setCryptedPassword(null);
-        
         return user;
     }
     
@@ -146,8 +140,6 @@ public class ApiUser extends ApiGeneric {
     List<NnUserLibrary> userUploads(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("userId") String userIdStr,
             @PathVariable("repo") String repo) {
-        
-        List<NnUserLibrary> results;
 
         Long userId = null;
         try {
@@ -203,20 +195,10 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
-            results = libMngr.findByUserAndType(user, type, page, rows);
-            for (NnUserLibrary result : results) {
-                result.setName(NnStringUtil.revertHtml(result.getName()));
-            }
-            
-            return results;
+            return libMngr.findByUserAndType(user, type, page, rows);
             
         } else {
-            results = libMngr.findByUserAndType(user, type);
-            for (NnUserLibrary result : results) {
-                result.setName(NnStringUtil.revertHtml(result.getName()));
-            }
-            
-            return results;
+            return libMngr.findByUserAndType(user, type);
         }      
     }
     
@@ -320,11 +302,6 @@ public class ApiUser extends ApiGeneric {
         }
         
         Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
-        
-        for (NnChannel result : results) {
-            result.setName(NnStringUtil.revertHtml(result.getName()));
-            result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
-        }
         
         return results;
     }

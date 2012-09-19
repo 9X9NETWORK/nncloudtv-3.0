@@ -518,9 +518,6 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        channel.setName(NnStringUtil.revertHtml(channel.getName()));
-        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
-        
         return channel;
     }
     
@@ -1020,117 +1017,12 @@ public class ApiContent extends ApiGeneric {
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
             
-            Short startTime = null;
-            try {
-                startTime = Short.valueOf(startTimeStr);
-            } catch (NumberFormatException e) {
-            }
-            if (startTime == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            program.setStartTime(startTime);
-        }
-        
-        // endTime
-        String endTimeStr = req.getParameter("endTime");
-        if (endTimeStr == null) {
-            
-            program.setEndTime(0);
-            
-        } else {
-            
-            Short endTime = null;
-            try {
-                endTime = Short.valueOf(endTimeStr);
-            } catch (NumberFormatException e) {
-            }
-            if (endTime == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            program.setEndTime(endTime);
-        }
-        
-        NnProgramManager programMngr = new NnProgramManager();
-        
-        // subSeq
-        String subSeqStr = req.getParameter("subSeq");
-        if (subSeqStr == null) {
-            
-            program.setSubSeq(0);
-        } else {
-            Short subSeq = null;
-            try {
-                subSeq = Short.valueOf(subSeqStr);
-            } catch (NumberFormatException e) {
-            }
-            if (subSeq == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            program.setSubSeq(subSeq);
-        }
-        
-        return programMngr.create(episode, program);
-    }
-    
-    @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
-    public @ResponseBody
-    List<TitleCard> programTitleCards(HttpServletRequest req,
-            HttpServletResponse resp,
-            @PathVariable("programId") String programIdStr) {
-        
-        Long programId = null;
-        try {
-            programId = Long.valueOf(programIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (programId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> results = titleCardMngr.findByProgramId(programId);
-        
-        for (TitleCard result : results) {
-            result.setMessage(NnStringUtil.revertHtml(result.getMessage()));
-        }
-        
-        return results;
-    }
-    
-    @RequestMapping(value = "episodes/{episodeId}/title_cards", method = RequestMethod.GET)
-    public @ResponseBody
-    List<TitleCard> episodeTitleCards(HttpServletRequest req,
-            HttpServletResponse resp,
-            @PathVariable("episodeId") String episodeIdStr) {
-    
-        Long episodeId = null;
-        try {
-            episodeId = Long.valueOf(episodeIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (episodeId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
+            notFound(resp, "Episode Not Found");
             return null;
         }
         
         NnProgramManager programMngr = new NnProgramManager();
-        
-        List<NnProgram> programs = programMngr.findByEpisodeId(episodeId);
-        List<TitleCard> results = new ArrayList<TitleCard>();
-        
-        for (NnProgram program : programs) {
-            results.addAll(titleCardMngr.findByProgramId(program.getId()));
-        }
-        
-        for (TitleCard result : results) {
-            result.setMessage(NnStringUtil.revertHtml(result.getMessage()));
-        }
-        
-        return results;
+        return programMngr.findByEpisodeId(episodeId);
     }
     
     @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.DELETE)
@@ -1246,10 +1138,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        NnAd nnad = adMngr.findByEpisode(episode);
-        nnad.setMessage(NnStringUtil.revertHtml(nnad.getMessage()));
-        
-        return nnad;
+        return adMngr.findByEpisode(episode);
     }
     
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
@@ -1470,8 +1359,6 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, "Item Not Found");
             return null;
         }
-        
-        lib.setName(NnStringUtil.revertHtml(lib.getName()));
         
         return lib;
     }
