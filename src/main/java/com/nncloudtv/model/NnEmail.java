@@ -10,9 +10,9 @@ public class NnEmail {
     private String toName;
     
     public static String SEND_EMAIL_SHARE = "share@9x9.tv";
-    private String sendEmail;
+    private String senderEmail;
     
-    private String sendName;
+    private String senderName;
     
     private String replyToEmail;
     
@@ -20,19 +20,21 @@ public class NnEmail {
     
     private String body;
 
-    public NnEmail(String toEmail, String toName, String sendEmail, String sendName, String replyToEmail, String subject, String body) {
+    public NnEmail(String toEmail, String toName, String 
+    		       senderEmail, String senderName, 
+    		       String replyToEmail, String subject, String body) {
         this.toEmail = toEmail;
         this.toName = toName;
-        this.sendEmail = sendEmail;
+        this.senderEmail = senderEmail;
+        this.senderName = senderName;        
         this.replyToEmail = replyToEmail;
-        this.sendName = sendName;
         this.subject = subject;
         this.body = body;
     }
     
     public NnEmail(String subject, String body) {
-        this.sendEmail = "nncloudtv@gmail.com";
-        this.sendName = "nncloudtv";
+        this.senderEmail = "nncloudtv@gmail.com";
+        this.senderName = "nncloudtv";
         this.toEmail = "nncloudtv@gmail.com";
         this.toName = "nncloudtv";        
     }
@@ -54,19 +56,19 @@ public class NnEmail {
     }
 
     public String getSendEmail() {
-        return sendEmail;
+        return senderEmail;
     }
 
-    public void setSendEmail(String sendEmail) {
-        this.sendEmail = sendEmail;
+    public void setSendEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
     }
 
     public String getSendName() {
-        return sendName;
+        return senderName;
     }
 
-    public void setSendName(String sendName) {
-        this.sendName = sendName;
+    public void setSendName(String senderName) {
+        this.senderName = senderName;
     }
 
     public String getSubject() {
