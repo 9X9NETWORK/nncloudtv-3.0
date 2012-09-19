@@ -1,7 +1,6 @@
 package com.nncloudtv.dao;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,9 +9,6 @@ import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnEpisode;
-import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.service.NnEpisodeManager;
-import com.nncloudtv.service.NnProgramManager;
 
 public class NnEpisodeDao extends GenericDao<NnEpisode> {
     protected static final Logger log = Logger.getLogger(NnEpisodeDao.class.getName());
