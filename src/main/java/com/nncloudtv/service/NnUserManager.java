@@ -56,6 +56,9 @@ public class NnUserManager {
 
     //TODO replace name with none-digit/characters
     public String generateProfile(String name) {
+    	String profile = RandomStringUtils.randomAlphabetic(10);
+    	return profile;
+    	/*
         String profile = "";
         if (name != null) {
             String random = RandomStringUtils.randomNumeric(5);
@@ -65,6 +68,7 @@ public class NnUserManager {
             profile = RandomStringUtils.randomAlphabetic(10);
         }
         return profile;
+        */
     }
     
     //Default is 1; Asia (tw, cn, hk) is 2
@@ -319,8 +323,7 @@ public class NnUserManager {
     }
     
     public String composeCuratorInfoStr(NnUser user, String channelId, HttpServletRequest req) {
-        String uid = user.getShard() + "-" + user.getId();
-        //#!curator=xxx-name
+        //#!curator=xxxxxxxx
         String profileUrl = "";
         if (user.getProfileUrl() != null)
             profileUrl = NnNetUtil.getUrlRoot(req) + "/#!curator=" + user.getProfileUrl();
@@ -340,7 +343,7 @@ public class NnUserManager {
     }
 
     public static boolean isGuestByToken(String token) {
-        if (token == null || token.length() > 0)
+        if (token == null || token.length() == 0)
             return true;
         if (token != null && token.contains(NnGuest.TOKEN_PREFIX)) {
             return true;
