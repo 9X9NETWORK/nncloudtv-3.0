@@ -34,6 +34,21 @@ public class TagManager {
         return channels;
     }        
 
+    public List<Tag> findByChannel(long chId) {
+    	List<TagMap> list = dao.findMapByChannel(chId);
+    	List<Tag> tags = new ArrayList<Tag>();
+    	for (TagMap m : list) {
+    		Tag t = this.findById(m.getTagId());
+    		if (t != null)
+    			tags.add(t);
+    	}    	
+    	return tags;
+    }
+    
+    public Tag findById(long id) {        
+        return dao.findById(id);
+    }
+    
     public static String getValidTag(String tag) {
     	if (tag == null)
     		return null;
@@ -41,6 +56,7 @@ public class TagManager {
         tag = tag.replaceAll("[\\t\\n\\x0B\\f\\r]", " ");        
         tag = tag.replaceAll("[\\s]+", " ");
         tag = tag.trim();
+        tag = tag.toLowerCase();
     	return tag;
     }
     
@@ -58,7 +74,12 @@ public class TagManager {
         TagMap map = new TagMap(tagId, channelId);
         dao.saveMap(map);
     }
-    
+
+    public void deleteChannel(long tagId, long channelId) {
+        TagMap map = this.findByTagAndChannel(tagId, channelId);
+        if (map != null)
+        	dao.deleteTagMap(map);
+    }    
     
     public TagMap findByTagAndChannel(long tagId, long channelId) {
         return dao.findMapByTagAndChannel(tagId, channelId);
