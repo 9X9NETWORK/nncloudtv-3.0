@@ -28,6 +28,7 @@ import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.Tag;
@@ -424,7 +425,15 @@ public class NnChannelManager {
         }
         return qualified;
     }
-
+    
+    public int calcuateEpisodeCount(NnChannel channel) {
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        List<NnEpisode> episodes = episodeMngr.findByChannelId(channel.getId());
+        
+        return episodes.size();
+    }
+    
     public NnChannel findBySourceUrl(String url) {
         if (url == null) {return null;}
         return dao.findBySourceUrl(url);

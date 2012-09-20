@@ -72,10 +72,7 @@ public class ApiUser extends ApiGeneric {
         user.setName(NnStringUtil.revertHtml(user.getName()));
         user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
         
-        user.setSalt(null);
-        user.setCryptedPassword(null);
-        
-        return user;
+        return userMngr.purify(user);
     }
     
     @RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)

@@ -353,6 +353,10 @@ public class NnUserManager {
     
     public NnUser purify(NnUser user) {
     
+        if (user == null) {
+            return null;
+        }
+        
         user.setSalt(null);
         user.setCryptedPassword(null);
         

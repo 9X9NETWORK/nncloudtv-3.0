@@ -787,7 +787,6 @@ public class ApiContent extends ApiGeneric {
     String episodeDelete(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable("episodeId") String episodeIdStr) {
     
-        
         Long episodeId = null;
         try {
             episodeId = Long.valueOf(episodeIdStr);
@@ -822,8 +821,17 @@ public class ApiContent extends ApiGeneric {
             
         }
         
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        
         // delete episode
         episodeMngr.delete(episode);
+        
+        // re-calcuate episode count
+        if (channel != null) {
+            channel.setCntEpisode(channelMngr.calcuateEpisodeCount(channel));
+            channelMngr.save(channel);
+        }
         
         return "OK";
     }
@@ -1004,7 +1012,15 @@ public class ApiContent extends ApiGeneric {
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        return episodeMngr.save(episode);
+        episode = episodeMngr.save(episode);
+        
+        episode.setName(NnStringUtil.revertHtml(episode.getName()));
+        episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+        
+        channel.setCntEpisode(channelMngr.calcuateEpisodeCount(channel));
+        channelMngr.save(channel);
+        
+        return episode;
     }
     
     @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.GET)
