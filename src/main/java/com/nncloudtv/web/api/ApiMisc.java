@@ -121,11 +121,6 @@ public class ApiMisc extends ApiGeneric {
             user.setSalt(null);
         }
 		
-		if (user != null) {
-		    user.setSalt(null);
-		    user.setCryptedPassword(null);
-		}
-		
 		return user;
 	}
 	
