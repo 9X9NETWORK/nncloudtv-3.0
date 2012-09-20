@@ -408,7 +408,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }        
     
-    public String subscribe(String userToken, String channelId, String gridId) {
+    public String subscribe(String userToken, String channelId, String gridId) {    	
         //verify input
         @SuppressWarnings("rawtypes")
         HashMap map = this.checkUser(userToken, false);
@@ -436,6 +436,10 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
         
         short seq = Short.parseShort(gridId);
+        if (seq > 72) {
+        	return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+
         NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
         if (s != null)
             return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_POS_OCCUPIED, null);        
@@ -1108,8 +1112,9 @@ public class PlayerApiService {
             String content = "user ui-lang:" + user.getLang() + "\n";
             content += "user region:" + user.getSphere() + "\n";
             content += "user report:" + comment;
-            NnEmail mail = new NnEmail(toEmail, toName,user.getName(), user.getEmail(), user.getEmail(), subject, content);
-            
+            NnEmail mail = new NnEmail(toEmail, toName, 
+            		                   user.getEmail(), user.getName(), 
+            		                   user.getEmail(), subject, content);            
             service.sendEmail(mail);
             
         }
