@@ -127,6 +127,11 @@ public class NnStringUtil {
     }
     
     public static String htmlSafeAndTruncated(String str, int length) {
+        
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+        
         for (int i = length; i > 0; i--) {
             String truncated = truncateUTF8(str, i);
             String htmlSafe = htmlSafeChars(truncated);

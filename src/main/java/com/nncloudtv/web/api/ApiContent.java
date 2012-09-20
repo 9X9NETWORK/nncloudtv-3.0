@@ -381,8 +381,9 @@ public class ApiContent extends ApiGeneric {
         name = NnStringUtil.htmlSafeAndTruncated(name);
         
         String intro = req.getParameter("intro");
-        intro = NnStringUtil.htmlSafeAndTruncated(intro);
-        
+        if (intro != null) {
+            intro = NnStringUtil.htmlSafeAndTruncated(intro);
+        }
         String imageUrl = req.getParameter("imageUrl");
         if (imageUrl == null) {
             imageUrl = NnChannel.IMAGE_WATERMARK_URL;
@@ -493,9 +494,14 @@ public class ApiContent extends ApiGeneric {
             program.setSubSeq(subSeq);
         }
         
-        return programMngr.create(episode, program);
+        program = programMngr.create(episode, program);
+        
+        program.setName(NnStringUtil.revertHtml(program.getName()));
+        program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
+        
+        return program;
     }
-
+    
     @RequestMapping(value = "channels/{channelId}", method = RequestMethod.GET)
     public @ResponseBody
     NnChannel channel(HttpServletRequest req, HttpServletResponse resp,
