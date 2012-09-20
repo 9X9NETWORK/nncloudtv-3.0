@@ -209,7 +209,7 @@ public class ApiMisc extends ApiGeneric {
     }
 	
 	@RequestMapping("*")
-	public @ResponseBody void blackHole(HttpServletRequest req, HttpServletResponse resp) {
+	public @ResponseBody String blackHole(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String path = req.getServletPath();
 		String message = null;
@@ -233,13 +233,21 @@ public class ApiMisc extends ApiGeneric {
 				message = AmazonLib.decodeS3Token(AmazonLib.S3_EXT, now, salt,
 				        rand);
 			} else {
-				message = "Black Hole!";
+				message = BLACK_HOLE;
 			}
 		} catch (IOException e) {
-		}
-		
-		notFound(resp, message);
-		
-	}
-	
+            internalError(resp);
+            return null;
+        }
+        
+        if (message.equals(BLACK_HOLE)) {
+            notFound(resp, message);
+            return null;
+        }
+        
+        resp.setContentType(PLAIN_TEXT_UTF8);
+        
+        return message + "\n";
+    }
+
 }

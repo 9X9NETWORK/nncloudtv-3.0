@@ -19,6 +19,7 @@ public class ApiGeneric {
 	public static final String PLAIN_TEXT_UTF8 = "plain/text; charset=utf-8";
 	public static final String API_DOC = "API-DOC";
 	public static final String API_DOC_URL = "http://goo.gl/H7Jzl";
+	public static final String BLACK_HOLE = "Black Hole!";
 	
 	public void unauthorized(HttpServletResponse resp) {
 		try {
