@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock17"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock21"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -190,13 +190,19 @@ soundManager.onready(function()
   <ul id="curator-list">
   </ul>
   <ul id="footer-list">
-    <li id="siteinfo">
-      <p id="btn-siteinfo"></p>
-      <p id="selected-siteinfo">Company</p>
-      <ul id="siteinfo-dropdown" class="dropdown">
-        <li class="on">Company</li>
-        <li>Blog</li>
-        <li>Forum</li>
+    <li id="developer">
+      <p id="btn-developer"></p>
+      <p id="selected-developer">About us</p>
+      <ul id="developer-dropdown" class="dropdown">
+        <li data-doc="v-about">About us</li>                                 
+        <li data-doc="v-help">Help</li>
+        <li data-doc="v-report">Report</li>
+        <li data-doc="v-terms">Terms & Policy</li>
+        <li data-doc="v-contact">Contact us</li>
+        <li data-doc="v-partners">Partners</li>
+        <li data-doc="v-curators">Curators</li>
+        <li data-doc="v-press">Press</li>
+        <li data-doc="v-curation">Curation Contest</li>
       </ul>
     </li>
     <li id="sitelang">
@@ -278,9 +284,6 @@ soundManager.onready(function()
       <p id="ch-title"></p>
       <p id="ep-title"></p>
       <p id="btn-follow"><span>Follow this Channel</span></p>
-      <div id="fb-like-container" style="display: none">
-        <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href=""></div>
-      </div>
       <ul class="favorite">
         <li class="favorite-head"></li>
         <li class="favorite-body"><span>Favorite</span></li>
@@ -289,6 +292,9 @@ soundManager.onready(function()
         <li class="favorite-bubble-center"><span>172K</span></li>
         <li class="favorite-bubble-right"></li>
       </ul>
+      <div id="fb-like-container" style="display: none">
+        <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href=""></div>
+      </div>
       <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">This channel has been added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>"
     </div>
     <p id="video-placeholder"></p>
@@ -658,36 +664,19 @@ soundManager.onready(function()
       <div id="guide-tm">
         <div id="guide-trending">
           <h3><span>Trending Stories (</span><span id="trading-chNum">9</span><span>)</span></h3>
-          <div id="trending-arrows">
-            <!--div id="trending-arrows-down" style="display: none">
-              <p id="trending-down"></p>
-            </div-->
-            <div id="trending-arrows-ud" style="display: block">
-              <p id="trending-up"></p>
-              <p id="trending-down"></p>
-            </div>
-            <!--div id="trending-arrows-up" style="display: none">
-              <p id="trending-up"></p>
-            </div-->
+          <div id="trending-arrows" class="horizon-arrows">
+            <div id="trending-up"></div>
+            <div id="trending-down"></div>
           </div>
-
           <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
           <ul id="gt-list">
           </ul>    
         </div>
         <div id="guide-maylike"> 
           <h3><span>You May Like (</span><span id="recommend-chNum">9</span><span>)</span></h3>
-          <div id="maylike-arrows">
-            <!--div id="maylike-arrows-down" style="display: none">
-              <p id="maylike-down"></p>
-            </div-->
-            <div id="maylike-arrows-ud" style="display: block">
-              <p id="maylike-up"></p>
-              <p id="maylike-down"></p>
-            </div>
-            <!--div id="maylike-arrows-up" style="display: none">
-              <p id="maylike-up"></p>
-            </div-->
+          <div id="maylike-arrows" class="horizon-arrows">
+            <div id="maylike-up"></div>
+            <div id="maylike-down"></div>
           </div>
           <img src="${nroot}/images/bg_guide_trending.png" class="min-bg">
           <ul id="gr-list">
@@ -1177,6 +1166,30 @@ soundManager.onready(function()
 </div>
 <!-- signin End --> 
 
+
+
+<!-- Developer Layer Begin --> 
+<div id="developer-layer" class="stage">
+  <div class="tape"></div>                                 
+    <ul id="developer-menu">
+    </ul>
+    <div id="developer-title">
+      <h1></h1>
+    </div>
+      <div class="reco-shelf">
+        <div id="developer-view">
+          <img src="">
+        </div>
+      </div>
+    <div id="developer-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+    <div id="developer-constrain">
+       <div id="developer-list">
+         <div id="developer-content">
+       </div>
+    </div>
+  </div>
+</div>
+<!-- Developer Layer End -->
 
 
 
