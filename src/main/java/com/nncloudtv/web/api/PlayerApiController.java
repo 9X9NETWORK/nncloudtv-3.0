@@ -482,7 +482,8 @@ public class PlayerApiController {
     @RequestMapping(value="categoryInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String categoryInfo(
             @RequestParam(value="category", required=false) String id,
-            @RequestParam(value="sidx", required=false) String sidx,
+            @RequestParam(value="start", required=false) String start,
+            @RequestParam(value="count", required=false) String count,
             @RequestParam(value="sort", required=false) String sort,
             @RequestParam(value="tag", required=false) String tag,
             @RequestParam(value="rx", required = false) String rx,
@@ -492,7 +493,7 @@ public class PlayerApiController {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);
-            output = playerApiService.categoryInfo(id, tag, sidx, sort);
+            output = playerApiService.categoryInfo(id, tag, start, count, sort);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

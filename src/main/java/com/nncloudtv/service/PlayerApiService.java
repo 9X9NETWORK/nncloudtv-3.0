@@ -453,7 +453,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
-    public String categoryInfo(String id, String tagStr, String sidx, String sort) {
+    public String categoryInfo(String id, String tagStr, String start, String count, String sort) {
         if (id == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
@@ -468,18 +468,21 @@ public class PlayerApiService {
         } else {
             //channels = catMngr.findChannels(cid, true);
         	//query.setRange((page - 1) * limit, page * limit);
-        	if (sidx == null)
-        		sidx = "1";
-        	int startIndex = Integer.parseInt(sidx);
-        	int limit = 20;
+        	if (start == null || count.length() == 0)
+        		start = "1";
+        	if (count == null || count.length() == 0)
+        		count = "30";
+        	int startIndex = Integer.parseInt(start);
+        	int limit = Integer.valueOf(count);
         	int page = (int) (startIndex / limit) + 1;
-            channels = catMngr.listChannels(page, 20, cat.getId());
+            channels = catMngr.listChannels(page, limit, cat.getId());
         }
         String result[] = {"", "", ""};
         //category info        
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
         result[0] += assembleKeyValue("name", cat.getName());
-        result[0] += assembleKeyValue("sidx", sidx);
+        result[0] += assembleKeyValue("start", start);
+        result[0] += assembleKeyValue("count", count);
         result[0] += assembleKeyValue("total", String.valueOf(catMngr.findChannelSize(cat.getId())));        
         //category tag
         String tags = cat.getTag();

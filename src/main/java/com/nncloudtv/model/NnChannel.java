@@ -45,8 +45,8 @@ public class NnChannel implements Serializable {
     public static String IMAGE_RADIO_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
     public static String IMAGE_ERROR_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/error.png";
     public static String IMAGE_FB_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/facebook-icon.gif";
-    public static String IMAGE_WATERMARK_URL= "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
-    public static String IMAGE_DEFAULT_URL= "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
+    public static String IMAGE_WATERMARK_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
+    public static String IMAGE_DEFAULT_URL = "http://s3.amazonaws.com/9x9ui/war/v0/images/9x9-watermark.jpg";
         
     @Persistent
     private boolean isPublic;
@@ -239,7 +239,7 @@ public class NnChannel implements Serializable {
              getStatus() != NnChannel.STATUS_PROCESSING)) {    
             imageUrl = IMAGE_ERROR_URL;
         } else if (getImageUrl() == null) {
-            imageUrl = NnChannel.IMAGE_DEFAULT_URL; 
+            imageUrl = ""; 
         }        
             
         return imageUrl;
