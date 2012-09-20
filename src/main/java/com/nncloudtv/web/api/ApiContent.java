@@ -629,7 +629,9 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
-        return channelMngr.save(channel);
+        channelMngr.save(channel);
+        
+        return channelMngr.findById(channel.getId());
     }
     
     @RequestMapping(value = "channels/{channelId}/programs", method = RequestMethod.GET)

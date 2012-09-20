@@ -442,7 +442,7 @@ public class ApiUser extends ApiGeneric {
             }
         }
         
-        return channel;
+        return channelMngr.findById(channel.getId());
     }
     
     @RequestMapping(value = "users/{userId}/channels/{channelId}", method = RequestMethod.DELETE)
