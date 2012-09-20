@@ -20,8 +20,8 @@ public class NnEmail {
     
     private String body;
 
-    public NnEmail(String toEmail, String toName, String 
-    		       senderEmail, String senderName, 
+    public NnEmail(String toEmail, String toName, 
+    		       String senderEmail, String senderName, 
     		       String replyToEmail, String subject, String body) {
         this.toEmail = toEmail;
         this.toName = toName;
