@@ -17,6 +17,18 @@ public class CategoryDao extends GenericDao<Category> {
     public CategoryDao() {
         super(Category.class);
     }
+
+    public long findChannelSize(long categoryId) {
+    	PersistenceManager pm = PMF.getContent().getPersistenceManager();
+    	String sql = "select count(*) " +
+    				   "from category_map " +
+    				  "where categoryId = " + categoryId;    				   
+    	Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+    	@SuppressWarnings("rawtypes")
+		List results = (List) query.execute();
+    	Long size = (Long)results.iterator().next();
+    	return size;
+    }
     
     public Category save(Category category) {
         if (category == null) {return null;}        
@@ -106,6 +118,23 @@ public class CategoryDao extends GenericDao<Category> {
             pm.close();
         }
         return category;        
+    }
+
+    public List<CategoryMap> listCategoryMap(int page, int limit, String filter) {
+    	PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<CategoryMap> results;
+        try {
+            Query query = pm.newQuery(CategoryMap.class);
+            if (filter != null && filter != "")
+                query.setFilter(filter);
+            query.setRange((page - 1) * limit, page * limit);
+            @SuppressWarnings("unchecked")
+            List<CategoryMap> tmp = (List<CategoryMap>)query.execute();
+            results = (List<CategoryMap>)pm.detachCopyAll(tmp);
+        } finally {
+            pm.close();
+        }
+        return results;
     }
     
     public List<CategoryMap> findMap(long id) {        
