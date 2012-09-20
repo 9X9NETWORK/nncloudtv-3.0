@@ -1211,7 +1211,6 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
 
-    // TODO: refine
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.POST)
     public @ResponseBody
     TitleCard titleCardCreate(HttpServletResponse resp, HttpServletRequest req,
@@ -1248,77 +1247,87 @@ public class ApiContent extends ApiGeneric {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
-        if ((type == TitleCard.TYPE_BEGIN) || (type == TitleCard.TYPE_END)) {
-            // pass
-        } else {
+        if (type != TitleCard.TYPE_BEGIN && type != TitleCard.TYPE_END) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
         
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        
+        TitleCard titleCard = titleCardMngr.findByProgramIdAndType(programId, type);
+        if (titleCard == null) {
+            titleCard = new TitleCard(program.getChannelId(), programId, type);
+        }
+        
+        // message
         String message = req.getParameter("message");
         if (message == null) {
             badRequest(resp, MISSING_PARAMETER);
             return null;
         }
+        titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
         
-        
-        
-        TitleCard titleCard = null;
-        TitleCardManager titleCardMngr = new TitleCardManager();
-        List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
-        for (int i = 0; i < titleCards.size(); i++) {
-            if (titleCards.get(i).getType() == type) {
-                titleCard = titleCards.get(i); // read as it already exist, update operation
-                break;
-            }
-        }
-        if (titleCard == null) {
-            long channelId = program.getChannelId();
-            titleCard = new TitleCard(channelId, programId, type); // create as it not exist, add operation
-            titleCard = titleCardMngr.create(titleCard);
-        }
-        
-        // do set and save
-        
+        // duration
         String duration = req.getParameter("duration");
-        if (duration != null) {
+        if (duration == null) {
+            titleCard.setDuration(TitleCard.DEFAULT_DURATION);
+        } else {
             titleCard.setDuration(duration);
         }
         
-        titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
-        
+        // size
         String size = req.getParameter("size");
-        if (size != null) {
+        if (size == null) {
+            titleCard.setSize(TitleCard.DEFAULT_SIZE);
+        } else {
             titleCard.setSize(size);
         }
         
+        // color
         String color = req.getParameter("color");
-        if (color != null) {
+        if (color == null) {
+            titleCard.setColor(TitleCard.DEFAULT_COLOR);
+        } else {
             titleCard.setColor(color);
         }
         
+        // effect
         String effect = req.getParameter("effect");
-        if (effect != null) {
+        if (effect == null) {
+            titleCard.setEffect(TitleCard.DEFAULT_EFFECT);
+        } else {
             titleCard.setEffect(effect);
         }
         
+        // align
         String align = req.getParameter("align");
-        if (align != null) {
+        if (align == null) {
+            titleCard.setAlign(TitleCard.DEFAULT_ALIGN);
+        } else {
             titleCard.setAlign(align);
         }
         
+        // bgColor
         String bgColor = req.getParameter("bgColor");
-        if (bgColor != null) {
+        if (bgColor == null) {
+            titleCard.setBgColor(TitleCard.DEFAULT_BG_COLOR);
+        } else {
             titleCard.setBgColor(bgColor);
         }
         
+        // style
         String style = req.getParameter("style");
-        if (style != null) {
+        if (style == null) {
+            titleCard.setStyle(TitleCard.DEFAULT_STYLE);
+        } else {
             titleCard.setStyle(style);
         }
         
+        // weight
         String weight = req.getParameter("weight");
-        if (style != null) {
+        if (style == null) {
+            titleCard.setWeight(TitleCard.DEFAULT_WEIGHT);
+        } else {
             titleCard.setWeight(weight);
         }
         
@@ -1327,7 +1336,11 @@ public class ApiContent extends ApiGeneric {
             titleCard.setBgImage(bgImage);
         }
         
-        return titleCardMngr.save(titleCard);
+        titleCard = titleCardMngr.save(titleCard);
+        
+        titleCard.setMessage(NnStringUtil.revertHtml(titleCard.getMessage()));
+        
+        return titleCard;
     }
     
     @RequestMapping(value = "title_card/{id}", method = RequestMethod.DELETE)

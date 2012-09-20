@@ -27,11 +27,6 @@ public class TitleCardManager {
         card.setPlayerSyntax(this.generatePlayerSyntax(card));
         return dao.save(card);
     }
-
-    //TODO, going to remove
-    public TitleCard create(TitleCard card) {
-        return this.save(card);
-    }
     
     public void delete(TitleCard card) {
         if (card == null) {
@@ -76,5 +71,10 @@ public class TitleCardManager {
             return null;
         }
         return syntax;
+    }
+    
+    public TitleCard findByProgramIdAndType(long programId, short type) {
+    
+        return dao.findByProgramIdAndType(programId, type);
     }
 }

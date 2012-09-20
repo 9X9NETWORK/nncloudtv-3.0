@@ -8,6 +8,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.TitleCard;
 
 public class TitleCardDao extends GenericDao<TitleCard> {
@@ -47,6 +48,26 @@ public class TitleCardDao extends GenericDao<TitleCard> {
             pm.close();
         }
         return detached;
+    }
+    
+    public TitleCard findByProgramIdAndType(long programId, short type) {
+    
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        TitleCard result = null;
+        try {
+            Query query = pm.newQuery(TitleCard.class);
+            query.setFilter("programId == programIdParam && type == typeParam");
+            query.declareParameters("long programId, short typeParam");
+            @SuppressWarnings("unchecked")
+            List<TitleCard> titleCards = (List<TitleCard>) query.execute(
+                    programId, type);
+            if (titleCards.size() > 0) {
+                result = pm.detachCopy(titleCards.get(0));
+            }
+        } finally {
+            pm.close();
+        }
+        return result;
     }
 
 }

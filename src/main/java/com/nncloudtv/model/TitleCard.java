@@ -79,24 +79,21 @@ public class TitleCard implements Serializable {
     @Persistent
     private Date updateDate;
     
+    public static final String DEFAULT_MESSAGE  = "My Video";
+    public static final String DEFAULT_ALIGN    = "center";
+    public static final String DEFAULT_EFFECT   = "none";
+    public static final String DEFAULT_DURATION = "7";
+    public static final String DEFAULT_SIZE     = "20";
+    public static final String DEFAULT_COLOR    = "white";
+    public static final String DEFAULT_STYLE    = "normal";
+    public static final String DEFAULT_WEIGHT   = "normal";
+    public static final String DEFAULT_BG_COLOR = "black";
+    
     public TitleCard(long channelId, long programId, short type) {
+        
         this.channelId = channelId;
         this.programId = programId;
         this.type = type;
-        Date now = new Date();        
-        this.updateDate = now;
-        
-        // default options       
-        this.message = "My Video";
-        this.align = "center";
-        this.effect = "none";
-        this.duration = "7";
-        this.size = "20";
-        this.color = "white";
-        this.style = "normal";
-        this.weight = "normal";
-        this.bgColor = "black";
-        this.bgImage = "";
     }
 
     public Date getUpdateDate() {
