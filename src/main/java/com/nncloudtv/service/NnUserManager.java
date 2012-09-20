@@ -341,7 +341,7 @@ public class NnUserManager {
         String output = NnStringUtil.getDelimitedStr(info);
         return output;
     }
-
+    
     public static boolean isGuestByToken(String token) {
         if (token == null || token.length() == 0)
             return true;
@@ -349,6 +349,14 @@ public class NnUserManager {
             return true;
         }
         return false;
+    }
+    
+    public NnUser purify(NnUser user) {
+    
+        user.setSalt(null);
+        user.setCryptedPassword(null);
+        
+        return user;
     }
     
 }

@@ -137,15 +137,9 @@ public class ApiUser extends ApiGeneric {
             }
         }
         
-        userMngr.save(user);
-        NnUser result = userMngr.findById(user.getId());
-        if (result == null) {
-            internalError(resp);
-            return null;
-        }
-        result.setSalt(null);
-        result.setCryptedPassword(null);
-        return result;
+        user = userMngr.save(user);
+        
+        return userMngr.purify(user);
     }
     
     @RequestMapping(value = "users/{userId}/my_{repo}", method = RequestMethod.GET)
