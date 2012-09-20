@@ -453,7 +453,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
-    public String categoryInfo(String id, String tagStr, String sort) {
+    public String categoryInfo(String id, String tagStr, String sidx, String sort) {
         if (id == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
@@ -466,12 +466,21 @@ public class PlayerApiService {
         if (tagStr != null) {
             channels = catMngr.findChannelsByTag(cid, true, tagStr);
         } else {
-            channels = catMngr.findChannels(cid, true);
+            //channels = catMngr.findChannels(cid, true);
+        	//query.setRange((page - 1) * limit, page * limit);
+        	if (sidx == null)
+        		sidx = "1";
+        	int startIndex = Integer.parseInt(sidx);
+        	int limit = 20;
+        	int page = (int) (startIndex / limit) + 1;
+            channels = catMngr.listChannels(page, 20, cat.getId());
         }
         String result[] = {"", "", ""};
-        //category info
+        //category info        
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
         result[0] += assembleKeyValue("name", cat.getName());
+        result[0] += assembleKeyValue("sidx", sidx);
+        result[0] += assembleKeyValue("total", String.valueOf(catMngr.findChannelSize(cat.getId())));        
         //category tag
         String tags = cat.getTag();
         if (tags != null) {
@@ -602,7 +611,7 @@ public class PlayerApiService {
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             //List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, true);
-            List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator);
+            List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0);
             for (NnChannel c : curatorChannels) {
                 if (c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS) {
                     channels.add(c);
