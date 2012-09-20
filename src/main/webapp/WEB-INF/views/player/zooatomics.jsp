@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock21"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock22"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -289,13 +289,13 @@ soundManager.onready(function()
         <li class="favorite-body"><span>Favorite</span></li>
         <li class="favorite-tail"></li>
         <li class="favorite-bubble-left"></li>
-        <li class="favorite-bubble-center"><span>172K</span></li>
+        <li class="favorite-bubble-center"><span style="display: none">172K</span></li>
         <li class="favorite-bubble-right"></li>
       </ul>
       <div id="fb-like-container" style="display: none">
         <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href=""></div>
       </div>
-      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">This channel has been added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>"
+      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">This channel has been added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>
     </div>
     <p id="video-placeholder"></p>
     <div id="player-ep-bar">
@@ -1176,11 +1176,16 @@ soundManager.onready(function()
     <div id="developer-title">
       <h1></h1>
     </div>
-      <div class="reco-shelf">
-        <div id="developer-view">
-          <img src="">
-        </div>
+    <div class="reco-shelf">
+      <div id="developer-view"><img src=""></div>
+    </div>
+    <div id="developer-download">
+      <div class="btn-gray">
+        <p class="btn-gray-left"></p>
+        <p class="btn-gray-middle"></p>
+        <p class="btn-gray-right"></p>
       </div>
+    </div>
     <div id="developer-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
     <div id="developer-constrain">
        <div id="developer-list">
