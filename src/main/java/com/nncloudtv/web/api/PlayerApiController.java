@@ -338,11 +338,15 @@ public class PlayerApiController {
             @RequestParam(value="category", required=false) String category,
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="flatten", required=false) String isFlatten,
+            @RequestParam(value="v", required=false) String v,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {                                                
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
+        	if (v != "32") {
+        		
+        	}
             this.prepService(req, true);
             boolean flatten = Boolean.parseBoolean(isFlatten);
             output = playerApiService.category(category, lang, flatten);
@@ -420,6 +424,7 @@ public class PlayerApiController {
     @RequestMapping(value="setInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String setInfo(
             @RequestParam(value="set", required=false) String id,
+            @RequestParam(value="v", required=false) String v,
             @RequestParam(value="landing", required=false) String beautifulUrl,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
@@ -477,6 +482,7 @@ public class PlayerApiController {
     @RequestMapping(value="categoryInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String categoryInfo(
             @RequestParam(value="category", required=false) String id,
+            @RequestParam(value="sidx", required=false) String sidx,
             @RequestParam(value="sort", required=false) String sort,
             @RequestParam(value="tag", required=false) String tag,
             @RequestParam(value="rx", required = false) String rx,
@@ -486,7 +492,7 @@ public class PlayerApiController {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);
-            output = playerApiService.categoryInfo(id, tag, sort);
+            output = playerApiService.categoryInfo(id, tag, sidx, sort);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -681,6 +687,7 @@ public class PlayerApiController {
      */        
     @RequestMapping(value="channelLineup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String channelLineup(
+    		@RequestParam(value="v", required=false) String v,
             @RequestParam(value="user", required=false) String userToken, 
             @RequestParam(value="subscriptions", required=false) String subscriptions,
             @RequestParam(value="curator", required=false) String curatorIdStr,
@@ -735,6 +742,7 @@ public class PlayerApiController {
      */
     @RequestMapping(value="programInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String programInfo(
+    		@RequestParam(value="v", required=false) String v,
             @RequestParam(value="channel", required=false) String channelIds,
             @RequestParam(value="user", required = false) String userToken,
             @RequestParam(value="userInfo", required=false) String userInfo,
