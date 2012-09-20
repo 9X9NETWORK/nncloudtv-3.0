@@ -746,6 +746,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        List<NnEpisode> results = new ArrayList<NnEpisode>();
+        
         // paging
         long page = 0, rows = 0;
         try {
@@ -758,12 +761,9 @@ public class ApiContent extends ApiGeneric {
         } catch (NumberFormatException e) {
         }
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        List<NnEpisode> results = new ArrayList<NnEpisode>();
-        
         if (page > 0 && rows > 0) {
             
-            results = episodeMngr.list(page, rows, null, null, "channelId = " + channelId);
+            results = episodeMngr.list(page, rows, null, null, "channelId == " + channelId);
             
         } else {
             

@@ -60,27 +60,6 @@ public class NnUserLibraryDao extends GenericDao<NnUserLibrary> {
 		return result;
 	}
 	
-    public List<NnUserLibrary> findByUserIdStrAndType(String userIdStr, short type, short page, short rows) {
-
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-
-        List<NnUserLibrary> result = new ArrayList<NnUserLibrary>();
-        try {
-            Query query = pm.newQuery(NnUserLibrary.class);
-            query.setFilter("userIdStr == userIdStrParam && type == typeParam");
-            query.declareParameters("String userIdStrParam, short typeParam");
-            query.setOrdering("updateDate desc");
-            query.setRange((page - 1) * rows, page * rows);
-            @SuppressWarnings("unchecked")
-            List<NnUserLibrary> libs = (List<NnUserLibrary>) query.execute(
-                    userIdStr, type);
-            result = (List<NnUserLibrary>) pm.detachCopyAll(libs);
-        } finally {
-            pm.close();
-        }
-        return result;
-    }
-	
 	public NnUserLibrary findByUserIdStrAndTypeAndFileUrl(String userIdStr, short type,
             String fileUrl) {
 		

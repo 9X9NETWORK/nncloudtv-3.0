@@ -123,7 +123,6 @@ public class ApiUser extends ApiGeneric {
         String imageUrl = req.getParameter("imageUrl");
         if (imageUrl != null) {
             
-            // TODO: check for image url
             user.setImageUrl(imageUrl);
         }
         
@@ -148,7 +147,7 @@ public class ApiUser extends ApiGeneric {
             @PathVariable("repo") String repo) {
         
         List<NnUserLibrary> results;
-
+        
         Long userId = null;
         try {
             userId = Long.valueOf(userIdStr);
@@ -176,7 +175,8 @@ public class ApiUser extends ApiGeneric {
         
         String pageStr = req.getParameter("page");
         String rowsStr =  req.getParameter("rows");
-        if ((pageStr!=null) && (rowsStr!=null)) {
+        
+        if (pageStr != null && rowsStr != null) {
             
             Short page = null;
             try {
@@ -198,26 +198,25 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
-            if ((page<1)||(rows<1)) {
+            if (page < 1 || rows < 1) {
+                
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
             
-            results = libMngr.findByUserAndType(user, type, page, rows);
-            for (NnUserLibrary result : results) {
-                result.setName(NnStringUtil.revertHtml(result.getName()));
-            }
-            
-            return results;
+            String filter = "userIdStr == '" + user.getIdStr() + "' && type == " + type;
+            results = libMngr.list(page, rows, null, null, filter);
             
         } else {
-            results = libMngr.findByUserAndType(user, type);
-            for (NnUserLibrary result : results) {
-                result.setName(NnStringUtil.revertHtml(result.getName()));
-            }
             
-            return results;
-        }      
+            results = libMngr.findByUserAndType(user, type);
+        }
+        
+        for (NnUserLibrary result : results) {
+            result.setName(NnStringUtil.revertHtml(result.getName()));
+        }
+        
+        return results;
     }
     
     @RequestMapping(value = "users/{userId}/my_{repo}", method = RequestMethod.POST)

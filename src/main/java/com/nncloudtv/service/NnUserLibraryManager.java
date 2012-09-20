@@ -28,12 +28,9 @@ public class NnUserLibraryManager {
         return libDao.findById(id);
     }
     
+    // sorted by updateDate
     public List<NnUserLibrary> findByUserAndType(NnUser user, Short type) {
         return libDao.findByUserIdStrAndType(user.getIdStr(), type);
-    }
-    
-    public List<NnUserLibrary> findByUserAndType(NnUser user, Short type, Short page, Short rows) {
-        return libDao.findByUserIdStrAndType(user.getIdStr(), type, page, rows);
     }
     
     public void delete(NnUserLibrary lib) {
@@ -43,5 +40,10 @@ public class NnUserLibraryManager {
     public NnUserLibrary findByUserAndTypeAndFileUrl(NnUser user, short type,
             String fileUrl) {        
         return libDao.findByUserIdStrAndTypeAndFileUrl(user.getIdStr(), type, fileUrl);
+        
+    }
+    
+    public List<NnUserLibrary> list(long page, long rows, String sidx, String sord, String filter) {
+        return libDao.list(page, rows, sidx, sord, filter);
     }
 }
