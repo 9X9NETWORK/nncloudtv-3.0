@@ -102,6 +102,11 @@ public class CategoryManager {
         return matched;
     }
     
+    public List<CategoryMap> findMapByChannelId(long channelId) {
+        
+        return mapDao.findByChannelId(channelId);
+    }
+    
     public List<Category> findByChannelId(long channelId) {
         
         List<CategoryMap> maps = mapDao.findByChannelId(channelId);
@@ -186,6 +191,18 @@ public class CategoryManager {
         
     public void delete(Category c) {
         dao.delete(c);
+    }
+    
+    public void delete(CategoryMap map) {
+    
+        mapDao.delete(map);
+    }
+    
+    public void delete(List<CategoryMap> cats) {
+        
+        for (CategoryMap cat : cats) {
+            delete(cat);
+        }
     }
     
     public void saveAll(List<Category> categories) {

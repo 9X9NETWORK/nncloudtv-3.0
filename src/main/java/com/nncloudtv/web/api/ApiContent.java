@@ -615,13 +615,12 @@ public class ApiContent extends ApiGeneric {
             // category mapping
             if (categoryId != channel.getCategoryId()) {
                 
-                List<Category> origCategories = catMngr.findByChannelId(channelId);
+                List<CategoryMap> cats = catMngr.findMapByChannelId(channelId);
                 
-                for (Category cat : origCategories) {
-                    catMngr.delete(cat);
-                }
+                catMngr.delete(cats);
                 
                 catMngr.save(new CategoryMap(categoryId, channelId));
+                
                 if (channel.getSphere() != null && channel.getSphere().equalsIgnoreCase(LangTable.OTHER)) {
                     
                     Category twin = catMngr.findTwin(category);
