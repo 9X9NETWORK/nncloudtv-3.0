@@ -49,6 +49,10 @@ public class NnProgramManager {
             reorderEpisodePrograms(episode.getId());
         }
         
+        // update episode duration
+        episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        episodeMngr.save(episode);
+        
         return program;
     }
     
@@ -103,18 +107,65 @@ public class NnProgramManager {
     }
     
     public NnProgram save(NnProgram program) {
+        
+        if (program == null) {
+            return program;
+        }
+        
         Date now = new Date();
+        
         if (program.getCreateDate() == null)
             program.setCreateDate(now);
-        program.setUpdateDate(now); // NOTE: a trying to modify program update time (from admin) will be omitted by this, use "untouched" save() instread
+        
+        program.setUpdateDate(now);
         program = dao.save(program);
+        
         this.processCache(program.getChannelId());
+        
+        return program;
+    }
+    
+    public NnProgram save(NnProgram program, boolean recalculateEpisodeDuration) {
+    
+        
+        if (program == null) {
+            return program;
+        }
+        
+        program = save(program);
+        
+        if (recalculateEpisodeDuration) {
+            
+            NnEpisodeManager episodeMngr = new NnEpisodeManager();
+            
+            NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
+            if (episode != null) {
+                episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+                episodeMngr.save(episode);
+            }
+            
+        }
+        
         return program;
     }
     
     public void delete(NnProgram program) {
-        dao.delete(program);        
-        this.processCache(program.getChannelId());        
+    
+        long episodeId = program.getEpisodeId();
+        long channelId = program.getChannelId();
+        
+        dao.delete(program);
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode != null) {
+            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+            episodeMngr.save(episode);
+            
+            reorderEpisodePrograms(episodeId);
+        }
+        
+        processCache(channelId);
     }
     
     public void delete(List<NnProgram> programs) {
@@ -123,12 +174,12 @@ public class NnProgramManager {
         
         for (NnProgram program : programs) {
             
-            long tempChannelId = program.getChannelId();
+            long tmpChannelId = program.getChannelId();
             
-            delete(program);
+            dao.delete(program);
             
-            if (channelId != tempChannelId) {
-                channelId = tempChannelId;
+            if (channelId != tmpChannelId) {
+                channelId = tmpChannelId;
                 processCache(channelId);
             }
         }

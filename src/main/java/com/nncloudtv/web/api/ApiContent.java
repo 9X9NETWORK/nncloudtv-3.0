@@ -242,6 +242,8 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        boolean recalculateDuration = false;
+        
         // name
         String name = req.getParameter("name");
         if (name != null) {
@@ -289,6 +291,7 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             program.setStartTime(startTime);
+            recalculateDuration = true;
         }
         
         // endTime
@@ -304,9 +307,15 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             program.setStartTime(endTime);
+            recalculateDuration = true;
         }
         
-        return programMngr.save(program);
+        program = programMngr.save(program, recalculateDuration);
+        
+        program.setName(NnStringUtil.htmlSafeAndTruncated(program.getName()));
+        program.setIntro(NnStringUtil.htmlSafeAndTruncated(program.getIntro()));
+        
+        return program;
     }
     
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.DELETE)
@@ -331,22 +340,14 @@ public class ApiContent extends ApiGeneric {
             return "Program Not Found";
         }
         
-        long episodeId = program.getEpisodeId();
-        
         TitleCardManager titleCardMngr = new TitleCardManager();
         
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
-        for (int i = 0; i < titleCards.size(); i++) {
-            titleCardMngr.delete(titleCards.get(i));
+        for (TitleCard titleCard : titleCards) {
+            titleCardMngr.delete(titleCard);
         }
         
         programMngr.delete(program);
-        
-        if (episodeId > 0) {
-            
-            programMngr.reorderEpisodePrograms(episodeId);
-            
-        }
         
         return "OK";
     }
@@ -390,6 +391,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnProgram program = new NnProgram(episode.getChannelId(), episodeId, name, intro, imageUrl);
+        program.setPublic(true);
         
         // fileUrl
         String fileUrl = req.getParameter("fileUrl");

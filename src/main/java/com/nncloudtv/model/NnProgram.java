@@ -216,7 +216,16 @@ public class NnProgram implements Serializable {
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
-
+    
+    public int getDurationInt() {
+        int duration = 0;
+        try {
+            duration = Integer.valueOf(duration);
+        } catch (NumberFormatException e) {
+        }
+        return duration;
+    }
+    
     public String getDuration() {
         return duration;
     }
@@ -344,15 +353,33 @@ public class NnProgram implements Serializable {
     public String getStartTime() {
         return startTime;
     }
-
+    
+    public int getStartTimeInt() {
+        int startTimeInt = 0;
+        try {
+            startTimeInt = Integer.valueOf(startTime);
+        } catch (NumberFormatException e) {
+        }
+        return startTimeInt;
+    }
+    
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
-
+    
     public String getEndTime() {
         return endTime;
     }
-
+    
+    public int getEndTimeInt() {
+        int endTimeInt = 0;
+        try {
+            endTimeInt = Integer.valueOf(endTime);
+        } catch (NumberFormatException e) {
+        }
+        return endTimeInt;
+    }
+    
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }

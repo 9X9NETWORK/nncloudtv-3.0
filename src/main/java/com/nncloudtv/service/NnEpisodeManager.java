@@ -163,4 +163,29 @@ public class NnEpisodeManager {
     
         return dao.list(page, rows, sidx, sord, filter);
     }
+    
+    public int calculateEpisodeDuration(NnEpisode episode) {
+    
+        NnProgramManager programMngr = new NnProgramManager();
+        List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
+        
+        int totalDuration = 0;
+        
+        for (NnProgram program : programs) {
+            
+            int startTime = program.getStartTimeInt();
+            int endTime = program.getEndTimeInt();
+            
+            int delta = 0;
+            if (startTime == 0 && endTime == 0) {
+                delta = program.getDurationInt();
+            } else {
+                delta = (endTime > startTime) ? (endTime - startTime) : 0;
+            }
+            
+            totalDuration += delta;
+        }
+        
+        return totalDuration;
+    }
 }

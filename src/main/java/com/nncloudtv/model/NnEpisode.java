@@ -46,6 +46,13 @@ public class NnEpisode implements Serializable {
     private Date updateDate;
     
     @NotPersistent
+    private int cntView;
+    
+    // louis: is this need to be persistent?
+    @NotPersistent
+    private int duration;
+    
+    @NotPersistent
     private int seq;
     
     public NnEpisode(long channelId) {
@@ -134,5 +141,25 @@ public class NnEpisode implements Serializable {
 	public void setSeq(int seq) {
 		this.seq = seq;
 	}
+
+    public int getCntView() {
+    
+        return cntView;
+    }
+
+    public void setCntView(int cntView) {
+    
+        this.cntView = cntView;
+    }
+
+    public int getDuration() {
+    
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+    
+        this.duration = duration;
+    }
      
 }
