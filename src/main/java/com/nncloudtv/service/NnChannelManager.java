@@ -764,12 +764,27 @@ public class NnChannelManager {
         List<NnProgram> programs = programMngr.findByChannel(channel.getId());
         
         List<String> imgs = new ArrayList<String>();
+        
         for (int i = 0; i < programs.size() && imgs.size() < 3; i++) {
+            
             String img = programs.get(i).getImageUrl();
+            
             if (img != null && img.length() > 0) {
                 imgs.add(img);
             }
-        }                
+        }
+        
+        if (imgs.size() > 0) {
+            
+            String moreImageUrl = imgs.remove(0);
+            for (String imageUrl : imgs) {
+                
+                moreImageUrl += "|" + imageUrl;
+            }
+            
+            channel.setMoreImageUrl(moreImageUrl);
+        }
+        
     }
     
 }

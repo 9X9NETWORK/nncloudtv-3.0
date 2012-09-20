@@ -34,7 +34,10 @@ public class NnChannel implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=500)
     private String intro;
-
+    
+    @NotPersistent
+    private String moreImageUrl;
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String imageUrl; 
@@ -484,6 +487,16 @@ public class NnChannel implements Serializable {
     
     public void setCntEpisode(int cntEpisode) {
         this.cntEpisode = cntEpisode;
+    }
+
+    public String getMoreImageUrl() {
+    
+        return moreImageUrl;
+    }
+
+    public void setMoreImageUrl(String moreImageUrl) {
+    
+        this.moreImageUrl = moreImageUrl;
     }
 
 }
