@@ -518,6 +518,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        channel.setName(NnStringUtil.revertHtml(channel.getName()));
+        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        
         return channel;
     }
     
@@ -1140,7 +1143,13 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        return adMngr.findByEpisode(episode);
+        NnAd nnad = adMngr.findByEpisode(episode);
+        
+        if (nnad != null) {
+            nnad.setMessage(NnStringUtil.revertHtml(nnad.getMessage()));
+        }
+        
+        return nnad;
     }
     
     @RequestMapping(value = "programs/{programId}/title_cards", method = RequestMethod.GET)
@@ -1162,9 +1171,13 @@ public class ApiContent extends ApiGeneric {
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> results = titleCardMngr.findByProgramId(programId);
         
+        for (TitleCard result : results) {
+            result.setMessage(NnStringUtil.revertHtml(result.getMessage()));
+        }
+        
         return results;
     }
-
+    
     @RequestMapping(value = "episodes/{episodeId}/title_cards", method = RequestMethod.GET)
     public @ResponseBody
     List<TitleCard> episodeTitleCards(HttpServletRequest req,
@@ -1189,6 +1202,10 @@ public class ApiContent extends ApiGeneric {
         
         for (NnProgram program : programs) {
             results.addAll(titleCardMngr.findByProgramId(program.getId()));
+        }
+        
+        for (TitleCard result : results) {
+            result.setMessage(NnStringUtil.revertHtml(result.getMessage()));
         }
         
         return results;
@@ -1361,6 +1378,8 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, "Item Not Found");
             return null;
         }
+        
+        lib.setName(NnStringUtil.revertHtml(lib.getName()));
         
         return lib;
     }
