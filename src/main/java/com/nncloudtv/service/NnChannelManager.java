@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -195,7 +196,8 @@ public class NnChannelManager {
             favoriteCh.setUserIdStr(user.getIdStr());
             favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
             favoriteCh.setSphere(user.getSphere());
-            
+            favoriteCh.setPublic(true);
+            favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);
             dao.save(favoriteCh);
         }
         NnProgramManager pMngr = new NnProgramManager();
@@ -538,10 +540,42 @@ public class NnChannelManager {
             channels = service.findBillboardPool(9, lang);
         } else if (name.equals(Tag.HOT)) {
             channels = service.findBillboardPool(9, lang);
-        }
+        }        
+        Collections.sort(channels, this.getChannelComparator("updateDate"));
         return channels;
     }
-                
+
+    public Comparator<NnChannel> getChannelComparator(String sort) {
+    	if (sort.equals("seq")) {
+            class ChannelComparator implements Comparator<NnChannel> {
+                public int compare(NnChannel channel1, NnChannel channel2) {
+                	Short seq1 = channel1.getSeq();
+                	Short seq2 = channel2.getSeq();
+                	return seq1.compareTo(seq2);
+                }
+            }
+            return new ChannelComparator();    		
+    	}
+    	if (sort.equals("cntView")) {
+            class ChannelComparator implements Comparator<NnChannel> {
+                public int compare(NnChannel channel1, NnChannel channel2) {
+                	Integer cntView1 = channel1.getCntView();
+                	Integer cntView2 = channel2.getCntView();
+                	return cntView2.compareTo(cntView1);
+                }
+            }
+            return new ChannelComparator();    		
+    	}    	
+        class ChannelComparator implements Comparator<NnChannel> {
+            public int compare(NnChannel channel1, NnChannel channel2) {
+                Date date1 = channel1.getUpdateDate();
+                Date date2 = channel2.getUpdateDate();                
+                return date2.compareTo(date1);
+            }
+        }        
+        return new ChannelComparator();
+    }
+    
     public int addCntView(boolean readOnly, long channelId) {        
         String counterName = "cid" + channelId;
         CounterFactory factory = new CounterFactory();
@@ -615,14 +649,16 @@ public class NnChannelManager {
         return channels;
     }
 
+    //TODO change to list, and merge with byUser, and subList is not real
     //used only in player for specific occasion
-    public List<NnChannel> findByUserAndHisFavorite(NnUser user) {
+    public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit) {
         String userIdStr = user.getShard() + "-" + user.getId();
-        List<NnChannel> channels = dao.findByUser(userIdStr, 0, true);
+        List<NnChannel> channels = dao.findByUser(userIdStr, limit, true);
         boolean needToFake = true;
         for (NnChannel c : channels) {
-        	if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE)
+        	if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
         		needToFake = false;
+        	}
         }
         if (needToFake) {
         	log.info("---- need to fake-----");
@@ -634,6 +670,12 @@ public class NnChannelManager {
         	c.setPublic(true);
         	channels.add(c);
         }
+        if (limit == 0) {
+            return channels;
+        } else {             
+            if (channels.size() > limit)
+            return channels.subList(0, limit);
+        }        
         return channels;
     }
     
