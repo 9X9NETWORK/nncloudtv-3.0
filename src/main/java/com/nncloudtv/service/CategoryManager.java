@@ -65,7 +65,7 @@ public class CategoryManager {
         return dao.findById(id);
     }
 
-    //player=true returns only public and success channels
+    //player=true returns only public and success channels    
     public List<NnChannel> findChannels(long id, boolean player) {
         List<CategoryMap> map = dao.findMap(id);
         List<NnChannel> channels = new ArrayList<NnChannel>();
@@ -81,6 +81,23 @@ public class CategoryManager {
         return channels;
     }
 
+    public long findChannelSize(long categoryId) {
+    	return dao.findChannelSize(categoryId);
+    }
+    
+    public List<NnChannel> listChannels(int page, int limit, long categoryId) {
+    	NnChannelManager chMngr = new NnChannelManager();
+    	List<NnChannel> channels = new ArrayList<NnChannel>();
+    	List<CategoryMap> list = dao.listCategoryMap(page, limit, "categoryId == " + categoryId);
+    	for (CategoryMap m :list) {
+    		NnChannel c = chMngr.findById(m.getChannelId());
+    		if (c != null)
+    			channels.add(c);
+    	}
+    	return channels;
+    }
+        
+    
     //find channels under certain category id with the tag
     public List<NnChannel> findChannelsByTag(long id, boolean player, String tagStr) {
         List<NnChannel> channels = this.findChannels(id, player);    
