@@ -672,6 +672,11 @@ public class ApiContent extends ApiGeneric {
         List<NnProgram> results = programMngr.findByChannelId(channelId);
         Collections.sort(results, programMngr.getProgramSeqComparator());
         
+        for (NnProgram program : results) {
+            program.setName(NnStringUtil.revertHtml(program.getName()));
+            program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
+        }
+        
         return results;
     }
     

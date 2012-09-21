@@ -114,7 +114,7 @@ public class NnProgram implements Serializable {
     private Date updateDate;
     
     @Persistent
-    private Date              publishDate;
+    private Date publishDate;
     
     @NotPersistent
     private int cntView;

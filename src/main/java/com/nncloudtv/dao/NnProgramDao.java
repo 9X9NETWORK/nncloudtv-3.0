@@ -208,6 +208,9 @@ public class NnProgramDao extends GenericDao<NnProgram> {
     }
 
     public List<NnProgram> findByChannel(long channelId) {
+        
+        log.info("find by channelId = " + channelId);
+        
         List<NnProgram> detached = new ArrayList<NnProgram>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
