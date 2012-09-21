@@ -646,24 +646,20 @@ public class NnProgramManager {
         NnChannelManager channelMngr = new NnChannelManager();
         List<NnProgram> empty = new ArrayList<NnProgram>();
         
-        List<NnChannel> channelFavorites = channelMngr.findByUserAndHisFavorite(user, 0, false);
-        if (channelFavorites.size() == 0) {
-            log.info("no favorite channel");
-            return empty;
+        List<NnChannel> channelFavorites = channelMngr.findByUser(user, 0, false);
+        
+        for (NnChannel channel : channelFavorites) {
+            
+            if (channel.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+                
+                List<NnProgram> favorites = findByChannelId(channel.getId());
+                log.info("favorites count = " + favorites.size());
+                return favorites;
+            }
         }
         
-        NnChannel channelFavorite = channelFavorites.get(0);
-        if (channelFavorite.getContentType() != NnChannel.CONTENTTYPE_FAVORITE) {
-            log.info("fake favorite channel");
-            return empty;
-        }
-        
-        
-        List<NnProgram> favorites = findByChannelId(channelFavorite.getId());
-        
-        log.info("favorites count = " + favorites.size());
-        
-        return favorites;
+        log.info("no favorite channel");
+        return empty;
     }
 }
 
