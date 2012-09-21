@@ -614,7 +614,7 @@ public class PlayerApiService {
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             //List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, true);
-            List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0);
+            List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, true);
             for (NnChannel c : curatorChannels) {
                 if (c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS) {
                     channels.add(c);

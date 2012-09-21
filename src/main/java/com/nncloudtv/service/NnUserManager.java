@@ -306,9 +306,9 @@ public class NnUserManager {
         List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
         for (NnUser u : users) {
             if (chCntLimit) {
-                curatorChannels.addAll(chMngr.findByUserAndHisFavorite(u, 1));
+                curatorChannels.addAll(chMngr.findByUserAndHisFavorite(u, 1, true));
             } else {
-                curatorChannels.addAll(chMngr.findByUserAndHisFavorite(u, 0));
+                curatorChannels.addAll(chMngr.findByUserAndHisFavorite(u, 0, true));
             }
             String ch = "";
             if (curatorChannels.size() > 0) {

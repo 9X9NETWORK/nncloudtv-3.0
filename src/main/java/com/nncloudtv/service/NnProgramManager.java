@@ -646,7 +646,7 @@ public class NnProgramManager {
         NnChannelManager channelMngr = new NnChannelManager();
         List<NnProgram> empty = new ArrayList<NnProgram>();
         
-        List<NnChannel> channelFavorites = channelMngr.findByUserAndHisFavorite(user, 0);
+        List<NnChannel> channelFavorites = channelMngr.findByUserAndHisFavorite(user, 0, false);
         if (channelFavorites.size() == 0) {
             return empty;
         }
