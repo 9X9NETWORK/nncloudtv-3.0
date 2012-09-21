@@ -30,6 +30,7 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.CategoryManager;
+import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
@@ -194,7 +195,10 @@ public class ApiUser extends ApiGeneric {
                 favorite.setPublishDate(episode.getPublishDate());
                 favorite.setCntView(episode.getCntView());
                 favorite.setPublic(episode.isPublic());
-                favorite.setPlaybackUrl("pedding ...."); // TODO: playbackUrl ?
+                favorite.setPlaybackUrl("http://"
+                        + MsoConfigManager.getServerDomain() + "/ch="
+                        + program.getChannelId() + "&ep="
+                        + program.getEpisodeId());
                 
             } else {
                 

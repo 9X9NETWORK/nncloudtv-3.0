@@ -9,6 +9,8 @@ public class UserFavorite implements Serializable {
     
     private long channelId;
     
+    private long storageId;
+    
     private String imageUrl;
     
     private String name;
@@ -101,6 +103,16 @@ public class UserFavorite implements Serializable {
     public void setPlaybackUrl(String playbackUrl) {
     
         this.playbackUrl = playbackUrl;
+    }
+
+    public long getStorageId() {
+    
+        return storageId;
+    }
+
+    public void setStorageId(long storageId) {
+    
+        this.storageId = storageId;
     }
     
 }
