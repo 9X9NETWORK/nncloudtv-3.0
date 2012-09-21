@@ -777,7 +777,7 @@ public class NnChannelManager {
         return output;
     }
 
-    private String convertEpochToTime(String transcodingUpdateDate, Date updateDate) {
+    public static String convertEpochToTime(String transcodingUpdateDate, Date updateDate) {
         String output = "";
         try {
             if (transcodingUpdateDate != null) {
