@@ -489,7 +489,7 @@ public class NnProgramManager {
         return program;
     }
 
-    public List<NnProgram> findByChannel(long channelId) {
+    public List<NnProgram> findByChannelId(long channelId) {
         return dao.findByChannel(channelId);
     }
     
@@ -639,6 +639,24 @@ public class NnProgramManager {
         }
         
         return new NnProgramSeqComparator();
+    }
+    
+    public List<NnProgram> getUserFavorites(NnUser user) {
+    
+        NnChannelManager channelMngr = new NnChannelManager();
+        List<NnProgram> empty = new ArrayList<NnProgram>();
+        
+        List<NnChannel> channelFavorites = channelMngr.findByUserAndHisFavorite(user, 0);
+        if (channelFavorites.size() == 0) {
+            return empty;
+        }
+        
+        NnChannel channelFavorite = channelFavorites.get(0);
+        if (channelFavorite.getContentType() != NnChannel.CONTENTTYPE_FAVORITE) {
+            return empty;
+        }
+        
+        return findByChannelId(channelFavorite.getId());
     }
 }
 

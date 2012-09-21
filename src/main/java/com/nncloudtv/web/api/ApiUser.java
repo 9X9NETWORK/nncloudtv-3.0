@@ -24,14 +24,19 @@ import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnEpisode;
+import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnEpisodeManager;
+import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.web.json.cms.UserFavorite;
 import com.nncloudtv.web.json.facebook.FacebookPage;
 
 @Controller
@@ -137,6 +142,74 @@ public class ApiUser extends ApiGeneric {
         user = userMngr.save(user);
         
         return userMngr.purify(user);
+    }
+    
+    @RequestMapping(value = "users/{userId}/my_favorites", method = RequestMethod.GET)
+    List<UserFavorite> userFavorites(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+        
+        List<UserFavorite> results = new ArrayList<UserFavorite>();
+        
+        Long userId = null;
+        try {
+            userId = Long.valueOf(userIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (userId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        
+        NnUser user = userMngr.findById(userId);
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
+        List<NnProgram> favorites = programMngr.getUserFavorites(user);
+        
+        for (NnProgram program : favorites) {
+            
+            UserFavorite favorite = new UserFavorite();
+            
+            if (program.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+                
+                NnEpisode episode = episodeMngr.findById(program.getStorageIdInt());
+                if (episode == null) {
+                    continue;
+                }
+                
+                favorite.setChannelId(episode.getChannelId());
+                favorite.setImageUrl(episode.getImageUrl());
+                favorite.setName(episode.getName());
+                favorite.setDuration(episode.getDuration());
+                favorite.setPublishDate(episode.getPublishDate());
+                favorite.setCntView(episode.getCntView());
+                favorite.setPublic(episode.isPublic());
+                favorite.setPlaybackUrl("pedding ...."); // TODO: playbackUrl ?
+                
+            } else {
+                
+                favorite.setChannelId(program.getChannelId());
+                favorite.setImageUrl(program.getImageUrl());
+                favorite.setName(program.getName());
+                favorite.setDuration(program.getDurationInt());
+                favorite.setPublishDate(program.getPublishDate());
+                favorite.setCntView(program.getCntView());
+                favorite.setPublic(program.isPublic());
+                favorite.setPlaybackUrl("pedding ...."); // TODO: playbackUrl ?
+                
+            }
+            
+            results.add(favorite);
+        }
+        
+        return results;
     }
     
     @RequestMapping(value = "users/{userId}/my_{repo}", method = RequestMethod.GET)

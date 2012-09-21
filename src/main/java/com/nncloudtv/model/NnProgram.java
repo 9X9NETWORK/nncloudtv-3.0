@@ -112,9 +112,12 @@ public class NnProgram implements Serializable {
         
     @Persistent
     private Date updateDate;
-
+    
     @Persistent
     private Date              publishDate;
+    
+    @NotPersistent
+    private int cntView;
     
     public NnProgram(long channelId, String name, String intro, String imageUrl) {
     
@@ -399,5 +402,24 @@ public class NnProgram implements Serializable {
     public void setEpisodeId(long episodeId) {
         this.episodeId = episodeId;
     }
+
+    public long getStorageIdInt() {
     
+        Long id = null;
+        try {
+            id = Long.valueOf(storageId);
+        } catch (NumberFormatException e) {
+        }
+        
+        return (id == 0) ? 0 : id;
+    }
+
+    public int getCntView() {
+    
+        return cntView;
+    }
+    
+    public void setCntView(int cntView) {
+        this.cntView = cntView;
+    }
 }

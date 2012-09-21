@@ -714,7 +714,7 @@ public class NnChannelManager {
         }            
         if (c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL && 
             c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-        	List<NnProgram> programs = new NnProgramManager().findByChannel(c.getId());
+        	List<NnProgram> programs = new NnProgramManager().findByChannelId(c.getId());
         	for (int i=0; i<3; i++) {
         		if (i < programs.size())
         			imageUrl += "|" + programs.get(i).getImageUrl();
@@ -812,7 +812,7 @@ public class NnChannelManager {
     
         NnProgramManager programMngr = new NnProgramManager();
         
-        List<NnProgram> programs = programMngr.findByChannel(channel.getId());
+        List<NnProgram> programs = programMngr.findByChannelId(channel.getId());
         
         List<String> imgs = new ArrayList<String>();
         
