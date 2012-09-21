@@ -56,6 +56,8 @@ CREATE TABLE `nnepisode` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `imageUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `intro` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `duration` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,  
+  `isPublic` bit(1) NOT NULL,  
   `channelId` bigint(20) DEFAULT '0',
   `adId` bigint(20) DEFAULT '0',
   `publishDate` timestamp,
@@ -166,7 +168,7 @@ drop table nnset_autosharing;
 drop table nnset_to_nnchannel;
 drop table counter_shard;
 drop table nnuser_report;
-
+drop table nndevice;
 -----------------------------------------------------    
 use nncloudtv_analytics;
 drop table mso;
@@ -221,12 +223,22 @@ update nnuser set cntFollower = 0;
 update nnuser set cntChannel = 0;
 update nnuser set profileUrl = (select round(rand() * 10000000000)) where profileUrl is null;
 
+delete from nnuser_subscribe where seq=0;
+delete s1
+  from nnuser_subscribe s1, nnuser_subscribe s2
+ where s1.id < s2.id
+   and s1.userId = s2.userId
+   and s1.seq = s2.seq;
+alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);
+
 use nncloudtv_content;
-alter table nnchannel alter cntSubscribe set default 0;
 alter table nnchannel add column poolType smallint(6)  default 0;
 alter table nnchannel add column sphere varchar(5) default 'en';
 alter table nnchannel drop column errorReason;
 alter table nnchannel add column cntSubscribe int(11) not null default 0;
+alter table nnchannel add column cntEpisode int(11) not null default 0;
+update nnchannel set cntEpisode = programCnt;
+alter table nnchannel drop column programCnt;
 alter table nnchannel add column userIdStr varchar(25);
 alter table nnchannel add column note varchar(10);
 alter table nnchannel add subscribersIdStr varchar(255);
@@ -250,6 +262,7 @@ insert into nnepisode (name, imageUrl, intro, publishDate, updateDate, channelId
   where c.contentType = 6
     and c.id = p.channelId)
 
+//!!!! wrong !!!!    
 update nnprogram
    set seq = '00000001', subSeq = '00000001'
  where seq is null
@@ -259,16 +272,29 @@ update nnprogram
    set subSeq = '00000001'
  where subSeq is null
    and channelId in (select id from nnchannel where contentType = 6)
+
+update nnprogram
+   set subSeq = '00000001'
+ where subSeq is null
+   and channelId in (select id from nnchannel where contentType = 6)
+
    
+update nnchannel set tag = null where tag = "";
+update nnchannel set tag = null where tag like "Enter tags%";
+update nnchannel set tag = lower(tag);
+
+update nnchannel set transcodingUpdateDate = null where contentType=3;
+update nnchannel set transcodingUpdateDate = null where contentType=4;
 
 delete from mso_config where id in (2,4);
 
 -----------------------------------------------------
 - category.py
 - content.py
-modify to zh and do again
+- content_zh.py
 - jobs/category_tag.py
-- jobs/channel_meta.py            
+- jobs/channel_meta.py
+- jobs/category_cntChannel.py
 - billboard.py
 - trending.py
 - subscribe.py

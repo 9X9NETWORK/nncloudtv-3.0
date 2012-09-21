@@ -228,7 +228,9 @@
 3307	明星開麥拉	http://www.maplestage.net/show/明星開麥拉/	電視與電影	"綜藝娛樂, 梁赫群, 選秀"	ZH	TW	Q2	
 6730	明艷動人的她 / My Shining Girl	http://www.maplestage.net/drama/明艷動人的她/	電視與電影	"韓劇, 金亨俊, 蘇怡賢, 樸光賢, 高娜恩, 李政表, kbs"	ZH	TW	Q2	
 3830	星光下的童話	http://www.maplestage.net/drama/星光下的童話/	電視與電影	"偶像劇, 星勢力娛樂, 華視, 陳楚河, 賴雅妍, 李國毅, 田中千繪"	ZH	TW	Q2	
+5326	星島中文電台	http://www.youtube.com/user/demo9x9	新聞	"八方論談, 克怡的輕鬆頻道, gossip station"	ZH	TW	Q2	純音檔
 6560	星聞蒐得妙	http://www.maplestage.net/show/星聞蒐得妙/	電視與電影	"綜藝娛樂, TVBS, 大明星小跟班, 星時尚, 海芬"	ZH	TW	Q2	
+6683	暴力羅曼史 / Wild Romance	http://www.maplestage.net/drama/暴力羅曼史/	電視與電影	"韓劇, 李東旭, 李詩英, 吳應錫, 裴靜秀"	ZH	TW	Q2	
 114	有話好說	http://www.youtube.com/user/ptstalk	電視與電影	"公視, 談話類, 知性, 名嘴"	ZH	TW	Q2	
 4527	杰威爾音樂 JVR Music International	http://www.youtube.com/user/jvrmuzic	音樂	"杰威爾, 周杰倫, 袁詠琳, 梁心頤, 浪花兄弟, 楊瑞代"	ZH	TW	Q2	
 75	東台灣新聞	http://www.youtube.com/user/starfuntv	新聞	"台東, 新聞, 星樂傳播"	ZH	TW	Q2	
@@ -261,7 +263,6 @@
 516	海鵬電影，處處真情	http://www.youtube.com/user/swallowwingsfilm	電視與電影	"電影預告, 花絮"	ZH	TW	Q2	
 6705	深宮諜影 / Mystery in the Palace	http://www.maplestage.net/drama/深宮諜影/	電視與電影	"古裝劇, 中國, 歷史, 甘婷婷, 鄭嘉穎, 米雪, 劉庭羽, 洪欣, 廖碧兒,"	ZH	TW	Q2	
 483	添翼創越工作室	http://www.youtube.com/user/teamear	音樂	"添翼創越, MV, 演唱會"	ZH	TW	Q1	
-5290	溫哥華星島	http://www.youtube.com/user/singtaovancouver	新聞	"溫哥華, 星島日報,"	EN	US	Q2	英文
 6583	溫柔的慈悲 / Gentle Mercy	http://www.maplestage.net/drama/溫柔的慈悲/	電視與電影	"偶像劇, 華視, 黃騰浩, 李佳穎, 胡安安"	ZH	TW	Q2	
 628	滾石唱片官方頻道	http://www.youtube.com/user/rockrecordstaipei	音樂	"滾石唱片, MV"	ZH	TW	Q1	
 156	無國界醫生	http://www.youtube.com/user/msfhk	教育講座	" msf, 非洲, 人道關注, 醫療"	ZH	Worldwide	Q1	
@@ -434,3 +435,85 @@
 6563	黃韻玲KAY H. 音樂生活	http://www.youtube.com/user/kayhuang2001	音樂	"華語歌手, 黃韻玲, 演唱會"	ZH	TW	Q2	
 429	齊石傳播的影音總匯	http://www.youtube.com/user/keystone0318	電視與電影	"齊石, 電視台"	ZH	TW	Q2	
 7687	龍巡天下 / King Inspects The World	http://www.maplestage.net/drama/龍巡天下/	電視與電影	"古裝劇, 中國, 王重光, 王燦, 周明增, 曾安琪, 血麒麟, 無童鎮, 攀桂夢斷, 斷臂觀音"	ZH	TW	Q2	
+353	15fun一窩蜂3C影音	http://www.youtube.com/user/15fun	科技3C	"15fun一窩蜂3C影音, 髮型, 正妹, 家電, 科技, tech reviews"	ZH	TW	Q1	
+6581	廉正英雄	http://www.maplestage.net/drama/廉政英雄/	電視與電影	"台灣偶像劇, 民視, 孫樹培, 李政穎, 江祖平, 姚元浩, 劉香慈, 周孝安, 尹崇珍, "	ZH	TW	Q2	
+7173	9x9電影	http://www.maplestage.net/drama/電影/	電視與電影	"微電影, 香港片, 國片, 華語片,"	ZH	TW	Q2	
+7586	AA制生活 / AA Lifestyle	http://www.maplestage.net/drama/AA制生活/	電視與電影	"內地時裝劇, 小說改編, 趙晨陽, 李小璐, 任重,  馬蘇, 曹炳琨, 張秋歌, 劉莉莉, "	ZH	TW	Q2	
+6505	Alfamusictw	http://www.youtube.com/user/alfamusictw	音樂	"華語音樂, 阿爾發音樂, 華語歌手, 張傑,"	ZH	TW	Q1	
+6267	Amy的另一個影音頻道	http://www.youtube.com/user/amy629007	音樂	"華語音樂歌手, live演唱, 現場, 演唱會, 簽唱會, live performances"	ZH	TW	Q1	
+6780	Annie's tube	http://www.youtube.com/user/wxes89502332002	電視與電影	"discovery, 知性, 國家地理, 歐美影集, 運動興趣,"	ZH	TW	Q2	
+5656	ANN NEWS	http://www.youtube.com/user/annnewsch	新聞	"ann news, 日本, "	Others	Worldwidewide	Q2	
+160	Apple Action News	http://www.youtube.com/user/appleactionews	新聞	"蘋果動新聞, "	ZH	TW	Q2	
+3302	App Star 高手爭霸戰	http://www.maplestage.net/show/App Star 高手爭霸戰/	電視與電影	"綜藝娛樂, 3C, apps, "	ZH	TW	Q2	
+117	Avex Network	http://www.youtube.com/user/avexnetwork	音樂	"日本流行音樂歌手, live演唱會, live performances"	Others	Worldwidewide	Q2	
+5568	BeeTV	http://www.youtube.com/user/beetvch	電視與電影	"日本節目, bee tv, "	Others	Worldwidewide	Q2	
+8433	Big / Big	http://www.maplestage.net/drama/Big/	電視與電影	"韓劇, 孔侑, 李敏貞, 裴秀智, 張熙珍, 安石煥,"	ZH	TW	Q3	
+6569	Big TV USA	http://www.youtube.com/user/bigtvusa	電視與電影	"綜藝娛樂, bigtv usa, 大陸節目, "	ZH	TW	Q2	
+5675	Capcom	http://www.youtube.com/user/capcomchannel	電玩遊戲	"capcom, 電玩遊戲, 日本, "	Others	Worldwide	Q1	
+5780	Car@niftyTV 新車 インプレッション	http://www.youtube.com/user/carniftytv	動力機械 	"日本, 汽車, "	Others	Worldwide	Q1	
+3846	CCTV-10 Education	http://www.youtube.com/user/cctv10education	教育講座	"教育, 文化, 地理, 歷史,"	ZH	TW	Q2	
+3459	CCTV-4 中文紀錄片頻道	http://www.youtube.com/user/cctv4documentary	科學知識	"中國, 歷史, 文化, 紀錄片, "	ZH	TW	Q1	
+3865	CCTV-9 Travelogue	http://www.youtube.com/user/cctv9travelogue	電視與電影	"旅遊生活, 中國,"	EN	US	Q1	
+3848	CCTV Chinese Civilization	http://www.youtube.com/user/chinesecivilization2	電視與電影	"旅遊生活, 中國, 行腳節目,"	ZH	TW	Q2	
+3847	CCTV Chinese Music Channel	http://www.youtube.com/user/cctv13music	音樂	"中國民族音樂歌曲,"	ZH	TW	Q2	
+3849	CCTV Mixed	http://www.youtube.com/user/roadshow68xchina	電視與電影	"中央電視, 電視劇, 紀錄片, 綜藝娛樂,"	ZH	TW	Q1	
+660	CCTV中國中央電視台	http://www.youtube.com/user/roadshow68xcn	電視與電影	"中央電視, 綜藝娛樂, 新聞,"	ZH	TW	Q1	
+7509	Charley0313	http://www.youtube.com/user/charley0313	音樂	"素人歌手, song covers, indie"	ZH	TW	Q3	
+7200	ChineseNews中文新聞	http://www.youtube.com/user/thechinesenews	運動與健康	"cctv news, 新聞,"	ZH	TW	Q2	
+4869	シネマトゥデイCinemaToday	http://www.youtube.com/user/cinematoday	電視與電影	"電影預告, 日本,"	Others	Worldwide	Q2	
+474	Cineplex 聯影電影	http://www.youtube.com/user/cineplexcomtw	電視與電影	"電影預告, 聯影電影, movie trailers"	ZH	TW	Q2	
+213	DCview數位視野	http://www.youtube.com/user/dcviewno1	科技3C	"攝影,  數位視野, 相機, cameras"	ZH	TW	Q1	
+6565	Dream Girls 官方專區	http://www.youtube.com/user/dreamgirls201103	人物與網誌	"華語女子團體, dream girls, 李毓芬, 郭雪芙, 宋米秦,  明星藝人,"	ZH	TW	Q2	
+80	Drive Movie	http://www.youtube.com/user/drivemovie	動力機械 	"日本街道, 行車記錄, "	Others	Worldwide	Q1	
+5552	EMIミュージック・ジャパン	http://www.youtube.com/user/emimusicjapan	音樂	"日本流行音樂歌手, mv, emi,"	Others	Worldwide	Q1	
+183	Go車誌	http://www.youtube.com/user/buycartv	動力機械 	"go車誌, buycartv, 汽車,"	ZH	TW	Q1	
+6728	GrooveWar	http://www.youtube.com/user/groovewar	音樂	"groovewar, 饒舌, dj, hip hop,"	ZH	TW	Q1	
+6279	GroupPowerMovie	http://www.youtube.com/user/grouppowermovie	電視與電影	"電影預告, movie trailers"	ZH	TW	Q1	
+564	HIM華研國際音樂	http://www.youtube.com/user/himservice	音樂	"華語歌手, 華研國際音樂, s.h.e, 汪東城, 任家萱, 田馥甄, 陳嘉樺, 林宥嘉, 炎亞綸, 倪安東, 郭品超, olivia ong,"	ZH	TW	Q1	
+7123	HK TVB & Mixed News by evergreen	http://www.youtube.com/user/evergreen8883	新聞	"新聞, "	ZH	TW	Q2	
+3346	I am BNN	http://www.youtube.com/user/bnn0705	音樂	"素人歌手, beatbox, indie, song covers"	ZH	TW	Q2	
+7172	iCD銀河愛音樂	http://www.youtube.com/user/iwanticd	音樂	"銀河愛音樂, 蕭福德, 賴威佑, 王翰, 文夏x文香, 無限融合黨, 李昀陵, 董舜文, 趙一豪, 教練樂隊, "	ZH	TW	Q1	
+532	iFilm FLICKS傳影互動	http://www.youtube.com/user/ifilmfilmware	電視與電影	"電影預告, 花絮, movie trailers"	ZH	TW	Q1	
+6245	Jing Si Aphorisms	http://www.youtube.com/user/dujingsi	宗教與非營利	"大愛劇場, 環保志工, 靜思智慧語,"	ZH	TW	Q3	
+6288	KanekiMusic	http://www.youtube.com/user/kanekimusic	音樂	"金木音樂, 金木義則, 矢野沙織, e zzy,"	ZH	TW	Q2	
+6667	KKBOX	http://www.youtube.com/user/kkbox	音樂	"華語音樂, 歌手, 專訪, 現場演唱, "	ZH	TW	Q1	
+7447	K-POP最強生死戰 / K-POP - The Ultimate Audition	http://www.maplestage.net/drama/K-POP最強生死戰/	電視與電影	"韓劇, 高恩雅, 朴有煥, 郭永煥, "	ZH	TW	Q2	
+427	lsmovietw 的電影頻道	http://www.youtube.com/user/lsmovietw	電視與電影	"電影預告, movie trailers"	ZH	TW	Q2	
+3378	Maggie 魔法料理	http://www.maplestage.net/show/Maggie 魔法料理/	電視與電影	"美食料理,"	ZH	TW	Q2	
+6519	Maggie 魔法料理	http://www.maplestage.net/show/Maggie 魔法料理/	電視與電影	"美食料理,"	ZH	TW	Q2	
+6520	Mr. J頻道	http://www.maplestage.net/show/Mr. J頻道/	電視與電影	"綜藝娛樂, 訪談,"	ZH	TW	Q2	
+6347	MusicBoxForever	http://www.youtube.com/user/musicboxforever	音樂	"華語音樂, mv,"	ZH	TW	Q2	
+7241	MyTVHK	http://www.youtube.com/user/mytvhk	人物與網誌	"香港廣播,"	Others	TW	Q3	
+3750	Natual Health Videos	http://www.youtube.com/user/ihealthtube	運動與健康	"wellness, diet"	EN	US	Q2	
+7030	NatureBox	http://www.youtube.com/user/naturalbox1	運動與健康	"健康生活, 醫學保健, 運動體操, 林蓓莉,"	ZH	TW	Q2	
+6040	Obiwan1103 Music	http://www.youtube.com/user/obiwan1103	音樂	"素人歌手, 神棍樂團, 揪團音樂研究所, song covers"	ZH	TW	Q1	
+159	PeoPo公民新聞平台	http://www.youtube.com/user/peoponews	新聞	公民新聞	ZH	TW	Q2	
+679	PNN--公視新聞議題中心	http://www.youtube.com/user/pnnpts	新聞	"公視新聞網, 議題中心, "	ZH	TW	Q2	
+6559	POWER 星期天	http://www.maplestage.net/show/POWER 星期天/	電視與電影	"綜藝娛樂, 吳宗憲,"	ZH	TW	Q2	
+55	PTS公共電視台	http://www.youtube.com/user/pts	新聞	"新聞, 節目預告, "	ZH	TW	Q2	
+35	SBL【百年，拼好球】	http://www.youtube.com/user/jimmylin121	運動與健康	"超級籃球聯賽, sbl, "	ZH	TW	Q1	
+5643	SBS（静岡放送） Official Channel 	http://www.youtube.com/user/sbs6ch	電視與電影	"sbs, 静岡放送, 日本,"	Others	TW	Q1	
+2030	SonyMusicTaiwan	http://www.youtube.com/user/sonymusictaiwan	音樂	"索尼流行音樂, 席琳狄翁, 里歐娜, 賈斯汀, 艾薇兒,  碧昂絲, 克莉絲汀, 西城男孩, 瑞奇馬汀, 惠妮休斯頓, 馬友友, 巴布迪倫, 米希亞, 中島美嘉, 平井堅, 彩虹樂團, 王若琳, 張懸, 楊丞琳, 戴愛玲, "	Others	Worldwide	Q1	
+3448	SS小燕之夜	http://www.maplestage.net/show/SS小燕之夜/	電視與電影	"綜藝娛樂, 訪談,"	ZH	TW	Q2	
+214	SuperEAMAN Games	http://www.youtube.com/user/supereaman	電玩遊戲	"藝電幫, 電玩遊戲, game commentaries"	ZH	TW	Q1	
+494	Taiwan Indie Music	http://www.youtube.com/user/totororo0202	音樂	"台灣, 獨立音樂, 地下音樂, indie, live performances"	ZH	TW	Q1	
+541	Taiwan Talks 台灣脫口秀4	http://www.youtube.com/user/taiwantalks4	電視與電影	"綜藝娛樂, 新聞挖挖哇, 非關命運, 台灣演義, "	ZH	TW	Q3	
+6332	TaiwanWatch2	http://www.youtube.com/user/taiwanwatch2	宗教與非營利	看守台灣協會	ZH	TW	Q3	
+3578	TBWTV	http://www.youtube.com/user/tbwtv	電視與電影	"世界電視台, 台灣, 洛杉磯, 加拿大, 南美,"	ZH	TW	Q2	
+7229	TheChineseNews (CNTV)	http://www.youtube.com/user/xinwennews	新聞	"新聞, cntv,"	ZH	TW	Q2	
+3614	Trumoo007	http://www.youtube.com/user/trumoo007	人物與網誌	"美國素人華語歌手, 馬莉娜, briana, song covers, indie"	ZH	TW	Q2	
+6275	TungStephy	http://www.youtube.com/user/tungstephy	音樂	"華語音樂歌手, 董事長樂團, "	ZH	TW	Q2	
+3556	TVBS哈新闻	http://www.maplestage.net/show/TVBS哈新闻/	電視與電影	"娛樂新聞, 翁滋蔓, 海裕芬, 林立雯,"	ZH	TW	Q2	
+599	TVBS新聞	http://www.youtube.com/user/tvbs	新聞	"tvbs, 新聞,"	ZH	TW	Q1	
+3416	TVQQ堂	http://www.maplestage.net/show/TVQQ堂/	電視與電影	"綜藝娛樂, 黃國倫, 蝴蝶姐姐, "	ZH	TW	Q2	
+52	TWIMI | 獨立媒體	http://www.youtube.com/user/twimitv	新聞	"獨立媒體, 民進黨,"	ZH	TW	Q1	
+747	T客邦的影片播放室	http://www.youtube.com/user/tkbang	科技3C	"t客邦, 攝影, 3c, tech reviews, cameras, consumer electronics"	ZH	TW	Q1	
+257	UDN數位資訊	http://www.youtube.com/user/udndigital	科技3C	"數位, 3c, 科技, consumer electronics, tech reviews, apps"	ZH	TW	Q2	
+1473	udn 聯合新聞網	http://www.youtube.com/user/udncom	新聞	聯合新聞網	ZH	TW	Q1	
+535	U Loud Music 有料音樂	http://www.youtube.com/user/uloud	音樂	"有料音樂, 滅火器, 庫克樂團, 華語音樂,"	ZH	TW	Q1	
+6853	vsshare	http://www.youtube.com/user/vsshare	電視與電影	"綜藝娛樂, 小燕之夜, 大學生了沒, 康熙來了, "	ZH	TW	Q2	
+536	WALL TV | TheWALL Music	http://www.youtube.com/user/thewalltw	音樂	"wall tv, 地下樂團, 獨立音樂, indie, live performances"	ZH	TW	Q2	
+551	Wedding 大日子 	http://www.youtube.com/user/dariziwedding	藝術設計	"wedding, 大日子, 婚紗拍攝,"	ZH	TW	Q1	
+3379	WOMAN愛旅行	http://www.maplestage.net/show/WOMAN愛旅行/	電視與電影	"林若亞, 旅遊, 郭怡廷, 華視, "	ZH	TW	Q2	
+3557	WTO姐妹會	http://www.maplestage.net/show/WTO姐妹會/	電視與電影	"綜藝娛樂, 曹蘭, 女性, 謝哲青, 高伊玲, "	ZH	TW	Q2	
+5291	Z-Club Dio	http://www.youtube.com/user/zclubdio	動力機械 	"機車, bike reviews"	ZH	TW	Q2	
