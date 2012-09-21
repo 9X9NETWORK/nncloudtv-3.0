@@ -145,6 +145,7 @@ public class ApiUser extends ApiGeneric {
     }
     
     @RequestMapping(value = "users/{userId}/my_favorites", method = RequestMethod.GET)
+    public @ResponseBody
     List<UserFavorite> userFavorites(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
@@ -172,6 +173,8 @@ public class ApiUser extends ApiGeneric {
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         List<NnProgram> favorites = programMngr.getUserFavorites(user);
+        
+        log.info("my favorites count = " + favorites.size());
         
         for (NnProgram program : favorites) {
             
