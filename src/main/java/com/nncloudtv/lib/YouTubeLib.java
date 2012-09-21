@@ -29,6 +29,7 @@ public class YouTubeLib {
     protected static final Logger log = Logger.getLogger(YouTubeLib.class.getName());
     
     public static final String regexNormalizedVideoUrl = "^http:\\/\\/www\\.youtube\\.com\\/watch\\?v=[^&]+$";
+    public static final String regexVideoIdStr = "v=[^&]+";
         
     /** 
      * 1. remove those invalid keywords we already know.
@@ -310,4 +311,23 @@ public class YouTubeLib {
         return url.matches(regexNormalizedVideoUrl);
     }
     
+    public static String getYouTubeVideoIdStr(String url) {
+        
+        if (url == null || url.length() == 0) {
+            return url;
+        }
+        
+        if (!isVideoUrlNormalized(url)) {
+            return null;
+        }
+        
+        Pattern pattern = Pattern.compile(regexVideoIdStr);
+        Matcher matcher = pattern.matcher(url);
+        
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        
+        return null;
+    }
 }

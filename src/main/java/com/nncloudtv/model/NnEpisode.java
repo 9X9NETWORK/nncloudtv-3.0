@@ -48,6 +48,9 @@ public class NnEpisode implements Serializable {
     @NotPersistent
     private int cntView;
     
+    @NotPersistent
+    private String playbackUrl;
+    
     // louis: is this need to be persistent?
     @NotPersistent
     private int duration;
@@ -160,6 +163,16 @@ public class NnEpisode implements Serializable {
     public void setDuration(int duration) {
     
         this.duration = duration;
+    }
+
+    public String getPlaybackUrl() {
+    
+        return playbackUrl;
+    }
+
+    public void setPlaybackUrl(String playbackUrl) {
+    
+        this.playbackUrl = playbackUrl;
     }
      
 }

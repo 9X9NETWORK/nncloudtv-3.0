@@ -188,28 +188,25 @@ public class ApiUser extends ApiGeneric {
                     continue;
                 }
                 
-                favorite.setChannelId(episode.getChannelId());
                 favorite.setImageUrl(episode.getImageUrl());
                 favorite.setName(episode.getName());
                 favorite.setDuration(episode.getDuration());
                 favorite.setPublishDate(episode.getPublishDate());
                 favorite.setCntView(episode.getCntView());
                 favorite.setPublic(episode.isPublic());
-                favorite.setPlaybackUrl("http://"
-                        + MsoConfigManager.getServerDomain() + "/ch="
-                        + program.getChannelId() + "&ep="
-                        + program.getEpisodeId());
+                favorite.setPlaybackUrl(episodeMngr.getEpisodePlaybackUrl(episode));
                 
             } else {
                 
-                favorite.setChannelId(program.getChannelId());
                 favorite.setImageUrl(program.getImageUrl());
                 favorite.setName(program.getName());
                 favorite.setDuration(program.getDurationInt());
                 favorite.setPublishDate(program.getPublishDate());
                 favorite.setCntView(program.getCntView());
                 favorite.setPublic(program.isPublic());
-                favorite.setPlaybackUrl("pedding ...."); // TODO: playbackUrl ?
+                favorite.setPlaybackUrl(NnStringUtil.getPlaybackUrl(
+                        program.getStorageId(),
+                        YouTubeLib.getYouTubeVideoIdStr(program.getFileUrl())));
                 
             }
             

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.service.MsoConfigManager;
 
 public class NnStringUtil {
     protected static final Logger log = Logger.getLogger(NnStringUtil.class.getName());    
@@ -188,4 +189,15 @@ public class NnStringUtil {
         return String.format("%08d", seq);
     }
     
+    public static String getPlaybackUrl(String channelIdStr, String episodeIdStr) {
+    
+        return "http://" + MsoConfigManager.getServerDomain() + "/view?ch"
+                + channelIdStr + "&ep=" + episodeIdStr;
+    }
+    
+    public static String getPlaybackUrl(long channelId, long episodeId) {
+    
+        return "http://" + MsoConfigManager.getServerDomain() + "/view?ch"
+                + channelId + "&ep=" + episodeId;
+    }
 }

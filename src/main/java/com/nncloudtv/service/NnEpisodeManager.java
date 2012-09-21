@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.nncloudtv.dao.NnEpisodeDao;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 
@@ -187,5 +188,10 @@ public class NnEpisodeManager {
         }
         
         return totalDuration;
+    }
+    
+    public String getEpisodePlaybackUrl(NnEpisode episode) {
+    
+        return NnStringUtil.getPlaybackUrl(episode.getChannelId(), episode.getId());
     }
 }

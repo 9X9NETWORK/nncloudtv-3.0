@@ -786,6 +786,14 @@ public class ApiContent extends ApiGeneric {
         episodeMngr.populateEpisodesSeq(results);
         Collections.sort(results, episodeMngr.getEpisodePublicSeqComparator());
         
+        for (NnEpisode episode : results) {
+            
+            episode.setName(NnStringUtil.revertHtml(episode.getName()));
+            episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+            
+            episode.setPlaybackUrl(episodeMngr.getEpisodePlaybackUrl(episode));
+        }
+        
         return results;
     }
     

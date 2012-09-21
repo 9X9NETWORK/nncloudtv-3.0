@@ -7,10 +7,6 @@ public class UserFavorite implements Serializable {
     
     private static final long serialVersionUID = -6689668608352509726L;
     
-    private long channelId;
-    
-    private long storageId;
-    
     private String imageUrl;
     
     private String name;
@@ -24,16 +20,6 @@ public class UserFavorite implements Serializable {
     private boolean isPublic;
     
     private String playbackUrl;
-
-    public long getChannelId() {
-    
-        return channelId;
-    }
-
-    public void setChannelId(long channelId) {
-    
-        this.channelId = channelId;
-    }
 
     public String getImageUrl() {
     
@@ -105,14 +91,4 @@ public class UserFavorite implements Serializable {
         this.playbackUrl = playbackUrl;
     }
 
-    public long getStorageId() {
-    
-        return storageId;
-    }
-
-    public void setStorageId(long storageId) {
-    
-        this.storageId = storageId;
-    }
-    
 }
