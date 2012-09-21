@@ -676,6 +676,8 @@ public class ApiContent extends ApiGeneric {
             program.setName(NnStringUtil.revertHtml(program.getName()));
             program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
         }
+         
+        log.info("program count = " + results.size());
         
         return results;
     }
