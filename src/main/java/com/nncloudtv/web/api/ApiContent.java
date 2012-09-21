@@ -945,9 +945,19 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
-        // TODO: re-run ?
+        // rerun
+        String rerunStr = req.getParameter("rerun");
+        boolean rerun = false;
+        if (rerunStr != null && Boolean.valueOf(rerunStr)) {
+            rerun = true;
+        }
         
-        return episodeMngr.save(episode);
+        episode = episodeMngr.save(episode, rerun);
+        
+        episode.setName(NnStringUtil.revertHtml(episode.getName()));
+        episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+        
+        return episode;
     }
     
     @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.POST)
@@ -1024,8 +1034,6 @@ public class ApiContent extends ApiGeneric {
                 episode.setPublic(isPublic);
             }
         }
-        
-        // TODO: re-run ?
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         

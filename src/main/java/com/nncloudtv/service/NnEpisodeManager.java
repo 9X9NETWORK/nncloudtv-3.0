@@ -31,6 +31,25 @@ public class NnEpisodeManager {
         
     }
     
+    public NnEpisode save(NnEpisode episode, boolean rerun) {
+    
+        // rerun: to make episode on top again and public
+        if (rerun) {
+            
+            NnProgramManager programMngr = new NnProgramManager();
+            List<NnProgram> programs = programMngr.findByEpisodeId(episode.getAdId());
+            
+            for (NnProgram program : programs) {
+                program.setSeq(0);
+            }
+            programMngr.save(programs);
+            
+            reorderChannelEpisodes(episode.getChannelId());
+        }
+        
+        return save(episode);
+    }
+    
     public NnEpisode findByAdId(long adId) {
         return dao.findByAdId(adId);
     }
@@ -133,7 +152,7 @@ public class NnEpisodeManager {
         NnProgramManager programMngr = new NnProgramManager();
         List<NnEpisode> episodes = findByChannelIdSorted(channelId);
         
-        // remove empty episode which is not be sorted
+        // remove empty episode which will not be sorted
         for (NnEpisode episode : episodes) {
             
             if (episode.getSeq() == 0 && getProgramCnt(episode) == 0) {
