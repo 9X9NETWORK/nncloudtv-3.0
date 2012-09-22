@@ -19,6 +19,7 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.service.IosService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnStatusMsg;
 import com.nncloudtv.service.PlayerApiService;
@@ -341,14 +342,14 @@ public class PlayerApiController {
             @RequestParam(value="v", required=false) String v,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
-            HttpServletResponse resp) {                                                
+            HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
-        	if (v != "32") {
-        		
-        	}
             this.prepService(req, true);
             boolean flatten = Boolean.parseBoolean(isFlatten);
+        	if (v == null) {
+        		return new IosService().category(category, lang, flatten); 
+        	}
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
@@ -430,7 +431,7 @@ public class PlayerApiController {
             HttpServletRequest req,
             HttpServletResponse resp) {
         log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);        
-        return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null);        
+        return new IosService().setInfo(id, beautifulUrl);        
     }
 
     /** 
@@ -708,7 +709,7 @@ public class PlayerApiController {
             boolean isUserInfo = Boolean.parseBoolean(userInfo);
             boolean isSetInfo = Boolean.parseBoolean(setInfo);
             boolean isRequired = Boolean.parseBoolean(required);
-            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired);
+            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, v);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -794,7 +795,7 @@ public class PlayerApiController {
         log.info("player input - userToken=" + userToken+ "; url=" + url + 
                  ";grid=" + grid + ";categoryId=" + categoryIds +
                  ";rx=" + rx + ";tags" + tags + ";lang=" + lang);
-        return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+        return playerApiService.assembleMsgs(NnStatusCode.API_DEPRECATED, null);
         /*
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
         try {
@@ -1832,7 +1833,7 @@ public class PlayerApiController {
     /**
      * <p> Record user's favorite channel and episode.</p>
      * <p> For non-Youtube episode, supply channel and program id. 
-     * Supply the rest (video, name, image) for Youtube channels.
+     * Supply the rest (video, name, image, duration, channelid) for Youtube channels.
      * </p> 
      * <p> delete equalst to true will delete the exising favorite program.
      * For deletion, user and program is expected.
@@ -1855,6 +1856,7 @@ public class PlayerApiController {
             @RequestParam(value="video", required=false) String fileUrl,
             @RequestParam(value="name", required=false) String name,
             @RequestParam(value="image", required=false) String imageUrl,            
+            @RequestParam(value="duration", required=false) String duration,
             @RequestParam(value="delete", required=false) String delete,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -1863,7 +1865,7 @@ public class PlayerApiController {
             boolean del = Boolean.parseBoolean(delete);
             System.out.println("delete:" + delete);
             this.prepService(req, true);        
-            output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, del);
+            output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, duration, del);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
