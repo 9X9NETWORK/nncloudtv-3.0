@@ -231,6 +231,9 @@ delete s1
    and s1.seq = s2.seq;
 alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);
 
+delete from nnuser where id = 2535;
+delete from nnuser_subscribe where userId = 2535;
+
 use nncloudtv_content;
 alter table nnchannel add column poolType smallint(6)  default 0;
 alter table nnchannel add column sphere varchar(5) default 'en';
@@ -244,6 +247,7 @@ alter table nnchannel add column note varchar(10);
 alter table nnchannel add subscribersIdStr varchar(255);
 update nnchannel set sphere = lang;
 update nnchannel set lang='en', sphere='en' where lang is null;
+update nnchannel set status=1 where id in ( 130 ,3392 ,3816 ,4976 ,6761 ,6765 ,7216 ,7365 ,7571 ,7601 ,7625 ,7698);
 
 alter table nnprogram drop column type;
 alter table nnprogram add column publishDate datetime;
@@ -297,9 +301,10 @@ delete from mso_config where id in (2,4);
 - jobs/category_cntChannel.py
 - billboard.py
 - trending.py
-- subscribe.py
+#- subscribe.py
 - jobs/hot.py
 - curator.py
 - curator_nn.py
-- delete from mso where id > 2; 
-
+- jobs/channel_cntProgram.py
+#- delete from mso where id > 2; 
+ 
