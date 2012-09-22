@@ -51,8 +51,7 @@ public class NnEpisode implements Serializable {
     @NotPersistent
     private String playbackUrl;
     
-    // louis: is this need to be persistent?
-    @NotPersistent
+    @Persistent
     private int duration;
     
     @NotPersistent
