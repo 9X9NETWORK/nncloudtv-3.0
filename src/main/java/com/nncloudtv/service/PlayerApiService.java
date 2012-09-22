@@ -538,7 +538,9 @@ public class PlayerApiService {
                                 boolean userInfo, 
                                 String channelIds, 
                                 boolean setInfo, 
-                                boolean isRequired) { 
+                                boolean isRequired,
+                                String v
+                                ) { 
                                                                
         //verify input
         if (((userToken == null && userInfo == true) || 
@@ -659,7 +661,10 @@ public class PlayerApiService {
                 c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
             }
         }
-        channelOutput += chMngr.composeChannelLineup(channels);
+        if (v != null)
+        	channelOutput += chMngr.composeChannelLineup(channels);
+        else
+        	channelOutput += new IosService().composeChannelLineup(channels);
         result.add(channelOutput);
         
         String size[] = new String[result.size()];
@@ -1582,7 +1587,7 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup(token, null, null, false, null, true, false);
+        String lineup = this.channelLineup(token, null, null, false, null, true, false, "32");
         data.add(lineup);
         if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
@@ -1635,7 +1640,7 @@ public class PlayerApiService {
         return output;                
     }
 
-    public String favorite(String userToken, String program, String fileUrl, String name, String imageUrl, boolean delete) {
+    public String favorite(String userToken, String program, String fileUrl, String name, String imageUrl, String duration, boolean delete) {
         if (userToken == null || (program == null && fileUrl == null))
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         String[] result = {""};        
@@ -1653,7 +1658,7 @@ public class PlayerApiService {
         if (delete) {
             chMngr.deleteFavorite(u, pid);
         } else {
-            chMngr.saveFavorite(u, pid, fileUrl, name, imageUrl);
+            chMngr.saveFavorite(u, pid, fileUrl, name, imageUrl, duration);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 
