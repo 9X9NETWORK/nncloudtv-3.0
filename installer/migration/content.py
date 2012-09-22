@@ -62,6 +62,7 @@ contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 35); 
 contentCursor.execute("""insert into tag_map (tagId, channelId) values (4, 36); """)
 #hot english from thrending
 contentCursor.execute("""delete from counter_shard where id > 1 ; """)
+contentCursor.execute("""ALTER TABLE counter_shard AUTO_INCREMENT = 2; ; """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch5058', 1); """)      
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch3722', 1); """)
 contentCursor.execute("""insert into counter_shard (shardNumber, counterName, count) values (0,'ch116', 1); """)

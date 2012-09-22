@@ -20,10 +20,10 @@ salt = uuid.uuid4().bytes
 hashed_password = hashlib.sha512(password + salt).digest()
 
 userCursor.execute("""
-   insert into nncloudtv_nnuser1.nnuser
-     (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, salt, cryptedPassword)
-   values
-     (%s, %s, %s, %s, %s, %s, %s, now(), now(), 0, false, %s, %s)              
-   """, (userEmail, 1, username, thumbnail, epoch, 1, 8, salt, hashed_password))
+   update nncloudtv_nnuser1.nnuser
+     set salt = %s, cryptedPassword = %s 
+   where id = 2170 
+     (%s, %s)              
+   """, (salt, cryptedPassword))
 dbuser.commit()
 

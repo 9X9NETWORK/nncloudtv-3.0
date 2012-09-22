@@ -28,6 +28,8 @@ contentCursor.execute("""
        and c.id = o.contentId
        and o.contentType = 2
        and o.msoId = m.id
+       and m.Id != 1
+       and m.Id != 2
        and m.contactEmail = u.email 
     """)
 i = 0

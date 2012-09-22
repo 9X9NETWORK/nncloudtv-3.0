@@ -21,29 +21,86 @@ dbuser = MySQLdb.connect (host = "localhost",
 
 userCursor = dbuser.cursor()
 
-userCursor.execute("""delete from nnuser where email like 'curator%@9x9.tv' """)         
+userCursor.execute("""delete from nnuser where email like 'curator%@9x9.tv' """)
 dbuser.commit()
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'ichi', '陳奕棋', 'curator1@9x9.tv', '喜歡ACG，但是還是有比較少涉入的領域～請大家多多指教!', 'http://a4.sphotos.ak.fbcdn.net/hphotos-ak-snc7/487255_4230090354172_1364920231_n.jpg'); """)         
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'evonne', 'Evonne', 'curator2@9x9.tv', 'you care;I care;woman care!', 'http://a8.sphotos.ak.fbcdn.net/hphotos-ak-ash4/304426_528514960496996_185500788_n.jpg'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'janetc', 'Janet Chou', 'curator3@9x9.tv', 'Do What I Wanna Do', 'https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-snc7/381156_3382567293342_272921887_n.jpg'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'tanny', 'T Anny', 'curator4@9x9.tv', 'Play!Life.', 'https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-snc6/264510_232961963399330_8192909_n.jpg');""")
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'newsme', '時事達人', 'curator5@9x9.tv', '網羅時事一把罩', 'http://www.greekshares.com/uploads/image/latest_news_greekshares.jpg');  """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'apha',  '阿發', 'curator6@9x9.tv', '人生就是開心就好，簡簡單單的生活足矣！', 'http://etch.s.dpool.sina.com.cn/nd/dataent/moviepic/pics/59/moviepic_a550a67604ae0c89fb734631aa4ea5d9.jpg'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'mengjie',  'Mengjie', 'curator7@9x9.tv', 'Hi，這是我的頻道。', 'http://a4.sphotos.ak.fbcdn.net/hphotos-ak-ash3/39913_1406015591115_1687309_n.jpg');   """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'grass',  '細草，有風飄飄。', 'curator8@9x9.tv', '時間，會告訴你甚麼是愛。時間，會證明一切。預言和詛咒的差別。', 'http://www.qqxoo.com/uploads/allimg/120730/9-120I01J6440-L.jpg'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'amulo',  '阿姆羅', 'curator9@9x9.tv', '你能保證戰鬥完了後可以好好睡一覺嗎????', 'http://gd.766.com/h002/h30/img200902021050150.jpg'); """)                                             
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'weic',  '偽˙善', 'curator10@9x9.tv', '跟一般人一樣，單純的存在著. 如果說我能為大家帶來甚麼, 或許是那微不足道但真誠的，話語', 'http://pica.nipic.com/2007-06-12/2007612211417720_2.jpg'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'wulala',  '烏拉拉', 'curator11@9x9.tv', '只要一秒鐘 讓你呵呵笑出來！', 'http://pic.pimg.tw/octa1113/1685f9b90ecbfe1b48663ca6e5df3416.jpg');""")
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'archer',  'archer', 'curator12@9x9.tv', 'To be yourself', 'http://www.xpcolor.com/wallpaper/UploadPic/2007-12/200712502827771.jpg');""")
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'debbie',  'Debbie', 'curator13@9x9.tv', '不完美才是完美', 'http://image.tpwang.net/image/%E8%89%BE/artist-%E8%89%BE%E8%96%87%E5%85%92%C2%B7%E6%8B%89%E7%B6%AD%E5%B0%BC/%E8%89%BE%E8%96%87%E5%85%92%C2%B7%E6%8B%89%E7%B6%AD%E5%B0%BC192371.jpg');""")
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'sumer',  'sumer', 'curator14@9x9.tv', 'Keep in faith', 'http://motorcyclehdwallpaper.com/?attachment_id=473'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'dpd',  '大排檔', 'curator15@9x9.tv', '整理了一堆雜七雜八的節目，歡迎訂閱！', '');  """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'rong', 'RONG', 'curator16@9x9.tv', '來自四次原星球，喜好追求新事物，喜歡就訂閱我的頻道吧', 'http://a6.sphotos.ak.fbcdn.net/hphotos-ak-snc6/s720x720/216077_525923707423517_1297698671_n.jpg'); """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'sing', '思吟', 'curator17@9x9.tv', 'Europe travel', 'https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-ash4/488324_3816646129815_373229457_n.jpg') ; """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'jasonl', 'Jason Lee', 'curator18@9x9.tv', 'Sensation 電音派對', 'http://profile.ak.fbcdn.net/hprofile-ak-ash4/275985_100001674112594_2144873977_n.jpg') ; """)
-userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'kingw', '金木義則', 'curator19@9x9.tv', '嚴選音樂，就在Music Day', 'http://profile.ak.fbcdn.net/hprofile-ak-snc7/368861_100002766796163_971690919_n.jpg') ; """)
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'ichi', '陳奕棋', 'curator1@9x9.tv', '喜歡ACG，但是還是有比較少涉入的領域～請大家多多指教!', 'http://a4.sphotos.ak.fbcdn.net/hphotos-ak-snc7/487255_4230090354172_1364920231_n.jpg'); """)
+#assassassgogogo@hotmail.com 
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'evonne', 'Evonne', 'curator2@9x9.tv', 'you care;I care;woman care!', 'http://a8.sphotos.ak.fbcdn.net/hphotos-ak-ash4/304426_528514960496996_185500788_n.jpg'); """)
+#evonnefufu@gmail.com
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'janetc', 'Janet Chou', 'curator3@9x9.tv', 'Do What I Wanna Do', 'https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-snc7/381156_3382567293342_272921887_n.jpg'); """)
+#w428588@hotmail.com
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'tanny', 'T Anny', 'curator4@9x9.tv', 'Play!Life.', 'https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-snc6/264510_232961963399330_8192909_n.jpg');""")
+#playthemesongs@gmail.com
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'newsme', '時事達人', 'curator1@9x9.tv', '網羅時事一把罩', 'http://www.greekshares.com/uploads/image/latest_news_greekshares.jpg');  """)
+#intern@9x9.tv
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'apha',  '阿發', 'curator1@9x9.tv', '人生就是開心就好，簡簡單單的生活足矣！', 'http://etch.s.dpool.sina.com.cn/nd/dataent/moviepic/pics/59/moviepic_a550a67604ae0c89fb734631aa4ea5d9.jpg'); """)
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'mengjie',  'Mengjie', 'curator2@9x9.tv', 'Hi，這是我的頻道。', 'http://a4.sphotos.ak.fbcdn.net/hphotos-ak-ash3/39913_1406015591115_1687309_n.jpg');   """)
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'grass',  '細草，有風飄飄。', 'curator3@9x9.tv', '時間，會告訴你甚麼是愛。時間，會證明一切。預言和詛咒的差別。', 'http://www.qqxoo.com/uploads/allimg/120730/9-120I01J6440-L.jpg'); """)
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'amulo',  '阿姆羅', 'curator4@9x9.tv', '你能保證戰鬥完了後可以好好睡一覺嗎????', 'http://gd.766.com/h002/h30/img200902021050150.jpg'); """)                                             
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'weic',  '偽˙善', 'curator5@9x9.tv', '跟一般人一樣，單純的存在著. 如果說我能為大家帶來甚麼, 或許是那微不足道但真誠的，話語', 'http://pica.nipic.com/2007-06-12/2007612211417720_2.jpg'); """)
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'wulala',  '烏拉拉', 'curator6@9x9.tv', '只要一秒鐘 讓你呵呵笑出來！', 'http://pic.pimg.tw/octa1113/1685f9b90ecbfe1b48663ca6e5df3416.jpg');""")
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'archer',  'archer', 'curator7@9x9.tv', 'To be yourself', 'http://www.xpcolor.com/wallpaper/UploadPic/2007-12/200712502827771.jpg');""")
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'debbie',  'Debbie', 'curator8@9x9.tv', '不完美才是完美', 'http://image.tpwang.net/image/%E8%89%BE/artist-%E8%89%BE%E8%96%87%E5%85%92%C2%B7%E6%8B%89%E7%B6%AD%E5%B0%BC/%E8%89%BE%E8%96%87%E5%85%92%C2%B7%E6%8B%89%E7%B6%AD%E5%B0%BC192371.jpg');""")
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'sumer',  'sumer', 'curator9@9x9.tv', 'Keep in faith', 'http://motorcyclehdwallpaper.com/?attachment_id=473'); """)
+userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, false,'dpd',  '大排檔', 'curator10@9x9.tv', '整理了一堆雜七雜八的節目，歡迎訂閱！', '');  """)
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'rong', 'RONG', 'curator16@9x9.tv', '來自四次原星球，喜好追求新事物，喜歡就訂閱我的頻道吧', 'http://a6.sphotos.ak.fbcdn.net/hphotos-ak-snc6/s720x720/216077_525923707423517_1297698671_n.jpg'); """)
+#x_x707@hotmail.com
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'sing', '思吟', 'curator17@9x9.tv', 'Europe travel', 'https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-ash4/488324_3816646129815_373229457_n.jpg') ; """)
+#knockknocksevendays@gmail.com
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'jasonl', 'Jason Lee', 'curator18@9x9.tv', 'Sensation 電音派對', 'http://profile.ak.fbcdn.net/hprofile-ak-ash4/275985_100001674112594_2144873977_n.jpg') ; """)
+#imjasonlee0314@gmail.com
+#userCursor.execute("""insert into nnuser (updateDate, type, shard, featured, profileUrl, name, email, intro, imageUrl) values (now(), 4, 1, true, 'kingw', '金木義則', 'curator11@9x9.tv', '嚴選音樂，就在Music Day', 'http://profile.ak.fbcdn.net/hprofile-ak-snc7/368861_100002766796163_971690919_n.jpg') ; """)
+#www.kanekimusic@gmail.com
 dbuser.commit()
 
+curatorEmail = ["assassassgogogo@hotmail.com", "evonnefufu@gmail.com", "w428588@hotmail.com", "playthemesongs@gmail.com", "intern@9x9.tv", 
+                "curator1@9x9.tv", "curator2@9x9.tv", "curator3@9x9.tv", "curator4@9x9.tv", "curator5@9x9.tv", "curator6@9x9.tv",
+                "curator7@9x9.tv", "curator8@9x9.tv", "curator9@9x9.tv", "curator10@9x9.tv",
+                "x_x707@hotmail.com", "knockknocksevendays@gmail.com", "imjasonlee0314@gmail.com", "www.kanekimusic@gmail.com"]
+curatorImage = ["http://a4.sphotos.ak.fbcdn.net/hphotos-ak-snc7/487255_4230090354172_1364920231_n.jpg",
+                "http://a8.sphotos.ak.fbcdn.net/hphotos-ak-ash4/304426_528514960496996_185500788_n.jpg",
+                "https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-snc7/381156_3382567293342_272921887_n.jpg",
+                "https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-snc6/264510_232961963399330_8192909_n.jpg",
+                "http://www.greekshares.com/uploads/image/latest_news_greekshares.jpg",
+                "","", "","","","","","","","",
+                "http://a6.sphotos.ak.fbcdn.net/hphotos-ak-snc6/s720x720/216077_525923707423517_1297698671_n.jpg",
+                "https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-ash4/488324_3816646129815_373229457_n.jpg",
+                "http://profile.ak.fbcdn.net/hprofile-ak-ash4/275985_100001674112594_2144873977_n.jpg",
+                "http://profile.ak.fbcdn.net/hprofile-ak-snc7/368861_100002766796163_971690919_n.jpg" ]                
+curatorProfile = ["ichi",
+                  "evonne",
+                  "Janet Chou",
+                  "T Anny",
+                  "newsme",
+                  "","", "","","","","","","","",
+                  "rong",
+                  "sing",
+                  "jasonl",
+                  "kingw"]
+curatorIntro = ["喜歡ACG，但是還是有比較少涉入的領域～請大家多多指教",
+                "you care;I care;woman care!",
+                "Do What I Wanna Do",
+                "Play!Life.",
+                "newsme",
+                "","", "","","","","","","","",
+                "RONG",
+                "思吟",
+                "Jason Lee",
+                "嚴選音樂，就在Music Day"]                                                                              
+curatorName = ["陳奕棋",
+               "Evonne",
+               "janetc",
+               "tanny",  
+               "時事達人",
+               "","", "","","","","","","","",
+               "rong",
+               "sing",
+               "jasonl",
+               "金木義則"]
+
+featuredEmail = ["assassassgogogo@hotmail.com", "evonnefufu@gmail.com", "w428588@hotmail.com", "playthemesongs@gmail.com", "x_x707@hotmail.com", 
+                 "knockknocksevendays@gmail.com", "imjasonlee0314@gmail.com", "www.kanekimusic@gmail.com"]
+ 
 curators = []
 curators.append( [8549])
 curators.append([8571])
@@ -65,10 +122,44 @@ curators.append([])
 curators.append([5541])
 curators.append([8612])
 
+for d in featuredEmail:
+   print "featuredEmail:" + d 
+   userCursor.execute("""         
+			 update nnuser set featured=true                          
+				where email = %s
+				 """, (d))         
+
 i = 1
 for curator in curators:
-   #print i    
-   email = 'curator' + str(i) + '@9x9.tv'
+   print i    
+   #email = 'curator' + str(i) + '@9x9.tv'
+   email = curatorEmail[i-1]
+   print email
+   image = curatorImage[i-1]
+   if len(image) > 0:          
+      userCursor.execute("""         
+			    update nnuser set imageUrl = %s                           
+			     where email = %s
+             """, (image, email))         
+   profile = curatorProfile[i-1]
+   if len(profile) > 0:          
+      userCursor.execute("""         
+			    update nnuser set profileUrl = %s                           
+			     where email = %s
+             """, (profile, email))         
+   intro = curatorIntro[i-1]
+   if len(intro) > 0:          
+      userCursor.execute("""         
+			    update nnuser set intro = %s                           
+			     where email = %s            
+             """, (intro, email))         
+   name = curatorName[i-1]
+   if len(name) > 0:          
+      userCursor.execute("""         
+			    update nnuser set name = %s                           
+			     where email = %s            
+             """, (name, email))         
+
    userCursor.execute("""
      select id                              
        from nnuser                          
