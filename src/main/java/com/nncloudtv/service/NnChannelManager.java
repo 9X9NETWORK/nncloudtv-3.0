@@ -189,7 +189,7 @@ public class NnChannelManager {
     }
     
     //save favorite channel along with the program
-    public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl) {
+    public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl, String duration) {
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
@@ -201,23 +201,23 @@ public class NnChannelManager {
             dao.save(favoriteCh);
         }
         NnProgramManager pMngr = new NnProgramManager();
-        NnProgram toBeFavorite = null;
+        NnProgram favorite = null;
         if (pId != 0) {
-            toBeFavorite = pMngr.findById(pId);
-            if (toBeFavorite == null) {
+            favorite = pMngr.findById(pId);
+            if (favorite == null) {
                 log.info("program invalid:" + pId);
                 return;
             }
-            NnChannel c = new NnChannelManager().findById(toBeFavorite.getChannelId());
+            NnChannel c = new NnChannelManager().findById(favorite.getChannelId());
             if (c == null) {
-                log.info("program doesn't have channel info:" + toBeFavorite.getChannelId());
+                log.info("program doesn't have channel info:" + favorite.getChannelId());
                 return;
             }
             if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
-                if (toBeFavorite.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
-                    fileUrl = toBeFavorite.getFileUrl();
-                    name = toBeFavorite.getName();
-                    imageUrl = toBeFavorite.getImageUrl();
+                if (favorite.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
+                    fileUrl = favorite.getFileUrl();
+                    name = favorite.getName();
+                    imageUrl = favorite.getImageUrl();
                 }
             }
         }
@@ -230,6 +230,7 @@ public class NnChannelManager {
                 }
                 existFavorite.setFileUrl(fileUrl);
                 existFavorite.setPublic(true);
+                existFavorite.setDuration(duration);
                 existFavorite.setStatus(NnProgram.STATUS_OK);                
                 pMngr.save(existFavorite);                
             }
@@ -237,22 +238,21 @@ public class NnChannelManager {
         }
         //only 9x9 channel or reference of 9x9 channel should hit here,  
         String storageId = "";
-        if (toBeFavorite.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
-            storageId = toBeFavorite.getStorageId();
+        if (favorite.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+            storageId = favorite.getStorageId();
         } else {                     
-            storageId = String.valueOf(toBeFavorite.getEpisodeId());
+            storageId = String.valueOf(favorite.getEpisodeId());
         }
         NnProgram existFavorite = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);        
         if (existFavorite != null)
             return;
         
-        NnProgram newP = new NnProgram(favoriteCh.getId(), toBeFavorite.getName(), toBeFavorite.getIntro(), toBeFavorite.getImageUrl());
+        NnProgram newP = new NnProgram(favoriteCh.getId(), favorite.getName(), favorite.getIntro(), favorite.getImageUrl());
         newP.setPublic(true);
         newP.setStatus(NnProgram.STATUS_OK);
         newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
         newP.setStorageId(storageId);
-        newP.setUpdateDate(new Date());
-        pMngr.save(newP);            
+        pMngr.save(newP);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     
     public NnChannel save(NnChannel channel) {
@@ -757,7 +757,7 @@ public class NnChannelManager {
                         String.valueOf(c.getStatus()),
                         String.valueOf(c.getContentType()),
                         c.getPlayerPrefSource(),
-                        this.convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
+                        convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
                         String.valueOf(c.getSorting()),
                         c.getPiwik(),
                         String.valueOf(c.getRecentlyWatchedProgram()),
