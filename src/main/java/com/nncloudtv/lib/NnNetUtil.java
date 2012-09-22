@@ -103,15 +103,21 @@ public class NnNetUtil {
             url = new URL(urlStr);
             HttpURLConnection connection;
             connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
             connection.setDoOutput(true);
             connection.setRequestMethod("GET");
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {                
                 log.info("response not ok!" + connection.getResponseCode());
+                return null;
             }            
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = reader.readLine();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            String line;
+            String result = "";
+            while ((line = reader.readLine()) != null) {
+            	result += line + "\n";
+            }
             reader.close();
-            return line;            
+            return result;            
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -119,7 +125,7 @@ public class NnNetUtil {
         }        
         return null;
     }
-    
+   
     public static void urlPostWithJson(String urlStr, Object obj) {
         log.info("post to " + urlStr);
         URL url;
