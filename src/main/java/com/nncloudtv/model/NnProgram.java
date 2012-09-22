@@ -115,12 +115,11 @@ public class NnProgram implements Serializable {
     
     @Persistent
     private Date publishDate;
-    
+
     @NotPersistent
     private int cntView;
     
-    public NnProgram(long channelId, String name, String intro, String imageUrl) {
-    
+    public NnProgram(long channelId, String name, String intro, String imageUrl) {    
         this.channelId = channelId;
         this.name = name;
         this.intro = intro;
@@ -128,6 +127,9 @@ public class NnProgram implements Serializable {
         Date now = new Date();
         this.createDate = now;
         this.updateDate = now;
+        this.publishDate = now;
+        this.isPublic = true;
+        this.status = NnProgram.STATUS_OK;
     }
     
     public NnProgram(long channelId, long episodeId, String name, String intro,
