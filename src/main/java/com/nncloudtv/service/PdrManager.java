@@ -47,6 +47,7 @@ public class PdrManager {
             long channelId = Long.parseLong(m.group(1));
             if (channelId != 0) {
                 String counterName = "ch" + channelId;
+                log.info("store cnt channel view - counterName:" + counterName);
                 ShardedCounter counter = factory.getOrCreateCounter(counterName);
                 counter.increment();
             }
