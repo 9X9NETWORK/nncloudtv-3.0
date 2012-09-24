@@ -190,6 +190,9 @@ public class NnChannelManager {
     
     //save favorite channel along with the program
     public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl, String duration) {
+        if (fileUrl != null && !fileUrl.contains("http")) {
+        	fileUrl = "http://www.youtube.com/watch?v=" + fileUrl;
+        }    	
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
@@ -225,9 +228,6 @@ public class NnChannelManager {
             NnProgram existFavorite = pMngr.findByChannelAndFileUrl(favoriteCh.getId(), fileUrl);
             if (existFavorite == null) {
                 existFavorite = new NnProgram(favoriteCh.getId(), name, "", imageUrl);
-                if (!fileUrl.contains("http")) {
-                	fileUrl = "http://www.youtube.com/watch?v=" + fileUrl;
-                }
                 existFavorite.setFileUrl(fileUrl);
                 existFavorite.setPublic(true);
                 existFavorite.setDuration(duration);
