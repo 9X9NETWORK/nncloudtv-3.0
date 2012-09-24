@@ -144,6 +144,8 @@ public class PlayerApiController {
         playerApiService.setLocale(locale);
         playerApiService.setMso(mso);
         int status = playerApiService.checkRO();
+        String version = (req.getParameter("v") == null) ? "31" : req.getParameter("v"); 
+        playerApiService.setVersion(version);
         this.locale = locale;
         return status;                
     }
@@ -1863,7 +1865,6 @@ public class PlayerApiController {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             boolean del = Boolean.parseBoolean(delete);
-            System.out.println("delete:" + delete);
             this.prepService(req, true);        
             output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, duration, del);
         } catch (Exception e) {
