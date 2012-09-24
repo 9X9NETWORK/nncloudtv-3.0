@@ -144,8 +144,8 @@ public class PlayerApiController {
         playerApiService.setLocale(locale);
         playerApiService.setMso(mso);
         int status = playerApiService.checkRO();
-        String version = (req.getParameter("v") == null) ? "31" : req.getParameter("v"); 
-        playerApiService.setVersion(version);
+        String version = (req.getParameter("v") == null) ? "31" : req.getParameter("v");        
+        playerApiService.setVersion(Integer.parseInt(version));
         this.locale = locale;
         return status;                
     }
@@ -349,7 +349,7 @@ public class PlayerApiController {
         try {
             this.prepService(req, true);
             boolean flatten = Boolean.parseBoolean(isFlatten);
-        	if (v == null) {
+            if (playerApiService.getVersion() < 32) {
         		return new IosService().category(category, lang, flatten); 
         	}
             output = playerApiService.category(category, lang, flatten);

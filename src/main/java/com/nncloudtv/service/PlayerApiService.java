@@ -66,8 +66,17 @@ public class PlayerApiService {
     private NnChannelManager chMngr = new NnChannelManager();
     private Locale locale;
     private Mso mso;
+    private int version = 32;    
         
-    public void setLocale(Locale locale) {
+    public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public void setLocale(Locale locale) {
         this.locale = locale;
     }
     
@@ -312,7 +321,7 @@ public class PlayerApiService {
         }
     }
      
-    public String brandInfo(HttpServletRequest req) {        
+    public String brandInfo(HttpServletRequest req) {
         String[] result = msoMngr.getBrandInfoCache(false);
         boolean readOnly = MsoConfigManager.isInReadonlyMode(false);
         //locale
@@ -836,12 +845,19 @@ public class PlayerApiService {
         } else if (chArr.length > 1) {            
             List<Long> list = new ArrayList<Long>();
             for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
-            System.out.println("hello charr:" + list.size());
             for (Long l : list) {
-                programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);
+            	if (version < 32) {
+            		programInfoStr = new IosService().findPlayerProgramInfoByChannel(l, sidxL, limitL);
+            	} else {
+            		programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);
+            	}
             }
         } else {
-            programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);                
+        	if (version < 32) {
+        		programInfoStr = new IosService().findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
+        	} else {        	
+        		programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
+        	}
         }        
         
         MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.CDN);
