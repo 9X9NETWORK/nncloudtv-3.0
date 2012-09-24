@@ -451,8 +451,7 @@ public class NnProgramManager {
             intro = intro.replaceAll("\\s", " ");                
             intro = intro.substring(0, introLenth);
         }
-        
-        url1 = (videoUrl != null) ? videoUrl : null;
+        url1 = (videoUrl != null) ? videoUrl : url1;
         if (name == null) {
             name = p.getName();
             if (name != null)
