@@ -297,6 +297,7 @@ public class NnProgramManager {
     }
             
     public List<NnProgram> findRealPrograms(String storageId) {
+    	storageId = storageId.replace("e", "");
         List<NnProgram> programs = new ArrayList<NnProgram>();
         programs = dao.findProgramsByEpisode(Long.parseLong(storageId));
         log.info("find reference's real programs size:" + programs.size());        
@@ -373,7 +374,7 @@ public class NnProgramManager {
     	        name = name.replaceFirst("\\|", "");
     	        imageUrl = imageUrl.replaceFirst("\\|", "");
     	        intro = intro.replaceFirst("\\|", "");
-    		    result += composeEpisodeInfoStr(episodeMap.get(one.getEpisodeId()), one, name, intro, imageUrl, videoUrl, card);
+    		    result += composeEpisodeInfoStr(episodeMap.get(one.getEpisodeId()), name, intro, imageUrl, videoUrl, card);
 	        }
 	        it.remove();
 	    }
@@ -396,6 +397,7 @@ public class NnProgramManager {
         }
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
         	for (NnProgram p : programs) {
+        		System.out.println("<<<< program type >>>>" + p.getContentType());
         		if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
         			List<NnProgram> favorite = this.findRealPrograms(p.getStorageId());
         			String favoriteStr = this.processSubEpisode(favorite);
@@ -607,10 +609,10 @@ public class NnProgramManager {
         return empty;
     }
     
-    public String composeEpisodeInfoStr(NnEpisode e, NnProgram p, String name, String intro, String imageUrl, String videoUrl, String card) {
+    public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String card) {
         String output = "";        
         String[] ori = {String.valueOf(e.getChannelId()), 
-                        String.valueOf(p.getId()), 
+                        "e" + String.valueOf(e.getId()), 
                         name, 
                         intro,
                         "1", //content type, more accurate should be piped

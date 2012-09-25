@@ -1147,6 +1147,49 @@ public class PlayerApiController {
         return output;
     }    
 
+    @RequestMapping(value="forgotPassword", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String setUserProfile(
+            @RequestParam(value="email", required=false)String email,
+            HttpServletRequest req,
+            HttpServletResponse resp) {        
+        log.info("forgot password email:" + email);
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
+            }
+            output = playerApiService.forgotPassword(email, req);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }    
+
+    @RequestMapping(value="resetPassword", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String setUserProfile(
+            @RequestParam(value="token", required=false)String token,
+            @RequestParam(value="password", required=false)String password,
+            HttpServletRequest req,
+            HttpServletResponse resp) {        
+        log.info("reset password email:" + token);
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
+            }
+            output = playerApiService.resetPassword(token, password, req);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }    
+    
     /**
      * Get user profile information
      * 

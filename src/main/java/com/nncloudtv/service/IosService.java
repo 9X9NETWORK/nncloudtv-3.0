@@ -115,6 +115,13 @@ public class IosService {
         return str;
     }    
 
+	public String search(String text) {
+		List<NnChannel> searchResults = NnChannelManager.search(text, false);
+		String[] result = {""};
+		result[0] = this.composeChannelLineup(searchResults);
+		return new PlayerApiService().assembleMsgs(NnStatusCode.SUCCESS, result);
+	}
+    
     public String composeProgramInfoStr(List<NnProgram> programs) {        
         String output = "";        
         String regexCache = "^(http|https)://(9x9cache.s3.amazonaws.com|s3.amazonaws.com/9x9cache)";

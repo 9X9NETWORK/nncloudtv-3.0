@@ -40,6 +40,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnContent;
 import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnEmail;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnGuest;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
@@ -86,7 +87,7 @@ public class PlayerApiService {
 
     public String handleException (Exception e) {
         if (e.getClass().equals(NumberFormatException.class)) {
-            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
+            //return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
         } else if (e.getClass().equals(CommunicationsException.class)) {
             return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
         } 
@@ -1467,9 +1468,29 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
+    public String forgotPassword(String email, HttpServletRequest req) {
+    	NnUser user = userMngr.findByEmail(email, req);
+    	if (user == null) {
+    		return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+    	}
+    	return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+    }
+
+    public String resetPassword(String token, String password, HttpServletRequest req) {
+//    	NnUser user = userMngr.findByEmail(token, password, req);
+//    	if (user == null) {
+//    		return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+//    	}
+    	return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+    }
+    
     public String search(String text, String stack, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+        if (version < 32) {
+        	return new IosService().search(text);
+        }
+        
         //matched channels
         //List<NnChannel> channels = NnChannelManager.search(text, false);
         String userToken = CookieHelper.getCookie(req, CookieHelper.USER);
@@ -1671,19 +1692,28 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         long pid = 0;
         NnChannel c = chMngr.findById(Long.parseLong(channel));
-        NnProgram p = null;
         if (c == null)
         	return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+        NnProgram p = null;
+        NnEpisode e = null;
         if (program != null) {
-            pid = Long.parseLong(program);
-            p = new NnProgramManager().findById(Long.parseLong(program));
-            if (p == null)
-                return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+        	if (program.contains("e")) {
+        		program = program.replace("e", "");
+        		e = new NnEpisodeManager().findById(Long.parseLong(program));
+        		if (e == null)
+        			return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+        	} else {
+                pid = Long.parseLong(program);
+                p = new NnProgramManager().findById(Long.parseLong(program));
+                if (p == null)
+                    return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+        	}
         }
+        //delete pid should not contain "e"
         if (delete) {
             chMngr.deleteFavorite(u, pid);
         } else {
-            chMngr.saveFavorite(u, c, p, fileUrl, name, imageUrl, duration);
+            chMngr.saveFavorite(u, c, e, p, fileUrl, name, imageUrl, duration);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 

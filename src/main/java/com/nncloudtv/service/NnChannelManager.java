@@ -203,7 +203,7 @@ public class NnChannelManager {
     
     //save favorite channel along with the program
     //channel and program has been verified if exist
-    public void saveFavorite(NnUser user, NnChannel c, NnProgram p, String fileUrl, String name, String imageUrl, String duration) {
+    public void saveFavorite(NnUser user, NnChannel c, NnEpisode e, NnProgram p, String fileUrl, String name, String imageUrl, String duration) {
         if (fileUrl != null && !fileUrl.contains("http")) {
             fileUrl = "http://www.youtube.com/watch?v=" + fileUrl;
         }    
@@ -239,16 +239,25 @@ public class NnChannelManager {
         }
         //only 9x9 channel or reference of 9x9 channel should hit here,  
         String storageId = "";
-        if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
-            storageId = p.getStorageId();
-        } else {                     
-        storageId = String.valueOf(p.getEpisodeId());
+        String pname = "";
+        String pintro = "";
+        String pimageUrl = "";
+        if (e != null) { //9x9 channel
+        	storageId = "e" + String.valueOf(e.getId());
+        	pname = e.getName();
+        	pintro = e.getIntro();
+        	pimageUrl = e.getImageUrl();
+        } else { //reference channel
+        	storageId = p.getStorageId();
+        	pname = p.getName();
+        	pintro = p.getIntro();
+        	pimageUrl = p.getImageUrl();
         }
         NnProgram existFavorite = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);        
         if (existFavorite != null)
             return;
         
-        NnProgram newP = new NnProgram(favoriteCh.getId(), p.getName(), p.getIntro(), p.getImageUrl());
+        NnProgram newP = new NnProgram(favoriteCh.getId(), pname, pintro, pimageUrl);
         newP.setPublic(true);
         newP.setStatus(NnProgram.STATUS_OK);
         newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
@@ -717,7 +726,7 @@ public class NnChannelManager {
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED ||
             c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
             NnProgramManager pMngr = new NnProgramManager();
-            List<NnProgram> programs = pMngr.findByChannelId(c.getId());
+            List<NnProgram> programs = pMngr.findByChannelId(c.getId()); //TODO find good program
             Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
             for (int i=0; i<3; i++) {
                 if (i < programs.size()) {
