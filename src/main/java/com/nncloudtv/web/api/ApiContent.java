@@ -636,6 +636,8 @@ public class ApiContent extends ApiGeneric {
                         catMngr.save(new CategoryMap(twin.getId(), channelId));
                     }
                 }
+                
+                channel.setCategoryId(categoryId);
             }
         }
         

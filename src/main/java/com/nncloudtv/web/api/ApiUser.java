@@ -484,8 +484,8 @@ public class ApiUser extends ApiGeneric {
         }
         
         channel = channelMngr.save(channel);
-        long channelId = channel.getId();
         
+        long channelId = channel.getId();
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
             
@@ -515,9 +515,13 @@ public class ApiUser extends ApiGeneric {
                     catMngr.save(new CategoryMap(twin.getId(), channelId));
                 }
             }
+            channel.setCategoryId(categoryId);
         }
         
-        return channelMngr.findById(channel.getId());
+        channel.setName(NnStringUtil.revertHtml(channel.getName()));
+        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        
+        return channel;
     }
     
     @RequestMapping(value = "users/{userId}/channels/{channelId}", method = RequestMethod.DELETE)
