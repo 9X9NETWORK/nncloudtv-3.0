@@ -664,7 +664,6 @@ public class PlayerApiService {
             }
         }
         String channelOutput = "";
-        System.out.println("---- channels size---" + channels.size());
         for (NnChannel c : channels) {
             if (user != null && sortMap.containsKey(c.getId()))
                 c.setSorting(sortMap.get(c.getId()));
@@ -1671,13 +1670,12 @@ public class PlayerApiService {
         if (u == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         long pid = 0;
-        NnChannel c = null;
+        NnChannel c = chMngr.findById(Long.parseLong(channel));
         NnProgram p = null;
+        if (c == null)
+        	return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         if (program != null) {
             pid = Long.parseLong(program);
-            c = chMngr.findById(Long.parseLong(channel));
-            if (c == null)
-            	return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
             p = new NnProgramManager().findById(Long.parseLong(program));
             if (p == null)
                 return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);

@@ -209,7 +209,7 @@ public class NnChannelManager {
         }    
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
-            favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
+            favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change            
             favoriteCh.setUserIdStr(user.getIdStr());
             favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
             favoriteCh.setSphere(user.getSphere());
@@ -219,7 +219,7 @@ public class NnChannelManager {
         }
         NnProgramManager pMngr = new NnProgramManager();        
         if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
-            if (p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
+            if (p != null && p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
                 fileUrl = p.getFileUrl();
                 name = p.getName();
                 imageUrl = p.getImageUrl();
@@ -661,19 +661,19 @@ public class NnChannelManager {
         List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
         boolean needToFake = true;
         for (NnChannel c : channels) {
-        if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
-        needToFake = false;
-        }
+            if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+                needToFake = false;
+            }
         }
         if (needToFake) {
-        log.info("need to fake");
-        String name = user.getName() + "'s favorite";
-        NnChannel c = new NnChannel(name, "", "");
-        c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
-        c.setUserIdStr(user.getIdStr());
-        c.setStatus(NnChannel.STATUS_SUCCESS);
-        c.setPublic(true);
-        channels.add(c);
+            log.info("need to fake");
+            String name = user.getName() + "'s favorite";
+            NnChannel c = new NnChannel(name, user.getImageUrl(), "");
+            c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
+            c.setUserIdStr(user.getIdStr());
+            c.setStatus(NnChannel.STATUS_SUCCESS);
+            c.setPublic(true);
+            channels.add(c);
         }
         if (limit == 0) {
             return channels;
@@ -703,25 +703,19 @@ public class NnChannelManager {
     public String composeChannelLineupStr(NnChannel c) {
         Random r = new Random();
         int viewCount = r.nextInt(300);
-        String imageUrl = c.getPlayerPrefImageUrl();
 
-        NnUserManager userMngr = new NnUserManager();
-        NnUser u = userMngr.findByIdStr(c.getUserIdStr());        
-        String userName = "";
-        String userIntro = "";
-        String userImageUrl = "";
-        String curatorProfile = "";
-        if (u != null) {
-            userName = u.getName();
-            userIntro = u.getIntro();
-            userImageUrl = u.getImageUrl();
-            curatorProfile = u.getProfileUrl();
-        }
+        //name and last episode title
+        //favorite channel name will be overwritten later
 		String[] split = c.getName().split("|");
 		String name = split.length > 0 ? split[0] : c.getName();
-		String lastEpisodeTitle = split.length > 1 ? split[1] : "";		
-        if (c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL && 
-            c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+		String lastEpisodeTitle = split.length > 1 ? split[1] : "";
+		
+		//image url, favorite channel image will be overwritten later
+        String imageUrl = c.getPlayerPrefImageUrl();
+        if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
+            c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
+            c.getContentType() == NnChannel.CONTENTTYPE_MIXED ||
+            c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
             NnProgramManager pMngr = new NnProgramManager();
             List<NnProgram> programs = pMngr.findByChannelId(c.getId());
             Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
@@ -734,11 +728,32 @@ public class NnChannelManager {
                 }
             }
         }
-        
+
+        //curator info
+        NnUserManager userMngr = new NnUserManager();
+        NnUser u = userMngr.findByIdStr(c.getUserIdStr());
+        String userName = "";
+        String userIntro = "";
+        String userImageUrl = "";
+        String curatorProfile = "";
+        if (u != null) {
+            userName = u.getName();
+            userIntro = u.getIntro();
+            userImageUrl = u.getImageUrl();
+            curatorProfile = u.getProfileUrl();
+            if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+            	log.info("change favorite channel name and thumbnail");
+                name = userName + "'s Favorite";
+                imageUrl = userImageUrl;
+            }
+        }
+
+        //3 subscribers info
         String subscriberProfile = "";
         String subscriberImage = "";
         String subscribersIdStr = c.getSubscribersIdStr();
-        if (subscribersIdStr != null) {
+        if (c.getContentType() != NnChannel.CONTENTTYPE_FAKE_FAVORITE && 
+        	subscribersIdStr != null) {
             String[] list = subscribersIdStr.split(";");
             for (String l : list ) {
                 NnUser sub = userMngr.findByIdStr(l);
