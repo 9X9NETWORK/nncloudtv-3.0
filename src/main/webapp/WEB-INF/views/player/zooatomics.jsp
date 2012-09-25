@@ -118,7 +118,7 @@ soundManager.onready(function()
 
 <body id="body" style="overflow: hidden">
 
-<div id="blue" style="background: black; width: 100%; height: 100%; display: block; position: absolute; color: white">
+<div id="blue" style="background-color: #dedede; width: 100%; height: 100%; display: block; position: absolute; color: white">
 </div>
 
 <div id="audio1" style="display:block;width:750px;height:30px;visibility:hidden" href=""></div>
@@ -345,12 +345,12 @@ soundManager.onready(function()
     <p id="curator-profile-photo"><img src="thumbnail/curator_05.png"></p>
     <h2 id="curator-profile-name">Snowball</h2>
     <div id="curator-paragraphs">
-      <p id="curator-declaration">Hi,<br>Welcome to visit my channels.<br>I love here!</p>
-      <p id="curator-email">My E-mail:<br>snowball@9x9.tv</p>
-      <p id="curator-blog">My Blog:<br>http://esnowball.blogspot.com</p>
-      <p id="curator-page">My Page's URL:<br><span id="curator-url">www.9x9.tv/curator/24225524222</span><br><span class="link">Create customized short URL</span></p>
+      <p id="curator-declaration"></p>
+      <p id="curator-email"></p>
+      <p id="curator-blog"></p>
+      <p id="curator-page">My Page's URL:<br><span id="curator-url"></span><br><span class="link">Create customized short URL</span></p>
     </div>
-    <p class="curator-sidebar-btn" id="btn-edit-curator">Edit</p>
+    <p class="curator-sidebar-btn" id="btn-edit-curator" style="display: none">Edit</p>
     <p class="curator-sidebar-btn" id="btn-about-curator"></p>
     <ul id="curator-activity">
       <li>
@@ -558,7 +558,7 @@ soundManager.onready(function()
     <ul id="ch-meta">
       <li><span id="ch-meta-count"></span></li>
       <li><span id="ch-meta-ago"></span></li>
-      <li><span>by</span><span class="name" id="ch-meta_curator"></span></li>
+      <li><span>by</span><span class="name" id="ch-meta-curator"></span></li>
     </ul>
     <p id="ch-brief" class="ellipsis multiline"><span></span></p>
   </div>
@@ -673,7 +673,7 @@ soundManager.onready(function()
           </ul>    
         </div>
         <div id="guide-maylike"> 
-          <h3><span>You May Like (</span><span id="recommend-chNum">9</span><span>)</span></h3>
+          <h3><span>Recommended (</span><span id="recommend-chNum">9</span><span>)</span></h3>
           <div id="maylike-arrows" class="horizon-arrows">
             <div id="maylike-up"></div>
             <div id="maylike-down"></div>
