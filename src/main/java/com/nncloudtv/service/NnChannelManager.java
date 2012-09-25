@@ -715,10 +715,15 @@ public class NnChannelManager {
 
         //name and last episode title
         //favorite channel name will be overwritten later
+        /*
 		String[] split = c.getName().split("|");
 		String name = split.length > 0 ? split[0] : c.getName();
 		String lastEpisodeTitle = split.length > 1 ? split[1] : "";
-		
+		*/
+
+		String name = c.getName();;
+		String lastEpisodeTitle = "";
+        
 		//image url, favorite channel image will be overwritten later
         String imageUrl = c.getPlayerPrefImageUrl();
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
