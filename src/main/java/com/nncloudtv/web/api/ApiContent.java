@@ -943,7 +943,7 @@ public class ApiContent extends ApiGeneric {
         if (isPublicStr != null) {
             Boolean isPublic = Boolean.valueOf(isPublicStr);
             if (isPublic != null) {
-                episode.setPublic(isPublic);
+                episode.setIsPublic(isPublic);
             }
         }
         
@@ -1033,7 +1033,7 @@ public class ApiContent extends ApiGeneric {
         if (isPublicStr != null) {
             Boolean isPublic = Boolean.valueOf(isPublicStr);
             if (isPublic != null) {
-                episode.setPublic(isPublic);
+                episode.setIsPublic(isPublic);
             }
         }
         

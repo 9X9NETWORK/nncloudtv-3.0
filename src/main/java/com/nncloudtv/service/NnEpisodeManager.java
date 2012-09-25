@@ -45,7 +45,7 @@ public class NnEpisodeManager {
             programMngr.save(programs);
             
             episode.setPublishDate(new Date());
-            episode.setPublic(rerun);
+            episode.setIsPublic(rerun);
             save(episode);
             
             reorderChannelEpisodes(episode.getChannelId());
@@ -111,11 +111,11 @@ public class NnEpisodeManager {
             
             public int compare(NnEpisode episode1, NnEpisode episode2) {
                 
-                if (episode1.isPublic() == episode2.isPublic()) {
+                if (episode1.getIsPublic() == episode2.getIsPublic()) {
                     
                     return (episode1.getSeq() - episode2.getSeq());
                     
-                } else if (episode1.isPublic() == false) {
+                } else if (episode1.getIsPublic() == false) {
                     
                     return -1;
                             

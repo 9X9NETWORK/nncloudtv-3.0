@@ -128,11 +128,11 @@ public class NnEpisode implements Serializable {
         this.channelId = channelId;
     }
 
-	public boolean isPublic() {
+	public boolean getIsPublic() {
 		return isPublic;
 	}
 
-	public void setPublic(boolean isPublic) {
+	public void setIsPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 

@@ -406,6 +406,10 @@ public class NnProgram implements Serializable {
     }
 
     public long getStorageIdInt() {
+        
+        if (storageId == null) {
+            return 0;
+        }
     
         Long id = null;
         try {
@@ -413,7 +417,7 @@ public class NnProgram implements Serializable {
         } catch (NumberFormatException e) {
         }
         
-        return (id == 0) ? 0 : id;
+        return (id == null) ? 0 : id;
     }
 
     public int getCntView() {
