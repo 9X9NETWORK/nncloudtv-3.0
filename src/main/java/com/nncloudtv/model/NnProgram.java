@@ -339,8 +339,8 @@ public class NnProgram implements Serializable {
         return subSeq;
     }
     
-    public void setSubSeq(int i) {
-        this.subSeq = NnStringUtil.seqToStr(i);
+    public void setSubSeq(int subSeq) {
+        this.subSeq = NnStringUtil.seqToStr(subSeq);
     }
     
     public void setSubSeq(String subSeq) {

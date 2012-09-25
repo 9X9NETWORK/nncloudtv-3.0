@@ -45,7 +45,7 @@ public class NnProgramManager {
         }
         
         // non-specified sub-position
-        if (program.getSeqInt() == 0) {
+        if (program.getSubSeqInt() == 0) {
             reorderEpisodePrograms(episode.getId());
         }
         
