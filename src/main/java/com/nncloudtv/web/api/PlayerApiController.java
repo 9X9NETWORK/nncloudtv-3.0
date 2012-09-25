@@ -1854,6 +1854,7 @@ public class PlayerApiController {
     @RequestMapping(value="favorite", produces = "text/plain; charset=utf-8")
     public @ResponseBody String favorite(
             @RequestParam(value="user", required=false) String user,
+            @RequestParam(value="channel", required=false) String channel,
             @RequestParam(value="program", required=false) String program,
             @RequestParam(value="video", required=false) String fileUrl,
             @RequestParam(value="name", required=false) String name,
@@ -1866,7 +1867,7 @@ public class PlayerApiController {
         try {
             boolean del = Boolean.parseBoolean(delete);
             this.prepService(req, true);        
-            output = playerApiService.favorite(user, program, fileUrl, name, imageUrl, duration, del);
+            output = playerApiService.favorite(user, channel, program, fileUrl, name, imageUrl, duration, del);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

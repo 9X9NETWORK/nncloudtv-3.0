@@ -475,15 +475,16 @@ public class PlayerApiService {
         if (tagStr != null) {
             channels = catMngr.findChannelsByTag(cid, true, tagStr);
         } else {
-            //channels = catMngr.findChannels(cid, true);
-        	//query.setRange((page - 1) * limit, page * limit);
         	if (start == null || count.length() == 0)
         		start = "1";
         	if (count == null || count.length() == 0)
-        		count = "30";
+        		count = "0";        	
         	int startIndex = Integer.parseInt(start);
-        	int limit = Integer.valueOf(count);
-        	int page = (int) (startIndex / limit) + 1;
+        	int limit = Integer.valueOf(count);        	
+        	int page = 0;
+        	if (limit != 0) {
+        		page = (int) (startIndex / limit) + 1;
+        	}
             channels = catMngr.listChannels(page, limit, cat.getId());
         }
         String result[] = {"", "", ""};
@@ -491,8 +492,11 @@ public class PlayerApiService {
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
         result[0] += assembleKeyValue("name", cat.getName());
         result[0] += assembleKeyValue("start", start);
+        String total = String.valueOf(catMngr.findChannelSize(cat.getId()));
+        if (count.equals("0"))
+        	count = total;
         result[0] += assembleKeyValue("count", count);
-        result[0] += assembleKeyValue("total", String.valueOf(catMngr.findChannelSize(cat.getId())));        
+        result[0] += assembleKeyValue("total", total);        
         //category tag
         String tags = cat.getTag();
         if (tags != null) {
@@ -1487,6 +1491,8 @@ public class PlayerApiService {
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
         List<NnUser> users = userMngr.search(null, null, text);
+        int endIndex = (users.size() > 9) ? 9: users.size();
+        users = users.subList(0, endIndex);
         result[1] += userMngr.composeCuratorInfo(users, true, req);
         
         //if none matched, return suggestion channels
@@ -1656,25 +1662,30 @@ public class PlayerApiService {
         return output;                
     }
 
-    public String favorite(String userToken, String program, String fileUrl, String name, String imageUrl, String duration, boolean delete) {
+    public String favorite(String userToken, String channel, String program, String fileUrl, String name, String imageUrl, String duration, boolean delete) {
         if (userToken == null || (program == null && fileUrl == null))
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-        String[] result = {""};        
+        String[] result = {""};                
 
         NnUser u = userMngr.findByToken(userToken);
         if (u == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         long pid = 0;
+        NnChannel c = null;
+        NnProgram p = null;
         if (program != null) {
             pid = Long.parseLong(program);
-            NnProgram p = new NnProgramManager().findById(Long.parseLong(program));
+            c = chMngr.findById(Long.parseLong(channel));
+            if (c == null)
+            	return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+            p = new NnProgramManager().findById(Long.parseLong(program));
             if (p == null)
                 return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
         }
         if (delete) {
             chMngr.deleteFavorite(u, pid);
         } else {
-            chMngr.saveFavorite(u, pid, fileUrl, name, imageUrl, duration);
+            chMngr.saveFavorite(u, c, p, fileUrl, name, imageUrl, duration);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
 

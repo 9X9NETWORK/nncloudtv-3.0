@@ -10,7 +10,8 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /**
- * sub-episode's title card 
+ * sub-episode's title card. 
+ * each program can have a "before" and "after" card.
  */
 @PersistenceCapable(table="title_card", detachable = "true")
 public class TitleCard implements Serializable {    

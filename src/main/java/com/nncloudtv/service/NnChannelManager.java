@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.CategoryMapDao;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.ShardedCounter;
+import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
@@ -111,33 +112,46 @@ public class NnChannelManager {
         return channel;
     }
 
+    public String processCache(NnChannel c) {
+        String cacheKey = this.getCacheKey(c.getId());
+        String str = this.composeChannelLineupStr(c); 
+        CacheFactory.set(cacheKey, str);
+        return str;
+    }
+
+    //example: nnchannel(channel_id)
+    public String getCacheKey(long channelId) {
+        String str = "nnchannel(" + channelId + ")"; 
+        return str;
+    }
+    
     //process tag text enter by users
     //TODO or move to TagManager
     public String processTagText(String channelTag) {
-    	String result = "";
-    	String[] multiples = channelTag.split(",");
-    	for (String m : multiples) {
-    		String tag = TagManager.getValidTag(m);
-    		if (tag != null && tag.length() > 0 && tag.length() < 20)
-    			result += "," + tag;
-    	}
-    	result = result.replaceFirst(",", "");
-    	if (result.length() == 0)
-    		return null;
-    	return result;
+    String result = "";
+    String[] multiples = channelTag.split(",");
+    for (String m : multiples) {
+    String tag = TagManager.getValidTag(m);
+    if (tag != null && tag.length() > 0 && tag.length() < 20)
+    result += "," + tag;
+    }
+    result = result.replaceFirst(",", "");
+    if (result.length() == 0)
+    return null;
+    return result;
     }
     
     //IMPORTANT: use processTagText first 
     public void processChannelTag(NnChannel c) {
         TagManager tagMngr = new TagManager();
-    	List<Tag> originalTags = tagMngr.findByChannel(c.getId());
-    	Map<Long, String> map = new HashMap<Long, String>();
-    	for (Tag t : originalTags) {
-    		map.put(t.getId(), t.getName());
-    	}
+        List<Tag> originalTags = tagMngr.findByChannel(c.getId());
+        Map<Long, String> map = new HashMap<Long, String>();
+        for (Tag t : originalTags) {
+            map.put(t.getId(), t.getName());
+        }
         String tag = c.getTag();
         if (tag == null)
-        	return;
+        return;
         String[] multiples = tag.split(",");
         for (String m : multiples) {
             m = m.trim();            
@@ -146,7 +160,7 @@ public class NnChannelManager {
                 t = new Tag(m);
                 tagMngr.save(t);
             } else {
-            	map.remove(t.getId());
+                map.remove(t.getId());
             }
             TagMap tm = tagMngr.findByTagAndChannel(t.getId(), c.getId());
             if (tm == null)
@@ -175,24 +189,24 @@ public class NnChannelManager {
     
     //create an empty favorite channel
     public NnChannel createFavorite(NnUser user) {
-    	log.info("create empty favorite channel for whom want to subscribe an empty channel");
-    	NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
+        log.info("create empty favorite channel for whom want to subscribe an empty channel");
+        NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
             favoriteCh.setUserIdStr(user.getIdStr());
             favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
-            favoriteCh.setSphere(user.getSphere());
-            
+            favoriteCh.setSphere(user.getSphere());            
             dao.save(favoriteCh);
         }
         return favoriteCh;
     }
     
     //save favorite channel along with the program
-    public void saveFavorite(NnUser user, long pId, String fileUrl, String name, String imageUrl, String duration) {
+    //channel and program has been verified if exist
+    public void saveFavorite(NnUser user, NnChannel c, NnProgram p, String fileUrl, String name, String imageUrl, String duration) {
         if (fileUrl != null && !fileUrl.contains("http")) {
-        	fileUrl = "http://www.youtube.com/watch?v=" + fileUrl;
-        }    	
+            fileUrl = "http://www.youtube.com/watch?v=" + fileUrl;
+        }    
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
@@ -203,27 +217,14 @@ public class NnChannelManager {
             favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);
             dao.save(favoriteCh);
         }
-        NnProgramManager pMngr = new NnProgramManager();
-        NnProgram favorite = null;
-        if (pId != 0) {
-            favorite = pMngr.findById(pId);
-            if (favorite == null) {
-                log.info("program invalid:" + pId);
-                return;
+        NnProgramManager pMngr = new NnProgramManager();        
+        if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
+            if (p.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
+                fileUrl = p.getFileUrl();
+                name = p.getName();
+                imageUrl = p.getImageUrl();
             }
-            NnChannel c = new NnChannelManager().findById(favorite.getChannelId());
-            if (c == null) {
-                log.info("program doesn't have channel info:" + favorite.getChannelId());
-                return;
-            }
-            if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
-                if (favorite.getContentType() != NnProgram.CONTENTTYPE_REFERENCE) {
-                    fileUrl = favorite.getFileUrl();
-                    name = favorite.getName();
-                    imageUrl = favorite.getImageUrl();
-                }
-            }
-        }
+        }        
         if (fileUrl != null) {
             NnProgram existFavorite = pMngr.findByChannelAndFileUrl(favoriteCh.getId(), fileUrl);
             if (existFavorite == null) {
@@ -238,16 +239,16 @@ public class NnChannelManager {
         }
         //only 9x9 channel or reference of 9x9 channel should hit here,  
         String storageId = "";
-        if (favorite.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
-            storageId = favorite.getStorageId();
+        if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+            storageId = p.getStorageId();
         } else {                     
-            storageId = String.valueOf(favorite.getEpisodeId());
+        storageId = String.valueOf(p.getEpisodeId());
         }
         NnProgram existFavorite = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);        
         if (existFavorite != null)
             return;
         
-        NnProgram newP = new NnProgram(favoriteCh.getId(), favorite.getName(), favorite.getIntro(), favorite.getImageUrl());
+        NnProgram newP = new NnProgram(favoriteCh.getId(), p.getName(), p.getIntro(), p.getImageUrl());
         newP.setPublic(true);
         newP.setStatus(NnProgram.STATUS_OK);
         newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
@@ -273,7 +274,7 @@ public class NnChannelManager {
         }
         //TODO will be inconsistent with those stored in tag table
         if (channel.getTag() != null) {
-        	channel.setTag(this.processTagText(channel.getTag()));
+            channel.setTag(this.processTagText(channel.getTag()));
         }
         channel = dao.save(channel);
         
@@ -383,10 +384,14 @@ public class NnChannelManager {
         log.info("return from svi:" + chStr);
         if (chStr != null) {
             String chs[] = chStr.split(",");
+            int i=1;
             for (String cId : chs) {
-                NnChannel c = this.findById(Long.parseLong(cId));
+            	if (i > 9) break;            		
+            	System.out.println("cid:" + cId);
+                NnChannel c = this.findById(Long.parseLong(cId.trim()));
                 if (c != null)
                     channels.add(c);
+                i++;
             }
         }
         return channels;
@@ -546,26 +551,26 @@ public class NnChannelManager {
     }
 
     public Comparator<NnChannel> getChannelComparator(String sort) {
-    	if (sort.equals("seq")) {
+    if (sort.equals("seq")) {
             class ChannelComparator implements Comparator<NnChannel> {
                 public int compare(NnChannel channel1, NnChannel channel2) {
-                	Short seq1 = channel1.getSeq();
-                	Short seq2 = channel2.getSeq();
-                	return seq1.compareTo(seq2);
+                Short seq1 = channel1.getSeq();
+                Short seq2 = channel2.getSeq();
+                return seq1.compareTo(seq2);
                 }
             }
-            return new ChannelComparator();    		
-    	}
-    	if (sort.equals("cntView")) {
+            return new ChannelComparator();    
+    }
+    if (sort.equals("cntView")) {
             class ChannelComparator implements Comparator<NnChannel> {
                 public int compare(NnChannel channel1, NnChannel channel2) {
-                	Integer cntView1 = channel1.getCntView();
-                	Integer cntView2 = channel2.getCntView();
-                	return cntView2.compareTo(cntView1);
+                Integer cntView1 = channel1.getCntView();
+                Integer cntView2 = channel2.getCntView();
+                return cntView2.compareTo(cntView1);
                 }
             }
-            return new ChannelComparator();    		
-    	}    	
+            return new ChannelComparator();    
+    }    
         class ChannelComparator implements Comparator<NnChannel> {
             public int compare(NnChannel channel1, NnChannel channel2) {
                 Date date1 = channel1.getUpdateDate();
@@ -656,19 +661,19 @@ public class NnChannelManager {
         List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
         boolean needToFake = true;
         for (NnChannel c : channels) {
-        	if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
-        		needToFake = false;
-        	}
+        if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+        needToFake = false;
+        }
         }
         if (needToFake) {
-        	log.info("---- need to fake-----");
-        	String name = user.getName() + "'s favorite";
-        	NnChannel c = new NnChannel(name, "", "");
-        	c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
-        	c.setUserIdStr(user.getIdStr());
-        	c.setStatus(NnChannel.STATUS_SUCCESS);
-        	c.setPublic(true);
-        	channels.add(c);
+        log.info("need to fake");
+        String name = user.getName() + "'s favorite";
+        NnChannel c = new NnChannel(name, "", "");
+        c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
+        c.setUserIdStr(user.getIdStr());
+        c.setStatus(NnChannel.STATUS_SUCCESS);
+        c.setPublic(true);
+        channels.add(c);
         }
         if (limit == 0) {
             return channels;
@@ -711,18 +716,25 @@ public class NnChannelManager {
             userIntro = u.getIntro();
             userImageUrl = u.getImageUrl();
             curatorProfile = u.getProfileUrl();
-        }            
+        }
+		String[] split = c.getName().split("|");
+		String name = split.length > 0 ? split[0] : c.getName();
+		String lastEpisodeTitle = split.length > 1 ? split[1] : "";		
         if (c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL && 
             c.getContentType() != NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-        	List<NnProgram> programs = new NnProgramManager().findByChannelId(c.getId());
-        	for (int i=0; i<3; i++) {
-        		if (i < programs.size())
-        			imageUrl += "|" + programs.get(i).getImageUrl();
-        		else
-        			i=4;
-        	}
+            NnProgramManager pMngr = new NnProgramManager();
+            List<NnProgram> programs = pMngr.findByChannelId(c.getId());
+            Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
+            for (int i=0; i<3; i++) {
+                if (i < programs.size()) {
+                   lastEpisodeTitle = programs.get(0).getName();
+                   imageUrl += "|" + programs.get(i).getImageUrl();
+                } else {
+                   i=4;
+                }
+            }
         }
-
+        
         String subscriberProfile = "";
         String subscriberImage = "";
         String subscribersIdStr = c.getSubscribersIdStr();
@@ -745,11 +757,11 @@ public class NnChannelManager {
         
         String id = Integer.toString(c.getSeq());
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
-        	id = "f" + "-" + curatorProfile;
+           id = "f" + "-" + curatorProfile;
         }
         String[] ori = {id, 
                         String.valueOf(c.getId()),
-                        c.getName(),
+                        name,
                         c.getIntro(),
                         imageUrl, //c.getPlayerPrefImageUrl(),                        
                         String.valueOf(c.getCntEpisode()),
@@ -771,6 +783,7 @@ public class NnChannelManager {
                         userImageUrl,
                         subscriberProfile,
                         subscriberImage,
+                        lastEpisodeTitle,
                        };
 
         String output = NnStringUtil.getDelimitedStr(ori);

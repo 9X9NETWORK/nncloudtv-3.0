@@ -127,7 +127,8 @@ public class CategoryDao extends GenericDao<Category> {
             Query query = pm.newQuery(CategoryMap.class);
             if (filter != null && filter != "")
                 query.setFilter(filter);
-            query.setRange((page - 1) * limit, page * limit);
+            if (limit > 0)
+            	query.setRange((page - 1) * limit, page * limit);
             @SuppressWarnings("unchecked")
             List<CategoryMap> tmp = (List<CategoryMap>)query.execute();
             results = (List<CategoryMap>)pm.detachCopyAll(tmp);

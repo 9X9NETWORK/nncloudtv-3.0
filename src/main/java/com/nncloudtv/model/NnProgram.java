@@ -168,6 +168,15 @@ public class NnProgram implements Serializable {
         return name;
     }
 
+    public String getPlayerName() {
+    	String name = this.getName(); 
+        if (name != null) {        	
+           name = name.replace("|", "\\|");
+       	   name = name.replaceAll("\\s", " ");
+        }
+        return name;    	
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -200,6 +209,17 @@ public class NnProgram implements Serializable {
         if (intro != null)
             intro = NnStringUtil.revertHtml(intro);
         return intro;
+    }
+    
+    public String getPlayerIntro() {
+    	String intro = this.getIntro(); 
+        if (intro != null) {
+            int len = (intro.length() > 256 ? 256 : intro.length()); 
+        	intro = intro.replaceAll("\\s", " ");                
+        	intro = intro.substring(0, len);           
+        }
+        return name;    	
+    	
     }
 
     public void setIntro(String intro) {

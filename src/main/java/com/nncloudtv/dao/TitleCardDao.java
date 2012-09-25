@@ -8,7 +8,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
-import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.TitleCard;
 
 public class TitleCardDao extends GenericDao<TitleCard> {
@@ -26,6 +25,7 @@ public class TitleCardDao extends GenericDao<TitleCard> {
             Query q = pm.newQuery(TitleCard.class);
             q.setFilter("channelId == channelIdParam");
             q.declareParameters("long channelIdParam");
+            q.setOrdering("programId");
             @SuppressWarnings("unchecked")
             List<TitleCard> cards = (List<TitleCard>) q.execute(channelId);
             detached = (List<TitleCard>)pm.detachCopyAll(cards);

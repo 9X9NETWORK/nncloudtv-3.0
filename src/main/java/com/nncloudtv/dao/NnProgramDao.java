@@ -180,13 +180,13 @@ public class NnProgramDao extends GenericDao<NnProgram> {
             } else if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {
                 ordering = "seq desc, subSeq asc";    
             } else if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
-                log.info("ordering by seq, subSeq asc");
                 ordering = "seq asc, subSeq asc";
             } else if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_SPECIAL_SORTING) {
                 ordering = "seq desc, subSeq asc";                
             } else {
                 ordering = "updateDate desc";
             }
+            log.info("ordering:" + ordering);
             String sql = "select * " +
                            "from nnprogram " +
                           "where channelId = " + c.getId() + " " + 
