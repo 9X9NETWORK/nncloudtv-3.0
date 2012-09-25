@@ -460,7 +460,7 @@ public class ApiContent extends ApiGeneric {
         String endTimeStr = req.getParameter("endTime");
         if (endTimeStr == null) {
             
-            program.setEndTime(0);
+            program.setEndTime(program.getDuration());
             
         } else {
             
