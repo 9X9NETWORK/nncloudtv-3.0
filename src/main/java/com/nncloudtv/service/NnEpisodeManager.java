@@ -112,11 +112,11 @@ public class NnEpisodeManager {
             
             public int compare(NnEpisode episode1, NnEpisode episode2) {
                 
-                if (episode1.getIsPublic() == episode2.getIsPublic()) {
+                if (episode1.isPublic() == episode2.isPublic()) {
                     
                     return (episode1.getSeq() - episode2.getSeq());
                     
-                } else if (episode1.getIsPublic() == false) {
+                } else if (episode1.isPublic() == false) {
                     
                     return -1;
                             
