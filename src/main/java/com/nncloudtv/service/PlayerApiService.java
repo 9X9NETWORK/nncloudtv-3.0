@@ -68,7 +68,7 @@ public class PlayerApiService {
     private Locale locale;
     private Mso mso;
     private int version = 32;    
-        
+    
     public int getVersion() {
 		return version;
 	}
@@ -84,7 +84,7 @@ public class PlayerApiService {
     public void setMso(Mso mso) {
         this.mso = mso;
     }
-
+    
     public String handleException (Exception e) {
         if (e.getClass().equals(NumberFormatException.class)) {
             //return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
@@ -168,6 +168,15 @@ public class PlayerApiService {
     public void setUserCookie(HttpServletResponse resp, String cookieName, String userId) {        
         CookieHelper.setCookie(resp, cookieName, userId);
     }    
+    
+	public String listRecommended(String lang) {
+		lang = this.checkLang(lang);	
+        if (lang == null)
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        if (version >= 32)
+        	return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null); 
+        return new IosService().listRecommended(lang);		
+	}
     
     public String fbSignup(String accessToken, String expires, HttpServletRequest req, HttpServletResponse resp) {
         String[] data = new FacebookLib().getFbMe(accessToken);
@@ -552,8 +561,7 @@ public class PlayerApiService {
                                 boolean userInfo, 
                                 String channelIds, 
                                 boolean setInfo, 
-                                boolean isRequired,
-                                String v
+                                boolean isRequired
                                 ) { 
                                                                
         //verify input
@@ -674,10 +682,10 @@ public class PlayerApiService {
                 c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
             }
         }
-        if (v != null)
-        	channelOutput += chMngr.composeChannelLineup(channels);
-        else
+        if (version < 32)
         	channelOutput += new IosService().composeChannelLineup(channels);
+        else
+        	channelOutput += chMngr.composeChannelLineup(channels);
         result.add(channelOutput);
         
         String size[] = new String[result.size()];
@@ -1629,7 +1637,7 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup(token, null, null, false, null, true, false, "32");
+        String lineup = this.channelLineup(token, null, null, false, null, true, false);
         data.add(lineup);
         if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
@@ -1683,7 +1691,7 @@ public class PlayerApiService {
     }
 
     public String favorite(String userToken, String channel, String program, String fileUrl, String name, String imageUrl, String duration, boolean delete) {
-        if (userToken == null || (program == null && fileUrl == null))
+        if (userToken == null || (program == null && fileUrl == null) || channel == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         String[] result = {""};                
 
