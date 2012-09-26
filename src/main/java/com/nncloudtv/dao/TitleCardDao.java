@@ -52,6 +52,8 @@ public class TitleCardDao extends GenericDao<TitleCard> {
     
     public TitleCard findByProgramIdAndType(long programId, short type) {
     
+        log.info("programId = " + programId + ", type = " + type);
+        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         TitleCard result = null;
         try {
