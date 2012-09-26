@@ -215,6 +215,7 @@ public class NnChannelManager {
             favoriteCh.setSphere(user.getSphere());
             favoriteCh.setPublic(true);
             favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);
+            favoriteCh.setCntEpisode(1);
             dao.save(favoriteCh);
         }
         NnProgramManager pMngr = new NnProgramManager();        
@@ -715,15 +716,10 @@ public class NnChannelManager {
 
         //name and last episode title
         //favorite channel name will be overwritten later
-        /*
-		String[] split = c.getName().split("|");
-		String name = split.length > 0 ? split[0] : c.getName();
-		String lastEpisodeTitle = split.length > 1 ? split[1] : "";
-		*/
-
-		String name = c.getName();;
-		String lastEpisodeTitle = "";
-        
+		String[] split = c.getName().split("\\|");
+		String name = split.length == 2 ? split[0] : c.getName();
+		String lastEpisodeTitle = split.length == 2 ? split[1] : "";
+		
 		//image url, favorite channel image will be overwritten later
         String imageUrl = c.getPlayerPrefImageUrl();
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
