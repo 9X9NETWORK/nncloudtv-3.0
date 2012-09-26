@@ -244,15 +244,15 @@ public class NnChannelManager {
         String pintro = "";
         String pimageUrl = "";
         if (e != null) { //9x9 channel
-        	storageId = "e" + String.valueOf(e.getId());
-        	pname = e.getName();
-        	pintro = e.getIntro();
-        	pimageUrl = e.getImageUrl();
+            storageId = "e" + String.valueOf(e.getId());
+            pname = e.getName();
+            pintro = e.getIntro();
+            pimageUrl = e.getImageUrl();
         } else { //reference channel
-        	storageId = p.getStorageId();
-        	pname = p.getName();
-        	pintro = p.getIntro();
-        	pimageUrl = p.getImageUrl();
+            storageId = p.getStorageId();
+            pname = p.getName();
+            pintro = p.getIntro();
+            pimageUrl = p.getImageUrl();
         }
         NnProgram existFavorite = pMngr.findByChannelAndStorageId(favoriteCh.getId(), storageId);        
         if (existFavorite != null)
@@ -396,8 +396,8 @@ public class NnChannelManager {
             String chs[] = chStr.split(",");
             int i=1;
             for (String cId : chs) {
-            	if (i > 9) break;            		
-            	System.out.println("cid:" + cId);
+                if (i > 9) break;                    
+                System.out.println("cid:" + cId);
                 NnChannel c = this.findById(Long.parseLong(cId.trim()));
                 if (c != null)
                     channels.add(c);
@@ -561,7 +561,7 @@ public class NnChannelManager {
     }
 
     public Comparator<NnChannel> getChannelComparator(String sort) {
-    if (sort.equals("seq")) {
+        if (sort.equals("seq")) {
             class ChannelComparator implements Comparator<NnChannel> {
                 public int compare(NnChannel channel1, NnChannel channel2) {
                 Short seq1 = channel1.getSeq();
@@ -570,8 +570,8 @@ public class NnChannelManager {
                 }
             }
             return new ChannelComparator();    
-    }
-    if (sort.equals("cntView")) {
+        }
+        if (sort.equals("cntView")) {
             class ChannelComparator implements Comparator<NnChannel> {
                 public int compare(NnChannel channel1, NnChannel channel2) {
                 Integer cntView1 = channel1.getCntView();
@@ -580,7 +580,7 @@ public class NnChannelManager {
                 }
             }
             return new ChannelComparator();    
-    }    
+        }    
         class ChannelComparator implements Comparator<NnChannel> {
             public int compare(NnChannel channel1, NnChannel channel2) {
                 Date date1 = channel1.getUpdateDate();
@@ -708,19 +708,37 @@ public class NnChannelManager {
         for (NnChannel c : channels) {
             output += this.composeChannelLineupStr(c) + "\n";
         }
+        return output;    	
+    	/*
+        String output = "";
+        for (NnChannel c : channels) {
+            String cacheKey = "nnchannel(" + c.getId() + ")";
+            String result = (String)CacheFactory.get(cacheKey);
+            if (CacheFactory.isRunning && result != null) {
+            	log.info("channel lineup from cache");
+                output += result;
+            } else {
+                String str = this.composeChannelLineupStr(c) + "\n";
+                if (CacheFactory.isRunning)
+                    CacheFactory.set(cacheKey, str);
+                output += str + "\n";                
+            }
+        }
         return output;
+        */
     }
+    
     public String composeChannelLineupStr(NnChannel c) {
         Random r = new Random();
         int viewCount = r.nextInt(300);
 
         //name and last episode title
         //favorite channel name will be overwritten later
-		String[] split = c.getName().split("\\|");
-		String name = split.length == 2 ? split[0] : c.getName();
-		String lastEpisodeTitle = split.length == 2 ? split[1] : "";
-		
-		//image url, favorite channel image will be overwritten later
+        String[] split = c.getName().split("\\|");
+        String name = split.length == 2 ? split[0] : c.getName();
+        String lastEpisodeTitle = split.length == 2 ? split[1] : "";
+        
+        //image url, favorite channel image will be overwritten later
         String imageUrl = c.getPlayerPrefImageUrl();
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
@@ -752,7 +770,7 @@ public class NnChannelManager {
             userImageUrl = u.getImageUrl();
             curatorProfile = u.getProfileUrl();
             if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
-            	log.info("change favorite channel name and thumbnail");
+                log.info("change favorite channel name and thumbnail");
                 name = userName + "'s Favorite";
                 imageUrl = userImageUrl;
             }
@@ -763,7 +781,7 @@ public class NnChannelManager {
         String subscriberImage = "";
         String subscribersIdStr = c.getSubscribersIdStr();
         if (c.getContentType() != NnChannel.CONTENTTYPE_FAKE_FAVORITE && 
-        	subscribersIdStr != null) {
+            subscribersIdStr != null) {
             String[] list = subscribersIdStr.split(";");
             for (String l : list ) {
                 NnUser sub = userMngr.findByIdStr(l);
@@ -780,12 +798,12 @@ public class NnChannelManager {
             }
         }
         
-        String id = Integer.toString(c.getSeq());
+        String id = Long.toString(c.getId());
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
            id = "f" + "-" + curatorProfile;
         }
-        String[] ori = {id, 
-                        String.valueOf(c.getId()),
+        String[] ori = {String.valueOf(c.getSeq()), 
+                        id,
                         name,
                         c.getIntro(),
                         imageUrl, //c.getPlayerPrefImageUrl(),                        
