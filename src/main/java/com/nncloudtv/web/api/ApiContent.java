@@ -277,7 +277,7 @@ public class ApiContent extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             } else {
-                program.setSeq(subSeq);
+                program.setSubSeq(subSeq);
             }
         }
         
