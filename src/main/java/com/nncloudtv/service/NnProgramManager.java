@@ -212,11 +212,9 @@ public class NnProgramManager {
         String cacheKey = "nnprogram(" + channelId + ")";
         String result = (String)CacheFactory.get(cacheKey);
         if (CacheFactory.isRunning && result != null) { 
-            log.info("<<<<< retrieve program info from cache >>>>>");
             return result;
         }        
         
-        log.info("nothing in the cache");        
         List<NnProgram> programs = this.findPlayerProgramsByChannel(channelId);
         log.info("channel id:" + channelId + "; program size:" + programs.size());
         String str = this.composeProgramInfo(programs);
@@ -297,8 +295,10 @@ public class NnProgramManager {
     }
             
     public List<NnProgram> findRealPrograms(String storageId) {
-    	storageId = storageId.replace("e", "");
         List<NnProgram> programs = new ArrayList<NnProgram>();
+        if (storageId == null)
+        	return programs;
+    	storageId = storageId.replace("e", "");
         programs = dao.findProgramsByEpisode(Long.parseLong(storageId));
         log.info("find reference's real programs size:" + programs.size());        
         return programs;        
