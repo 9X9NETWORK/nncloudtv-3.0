@@ -133,7 +133,7 @@ public class PlayerApiController {
             playerApiService.setUserAgent(PlayerApiService.PLAYER_IOS);
             log.info("from iOS");
         }
-        */ 
+        */
         if (log)
             NnNetUtil.logUrl(req);
         HttpSession session = req.getSession();
@@ -350,8 +350,8 @@ public class PlayerApiController {
             this.prepService(req, true);
             boolean flatten = Boolean.parseBoolean(isFlatten);
             if (playerApiService.getVersion() < 32) {
-        		return new IosService().category(category, lang, flatten); 
-        	}
+                return new IosService().category(category, lang, flatten); 
+            }
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
@@ -691,7 +691,7 @@ public class PlayerApiController {
      */        
     @RequestMapping(value="channelLineup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String channelLineup(
-    		@RequestParam(value="v", required=false) String v,
+            @RequestParam(value="v", required=false) String v,
             @RequestParam(value="user", required=false) String userToken, 
             @RequestParam(value="subscriptions", required=false) String subscriptions,
             @RequestParam(value="curator", required=false) String curatorIdStr,
@@ -711,7 +711,7 @@ public class PlayerApiController {
             boolean isUserInfo = Boolean.parseBoolean(userInfo);
             boolean isSetInfo = Boolean.parseBoolean(setInfo);
             boolean isRequired = Boolean.parseBoolean(required);
-            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, v);
+            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -746,7 +746,7 @@ public class PlayerApiController {
      */
     @RequestMapping(value="programInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String programInfo(
-    		@RequestParam(value="v", required=false) String v,
+            @RequestParam(value="v", required=false) String v,
             @RequestParam(value="channel", required=false) String channelIds,
             @RequestParam(value="user", required = false) String userToken,
             @RequestParam(value="userInfo", required=false) String userInfo,
@@ -987,7 +987,16 @@ public class PlayerApiController {
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {                                                
-        return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null);        
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            this.prepService(req, true);
+            output = playerApiService.listRecommended(lang);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;      
     }
 
     /**
