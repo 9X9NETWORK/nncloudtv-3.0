@@ -708,14 +708,14 @@ public class NnChannelManager {
         for (NnChannel c : channels) {
             output += this.composeChannelLineupStr(c) + "\n";
         }
-        return output;    	
-    	/*
+        return output;        
+        /*
         String output = "";
         for (NnChannel c : channels) {
             String cacheKey = "nnchannel(" + c.getId() + ")";
             String result = (String)CacheFactory.get(cacheKey);
             if (CacheFactory.isRunning && result != null) {
-            	log.info("channel lineup from cache");
+                log.info("channel lineup from cache");
                 output += result;
             } else {
                 String str = this.composeChannelLineupStr(c) + "\n";

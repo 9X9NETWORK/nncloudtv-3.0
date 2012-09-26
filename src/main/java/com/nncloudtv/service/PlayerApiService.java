@@ -70,14 +70,14 @@ public class PlayerApiService {
     private int version = 32;    
     
     public int getVersion() {
-		return version;
-	}
+        return version;
+    }
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
-	public void setLocale(Locale locale) {
+    public void setLocale(Locale locale) {
         this.locale = locale;
     }
     
@@ -169,14 +169,14 @@ public class PlayerApiService {
         CookieHelper.setCookie(resp, cookieName, userId);
     }    
     
-	public String listRecommended(String lang) {
-		lang = this.checkLang(lang);	
+    public String listRecommended(String lang) {
+        lang = this.checkLang(lang);    
         if (lang == null)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         if (version >= 32)
-        	return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null); 
-        return new IosService().listRecommended(lang);		
-	}
+            return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null); 
+        return new IosService().listRecommended(lang);        
+    }
     
     public String fbSignup(String accessToken, String expires, HttpServletRequest req, HttpServletResponse resp) {
         String[] data = new FacebookLib().getFbMe(accessToken);
@@ -427,7 +427,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }        
     
-    public String subscribe(String userToken, String channelId, String gridId) {    	
+    public String subscribe(String userToken, String channelId, String gridId) {        
         //verify input
         @SuppressWarnings("rawtypes")
         HashMap map = this.checkUser(userToken, false);
@@ -442,12 +442,12 @@ public class PlayerApiService {
         if (channelId == null)
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);        
         if (channelId.contains("f-")) {
-        	String profileUrl = channelId.replaceFirst("f-", "");
-        	NnUser curator = userMngr.findByProfileUrl(profileUrl);
-        	if (curator == null)
-        		return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
-        	NnChannel favoriteCh = chMngr.createFavorite(curator);
-        	channelId = String.valueOf(favoriteCh.getId());
+            String profileUrl = channelId.replaceFirst("f-", "");
+            NnUser curator = userMngr.findByProfileUrl(profileUrl);
+            if (curator == null)
+                return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
+            NnChannel favoriteCh = chMngr.createFavorite(curator);
+            channelId = String.valueOf(favoriteCh.getId());
         }
         long cId = Long.parseLong(channelId);            
         NnChannel channel = chMngr.findById(cId);            
@@ -456,7 +456,7 @@ public class PlayerApiService {
         
         short seq = Short.parseShort(gridId);
         if (seq > 72) {
-        	return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
 
         NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
@@ -485,16 +485,16 @@ public class PlayerApiService {
         if (tagStr != null) {
             channels = catMngr.findChannelsByTag(cid, true, tagStr);
         } else {
-        	if (start == null || count.length() == 0)
-        		start = "1";
-        	if (count == null || count.length() == 0)
-        		count = "0";        	
-        	int startIndex = Integer.parseInt(start);
-        	int limit = Integer.valueOf(count);        	
-        	int page = 0;
-        	if (limit != 0) {
-        		page = (int) (startIndex / limit) + 1;
-        	}
+            if (start == null || count.length() == 0)
+                start = "1";
+            if (count == null || count.length() == 0)
+                count = "0";            
+            int startIndex = Integer.parseInt(start);
+            int limit = Integer.valueOf(count);            
+            int page = 0;
+            if (limit != 0) {
+                page = (int) (startIndex / limit) + 1;
+            }
             channels = catMngr.listChannels(page, limit, cat.getId());
         }
         String result[] = {"", "", ""};
@@ -504,7 +504,7 @@ public class PlayerApiService {
         result[0] += assembleKeyValue("start", start);
         String total = String.valueOf(catMngr.findChannelSize(cat.getId()));
         if (count.equals("0"))
-        	count = total;
+            count = total;
         result[0] += assembleKeyValue("count", count);
         result[0] += assembleKeyValue("total", total);        
         //category tag
@@ -683,9 +683,9 @@ public class PlayerApiService {
             }
         }
         if (version < 32)
-        	channelOutput += new IosService().composeChannelLineup(channels);
+            channelOutput += new IosService().composeChannelLineup(channels);
         else
-        	channelOutput += chMngr.composeChannelLineup(channels);
+            channelOutput += chMngr.composeChannelLineup(channels);
         result.add(channelOutput);
         
         String size[] = new String[result.size()];
@@ -858,18 +858,18 @@ public class PlayerApiService {
             List<Long> list = new ArrayList<Long>();
             for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
             for (Long l : list) {
-            	if (version < 32) {
-            		programInfoStr = new IosService().findPlayerProgramInfoByChannel(l, sidxL, limitL);
-            	} else {
-            		programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);
-            	}
+                if (version < 32) {
+                    programInfoStr = new IosService().findPlayerProgramInfoByChannel(l, sidxL, limitL);
+                } else {
+                    programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);
+                }
             }
         } else {
-        	if (version < 32) {
-        		programInfoStr = new IosService().findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
-        	} else {        	
-        		programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
-        	}
+            if (version < 32) {
+                programInfoStr = new IosService().findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
+            } else {            
+                programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
+            }
         }        
         
         MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.CDN);
@@ -1158,8 +1158,8 @@ public class PlayerApiService {
             content += "user region:" + user.getSphere() + "\n";
             content += "user report:" + comment;
             NnEmail mail = new NnEmail(toEmail, toName, 
-            		                   user.getEmail(), user.getName(), 
-            		                   user.getEmail(), subject, content);            
+                                       user.getEmail(), user.getName(), 
+                                       user.getEmail(), subject, content);            
             service.sendEmail(mail);
             
         }
@@ -1477,26 +1477,26 @@ public class PlayerApiService {
     }
 
     public String forgotPassword(String email, HttpServletRequest req) {
-    	NnUser user = userMngr.findByEmail(email, req);
-    	if (user == null) {
-    		return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-    	}
-    	return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+        NnUser user = userMngr.findByEmail(email, req);
+        if (user == null) {
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+        }
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
     public String resetPassword(String token, String password, HttpServletRequest req) {
-//    	NnUser user = userMngr.findByEmail(token, password, req);
-//    	if (user == null) {
-//    		return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-//    	}
-    	return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+//        NnUser user = userMngr.findByEmail(token, password, req);
+//        if (user == null) {
+//            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+//        }
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
     public String search(String text, String stack, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         if (version < 32) {
-        	return new IosService().search(text);
+            return new IosService().search(text);
         }
         
         //matched channels
@@ -1701,21 +1701,21 @@ public class PlayerApiService {
         long pid = 0;
         NnChannel c = chMngr.findById(Long.parseLong(channel));
         if (c == null)
-        	return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+            return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         NnProgram p = null;
         NnEpisode e = null;
         if (program != null) {
-        	if (program.contains("e")) {
-        		program = program.replace("e", "");
-        		e = new NnEpisodeManager().findById(Long.parseLong(program));
-        		if (e == null)
-        			return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
-        	} else {
+            if (program.contains("e")) {
+                program = program.replace("e", "");
+                e = new NnEpisodeManager().findById(Long.parseLong(program));
+                if (e == null)
+                    return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+            } else {
                 pid = Long.parseLong(program);
                 p = new NnProgramManager().findById(Long.parseLong(program));
                 if (p == null)
                     return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
-        	}
+            }
         }
         //delete pid should not contain "e"
         if (delete) {
