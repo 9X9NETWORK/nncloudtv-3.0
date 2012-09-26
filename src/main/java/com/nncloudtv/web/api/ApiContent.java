@@ -876,6 +876,8 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        episode.setSeq(episodeMngr.getEpisodeSeq(episode));
+        
         return episode;
     }
     
