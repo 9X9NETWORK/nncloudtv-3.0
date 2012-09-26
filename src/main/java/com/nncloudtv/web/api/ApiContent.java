@@ -217,6 +217,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        program.setName(NnStringUtil.revertHtml(program.getName()));
+        program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
+        
         return program;
     }
     
@@ -247,13 +250,13 @@ public class ApiContent extends ApiGeneric {
         // name
         String name = req.getParameter("name");
         if (name != null) {
-            program.setName(NnStringUtil.htmlSafeChars(name));
+            program.setName(NnStringUtil.htmlSafeAndTruncated(name));
         }
         
         // intro
         String intro = req.getParameter("intro");
         if (intro != null) {
-            program.setIntro(NnStringUtil.htmlSafeChars(intro));
+            program.setIntro(NnStringUtil.htmlSafeAndTruncated(intro));
         }
         
         // imageUrl
@@ -312,8 +315,8 @@ public class ApiContent extends ApiGeneric {
         
         program = programMngr.save(program, recalculateDuration);
         
-        program.setName(NnStringUtil.htmlSafeAndTruncated(program.getName()));
-        program.setIntro(NnStringUtil.htmlSafeAndTruncated(program.getIntro()));
+        program.setName(NnStringUtil.revertHtml(program.getName()));
+        program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
         
         return program;
     }
@@ -641,9 +644,12 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
-        channelMngr.save(channel);
+        NnChannel savedChannel = channelMngr.save(channel);
+        savedChannel.setCategoryId(channel.getCategoryId());
+        savedChannel.setName(NnStringUtil.revertHtml(savedChannel.getName()));
+        savedChannel.setIntro(NnStringUtil.revertHtml(savedChannel.getIntro()));
         
-        return channelMngr.findById(channel.getId());
+        return savedChannel;
     }
     
     @RequestMapping(value = "channels/{channelId}/programs", method = RequestMethod.GET)
@@ -877,6 +883,8 @@ public class ApiContent extends ApiGeneric {
         }
         
         episode.setSeq(episodeMngr.getEpisodeSeq(episode));
+        episode.setName(NnStringUtil.revertHtml(episode.getName()));
+        episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
         
         return episode;
     }
@@ -1077,7 +1085,13 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnProgramManager programMngr = new NnProgramManager();
-        return programMngr.findByEpisodeId(episodeId);
+        List<NnProgram> results = programMngr.findByEpisodeId(episodeId);
+        for (NnProgram result : results) {
+            result.setName(NnStringUtil.revertHtml(result.getName()));
+            result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
+        }
+        
+        return results;
     }
     
     @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.DELETE)
@@ -1165,7 +1179,10 @@ public class ApiContent extends ApiGeneric {
         
         resp.setStatus(201);
         
-        return adMngr.save(nnad, episode);
+        nnad = adMngr.save(nnad, episode);
+        nnad.setMessage(NnStringUtil.revertHtml(nnad.getMessage()));
+        
+        return nnad;
     }
     
     @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.GET)
@@ -1479,7 +1496,10 @@ public class ApiContent extends ApiGeneric {
             lib.setImageUrl(imageUrl);
         }
         
-        return libMngr.save(lib);
+        lib = libMngr.save(lib);
+        lib.setName(NnStringUtil.revertHtml(lib.getName()));
+        
+        return lib;
     }
     
     @RequestMapping(value = { "my_uploads/{id}", "my_library/{id}" }, method = RequestMethod.DELETE)

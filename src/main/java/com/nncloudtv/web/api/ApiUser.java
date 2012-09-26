@@ -75,9 +75,6 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        user.setName(NnStringUtil.revertHtml(user.getName()));
-        user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
-        
         return userMngr.purify(user);
     }
     

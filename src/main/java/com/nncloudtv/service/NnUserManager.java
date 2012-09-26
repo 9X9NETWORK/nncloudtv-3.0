@@ -360,6 +360,9 @@ public class NnUserManager {
         user.setSalt(null);
         user.setCryptedPassword(null);
         
+        user.setName(NnStringUtil.revertHtml(user.getName()));
+        user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
+        
         return user;
     }
     
