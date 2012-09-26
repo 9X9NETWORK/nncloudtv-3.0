@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -155,14 +156,16 @@ public class NnEpisodeManager {
     
         NnProgramManager programMngr = new NnProgramManager();
         List<NnEpisode> episodes = findByChannelIdSorted(channelId);
+        List<NnEpisode> removes = new ArrayList<NnEpisode>();
         
         // remove empty episode which will not be sorted
         for (NnEpisode episode : episodes) {
             
             if (episode.getSeq() == 0 && getProgramCnt(episode) == 0) {
-                episodes.remove(episode);
+                removes.add(episode);
             }
         }
+        episodes.remove(removes);
         
         for (int i = 0; i < episodes.size(); i++) {
             
