@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock22"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock24"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -514,25 +514,26 @@ soundManager.onready(function()
     <ul id="categ-list">
     </ul>
   </div>
-
- <div id="browse-sort">
-      <ul id="sort-list">
-        <li class="head">Sorted by</li>
-        <li id="sort-by-update" class="on">Update Time</li>
-        <li id="sort-by-sub">Most Subscribed</li>
-        <li id="sort-by-alpha">Alphabetical</li>
-      </ul>
-      <div id="tag-area">
-        <p id="tag-head">The most popular tags:</p>
-        <ul id="tag-list">
-        </ul> 
-      </div>
+  <div id="browse-sort">
+     <ul id="sort-list">
+       <li class="head">Sorted by</li>
+       <li id="sort-by-update" class="on">Update Time</li>
+       <li id="sort-by-sub">Most Subscribed</li>
+       <li id="sort-by-alpha">Alphabetical</li>
+     </ul>
+     <div id="tag-area">
+       <p id="tag-head">The most popular tags:</p>
+       <ul id="tag-list">
+       </ul> 
+     </div>
   </div>
-  <div id="browse-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-  <div id="browse-constrain">
-    <div id="browse-list">
-      <ul id="ch-list">
-      </ul>
+  <div id="browse-main">
+    <div id="browse-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+    <div id="browse-constrain">
+      <div id="browse-list">
+        <ul id="ch-list">
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -561,12 +562,12 @@ soundManager.onready(function()
     <img src="${nroot}/thumbnail/photo/11.jpg" class="thumbnail1">
     <img src="${nroot}/thumbnail/photo/12.jpg" class="thumbnail2">
     <img src="${nroot}/photo/13.jpg" class="thumbnail3">
-    <ul id="ch-meta">
-      <li><span id="ch-meta-count"></span></li>
-      <li><span id="ch-meta-ago"></span></li>
-      <li><span>by</span><span class="name" id="ch-meta-curator"></span></li>
-    </ul>
-    <p id="ch-brief" class="ellipsis multiline"><span></span></p>
+    <div id="ch-meta">
+      <p><span id="ch-meta-count">10 Episodes</span></p>
+      <p><span id="ch-meta-ago">2 day ago</span></p>
+      <p><span>by</span><span class="name" id="ch-meta-curator">Vialo</span></p>
+      <p id="ch-brief" class="ellipsis multiline"><span></span></p>
+    </div>
   </div>
   
   <div id="guide-holder">
