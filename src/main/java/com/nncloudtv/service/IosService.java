@@ -19,6 +19,19 @@ public class IosService {
     protected static final Logger log = Logger.getLogger(IosService.class.getName());
     private static final String urlRoot = "http://s3.amazonaws.com/9x9ui/war/v2/ios/";
     
+    public String listRecommended(String lang) {
+    	String filename = "listRecommended_en";
+        if (lang != null && lang.equals(LangTable.LANG_ZH)) {
+            filename = "listRecommended_zh";
+        }
+        String url = urlRoot + filename;
+        String result = NnNetUtil.urlGet(url);
+        if (result == null)
+            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        return result;
+    	
+    }
+    
     public String category(String id, String lang, boolean flatten) {
         log.info("category request from != v32");
         String filename = "category_en";
