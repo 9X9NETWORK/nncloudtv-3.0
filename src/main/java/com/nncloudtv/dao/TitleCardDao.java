@@ -59,7 +59,7 @@ public class TitleCardDao extends GenericDao<TitleCard> {
         try {
             Query query = pm.newQuery(TitleCard.class);
             query.setFilter("programId == programIdParam && type == typeParam");
-            query.declareParameters("long programId, short typeParam");
+            query.declareParameters("long programIdParam, short typeParam");
             @SuppressWarnings("unchecked")
             List<TitleCard> titleCards = (List<TitleCard>) query.execute(
                     programId, type);
