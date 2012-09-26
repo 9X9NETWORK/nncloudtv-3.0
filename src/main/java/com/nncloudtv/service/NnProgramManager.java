@@ -550,6 +550,10 @@ public class NnProgramManager {
     
     public List<NnProgram> findByEpisodeId(long episodeId) {
         
+        if (episodeId == 0) {
+            return new ArrayList<NnProgram>();
+        }
+        
         return dao.findProgramsByEpisode(episodeId); // sorted already
     }
     

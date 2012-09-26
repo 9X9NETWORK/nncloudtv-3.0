@@ -37,7 +37,7 @@ public class NnEpisodeManager {
         if (rerun) {
             
             NnProgramManager programMngr = new NnProgramManager();
-            List<NnProgram> programs = programMngr.findByEpisodeId(episode.getAdId());
+            List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
             
             for (NnProgram program : programs) {
                 program.setSeq(0);
