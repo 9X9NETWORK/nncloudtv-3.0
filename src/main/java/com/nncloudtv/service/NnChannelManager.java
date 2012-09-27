@@ -195,8 +195,11 @@ public class NnChannelManager {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
             favoriteCh.setUserIdStr(user.getIdStr());
             favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
-            favoriteCh.setSphere(user.getSphere());            
-            dao.save(favoriteCh);
+            favoriteCh.setPublic(true);            
+            favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);            
+            favoriteCh.setSphere(user.getSphere());
+            favoriteCh.setCntEpisode(1);
+            dao.save(favoriteCh);                        
         }
         return favoriteCh;
     }
@@ -209,14 +212,7 @@ public class NnChannelManager {
         }    
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
-            favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change            
-            favoriteCh.setUserIdStr(user.getIdStr());
-            favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
-            favoriteCh.setSphere(user.getSphere());
-            favoriteCh.setPublic(true);
-            favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);
-            favoriteCh.setCntEpisode(1);
-            dao.save(favoriteCh);
+        	favoriteCh = this.createFavorite(user);
         }
         NnProgramManager pMngr = new NnProgramManager();        
         if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
@@ -668,7 +664,9 @@ public class NnChannelManager {
     //used only in player for specific occasion
     public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit, boolean isPlayer) {
         String userIdStr = user.getShard() + "-" + user.getId();
+        limit = 2;
         List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
+        System.out.println("limit:" + limit + ";size:" + channels.size());
         boolean needToFake = true;
         for (NnChannel c : channels) {
             if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
