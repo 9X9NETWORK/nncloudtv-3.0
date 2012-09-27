@@ -499,6 +499,10 @@ public class ApiContent extends ApiGeneric {
             program.setSubSeq(subSeq);
         }
         
+        // publish
+        program.setPublishDate(new Date());
+        program.setPublic(true);
+        
         program = programMngr.create(episode, program);
         
         program.setName(NnStringUtil.revertHtml(program.getName()));
