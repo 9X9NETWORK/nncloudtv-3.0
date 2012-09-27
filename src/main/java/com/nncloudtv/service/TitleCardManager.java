@@ -52,20 +52,21 @@ public class TitleCardManager {
         if (card.getMessage() == null) 
             return null;
         String syntax = "";
-        //TODO move to player to assemble
-        //syntax += "subepisode: " + Long.parseLong(card.getSubSeq());
-        syntax += "message: " + card.getMessage() + "\n";
-        if (card.getDuration() != null)
-            syntax += "duration: " + card.getDuration() + "\n";
-        if (card.getStyle() != null)
-            syntax += "style: " + card.getStyle() + "\n";
-        if (card.getColor() != null)
-            syntax += "color: " + card.getColor() + "\n";
-        if (card.getBgColor() != null)
-            syntax += "bgcolor: " + card.getColor() + "\n";        
+        String encoding = "UTF-8";
         try {
-            syntax = URLEncoder.encode(syntax, "UTF-8");
-            log.info("syntax:" + syntax);
+        	String breakEncoding = URLEncoder.encode("\n", encoding);
+            syntax += URLEncoder.encode("message: ", encoding) + card.getMessage() + breakEncoding;
+            if (card.getDuration() != null)
+                syntax += URLEncoder.encode("duration: ", encoding) + card.getDuration() + breakEncoding;
+            if (card.getStyle() != null)
+                syntax += URLEncoder.encode("style: ", encoding) + card.getStyle() + breakEncoding;
+            if (card.getColor() != null)
+                syntax += URLEncoder.encode("color: ", encoding) + card.getColor() + breakEncoding;
+            if (card.getBgColor() != null)
+                syntax += URLEncoder.encode("bgcolor: ", encoding) + card.getColor()  + breakEncoding;
+            
+             //syntax = URLEncoder.encode(syntax, encoding);
+             log.info("syntax:" + syntax);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
