@@ -45,8 +45,6 @@ public class TitleCardManager {
     
     // TODO: findByEpisode()
     
-    //IMPORTANT: subepisode: (number) is moved out from here and can only retrieved from NnProgram, 
-    //           since the seq could be changed often
     private String generatePlayerSyntax(TitleCard card) {
         if (card == null) return null;
         if (card.getMessage() == null) 
@@ -57,16 +55,14 @@ public class TitleCardManager {
         	String breakEncoding = URLEncoder.encode("\n", encoding);
             syntax += URLEncoder.encode("message: ", encoding) + card.getMessage() + breakEncoding;
             if (card.getDuration() != null)
-                syntax += URLEncoder.encode("duration: ", encoding) + card.getDuration() + breakEncoding;
+                syntax += "duration: " + card.getDuration() + breakEncoding;
             if (card.getStyle() != null)
-                syntax += URLEncoder.encode("style: ", encoding) + card.getStyle() + breakEncoding;
+                syntax += "style: " + card.getStyle() + breakEncoding;
             if (card.getColor() != null)
-                syntax += URLEncoder.encode("color: ", encoding) + card.getColor() + breakEncoding;
+                syntax += "color: " + card.getColor() + breakEncoding;
             if (card.getBgColor() != null)
-                syntax += URLEncoder.encode("bgcolor: ", encoding) + card.getColor()  + breakEncoding;
-            
-             //syntax = URLEncoder.encode(syntax, encoding);
-             log.info("syntax:" + syntax);
+                syntax += "bgcolor: " + card.getColor() + breakEncoding;
+            log.info("syntax:" + syntax);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
