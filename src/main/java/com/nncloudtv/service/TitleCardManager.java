@@ -52,8 +52,8 @@ public class TitleCardManager {
         String syntax = "";
         String encoding = "UTF-8";
         try {
-        	String breakEncoding = URLEncoder.encode("\n", encoding);
-            syntax += URLEncoder.encode("message: ", encoding) + card.getMessage() + breakEncoding;
+            String breakEncoding = URLEncoder.encode("\n", encoding);
+            syntax += "message: " + card.getMessage() + breakEncoding;
             if (card.getDuration() != null)
                 syntax += "duration: " + card.getDuration() + breakEncoding;
             if (card.getStyle() != null)
