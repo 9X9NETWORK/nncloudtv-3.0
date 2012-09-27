@@ -252,6 +252,10 @@ public class NnChannel implements Serializable {
     public boolean isPublic() {
         return isPublic;
     }
+    
+    public boolean getIsPublic() {
+        return isPublic;
+    }
 
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
