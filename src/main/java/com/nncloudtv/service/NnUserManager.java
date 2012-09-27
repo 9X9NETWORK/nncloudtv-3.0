@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,6 +71,24 @@ public class NnUserManager {
         }
         return profile;
         */
+    }
+
+    public String forgotPwdToken(NnUser user) {
+		byte[] pwd = user.getCryptedPassword();
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] thedigest = md.digest(pwd);
+			StringBuffer sb = new StringBuffer();
+	        for (int i = 0; i < thedigest.length; i++) {
+	          sb.append(Integer.toString((thedigest[i] & 0xff) + 0x100, 16).substring(1));
+	        }
+	        String token = sb.toString();
+	        log.info("Digest(in hex format):: " + token);
+	        return token;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
     }
     
     //Default is 1; Asia (tw, cn, hk) is 2
@@ -158,7 +178,7 @@ public class NnUserManager {
         return result;
     }    
     
-    //!!! able to assign shard
+    //TODO able to assign shard
     public NnUser findByEmail(String email, HttpServletRequest req) {
         short shard= NnUserManager.getShardByLocale(req);
         return dao.findByEmail(email.toLowerCase(), shard);
