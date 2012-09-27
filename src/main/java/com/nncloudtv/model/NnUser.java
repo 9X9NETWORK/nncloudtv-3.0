@@ -59,7 +59,7 @@ public class NnUser implements Serializable {
     @NotPersistent
     private String password;
     
-    @Persistent
+    @Persistent (defaultFetchGroup="true")
     private byte[] cryptedPassword;
 
     @Persistent
