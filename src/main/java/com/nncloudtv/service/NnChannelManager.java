@@ -664,9 +664,7 @@ public class NnChannelManager {
     //used only in player for specific occasion
     public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit, boolean isPlayer) {
         String userIdStr = user.getShard() + "-" + user.getId();
-        limit = 2;
         List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
-        System.out.println("limit:" + limit + ";size:" + channels.size());
         boolean needToFake = true;
         for (NnChannel c : channels) {
             if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
@@ -707,7 +705,7 @@ public class NnChannelManager {
             output += this.composeChannelLineupStr(c) + "\n";
         }
         return output;        
-        /*
+    	/*
         String output = "";
         for (NnChannel c : channels) {
             String cacheKey = "nnchannel(" + c.getId() + ")";
@@ -800,23 +798,23 @@ public class NnChannelManager {
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
            id = "f" + "-" + curatorProfile;
         }
-        String[] ori = {String.valueOf(c.getSeq()), 
+        String[] ori = {String.valueOf(c.getSeq()), //REPLACE
                         id,
                         name,
                         c.getIntro(),
                         imageUrl, //c.getPlayerPrefImageUrl(),                        
-                        String.valueOf(c.getCntEpisode()),
+                        String.valueOf(c.getCntEpisode()), //REPLACE
                         String.valueOf(c.getType()),
                         String.valueOf(c.getStatus()),
                         String.valueOf(c.getContentType()),
                         c.getPlayerPrefSource(),
                         convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
-                        String.valueOf(c.getSorting()),
+                        String.valueOf(c.getSorting()), //REPLACE
                         c.getPiwik(),
-                        String.valueOf(c.getRecentlyWatchedProgram()),
+                        String.valueOf(c.getRecentlyWatchedProgram()), //REPLACE
                         c.getOriName(),
-                        String.valueOf(c.getCntSubscribe()),
-                        String.valueOf(viewCount), //view count
+                        String.valueOf(c.getCntSubscribe()), //REPLACE
+                        String.valueOf(viewCount), //view count //REPLACE
                         c.getTag(),
                         curatorProfile, //curator id
                         userName,
