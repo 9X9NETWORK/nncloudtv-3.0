@@ -1481,14 +1481,20 @@ public class PlayerApiService {
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
+        String phrase = email + "&" + userMngr.forgotPwdToken(user);
+        log.info("phrase:" + phrase);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String resetPassword(String token, String password, HttpServletRequest req) {
-//        NnUser user = userMngr.findByEmail(token, password, req);
-//        if (user == null) {
-//            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-//        }
+    public String resetPassword(String email, String token, String password, HttpServletRequest req) {
+        NnUser user = userMngr.findByEmail(email, req);
+        if (user == null) {
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+        }
+        if (userMngr.forgotPwdToken(user) == token) {
+            user.setPassword(password);
+            userMngr.resetPassword(user);            	
+        }
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
