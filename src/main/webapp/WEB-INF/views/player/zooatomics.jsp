@@ -171,15 +171,12 @@ soundManager.onready(function()
 <!-- Curator Bubble Begin -->
 <div id="curator-bubble">
   <ul id="icon-social">
-    <li id="twitter"></li>
     <li id="facebook"></li>
-    <li id="blogger"></li>
-    <li id="google"></li>
   </ul>
   <div id="curator-info" class="ellipsis multiline">
     <p id="curator-thumb"><img src="thumbnail/curator_09.png"></p>
     <p id="curator-name-bubble">Liz Lisa</p>
-    <p id="curator-intro">The idea behind curators & content curation is that here is such a flood of new content through the Internet pipes these days that being aware of all of it.</p>
+    <p id="curator-intro"></p>
   </div>
   <div id="curator-ch-meta">
     <p id="top-ch-name">My Top Channel: Coffee Shop</p> 
