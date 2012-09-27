@@ -56,7 +56,7 @@ public class NnUserManager {
 
     //TODO replace name with none-digit/characters
     public String generateProfile(String name) {
-    	String profile = RandomStringUtils.randomAlphabetic(10);
+    	String profile = RandomStringUtils.randomNumeric(10);
     	return profile;
     	/*
         String profile = "";
