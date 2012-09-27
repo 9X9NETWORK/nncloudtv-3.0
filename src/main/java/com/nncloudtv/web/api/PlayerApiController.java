@@ -1156,6 +1156,12 @@ public class PlayerApiController {
         return output;
     }    
 
+    /**
+     * Request to reset the password. System will send out an email 
+     *  
+     * @param email
+     * @return
+     */
     @RequestMapping(value="forgotPassword", produces = "text/plain; charset=utf-8")
     public @ResponseBody String setUserProfile(
             @RequestParam(value="email", required=false)String email,
@@ -1177,8 +1183,15 @@ public class PlayerApiController {
         return output;
     }    
 
+    /**
+     * 
+     * @param token
+     * @param password
+     * @return
+     */
     @RequestMapping(value="resetPassword", produces = "text/plain; charset=utf-8")
     public @ResponseBody String setUserProfile(
+    		@RequestParam(value="email", required=false)String email,
             @RequestParam(value="token", required=false)String token,
             @RequestParam(value="password", required=false)String password,
             HttpServletRequest req,
@@ -1190,7 +1203,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
             }
-            output = playerApiService.resetPassword(token, password, req);
+            output = playerApiService.resetPassword(email, token, password, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
