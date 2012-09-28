@@ -54,6 +54,10 @@ public class TitleCardManager {
         try {
             String breakEncoding = URLEncoder.encode("\n", encoding);
             syntax += "message: " + card.getMessage() + breakEncoding;
+            if (card.getType() == TitleCard.TYPE_BEGIN)
+                syntax += "type: begin" + breakEncoding;
+            else
+                syntax += "type: end" + breakEncoding;
             if (card.getDuration() != null)
                 syntax += "duration: " + card.getDuration() + breakEncoding;
             if (card.getStyle() != null)
