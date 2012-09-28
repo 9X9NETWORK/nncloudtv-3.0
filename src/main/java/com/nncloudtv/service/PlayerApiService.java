@@ -484,19 +484,18 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (tagStr != null) {
             channels = catMngr.findChannelsByTag(cid, true, tagStr);
-        } else {
-            if (start == null || count.length() == 0)
-                start = "1";
-            if (count == null || count.length() == 0)
-                count = "0";            
-            int startIndex = Integer.parseInt(start);
-            int limit = Integer.valueOf(count);            
-            int page = 0;
-            if (limit != 0) {
-                page = (int) (startIndex / limit) + 1;
-            }
-            channels = catMngr.listChannels(page, limit, cat.getId());
         }
+        if (start == null || count.length() == 0)
+            start = "1";
+        if (count == null || count.length() == 0)
+            count = "0";            
+        int startIndex = Integer.parseInt(start);
+        int limit = Integer.valueOf(count);            
+        int page = 0;
+        if (limit != 0) {
+            page = (int) (startIndex / limit) + 1;
+        }
+        channels = catMngr.listChannels(page, limit, cat.getId());
         String result[] = {"", "", ""};
         //category info        
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
@@ -673,15 +672,6 @@ public class PlayerApiService {
             }
         }
         String channelOutput = "";
-        for (NnChannel c : channels) {
-            if (user != null && sortMap.containsKey(c.getId()))
-                c.setSorting(sortMap.get(c.getId()));
-            else 
-                c.setSorting(NnChannelManager.getDefaultSorting(c));
-            if (user != null && watchedMap.containsKey(c.getId())) {
-                c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
-            }
-        }
         if (version < 32)
             channelOutput += new IosService().composeChannelLineup(channels);
         else
@@ -1118,8 +1108,8 @@ public class PlayerApiService {
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
-
-    public String userReport(String userToken, String deviceToken, String session, String comment) {
+    
+    public String userReport(String userToken, String deviceToken, String session, String type, String item, String comment) {
         if (session == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         if (userToken == null && deviceToken == null)
@@ -1147,7 +1137,7 @@ public class PlayerApiService {
         
         NnUserReportManager reportMngr = new NnUserReportManager();
         String[] result = {""};
-        NnUserReport report = reportMngr.save(user, device, session, comment);
+        NnUserReport report = reportMngr.save(user, device, session, type, item, comment);
         if (report != null) {
             result[0] = PlayerApiService.assembleKeyValue("id", String.valueOf(report.getId()));
             EmailService service = new EmailService();
@@ -1156,6 +1146,15 @@ public class PlayerApiService {
             String subject = "User send a report";
             String content = "user ui-lang:" + user.getLang() + "\n";
             content += "user region:" + user.getSphere() + "\n";
+            
+            String[] key = item.split(",");
+            String[] value = comment.split(",");
+            if (key.length != value.length)
+                return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
+            for (int i=0; i<key.length; i++) {
+                
+            }
+            
             content += "user report:" + comment;
             NnEmail mail = new NnEmail(toEmail, toName, 
                                        user.getEmail(), user.getName(), 
