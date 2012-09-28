@@ -482,9 +482,6 @@ public class PlayerApiService {
         if (cat == null)
             return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
         List<NnChannel> channels = new ArrayList<NnChannel>();
-        if (tagStr != null) {
-            channels = catMngr.findChannelsByTag(cid, true, tagStr);
-        }
         if (start == null || count.length() == 0)
             start = "1";
         if (count == null || count.length() == 0)
@@ -494,8 +491,12 @@ public class PlayerApiService {
         int page = 0;
         if (limit != 0) {
             page = (int) (startIndex / limit) + 1;
+        }        
+        if (tagStr != null) {
+            channels = catMngr.findChannelsByTag(cid, true, tagStr);            
+        } else {
+            channels = catMngr.listChannels(page, limit, cat.getId());
         }
-        channels = catMngr.listChannels(page, limit, cat.getId());
         String result[] = {"", "", ""};
         //category info        
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
@@ -513,10 +514,6 @@ public class PlayerApiService {
             for (String t : tag) {
                 result[1] += t + "\n";
             }
-        }
-        //channel info
-        for (NnChannel c : channels) {
-            c.setSorting(NnChannelManager.getDefaultSorting(c));                                                    
         }
         result[2] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
@@ -591,13 +588,8 @@ public class PlayerApiService {
         if (userInfo)
             result.add(this.prepareUserInfo(user, null));
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
-        NnUserChannelSortingManager sortingMngr = new NnUserChannelSortingManager();
-        List<NnUserChannelSorting> sorts = new ArrayList<NnUserChannelSorting>();
-        HashMap<Long, Short> sortMap = new HashMap<Long, Short>();
-        HashMap<Long, String> watchedMap = new HashMap<Long, String>();
         if (user != null) {
             List<NnUserSubscribeGroup> groups = groupMngr.findByUser(user);    
-            sorts = sortingMngr.findByUser(user);
             //set info
             if (setInfo) {
                 String setOutput = "";
@@ -613,14 +605,6 @@ public class PlayerApiService {
                 }
                 result.add(setOutput);
             }
-            for (NnUserChannelSorting s : sorts) {
-                sortMap.put(s.getChannelId(), s.getSort());
-            }
-            NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
-            List<NnUserWatched> watched = watchedMngr.findByUserToken(user.getToken());
-            for (NnUserWatched w : watched) {
-                watchedMap.put(w.getChannelId(), w.getProgram());
-            }            
         }
         //find channels
         List<NnChannel> channels = new ArrayList<NnChannel>();
@@ -803,6 +787,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
     }
     
+    //TODO real range search
     public String tagInfo(String name, String start, String count) {
         if (name == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
@@ -814,6 +799,10 @@ public class PlayerApiService {
         result[0] += assembleKeyValue("id", String.valueOf(tag.getId()));
         result[0] += assembleKeyValue("name", tag.getName());        
         List<NnChannel> channels = new TagManager().findChannelsByTag(name, true);
+        start = start == null ? "0" : start;
+        int startIndex = Integer.parseInt(start) - 1;
+        startIndex = startIndex < 0 ? 0 : startIndex;
+        channels = channels.subList(startIndex, startIndex + Integer.parseInt(count));
         result[1] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }

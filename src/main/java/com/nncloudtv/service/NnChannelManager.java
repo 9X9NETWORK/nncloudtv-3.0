@@ -33,6 +33,8 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserChannelSorting;
+import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.TagMap;
 import com.nncloudtv.web.api.NnStatusCode;
@@ -128,17 +130,17 @@ public class NnChannelManager {
     //process tag text enter by users
     //TODO or move to TagManager
     public String processTagText(String channelTag) {
-    String result = "";
-    String[] multiples = channelTag.split(",");
-    for (String m : multiples) {
-    String tag = TagManager.getValidTag(m);
-    if (tag != null && tag.length() > 0 && tag.length() < 20)
-    result += "," + tag;
-    }
-    result = result.replaceFirst(",", "");
-    if (result.length() == 0)
-    return null;
-    return result;
+        String result = "";
+        String[] multiples = channelTag.split(",");
+        for (String m : multiples) {
+            String tag = TagManager.getValidTag(m);
+            if (tag != null && tag.length() > 0 && tag.length() < 20)
+                result += "," + tag;
+        }
+        result = result.replaceFirst(",", "");
+        if (result.length() == 0)
+            return null;
+        return result;
     }
     
     //IMPORTANT: use processTagText first 
@@ -151,7 +153,7 @@ public class NnChannelManager {
         }
         String tag = c.getTag();
         if (tag == null)
-        return;
+            return;
         String[] multiples = tag.split(",");
         for (String m : multiples) {
             m = m.trim();            
@@ -212,7 +214,7 @@ public class NnChannelManager {
         }    
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
-        	favoriteCh = this.createFavorite(user);
+            favoriteCh = this.createFavorite(user);
         }
         NnProgramManager pMngr = new NnProgramManager();        
         if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
@@ -700,12 +702,14 @@ public class NnChannelManager {
     }
 
     public String composeChannelLineup(List<NnChannel> channels) {
+
         String output = "";
         for (NnChannel c : channels) {
             output += this.composeChannelLineupStr(c) + "\n";
         }
         return output;        
-    	/*
+
+        /*        
         String output = "";
         for (NnChannel c : channels) {
             String cacheKey = "nnchannel(" + c.getId() + ")";
@@ -721,7 +725,7 @@ public class NnChannelManager {
             }
         }
         return output;
-        */
+         */        
     }
     
     public String composeChannelLineupStr(NnChannel c) {
@@ -809,9 +813,9 @@ public class NnChannelManager {
                         String.valueOf(c.getContentType()),
                         c.getPlayerPrefSource(),
                         convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
-                        String.valueOf(c.getSorting()), //REPLACE
+                        String.valueOf(getDefaultSorting(c)), //use default sorting for all
                         c.getPiwik(),
-                        String.valueOf(c.getRecentlyWatchedProgram()), //REPLACE
+                        "", //recently watched program
                         c.getOriName(),
                         String.valueOf(c.getCntSubscribe()), //REPLACE
                         String.valueOf(viewCount), //view count //REPLACE
@@ -843,6 +847,34 @@ public class NnChannelManager {
             log.info("convertEpochToTime fails:" + transcodingUpdateDate + ";" + updateDate);
         }
         return output;
+    } 
+    
+    //put user's customized sorting and watched into channel
+    public List<NnChannel> getUserChannels(NnUser user, List<NnChannel> channels) {
+        NnUserChannelSortingManager sortingMngr = new NnUserChannelSortingManager();        
+        List<NnUserChannelSorting> sorts = new ArrayList<NnUserChannelSorting>();
+        
+        HashMap<Long, Short> sortMap = new HashMap<Long, Short>();
+        HashMap<Long, String> watchedMap = new HashMap<Long, String>();
+        sorts = sortingMngr.findByUser(user);
+        for (NnUserChannelSorting s : sorts) {
+            sortMap.put(s.getChannelId(), s.getSort());
+        }
+        NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
+        List<NnUserWatched> watched = watchedMngr.findByUserToken(user.getToken());
+        for (NnUserWatched w : watched) {
+            watchedMap.put(w.getChannelId(), w.getProgram());
+        }            
+        for (NnChannel c : channels) {
+            if (user != null && sortMap.containsKey(c.getId()))
+                c.setSorting(sortMap.get(c.getId()));
+            else 
+                c.setSorting(NnChannelManager.getDefaultSorting(c));
+            if (user != null && watchedMap.containsKey(c.getId())) {
+                c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
+            }
+        }
+        return channels;
     }
     
     public Comparator<NnChannel> getChannelUpdateDateComparator() {
