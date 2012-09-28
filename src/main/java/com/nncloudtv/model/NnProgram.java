@@ -247,9 +247,14 @@ public class NnProgram implements Serializable {
     }
     
     public int getDurationInt() {
+        
+        if (this.duration == null) {
+            return 0;
+        }
+        
         int duration = 0;
         try {
-            duration = Integer.valueOf(duration);
+            duration = Integer.valueOf(this.duration);
         } catch (NumberFormatException e) {
         }
         return duration;
@@ -330,6 +335,11 @@ public class NnProgram implements Serializable {
     }
     
     public int getSeqInt() {
+        
+        if (this.seq == null) {
+            return 0;
+        }
+        
         short seq = 0;
         try {
             seq = Short.valueOf(this.seq);
@@ -351,6 +361,11 @@ public class NnProgram implements Serializable {
     }
     
     public int getSubSeqInt() {
+        
+        if (this.subSeq == null) {
+            return 0;
+        }
+        
         short subSeq = 0;
         try {
             subSeq = Short.valueOf(this.subSeq);
@@ -384,6 +399,11 @@ public class NnProgram implements Serializable {
     }
     
     public int getStartTimeInt() {
+        
+        if (startTime == null) {
+            return 0;
+        }
+        
         int startTimeInt = 0;
         try {
             startTimeInt = Integer.valueOf(startTime);
@@ -401,6 +421,11 @@ public class NnProgram implements Serializable {
     }
     
     public int getEndTimeInt() {
+        
+        if (endTime == null) {
+            return 0;
+        }
+        
         int endTimeInt = 0;
         try {
             endTimeInt = Integer.valueOf(endTime);
