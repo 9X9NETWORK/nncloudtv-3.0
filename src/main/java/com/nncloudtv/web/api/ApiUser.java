@@ -278,7 +278,7 @@ public class ApiUser extends ApiGeneric {
             }
             
             String filter = "userIdStr == '" + user.getIdStr() + "' && type == " + type;
-            results = libMngr.list(page, rows, null, null, filter);
+            results = libMngr.list(page, rows, "updateDate", "desc", filter);
             
         } else {
             
