@@ -1654,28 +1654,28 @@ public class PlayerApiService {
         //4. trending
         log.info ("[quickLogin] trending channels");
         
-        String trending = this.channelStack(Tag.TRENDING, null, token, null);
+        String trending = this.channelStack(Tag.TRENDING, sphere, token, null);
         data.add(trending);
         if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //5. recommended
         log.info ("[quickLogin] recommended channels");
-        String recommended = this.channelStack(Tag.RECOMMEND, null, token, null);        
+        String recommended = this.channelStack(Tag.RECOMMEND, sphere, token, null);        
         data.add(recommended);
         if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //6. featured
         log.info ("[quickLogin] featured channels");
-        String featured = this.channelStack(Tag.FEATURED, null, token, null);
+        String featured = this.channelStack(Tag.FEATURED, sphere, token, null);
         data.add(featured);
         if (this.getStatus(featured) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //7. hottest
         log.info ("[quickLogin] hot channels");
-        String hot = this.channelStack(Tag.HOT, null, token, null);
+        String hot = this.channelStack(Tag.HOT, sphere, token, null);
         data.add(hot);
         if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
