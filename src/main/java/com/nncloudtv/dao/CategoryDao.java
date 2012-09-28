@@ -64,11 +64,11 @@ public class CategoryDao extends GenericDao<Category> {
         List<Category> detached = new ArrayList<Category>();
         try {
             Query query = pm.newQuery(Category.class);
-            query.setFilter("lang == langParam && isPublic == isPublicParam");
-            query.declareParameters("String langParam, boolean isPublicParam");
+            query.setFilter("lang == langParam");
+            query.declareParameters("String langParam");
             query.setOrdering("seq");
             @SuppressWarnings("unchecked")
-            List<Category> results = (List<Category>) query.execute(lang, true);            
+            List<Category> results = (List<Category>) query.execute(lang);            
             detached = (List<Category>)pm.detachCopyAll(results);
         } finally {
             pm.close();
