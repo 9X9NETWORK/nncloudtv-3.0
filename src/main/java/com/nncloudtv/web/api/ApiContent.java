@@ -742,6 +742,14 @@ public class ApiContent extends ApiGeneric {
             categories = catMngr.findAll();
         }
         
+        List<Category> temp = new ArrayList<Category>();
+        temp.addAll(categories);
+        for (Category category : temp) {
+            if (category.isPublic() == false) {
+                categories.remove(category);
+            }
+        }
+        
         Collections.sort(categories, catMngr.getCategorySeqComparator());
         
         return categories;
