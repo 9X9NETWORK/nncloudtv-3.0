@@ -447,13 +447,15 @@ public class PlayerApiController {
     @RequestMapping(value="tagInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String tagInfo(
             @RequestParam(value="name", required=false) String name,
+            @RequestParam(value="start", required=false) String start,
+            @RequestParam(value="count", required=false) String count,            
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);
-            output = playerApiService.tagInfo(name);
+            output = playerApiService.tagInfo(name, start, count);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -1110,7 +1112,9 @@ public class PlayerApiController {
         try {
             int status = this.prepService(req, true);
             if (status != NnStatusCode.SUCCESS)
-                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+            if (value != null)
+                comment = value;
             output = playerApiService.userReport(user, device, session, type, item, comment);
         } catch (Exception e) {
             output = playerApiService.handleException(e);

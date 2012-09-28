@@ -44,10 +44,6 @@ public class NnUserReport {
     @Persistent
     @Column(jdbcType="VARCHAR", length=1000)
     private String comment; //use with item as key/value pair
-
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String item;
     
     //session defined by the player, it's the same as PdrRaw session. 
     //to associate user's report and our logging data.
@@ -60,7 +56,7 @@ public class NnUserReport {
 
     public NnUserReport() {}
     
-    public NnUserReport(NnUser user, NnDevice device, String session, String type, String item, String comment) {
+    public NnUserReport(NnUser user, NnDevice device, String session, String type, String comment) {
         if (user != null) {
             this.userId = user.getId();
             this.userToken = user.getToken();
@@ -71,8 +67,10 @@ public class NnUserReport {
         }
         this.session = session;
         this.comment = comment;
-        if (item == null)
+        if (type == null)
             this.setType(NnUserReport.TYPE_PROBLEM);
+        else
+            this.setType(type);
     }    
     public long getUserId() {
         return userId;
@@ -121,12 +119,6 @@ public class NnUserReport {
     }
     public void setId(long id) {
         this.id = id;
-    }
-    public String getItem() {
-        return item;
-    }
-    public void setItem(String item) {
-        this.item = item;
     }
     public String getType() {
         return type;

@@ -803,7 +803,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null); 
     }
     
-    public String tagInfo(String name) {
+    public String tagInfo(String name, String start, String count) {
         if (name == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         String[] result = {"", ""};
@@ -1110,7 +1110,7 @@ public class PlayerApiService {
     }
     
     public String userReport(String userToken, String deviceToken, String session, String type, String item, String comment) {
-        if (session == null)
+        if (session == null || comment == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         if (userToken == null && deviceToken == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
@@ -1134,33 +1134,40 @@ public class PlayerApiService {
         }
         if (device == null && user == null)
             return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
+
+        String content = "";
+        if (item != null) {
+            String[] key = item.split(",");
+            String[] value = comment.split(",");
+            if (key.length != value.length)
+                return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
+            for (int i=0; i<key.length; i++) {
+                content += key[i] + ":" + value[i] + "\n";
+            }
+        } else {
+            content = comment; //backward compatibility
+        }
         
         NnUserReportManager reportMngr = new NnUserReportManager();
-        String[] result = {""};
-        NnUserReport report = reportMngr.save(user, device, session, type, item, comment);
+        String[] result = {""};        
+        NnUserReport report = reportMngr.save(user, device, session, type, item, content);
         if (report != null) {
             result[0] = PlayerApiService.assembleKeyValue("id", String.valueOf(report.getId()));
             EmailService service = new EmailService();
             String toEmail = "userfeedback@9x9.tv";
             String toName = "feedback";
             String subject = "User send a report";
-            String content = "user ui-lang:" + user.getLang() + "\n";
-            content += "user region:" + user.getSphere() + "\n";
+            String body = "user ui-lang:" + user.getLang() + "\n";
+            body += "user region:" + user.getSphere() + "\n\n";
+            body += content;
+            subject += (type != null) ? ("(" + type + ")") : "" ;
             
-            String[] key = item.split(",");
-            String[] value = comment.split(",");
-            if (key.length != value.length)
-                return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
-            for (int i=0; i<key.length; i++) {
-                
-            }
-            
-            content += "user report:" + comment;
+            log.info("subject:" + subject);
+            log.info("content:" + content);
             NnEmail mail = new NnEmail(toEmail, toName, 
                                        user.getEmail(), user.getName(), 
                                        user.getEmail(), subject, content);            
-            service.sendEmail(mail);
-            
+            service.sendEmail(mail);            
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
