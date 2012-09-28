@@ -1099,6 +1099,9 @@ public class PlayerApiController {
             @RequestParam(value="device", required=false) String device,
             @RequestParam(value="session", required=false) String session,
             @RequestParam(value="comment", required=false) String comment,
+            @RequestParam(value="type", required=false) String type,
+            @RequestParam(value="key", required=false) String item,
+            @RequestParam(value="value", required=false) String value,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -1108,7 +1111,7 @@ public class PlayerApiController {
             int status = this.prepService(req, true);
             if (status != NnStatusCode.SUCCESS)
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
-            output = playerApiService.userReport(user, device, session, comment);
+            output = playerApiService.userReport(user, device, session, type, item, comment);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
