@@ -132,8 +132,7 @@ public class NnProgramManager {
     }
     
     public NnProgram save(NnProgram program, boolean recalculateEpisodeDuration) {
-    
-        
+            
         if (program == null) {
             return program;
         }
@@ -297,88 +296,90 @@ public class NnProgramManager {
     public List<NnProgram> findRealPrograms(String storageId) {
         List<NnProgram> programs = new ArrayList<NnProgram>();
         if (storageId == null)
-        	return programs;
-    	storageId = storageId.replace("e", "");
+            return programs;
+        storageId = storageId.replace("e", "");
         programs = dao.findProgramsByEpisode(Long.parseLong(storageId));
         log.info("find reference's real programs size:" + programs.size());        
         return programs;        
     }
     
     @SuppressWarnings("rawtypes")
-	public String processSubEpisode(List<NnProgram> programs) {
-    	long cId = programs.get(0).getChannelId();
-    	//put programs in the map, key is seq, all programs with the same seq will be lumped to a list
-    	Map<String, List<NnProgram>> map = new TreeMap<String, List<NnProgram>>();    	    	
-	    String result = "";
-    	for (NnProgram p : programs) {
-    		if (p.getEpisodeId() == 0) {
-    	    	result += this.composeProgramInfoStr(p);
-    		}
-			List<NnProgram> list = map.get(p.getSeq());
-			list = (list == null) ? new ArrayList<NnProgram>() : list;
-			list.add(p);
-			map.put(p.getSeq(), list);
-    	}
-    	if (result.length() > 0) {
-    		log.info("noted: old 9x9 program not migrated");
-    		return result;
-    	}
-    	//episode in map, nnprogram retrieves episode based on episodeId in nnprogram
-    	List<NnEpisode> episodes = new NnEpisodeManager().findByChannelId(cId);
-    	Map<Long, NnEpisode> episodeMap = new HashMap<Long, NnEpisode>();
-    	for (NnEpisode e : episodes) {
-    		episodeMap.put(e.getId(), e);
-    	}
-    	//title card in map, nnprogram retrieves title card based on program id and type 
+    public String processSubEpisode(List<NnProgram> programs) {
+        long cId = programs.get(0).getChannelId();
+        //put programs in the map, key is seq, all programs with the same seq will be lumped to a list
+        Map<String, List<NnProgram>> map = new TreeMap<String, List<NnProgram>>();                
+        String result = "";
+        for (NnProgram p : programs) {
+            if (p.getEpisodeId() == 0) {
+                result += this.composeProgramInfoStr(p);
+            }
+            List<NnProgram> list = map.get(p.getSeq());
+            list = (list == null) ? new ArrayList<NnProgram>() : list;
+            list.add(p);
+            map.put(p.getSeq(), list);
+        }
+        if (result.length() > 0) {
+            log.info("noted: old 9x9 program not migrated");
+            return result;
+        }
+        //episode in map, nnprogram retrieves episode based on episodeId in nnprogram
+        List<NnEpisode> episodes = new NnEpisodeManager().findByChannelId(cId);
+        Map<Long, NnEpisode> episodeMap = new HashMap<Long, NnEpisode>();
+        for (NnEpisode e : episodes) {
+            episodeMap.put(e.getId(), e);
+        }
+        //title card in map, nnprogram retrieves title card based on program id and type 
         List<TitleCard> cards = new TitleCardDao().findByChannel(cId); //order by channel id and program id
         HashMap<String, TitleCard> cardMap = new HashMap<String, TitleCard>();        
         for (TitleCard c : cards) {
             String key = String.valueOf(c.getProgramId() + ";" + c.getType());
             cardMap.put(key, c);
         }
-	    Iterator<Entry<String, List<NnProgram>>> it = map.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        @SuppressWarnings("unchecked")
-			List<NnProgram> list = (List<NnProgram>) pairs.getValue();
-	        if (list.size() > 0) {
+        Iterator<Entry<String, List<NnProgram>>> it = map.entrySet().iterator();
+        while (it.hasNext()) { //each entry is an episode (of programs)
+            Map.Entry pairs = (Map.Entry)it.next();
+            @SuppressWarnings("unchecked")
+            List<NnProgram> list = (List<NnProgram>) pairs.getValue();
+            if (list.size() > 0) {
                 String videoUrl = "";
                 String name = "";
                 String imageUrl = "";
-                String intro = "";	        	        
-    	        String card = "";
+                String intro = "";                        
+                String card = "";
                 NnProgram one = list.get(0);
-    	        for (NnProgram p : list) {
-    	            String cardKey1 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_BEGIN); 
-    	            String cardKey2 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_END);    	        	
-    	            if (p.getSubSeq() != null && p.getSubSeq().length() > 0) {
-    	                if (cardMap.containsKey(cardKey1)) {
-    	                    card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
-    	                    card += cardMap.get(cardKey1).getPlayerSyntax() + "%0A--%0A";
-    	                    cardMap.remove(cardKey1);
-    	                }
-    	                if (cardMap.containsKey(cardKey2)) {
-    	                    card += "subepisode" + "%3A%20" + Long.parseLong(p.getSubSeq()) + "%0A";
-    	                    card += cardMap.get(cardKey2).getPlayerSyntax() + "%0A--%0A";
-    	                    cardMap.remove(cardKey2);
-    	                }
-    	            }
-    	        	videoUrl += "|" + p.getFileUrl();
-    	        	videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";   
-    	        	videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";    	        	    	        	
-    	        	name += "|" + p.getPlayerName();	        	
-    	        	imageUrl += "|" + p.getImageUrl();
-    	        	intro += "|" + p.getPlayerIntro();
-    	        }
-    	        videoUrl = videoUrl.replaceFirst("\\|", "");
-    	        name = name.replaceFirst("\\|", "");
-    	        imageUrl = imageUrl.replaceFirst("\\|", "");
-    	        intro = intro.replaceFirst("\\|", "");
-    		    result += composeEpisodeInfoStr(episodeMap.get(one.getEpisodeId()), name, intro, imageUrl, videoUrl, card);
-	        }
-	        it.remove();
-	    }
-    	return result;
+                int i=1;
+                for (NnProgram p : list) { //sub-episodes
+                    String cardKey1 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_BEGIN); 
+                    String cardKey2 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_END);                    
+                    if (p.getSubSeq() != null && p.getSubSeq().length() > 0) {
+                        if (cardMap.containsKey(cardKey1)) {
+                            card += "subepisode" + "%3A%20" + i + "%0A";
+                            card += cardMap.get(cardKey1).getPlayerSyntax() + "%0A--%0A";
+                            cardMap.remove(cardKey1);
+                        }
+                        if (cardMap.containsKey(cardKey2)) {
+                            card += "subepisode" + "%3A%20" + i + "%0A";
+                            card += cardMap.get(cardKey2).getPlayerSyntax() + "%0A--%0A";
+                            cardMap.remove(cardKey2);                            
+                        }
+                    }
+                    videoUrl += "|" + p.getFileUrl();
+                    videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";   
+                    videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";                                        
+                    name += "|" + p.getPlayerName();                
+                    imageUrl += "|" + p.getImageUrl();
+                    intro += "|" + p.getPlayerIntro();
+                    i++;
+                }
+                videoUrl = videoUrl.replaceFirst("\\|", "");
+                name = name.replaceFirst("\\|", "");
+                imageUrl = imageUrl.replaceFirst("\\|", "");
+                intro = intro.replaceFirst("\\|", "");
+                result += composeEpisodeInfoStr(episodeMap.get(one.getEpisodeId()), name, intro, imageUrl, videoUrl, card);
+            }
+            it.remove();
+        }
+        return result;
     }
 
     public String composeProgramInfo(List<NnProgram> programs) {
@@ -396,31 +397,31 @@ public class NnProgramManager {
             return result;
         }
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
-        	for (NnProgram p : programs) {
-        		System.out.println("<<<< program type >>>>" + p.getContentType());
-        		if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
-        			List<NnProgram> favorite = this.findRealPrograms(p.getStorageId());
-        			String favoriteStr = this.processSubEpisode(favorite);
-            		String[] lines = favoriteStr.split("\n");
-            		for (String line : lines) {
-            			//replace with favorite's own channel id and program id
-            	   		Pattern pattern = Pattern.compile("\t.*?\t");
-                		Matcher m = pattern.matcher(line);
-                		if (m.find()) {
-                			line = m.replaceFirst("\t" + String.valueOf(p.getId()) + "\t");
-                		}
-                		pattern = Pattern.compile(".*?\t");
-                		m = pattern.matcher(line);
-                		if (m.find()) {
-                			line = m.replaceFirst(p.getChannelId() + "\t");
-                		}                		
-            			result += line + "\n";
-            		}
-        		} else {
-        			result += this.composeProgramInfoStr(p);
-        		}
-        	}
-        	return result;
+            for (NnProgram p : programs) {
+                System.out.println("<<<< program type >>>>" + p.getContentType());
+                if (p.getContentType() == NnProgram.CONTENTTYPE_REFERENCE) {
+                    List<NnProgram> favorite = this.findRealPrograms(p.getStorageId());
+                    String favoriteStr = this.processSubEpisode(favorite);
+                    String[] lines = favoriteStr.split("\n");
+                    for (String line : lines) {
+                        //replace with favorite's own channel id and program id
+                           Pattern pattern = Pattern.compile("\t.*?\t");
+                        Matcher m = pattern.matcher(line);
+                        if (m.find()) {
+                            line = m.replaceFirst("\t" + String.valueOf(p.getId()) + "\t");
+                        }
+                        pattern = Pattern.compile(".*?\t");
+                        m = pattern.matcher(line);
+                        if (m.find()) {
+                            line = m.replaceFirst(p.getChannelId() + "\t");
+                        }                        
+                        result += line + "\n";
+                    }
+                } else {
+                    result += this.composeProgramInfoStr(p);
+                }
+            }
+            return result;
         }
         //only 9x9 channels hits here
         result += this.processSubEpisode(programs);
@@ -674,17 +675,17 @@ public class NnProgramManager {
     }        
 
     public Comparator<NnProgram> getProgramComparator(String sort) {
-    	if (sort.equals("updateDate")) {
+        if (sort.equals("updateDate")) {
             class ProgramComparator implements Comparator<NnProgram> {
                 public int compare(NnProgram program1, NnProgram program2) {
-                	Date d1 = program1.getUpdateDate();
-                	Date d2 = program2.getUpdateDate();
-                	return d2.compareTo(d1);
+                    Date d1 = program1.getUpdateDate();
+                    Date d2 = program2.getUpdateDate();
+                    return d2.compareTo(d1);
                 }
             }
-            return new ProgramComparator();    		
-    	}
-    	//default, seq and subSeq
+            return new ProgramComparator();            
+        }
+        //default, seq and subSeq
         class NnProgramSeqComparator implements Comparator<NnProgram> {            
             public int compare(NnProgram program1, NnProgram program2) {                
                 int seq1 = program1.getSeqInt();
@@ -694,7 +695,7 @@ public class NnProgramManager {
                 return (seq1 == seq2) ? (subSeq1 - subSeq2) : (seq1 - seq2);                
             }
         }        
-        return new NnProgramSeqComparator();    	
+        return new NnProgramSeqComparator();       
     }
     
 }
