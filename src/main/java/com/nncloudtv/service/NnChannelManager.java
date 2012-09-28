@@ -734,8 +734,9 @@ public class NnChannelManager {
 
         //name and last episode title
         //favorite channel name will be overwritten later
-        String[] split = c.getName().split("\\|");
-        String name = split.length == 2 ? split[0] : c.getName();
+        String name = c.getName() == null ? "" : c.getName();
+        String[] split = name.split("\\|");
+        name = split.length == 2 ? split[0] : name;
         String lastEpisodeTitle = split.length == 2 ? split[1] : "";
         
         //image url, favorite channel image will be overwritten later

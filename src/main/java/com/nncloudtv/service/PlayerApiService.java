@@ -800,9 +800,13 @@ public class PlayerApiService {
         result[0] += assembleKeyValue("name", tag.getName());        
         List<NnChannel> channels = new TagManager().findChannelsByTag(name, true);
         start = start == null ? "0" : start;
+        count = count == null ? String.valueOf(channels.size()) : count;        
         int startIndex = Integer.parseInt(start) - 1;
+        int endIndex = Integer.parseInt(count);
         startIndex = startIndex < 0 ? 0 : startIndex;
+        endIndex = endIndex > channels.size() ? channels.size() : endIndex;
         channels = channels.subList(startIndex, startIndex + Integer.parseInt(count));
+        log.info("startIndex:" + startIndex + ";endIndex:" + endIndex);
         result[1] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
