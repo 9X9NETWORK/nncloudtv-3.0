@@ -35,10 +35,19 @@ public class NnUserReport {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String deviceToken;
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String type;
+    public static String TYPE_PROBLEM = "problem";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=1000)
-    private String comment;
+    private String comment; //use with item as key/value pair
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String item;
     
     //session defined by the player, it's the same as PdrRaw session. 
     //to associate user's report and our logging data.
@@ -50,7 +59,8 @@ public class NnUserReport {
     private Date createDate;
 
     public NnUserReport() {}
-    public NnUserReport(NnUser user, NnDevice device, String session, String comment) {
+    
+    public NnUserReport(NnUser user, NnDevice device, String session, String type, String item, String comment) {
         if (user != null) {
             this.userId = user.getId();
             this.userToken = user.getToken();
@@ -61,6 +71,8 @@ public class NnUserReport {
         }
         this.session = session;
         this.comment = comment;
+        if (item == null)
+            this.setType(NnUserReport.TYPE_PROBLEM);
     }    
     public long getUserId() {
         return userId;
@@ -110,4 +122,16 @@ public class NnUserReport {
     public void setId(long id) {
         this.id = id;
     }
+    public String getItem() {
+        return item;
+    }
+    public void setItem(String item) {
+        this.item = item;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }    
 }
