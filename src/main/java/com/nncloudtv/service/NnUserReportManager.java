@@ -14,8 +14,8 @@ public class NnUserReportManager {
     
     private NnUserReportDao reportDao = new NnUserReportDao();
     
-    public NnUserReport save(NnUser user, NnDevice device, String session, String comment) {
-        NnUserReport report = new NnUserReport(user, device, session, comment);
+    public NnUserReport save(NnUser user, NnDevice device, String session, String type, String item, String comment) {
+        NnUserReport report = new NnUserReport(user, device, session, type, item, comment);
         report.setCreateDate(new Date());
         reportDao.save(report);
         return report;
