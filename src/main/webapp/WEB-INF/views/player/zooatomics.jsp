@@ -271,7 +271,7 @@ soundManager.onready(function()
       <p id="bar-arrowdown"></p>
     </div>
     <div id="pl-switcher">
-      <ul id="pl-menu"><li id="trending" title="Trending"></li><li id="recommendation" title="Recommended"></li><li id="myfollow1" title="Featured"></li><li id="myfollow2" title="Your Subscriptions"></li></ul>
+      <ul id="pl-menu"><li id="trending" title="Trending"></li><li id="recommendation" title="Recommended"></li><li id="myfollow1" title="I'm Following (by Update Time)"></li><li id="myfollow2" title="I'm Following (by Channel Number)"></li></ul>
       <p id="pl-type">Trending Stories</p>
       <p id="pl-note">(Sorted by updated time)</p>
       <div id="popmessage-player-list" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">Added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>
@@ -550,7 +550,7 @@ soundManager.onready(function()
 
 <!-- Guide Begin -->
 <div id="guide-layer" class="stage">
-  <h2>I'm Following (<span id="chNum">20</span>/72)</h2>
+  <h2><span id="guide-imfollowing-banner">I'm Following</span> (<span id="chNum">20</span>/72)</h2>
   
   <div id="guide-bubble">
     <img src="${nroot}/images/bg_guide_bubble1.png" id="bg1" class="bg">
@@ -668,7 +668,7 @@ soundManager.onready(function()
       </div>
       <div id="guide-tm">
         <div id="guide-trending">
-          <h3><span>Trending Stories (</span><span id="trading-chNum">9</span><span>)</span></h3>
+          <h3><span><span id="guide-trending-banner">Trending Stories</span> (</span><span id="trading-chNum">9</span><span>)</span></h3>
           <div id="trending-arrows" class="horizon-arrows">
             <div id="trending-up"></div>
             <div id="trending-down"></div>
@@ -678,7 +678,7 @@ soundManager.onready(function()
           </ul>    
         </div>
         <div id="guide-maylike"> 
-          <h3><span>Recommended (</span><span id="recommend-chNum">9</span><span>)</span></h3>
+          <h3><span><span id="guide-recommended-banner">Recommended</span> (</span><span id="recommend-chNum">9</span><span>)</span></h3>
           <div id="maylike-arrows" class="horizon-arrows">
             <div id="maylike-up"></div>
             <div id="maylike-down"></div>
@@ -712,7 +712,7 @@ soundManager.onready(function()
       <img src="${nroot}/thumbnail/banner.png">
     </div>
     <div id="homeleftbox">
-      <h1>Trending Stories (9)</h1>
+      <h1><span id="home-trending-banner">Trending Stories</span> (9)</h1>
       <p id="home-arrow-up"></p>
       <p id="home-arrow-down"></p>
       <div id="trending-stories">
@@ -726,8 +726,8 @@ soundManager.onready(function()
               <img src="" width="80px" height="45px"><img src="" width="80px" height="45px">
               <ul>
                 <li class="trending-f">Sport Channel</li>
-                <li>50 Episodes</li>
-                <li>1 hour ago  | 100 Views</li>
+                <li id="trending-f-episodes">50 Episodes</li>
+                <li id="trending-f-ago-views">1 hour ago  | 100 Views</li>
               </ul>
             </div> 
             <p class="trending-box-footer-r"></p>
