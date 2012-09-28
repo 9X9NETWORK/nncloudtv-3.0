@@ -1,6 +1,8 @@
 package com.nncloudtv.web;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.PlayerService;
 
 @Controller
@@ -107,18 +113,6 @@ public class PlayerController {
             String url = service.rewrite(req); 
             return "redirect:/" + url + "#!landing=" + name;
         }
-        //actually won't continue
-        try {
-            PlayerService service = new PlayerService();        
-            model = service.prepareBrand(model, mso, resp);            
-            model = service.preparePlayer(model, js, jsp);            
-            if (jsp != null && jsp.length() > 0) {
-                return "player/" + jsp;
-            }
-            //String prefLanguage = req.getHeader("Accept-Language");        
-        } catch (Throwable t) {
-            NnLogUtil.logThrowable(t);
-        }
         return "player/zooatomics";
     }
     
@@ -138,6 +132,7 @@ public class PlayerController {
         //additional params
         PlayerService service = new PlayerService();
         String queryStr = service.rewrite(req);
+        System.out.println("query str:" + queryStr);
         String cid = channel;
         if (ch != null)
             cid = ch;
@@ -145,29 +140,29 @@ public class PlayerController {
         if (ep != null)
             pid = ep;
         String epStr = "";
-        if (pid != null)
-            epStr = "!ep=" + episode;
-        return "redirect:/" + queryStr + "#!ch=" + cid + epStr;
-        
-        /*
-        try {
-            PlayerService service = new PlayerService();
-            model = service.prepareBrand(model, mso, resp);
-            if (episode != null) {
-                model = service.prepareEpisode(model, episode, resp);
-            } else {
-                model = service.prepareChannel(model, channel, resp);
-            }
-            model = service.preparePlayer(model, js, jsp);
-            if (jsp != null && jsp.length() > 0) {
-                return "player/" + jsp;
-            }
-            return "player/zooatomics";
-        } catch (Throwable t){
-            NnLogUtil.logThrowable(t);
-            return "player/zooatomics";            
+        if (pid != null) {
+            Pattern pattern = Pattern.compile("[\\d]*");
+            Matcher matcher = pattern.matcher(cid);
+            if (matcher.matches()) {
+                NnChannel c = new NnChannelManager().findById(Long.parseLong(cid));
+                if (c != null) {
+                    if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
+                        matcher = pattern.matcher(pid);
+                        if (matcher.matches()) {
+                            NnProgram p = new NnProgramManager().findById(Long.parseLong(pid));
+                            if (p != null) {
+                                log.info("before pid:" + pid + ";after pid:" + p.getEpisodeId());
+                                pid = String.valueOf("e" + p.getEpisodeId());                                
+                            }
+                        }
+                    }
+                }
+            }            
+            epStr = "!ep=" + pid;
         }
-        */
+        System.out.println(queryStr + "#!ch=" + cid + epStr);
+        return "hello/hello";
+        //return "redirect:/" + queryStr + "#!ch=" + cid + epStr;
     }
     
     @RequestMapping("support")
