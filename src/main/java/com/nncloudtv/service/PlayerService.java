@@ -102,13 +102,13 @@ public class PlayerService {
         Matcher m = pattern.matcher(url);
         if (m.find()) {
             String matched = m.group(2);
-            matched = matched.replaceAll("ch=\\d*&?", "");
+            matched = matched.replaceAll("ch=[^&]*&?",  "");
             log.info("matched 1:" + matched);
-            matched = matched.replaceAll("ep=\\d*&?", "");
+            matched = matched.replaceAll("ep=[^&]*&?", "");
             log.info("matched 2:" + matched);
-            matched = matched.replaceAll("channel=\\d*&?", "");
+            matched = matched.replaceAll("channel=[^&]*&?", "");
             log.info("matched 3:" + matched);
-            matched = matched.replaceAll("episode=\\d*&?", "");
+            matched = matched.replaceAll("episode=[^&]*&?", "");
             log.info("matched 4:" + matched);
             if (matched.length() > 0)
                 return "?" + matched;
