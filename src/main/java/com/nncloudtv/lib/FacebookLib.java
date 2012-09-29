@@ -76,10 +76,26 @@ public class FacebookLib {
                 data[0] = line.split("\"id\":\"")[1].split(",")[0].replace("\"", "");
                 String email = line.split("\"email\":\"")[1].split(",")[0].replace("\"", "").replace("\\u0040", "@");
                 data[1] = email;
-                data[2] = line.split("\"name\":\"")[1].split(",")[0].replace("\"", "");
-                data[3] = line.split("\"gender\":\"")[1].split(",")[0].replace("\"", "");
-                data[4] = line.split("\"locale\":\"")[1].split(",")[0].replace("\"", "");
-                data[5] = line.split("\"birthday\":\"")[1].split(",")[0].replace("\"", "");
+                try {
+                   data[2] = line.split("\"name\":\"")[1].split(",")[0].replace("\"", "");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                   data[2] = ""; 
+                }
+                try {
+                    data[3] = line.split("\"gender\":\"")[1].split(",")[0].replace("\"", "");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    data[3] = ""; 
+                }
+                try {
+                    data[4] = line.split("\"locale\":\"")[1].split(",")[0].replace("\"", "");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    data[4] = ""; 
+                }
+                try {
+                    data[5] = line.split("\"birthday\":\"")[1].split(",")[0].replace("\"", "");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    data[5] = "";
+                }
             } else {
                 log.info("response status:" + connection.getResponseCode() + ";" + connection.getResponseMessage());                
             }
