@@ -796,18 +796,25 @@ public class PlayerApiService {
         Tag tag = tagMngr.findByName(name);
         if (tag == null)
             return this.assembleMsgs(NnStatusCode.TAG_INVALID, null);
-        result[0] += assembleKeyValue("id", String.valueOf(tag.getId()));
-        result[0] += assembleKeyValue("name", tag.getName());        
+                        
         List<NnChannel> channels = new TagManager().findChannelsByTag(name, true);
-        start = start == null ? "0" : start;
+        start = start == null ? "1" : start;
         count = count == null ? String.valueOf(channels.size()) : count;        
         int startIndex = Integer.parseInt(start) - 1;
         int endIndex = Integer.parseInt(count);
         startIndex = startIndex < 0 ? 0 : startIndex;
         endIndex = endIndex > channels.size() ? channels.size() : endIndex;
+        int total = channels.size();
         channels = channels.subList(startIndex, startIndex + Integer.parseInt(count));
         log.info("startIndex:" + startIndex + ";endIndex:" + endIndex);
         result[1] += chMngr.composeChannelLineup(channels);
+        
+        result[0] += assembleKeyValue("id", String.valueOf(tag.getId()));
+        result[0] += assembleKeyValue("name", tag.getName());
+        result[0] += assembleKeyValue("start", start);
+        result[0] += assembleKeyValue("count", count);
+        result[0] += assembleKeyValue("total", String.valueOf(total));
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
