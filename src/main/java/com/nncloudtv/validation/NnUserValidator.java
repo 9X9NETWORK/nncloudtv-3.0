@@ -38,7 +38,7 @@ public class NnUserValidator {
         }
         String dob = user.getDob();
         if (dob != null) {
-            if (!Pattern.matches("^\\d*$", dob)) {
+            if (!Pattern.matches("[\\d\\\\/\\\\]*", dob)) {
                 log.info("dob error:" + dob + ";" + user.getEmail());
                 return NnStatusCode.INPUT_BAD;
             }
