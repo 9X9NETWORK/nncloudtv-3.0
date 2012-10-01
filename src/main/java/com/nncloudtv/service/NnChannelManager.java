@@ -195,7 +195,6 @@ public class NnChannelManager {
     
     //create an empty favorite channel
     public NnChannel createFavorite(NnUser user) {
-        log.info("create empty favorite channel for whom want to subscribe an empty channel");
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
             favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
