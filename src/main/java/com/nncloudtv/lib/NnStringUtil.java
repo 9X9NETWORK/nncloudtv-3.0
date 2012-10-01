@@ -191,13 +191,13 @@ public class NnStringUtil {
     
     public static String getPlaybackUrl(String channelIdStr, String episodeIdStr) {
     
-        return "http://" + MsoConfigManager.getServerDomain() + "/view?ch"
+        return "http://" + MsoConfigManager.getServerDomain() + "/view?ch="
                 + channelIdStr + "&ep=" + episodeIdStr;
     }
     
     public static String getPlaybackUrl(long channelId, long episodeId) {
     
-        return "http://" + MsoConfigManager.getServerDomain() + "/view?ch"
+        return "http://" + MsoConfigManager.getServerDomain() + "/view?ch="
                 + channelId + "&ep=" + episodeId;
     }
 }
