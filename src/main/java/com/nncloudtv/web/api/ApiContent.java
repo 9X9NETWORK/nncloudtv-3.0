@@ -309,7 +309,7 @@ public class ApiContent extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-            program.setStartTime(endTime);
+            program.setEndTime(endTime);
             recalculateDuration = true;
         }
         
