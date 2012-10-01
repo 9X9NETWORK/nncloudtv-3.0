@@ -32,6 +32,7 @@ import com.nncloudtv.web.json.facebook.FacebookResponse;
 public class FacebookLib {
     protected static final Logger log = Logger.getLogger(FacebookLib.class.getName());
 
+    //TODO move to db or property file
     //dev1
     protected static String clientId = "417419178315486";
     protected static String secret = "bb96e3578cfb0822796810601d554e97";
@@ -49,6 +50,13 @@ public class FacebookLib {
     protected static String clientId = "411604618902543";
     protected static String secret = "ea2ba5658851e3c02a97b10dc9c99146";
     protected static String redirectUri = "http://beagle.9x9.tv/fb/login";
+    */
+
+    //demo
+    /*
+    protected static String clientId = "361253423962738";
+    protected static String secret = "85106cc16d80a5705a060a0bbae7cb60";
+    protected static String redirectUri = "http://demo.9x9.tv/fb/login";
     */
     
     private static String generateState() {
