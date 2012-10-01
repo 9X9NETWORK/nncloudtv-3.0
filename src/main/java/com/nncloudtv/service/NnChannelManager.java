@@ -701,15 +701,7 @@ public class NnChannelManager {
         return sorting;
     }
 
-    public String composeChannelLineup(List<NnChannel> channels) {
-
-        String output = "";
-        for (NnChannel c : channels) {
-            output += this.composeChannelLineupStr(c) + "\n";
-        }
-        return output;        
-
-        /*        
+    public String composeChannelLineupCache(List<NnChannel> channels) {
         String output = "";
         for (NnChannel c : channels) {
             String cacheKey = "nnchannel(" + c.getId() + ")";
@@ -724,8 +716,15 @@ public class NnChannelManager {
                 output += str + "\n";                
             }
         }
-        return output;
-         */        
+        return output;        
+    }
+    
+    public String composeChannelLineup(List<NnChannel> channels) {
+        String output = "";
+        for (NnChannel c : channels) {
+            output += this.composeChannelLineupStr(c) + "\n";
+        }
+        return output;        
     }
     
     public String composeChannelLineupStr(NnChannel c) {
