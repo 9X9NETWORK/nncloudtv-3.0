@@ -30,7 +30,6 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.CategoryManager;
-import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
@@ -385,18 +384,21 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
-        results = channelMngr.findByUser(user, 0, false);
+        results = channelMngr.findByUserAndHisFavorite(user, 0, false);
         
         for (NnChannel channel : results) {
+            
             channelMngr.populateMoreImageUrl(channel);
+            
+            channel.setName(NnStringUtil.revertHtml(channel.getName()));
+            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+            
+            if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
+                channel.setContentType(NnChannel.CONTENTTYPE_FAVORITE); // To fake is necessary to fake like that
+            }
         }
         
         Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
-        
-        for (NnChannel result : results) {
-            result.setName(NnStringUtil.revertHtml(result.getName()));
-            result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
-        }
         
         return results;
     }
