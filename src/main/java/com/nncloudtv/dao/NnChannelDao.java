@@ -199,6 +199,21 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         }
         return channel;                
     }        
+
+    @SuppressWarnings("unchecked")
+    public List<NnChannel> findByIds(List<Long> ids) {
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        try {
+            Query q = pm.newQuery(NnChannel.class, ":p.contains(id)");
+            q.setOrdering("updateDate desc");
+            channels = ((List<NnChannel>) q.execute(ids));        
+            channels = (List<NnChannel>) pm.detachCopyAll(channels);
+        } finally {
+            pm.close();
+        }
+        return channels;
+    }
     
     
 }

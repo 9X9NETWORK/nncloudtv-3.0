@@ -86,14 +86,12 @@ public class CategoryManager {
     }
     
     public List<NnChannel> listChannels(int page, int limit, long categoryId) {
-    	NnChannelManager chMngr = new NnChannelManager();
-    	List<NnChannel> channels = new ArrayList<NnChannel>();
     	List<CategoryMap> list = dao.listCategoryMap(page, limit, "categoryId == " + categoryId);
+        List<Long> ids = new ArrayList<Long>();
     	for (CategoryMap m :list) {
-    		NnChannel c = chMngr.findById(m.getChannelId());
-    		if (c != null)
-    			channels.add(c);
+    	    ids.add(m.getChannelId());
     	}
+    	List<NnChannel> channels = new NnChannelManager().findByIds(ids);
     	return channels;
     }
         

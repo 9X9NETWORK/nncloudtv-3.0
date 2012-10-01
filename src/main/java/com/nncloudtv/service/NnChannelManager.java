@@ -599,13 +599,8 @@ public class NnChannelManager {
         return counter.getCount();
     }
     
-    public List<NnChannel> findByChannelIds(List<Long> channelIds) {
-        List<NnChannel> channels = new ArrayList<NnChannel>();
-        for (Long id : channelIds) {
-            NnChannel channel = this.findById(id);
-            if (channel != null) channels.add(channel);
-        }
-        return channels;        
+    public List<NnChannel> findByIds(List<Long> ids) {        
+        return dao.findByIds(ids);
     }
     
     public List<NnChannel> findByStatus(short status) {

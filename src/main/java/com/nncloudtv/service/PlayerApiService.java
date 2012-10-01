@@ -485,9 +485,11 @@ public class PlayerApiService {
         if (start == null || count.length() == 0)
             start = "1";
         if (count == null || count.length() == 0)
-            count = "0";            
+            count = "100";
         int startIndex = Integer.parseInt(start);
-        int limit = Integer.valueOf(count);            
+        int limit = Integer.valueOf(count);
+        if (limit > 100)
+            limit = 100;
         int page = 0;
         if (limit != 0) {
             page = (int) (startIndex / limit) + 1;
@@ -634,7 +636,7 @@ public class PlayerApiService {
             if (chArr.length > 1) {
                 List<Long> list = new ArrayList<Long>();
                 for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
-                channels = chMngr.findByChannelIds(list);
+                channels = chMngr.findByIds(list);
             } else {
                 NnChannel channel = chMngr.findById(Long.parseLong(channelIds));
                 if (channel != null) channels.add(channel);                    
