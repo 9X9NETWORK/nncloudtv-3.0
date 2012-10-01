@@ -485,11 +485,11 @@ public class PlayerApiService {
         if (start == null || count.length() == 0)
             start = "1";
         if (count == null || count.length() == 0)
-            count = "100";
+            count = "200";
         int startIndex = Integer.parseInt(start);
         int limit = Integer.valueOf(count);
-        if (limit > 100)
-            limit = 100;
+        if (limit > 200)
+            limit = 200;
         int page = 0;
         if (limit != 0) {
             page = (int) (startIndex / limit) + 1;
