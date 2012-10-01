@@ -66,10 +66,11 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         String sql = "select * from nnchannel " +
          "where (lower(name) like lower('%" + queryStr + "%')" +   
-         "|| lower(intro) like lower('%" + queryStr + "%')) limit 9";
+         "|| lower(intro) like lower('%" + queryStr + "%'))";
         if (!all) {
             sql += " and status = " + NnChannel.STATUS_SUCCESS;
         }
+        sql += " limit 9";
 
 //        String sql = "select * from nnchannel " +
 //         "where status = " + NnChannel.STATUS_SUCCESS + 
