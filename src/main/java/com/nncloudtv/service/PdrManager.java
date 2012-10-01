@@ -40,7 +40,7 @@ public class PdrManager {
     //TODO should verify user/device token, but hell later  
     public void processWatched(String userToken, String deviceToken, String pdr) {
         CounterFactory factory = new CounterFactory();        
-        String reg = "w\t(\\d++)\t(\\w++)";     
+        String reg = "\\sw\t(\\d++)\t(\\w++)";     
         Pattern pattern = Pattern.compile(reg);
         Matcher m = pattern.matcher(pdr);
         while (m.find()) {          
@@ -58,7 +58,7 @@ public class PdrManager {
         if (pdr == null) {return;}        
         PdrManager pdrMngr = new PdrManager();        
         NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
-        String reg = "w\t(\\d++)\t(\\w++)";        
+        String reg = "\\sw\t(\\d++)\t(\\w++)";        
         Pattern pattern = Pattern.compile(reg);
         Matcher m = pattern.matcher(pdr);
         if (user != null) {
