@@ -167,6 +167,7 @@ public class NnEpisodeManager {
         }
         episodes.remove(removes);
         
+        List<NnProgram> reorderedPrograms = new ArrayList<NnProgram>(); 
         for (int i = 0; i < episodes.size(); i++) {
             
             List<NnProgram> programs = programMngr.findByEpisodeId(episodes.get(i).getId());
@@ -175,9 +176,9 @@ public class NnEpisodeManager {
                 
                 program.setSeq(i + 1);
             }
-            programMngr.save(programs);
+            reorderedPrograms.addAll(programs);
         }
-        
+        programMngr.save(reorderedPrograms);
     }
     
     public void delete(NnEpisode episode) {

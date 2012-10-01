@@ -93,8 +93,10 @@ public class NnProgramManager {
      * @param programs
      * @return programs
      */
-    public List<NnProgram> save(List<NnProgram> programs) {        
-        long channelId = 0;        
+    public List<NnProgram> save(List<NnProgram> programs) {
+        
+        List<Long> channelIds = new ArrayList<Long>();
+        
         for (NnProgram program : programs) {            
             Date now = new Date();
             if (program.getCreateDate() == null)
@@ -102,11 +104,17 @@ public class NnProgramManager {
             if (program.getUpdateDate() == null) {
                 program.setUpdateDate(now);
             }            
-            program = dao.save(program);            
-            if (channelId != program.getChannelId()) {
-                channelId = program.getChannelId();
-                processCache(channelId);
+            
+            if (channelIds.indexOf(program.getChannelId()) < 0) {
+                channelIds.add(program.getChannelId());
             }
+        }
+        
+        programs = dao.save(programs);
+        
+        log.info("channel count = " + channelIds.size());
+        for (Long channelId : channelIds) {
+            processCache(channelId);
         }
         
         return programs;

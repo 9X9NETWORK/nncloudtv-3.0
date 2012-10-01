@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
@@ -31,6 +32,32 @@ public class NnProgramDao extends GenericDao<NnProgram> {
             pm.close();
         }
         return program;
+    }
+    
+    public List<NnProgram> save(List<NnProgram> programs) {
+    
+        if (programs.isEmpty()) { return programs; }
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+        
+        try {
+            
+            tx.begin();
+            pm.makePersistent(programs);
+            tx.commit();
+            programs = (List<NnProgram>) pm.detachCopyAll(programs);
+            
+        } finally {
+            
+            if (tx.isActive()) {
+                
+                tx.rollback();
+            }
+            pm.close();
+        }
+        
+        return programs;
     }
     
     public void delete(NnProgram program) {
