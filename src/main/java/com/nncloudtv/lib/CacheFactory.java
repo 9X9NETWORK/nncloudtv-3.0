@@ -27,7 +27,7 @@ public class CacheFactory {
             Properties properties = new Properties();
             properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
             String server = properties.getProperty("server");
-            log.info("memcache server:" + server);
+            //log.info("memcache server:" + server);
             cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));            
         } catch (IOException e) {
            log.severe("memcache io exception");
