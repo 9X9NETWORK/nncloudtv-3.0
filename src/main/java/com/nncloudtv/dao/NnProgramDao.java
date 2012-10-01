@@ -44,7 +44,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         try {
             
             tx.begin();
-            pm.makePersistent(programs);
+            pm.makePersistentAll(programs);
             tx.commit();
             programs = (List<NnProgram>) pm.detachCopyAll(programs);
             
