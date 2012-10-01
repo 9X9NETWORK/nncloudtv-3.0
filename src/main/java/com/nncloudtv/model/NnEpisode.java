@@ -136,7 +136,7 @@ public class NnEpisode implements Serializable {
         return isPublic;
     }
 	
-	public void setIsPublic(boolean isPublic) {
+	public void setPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 

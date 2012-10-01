@@ -965,7 +965,7 @@ public class ApiContent extends ApiGeneric {
         if (isPublicStr != null) {
             Boolean isPublic = Boolean.valueOf(isPublicStr);
             if (isPublic != null) {
-                episode.setIsPublic(isPublic);
+                episode.setPublic(isPublic);
             }
         }
         
@@ -1051,11 +1051,12 @@ public class ApiContent extends ApiGeneric {
         }
         
         // isPublic
+        episode.setPublic(true); // TODO: workaround, to be remove
         String isPublicStr = req.getParameter("isPublic");
         if (isPublicStr != null) {
             Boolean isPublic = Boolean.valueOf(isPublicStr);
             if (isPublic != null) {
-                episode.setIsPublic(isPublic);
+                episode.setPublic(isPublic);
             }
         }
         

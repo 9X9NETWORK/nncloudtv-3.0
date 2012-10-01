@@ -46,7 +46,7 @@ public class NnEpisodeManager {
             programMngr.save(programs);
             
             episode.setPublishDate(new Date());
-            episode.setIsPublic(rerun);
+            episode.setPublic(rerun);
             save(episode);
             
             reorderChannelEpisodes(episode.getChannelId());
