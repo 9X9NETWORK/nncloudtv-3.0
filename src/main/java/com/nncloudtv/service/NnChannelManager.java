@@ -187,6 +187,10 @@ public class NnChannelManager {
             if (p.getChannelId() == favoriteCh.getId())
                 pMngr.delete(p);
         }
+        
+        // update episode count
+        favoriteCh.setCntEpisode(calcuateEpisodeCount(favoriteCh));
+        save(favoriteCh);
     }
     
     //create an empty favorite channel
@@ -262,6 +266,10 @@ public class NnChannelManager {
         newP.setContentType(NnProgram.CONTENTTYPE_REFERENCE);
         newP.setStorageId(storageId);
         pMngr.save(newP);
+        
+        // update episode count
+        favoriteCh.setCntEpisode(calcuateEpisodeCount(favoriteCh));
+        save(favoriteCh);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     
     public NnChannel save(NnChannel channel) {
@@ -443,10 +451,20 @@ public class NnChannelManager {
     
     public int calcuateEpisodeCount(NnChannel channel) {
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        List<NnEpisode> episodes = episodeMngr.findByChannelId(channel.getId());
-        
-        return episodes.size();
+        if (channel.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+            
+            NnProgramManager programMngr = new NnProgramManager();
+            List<NnProgram> programs = programMngr.findByChannelId(channel.getId());
+            
+            return programs.size();
+            
+        } else {
+            
+            NnEpisodeManager episodeMngr = new NnEpisodeManager();
+            List<NnEpisode> episodes = episodeMngr.findByChannelId(channel.getId());
+            
+            return episodes.size();
+        }
     }
     
     public NnChannel findBySourceUrl(String url) {
