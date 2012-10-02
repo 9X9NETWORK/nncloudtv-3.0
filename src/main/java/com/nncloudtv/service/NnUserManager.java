@@ -325,14 +325,16 @@ public class NnUserManager {
         NnChannelManager chMngr = new NnChannelManager();
         List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
         for (NnUser u : users) {
+            List<NnChannel> channels = new ArrayList<NnChannel>();
             if (chCntLimit) {
-                curatorChannels.addAll(chMngr.findByUserAndHisFavorite(u, 1, true));
+                channels = chMngr.findByUserAndHisFavorite(u, 1, true);
             } else {
-                curatorChannels.addAll(chMngr.findByUserAndHisFavorite(u, 0, true));
+                channels = chMngr.findByUserAndHisFavorite(u, 0, true);
             }
+            curatorChannels.addAll(channels);            
             String ch = "";
-            if (curatorChannels.size() > 0) {
-                ch = String.valueOf(curatorChannels.get(0).getId());
+            if (channels.size() > 0) {                
+                ch = channels.get(0).getIdStr();
             }
             result += this.composeCuratorInfoStr(u, ch, req) + "\n";
         }
