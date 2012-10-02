@@ -905,21 +905,35 @@ public class NnChannelManager {
     }
     
     public void populateMoreImageUrl(NnChannel channel) {
-    
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        
-        List<NnEpisode> episodes = episodeMngr.findByChannelId(channel.getId());
         
         List<String> imgs = new ArrayList<String>();
         
-        for (int i = 0; i < episodes.size() && imgs.size() < 3; i++) {
+        if (channel.getContentType() == channel.CONTENTTYPE_FAVORITE) {
+            NnProgramManager programMngr = new NnProgramManager();
+            List<NnProgram> programs = programMngr.findByChannelId(channel.getId());
             
-            String img = episodes.get(i).getImageUrl();
+            for (int i = 0; i < programs.size() && imgs.size() < 3; i++) {
+                
+                String img = programs.get(i).getImageUrl();
+                if (img != null && img.length() > 0) {
+                    imgs.add(img);
+                }
+            }
             
-            if (img != null && img.length() > 0) {
-                imgs.add(img);
+        } else {
+            NnEpisodeManager episodeMngr = new NnEpisodeManager();
+            List<NnEpisode> episodes = episodeMngr.findByChannelId(channel.getId());
+
+            for (int i = 0; i < episodes.size() && imgs.size() < 3; i++) {
+                
+                String img = episodes.get(i).getImageUrl();
+                
+                if (img != null && img.length() > 0) {
+                    imgs.add(img);
+                }
             }
         }
+        
         
         if (imgs.size() > 0) {
             
