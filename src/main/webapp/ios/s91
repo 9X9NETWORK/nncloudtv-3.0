@@ -1,0 +1,18 @@
+0	SUCCESS
+--
+name	9x9
+imageUrl	http://s3.amazonaws.com/9x9ui/images/logo_9x9.png
+intro	9x9
+--
+id	91
+name	每日影音焦點
+imageUrl	http://9x9cache.s3.amazonaws.com/3ee2114f08c9f92fc00b0fb7a67bad00b1464c1f_1345437839_.jpg
+piwik	
+--
+1	8599	政經國際	New Channel	http://9x9cache.s3.amazonaws.com/3ee2114f08c9f92fc00b0fb7a67bad00b1464c1f_1345437839_.jpg	70	0	0	6		1348624085000	3	8632			16
+2	8602	娛樂體壇	New Channel	http://9x9cache.s3.amazonaws.com/5834f3bfd216bae632c312c782a13e9f65fb4566_1345438086_.jpg	25	0	0	6		1348622914000	3	8635			8
+4	8600	社會脈動	New Channel	http://9x9cache.s3.amazonaws.com/f909d023ad4777f22db3cc0cc6f7a02ace7b74e4_1345437976_.jpg	141	0	0	6		1348567260000	3	8633			7
+5	8486	菁英焦點	給你最廣闊的知性視野！	http://9x9cache.s3.amazonaws.com/e599e62a1165513a354bb68870efdb0ca302c9fc_1343823874_.jpg	276	0	0	6		1348556383000	3	8538			30
+6	8571	Woman care	you care;I care;woman care!	http://9x9cache.s3.amazonaws.com/032c108525848fca5a30f91d9e5980395ecf2416_1344589924_.jpg	95	0	0	6		1348737700000	3	8611			15
+7	8487	潮流日誌	最新最潮的資訊盡在此處!!!	http://9x9cache.s3.amazonaws.com/ca59a6f5c86c1a782763f72507cc58e56bdadada_1342425144_.jpg	220	0	0	6		1347947406000	3	8539			20
+8	8549	宅宅物語	動漫、模型相關影音	http://9x9cache.s3.amazonaws.com/2bc2335ec5af5a2302874e57ad10ef64e406ad91_1346728319_.jpg	129	0	0	6		1348474916000	3	8591			16
