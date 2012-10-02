@@ -160,9 +160,8 @@ public class PlayerController {
             }            
             epStr = "!ep=" + pid;
         }
-        System.out.println(queryStr + "#!ch=" + cid + epStr);
-        return "hello/hello";
-        //return "redirect:/" + queryStr + "#!ch=" + cid + epStr;
+        log.info(queryStr + "#!ch=" + cid + epStr);
+        return "redirect:/" + queryStr + "#!ch=" + cid + epStr;
     }
     
     @RequestMapping("support")
