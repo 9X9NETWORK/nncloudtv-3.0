@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.CategoryMapDao;
 import com.nncloudtv.dao.NnChannelDao;
-import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
@@ -609,17 +608,7 @@ public class NnChannelManager {
         }        
         return new ChannelComparator();
     }
-    
-    public int addCntView(boolean readOnly, long channelId) {        
-        String counterName = "cid" + channelId;
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getOrCreateCounter(counterName);
-        if (!readOnly) {
-            counter.increment();
-        }
-        return counter.getCount();
-    }
-    
+        
     public List<NnChannel> findByIds(List<Long> ids) {        
         return dao.findByIds(ids);
     }
@@ -695,6 +684,7 @@ public class NnChannelManager {
             NnChannel c = new NnChannel(name, user.getImageUrl(), "");
             c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
             c.setUserIdStr(user.getIdStr());
+            c.setNote(c.getFakeId(user.getProfileUrl())); //shortcut, maybe not very appropriate
             c.setStatus(NnChannel.STATUS_SUCCESS);
             c.setPublic(true);
             channels.add(c);
@@ -703,7 +693,7 @@ public class NnChannelManager {
             return channels;
         } else {             
             if (channels.size() > limit)
-            return channels.subList(0, limit);
+               return channels.subList(0, limit);
         }        
         return channels;
     }
@@ -813,17 +803,20 @@ public class NnChannelManager {
                 subscriberImage = subscriberImage.replaceFirst("\\|", "");
             }
         }
-        
+
+        /*
         String id = Long.toString(c.getId());
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
            id = "f" + "-" + curatorProfile;
         }
+        */
+        
         String[] ori = {String.valueOf(c.getSeq()), //REPLACE
-                        id,
+                        c.getIdStr(),
                         name,
                         c.getIntro(),
                         imageUrl, //c.getPlayerPrefImageUrl(),                        
-                        String.valueOf(c.getCntEpisode()), //REPLACE
+                        String.valueOf(c.getCntEpisode()),
                         String.valueOf(c.getType()),
                         String.valueOf(c.getStatus()),
                         String.valueOf(c.getContentType()),
@@ -833,7 +826,7 @@ public class NnChannelManager {
                         c.getPiwik(),
                         "", //recently watched program
                         c.getOriName(),
-                        String.valueOf(c.getCntSubscribe()), //REPLACE
+                        String.valueOf(c.getCntSubscribe()), //cnt subscribe, replace
                         String.valueOf(viewCount), //view count //REPLACE
                         c.getTag(),
                         curatorProfile, //curator id
@@ -891,7 +884,25 @@ public class NnChannelManager {
             }
         }
         return channels;
+    }        
+    /*
+    public static String getCntViewCacheName(long id) {
+        return "ch" + id;
     }
+        
+    public int getCntView(long id) {
+        String name = getCntViewCacheName(id);
+        String result = (String)CacheFactory.get(name);
+        if (result != null) {
+            return Integer.parseInt(result);
+        } 
+        log.info("cache: ch cnt view not cached");        
+        CounterFactory factory = new CounterFactory();
+        int count = factory.getCount(name); 
+        CacheFactory.set(name, count);
+        return count;
+    }
+    */
     
     public Comparator<NnChannel> getChannelUpdateDateComparator() {
         
