@@ -1361,6 +1361,8 @@ public class PlayerApiController {
             HttpServletResponse resp) {        
         
         log.info("saveShare(" + userToken + ")");
+        return playerApiService.assembleMsgs(NnStatusCode.API_DEPRECATED, null);
+        /*
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
         try {
             int status = this.prepService(req, true);
@@ -1373,6 +1375,7 @@ public class PlayerApiController {
             NnLogUtil.logThrowable(t);
         }
         return output;
+        */        
     }    
 
     /**
