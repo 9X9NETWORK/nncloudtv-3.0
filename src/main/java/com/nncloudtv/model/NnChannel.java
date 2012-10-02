@@ -197,6 +197,17 @@ public class NnChannel implements Serializable {
         this.id = id;
     }
 
+    public String getFakeId(String userProfileUrl) {
+        return "f-" + userProfileUrl;
+    }
+
+    public String getIdStr() {
+        if (type == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
+            return this.getNote();
+        else
+            return String.valueOf(id);
+    }
+    
     public String getName() {
         return name;
     }
