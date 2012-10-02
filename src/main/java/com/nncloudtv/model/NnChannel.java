@@ -202,7 +202,7 @@ public class NnChannel implements Serializable {
     }
 
     public String getIdStr() {
-        if (type == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
+        if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
             return this.getNote();
         else
             return String.valueOf(id);
