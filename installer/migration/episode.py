@@ -30,8 +30,9 @@ for r in rows:
       insert into nnepisode (name, imageUrl, intro, publishDate, updateDate, channelId)
                      values (%s, %s, %s, now(), now(), %s) 
        """, (r[0], r[1], r[2], r[3]))   
-   print str(cursor.lastrowid) + "; " + str(r[4])   
+   pid = r[4]
    eid = cursor.lastrowid
+   print str(pid) + ";" + str(eid)   
    cursor.execute("""update nnprogram set episodeId = %s
                       where id = %s
                    """, (eid, r[4]))
