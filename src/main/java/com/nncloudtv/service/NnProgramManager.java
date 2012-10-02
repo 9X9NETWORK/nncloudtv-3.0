@@ -313,6 +313,8 @@ public class NnProgramManager {
     
     @SuppressWarnings("rawtypes")
     public String processSubEpisode(List<NnProgram> programs) {
+        if (programs.size() == 0)
+            return "";
         long cId = programs.get(0).getChannelId();
         //put programs in the map, key is seq, all programs with the same seq will be lumped to a list
         Map<String, List<NnProgram>> map = new TreeMap<String, List<NnProgram>>();                
