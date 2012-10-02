@@ -236,6 +236,10 @@ public class NnChannelManager {
                 existFavorite.setDuration(duration);
                 existFavorite.setStatus(NnProgram.STATUS_OK);                
                 pMngr.save(existFavorite);                
+                
+                // update episode count
+                favoriteCh.setCntEpisode(calcuateEpisodeCount(favoriteCh));
+                save(favoriteCh);
             }
             return;
         }
