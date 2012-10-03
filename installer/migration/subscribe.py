@@ -20,8 +20,7 @@ dbuser = MySQLdb.connect (host = "localhost",
 
 userCursor = dbuser.cursor()
 userCursor.execute("""
- select id
-	 from nnuser order by id where id < 18""")
+ select id from nnuser order by id""")
 userRow = userCursor.fetchall() 
 i = 0
 for ur in userRow:
