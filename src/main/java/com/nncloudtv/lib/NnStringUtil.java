@@ -189,15 +189,15 @@ public class NnStringUtil {
         return String.format("%08d", seq);
     }
     
-    public static String getPlaybackUrl(String channelIdStr, String episodeIdStr) {
+    public static String getProgramPlaybackUrl(String channelIdStr, String programIdStr) {
     
         return "http://" + MsoConfigManager.getServerDomain() + "/view?ch="
-                + channelIdStr + "&ep=" + episodeIdStr;
+                + channelIdStr + "&ep=" + programIdStr;
     }
     
-    public static String getPlaybackUrl(long channelId, long episodeId) {
+    public static String getEpisodePlaybackUrl(long channelId, long episodeId) {
     
         return "http://" + MsoConfigManager.getServerDomain() + "/view?ch="
-                + channelId + "&ep=" + episodeId;
+                + channelId + "&ep=e" + episodeId;
     }
 }

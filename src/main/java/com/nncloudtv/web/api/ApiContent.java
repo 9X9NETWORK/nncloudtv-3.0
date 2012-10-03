@@ -813,7 +813,7 @@ public class ApiContent extends ApiGeneric {
             episode.setName(NnStringUtil.revertHtml(episode.getName()));
             episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
             
-            episode.setPlaybackUrl(episodeMngr.getEpisodePlaybackUrl(episode));
+            episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
         }
         
         return results;

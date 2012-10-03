@@ -216,9 +216,4 @@ public class NnEpisodeManager {
         
         return totalDuration;
     }
-    
-    public String getEpisodePlaybackUrl(NnEpisode episode) {
-    
-        return NnStringUtil.getPlaybackUrl(episode.getChannelId(), episode.getId());
-    }
 }

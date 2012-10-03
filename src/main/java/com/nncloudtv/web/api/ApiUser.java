@@ -190,7 +190,7 @@ public class ApiUser extends ApiGeneric {
                 favorite.setPublishDate(episode.getPublishDate());
                 favorite.setCntView(episode.getCntView());
                 favorite.setPublic(episode.isPublic());
-                favorite.setPlaybackUrl(episodeMngr.getEpisodePlaybackUrl(episode));
+                favorite.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
                 
             } else {
                 
@@ -200,7 +200,7 @@ public class ApiUser extends ApiGeneric {
                 favorite.setPublishDate(program.getPublishDate());
                 favorite.setCntView(program.getCntView());
                 favorite.setPublic(program.isPublic());
-                favorite.setPlaybackUrl(NnStringUtil.getPlaybackUrl(
+                favorite.setPlaybackUrl(NnStringUtil.getProgramPlaybackUrl(
                         program.getStorageId(),
                         YouTubeLib.getYouTubeVideoIdStr(program.getFileUrl())));
                 
