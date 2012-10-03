@@ -353,6 +353,68 @@ public class ApiContent extends ApiGeneric {
         return "OK";
     }
     
+    @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.DELETE)
+    public @ResponseBody
+    String programsDelete(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+    
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        String programIdsStr = req.getParameter("programIds");
+        if (programIdsStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        log.info(programIdsStr);
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        TitleCardManager titlecardMngr = new TitleCardManager();
+        
+        String[] programIdStrList = programIdsStr.split(",");
+        List<NnProgram> programList = new ArrayList<NnProgram>();
+        List<TitleCard> titlecardList = new ArrayList<TitleCard>();
+        
+        for (String programIdStr : programIdStrList) {
+            
+            Long programId = null;
+            try {
+                programId = Long.valueOf(programIdStr);
+            } catch(Exception e) {
+            }
+            if (programId != null) {
+                NnProgram program = programMngr.findById(programId);
+                if (program != null) {
+                    programList.add(program);
+                }
+                List<TitleCard> titlecards = titlecardMngr.findByProgramId(programId);
+                if (titlecards.size() > 0) {
+                    titlecardList.addAll(titlecards);
+                }
+            }
+        }
+        log.info("program count = " + programList.size());
+        log.info("titlecard count = " + titlecardList.size());
+        
+        titlecardMngr.delete(titlecardList);
+        programMngr.delete(programList);
+        
+        return "OK";
+    }
+    
     @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.POST)
     public @ResponseBody
     NnProgram programCreate(HttpServletRequest req, HttpServletResponse resp,
