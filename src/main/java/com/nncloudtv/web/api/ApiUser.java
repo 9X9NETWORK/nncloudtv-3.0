@@ -395,7 +395,7 @@ public class ApiUser extends ApiGeneric {
             
             if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
                 channel.setContentType(NnChannel.CONTENTTYPE_FAVORITE); // To fake is necessary to fake like that
-                channel.setMoreImageUrl(NnChannel.IMAGE_DEFAULT_URL + "|" + NnChannel.IMAGE_DEFAULT_URL + "|" + NnChannel.IMAGE_DEFAULT_URL);
+                channel.setMoreImageUrl(NnChannel.IMAGE_EPISODE_URL + "|" + NnChannel.IMAGE_EPISODE_URL + "|" + NnChannel.IMAGE_EPISODE_URL);
             }
         }
         
