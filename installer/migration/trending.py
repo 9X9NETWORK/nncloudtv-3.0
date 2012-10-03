@@ -13,7 +13,7 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              use_unicode = True,
                              db = "nncloudtv_content")
 
-feed = open("trending_en.txt", "rU")
+feed = open("trending_zh.txt", "rU")
 ################################
 i = 19
 for line in feed:
