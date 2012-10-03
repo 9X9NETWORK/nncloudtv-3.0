@@ -21,7 +21,7 @@ dbuser = MySQLdb.connect (host = "localhost",
 userCursor = dbuser.cursor()
 userCursor.execute("""
  select id
-	 from nnuser""")
+	 from nnuser order by id where id < 18""")
 userRow = userCursor.fetchall() 
 i = 0
 for ur in userRow:
@@ -37,7 +37,8 @@ for ur in userRow:
    sidList = list()
    newSeqList = list()
    processIdList = list()
-   processSeqList = list()
+   processSeqList = list()    
+   deleteIdList = list()
    seqarr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
    print "seqerr len:" + str(len(seqarr))
    for sr in subscribeRow:
@@ -51,11 +52,11 @@ for ur in userRow:
          processSeqList.append(seq)                    
       elif (seq >= 70 and seq <=72):
          processIdList.append(sid)
-         processSeqList.append(seq)
+         processSeqList.append(seq)     
       elif (seq >= 79 and seq <=81): 
          processIdList.append(sid) 
          processSeqList.append(seq)
-      elif (seq > 81 or seq < 1):
+      elif (seq > 81 or seq < 1):                                                  
          print "bad data"
       else:
          newSeq = seqChange(seq)     
@@ -63,8 +64,8 @@ for ur in userRow:
          seqarr[newSeq-1] = 1         
          sidList.append(sid)
          newSeqList.append(newSeq)      
-         
-   print "process is list len:" + str(len(processIdList))
+
+   print "process id list len:" + str(len(processIdList))
    for p in processIdList:
       print "processidlist"
       j = 0
@@ -72,6 +73,7 @@ for ur in userRow:
 	       if s == 0:
 	          sidList.append(p) #sid
 	          newSeqList.append(j+1) #new seq
+	          processIdList.remove(p)
 	          seqarr[j] = 1
 	          print "sidlist add:" + str(p) + ";new seq:" + str(j+1)
 	          break
@@ -84,7 +86,13 @@ for ur in userRow:
              set seq = %s
            where id = %s
            """, (newSeqList[k], sid))
-      k = k+1			     
+      k = k+1
+   for p in processIdList:
+      userCursor.execute("""                      
+          delete from nnuser_subscribe
+           where id = %s
+           """, (p))
+          
    dbuser.commit()   
    i = i+1
    #if i > 2:
