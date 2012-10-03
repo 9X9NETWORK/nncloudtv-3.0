@@ -394,7 +394,7 @@ public class ApiContent extends ApiGeneric {
             episodeProgramIdList.add(episodeProgram.getId());
         }
         
-        String programIdsStr = req.getParameter("programIds");
+        String programIdsStr = req.getParameter("programs");
         if (programIdsStr == null) {
             badRequest(resp, MISSING_PARAMETER);
             return null;
