@@ -925,7 +925,8 @@ public class NnChannelManager {
         
         if (channel.getContentType() == channel.CONTENTTYPE_FAVORITE) {
             NnProgramManager programMngr = new NnProgramManager();
-            List<NnProgram> programs = programMngr.findByChannelId(channel.getId());
+            String filter = "channelId == " + channel.getId();
+            List<NnProgram> programs = programMngr.list(1, 50, "updateDate", "desc", filter);
             
             for (int i = 0; i < programs.size() && imgs.size() < 3; i++) {
                 
@@ -937,7 +938,8 @@ public class NnChannelManager {
             
         } else {
             NnEpisodeManager episodeMngr = new NnEpisodeManager();
-            List<NnEpisode> episodes = episodeMngr.findByChannelId(channel.getId());
+            String filter = "channelId == " + channel.getId();
+            List<NnEpisode> episodes = episodeMngr.list(1, 50, "updateDate", "desc", filter);
 
             for (int i = 0; i < episodes.size() && imgs.size() < 3; i++) {
                 
