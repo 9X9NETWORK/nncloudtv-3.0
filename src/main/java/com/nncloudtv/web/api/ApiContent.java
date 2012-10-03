@@ -367,11 +367,21 @@ public class ApiContent extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        TitleCardManager titlecardMngr = new TitleCardManager();
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
             notFound(resp, "Episode Not Found");
             return null;
+        }
+        
+        List<NnProgram> episodePrograms = programMngr.findByEpisodeId(episode.getId());
+        List<Long> episodeProgramIdList = new ArrayList<Long>();
+        for (NnProgram episodeProgram : episodePrograms) {
+            episodeProgramIdList.add(episodeProgram.getId());
         }
         
         String programIdsStr = req.getParameter("programIds");
@@ -381,36 +391,37 @@ public class ApiContent extends ApiGeneric {
         }
         log.info(programIdsStr);
         
-        NnProgramManager programMngr = new NnProgramManager();
-        TitleCardManager titlecardMngr = new TitleCardManager();
-        
         String[] programIdStrList = programIdsStr.split(",");
-        List<NnProgram> programList = new ArrayList<NnProgram>();
-        List<TitleCard> titlecardList = new ArrayList<TitleCard>();
+        List<NnProgram> programDeleteList = new ArrayList<NnProgram>();
+        List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
         
         for (String programIdStr : programIdStrList) {
             
             Long programId = null;
             try {
+                
                 programId = Long.valueOf(programIdStr);
+                
             } catch(Exception e) {
             }
             if (programId != null) {
+                
                 NnProgram program = programMngr.findById(programId);
-                if (program != null) {
-                    programList.add(program);
-                }
-                List<TitleCard> titlecards = titlecardMngr.findByProgramId(programId);
-                if (titlecards.size() > 0) {
-                    titlecardList.addAll(titlecards);
+                if (program != null && episodeProgramIdList.indexOf(program.getId()) > -1) {
+                    
+                    programDeleteList.add(program);
+                    List<TitleCard> titlecards = titlecardMngr.findByProgramId(programId);
+                    if (titlecards.size() > 0) {
+                        titlecardDeleteList.addAll(titlecards);
+                    }
                 }
             }
         }
-        log.info("program count = " + programList.size());
-        log.info("titlecard count = " + titlecardList.size());
+        log.info("program delete count = " + programDeleteList.size());
+        log.info("titlecard delete count = " + titlecardDeleteList.size());
         
-        titlecardMngr.delete(titlecardList);
-        programMngr.delete(programList);
+        titlecardMngr.delete(titlecardDeleteList);
+        programMngr.delete(programDeleteList);
         
         return "OK";
     }
