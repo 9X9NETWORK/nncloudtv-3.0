@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;

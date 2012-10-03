@@ -72,15 +72,9 @@ public class GenericDao<T> {
         if (list == null) return;
         
         PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
-        Transaction tx = pm.currentTransaction();
         try {
-            tx.begin();
             pm.deletePersistentAll(list);
-            tx.commit();
         } finally {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
             pm.close();
         }
     }
