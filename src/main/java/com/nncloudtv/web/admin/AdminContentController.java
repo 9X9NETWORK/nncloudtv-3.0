@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnContent;
 import com.nncloudtv.service.NnContentManager;
@@ -48,7 +49,7 @@ public class AdminContentController {
         if (id != null) {
             NnContent content = contentMngr.findById(Long.parseLong(id));
             mv.addObject("key", content.getItem());
-            mv.addObject("lang", content.getLang());
+            mv.addObject("lang", content.getLang());            
             mv.addObject("text", content.getValue());
         }
         return mv;
@@ -59,6 +60,7 @@ public class AdminContentController {
         String key = req.getParameter("key");
         String lang = req.getParameter("lang");
         String text = req.getParameter("text");
+        text = NnStringUtil.htmlSafeChars(text);
         NnContent content = contentMngr.findByItemAndLang(key, lang);
         if (content == null) {
             content = new NnContent(key, text, lang);
