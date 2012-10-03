@@ -35,6 +35,6 @@ for r in rows:
    print str(pid) + ";" + str(eid)   
    cursor.execute("""update nnprogram set episodeId = %s
                       where id = %s
-                   """, (eid, r[4]))
+                   """, (eid, pid))
 dbcontent.commit()
 dbcontent.close()
