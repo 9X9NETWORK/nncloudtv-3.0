@@ -923,7 +923,7 @@ public class NnChannelManager {
         
         List<String> imgs = new ArrayList<String>();
         
-        if (channel.getContentType() == channel.CONTENTTYPE_FAVORITE) {
+        if (channel.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
             NnProgramManager programMngr = new NnProgramManager();
             String filter = "channelId == " + channel.getId();
             List<NnProgram> programs = programMngr.list(1, 50, "updateDate", "desc", filter);
