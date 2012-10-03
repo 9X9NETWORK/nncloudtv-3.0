@@ -49,8 +49,10 @@ public class AdminContentController {
         if (id != null) {
             NnContent content = contentMngr.findById(Long.parseLong(id));
             mv.addObject("key", content.getItem());
-            mv.addObject("lang", content.getLang());            
-            mv.addObject("text", content.getValue());
+            mv.addObject("lang", content.getLang());
+            String str = content.getValue(); 
+            str = NnStringUtil.htmlSafeChars(str);
+            mv.addObject("text", str);
         }
         return mv;
     }
@@ -60,7 +62,6 @@ public class AdminContentController {
         String key = req.getParameter("key");
         String lang = req.getParameter("lang");
         String text = req.getParameter("text");
-        text = NnStringUtil.htmlSafeChars(text);
         NnContent content = contentMngr.findByItemAndLang(key, lang);
         if (content == null) {
             content = new NnContent(key, text, lang);
