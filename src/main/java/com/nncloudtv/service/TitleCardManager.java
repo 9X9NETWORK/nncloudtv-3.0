@@ -35,6 +35,15 @@ public class TitleCardManager {
         dao.delete(card);
     }
     
+    public void delete(List<TitleCard> titlecards) {
+    
+        if (titlecards == null || titlecards.size() == 0) {
+            return;
+        }
+        
+        dao.deleteAll(titlecards);
+    }
+    
     public List<TitleCard> findByProgramId(long programId) {
         return dao.findByProgramId(programId);
     }

@@ -110,7 +110,7 @@ public class NnProgramManager {
             }
         }
         
-        programs = dao.save(programs);
+        programs = dao.saveAll(programs);
         
         log.info("channel count = " + channelIds.size());
         for (Long channelId : channelIds) {
@@ -165,36 +165,39 @@ public class NnProgramManager {
     public void delete(NnProgram program) {
     
         long episodeId = program.getEpisodeId();
-        long channelId = program.getChannelId();
         
         dao.delete(program);
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode != null) {
+            
             episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
             episodeMngr.save(episode);
-            
-            reorderEpisodePrograms(episodeId);
         }
         
-        processCache(channelId);
     }
     
     public void delete(List<NnProgram> programs) {
     
-        long channelId = 0;
+        if (programs == null || programs.size() == 0) {
+            return;
+        }
+        
+        List<Long> channelIds = new ArrayList<Long>();
         
         for (NnProgram program : programs) {
             
-            long tmpChannelId = program.getChannelId();
-            
-            dao.delete(program);
-            
-            if (channelId != tmpChannelId) {
-                channelId = tmpChannelId;
-                processCache(channelId);
+            if (channelIds.indexOf(program.getChannelId()) < 0) {
+                channelIds.add(program.getChannelId());
             }
+        }
+        
+        dao.deleteAll(programs);
+        
+        log.info("channel count = " + channelIds.size());
+        for (Long channelId : channelIds) {
+            processCache(channelId);
         }
     }
     

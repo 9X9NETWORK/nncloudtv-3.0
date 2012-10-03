@@ -343,12 +343,10 @@ public class ApiContent extends ApiGeneric {
             return "Program Not Found";
         }
         
+        // delete title cards
         TitleCardManager titleCardMngr = new TitleCardManager();
-        
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
-        for (TitleCard titleCard : titleCards) {
-            titleCardMngr.delete(titleCard);
-        }
+        titleCardMngr.delete(titleCards);
         
         programMngr.delete(program);
         
@@ -849,14 +847,16 @@ public class ApiContent extends ApiGeneric {
             adMngr.delete(nnAd);
         }
         
-        // delete programs
+        // delete programs / title cards
+        TitleCardManager titlecardMngr = new TitleCardManager();
         NnProgramManager programMngr = new NnProgramManager();
+        List<TitleCard> titlecards = new ArrayList<TitleCard>();
         List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
-        if (programs.size() > 0) {
-            
-            programMngr.delete(programs);
-            
+        for (NnProgram program : programs) {
+            titlecards.addAll(titlecardMngr.findByProgramId(program.getId()));
         }
+        titlecardMngr.delete(titlecards);
+        programMngr.delete(programs);
         
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(episode.getChannelId());

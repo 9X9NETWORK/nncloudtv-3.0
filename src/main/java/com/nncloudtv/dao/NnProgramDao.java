@@ -34,32 +34,6 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         return program;
     }
     
-    public List<NnProgram> save(List<NnProgram> programs) {
-    
-        if (programs.isEmpty()) { return programs; }
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        
-        Transaction tx = pm.currentTransaction();
-        
-        try {
-            
-            tx.begin();
-            pm.makePersistentAll(programs);
-            tx.commit();
-            programs = (List<NnProgram>) pm.detachCopyAll(programs);
-            
-        } finally {
-            
-            if (tx.isActive()) {
-                
-                tx.rollback();
-            }
-            pm.close();
-        }
-        
-        return programs;
-    }
-    
     public void delete(NnProgram program) {
         if (program == null) return;
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
@@ -69,7 +43,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
             pm.close();
         }        
     }
-
+    
     public NnProgram findByChannelAndFileUrl(long channelId, String fileUrl) {
         NnProgram detached = null;
         PersistenceManager pm = PMF.getContent().getPersistenceManager();        

@@ -46,14 +46,15 @@ public class GenericDao<T> {
         return dao;
     }
     
-    public void saveAll(List<T> dao) {
-        if (dao == null) {return;}
-        PersistenceManager pm = PMF.get(dao.getClass()).getPersistenceManager();
+    public List<T> saveAll(List<T> list) {
+        if (list == null) {return list;}
+        PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
         try {
-            pm.makePersistentAll(dao);
+            pm.makePersistentAll(list);
         } finally {
             pm.close();
         }
+        return list;
     }
     
     public void delete(T dao) {
@@ -66,11 +67,11 @@ public class GenericDao<T> {
         }
     }
     
-    public void deleteAll(List<T> dao) {
-        if (dao == null) return;
-        PersistenceManager pm = PMF.get(dao.getClass()).getPersistenceManager();
+    public void deleteAll(List<T> list) {
+        if (list == null) return;
+        PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
         try {
-            pm.deletePersistentAll(dao);
+            pm.deletePersistentAll(list);
         } finally {
             pm.close();
         }

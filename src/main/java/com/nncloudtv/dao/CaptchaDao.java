@@ -16,15 +16,6 @@ public class CaptchaDao extends GenericDao<Captcha> {
         super(Captcha.class);
     }
     
-    public void saveAll(List<Captcha> list) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        try {
-            pm.makePersistentAll(list);
-        } finally {
-            pm.close();
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     public Captcha getRandom() {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
