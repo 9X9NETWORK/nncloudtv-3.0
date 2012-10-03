@@ -337,6 +337,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnProgramManager programMngr = new NnProgramManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
@@ -348,7 +349,16 @@ public class ApiContent extends ApiGeneric {
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
         titleCardMngr.delete(titleCards);
         
+        long episodeId = program.getEpisodeId();
+        
         programMngr.delete(program);
+        
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode != null) {
+            
+            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+            episodeMngr.save(episode);
+        }
         
         return "OK";
     }
@@ -422,6 +432,11 @@ public class ApiContent extends ApiGeneric {
         
         titlecardMngr.delete(titlecardDeleteList);
         programMngr.delete(programDeleteList);
+        
+        episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        episodeMngr.save(episode);
+        
+        programMngr.reorderEpisodePrograms(episodeId);
         
         return "OK";
     }

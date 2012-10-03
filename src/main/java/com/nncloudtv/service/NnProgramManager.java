@@ -164,18 +164,7 @@ public class NnProgramManager {
     
     public void delete(NnProgram program) {
     
-        long episodeId = program.getEpisodeId();
-        
         dao.delete(program);
-        
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        NnEpisode episode = episodeMngr.findById(episodeId);
-        if (episode != null) {
-            
-            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
-            episodeMngr.save(episode);
-        }
-        
     }
     
     public void delete(List<NnProgram> programs) {

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 import javax.jdo.datastore.DataStoreCache;
 
 import com.nncloudtv.lib.PMF;
@@ -69,10 +70,17 @@ public class GenericDao<T> {
     
     public void deleteAll(List<T> list) {
         if (list == null) return;
+        
         PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
+        Transaction tx = pm.currentTransaction();
         try {
+            tx.begin();
             pm.deletePersistentAll(list);
+            tx.commit();
         } finally {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             pm.close();
         }
     }
