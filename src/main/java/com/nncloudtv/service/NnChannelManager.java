@@ -940,7 +940,7 @@ public class NnChannelManager {
             NnEpisodeManager episodeMngr = new NnEpisodeManager();
             String filter = "channelId == " + channel.getId();
             List<NnEpisode> episodes = episodeMngr.list(1, 50, "updateDate", "desc", filter);
-
+            
             for (int i = 0; i < episodes.size() && imgs.size() < 3; i++) {
                 
                 String img = episodes.get(i).getImageUrl();
@@ -951,6 +951,10 @@ public class NnChannelManager {
             }
         }
         
+        // fill up with default episode thubmnail
+        while (imgs.size() < 3) {
+            imgs.add(NnChannel.IMAGE_EPISODE_URL);
+        }
         
         if (imgs.size() > 0) {
             
