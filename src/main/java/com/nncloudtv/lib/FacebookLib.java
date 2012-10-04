@@ -58,6 +58,13 @@ public class FacebookLib {
     protected static String secret = "85106cc16d80a5705a060a0bbae7cb60";
     protected static String redirectUri = "http://demo.9x9.tv/fb/login";
     */
+
+    //production
+    /*
+    protected static String clientId = "110847978946712";
+    protected static String secret = "1a6abc521920290b1e8c489134daeb06";
+    protected static String redirectUri = "http://www.9x9.tv/fb/login";
+    */
     
     private static String generateState() {
         String time = String.valueOf(new Date().getTime());
