@@ -25,23 +25,39 @@ if version == "":
 print "version number:" + version
 
 # copy over root.war
-src = "..//target//nncloudtv-0.0.1-SNAPSHOT.war"
+src = "../target/root.war"
 dst = "root.war"
 shutil.copyfile(src, dst)                                                                                       
+
+src = "../../nncms/target/cms.war"
+dst = "cms.war"
+shutil.copyfile(src, dst)                                                                                       
+
 print "--- generate root.war ---"
 
 # generate md5
 if myos == "1":
   md5 = os.popen("md5sum root.war").read()
+  cmsMd5 = os.popen("md5sum cms.war").read()
 if myos == "2":
   md5 = os.popen("tools\md5sums -u root.war").read()
 match = re.match("(.*)( .*)", md5)
+cmsmatch = re.match("(.*)( .*)", md5)
 if match:
   md5 = match.group(1)
+if cmsmatch:
+  cmsMd5 = cmsmatch.group(1)
+
 print "--- generate md5 = " + md5
+print "--- generate cms md5 = " + cmsMd5
 
 dest = open("root.md5", "w")
 line = md5 + " " + "root.war\x00\x0a"
+dest.write(line)
+dest.close()
+
+dest = open("cms.md5", "w")
+line = md5 + " " + "cms.war\x00\x0a"
 dest.write(line)
 dest.close()
 
@@ -90,7 +106,10 @@ if server == "4":
      os.system("scp -i ~/keys/prod-west2.pem root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/root.md5")
      os.system("scp -i ~/keys/prod-west2.pem version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/version")  
      os.system("scp -i ~/keys/prod-west2.pem version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/version")
-  if myos == "2": 
+     
+     os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/cms/cms.war")
+     os.system("scp -i ~/keys/prod-west2.pem cms.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/cms/cms.md5")
+if myos == "2": 
      os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
      os.system("pscp -i prod-west2.ppk root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
      os.system("pscp -i prod-west2.ppk version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates")  
