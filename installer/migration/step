@@ -282,28 +282,37 @@ delete s1
  where s1.id < s2.id                                    
    and s1.userId = s2.userId
    and s1.seq = s2.seq;
-//drop table nnuser_subscribe;
-//create nnuser_subscribe table
-//alter table nnuser_subscribe drop index userSubscribe;
-//alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);
------------------------------------------
-//drop table nnuser_subscribe;
-CREATE TABLE `nnuser_subscribe` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `channelId` bigint(20) NOT NULL,
-  `createDate` datetime DEFAULT NULL,
-  `seq` smallint(6) NOT NULL,
-  `type` smallint(6) NOT NULL,
-  `userId` bigint(20) NOT NULL,               
-  `updateDate` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `nnuser_subscribe_channel_id` (`channelId`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
-//insert into nnuser_subscribe select * from nnuser_subscribe_backup;
+alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);   
 -----------------------------------------
 
 delete from nnuser where id = 2535;
 delete from nnuser_subscribe where userId = 2535;
+delete from nnuser_channel_sorting where userId = 2535;
+delete from nnuser_pref where userId = 2535;
+delete from nnuser_share where userId = 2535;
+delete from nnuser_subscribe where userId = 2535;
+delete from nnuser_subscribe_group where userId = 2535;
+delete from nnuser_watched where userId = 2535;
+
+delete from nnuser where id = 2507;
+delete from nnuser_subscribe where userId = 2507;
+delete from nnuser_channel_sorting where userId = 2507;
+delete from nnuser_pref where userId = 2507;
+delete from nnuser_share where userId = 2507;
+delete from nnuser_subscribe where userId = 2507;
+delete from nnuser_subscribe_group where userId = 2507;
+delete from nnuser_watched where userId = 2507;
+
+delete from nnuser where id = 37;
+delete from nnuser_subscribe where userId = 37;
+delete from nnuser_channel_sorting where userId = 37;
+delete from nnuser_pref where userId = 37;
+delete from nnuser_share where userId = 37;
+delete from nnuser_subscribe where userId = 37;
+delete from nnuser_subscribe_group where userId = 37;
+delete from nnuser_watched where userId = 37;
+
+alter table nnuser add UNIQUE KEY `userEmail` (`email`);
 
 use nncloudtv_content; 
 alter table nnchannel add column poolType smallint(6)  default 0;
@@ -317,8 +326,12 @@ alter table nnchannel add column userIdStr varchar(25);
 alter table nnchannel add column note varchar(10);
 alter table nnchannel add subscribersIdStr varchar(255);
 update nnchannel set sphere = lang;
+update nnchannel set lang='zh', sphere='zh' where contentType=6;
+update nnchannel set lang='zh', sphere='zh' where contentType=8;
+update nnchannel set lang='zh', sphere='zh' where contentType=9;
 update nnchannel set lang='en', sphere='en' where lang is null;
 update nnchannel set status=1 where id in ( 130 ,3392 ,3816 ,4976 ,6761 ,6765 ,7216 ,7365 ,7571 ,7601 ,7625 ,7698);
+update nnchannel set sphere = 'other' where sphere='world';
 
 alter table nnprogram drop column type;
 alter table nnprogram add column publishDate datetime;
@@ -421,11 +434,12 @@ CREATE TABLE `nnuser` (
   `fbId` varchar(255) DEFAULT NULL,
   `featured` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `userEmail` (`email`),
   KEY `nnuser1_profile_url` (`profileUrl`),
   KEY `nnuser1_token` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6775 DEFAULT CHARSET=utf8;
 
- CREATE TABLE `nnuser_channel_sorting` (
+CREATE TABLE `nnuser_channel_sorting` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userId` bigint(20) NOT NULL,
   `channelId` bigint(20) NOT NULL,
@@ -487,21 +501,6 @@ CREATE TABLE `nnuser_watched` (
   KEY `nnuser_watched_user_id` (`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
-// CREATE TABLE `nnuser_subscribe` (
-//  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-//  `channelId` bigint(20) NOT NULL,
-//  `createDate` datetime DEFAULT NULL,
-//  `seq` smallint(6) NOT NULL,
-//  `type` smallint(6) NOT NULL,
-//  `userId` bigint(20) NOT NULL,
-//  `updateDate` datetime DEFAULT NULL,
-//  PRIMARY KEY (`id`),
-//  UNIQUE KEY `userSubscribe` (`userId`,`seq`),
-//  KEY `nnuser_subscribe_channel_id` (`channelId`),
-//  KEY `nnuser_subscribe_user_id` (`userId`),
-//  KEY `nnuser1_subscribe_seq` (`seq`)
-//) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
-
 CREATE TABLE `nnuser_subscribe` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `channelId` bigint(20) NOT NULL,
@@ -542,7 +541,7 @@ jobs/channel_cntProgram.py
 
 
 
---------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 use nncloudtv_nnuser1;
 alter table nnuser alter cntSubscribe set default 0;
 alter table nnuser alter cntChannel set default 0;
@@ -555,4 +554,28 @@ alter table nnuser alter expires set default 0;
 - billboard
 - jobs/category_tag.py
 - user
+
+-----------------------------------------   
+//drop table nnuser_subscribe;
+//create nnuser_subscribe table
+//alter table nnuser_subscribe drop index userSubscribe;
+//alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);
+-----------------------------------------
+drop table nnuser_subscribe;
+CREATE TABLE `nnuser_subscribe` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channelId` bigint(20) NOT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `seq` smallint(6) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `userId` bigint(20) NOT NULL,               
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nnuser_subscribe_channel_id` (`channelId`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+insert into nnuser_subscribe select * from nnuser_subscribe2;
+//insert into nnuser_subscribe select * from nnuser_subscribe_backup;
+//insert into nnuser_subscribe2 select * from nnuser_subscribe_backup where userId=2501;
+
+create nnuser_subscribe select * from nnuser_subscribe2;
 
