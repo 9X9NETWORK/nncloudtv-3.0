@@ -267,7 +267,7 @@ public class ApiContent extends ApiGeneric {
         
         // subSeq
         String subSeqStr = req.getParameter("subSeq");
-        if (subSeqStr != null) {
+        if (subSeqStr != null && subSeqStr.length() > 0) {
             Short subSeq = null;
             try {
                 subSeq = Short.valueOf(subSeqStr);
@@ -283,7 +283,7 @@ public class ApiContent extends ApiGeneric {
         
         // startTime
         String startTimeStr = req.getParameter("startTime");
-        if (startTimeStr != null) {
+        if (startTimeStr != null && startTimeStr.length() > 0) {
             Integer startTime = null;
             try {
                 startTime = Integer.valueOf(startTimeStr);
@@ -299,7 +299,7 @@ public class ApiContent extends ApiGeneric {
         
         // endTime
         String endTimeStr = req.getParameter("endTime");
-        if (endTimeStr != null) {
+        if (endTimeStr != null && endTimeStr.length() > 0) {
             Integer endTime = null;
             try {
                 endTime = Integer.valueOf(endTimeStr);
