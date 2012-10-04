@@ -27,7 +27,7 @@ for ur in userRow:
    uid = ur[0]
    userCursor.execute("""
        select id, seq, channelId
-   	     from nnuser_subscribe
+   	     from nnuser_subscribe2
    	    where userId = %s 
    	    order by userId, seq
    """, (uid))
@@ -47,12 +47,15 @@ for ur in userRow:
       if seq > 81:
          print "wrong data"      
       if (seq >= 61 and seq <=63):
+         print "-- between 61 to 63 data: " + str(sid)
          processIdList.append(sid)
          processSeqList.append(seq)                    
       elif (seq >= 70 and seq <=72):
+         print "-- between 70 to 72 data: " + str(sid)
          processIdList.append(sid)
          processSeqList.append(seq)     
       elif (seq >= 79 and seq <=81): 
+         print "-- between 79 to 81 data: " + str(sid)
          processIdList.append(sid) 
          processSeqList.append(seq)
       elif (seq > 81 or seq < 1):                                                  
@@ -65,30 +68,30 @@ for ur in userRow:
          newSeqList.append(newSeq)      
 
    print "process id list len:" + str(len(processIdList))
-   for p in processIdList:
-      print "processidlist"
+   for p in processIdList[:]:
+      print "processidlist:" + str(p)
       j = 0
       for s in seqarr:
 	       if s == 0:
 	          sidList.append(p) #sid
 	          newSeqList.append(j+1) #new seq
-	          processIdList.remove(p)
 	          seqarr[j] = 1
 	          print "sidlist add:" + str(p) + ";new seq:" + str(j+1)
+                  processIdList.remove(p)
 	          break
 	       j = j+1
    k = 0
    for sid in sidList:
       print "i:" + str(i) + ";seq:" + str(newSeqList[k])
       userCursor.execute("""                      
-          update nnuser_subscribe
+          update nnuser_subscribe2
              set seq = %s
            where id = %s
            """, (newSeqList[k], sid))
       k = k+1
    for p in processIdList:
       userCursor.execute("""                      
-          delete from nnuser_subscribe
+          delete from nnuser_subscribe2
            where id = %s
            """, (p))
           
@@ -98,7 +101,7 @@ for ur in userRow:
    #   break
 
 userCursor.execute("""                      
-		delete from nnuser_subscribe
+		delete from nnuser_subscribe2
 		 where seq > 72
 		 """)
 dbuser.commit()
