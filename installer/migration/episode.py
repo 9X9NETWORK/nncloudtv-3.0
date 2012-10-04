@@ -27,8 +27,8 @@ cursor.execute("""
 rows = cursor.fetchall()
 for r in rows:
    cursor.execute("""
-      insert into nnepisode (name, imageUrl, intro, publishDate, updateDate, channelId)
-                     values (%s, %s, %s, now(), now(), %s) 
+      insert into nnepisode (name, imageUrl, intro, publishDate, updateDate, channelId, isPublic)
+                     values (%s, %s, %s, now(), now(), %s, true) 
        """, (r[0], r[1], r[2], r[3]))   
    pid = r[4]
    eid = cursor.lastrowid
