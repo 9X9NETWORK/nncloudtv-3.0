@@ -9,7 +9,7 @@ if choice == "2":
   server="prod"
 
 list=['datanucleus_analytics.properties', 'datanucleus_content.properties', 
-      'datanucleus_nnuser1.properties', 'datanucleus_nnuser2.properties', 'aws.properties', 
+      'datanucleus_nnuser1.properties', 'datanucleus_nnuser2.properties', 'datanucleus_recommend.properties', 'aws.properties', 
       'memcache.properties', 'queue.properties', 'sns.properties', 'piwik.properties']
 
 for l in list:                                                                         
