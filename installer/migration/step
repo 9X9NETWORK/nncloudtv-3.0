@@ -18,9 +18,13 @@ mysql slave
 cd /var/db_backup/
 mv 20121002-nncloudtv_content.sql.bz2 content.sql.bz2
 mv 20121002-nncloudtv_nnuser1.sql.bz2 nnuser1.sql.bz2
-
+                                                                                      
 sudo scp -i ~/keys/dev-west2.pem content.sql.bz2 ubuntu@dev4.9x9.tv:/home/ubuntu/files/nndb/content.sql.bz2
 sudo scp -i ~/keys/dev-west2.pem nnuser1.sql.bz2 ubuntu@dev4.9x9.tv:/home/ubuntu/files/nndb/nnuser1.sql.bz2
+
+sudo scp -i ~/keys/prod-west2.pem content.sql.bz2 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/content.sql.bz2
+sudo scp -i ~/keys/prod-west2.pem nnuser1.sql.bz2 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/nnuser1.sql.bz2
+                                                           
 
 -------------------------
 mysql new master
@@ -132,6 +136,8 @@ CREATE TABLE `nnad` (
   `updateDate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table nncontent modify value text null;
 
 -------------------------
 use nncloudtv_content;
