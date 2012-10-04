@@ -1,48 +1,22 @@
 import os, datetime, shutil
 
 #================================================================
-choice = raw_input('Environment (1.devel 2.alpha 3.prod/stage) : ')
-server="dev"
-if choice == "2":
- server="alpha"
-if choice == "3":                                          
- server="prod"
+choice = raw_input('Environment (1. alpha 2. prod/stage) : ')
+server="prod"
+if choice == "1":
+  server="alpha"
+if choice == "2":                                          
+  server="prod"
 
-src = server + "//datanucleus_analytics.properties"
-dst = "..//src//main//resources//datanucleus_analytics.properties"
-shutil.copyfile(src, dst)
+list=['datanucleus_analytics.properties', 'datanucleus_content.properties', 
+      'datanucleus_nnuser1.properties', 'datanucleus_nnuser2.properties', 'aws.properties', 
+      'memcache.properties', 'queue.properties', 'sns.properties', 'piwik.properties']
 
-src = server + "//datanucleus_content.properties"
-dst = "..//src//main//resources//datanucleus_content.properties"
-shutil.copyfile(src, dst)
+for l in list:                                                                         
+   src = server + "/" + l                                                
+   dst = "../src/main/resources/" + l
+   shutil.copyfile(src, dst)
 
-src = server + "//datanucleus_nnuser1.properties"
-dst = "..//src//main//resources//datanucleus_nnuser1.properties"
-shutil.copyfile(src, dst)
-
-src = server + "//datanucleus_nnuser2.properties"
-dst = "..//src//main//resources//datanucleus_nnuser2.properties"                                   
-shutil.copyfile(src, dst)
-
-src = server + "//aws.properties"
-dst = "..//src//main//resources//aws.properties"
-shutil.copyfile(src, dst)
-
-src = server + "//memcache.properties"
-dst = "..//src//main//resources//memcache.properties"
-shutil.copyfile(src, dst)
-
-src = server + "//queue.properties"
-dst = "..//src//main//resources//queue.properties"
-shutil.copyfile(src, dst)
-
-src = server + "//sns.properties"
-dst = "..//src//main//resources//sns.properties"
-shutil.copyfile(src, dst)
-
-src = server + "//piwik.properties"
-dst = "..//src//main//resources//piwik.properties"
-shutil.copyfile(src, dst)
 
 #================================================================                         
 version = raw_input('Enter version number : ')
@@ -63,7 +37,7 @@ for line in old_file:
   if (line.find("String appVersion") > 0):   
      line = "        String appVersion = \"" + version + "\";\n"
   if (line.find("String svn") > 0):   
-     line = "        String svn = \"" + rev + "\";\n"
+     line = "        String svn = \"" + rev + "\";\n"	
   if (line.find("String packagedTime") > 0):   
      line = "        String packagedTime = \"" + str(now) + "\";\n"
   new_file.write(line)
@@ -74,17 +48,16 @@ os.remove("..//src//main//java//com//nncloudtv//web//VersionController.java")
 os.rename("..//src//main//java//com//nncloudtv//web//VersionController.java.tmp", "..//src//main//java//com//nncloudtv//web//VersionController.java")
 
 #================================================================
-
-print "\n--- mvn clean:clean ---\n"
 os.chdir("..//")                                                           
-os.system("mvn clean:clean")                     
-print "\n--- mvn compile ---\n"
-os.system("mvn compile")                            
-print "\n--- mvn datanucleus:enhance ---\n"
+os.system("mvn clean compile")                                                 
 os.system("mvn datanucleus:enhance")
-print "\n--- mvn compile war:war ---\n"
-os.system("mvn compile war:war")
-                                               
+os.system("mvn war:war")
+
+os.chdir("..//nncms")                                                           
+os.system("mvn clean compile")                                                 
+os.system("mvn war:war")
+
+
 print "\n--- summary ---\n"
 print "Package environment:" + server
 print "Version number:" + version
