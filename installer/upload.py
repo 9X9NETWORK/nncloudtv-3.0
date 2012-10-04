@@ -102,13 +102,17 @@ if server == "4":
   print "--- uploading to deploy server ---"
   folder = raw_input('Folder created? : ')  # to be hooked up with ssh command, used as reminder for now
   if myos == "1":                  
-     os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/root.war")
-     os.system("scp -i ~/keys/prod-west2.pem root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/root.md5")
-     os.system("scp -i ~/keys/prod-west2.pem version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/version")  
-     os.system("scp -i ~/keys/prod-west2.pem version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/version")
+     #os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/root.war")
+     #os.system("scp -i ~/keys/prod-west2.pem root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/root.md5")
+     #os.system("scp -i ~/keys/prod-west2.pem version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/version")  
+     #os.system("scp -i ~/keys/prod-west2.pem version ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version + "/version")
      
-     os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/cms/cms.war")
-     os.system("scp -i ~/keys/prod-west2.pem cms.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/cms/cms.md5")
+     #os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/cms/cms.war")
+     #os.system("scp -i ~/keys/prod-west2.pem cms.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/cms/cms.md5")
+     
+     os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@v32a.9x9.tv:/usr/share/jetty/webapps/cms.war")
+     os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@v32a.9x9.tv:/usr/share/jetty/webapps/root.war")
+
 if myos == "2": 
      os.system("pscp -i prod-west2.ppk root.war ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
      os.system("pscp -i prod-west2.ppk root.md5 ubuntu@ec2-50-112-96-199.us-west-2.compute.amazonaws.com:/var/www/updates/" + version)
