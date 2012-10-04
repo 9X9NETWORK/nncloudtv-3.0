@@ -62,7 +62,7 @@ print "hotlist:" + str(len(hotList))
 #	from tag t, tag_map m 
 # where t.name  = 'hot(9x9en)' and t.id = m.tagId;   
 
-i=1
+i=10
 for h in hotList:
    contentCursor.execute("""
       update tag_map
