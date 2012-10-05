@@ -1156,20 +1156,20 @@ public class PlayerApiService {
         if (report != null) {
             result[0] = PlayerApiService.assembleKeyValue("id", String.valueOf(report.getId()));
             EmailService service = new EmailService();
-            String toEmail = "userfeedback@9x9.tv";
+            String toEmail = "feedback@9x9.tv";
             String toName = "feedback";
             String subject = "User send a report";
             String body = "user ui-lang:" + user.getLang() + "\n";
             body += "user region:" + user.getSphere() + "\n\n";
             body += content;
-            subject += (type != null) ? ("(" + type + ")") : "" ;
-            
+            subject += (type != null) ? (" (" + type + ")") : "" ;
+
             log.info("subject:" + subject);
-            log.info("content:" + content);
+            log.info("content:" + body);
             NnEmail mail = new NnEmail(toEmail, toName, 
                                        user.getEmail(), user.getName(), 
-                                       user.getEmail(), subject, content);            
-            service.sendEmail(mail);            
+                                       user.getEmail(), subject, content);
+            service.sendEmail(mail);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
