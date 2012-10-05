@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock24"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock27"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -47,7 +47,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwait.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -344,19 +344,15 @@ soundManager.onready(function()
 <!-- Player Layer End -->
 
 <!-- Curator Layer Begin -->
-<div id="curator-layer" class="stage curator">
+<div id="curator-layer" class="stage">
   <div id="curator-sidebar">
     <p id="curator-sidebar-shadow"></p>
-    <p id="curator-profile-photo"><img src="thumbnail/curator_05.png"></p>
-    <h2 id="curator-profile-name">Snowball</h2>
+    <p id="curator-profile-photo"><img src=""></p>
+    <h2 id="curator-profile-name"></h2>
     <div id="curator-paragraphs">
-      <p id="curator-declaration"></p>
-      <p id="curator-email"></p>
-      <p id="curator-blog"></p>
-      <p id="curator-page">My Page's URL:<br><span id="curator-url"></span><br><span class="link">Create customized short URL</span></p>
+      <p id="curator-declaration" class="ellipsis multiline"></p>
     </div>
-    <p class="curator-sidebar-btn" id="btn-edit-curator" style="display: none">Edit</p>
-    <p class="curator-sidebar-btn" id="btn-about-curator"></p>
+    <div id="curator-page"><b>My Page's URL:</b><br><span id="curator-url"></span><br><span class="link">Create customized short URL</span></div>
     <ul id="curator-activity">
       <li>
         <p class="number" id="curator-activity-channels"></p>
@@ -372,24 +368,29 @@ soundManager.onready(function()
       </li>
     </ul>
   </div>
-  <ul id="curator-tabs"><li class="left on" id="channel"><span id="btn-manage"></span><div><p><span class="name">Snowball</span>'s Channels<span id="curator-ch-num" class="number">(13)</span></p></div></li><li class="right" id="following"><div><p><span class="name">Snowball</span>'s Followings<span id="curator-fol-num" class="number">(20)</span></p></div></li></ul>
-  <ul id="manage-tip">
-    <li id="tip-left"></li>
-    <li id="tip-center">Manage your channels</li>
-    <li id="tip-right"></li>
-  </ul>
-  <div class="curator-panel" id="channel-panel">
-    <div id="channel-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-    <div class="curator-panel-constrain" id="channel-constrain">
-      <ul id="channel-list">
-      </ul>
+  <div id="curator-main">
+    <ul id="curator-tabs">
+      <li class="left on" id="channel"><span id="btn-manage"></span><div><p><span class="name"></span>'s Channels<span id="curator-ch-num" class="number">(0)</span></p></div></li>
+      <li class="right" id="following"><div><p><span class="name"></span>'s Followings<span id="curator-fol-num" class="number">(0)</span></p></div></li>
+    </ul>
+    <ul id="manage-tip">
+      <li id="tip-left"></li>
+      <li id="tip-center">Manage your channels</li>
+      <li id="tip-right"></li>
+    </ul>
+    <div class="curator-panel" id="channel-panel">
+      <div id="channel-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+      <div class="curator-panel-constrain" id="channel-constrain">
+        <ul id="channel-list">
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="curator-panel" id="following-panel">
-    <div id="following-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
-    <div class="curator-panel-constrain" id="following-constrain">
-      <ul id="following-list">
-      </ul>
+    <div class="curator-panel" id="following-panel">
+      <div id="following-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+      <div class="curator-panel-constrain" id="following-constrain">
+        <ul id="following-list">
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -721,30 +722,34 @@ soundManager.onready(function()
           <p class="trending-box-tab"><span>Follow</span></p>
           <p class="trending-box-play"></p>
           <img src="" class="mainpic" height="100%" width="100%">
+        </div>
+        <div id="trending-box-left"></div>
+        <div id="trending-box-mid">
           <div class="trending-box-footer"> 
-            <p class="trending-box-footer-l"></p> 
-            <div class="trending-box-footer-c">
-              <img src="" width="80px" height="45px"><img src="" width="80px" height="45px">
-              <ul>
-                <li class="trending-f">Sport Channel</li>
-                <li id="trending-f-episodes">50 Episodes</li>
-                <li id="trending-f-ago-views">1 hour ago  | 100 Views</li>
-              </ul>
-            </div> 
-            <p class="trending-box-footer-r"></p>
+            <img src=""><img src="">
+            <ul>
+              <li><p class="trending-f"><span>Channel Name</span></p></li>
+              <li id="trending-f-episodes">50 Episodes</li>
+              <li id="trending-f-ago-views">1 hour ago  | 100 Views</li>
+            </ul>
+          </div>
+          <div class="trending-content-msg">
+            <h2>Episode name</h2>
+            <p class="msg-p-left ellipsis multiline">Channel Description</p>
+            <p class="msg-p-right">by <b>Liz lisa</b></p>
           </div>
         </div>
-        <div class="trending-content-msg">
-          <h2>Jeremy Lin's rise from ordinary guy to sensation</h2>
-          <p class="msg-p-left">The most captivating strand of the Jeremy Lin mystique is that he came from nowhere, emerging overnight to become a star.</p>
-          <p class="msg-p-right">by <b>Liz lisa</b></p>
-          <img src="" class="msg-pic">
-        </div>
+        <div id="trending-box-right"></div>
       </div>
-      <ul id="trending-stories-right">
-      </ul>
+      <div id="trending-stories-list">
+        <ul id="trending-stories-right">
+        </ul>
+      </div>
       <hr>
       <div id="followings-wrap">
+        <h1>My Followings (20/72)</h1>
+        <ul id="followings-box">
+        </ul>
       </div>
     </div>
     <div id="homerightbox">
@@ -849,6 +854,9 @@ soundManager.onready(function()
         </li-->
       </ul>
       <div id="right">
+
+
+<!--
         <p class="title">Image</p>
         <div class="imagebox">
           <p class="l"></p>
@@ -878,6 +886,47 @@ soundManager.onready(function()
             <p class="btn-gray-right"></p>
           </div>
         </div>
+-->
+
+
+        <p class="title">Image</p>
+        <div class="imagebox">
+          <p class="l"></p>
+          <div class="c">
+            <div id="imagebox-upload-box">
+              <div id="imagebox-upload-wrap"> <span id="per">50%</span>
+                <div id="bar">
+                  <p class="bar_l"></p>
+                  <p class="bar_m"></p>
+                  <p class="bar_r"></p>
+                </div>
+              </div>              
+              <p class="imagebox-upload-wrap-p">Sample.jpg<br>
+                <br>
+                00:52 remaining</p>              
+              <div id="btn-cancel-upload-image" class="btn-white">
+                <p class="btn-white-left"></p>
+                <p class="btn-white-middle">Cancel</p>
+                <p class="btn-white-right"></p>
+              </div>           
+            </div>           
+                <div class="profile181" style="overflow:hidden;">
+                	<img src="thumbnail/modern-wedding-dresses.jpg">
+                </div>            
+            </div>
+          <p class="r"></p>
+          <div id="btn-upload-wrapper">
+              <div id="btn-upload" class="btn-gray">
+                <p class="btn-gray-left"></p>
+                <p class="btn-gray-middle">Upload a image</p>
+                <p class="btn-gray-right"></p>
+              </div>
+          </div>
+        </div>
+
+
+
+
       </div>
     </div>
   </div>
