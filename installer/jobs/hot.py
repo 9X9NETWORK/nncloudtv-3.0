@@ -1,3 +1,4 @@
+# process hot channels
 import urllib, urllib2
 import os
 from array import *
@@ -11,65 +12,45 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              use_unicode = True,
                              db = "nncloudtv_content")
 contentCursor = dbcontent.cursor()
+
+#reset channels
 contentCursor.execute("""
-   select c.id 
-     from nnchannel c, counter_shard s 
-    where (c.sphere = 'en' or c.sphere='other')
-      and c.poolType>=30
-      and s.counterName = concat('ch',c.id)      
-    order by count desc 
-    limit 9;     
-   """)
-hotRow = contentCursor.fetchall()
-hotList = list()
-for h in hotRow: 
-  cid = h[0]
-  hotList.append(cid)
+	 update tag_map set channelId=id where tagId=1 or tagId=2      
+	 """)
 
-hotList.reverse()
-print "hotlist:" + str(len(hotList))
-#select m.id, m.tagId, m.channelId 
-#	from tag t, tag_map m 
-# where t.name  = 'hot(9x9en)' and t.id = m.tagId;   
+lang = ['en', 'zh']
+langId = [1, 10]
 
-i=1
-for h in hotList:
+i=0             
+for l in lang:
    contentCursor.execute("""
-      update tag_map
-         set channelId = %s
-       where id = %s
-      """, (h, i))
-   i = i+1
-#########################################################   
-contentCursor.execute("""
-   select c.id 
-     from nnchannel c, counter_shard s 
-    where (c.sphere = 'zh' or c.sphere='other')
-      and c.poolType>=30
-      and s.counterName = concat('ch',c.id) 
-    order by count desc 
-    limit 9;     
-   """)
-hotRow = contentCursor.fetchall()
-hotList = list()
-for h in hotRow: 
-  cid = h[0]
-  hotList.append(cid)
+      select c.id 
+        from nnchannel c, counter_shard s 
+       where (c.sphere = %s or c.sphere='other')
+         and c.poolType>=30
+         and s.counterName = concat('ch',c.id)      
+       order by count desc 
+       limit 9;     
+       """, l)
+   hotRow = contentCursor.fetchall()
+   hotList = list()
+   for h in hotRow:                                            
+     cid = h[0]
+     hotList.append(cid)   
+   hotList.reverse()
+   print "hotlist:" + str(len(hotList))
+   
+   j=langId[i]              
+   for h in hotList:
+      print "channelid: " + str(h) + ";id:" + str(j) 
+      contentCursor.execute("""
+         update tag_map
+            set channelId = %s
+          where id = %s
+         """, (h, j))
+      j = j+1
 
-hotList.reverse()
-print "hotlist:" + str(len(hotList))
-#select m.id, m.tagId, m.channelId 
-#	from tag t, tag_map m 
-# where t.name  = 'hot(9x9en)' and t.id = m.tagId;   
-
-i=10
-for h in hotList:
-   contentCursor.execute("""
-      update tag_map
-         set channelId = %s
-       where id = %s
-      """, (h, i))
-   i = i+1
+   i = i + 1   
 
 #########################################################
 dbcontent.commit()  
