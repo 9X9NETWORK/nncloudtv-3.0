@@ -459,10 +459,10 @@ public class NnProgram implements Serializable {
         if (storageId == null) {
             return 0;
         }
-    
+        
         Long id = null;
         try {
-            id = Long.valueOf(storageId);
+            id = Long.valueOf(storageId.replace("e", ""));
         } catch (NumberFormatException e) {
         }
         
