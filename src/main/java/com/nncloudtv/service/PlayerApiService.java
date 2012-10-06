@@ -1112,7 +1112,7 @@ public class PlayerApiService {
     }
     
     public String userReport(String userToken, String deviceToken, String session, String type, String item, String comment) {
-        if (session == null || comment == null)
+        if (comment == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         if (userToken == null && deviceToken == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
@@ -1169,7 +1169,7 @@ public class PlayerApiService {
             NnEmail mail = new NnEmail(toEmail, toName, 
                                        user.getEmail(), user.getName(), 
                                        user.getEmail(), subject, content);
-            service.sendEmail(mail);
+            service.sendEmail(mail, "userfeedback@9x9.tv", "userfeedback");
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1294,7 +1294,7 @@ public class PlayerApiService {
         }
         EmailService service = new EmailService();
         NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);        
-        service.sendEmail(mail);
+        service.sendEmail(mail, null, null);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
@@ -1791,7 +1791,7 @@ public class PlayerApiService {
                                    user.getName(), user.getEmail(), UserInvite.getInviteSubject(), 
                                    content);
         log.info("email content:" + UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req));
-        service.sendEmail(mail);
+        service.sendEmail(mail, null, null);
         String[] result = {invite.getInviteToken()};
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
@@ -1876,7 +1876,7 @@ public class PlayerApiService {
             log.info("subject:" + subject);
             log.info("content:" + content);
             NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);        
-            new EmailService().sendEmail(mail);                        
+            new EmailService().sendEmail(mail, null, null);                        
         }         
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
