@@ -136,7 +136,7 @@ public class HelloController {
             HttpServletRequest req) {
         EmailService service = new EmailService();
         NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, "share 9x9", NnEmail.SEND_EMAIL_SHARE, "hello", "world");
-        service.sendEmail(mail);
+        service.sendEmail(mail, null, null);
         return "email sent";
     }            
 
