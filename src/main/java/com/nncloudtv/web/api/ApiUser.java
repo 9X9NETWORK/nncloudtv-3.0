@@ -45,7 +45,7 @@ public class ApiUser extends ApiGeneric {
 
     protected static Logger log = Logger.getLogger(ApiUser.class.getName());
     
-    @RequestMapping(value = "users/{userId}", method = RequestMethod.GET)
+    //@RequestMapping(value = "users/{userId}", method = RequestMethod.GET)
     public @ResponseBody
     NnUser userInfo(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable("userId") String userIdStr, @RequestParam(required = false) Short shard) {
@@ -77,7 +77,7 @@ public class ApiUser extends ApiGeneric {
         return userMngr.purify(user);
     }
     
-    @RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
+    //@RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
     public @ResponseBody
     NnUser userInfoUpdate(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable("userId") String userIdStr, @RequestParam(required = false) Short shard) {

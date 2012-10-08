@@ -780,6 +780,37 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "channels/{channelId}/isOwner", method = RequestMethod.GET)
+    public @ResponseBody
+    Boolean isChannelOwner(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        String mail = req.getParameter("mail");
+        if (mail == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        return channelMngr.isChannelOwner(channel, mail);
+    }
+    
     @RequestMapping(value = "tags", method = RequestMethod.GET)
     public @ResponseBody String[] tags(HttpServletRequest req, HttpServletResponse resp) {
         

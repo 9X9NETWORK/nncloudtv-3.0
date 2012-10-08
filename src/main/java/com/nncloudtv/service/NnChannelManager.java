@@ -969,4 +969,23 @@ public class NnChannelManager {
         
     }
     
+    public boolean isChannelOwner(NnChannel channel, String mail) {
+        
+        if (channel == null || mail == null) {
+            return false;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        NnUser user = userMngr.findById(channel.getUserId());
+        if(user == null) {
+            return false;
+        }
+        
+        if ((user.getEmail() != null) && user.getEmail().equals(mail)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
 }
