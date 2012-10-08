@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import com.nncloudtv.dao.NnEpisodeDao;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.model.TitleCard;
 
 public class NnEpisodeManager {
     
@@ -194,7 +195,9 @@ public class NnEpisodeManager {
     public int calculateEpisodeDuration(NnEpisode episode) {
     
         NnProgramManager programMngr = new NnProgramManager();
+        TitleCardManager titleCardMngr = new TitleCardManager();
         List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
+        List<TitleCard> titleCards = null;
         
         int totalDuration = 0;
         
@@ -211,6 +214,15 @@ public class NnEpisodeManager {
             }
             
             totalDuration += delta;
+            
+            delta = 0;
+            titleCards = titleCardMngr.findByProgramId(program.getId());
+            if (titleCards != null) {
+                for (TitleCard titleCard : titleCards) {
+                    delta += titleCard.getDurationLong();
+                }
+                totalDuration += delta;
+            }
         }
         
         return totalDuration;
