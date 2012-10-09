@@ -69,7 +69,9 @@ public class IosService {
             if (intro != null)
                 intro = intro.replaceAll("\n", " ").replaceAll("\t", " ");
             String imageUrl = c.getPlayerPrefImageUrl();
-            imageUrl = imageUrl.indexOf("|") < 0 ? imageUrl : imageUrl.substring(0, imageUrl.indexOf("|"));                             
+            log.info("ios: imageUrl:" + imageUrl);
+            imageUrl = imageUrl.indexOf("|") < 0 ? imageUrl : imageUrl.substring(0, imageUrl.indexOf("|"));
+            log.info("ios: after imageUrl:" + imageUrl);
             String youtubeId = "";
             if (c.getSourceUrl() != null && c.getSourceUrl().contains("http://www.youtube.com"))
                 youtubeId = YouTubeLib.getYouTubeChannelName(c.getSourceUrl());
