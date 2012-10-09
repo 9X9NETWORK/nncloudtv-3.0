@@ -202,7 +202,6 @@ public class NnChannelManager {
             favoriteCh.setPublic(true);            
             favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);            
             favoriteCh.setSphere(user.getSphere());
-            favoriteCh.setCntEpisode(1);
             favoriteCh = dao.save(favoriteCh);                        
         }
         return favoriteCh;
