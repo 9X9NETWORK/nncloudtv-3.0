@@ -47,7 +47,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwait.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai2.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -715,9 +715,11 @@ soundManager.onready(function()
     </div>
     <div id="homeleftbox">
       <h1><span id="home-trending-banner">Trending Stories</span> (9)</h1>
-      <p id="home-arrow-up"></p>
-      <p id="home-arrow-down"></p>
       <div id="trending-stories">
+        <div id="home-arrows" class="horizon-arrows">
+          <div id="home-up"></div>
+          <div id="home-down"></div>
+        </div>
         <div class="trending-box"> 
           <p class="trending-box-tab"><span>Follow</span></p>
           <p class="trending-box-play"></p>
