@@ -592,7 +592,7 @@ public class PlayerApiService {
         if (userInfo)
             result.add(this.prepareUserInfo(user, null));
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
-        if (user != null) {
+        if (curatorIdStr == null && user != null ) {
             List<NnUserSubscribeGroup> groups = groupMngr.findByUser(user);    
             //set info
             if (setInfo) {
@@ -620,12 +620,18 @@ public class PlayerApiService {
             log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
         } else if (curatorIdStr != null) {
             channelPos = false;
-            log.info("find channels curator created");
             NnUser curator = userMngr.findByProfileUrl(curatorIdStr);
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-            //List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, true);
-            List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, true);
+            List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
+            if (curator.getToken().equals(userToken)) {
+                log.info("find channels curator himself created");
+                curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, false);
+            } else {
+                log.info("find curator channels");
+                curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, true);
+            }
+            //List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, true);
             for (NnChannel c : curatorChannels) {
                 if (c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS) {
                     channels.add(c);
