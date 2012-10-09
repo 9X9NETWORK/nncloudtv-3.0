@@ -1,5 +1,8 @@
 package com.nncloudtv.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -559,9 +563,8 @@ public class PlayerApiService {
                                 boolean userInfo, 
                                 String channelIds, 
                                 boolean setInfo, 
-                                boolean isRequired
-                                ) { 
-                                                               
+                                boolean isRequired ) {                                 
+
         //verify input
         if (((userToken == null && userInfo == true) || 
             (userToken == null && channelIds == null) || 
@@ -1197,36 +1200,37 @@ public class PlayerApiService {
         HashSet<String> dic = new HashSet<String>();
         for (int i=0; i<valid.length; i++) {
             dic.add(valid[i]);
-        }                
+        }
         for (int i=0; i<key.length; i++) {
             if (!dic.contains(key[i]))
                 return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
+            String theValue = value[i];
             if (key[i].equals("name")) {
-                if (value[i].equals(NnUser.GUEST_NAME))
+                if (theValue.equals(NnUser.GUEST_NAME))
                     return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
-                user.setName(value[i]);
+                user.setName(theValue);
             }
             if (key[i].equals("image"))
-                user.setImageUrl(value[i]);
+                user.setImageUrl(theValue);
             if (key[i].equals("year"))
-                user.setDob(value[i]);
+                user.setDob(theValue);
             if (key[i].equals("description"))
-                user.setIntro(NnStringUtil.htmlSafeAndTruncated(value[i]));
+                user.setIntro(NnStringUtil.htmlSafeAndTruncated(theValue));
             if (key[i].equals("password"))
-                password = value[i];                
+                password = theValue;                
             if (key[i].equals("oldPassword"))
-                oldPassword = value[i];                
+                oldPassword = theValue;                
             if (key[i].equals("sphere")) {
-                if ((value[i] == null) || (this.checkLang(value[i]) == null))
+                if ((theValue == null) || (this.checkLang(theValue) == null))
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
-                user.setSphere(value[i]);
+                user.setSphere(theValue);
             }
             if (key[i].equals("gender"))
-                user.setGender(Short.parseShort(value[i]));                        
+                user.setGender(Short.parseShort(theValue));                        
             if (key[i].equals("ui-lang")) {
-                if ((value[i] == null) || (this.checkLang(value[i]) == null))
+                if ((theValue == null) || (this.checkLang(theValue) == null))
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
-                user.setLang(value[i]);
+                user.setLang(theValue);
             }
         }
         int status = NnUserValidator.validateProfile(user);
@@ -1501,7 +1505,7 @@ public class PlayerApiService {
         }
         if (userMngr.forgotPwdToken(user) == token) {
             user.setPassword(password);
-            userMngr.resetPassword(user);            	
+            userMngr.resetPassword(user);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
@@ -1636,7 +1640,6 @@ public class PlayerApiService {
         List<String> data = new ArrayList<String>();
         log.info ("[quickLogin] verify user: " + token);
         String userInfo = "";
-        String sphere = "en";
         if (token != null) {
             userInfo = this.userTokenVerify(token, req, resp);
         } else if (email != null || password != null) {        
@@ -1646,9 +1649,13 @@ public class PlayerApiService {
         }
         if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
             return userInfo;
-        }
-        int sphereIndex = userInfo.indexOf("sphere");
-        sphere = userInfo.substring(sphereIndex+7, sphereIndex+9);
+        }        
+        String sphere = "en";
+        Pattern pattern = Pattern.compile(".*sphere\t((en|zh)).*", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(userInfo);
+        if (matcher.matches()) {
+            sphere = matcher.group(1);
+        }        
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
