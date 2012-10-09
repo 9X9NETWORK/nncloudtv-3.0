@@ -1,6 +1,8 @@
 package com.nncloudtv.web.api;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1111,6 +1113,16 @@ public class PlayerApiController {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             int status = this.prepService(req, true);
+            String query = req.getQueryString();
+            String[] params = query.split("&");
+            for (String param : params) {
+                String[] pairs = param.split("=");
+                if (pairs.length > 1 && pairs[0].equals("comment"))
+                    comment = pairs[1];
+                if (pairs.length > 1 && pairs[0].equals("value"))
+                    value = pairs[1];
+            }
+            
             if (status != NnStatusCode.SUCCESS)
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
             if (value != null)
@@ -1139,6 +1151,7 @@ public class PlayerApiController {
      *        <p>ui-lang: ui language. Currently valid values are "zh" and "en".
      *        <p>sphere: content region. Currently valid values are "zh" and "en".
      */
+    //localhost:8080/playerAPI/setUserProfile?user=8s12689Ns28RN2992sut&key=description,lang&value=hello%2C妳好,en
     @RequestMapping(value="setUserProfile", produces = "text/plain; charset=utf-8")
     public @ResponseBody String setUserProfile(
             @RequestParam(value="user", required=false)String user,
@@ -1146,11 +1159,18 @@ public class PlayerApiController {
             @RequestParam(value="value", required=false)String value,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
-            HttpServletResponse resp) {        
-        log.info("set user profile: key(" + key + ");value(" + value + ")");
+            HttpServletResponse resp) {       
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             int status = this.prepService(req, true);
+            String query = req.getQueryString();
+            String[] params = query.split("&");
+            for (String param : params) {
+                String[] pairs = param.split("=");
+                if (pairs.length > 1 && pairs[0].equals("value"))
+                    value = pairs[1];
+            }
+            log.info("set user profile: key(" + key + ");value(" + value + ")");
             if (status != NnStatusCode.SUCCESS) {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
             }

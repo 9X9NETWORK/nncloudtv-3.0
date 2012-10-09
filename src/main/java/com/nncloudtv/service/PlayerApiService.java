@@ -2,7 +2,6 @@ package com.nncloudtv.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -91,7 +90,7 @@ public class PlayerApiService {
     
     public String handleException (Exception e) {
         if (e.getClass().equals(NumberFormatException.class)) {
-            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
+            //return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
         } else if (e.getClass().equals(CommunicationsException.class)) {
             return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
         } 
@@ -1165,6 +1164,12 @@ public class PlayerApiService {
             String body = "user ui-lang:" + user.getLang() + "\n";
             body += "user region:" + user.getSphere() + "\n\n";
             body += content;
+            try {
+                body = URLDecoder.decode(body, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }                
+            
             subject += (type != null) ? (" (" + type + ")") : "" ;
 
             log.info("subject:" + subject);
@@ -1194,7 +1199,6 @@ public class PlayerApiService {
         String oldPassword = "";
         if (key.length != value.length)
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
-        
         String[] valid = {"name", "year", "password", 
                 "oldPassword", "sphere", "ui-lang", "gender", "description", "image"};        
         HashSet<String> dic = new HashSet<String>();
@@ -1214,13 +1218,20 @@ public class PlayerApiService {
                 user.setImageUrl(theValue);
             if (key[i].equals("year"))
                 user.setDob(theValue);
-            if (key[i].equals("description"))
+            if (key[i].equals("description")) {
+                try {
+                    theValue = URLDecoder.decode(theValue, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }                
                 user.setIntro(NnStringUtil.htmlSafeAndTruncated(theValue));
+            }
             if (key[i].equals("password"))
                 password = theValue;                
             if (key[i].equals("oldPassword"))
                 oldPassword = theValue;                
             if (key[i].equals("sphere")) {
+                System.out.println("sphere check:" + theValue);
                 if ((theValue == null) || (this.checkLang(theValue) == null))
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
                 user.setSphere(theValue);
@@ -1232,7 +1243,7 @@ public class PlayerApiService {
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
                 user.setLang(theValue);
             }
-        }
+        }        
         int status = NnUserValidator.validateProfile(user);
         if (status != NnStatusCode.SUCCESS) {
             log.info("profile fail");
@@ -1519,6 +1530,7 @@ public class PlayerApiService {
         
         //matched channels
         //List<NnChannel> channels = NnChannelManager.search(text, false);
+        /*
         String userToken = CookieHelper.getCookie(req, CookieHelper.USER);
         boolean guest = NnUserManager.isGuestByToken(userToken);
         short userShard = 1;
@@ -1532,6 +1544,7 @@ public class PlayerApiService {
                 sphere = u.getSphere();
             }
         }
+        */
         //List<NnChannel> channels = chMngr.searchBySvi(text, userShard, userId, sphere);
         List<NnChannel> channels = NnChannelManager.search(text, false);
         String[] result = {"", "", "", ""}; //count, curator along with channels, channel, suggestion channel
