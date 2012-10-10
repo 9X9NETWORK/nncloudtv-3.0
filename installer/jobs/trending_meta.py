@@ -7,7 +7,7 @@ import MySQLdb
 
 conn = MySQLdb.connect (host = "localhost",
                         user = "root",
-                        passwd = "",
+                        passwd = "letlet",
                         charset = "utf8", 
                         use_unicode = True,                                               
                         db = "nncloudtv_content")
@@ -38,7 +38,7 @@ try:
        cursor.execute (""" 
            update nnchannel                 
               set updateDate = %s 
-            where id = %s """, (updateDate, pid))        
+            where id = %s """, (updateDate, cid))        
     
   conn.commit()
   cursor.close ()
