@@ -121,7 +121,7 @@ public class NnChannel implements Serializable {
     @Column(jdbcType="VARCHAR", length=10)
     private String note;
     
-    @NotPersistent
+    @Persistent
     private short seq; //use with subscription, to specify sequence in IPG. 
     
     //not used
