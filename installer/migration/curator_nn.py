@@ -21,11 +21,13 @@ dbcontent = MySQLdb.connect (host = "localhost",
 
 contentCursor = dbcontent.cursor()
 
+print "-- going to select --"
 contentCursor.execute("""
     select c.id, u.email, u.id 
       from nnchannel c, content_ownership o, mso_backup m, nncloudtv_nnuser1.nnuser u 
      where c.contentType = 6
        and c.id = o.contentId
+       and c.userIdStr is null
        and o.contentType = 2
        and o.msoId = m.id
        and m.Id != 1
