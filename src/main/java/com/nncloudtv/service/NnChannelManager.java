@@ -809,7 +809,9 @@ public class NnChannelManager {
            id = "f" + "-" + curatorProfile;
         }
         */
-        
+        short contentType = c.getContentType();
+        if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
+            contentType = NnChannel.CONTENTTYPE_FAVORITE;
         String[] ori = {String.valueOf(c.getSeq()), //REPLACE
                         c.getIdStr(),
                         name,
