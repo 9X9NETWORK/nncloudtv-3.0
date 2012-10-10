@@ -23,7 +23,7 @@ contentCursor = dbcontent.cursor()
 
 contentCursor.execute("""
     select c.id, u.email, u.id 
-      from nnchannel c, content_ownership o, mso m, nncloudtv_nnuser1.nnuser u 
+      from nnchannel c, content_ownership o, mso_backup m, nncloudtv_nnuser1.nnuser u 
      where c.contentType = 6
        and c.id = o.contentId
        and o.contentType = 2
