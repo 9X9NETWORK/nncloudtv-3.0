@@ -12,11 +12,12 @@ conn = MySQLdb.connect (host = "localhost",
 try:
   cursor = conn.cursor ()
   cursor.execute ("""
-     select channelId                 
-       from tag_map
-      where tagId=3 or tagId = 4           
-      order by tagId, channelId               
-                  """)                 
+      select distinct c.id
+        from tag_map map, nnchannel c
+       where (map.tagId=6)
+         and map.channelId = c.id    
+         and (c.contentType=3 or c.contentType=4);         
+       """)                 
   map_rows = cursor.fetchall ()  
   print "map_rows count:" + str(len(map_rows))
   for m in map_rows:     
