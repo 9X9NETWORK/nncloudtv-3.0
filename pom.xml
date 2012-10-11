@@ -58,7 +58,8 @@
              <webAppConfig>
                 <contextPath>/</contextPath>
              </webAppConfig>
-             <scanIntervalSeconds>5</scanIntervalSeconds>  
+             <reload>manual</reload> 
+             <!-- <scanIntervalSeconds>5</scanIntervalSeconds> -->  
              <systemProperties>
                 <systemProperty>
                    <name>org.apache.commons.logging.Log</name>
