@@ -22,7 +22,7 @@ def getSSH(server):
      ssh.connect(host, username = 'ubuntu', pkey = mykey)
      return ssh
 
-#--------------- write version file
+#---- write version file ----  
 myfile = open("..//src//main//java//com//nncloudtv//web//VersionController.java", "rU")
 version = ""
 for line in myfile:
@@ -35,7 +35,7 @@ if version == "":
   version = raw_input('Enter version number : ') 
 print "version number:" + version
 
-#--------------- copy war files       
+#---- copy war files ----       
 src = "../target/root.war"         
 dst = "root.war"
 shutil.copyfile(src, dst)                                                                                       
@@ -44,7 +44,7 @@ src = "../../nncms/target/cms.war"
 dst = "cms.war"
 shutil.copyfile(src, dst)                                                                                       
 
-#--------------- generate md5            
+#---- generate md5 ----            
 md5 = os.popen("md5sum root.war").read()
 match = re.match("(.*)( .*)", md5)       
 if match:
@@ -68,7 +68,7 @@ line = md5 + " " + "cms.war\x00\x0a"
 dest.write(line)
 dest.close()                           
 
-#--------------- generate  version file              
+#---- generate  version file ----              
 print "--- generate version file ---"
 dest = open("version", "w")
 line = version
@@ -106,7 +106,7 @@ if server == "2":
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/version")
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/version")
 
-#--------------- deploy
+#---- deploy ----
 print "\n"                                                       
 server = raw_input('Deploy? (1.stage 2.prod 3.exit) : ')
 if server == "1":      
