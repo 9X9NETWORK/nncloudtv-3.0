@@ -12,18 +12,18 @@ conn = MySQLdb.connect (host = "localhost",
 try:
   cursor = conn.cursor ()
   cursor.execute ("""
-      select distinct c.id
+      select distinct c.id 
         from tag_map map, nnchannel c
-       where (map.tagId=6)
+       where (map.tagId=3 or map.tagId=4)            
          and map.channelId = c.id    
-         and (c.contentType=3 or c.contentType=4);         
+         and (c.contentType=6);              
        """)                 
   map_rows = cursor.fetchall ()  
   print "map_rows count:" + str(len(map_rows))
   for m in map_rows:     
     cid = m[0]   
     print "cid: " + str(cid)
-    cursor.execute ("""
+    cursor.execute ("""             
          select id, updateDate 
            from nnprogram 
           where channelId = %s order by updateDate desc limit 1; 
