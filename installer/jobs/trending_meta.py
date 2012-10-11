@@ -1,7 +1,4 @@
-# import category_channel_set
-#- read through every row,
-#  find in category table, the ori_id, update with new id
-#  find in nnset table, the ori_id, new_id, update with new id
+# update nnchannel update time based on nnprogram
 
 import MySQLdb
 
@@ -20,7 +17,7 @@ try:
       where tagId=3 or tagId = 4           
       order by tagId, channelId               
                   """)                 
-  map_rows = cursor.fetchall ()
+  map_rows = cursor.fetchall ()  
   print "map_rows count:" + str(len(map_rows))
   for m in map_rows:     
     cid = m[0]   
