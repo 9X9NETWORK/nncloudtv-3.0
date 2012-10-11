@@ -436,8 +436,6 @@ public class ApiContent extends ApiGeneric {
         episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
         episodeMngr.save(episode);
         
-        programMngr.reorderEpisodePrograms(episodeId);
-        
         return "OK";
     }
     
