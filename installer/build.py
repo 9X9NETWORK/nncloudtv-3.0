@@ -27,6 +27,9 @@ source.close
 print "Revision number:" + rev
 now = datetime.datetime.utcnow()
 print now
+
+player_version = raw_input('Enter player version : ')
+
 old_file = open("..//src//main//java//com//nncloudtv//web//VersionController.java", "rU")
 new_file = open("..//src//main//java//com//nncloudtv//web//VersionController.java.tmp",'w')
 for line in old_file:
@@ -35,6 +38,10 @@ for line in old_file:
   if (line.find("String svn") > 0):
      line = "        String svn = \"" + rev + "\";\n"
   if (line.find("String packagedTime") > 0):
+     line = "        String packagedTime = \"" + str(now) + "\";\n"
+  if (line.find("String player") > 0):
+     line = "        String player = \"" + "mogwai" + player_version + "\";\n"
+     
   new_file.write(line)
 old_file.close()
 new_file.close()
