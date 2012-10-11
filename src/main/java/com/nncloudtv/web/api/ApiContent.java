@@ -356,7 +356,7 @@ public class ApiContent extends ApiGeneric {
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode != null) {
             
-            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
             episodeMngr.save(episode);
         }
         
@@ -433,7 +433,7 @@ public class ApiContent extends ApiGeneric {
         titlecardMngr.delete(titlecardDeleteList);
         programMngr.delete(programDeleteList);
         
-        episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
         episodeMngr.save(episode);
         
         programMngr.reorderEpisodePrograms(episodeId);
@@ -929,6 +929,9 @@ public class ApiContent extends ApiGeneric {
             
             episode.setName(NnStringUtil.revertHtml(episode.getName()));
             episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+            if (episode.getDuration() == 0) {
+                episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+            }
             
             episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
         }
@@ -1016,6 +1019,9 @@ public class ApiContent extends ApiGeneric {
         episode.setSeq(episodeMngr.getEpisodeSeq(episode));
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+        if (episode.getDuration() == 0) {
+            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        }
         
         return episode;
     }

@@ -56,7 +56,7 @@ public class NnProgramManager {
         }
         
         // update episode duration
-        episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
         episodeMngr.save(episode);
         
         return program;
@@ -153,7 +153,7 @@ public class NnProgramManager {
             
             NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
             if (episode != null) {
-                episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
                 episodeMngr.save(episode);
             }
             
