@@ -50,19 +50,28 @@ Go to project root folder,
 (c:\Java\projects\nncloudtv>mvn -Dslf4j=false -Dlog4j.configuration=file:./target/classes/log4j.properties jetty:run)
 
 - Basic tests,
-http://localhost:8888/hello/world (test your servlet and spring dispatcher)
-http://localhost:8888/hello/pdr (write a db record)
-http://localhost:8888/hello/cache_set (test memcache component)
-http://localhost:8888/fanout?exchange_name=hello (test rabbitq, nnqueue should output a hello message)
+http://localhost:8080/hello/world (test your servlet and spring dispatcher)
+http://localhost:8080/hello/pdr (write a db record)
+http://localhost:8080/hello/cache_set (test memcache component)
+http://localhost:8080/hello/fanout?exchange_name=hello (test rabbitq, nnqueue should output a hello message)
 
 - ready to go,
-go to http://localhost:8888/admin/index, click on initialize link
+go to http://localhost:8080/admin/index, click on initialize link
 
 ================================
 mvn 
 ================================
 - Download 3.0.3
 http://maven.apache.org/download.html 
+
+- ubuntu 
+> wget http://linux-files.com/maven/binaries/apache-maven-3.0.4-bin.tar.gz
+> tar -xzvf apache-maven-3.0.4-bin.tar.gz
+> sudo mkdir /usr/local/apache-maven
+> sudo cp -R apache-maven-3.0.4 /usr/local/apache-maven/
+> export PATH=/usr/local/apache-maven/apache-maven-3.0.4/bin:$PATH
+ps. add this line to the end of /home/ubuntu/.bashrc
+> mvn --version
 
 - read pom.xml
 
@@ -134,7 +143,8 @@ Package
 - packaging nncloudtv war procedures:
   a) modify datanucleus.properties files, there are four.
   b) packaging: 
-     mvn clean:clean  
+     mvn clean:clean
+     mvn compile
      mvn datanucleus:enhance 
      mvn compile war:war
   c) test the packaged war with jetty plugin:    
@@ -146,16 +156,10 @@ Package
   reference nnqueue.README 
 
 ================================
-In the pipeline
-================================ 
-- Admin portal
-
-================================
 Note
 ================================
-- javascript and image resources should only be placed on amazon s3.
+- javascript and image resources should be placed on amazon s3.
 use account nncloudtv@gmail.com to access
-
 
 =============================================================================================================
 EC2
@@ -201,6 +205,7 @@ MySql
 ================================
 - installation 
 apt-get install mysql-server-5.1
+apt-get install mysql-server-5.5
 
 - commands
 > service mysql start
@@ -229,9 +234,7 @@ Memcached
 ================================
 Mail server
 ================================
-> apt-get install sendmail
-
-- sendmail configuration (by wilson)
+> apt-get install postfix
 
 - jetty6 is loading wrong gnumail.jar, fixes:
 a. edit /etc/jetty/start.config:
@@ -262,6 +265,7 @@ pscp -i prod-west2.ppk nncloudtv-0.0.1-SNAPSHOT.war ubuntu@ec2-50-112-111-245.us
 
 - change hostname if necessary 
 > hostname devel 
+> /etc/hostname
 
 - commands: 
 sudo su
@@ -290,13 +294,17 @@ http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/cache_set (test me
 http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/cache_get (test memcache component)
 http://ec2-174-129-141-179.compute-1.amazonaws.com:8080/hello/fanout?exchange_name=hello (rabbit queue client test)
 
-- run on port 80 (port 80 might be closed, check ec2 console setting) 
+- run on port 80 (port 80 might be closed, check ec2 console setting)
+ 
 test
 > sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 
 permanent
+(create a new file iptables.rules)
 > vi /etc/iptables.rules
-> vi /etc/networks/interfaces
+
+(add one line to interfaces file)
+> vi /etc/network/interfaces
 pre-up iptables-restore < /etc/iptables.rules
 
 - stop apache2 (if u ever need it)
@@ -304,3 +312,42 @@ pre-up iptables-restore < /etc/iptables.rules
 
 - for server with monit, stop monit before manually restart your server
 service monit stop
+
+================================
+SSH
+================================  
+1. combine key and cert file into PKCS12 format
+$ openssl pkcs12 -inkey alpha.9x9.tv_private.key -in alpha.9x9.tv_ssl.cert -export -out jetty.pkcs12
+
+2. Generate keystore file (Java Keytool stores the keys and certificates in what is called a keystore)
+$ keytool -importkeystore -srckeystore jetty.pkcs12 -srcstoretype PKCS12 -destkeystore keystore
+
+3. copy all the key files to the directory
+/usr/share/jetty/keys
+
+3. edit jetty-ssl.xml
+$ vi /etc/jetty/jetty-ssl.xml
+edit keystore location and password, you can reference the file on alpha or it's checked in here,
+
+4. edit jetty.conf
+$ vi /etc/jetty/jetty.conf
+add line, /etc/jetty/jetty-ssl.xml
+
+5. modify iptables
+$ sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
+
+make sure there are only two ruls in iptables
+$ sudo iptables -t nat -n -L
+Chain PREROUTING (policy ACCEPT)
+target prot opt source destination
+REDIRECT tcp -- 0.0.0.0/0 0.0.0.0/0 tcp dpt:443 redir ports 8443
+REDIRECT tcp -- 0.0.0.0/0 0.0.0.0/0 tcp dpt:80 redir ports 8080
+
+5. modify /etc/iptables.rules
+
+ps. jetty configuration files are also checked in here,
+http://everest.teltel.com:8080/repos/misc/web/nnvmso-moveout/nncloudtv/installer/jetty/  
+
+================================
+Others
+================================  
