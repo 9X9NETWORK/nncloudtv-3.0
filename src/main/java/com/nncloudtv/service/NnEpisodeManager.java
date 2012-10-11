@@ -84,12 +84,12 @@ public class NnEpisodeManager {
         
         NnProgramManager programMngr = new NnProgramManager();
         
-        List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
-        if (programs.size() == 0) {
+        NnProgram program = programMngr.findOneByEpisodeId(episode.getId());
+        if (program == null) {
             return 0;
         }
         
-        return programs.get(0).getSeqInt();
+        return program.getSeqInt();
         
     }
     
