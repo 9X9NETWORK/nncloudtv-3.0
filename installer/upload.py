@@ -79,9 +79,9 @@ dest.close()
 print "\n"                                             
 server = raw_input('Server (1.stage 2.prod 3.exit) : ')
 if server == "1":      
-  print "--- uploading to stage server ---"             
+  print "--- uploading to stage server ---"                                                 
   os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@stage.9x9.tv:/home/ubuntu/files/root.war")
-  os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@stage.9x9.tv:/home/ubuntu/files/cms.war")
+  os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@stage.9x9.tv:/home/ubuntu/files/cms.war")
 if server == "2":        
   print "--- uploading to deploy server ---"                             
   ssh = getSSH("prod")
