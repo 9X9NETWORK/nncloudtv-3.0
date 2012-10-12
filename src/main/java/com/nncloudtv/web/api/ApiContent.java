@@ -355,9 +355,10 @@ public class ApiContent extends ApiGeneric {
         
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode != null) {
-            
-            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-            episodeMngr.save(episode);
+            if (episode.getDuration() > 0) {
+                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+                episodeMngr.save(episode);
+            }
         }
         
         return "OK";
@@ -433,8 +434,10 @@ public class ApiContent extends ApiGeneric {
         titlecardMngr.delete(titlecardDeleteList);
         programMngr.delete(programDeleteList);
         
-        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-        episodeMngr.save(episode);
+        if (episode.getDuration() > 0) {
+            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+            episodeMngr.save(episode);
+        }
         
         return "OK";
     }
@@ -1551,8 +1554,10 @@ public class ApiContent extends ApiGeneric {
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
         if (episode != null) {
-            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-            episodeMngr.save(episode);
+            if (episode.getDuration() > 0) {
+                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+                episodeMngr.save(episode);
+            }
         }
         
         titleCard = titleCardMngr.save(titleCard);
@@ -1590,8 +1595,10 @@ public class ApiContent extends ApiGeneric {
             NnEpisodeManager episodeMngr = new NnEpisodeManager();
             NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
             if (episode != null) {
-                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-                episodeMngr.save(episode);
+                if (episode.getDuration() > 0) {
+                    episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+                    episodeMngr.save(episode);
+                }
             }
         }
         

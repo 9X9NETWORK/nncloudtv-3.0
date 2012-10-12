@@ -56,8 +56,10 @@ public class NnProgramManager {
         }
         
         // update episode duration
-        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-        episodeMngr.save(episode);
+        if (episode.getDuration() > 0) {
+            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+            episodeMngr.save(episode);
+        }
         
         return program;
     }
@@ -153,8 +155,10 @@ public class NnProgramManager {
             
             NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
             if (episode != null) {
-                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-                episodeMngr.save(episode);
+                if (episode.getDuration() > 0) {
+                    episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+                    episodeMngr.save(episode);
+                }
             }
             
         }
