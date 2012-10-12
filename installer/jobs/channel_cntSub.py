@@ -4,7 +4,7 @@ import sqlite3
 
 conn = MySQLdb.connect (host = "localhost",
                         user = "root",
-                        passwd = "",
+                        passwd = "letlet",
                         charset = "utf8",
                         use_unicode = True,
                         db = "nncloudtv_content")

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # process hot channels
 import urllib, urllib2
 import os
@@ -7,7 +10,7 @@ import time
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
-                             passwd = "",
+                             passwd = "letlet",
                              charset = "utf8",
                              use_unicode = True,
                              db = "nncloudtv_content")

@@ -8,21 +8,41 @@ import time
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
-                             passwd = "",
+                             passwd = "letlet",
                              charset = "utf8",
                              use_unicode = True,
                              db = "nncloudtv_content")
 cursor = dbcontent.cursor()
 
+pwd = os.path.dirname(os.path.realpath(__file__))
+md5_file = pwd + '/trending.feed.txt.md5'
+md5_url = 'http://channelwatch.9x9.tv/dan/trending.feed.txt.md5'
 url = 'http://channelwatch.9x9.tv/dan/trending.feed.txt'
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 values = {'language' : 'Python' }
 headers = { 'User-Agent' : user_agent }
 data = urllib.urlencode(values)
+
+f = open(md5_file, 'r')
+md5 = f.read()
+f.close()
+
+req_md5 = urllib2.Request(md5_url, data, headers)
+response = urllib2.urlopen(req_md5)
+md5_new = response.readline()
+
+if md5_new == md5:
+  #print "same\n"
+  quit()
+
+#print "new\n"
+f = open(md5_file, 'w')
+f.write(md5_new)
+f.close()
+
 req = urllib2.Request(url, data, headers)
 response = urllib2.urlopen(req)
 feed = response.readlines()
-
 i = 0
 j = 0
 for line in feed:
