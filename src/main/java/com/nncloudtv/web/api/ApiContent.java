@@ -1540,7 +1540,7 @@ public class ApiContent extends ApiGeneric {
         
         // weight
         String weight = req.getParameter("weight");
-        if (style == null) {
+        if (weight == null) {
             titleCard.setWeight(TitleCard.DEFAULT_WEIGHT);
         } else {
             titleCard.setWeight(weight);
@@ -1548,7 +1548,7 @@ public class ApiContent extends ApiGeneric {
         
         // bgImg
         String bgImage = req.getParameter("bgImage");
-        if (bgImage == null) {
+        if ((bgImage == null) || bgImage.equals("")) {
             titleCard.setBgImage(TitleCard.DEFAULT_BG_IMG);
         } else {
             titleCard.setBgImage(bgImage);
