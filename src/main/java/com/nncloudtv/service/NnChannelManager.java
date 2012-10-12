@@ -232,6 +232,7 @@ public class NnChannelManager {
                 existFavorite.setFileUrl(fileUrl);
                 existFavorite.setPublic(true);
                 existFavorite.setDuration(duration);
+                existFavorite.setStorageId(String.valueOf(c.getId()));
                 existFavorite.setStatus(NnProgram.STATUS_OK);                
                 pMngr.save(existFavorite);                
                 
@@ -812,6 +813,8 @@ public class NnChannelManager {
         short contentType = c.getContentType();
         if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
             contentType = NnChannel.CONTENTTYPE_FAVORITE;
+        if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
+            viewCount = 0; //TODO removed
         String[] ori = {String.valueOf(c.getSeq()), //REPLACE
                         c.getIdStr(),
                         name,

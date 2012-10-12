@@ -64,7 +64,9 @@ public class IosService {
         for (NnChannel c : channels) {
             String name = c.getName();
             if (name != null)
-                name = name.replaceAll("\n", " ").replaceAll("\t", " ");        
+                name = name.replaceAll("\n", " ").replaceAll("\t", " ");
+            String[] split = name.split("\\|");
+            name = split.length == 2 ? split[0] : name;            
             String intro = c.getIntro();        
             if (intro != null)
                 intro = intro.replaceAll("\n", " ").replaceAll("\t", " ");
