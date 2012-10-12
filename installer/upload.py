@@ -14,12 +14,12 @@ def getSSH(server):
    host = "stage.9x9.tv"
    if server == "prod":    
      host = "moveout-log.9x9.tv"     
-   if server == "stage":
-     privatekeyfile = os.path.expanduser('~/keys/prod-west2.pem')
-     mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
-     ssh = paramiko.SSHClient()
-     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-     ssh.connect(host, username = 'ubuntu', pkey = mykey)
+   
+   privatekeyfile = os.path.expanduser('~/keys/prod-west2.pem')
+   mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
+   ssh = paramiko.SSHClient()
+   ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+   ssh.connect(host, username = 'ubuntu', pkey = mykey)
    return ssh
 
 #---- write version file ----  
