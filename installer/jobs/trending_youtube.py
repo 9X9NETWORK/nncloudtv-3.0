@@ -1,4 +1,4 @@
-# get latest youtube update from tom's feed.out
+# update trending youtube channels based on tom's output
 
 import urllib, urllib2
 import os
@@ -14,7 +14,7 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              db = "nncloudtv_content")
 cursor = dbcontent.cursor()
 
-url = 'http://channelwatch.9x9.tv/dan/feed.out'
+url = 'http://channelwatch.9x9.tv/dan/trending.feed.txt'
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 values = {'language' : 'Python' }
 headers = { 'User-Agent' : user_agent }
@@ -59,7 +59,7 @@ for line in feed:
      count = cursor.rowcount  
      if count == 0:
         epoch = time.mktime(time.gmtime()) 
-        userCursor.execute("""
+        cursor.execute("""
            insert into nncloudtv_nnuser1.nnuser
              (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl)
            values
