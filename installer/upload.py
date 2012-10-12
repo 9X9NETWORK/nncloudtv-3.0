@@ -51,8 +51,8 @@ if match:
   md5 = match.group(1)
 
 cmsMd5 = os.popen("md5sum cms.war").read()
-cmsmatch = re.match("(.*)( .*)", md5)
-if cmsmatch:
+cmsmatch = re.match("(.*)( .*)", cmsMd5)
+if cmsmatch:   
   cmsMd5 = cmsmatch.group(1)
 
 print "--- generate md5 = " + md5
