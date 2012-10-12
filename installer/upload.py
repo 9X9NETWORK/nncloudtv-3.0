@@ -20,7 +20,7 @@ def getSSH(server):
      ssh = paramiko.SSHClient()
      ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
      ssh.connect(host, username = 'ubuntu', pkey = mykey)
-     return ssh
+   return ssh
 
 #---- write version file ----  
 myfile = open("..//src//main//java//com//nncloudtv//web//VersionController.java", "rU")
@@ -61,7 +61,7 @@ print "--- generate cms md5 = " + cmsMd5
 dest = open("root.md5", "w")
 line = md5 + " " + "root.war\x00\x0a"
 dest.write(line)
-dest.close()
+dest.close()             
 
 dest = open("cms.md5", "w")
 line = md5 + " " + "cms.war\x00\x0a"
