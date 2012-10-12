@@ -47,7 +47,7 @@ shutil.copyfile(src, dst)
 #---- generate md5 ----            
 md5 = os.popen("md5sum root.war").read()
 match = re.match("(.*)( .*)", md5)       
-if match:
+if match:                          
   md5 = match.group(1)
 
 cmsMd5 = os.popen("md5sum cms.war").read()
@@ -58,16 +58,16 @@ if cmsmatch:
 print "--- generate md5 = " + md5
 print "--- generate cms md5 = " + cmsMd5
 
-dest = open("root.md5", "w")
+dest = open("root.md5", "w")      
 line = md5 + " " + "root.war\x00\x0a"
 dest.write(line)
 dest.close()             
 
-dest = open("cms.md5", "w")
-line = md5 + " " + "cms.war\x00\x0a"
+dest = open("cms.md5", "w")      
+line = cmsMd5 + " " + "cms.war\x00\x0a"
 dest.write(line)
 dest.close()                           
-
+                   
 #---- generate  version file ----              
 print "--- generate version file ---"
 dest = open("version", "w")
@@ -102,10 +102,10 @@ if server == "2":
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/root/" + version + "/version")
                                   
   os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/cms.war")
-  os.system("scp -i ~/keys/prod-west2.pem cms.md5 ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/cms.md5")
+  os.system("scp -i ~/keys/prod-west2.pem cms.md5 ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/cms.md5")     
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/version")
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/version")
-
+                                                                                   
 #---- deploy ----
 print "\n"                                                       
 server = raw_input('Deploy? (1.stage 2.prod 3.exit) : ')
