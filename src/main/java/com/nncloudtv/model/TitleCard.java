@@ -89,6 +89,7 @@ public class TitleCard implements Serializable {
     public static final String DEFAULT_STYLE    = "normal";
     public static final String DEFAULT_WEIGHT   = "normal";
     public static final String DEFAULT_BG_COLOR = "black";
+    public static final String DEFAULT_BG_IMG   = "http://9x9ui.s3.amazonaws.com/war/v0/images/titlecard-default.png";
     
     public TitleCard(long channelId, long programId, short type) {
         
