@@ -4,7 +4,7 @@ import urllib, urllib2
 import os
 from array import *
 import MySQLdb
-import time
+import time, datetime
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
@@ -36,6 +36,8 @@ if md5_new == md5:
   quit()
 
 #print "new\n"
+print datetime.datetime.now()
+print "\n"
 f = open(md5_file, 'w')
 f.write(md5_new)
 f.close()
