@@ -925,11 +925,16 @@ public class ApiContent extends ApiGeneric {
         
         for (NnEpisode episode : results) {
             
-            episode.setName(NnStringUtil.revertHtml(episode.getName()));
-            episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
             if (episode.getDuration() == 0) {
                 episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+                if(episode.getDuration() > 0) {
+                    episodeMngr.save(episode);
+                }
             }
+            
+            episode.setName(NnStringUtil.revertHtml(episode.getName()));
+            episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+            
             
             episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
         }
@@ -1014,12 +1019,16 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        if (episode.getDuration() == 0) {
+            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+            if(episode.getDuration() > 0) {
+                episodeMngr.save(episode);
+            }
+        }
+        
         episode.setSeq(episodeMngr.getEpisodeSeq(episode));
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
-        if (episode.getDuration() == 0) {
-            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
-        }
         
         return episode;
     }
@@ -1539,6 +1548,13 @@ public class ApiContent extends ApiGeneric {
             titleCard.setBgImage(bgImage);
         }
         
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
+        if (episode != null) {
+            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+            episodeMngr.save(episode);
+        }
+        
         titleCard = titleCardMngr.save(titleCard);
         
         titleCard.setMessage(NnStringUtil.revertHtml(titleCard.getMessage()));
@@ -1566,6 +1582,17 @@ public class ApiContent extends ApiGeneric {
         if (titleCard==null) {
             notFound(resp, "TitleCard Not Found");
             return null;
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(titleCard.getProgramId());
+        if (program != null) {
+            NnEpisodeManager episodeMngr = new NnEpisodeManager();
+            NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
+            if (episode != null) {
+                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+                episodeMngr.save(episode);
+            }
         }
         
         titleCardMngr.delete(titleCard);
