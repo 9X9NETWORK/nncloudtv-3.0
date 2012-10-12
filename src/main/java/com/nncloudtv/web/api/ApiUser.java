@@ -404,6 +404,77 @@ public class ApiUser extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "users/{userId}/channels/sorting", method = RequestMethod.PUT)
+    public @ResponseBody
+    String userChannelsSorting(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+        
+        Long userId = null;
+        try {
+            userId = Long.valueOf(userIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (userId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        NnUser user = userMngr.findById(userId);
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        String channelIdsStr = req.getParameter("channels");
+        if (channelIdsStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        String[] channelIdStrList = channelIdsStr.split(",");
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, false);
+        List<Long> channelIdList = new ArrayList<Long>();
+        for (NnChannel channel : channels) {
+            channelIdList.add(channel.getId());
+        }
+        
+        List<Long> orderedChannelIdList = new ArrayList<Long>();
+        for (String channelIdStr : channelIdStrList) {
+            
+            Long channelId = null;
+            try {
+                
+                channelId = Long.valueOf(channelIdStr);
+                
+            } catch(Exception e) {
+            }
+            if (channelId != null) {
+                orderedChannelIdList.add(channelId);
+                if (channelIdList.indexOf(channelId) > -1) {
+                    channelIdList.remove(channelId);
+                }
+            }
+        }
+        // parameter should contain all channelId
+        if (channelIdList.size() != 0) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        short counter = 1;
+        NnChannel channel;
+        for (Long channelId : orderedChannelIdList) {
+            channel = channelMngr.findById(channelId);
+            channel.setSeq(counter);
+            channelMngr.save(channel);
+            counter++;
+        }
+        
+        return "OK";
+    }
+    
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)
     public @ResponseBody NnChannel channelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
