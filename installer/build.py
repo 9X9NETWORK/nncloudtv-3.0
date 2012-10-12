@@ -1,8 +1,10 @@
 import os, datetime, shutil
 
 #---- get environment ----  
-choice = raw_input('Environment (1. prod/stage) : ')
+choice = raw_input('Environment (1. dev 2.prod/stage) : ')
 server="prod"
+if choice == "1":
+   server = "dev" 
 
 #---- copy property files ----
 list=['datanucleus_analytics.properties', 'datanucleus_content.properties',
@@ -13,6 +15,10 @@ for l in list:
    src = server + "/" + l
    dst = "../src/main/resources/" + l
    shutil.copyfile(src, dst)
+
+if server == "dev":
+   print "copy file completed. exit"
+   exit()
 
 #---- write version info ----
 version = raw_input('Enter version number : ')
