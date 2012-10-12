@@ -53,12 +53,19 @@ for line in feed:
   cId = data[0]
   username = data[1]
   userEmail = username + "@9x9.tv"
+  chTitle = data[2]
+  chTitle = chTitle.replace("|", ";")
   thumbnail = data[3]
   url1 = data[4]
   url2 = data[5]
   url3 = data[6]
   updateDate = data[9]
   programCnt = data[10]
+  lastEpisodeTitle = data[11]
+  lastEpisodeTitle = lastEpisodeTitle.replace("|", ";")
+  lastEpisodeTitle = lastEpisodeTitle.replace("\n", "")
+  finalChName = str(chTitle) + "|" + str(lastEpisodeTitle)  
+  #print "finalChName:" + finalChName
   imageUrl = thumbnail + "|" + url1 + "|" + url2 + "|" + url3
   cursor.execute("""                                                    
      select distinct c.id
@@ -104,22 +111,22 @@ for line in feed:
          where id = %s
          """, cId)      
      oriUserIdStr = cursor.fetchone()[0]  
+
      if oriUserIdStr == None:
         print "ch: " + cId + " oriUserId is null, added new user:" + userIdStr 
         cursor.execute("""    
            update nnchannel 
-              set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s), cntEpisode = %s
+              set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s), cntEpisode = %s, name = %s
             where id = %s                                 
-            """, (imageUrl, userIdStr, updateDate, programCnt, cId))
+            """, (imageUrl, userIdStr, updateDate, programCnt, finalChName, cId))
      else:
         cursor.execute("""    
            update nnchannel 
-              set imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
+              set imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s, name = %s
             where id = %s                                 
-            """, (imageUrl, updateDate, programCnt, cId))
-      
-     dbcontent.commit()
-     
+            """, (imageUrl, updateDate, programCnt, finalChName, cId))         
+
+dbcontent.commit()     
 cursor.close ()
 print "record read:" + str(i) + "; record update:" + str(j)
 
