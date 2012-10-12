@@ -71,7 +71,7 @@ for line in feed:
          from nncloudtv_nnuser1.nnuser
         where email = %s
         """, (userEmail))
-     user = userCursor.fetchone()
+     user = cursor.fetchone()
      userId = user[0]
      userIdStr = "1-" + str(userId)
      cursor = dbcontent.cursor()  
