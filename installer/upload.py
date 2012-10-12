@@ -112,15 +112,13 @@ server = raw_input('Deploy? (1.stage 2.prod 3.exit) : ')
 if server == "1":      
   print "--- deploying on stage server ---"
   ssh = getSSH("stage")
-  stdin, stdout, stderr = ssh.exec_command('cd files')
-  stdin, stdout, stderr = ssh.exec_command('sh installer.sh')
+  stdin, stdout, stderr = ssh.exec_command('cd files;sh installer.sh')
   print stdout.readlines()                                                   
   ssh.close()
 if server == "2":  
   print "--- deploying to prod server ---"
   ssh = getSSH("prod")
-  stdin, stdout, stderr = ssh.exec_command('cd bin/v32')
-  stdin, stdout, stderr = ssh.exec_command('./deploy_all_wars.sh')
+  stdin, stdout, stderr = ssh.exec_command('cd bin/v32;./deploy_all_wars.sh')
   print stdout.readlines()
   ssh.close()                                  
   
