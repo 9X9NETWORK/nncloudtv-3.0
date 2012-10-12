@@ -21,8 +21,10 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.service.IosService;
 import com.nncloudtv.service.MsoManager;
+import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnStatusMsg;
 import com.nncloudtv.service.PlayerApiService;
 
@@ -1980,14 +1982,19 @@ public class PlayerApiController {
         return "redirect:" + url;
     }
     
-    /*
-    @RequestMapping(value="piwikCreate")
+    @RequestMapping(value="episodeUpdate", produces = "text/plain; charset=utf-8")
     public @ResponseBody String piwikCreate(
-            @RequestParam(value="setId", required=false) long setId,
-            @RequestParam(value="channelId", required=false) long channelId) {
-        String piwikId = PiwikLib.createPiwikSite(setId, channelId);
-        log.info("setId:" + setId + ";channelId:" + channelId + ";piwik id:" + piwikId);
-        return piwikId);        
+            @RequestParam(value="epId", required=false) long epId ) {
+        NnEpisodeManager mngr = new NnEpisodeManager();
+        NnEpisode e = new NnEpisodeManager().findById(epId);
+        if (e != null) {
+            int duration = mngr.calculateEpisodeDuration(e);
+            log.info("new duration:" + duration);
+            e.setDuration(duration);
+            mngr.save(e);
+        }
+        return "OK";
+                
     }
-    */
+
 }
