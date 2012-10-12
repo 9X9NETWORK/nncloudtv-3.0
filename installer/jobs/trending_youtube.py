@@ -50,7 +50,6 @@ for line in feed:
   rows = cursor.fetchall()
   for r in rows:
      j = j+1    
-     print "userEmail:" + userEmail
      cursor.execute("""                                                    
        select id 
          from nncloudtv_nnuser1.nnuser
@@ -58,7 +57,8 @@ for line in feed:
         """, (userEmail))
      count = cursor.rowcount  
      if count == 0:
-        epoch = time.mktime(time.gmtime()) 
+        epoch = time.mktime(time.gmtime())
+        print "create new user, userEmail:" + userEmail
         cursor.execute("""
            insert into nncloudtv_nnuser1.nnuser
              (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl)
