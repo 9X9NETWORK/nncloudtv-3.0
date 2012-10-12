@@ -96,8 +96,8 @@ for line in feed:
             where id = %s                                 
             """, (imageUrl, updateDate, programCnt, cId))
       
-     dbcontent.commit()     
-     cursor.close ()
-
+     dbcontent.commit()
+     
+cursor.close ()
 print "record read:" + str(i) + "; record update:" + str(j)
 
