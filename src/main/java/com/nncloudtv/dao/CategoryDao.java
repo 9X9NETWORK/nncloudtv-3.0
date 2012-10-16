@@ -20,13 +20,18 @@ public class CategoryDao extends GenericDao<Category> {
 
     public long findChannelSize(long categoryId) {
     	PersistenceManager pm = PMF.getContent().getPersistenceManager();
-    	String sql = "select count(*) " +
-    				   "from category_map " +
-    				  "where categoryId = " + categoryId;    				   
-    	Query query = pm.newQuery("javax.jdo.query.SQL", sql);
-    	@SuppressWarnings("rawtypes")
-		List results = (List) query.execute();
-    	Long size = (Long)results.iterator().next();
+    	long size = 0;
+    	try {
+        	String sql = "select count(*) " +
+        				   "from category_map " +
+        				  "where categoryId = " + categoryId;    				   
+        	Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+        	@SuppressWarnings("rawtypes")
+    		List results = (List) query.execute();
+        	size = (Long)results.iterator().next();
+        } finally {
+            pm.close();
+        }
     	return size;
     }
     
@@ -119,25 +124,43 @@ public class CategoryDao extends GenericDao<Category> {
         }
         return category;        
     }
-
-    public List<CategoryMap> listCategoryMap(int page, int limit, String filter) {
-    	PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<CategoryMap> results;
-        try {
-            Query query = pm.newQuery(CategoryMap.class);
-            if (filter != null && filter != "")
-                query.setFilter(filter);
-            if (limit > 0)
-            	query.setRange((page - 1) * limit, page * limit);
-            @SuppressWarnings("unchecked")
-            List<CategoryMap> tmp = (List<CategoryMap>)query.execute();
-            results = (List<CategoryMap>)pm.detachCopyAll(tmp);
-        } finally {
-            pm.close();
-        }
-        return results;
-    }
     
+    public List<CategoryMap> listCategoryMap(int page, int limit, String filter) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        /*
+        select * 
+          from category_map
+         where categoryId = 1
+           and channelId in (select id from nnchannel where isPublic=true and status=0)
+         limit 10, 20
+        */
+        List<CategoryMap> detached = new ArrayList<CategoryMap>();
+        try {
+            String sql = "select * " +
+                           "from category_map ";
+            if (filter != null && filter != "")
+               sql += " where " + filter + " and ";
+            else
+               sql += " where ";
+            sql += " channelId in " +
+                      "(select id from nnchannel where isPublic=true and status=0)";
+            if (limit > 0) {
+                int start = (page-1) * limit;
+                sql += " limit " + start + "," + limit;
+            }
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(CategoryMap.class);
+            @SuppressWarnings("unchecked")
+            List<CategoryMap> results = (List<CategoryMap>) query.execute();
+            detached = (List<CategoryMap>)pm.detachCopyAll(results);
+        } finally {            
+            pm.close();
+        } 
+        return detached;
+        
+    }
+        
     public List<CategoryMap> findMap(long id) {        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<CategoryMap> detached = new ArrayList<CategoryMap>();

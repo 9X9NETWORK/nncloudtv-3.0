@@ -64,26 +64,27 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     @SuppressWarnings("unchecked")
     public static List<NnChannel> search(String queryStr, boolean all) {        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        String sql = "select * from nnchannel " +
-         "where (lower(name) like lower('%" + queryStr + "%')" +   
-         "|| lower(intro) like lower('%" + queryStr + "%'))";
-        if (!all) {
-            sql += " and status = " + NnChannel.STATUS_SUCCESS;
+        List<NnChannel> detached = new ArrayList<NnChannel>();
+        try {
+            String sql = 
+                "select * from nnchannel " +
+                 "where (lower(name) like lower('%" + queryStr + "%')" +   
+                    "|| lower(intro) like lower('%" + queryStr + "%'))";
+            if (!all) {
+                sql += " and status = " + NnChannel.STATUS_SUCCESS;
+                sql += " and isPublic = true";
+            }
+            sql += " limit 9";        
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnChannel.class);
+            List<NnChannel> results = (List<NnChannel>) q.execute();
+            detached = (List<NnChannel>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
         }
-        sql += " limit 9";
 
-//        String sql = "select * from nnchannel " +
-//         "where status = " + NnChannel.STATUS_SUCCESS + 
-//         " and " + 
-//         "(lower(name) like lower('%" + queryStr + "%')" + 
-//         "|| lower(intro) like lower('%" + queryStr + "%'))";
-        
-        log.info("Sql=" + sql);
-        Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-        q.setClass(NnChannel.class);
-        List<NnChannel> results = (List<NnChannel>) q.execute();
-        
-        return results;     
+        return detached;     
     }
     
     public List<NnChannel> findAll() {
