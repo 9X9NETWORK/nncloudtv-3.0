@@ -202,9 +202,10 @@ public class NnChannel implements Serializable {
         return "f-" + userProfileUrl;
     }
 
+    //for fake channel implementation
     public String getIdStr() {
         if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
-            return this.getNote();
+            return this.getNote(); //hack using note to store fake id
         else
             return String.valueOf(id);
     }
