@@ -1,3 +1,5 @@
+# update specific type of channel's program count.
+# type includes maplestage and speical youtube sorting
 import MySQLdb
 
 conn = MySQLdb.connect (host = "localhost",
