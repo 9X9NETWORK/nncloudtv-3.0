@@ -1,4 +1,4 @@
-﻿/* players mogwai4 */
+﻿/* players mogwai5 */
 
 var current_tube = '';
 var wmode = 'transparent';
@@ -521,6 +521,7 @@ var language_en =
   location: 'Location',
   favorite: 'Favorite',
   imfollowing: "I'm Following",
+  isfollowing: 'Channels %1 is following',
   followbychannel: "Sorted by channel number",
   followbyupdate: "Sorted by update time",
   mostpop: 'The most popular tags:',
@@ -560,7 +561,7 @@ var language_en =
   saveprofile: 'Save Profile',
   a_aboutus: 'About us',
   a_help: 'Help',
-  a_report: 'Report',
+  a_report: 'Feedback',
   a_termspolicy: 'Terms & Policy',
   a_contactus: 'Contact us',
   a_partners: 'Partners',
@@ -573,7 +574,8 @@ var language_en =
   newpasswordverify: 'Repeat New Password',
   cancel: 'Cancel',
   followingme: 'Following Me',
-  mypageurl: "My Page's URL"
+  mypageurl: "My Page's URL",
+  plzaccept: 'Please accept the agreements below.'
   };
 
 var language_tw =
@@ -853,7 +855,7 @@ var language_tw =
   conferr: 'Error saving your configuration',
   nochanguide: 'No channels in your guide!',
   badcaptcha: 'Oops! Looks like the verification word was entered incorrectly. Please try again.',
-  badpass: '密碼輸入不正確，請重新輸入',
+  badpass: '信箱或密碼輸入不正確，請重新輸入',
   alreadyin: '這個頻道已經在你的頻道表中',
   mustlogin: 'You must be logged in to use this feature',
   trynextep: '看下一個節目',
@@ -886,6 +888,7 @@ var language_tw =
   favorite: '喜歡',
   _imfollowing: '已訂閱(頻道)',
   imfollowing: '我的訂閱',
+  isfollowing: '我的訂閱',
   followbychannel: "定頻模式",
   followbyupdate: "動態模式",
   mostpop: '熱門標籤',
@@ -940,7 +943,8 @@ var language_tw =
   newpasswordverify: '再次輸入新密碼',
   cancel: '取消',
   followingme: '個粉絲',
-  mypageurl: '專頁連結'
+  mypageurl: '專頁連結',
+  plzaccept: '請接受以下的隱私權政策與使用條款'
   };
 
 var translations = language_en;
@@ -1303,10 +1307,12 @@ function set_language (lang)
   $("#developer-dropdown li").eq(6).html (translations ['a_curators']);
   $("#developer-dropdown li").eq(7).html (translations ['a_press']);
   $("#developer-dropdown li").eq(8).html (translations ['a_contest']);
-  if (language == 'en')
+  if (language == 'zh')
     $("#developer-dropdown li").eq(8).show();
   else
     $("#developer-dropdown li").eq(8).hide();
+  /* TEMP FIX */
+  $("#developer-dropdown li").eq(8).attr ("data-doc", "v-contest");
 
   if (home_stack_name == 'hottest')
     $("#home-type").html (translations ['hottest']);
@@ -1325,6 +1331,7 @@ function set_language (lang)
 
   translate_top_level_categories();
   footer_locale();
+  header();
   }
 
 function footer_locale()
@@ -1595,6 +1602,9 @@ function init()
 
   /* disable until it works */
   $("#signin-panel-signin .forgot").hide();
+
+  if ($("#popmessage-home").length == 0)
+    $("#home-layer").append('<div id="popmessage-home"><p class="popmessage-left"></p><p class="popmessage-middle"><p class="popmessage-right"></p></div>');
   }
 
 function set_username_clicks()
@@ -2849,7 +2859,7 @@ function home_trending_inner (id)
     {
     event.stopPropagation();
     log ("home main follow pressed: " + channel ['id']);
-    pop_with = "";
+    pop_with = "#popmessage-home";
 
     function tr_callback()
        {
@@ -2882,7 +2892,7 @@ function reset_home_trending_scope (id)
 function home_trending_arrow_up()
   {
   var id = $("#trending-stories-right li.on").attr ("id").replace (/^trending-/, '');
-  var new_id = (id <= 1) ? 9 : --id;
+  var new_id = (id <= 1) ? trending_stack.length - 1 : --id;
   reset_home_trending_scope (new_id);
   home_trending_inner (new_id);
   }
@@ -2890,7 +2900,7 @@ function home_trending_arrow_up()
 function home_trending_arrow_down()
   {
   var id = $("#trending-stories-right li.on").attr ("id").replace (/^trending-/, '');
-  var new_id = (id >= 9) ? 1 : ++id;
+  var new_id = (parseInt (id) + 1 >= trending_stack.length) ? 1 : ++id;
   reset_home_trending_scope (new_id);
   home_trending_inner (new_id);
   }
@@ -2913,7 +2923,8 @@ function home_subscriptions()
 
   if (username != 'Guest')
     {
-    $("#followings-wrap h1").html (translations ['imfollowing'] + ' (<span id="home-follow-count">' + channels_in_guide() + '</span>/72)');
+    var fol = translations ['isfollowing'].replace (/%1/, username);
+    $("#followings-wrap h1").html (fol + ' (<span id="home-follow-count">' + channels_in_guide() + '</span>/72)');
     home_subscriptions_stack = generate_updates_stack();
     }
   else
@@ -3078,8 +3089,8 @@ function redraw_home_right_column (stack)
     log ('billboard quickfollow '+ home_stack_name + ': ' + id);
     var clicked_stack = which_billboard_stack (home_stack_name);
     var channel = clicked_stack [id];
-    pop_with = "";
-    browse_accept (channel ['id'], "guide()");
+    pop_with = "#popmessage-home";
+    browse_accept (channel ['id']);
     });
 
   $("#home-billboard li .pl-curator").unbind();
@@ -10254,6 +10265,8 @@ function refresh_after_language_change()
   {
   if (thumbing == 'home')
     home();
+  else if (thumbing == 'curator')
+    curation (current_curator_page);
   else if (thumbing == 'about')
     developer ($("#developer-menu li h1.on").parent().attr("data-doc"));
   }
@@ -10391,6 +10404,9 @@ dblocks = blocks;
     if (stuff.match (/<!--INIT([\s\S]*?)-->/))
       xjs = stuff.match(/<!--INIT([\s\S]*?)-->/)[1]
     $("#developer-content").html (stuff);
+    $("#developer-constrain").css ({ height: $(window).height() - $("#developer-constrain").offset().top - $("#developer-layer .reco-shelf").height() });
+    try { $("#developer-slider .slider-vertical").slider ("destroy"); } catch (error) {};
+    $("#developer-slider").css ({ height: $(window).height() - $("#developer-constrain").offset().top - $("#developer-layer .reco-shelf").height() - 10 });
     scrollbar ("#developer-constrain", "#developer-list", "#developer-slider");
     $("#developer-menu li h1").removeClass ("on");
     $("#developer-menu li").each (function()
@@ -10400,6 +10416,7 @@ dblocks = blocks;
       });
     set_hash ("#!aboot=" + doc.replace (/^v-/, ''));
     eval (xjs);
+    header();
     });
   }
 
@@ -17092,15 +17109,13 @@ function curation (id)
   {
   log ("curation: " + id);
 
+  fresh_layer ('curator');
+  thumbing = 'curator';
+
   current_curator_page = id;
   current_curator_name = '';
 
   var showing = "curator"; /* or "visitor" */
-
-  $(".stage").hide();
-  header();
-  $("#nav li").removeClass ("on");
-  $("#browse").addClass ("on");
 
   set_hash ('#!curator=' + id);
 
@@ -17139,9 +17154,32 @@ function curation_inner (id)
   $("#curator-url").text (curat ['url']);
   $("#curator-declaration").text (curat ['desc']);
   // $("#curator-profile-photo img").attr ("src", curat ['thumb']);
-  load_constrained_image ("#curator-profile-photo img", curat ['thumb']);
+  load_constrained_image ("#curator-profile-photo img", curat ['thumb'], function()
+    {
+    var h = $("#curator-profile-photo img").height();
+    if (h > 181)
+      $("#curator-profile-photo img").css ("height", 181);
+    var w = $("#curator-profile-photo img").height();
+    if (w > 181)
+      $("#curator-profile-photo img").css ("width", 181);
+    });
   $("#curator-ch-num").text ("(" + curat ['channelcount'] + ")");
   $("#curator-fol-num").text ("(" + curat ['followers'] + ")");
+
+  if (language == 'en')
+    {
+    $("#curator-tabs .left div p").html
+      ('<span class="name">' + curat ['name'] + '</span>\'s Channels<span id="curator-ch-num" class="number">(' + curat ['channelcount'] + ')</span>');
+    $("#curator-tabs .right div p").html
+      ('<span class="name">' + curat ['name'] + '</span>\'s Followings<span id="curator-ch-num" class="number">(' + curat ['followers'] + ')</span>');
+    }
+  else
+    {
+    $("#curator-tabs .left div p").html 
+      ('<span class="name">' + curat ['name'] + '</span> 的頻道<span id="curator-ch-num" class="number">(' + curat ['channelcount'] + ')</span>');
+    $("#curator-tabs .right div p").html 
+      ('<span class="name">' + curat ['name'] + '</span> 的訂閱<span id="curator-ch-num" class="number">(' + curat ['followers'] + ')</span>');
+    }
 
   load_curator_channels (id);
 
@@ -17357,6 +17395,7 @@ function load_curator_channels (id)
 
         var ago = ageof (channel ['timestamp'], true);
         var funf = ( first_position_with_this_id (channel ['id']) > 0 ) ? translations ['unfollow'] : translations ['follow'];
+        var eplural = channel ['count'] == 1 ? translations ['nepisode'] : translations ['episode'];
 
         html += '<li id="curator-follow-' + su_count + '">';
         html += '<p class="channel-title">' + channel ['name'] + '</p>';
@@ -17367,10 +17406,10 @@ function load_curator_channels (id)
         html += '<img src="' + channel ['thumb3'] + '" class="thumb3">';
         html += '<p class="followed-curator-photo"><img src="' + channel ['curatorthumb'] + '"></p>';
         html += '<div class="channel-meta">';
-        html += '<p>' + channel ['count'] + ' Episodes<span class="divider">|</span>' + ago + '</p>';
+        html += '<p>' + channel ['count'] + ' ' + eplural + '<span class="divider">|</span>' + ago + '</p>';
         // html += '<p class="next-update">Next Update: Whenever</p>';
         html += '</div>';
-        html += '<p class="followed-curator">by<span>' + channel ['curatorname'] + '</span></p>';
+        html += '<p class="followed-curator">' + translations ['curatorby'] + '<span>' + channel ['curatorname'] + '</span></p>';
         html += '</li>';
         }
       $("#following-list").html (html);
@@ -18144,7 +18183,7 @@ function verify_and_submit_signup()
   {
   if (! ($("#signup-checkbox").hasClass ("on")))
     {
-    pw_signup_error ("Please accept the agreements below.");
+    pw_signup_error (translations ['plzaccept']);
     return;
     }
 
@@ -18206,6 +18245,7 @@ function input_init (hint, input)
 
 function input_pw_init (field)
   {
+  $(field).val ('');
   $(field).focus (function()
     {
     $(field).siblings (".hint").hide();
@@ -18275,16 +18315,17 @@ function up_progress (file, completed, total)
   $("#per").html (pct + "%");
   }
 
-function load_constrained_image (id, url)
+function load_constrained_image (id, url, callback)
   {
   var img = new Image();
   img.onload = function()
     {
     if (img.width > img.height)
-      $(id).css ({ width: "100%", height: "auto" });
+      $(id).css ({ width: "100%", height: "auto", 'margin-left': "auto", 'margin-right': "auto" });
     else
-      $(id).css ({ width: "auto", height: "100%" });
+      $(id).css ({ width: "auto", height: "100%", 'margin-left': "auto", 'margin-right': "auto" });
     $(id).attr ("src", img.src);
+    if (callback) callback();
     };
   img.src = url;
   }
