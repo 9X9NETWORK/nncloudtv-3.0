@@ -90,7 +90,7 @@ public class PlayerApiService {
     
     public String handleException (Exception e) {
         if (e.getClass().equals(NumberFormatException.class)) {
-            //return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
         } else if (e.getClass().equals(CommunicationsException.class)) {
             return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
         } 
@@ -1906,7 +1906,7 @@ public class PlayerApiService {
         }         
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
-    
+
     public String curator(String profile, String stack, HttpServletRequest req) {
         if (stack == null && profile == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
