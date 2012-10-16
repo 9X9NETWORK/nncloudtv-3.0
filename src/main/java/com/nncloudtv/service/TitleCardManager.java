@@ -25,6 +25,7 @@ public class TitleCardManager {
         Date now = new Date();
         card.setUpdateDate(now);
         card.setPlayerSyntax(this.generatePlayerSyntax(card));
+        new NnProgramManager().processCache(card.getChannelId());        
         return dao.save(card);
     }
     
@@ -33,15 +34,16 @@ public class TitleCardManager {
             return;
         }
         dao.delete(card);
+        new NnProgramManager().processCache(card.getChannelId());
     }
     
-    public void delete(List<TitleCard> titlecards) {
-    
+    public void delete(List<TitleCard> titlecards) {    
         if (titlecards == null || titlecards.size() == 0) {
             return;
-        }
-        
+        }        
         dao.deleteAll(titlecards);
+        //assumption: multiple titlecards operation will have the same channel id 
+        new NnProgramManager().processCache(titlecards.get(0).getChannelId());
     }
     
     public List<TitleCard> findByProgramId(long programId) {
@@ -51,8 +53,6 @@ public class TitleCardManager {
     public TitleCard findById(long id) {
         return dao.findById(id);
     }
-    
-    // TODO: findByEpisode()
     
     private String generatePlayerSyntax(TitleCard card) {
         if (card == null) return null;
