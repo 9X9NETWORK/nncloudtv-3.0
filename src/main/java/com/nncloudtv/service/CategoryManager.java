@@ -86,7 +86,7 @@ public class CategoryManager {
     }
     
     public List<NnChannel> listChannels(int page, int limit, long categoryId) {
-    	List<CategoryMap> list = dao.listCategoryMap(page, limit, "categoryId == " + categoryId);
+        List<CategoryMap> list = dao.listCategoryMap(page, limit, "categoryId = " + categoryId);
         List<Long> ids = new ArrayList<Long>();
     	for (CategoryMap m :list) {
     	    ids.add(m.getChannelId());
@@ -98,7 +98,8 @@ public class CategoryManager {
     
     //find channels under certain category id with the tag
     public List<NnChannel> findChannelsByTag(long id, boolean player, String tagStr) {
-        List<NnChannel> channels = this.findChannels(id, player);    
+        List<NnChannel> channels = this.findChannels(id, player); //TODO change to listChannels
+
         TagDao tagDao = new TagDao();
         Tag tag = tagDao.findByName(tagStr);
         HashSet<Long> set = new HashSet<Long>();
