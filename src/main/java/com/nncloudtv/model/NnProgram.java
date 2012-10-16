@@ -62,7 +62,9 @@ public class NnProgram implements Serializable {
     /**
      * used in 2 places:
      * 1. from channel parsing service, it's where the physical file stores, to avoid duplication.
-     * 2. for "favorite" feature, used when the program type is "reference". in this case, programId will be stored  
+     * 2. for "favorite" feature, 
+     *    used when the program type is "reference". in this case, the original programId will be stored
+     *    if a file url is stored, the original channel id is stored.  
      */
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
