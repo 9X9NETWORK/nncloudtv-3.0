@@ -50,9 +50,15 @@ public class GenericDao<T> {
     public List<T> saveAll(List<T> list) {
         if (list == null) {return list;}
         PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
+        Transaction tx = pm.currentTransaction();
         try {
+            tx.begin();
             pm.makePersistentAll(list);
+            tx.commit();
         } finally {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             pm.close();
         }
         return list;
@@ -72,9 +78,15 @@ public class GenericDao<T> {
         if (list == null) return;
         
         PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
+        Transaction tx = pm.currentTransaction();
         try {
+            tx.begin();
             pm.deletePersistentAll(list);
+            tx.commit();
         } finally {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             pm.close();
         }
     }
