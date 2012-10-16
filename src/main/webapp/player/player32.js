@@ -1,4 +1,4 @@
-﻿/* players mogwai3 */
+﻿/* players mogwai4 */
 
 var current_tube = '';
 var wmode = 'transparent';
@@ -265,6 +265,7 @@ var language_en =
   passmatch: 'The two passwords you entered do not match.',
   sixchar: 'Please choose a password of at least six characters.',
   signupfail: 'Signup failure',
+  tooken: 'This email has been used',
   suberr: 'Cannot add the channel to Smart Guide now',
   syschan: 'System channel cannot be deleted',
   deletethis: 'Do you want to delete this channel?',
@@ -489,8 +490,8 @@ var language_en =
   conferr: 'Error saving your configuration',
   nochanguide: 'No channels in your guide!',
   badcaptcha: 'Oops! Looks like the verification word was entered incorrectly. Please try again.',
-  badpass: 'The email or password you entered was incorrect. Please try again.',
-  alreadyin: 'That channel is already in your Guide',
+  badpass: "Email and password don't match, please try again",
+  alreadyin: 'This channel is already in your Guide',
   mustlogin: 'You must be logged in to use this feature',
   trynextep: 'Try next episode',
   nextchan: 'Next channel',
@@ -570,7 +571,9 @@ var language_en =
   oldpassword: 'Old Password',
   newpassword: 'New Password',
   newpasswordverify: 'Repeat New Password',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  followingme: 'Following Me',
+  mypageurl: "My Page's URL"
   };
 
 var language_tw =
@@ -619,9 +622,11 @@ var language_tw =
   thanx: '已登出，記得常回來9x9.tv！',
   logfail: '登入失敗',
   validmail: '請輸入正確的Email帳號',
-  passmatch: '輸入的密碼需相同',
+  _passmatch: '輸入的密碼需相同',
+  passmatch: '輸入密碼不一致，請重新輸入',
   sixchar: '密碼長度至少6個字元',
   signupfail: '註冊失敗，請再試一次',
+  tooken: '此信箱已被使用',
   suberr: '無法訂閱，請稍候再試',
   syschan: '系統頻道不可刪除',
   deletethis: '確定刪除此頻道？',
@@ -681,7 +686,8 @@ var language_tw =
   oneempty: '您只剩一個頻道空格。',
   noempty: '您的頻道表已滿，刪除頻道後才能訂閱',
   empties: '您還剩 1% 個頻道空格',
-  aboutus: '關於9x9',
+  _aboutus: '關於9x9',
+  aboutus: '關於我們',
   newusers: '註冊',
   signup: '註冊',
   successful: '新增成功',
@@ -847,8 +853,8 @@ var language_tw =
   conferr: 'Error saving your configuration',
   nochanguide: 'No channels in your guide!',
   badcaptcha: 'Oops! Looks like the verification word was entered incorrectly. Please try again.',
-  badpass: 'The email or password you entered was incorrect. Please try again.',
-  alreadyin: 'That channel is already in your Guide',
+  badpass: '密碼輸入不正確，請重新輸入',
+  alreadyin: '這個頻道已經在你的頻道表中',
   mustlogin: 'You must be logged in to use this feature',
   trynextep: '看下一個節目',
   nextchan: '換另一個頻道',
@@ -901,9 +907,11 @@ var language_tw =
   email: '信箱',
   password: '密碼',
   repeatpassword: '再次輸入密碼',
-  yourname: '你的姓名',
+  _yourname: '你的姓名',
+  yourname: '用戶名稱',
   createmyaccount: '送出',
-  thiswillbe: '這將是9x9的其他用戶看到你的用戶名。',
+  _thiswillbe: '這將是9x9的其他用戶看到你的用戶名。',
+  thiswillbe: '創建新用戶名稱',
   signfb: '使用FaceBook登入',
   agreement: '我已讀完並同意遵守隱私權政策與使用條款',
   createanewchannel: '創建頻道',
@@ -923,14 +931,16 @@ var language_tw =
   a_termspolicy: '政策條款',
   a_contactus: '聯繫我們',
   a_partners: '合作夥伴',
-  a_curators: '策展人',
+  a_curators: '創建頻道',
   a_press: '活動紀錄',
   a_contest: '頻道策展大賽',
   full: '你的頻道表已經滿了,請刪除現存頻道以加入新頻道',
   oldpassword: '舊密碼',
   newpassword: '新密碼',
   newpasswordverify: '再次輸入新密碼',
-  cancel: '取消'
+  cancel: '取消',
+  followingme: '個粉絲',
+  mypageurl: '專頁連結'
   };
 
 var translations = language_en;
@@ -1278,6 +1288,11 @@ function set_language (lang)
   $("#btn-home-sign-in-fb .btn-fb-middle").html (translations ['signfb']);
   $("#signup-checkbox-txt").html (translations ['agreement']);
 
+  $("#curator-activity li .item").eq(0).html (translations ['nchannels']);
+  $("#curator-activity li .item").eq(1).html (translations ['imfollowing']);
+  $("#curator-activity li .item").eq(2).html (translations ['followingme']);
+  $("#curator-page b").html (translations ['mypageurl']);
+
   /* about dropdown */
   $("#developer-dropdown li").eq(0).html (translations ['a_aboutus']);
   $("#developer-dropdown li").eq(1).html (translations ['a_help']);
@@ -1288,6 +1303,10 @@ function set_language (lang)
   $("#developer-dropdown li").eq(6).html (translations ['a_curators']);
   $("#developer-dropdown li").eq(7).html (translations ['a_press']);
   $("#developer-dropdown li").eq(8).html (translations ['a_contest']);
+  if (language == 'en')
+    $("#developer-dropdown li").eq(8).show();
+  else
+    $("#developer-dropdown li").eq(8).hide();
 
   if (home_stack_name == 'hottest')
     $("#home-type").html (translations ['hottest']);
@@ -1581,7 +1600,15 @@ function init()
 function set_username_clicks()
   {
   $("#signin").unbind();
-  $("#signin").click (new_signup);
+  $("#signin").click (function()
+    {
+    var saved_thumbing = thumbing;
+    new_signup (function()
+      {
+      if (saved_thumbing == 'home')
+        home();
+      });
+    });
   $("#profile").unbind();
   $("#profile").click (function (event)
     {
@@ -1707,6 +1734,7 @@ function setup_piwik()
 
 function reverse_engineer_program_id (episode_id)
   {
+log ("REVERSE ENGINEER: " + episode_id + " FROM: " + program_line);
   for (var i = 1; i <= n_program_line; i++)
     {
     if (episode_id == youtube_of (program_line [i]))
@@ -1716,8 +1744,9 @@ function reverse_engineer_program_id (episode_id)
 
 function track_episode (set_id, channel_id, episode_id)
   {
-  piwik_track_episode (set_id, channel_id, episode_id)
+  log ("&&&&&&&&&&&&&&&&&& TRACK :: CHANNEL:" + channel_id + " EPISODE:" + episode_id);
   track_without_piwik (set_id, channel_id, episode_id);
+  piwik_track_episode (set_id, channel_id, episode_id)
   into_player_history (set_id, channel_id, episode_id);
   }
 
@@ -2540,34 +2569,9 @@ function fetch_channels()
   {
   log ('******* obtaining channels');
 
-  var query = "/playerAPI/channelLineup?user=" + user + '&' + 'setInfo=true' + rx();
-
-  var d = $.get (query, function (data)
+  fetch_channels_then (function()
     {
-    var n = 0;
-    var conv = {};
-
-    for (var y = 1; y <= 9; y++)
-      for (var x = 1; x <= 9; x++)
-        conv [++n] = "" + y + "" + x;
-
-    var lines = data.split ('\n');
-    log ('number of lines obtained: ' + lines.length);
-
-    var fields = lines[0].split ('\t');
-    if (fields [0] != '0')
-      {
-      log_and_alert ('server error: ' + lines [0]);
-      return;
-      }
-
-    if (false && username.match (/^XYZ/))
-      alert ('query ' + query + ' : ' + data);
-
-    process_channel_lineup (data);
-
     update_cart_bubble (channels_in_guide());
-
     all_channels_fetched = true;
 
     if (add_jumpstart_channel)
@@ -2577,6 +2581,29 @@ function fetch_channels()
       }
 
     after_fetch_channels (false);
+    });
+  }
+
+function fetch_channels_then (callback)
+  {
+  var query = "/playerAPI/channelLineup?user=" + user + '&' + 'setInfo=true' + rx();
+  var d = $.get (query, function (data)
+    {
+    var lines = data.split ('\n');
+    log ('number of lines obtained: ' + lines.length);
+
+    var fields = lines[0].split ('\t');
+    if (fields [0] != '0')
+      {
+      log_and_alert ('server error: ' + lines [0]);
+      return;
+      }
+    process_channel_lineup (data);
+
+    if (typeof (callback) == 'function')
+      callback (fields[0]);
+    else
+      eval (callback);
     });
   }
 
@@ -3319,7 +3346,8 @@ function gr_click (id)
 
 function line_to_channel (line)
   {
-  var default_thumb = nroot + 'guide_ch_default.png';
+  var default_thumb = 'http://9x9ui.s3.amazonaws.com/mock22/images/guide_ch_default.png';
+
   var fields = line.split ('\t');
 
   if (!fields[1])
@@ -4167,8 +4195,8 @@ function youtube_of (program)
     var pinfo = programgrid [program];
     for (var field in { url1:0, url2:0, url3:0 })
       {
-      if (field in pinfo && pinfo [field].match (/\?v=([^\&]*)/))
-        return pinfo [field].match (/\?v=([^\&]*)/) [1];
+      if (field in pinfo && pinfo [field].match (/\?v=([^\&;]*)/))
+        return pinfo [field].match (/\?v=([^\&;]*)/) [1];
       }
     }
   }
@@ -4176,6 +4204,7 @@ function youtube_of (program)
 function best_url (program)
   {
   var desired;
+  var ret = '';
 
   if (! (program in programgrid))
     {
@@ -4196,19 +4225,19 @@ function best_url (program)
 
   if (programgrid [program]['url1'].match (ext))
     {
-    return programgrid [program]['url1'];
+    ret = programgrid [program]['url1'];
     }
   else if (programgrid [program]['url2'].match (ext))
     {
-    return programgrid [program]['url2'];
+    ret = programgrid [program]['url2'];
     }
   else if (programgrid [program]['url3'].match (ext))
     {
-    return programgrid [program]['url3'];
+    ret = programgrid [program]['url3'];
     }
   else if (programgrid [program]['url4'].match (ext))
     {
-    return programgrid [program]['url4'];
+    ret = programgrid [program]['url4'];
     }
   else
     {
@@ -4216,10 +4245,17 @@ function best_url (program)
       {
       var p = programgrid [program][f];
       if (! (p.match (/^(|null|fp:null|fp:)$/)))
-        return p;
+        {
+        ret = p;
+        break;
+        }
       }
-    return '';
     }
+
+  if (ret.match (/;/))
+    ret = ret.replace (/;.*/, '');
+
+  return ret;
   }
 
 function play_first_program_in (chan)
@@ -5311,24 +5347,6 @@ function keypress (keycode)
       submit_user_report ("Automated comment");
       break;
     }
-  }
-
-var shazam_save_thumbing;
-
-function shazam()
-  {
-  shazam_save_thumbing = thumbing;
-
-  $("#shazam-layer").show();
-  $("#btn-shazam-signin").unbind();
-
-  $("#btn-shazam-signin").click (function() { $("#shazam-layer").hide(); after_sign = "shazam_inner()"; new_submit_login(); });
-  $("#btn-shazam-cancel").click (function() { $("#shazam-layer").hide(); thumbing = shazam_save_thumbing; });
-  }
-
-function shazam_inner()
-  {
-  quicklogin (user);
   }
 
 function add_more_channels()
@@ -7148,7 +7166,7 @@ function user_blur()
   log ('user blur: ' + $(this).attr("id"));
   }
 
-function new_submit_login()
+function new_submit_login (callback_on_success)
   {
   var things = [];
 
@@ -7195,8 +7213,29 @@ function new_submit_login()
       /* wipe out the current guest account program+channel data */
       wipe();
 
+      if (false)
+        {
+        /* FORCE USE OF quickLogin. THIS WORKS, BUT IT IS RATHER SLOW. */
+        do_this_after_fetch_channels = after_sign;
+        after_sign = undefined;
+        quicklogin (user);
+        return;
+        }
+
       activated = false;
 
+      $("#waiting-layer").show();
+      fetch_channels_then (function()
+        {
+        $("#waiting-layer").hide();
+        if (typeof (callback_on_success) == 'function')
+          callback_on_success();
+        else
+          eval (callback_on_success);
+        });
+      return;
+
+      /* NOTREACHED */
       fetch_everything();
 
       if (saved_thumbing)
@@ -7282,93 +7321,7 @@ function error_login_fail()
   user_cursor = 'L-email';
   }
 
-function submit_signup()
-  {
-  var things = [];
-  var params = { 'S-name': 'name', 'S-email': 'email', 'S-password': 'password' };
-
-  // this is broken in earlier Opera, appears to be Javascript implementation bug
-  for (var p in params)
-    {
-    var v = $('#' + p).val();
-    v = encodeURIComponent (v);
-    things.push ( params [p] + '=' + v );
-    }
-
-  if (! $("#S-email").val().match (/\@/))
-    {
-    notice_ok ('user', translations ['validmail'], "error_bad_email()");
-    return;
-    }
-
-  if ($("#S-password").val() != $("#S-password2").val())
-    {
-    notice_ok ('user', translations ['passmatch'], "error_password()");
-    return;
-    }
-
-  if ($("#S-password").val().length < 6)
-    {
-    notice_ok ('user', translations ['sixchar'], "error_password()");
-    return;
-    }
-
-  var serialized = things.join ('&') + '&' + 'user=' + user + mso() + rx();
-  log ('signup: ' + serialized);
-
-  userid = undefined;
-  $("#waiting-layer").show();
-
-  $.post ("/playerAPI/signup", serialized, function (data)
-    {
-    $("#waiting-layer").hide();
-
-    log ('signup response: ' + data);
-
-    var lines = data.split ('\n');
-    var fields = lines[0].split ('\t');
-
-    if (fields [0] == "0")
-      {
-      for (var i = 2; i < lines.length; i++)
-        {
-        process_login_data_line (lines [i])
-        fields = lines [i].split ('\t');
-        if (fields [0] == 'token')
-          relay_post ("CONTROLLER " + user + ' ' + encodeURIComponent (username));
-        }
-
-      set_username();
-      log ('[login via signup] welcome ' + username + ', AKA ' + user);
-      solicit();
-
-      report ('u', 'signup ' + user + ' ' + username);
-
-      via_share = false;
-
-      /* wipe out the current guest account program+channel data */
-      wipe();
-      escape();
-
-      fetch_everything();
-
-      if (saved_thumbing)
-        {
-        thumbing = saved_thumbing;
-        saved_thumbing = undefined;
-        }
-      }
-    else
-      {
-      if (fields[1])
-        notice_ok ('user', translations ['signupfail'] + ': ' + fields [1], "error_signup_fail()");
-      else
-        notice_ok ('user', translations ['signupfail'], "error_signup_fail()");
-      }
-    });
-  }
-
-function new_submit_signup()
+function new_submit_signup (callback_on_success)
   {
   var things = [];
 
@@ -7385,21 +7338,18 @@ function new_submit_signup()
   if (! $("#signup-email").val().match (/\@/))
     {
     pw_signup_error (translations ['validmail']);
-    // notice_ok ('user', translations ['validmail'], "error_bad_email()");
     return;
     }
 
   if ($("#signup-password").val() != $("#signup-password2").val())
     {
     pw_signup_error (translations ['passmatch']);
-    // notice_ok ('user', translations ['passmatch'], "error_password()");
     return;
     }
 
   if ($("#signup-password").val().length < 6)
     {
     pw_signup_error (translations ['sixchar']);
-    // notice_ok ('user', translations ['sixchar'], "error_password()");
     return;
     }
 
@@ -7456,19 +7406,23 @@ function new_submit_signup()
         after_sign = undefined;
         eval (temp);
         }
+
+      if (typeof (callback_on_success) == 'function')
+        callback_on_success();
+      else
+        eval (callback_on_success);
       }
     else
       {
       if (fields[1])
         {
-        pw_signup_error (translations ['signupfail'] + ': ' + fields [1]);
-        // notice_ok (thumbing, translations ['signupfail'] + ': ' + fields [1], "error_signup_fail()");
+        if (fields[0] == '202')
+          pw_signup_error (translations ['tooken']);
+        else
+          pw_signup_error (translations ['signupfail'] + ': ' + fields [1]);
         }
       else
-        {
         pw_signup_error (translations ['signupfail']);
-        notice_ok (thumbing, translations ['signupfail'], "error_signup_fail()");
-        }
       }
     });
   }
@@ -8558,6 +8512,13 @@ function player (mode, cursor)
   $("#pl-menu li").removeClass ("on");
   $("#pl-note").hide();
 
+  if ((player_mode == 'guide' || player_mode == 'updates') && channels_in_guide() == 0)
+    {
+    /* If a login is in process (Guest clicked on "9" button), we may not have the channels yet */
+    fetch_channels_then (function() { player (mode, cursor); });
+    return;
+    }
+
   if (player_mode == 'guide')
     {
     $("#myfollow2").addClass ("on");
@@ -8596,7 +8557,7 @@ function player (mode, cursor)
     $("#pl-type").text (translations ['featured']);
     }
   else if (player_mode == 'curator-ch' || player_mode == 'curator-follow')
-    $("#pl-type").text ("Curator's");
+    $("#pl-type").text (current_curator_name);
 
   redraw_player_column();
 
@@ -8861,7 +8822,7 @@ function redraw_player_column()
     log ('player quickfollow: ' + id);
     var channel = player_stack [id];
     pop_with = "#popmessage-player-list";
-    browse_accept (channel ['id']);
+    browse_accept (channel ['id'], function() { log ("GREAT SUCCESS"); });
     });
 
   $("#pl-list li .pl-curator").unbind();
@@ -10173,9 +10134,6 @@ function header()
   $("#player").unbind();
   $("#player").click (player_button);
 
-  // $("#btn-account").unbind();
-  // $("#btn-account").click (function (event) { event.stopPropagation(); account_dropdown(); });
-
   $("#btn-developer").unbind();
   $("#btn-developer").click (function (event) { event.stopPropagation(); developer_dropdown(); });
 
@@ -10259,6 +10217,7 @@ function sitelang_dropdown()
       set_language ('en');
       footer_locale();
       save_language_setting();
+      refresh_after_language_change();
       }
     close_all_dropdowns();
     });
@@ -10270,6 +10229,7 @@ function sitelang_dropdown()
       set_language ('zh');
       footer_locale();
       save_language_setting();
+      refresh_after_language_change();
       }
     close_all_dropdowns();
     });
@@ -10288,6 +10248,14 @@ function save_language_setting()
       if (fields [0] != '0')
         notice_ok (thumbing, 'Error saving language: ' + fields[1], "");
       });
+  }
+
+function refresh_after_language_change()
+  {
+  if (thumbing == 'home')
+    home();
+  else if (thumbing == 'about')
+    developer ($("#developer-menu li h1.on").parent().attr("data-doc"));
   }
 
 function sitelocation_dropdown()
@@ -10412,7 +10380,7 @@ function developer_panel (doc)
   $("#developer-content").html ("");
   $("#developer-title h1").html ("");
   $("#developer-download").hide();
-  var query = '/playerAPI/staticContent?key=' + doc + '&' + 'lang=en' + rx();
+  var query = '/playerAPI/staticContent?key=' + doc + '&' + 'lang=' + language + rx();
   var d = $.get (query, function (data)
     {
     var blocks = data.split ('--\n');
@@ -13824,20 +13792,23 @@ sblocks = blocks;
          html += '</span>' + translations ['views'] + '<span class="divider">|</span><span class="follower-number">' + fields[7] + '</span>' + translations ['followers'] + '</p>';
          html += '<p class="channel-owned"><span class="channel-number">' + fields[5] + '</span>' + cplural + '</p>';
          html += '</div>';
-         if (parseInt (fields[8]) > 0)
+         if (fields[8])
            {
            shelf_count++;
            var channel = pool [fields[8]];
+           var is_empty_favorites = channel ['id'].match (/^f-/);
            var ago = ageof (channel ['timestamp'], true);
            searchshelf_stack [shelf_count] = channel;
-           html += '<div id="search-shelf-' + shelf_count + '" class="curator-shelf-item">';
+           html += '<div id="search-shelf-' + shelf_count + '" class="curator-shelf-item" data-channel="' + channel ['id'] + '">';
            html += '<p class="pl-title-line"><span class="pl-title">' + channel ['name'] + '</span></p>';
            html += '<p class="pl-curator-line"><span>' + translations ['curatorby'] + '</span><span class="pl-curator">' + channel ['curatorname'] + '</span></p>';
-           html += '<p class="icon-pl"></p>';
+           if (!is_empty_favorites)
+             html += '<p class="icon-pl"></p>';
            html += '<img src="' + channel ['thumb1'] + '" class="thumb1">';
            html += '<img src="' + channel ['thumb2'] + '" class="thumb2">';
            html += '<img src="' + channel ['thumb3'] + '" class="thumb3">';
-           html += '<p class="pl-sign"><span>' + ago + '</span></p>';
+           if (!is_empty_favorites)
+             html += '<p class="pl-sign"><span>' + ago + '</span></p>';
            html += '</div>';
            }
          html += '</li>';
@@ -13926,10 +13897,40 @@ sblocks = blocks;
      $("#result-summary").show();
 
      $("#curator-result li .curator-result-item").unbind();
-     $("#curator-result li .curator-result-item").click (function() { search_curator_click ($(this).attr("id")); });
+     $("#curator-result li .curator-result-item").click (function()
+       {
+       var id = $(this).attr("id");
+       log ('search curator click: ' + id);
+       var curator_id = $("#" + id).attr ("data-curator-id");
+       curation (curator_id);
+       });
 
      $("#curator-result li .curator-shelf-item").unbind();
-     $("#curator-result li .curator-shelf-item").click (function() { search_curator_shelf_click ($(this).attr("id")); });
+     $("#curator-result li .curator-shelf-item").click (function()
+       {
+       var id = $(this).attr("id").replace (/^search-shelf-/, '');
+       var channel_id = $(this).attr ("data-channel");
+       var channel = pool [channel_id];
+       log ('search curator shelf click: ' + id);
+       if (channel ['id'].match (/^f-/))
+         {
+         // notice_ok (thumbing, "This channel is an empty Favorites channel that cannot be played. If you think it won't be empty in the future, you can still Follow to it by visiting this curator's page and clicking Follow button on the channel box which contains this channel.", '');
+         return;
+         }
+       player_stack = searchshelf_stack;
+       player ('search', parseInt (id));
+       });
+
+     $("#curator-result li .curator-shelf-item .pl-curator").unbind();
+     $("#curator-result li .curator-shelf-item .pl-curator").click (function (event)
+       {
+       event.stopPropagation();
+       var id = $(this).parent().parent().attr("id");
+       log ('search curator shelf curatorname click: ' + id);
+       var channel_id = $("#" + id).attr ("data-channel");
+       var channel = pool [channel_id];
+       curation (channel ['curatorid']);
+       });
 
      $("#channel-result li").unbind();
      $("#channel-result li").click (function() { search_channel_click ($(this).attr("id")); });
@@ -14008,21 +14009,6 @@ function redraw_curator_pagination()
     log ('curator page ' + id);
     set_search_curator_page (id);
     });
-  }
-
-function search_curator_click (id)
-  {
-  log ('search curator click: ' + id);
-  var curator_id = $("#" + id).attr ("data-curator-id");
-  curation (curator_id);
-  }
-
-function search_curator_shelf_click (id)
-  {
-  log ('search curator shelf click: ' + id);
-  id = id.replace (/^search-shelf-/, '');
-  player_stack = searchshelf_stack;
-  player ('search', parseInt (id));
   }
 
 function search_channel_click (id)
@@ -14357,15 +14343,7 @@ function play_this_youtube_video (pid)
       try { ytmini[i].pauseVideo(); } catch (error) {};
       ytmini_why[i] = 'active';
       $("#ym" + i).css ("zIndex", "27");
-      if (thumbing == 'player' || thumbing == 'player-wait')
-        track_episode (undefined, player_real_channel, video_id);
-      else if (thumbing == 'store' || thumbing == 'store-wait')
-        {
-        track_episode (undefined, store_channel, video_id);
-        track_episode (store_cat, store_channel, video_id);
-        store_last_channel = store_channel;
-        store_last_program_index = program_cursor;
-        }
+      track_episode (undefined, player_real_channel, video_id);
       var youtube_thinks;
       try { youtube_thinks = ytmini[i].getVideoUrl(); } catch (error) {};
       log ('youtube thinks: ' + youtube_thinks);
@@ -14407,15 +14385,7 @@ function play_this_youtube_video (pid)
       ytmini_why [mini_player] = 'active';
       $("#ym" + mini_player).css ("zIndex", "27");
       start_yt_mini_tick();
-      if ((thumbing == 'player' || thumbing == 'player-wait') && player_mode == 'guide')
-        track_episode (undefined, player_real_channel, video_id);
-      else if (thumbing == 'store' || thumbing == 'store-wait')
-        {
-        track_episode (undefined, store_channel, video_id);
-        track_episode (store_cat, store_channel, video_id);
-        store_last_channel = store_channel;
-        store_last_program_index = program_cursor;
-        }
+      track_episode (undefined, player_real_channel, video_id);
       }
 
     preload_youtube_videos();
@@ -15131,11 +15101,7 @@ function browse_play (channel_id)
 
 function browse_accept_via_signin (channel)
   {
-  /* if 0 channels, wait for load -- user cannot delete system channel */
-  if (channels_in_guide() == 0)
-    do_this_after_fetch_channels = "browse_accept(" + channel + ")";
-  else
-    browse_accept (channel);
+  browse_accept (channel, browse_accept_callback_f);
   }
 
 var browse_accept_callback_f;
@@ -15166,16 +15132,14 @@ function browse_accept (channel, callback)
   if (channels_in_guide() >= 72)
     {
     redraw_subscribe();
-    notice_ok (thumbing, translations ['full'], "");
-    browse_accept_callback();
+    notice_ok (thumbing, translations ['full'], "browse_accept_callback()");
     return;
     }
 
   if (first_position_with_this_id (channel) > 0)
     {
     redraw_subscribe();
-    log_and_alert ("Already subscribed!");
-    browse_accept_callback();
+    notice_ok (thumbing, translations ['alreadyin'], "browse_accept_callback()");
     return;
     }
   else
@@ -15267,6 +15231,7 @@ function continue_acceptance (position, channel_info)
 
   redraw_store_add_button();
   redraw_ipg();
+  home_subscriptions();
   elastic();
   calculate_empties();
   update_cart_bubble (channels_in_guide());
@@ -17121,11 +17086,14 @@ function visit_youtube_channel_externally()
   }
 
 var current_curator_page;
+var current_curator_name;
 
 function curation (id)
   {
   log ("curation: " + id);
+
   current_curator_page = id;
+  current_curator_name = '';
 
   var showing = "curator"; /* or "visitor" */
 
@@ -17157,6 +17125,8 @@ function curation_inner (id)
   {
   log ('curation inner: ' + id);
   var curat = curator_pool [id];
+
+  current_curator_name = curat ['name'];
 
   $("#curator-activity-followers").text (curat ['followers']);
 
@@ -17234,8 +17204,8 @@ function load_curator_then (id, callback)
     return;
     }
 
-  var query = '/playerAPI/curator?curator=' + id + rx();
-  // var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
+  // var query = '/playerAPI/curator?curator=' + id + rx();
+  var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
   var d = $.get (query, function (data)
     {
     var lines = data.split ('\n');
@@ -17287,8 +17257,8 @@ function load_curator_channels (id)
   channel_scrollbar_activated = false;
   following_scrollbar_activated = false;
 
-  var query = '/playerAPI/curator?curator=' + id + rx();
-  // var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
+  // var query = '/playerAPI/curator?curator=' + id + rx();
+  var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
   var d = $.get (query, function (data)
     {
     var blocks = data.split (/^--$/m);
@@ -18126,11 +18096,11 @@ function new_signup (callback)
   $("#signin-layer").show();
   $("#signin-layer").css ("top", "0px");
   pw_error_reset();
-  signup_field_init();
+  signup_field_init (callback);
   pause_and_mute_everything();
   }
 
-function signup_field_init()
+function signup_field_init (callback)
   {
   input_init (translations ['email'], "#return-email");
   input_init (translations ['yourname'], "#signup-name");
@@ -18146,9 +18116,13 @@ function signup_field_init()
   $("#btn-home-sign-in").unbind();
   $("#btn-home-sign-in").click (function() 
     {
-    // $("#signin-layer").hide(); <-- done in new_submit_login
-    // after_sign = "signin_inner()";
-    new_submit_login();
+    new_submit_login (function()
+      {
+      if (typeof (callback) == 'function')
+        callback();
+      else
+        eval (callback);
+      });
     });
 
   $("#btn-home-create-account").unbind();
@@ -18174,9 +18148,11 @@ function verify_and_submit_signup()
     return;
     }
 
-  // $("#signin-layer").hide(); <-- done in new_submit_signup
-  // after_sign = "signin_inner()";
-  new_submit_signup();
+  new_submit_signup (function()
+    {
+    if (thumbing == 'home')
+      home();
+    });
   }
 
 function pw_signin_error (text)
