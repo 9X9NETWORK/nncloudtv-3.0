@@ -39,6 +39,10 @@ public class NnEpisode implements Serializable {
     @Persistent
     private boolean isPublic; 
     
+    // TODO: make it persistent
+    @NotPersistent
+    private Date scheduleDate;
+    
     @Persistent
     private Date publishDate;
         
@@ -54,6 +58,7 @@ public class NnEpisode implements Serializable {
     @Persistent
     private int duration;
     
+    // TODO: make it persistent
     @NotPersistent
     private int seq;
     
@@ -177,5 +182,13 @@ public class NnEpisode implements Serializable {
     
         this.playbackUrl = playbackUrl;
     }
+
+	public Date getScheduleDate() {
+		return scheduleDate;
+	}
+
+	public void setScheduleDate(Date scheduleDate) {
+		this.scheduleDate = scheduleDate;
+	}
      
 }
