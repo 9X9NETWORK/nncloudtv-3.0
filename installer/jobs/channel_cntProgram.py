@@ -2,7 +2,7 @@ import MySQLdb
 
 conn = MySQLdb.connect (host = "localhost",
                         user = "root",
-                        passwd = "letlet",
+                        passwd = "",
                         charset = "utf8", 
                         use_unicode = True,                                               
                         db = "nncloudtv_content")
@@ -12,7 +12,7 @@ cursor = conn.cursor()
 cursor.execute ("""
    select c.id, count(*)
      from nnchannel c, nnprogram p      
-    where (c.contentType = 6 || c.contentType = 8 || c.contentType = 9)
+    where (c.contentType = 8 || c.contentType = 9 || c.contentType = 11)
       and c.id = p.channelId
       and p.publishDate < now()
       and p.isPublic=true
