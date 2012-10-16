@@ -1,4 +1,4 @@
-﻿/* players mogwai5 */
+﻿/* players mogwai6 */
 
 var current_tube = '';
 var wmode = 'transparent';
@@ -520,6 +520,7 @@ var language_en =
   unfollow: 'Unfollow',
   location: 'Location',
   favorite: 'Favorite',
+  unfavorite: 'Unfavorite',
   imfollowing: "I'm Following",
   isfollowing: 'Channels %1 is following',
   followbychannel: "Sorted by channel number",
@@ -575,7 +576,11 @@ var language_en =
   cancel: 'Cancel',
   followingme: 'Following Me',
   mypageurl: "My Page's URL",
-  plzaccept: 'Please accept the agreements below.'
+  plzaccept: 'Please accept the agreements below.',
+  addfav: 'Added to your Favorites',
+  remfav: 'Removed from your Favorites',
+  hasbeenadded: 'This channel has been added to your Guide.',
+  hasbeenremoved: 'This channel has been removed from your Guide.'
   };
 
 var language_tw =
@@ -886,6 +891,7 @@ var language_tw =
   location: '所在地',
   _favorite: '喜愛,愛好',
   favorite: '喜歡',
+  unfavorite: '取消喜歡',
   _imfollowing: '已訂閱(頻道)',
   imfollowing: '我的訂閱',
   isfollowing: '我的訂閱',
@@ -944,7 +950,11 @@ var language_tw =
   cancel: '取消',
   followingme: '個粉絲',
   mypageurl: '專頁連結',
-  plzaccept: '請接受以下的隱私權政策與使用條款'
+  plzaccept: '請接受以下的隱私權政策與使用條款',
+  addfav: '此頻道已經添加到您喜歡的頻道表',
+  remfav: '此頻道已從您喜歡的頻道表中刪除',
+  hasbeenadded: '此頻道已經添加到您的頻道表',
+  hasbeenremoved: '此頻道已從您的頻道表中刪除'
   };
 
 var translations = language_en;
@@ -1019,8 +1029,23 @@ function elastic_innards()
 /* these are executed ONLY if a .resize was called, and not merely elastic() */
 function after_elastic()
   {
+  redraw_layer_if_possible();
+  }
+
+function redraw_layer_if_possible()
+  {
   if (thumbing == 'home')
     home();
+  else if (thumbing == 'curator')
+    curation (current_curator_page);
+  else if (thumbing == 'about')
+    developer ($("#developer-menu li h1.on").parent().attr("data-doc"));
+  else if (thumbing == 'guide')
+    guide();
+  else if (thumbing == 'browse')
+    browse_category (current_browse_index);
+  else if (thumbing == 'search')
+    perform_search (last_search_term);
   }
 
 function adjust_sliders()
@@ -1271,10 +1296,9 @@ function set_language (lang)
   $("#settings-layer #left li .title").eq(1).html (translations ['yourname']);
   $("#settings-layer #left li .title").eq(2).html (translations ['password']);
   $("#settings-layer #left li .title").eq(3).html (translations ['settingsabout']);
-  $("#settings-panel-change li .hint").eq(0).html (translations ['password'])
   $("#settings-panel-change li .hint").eq(0).html (translations ['oldpassword'])
-  $("#settings-panel-change li .hint").eq(0).html (translations ['newpassword'])
-  $("#settings-panel-change li .hint").eq(0).html (translations ['newpasswordverify'])
+  $("#settings-panel-change li .hint").eq(1).html (translations ['newpassword'])
+  $("#settings-panel-change li .hint").eq(2).html (translations ['newpasswordverify'])
   $("#btn-save-profile .btn-gray-middle").html (translations ['saveprofile']);
   $("#settings-layer #right .title").html (translations ['aboutimage']);
   $("#btn-change-password .btn-gray-middle").html (translations ['changepassword']);
@@ -1308,11 +1332,45 @@ function set_language (lang)
   $("#developer-dropdown li").eq(7).html (translations ['a_press']);
   $("#developer-dropdown li").eq(8).html (translations ['a_contest']);
   if (language == 'zh')
+    {
+    $("#developer-dropdown li").eq(7).show();
     $("#developer-dropdown li").eq(8).show();
+    }
   else
+    {
+    $("#developer-dropdown li").eq(7).hide();
     $("#developer-dropdown li").eq(8).hide();
+    }
   /* TEMP FIX */
   $("#developer-dropdown li").eq(8).attr ("data-doc", "v-contest");
+
+// NOT LETTING ME DO WHAT WE NEED...
+// <div id="player-ep-source">
+// <p id="ch-source">From <span>Mountain Biker gets taken out by BUCK Footage</span></p>
+// <p id="video-source">on <span>YouTube</span></p>
+// <p id="curator-source">by <span>Moutain Biker's News</span></p>
+// </div>
+
+  if (false)
+    {
+    var p_ch_source = $("#ch-source span").text();
+    var p_video_source = $("#video-source span").text();
+    var p_curator_source = $("#curator-source span").text();
+    if (language == 'zh')
+      {
+      html =  '<p id="curator-source">' + translations ['curatorby'] + ' <span>' + p_curator_source + '</span></p>';
+      html += '<p id="video-source">' + translations ['curatoron'] + '<span>' + p_video_source + '</span></p>';
+      html += '<p id="ch-source">' + translations ['curatorfrom'] + ' <span>' + p_ch_source + '</span></p>';
+      $("#player-ep-source").html (html);
+      }
+    else
+      {
+      html =  '<p id="ch-source">' + translations ['curatorfrom'] + ' <span>' + p_ch_source + '</span></p>';
+      html += '<p id="video-source">' + translations ['curatoron'] + ' <span>' + p_video_source + '</span></p>';
+      html += '<p id="curator-source">' + translations ['curatorby'] + ' <span>' + p_curator_source + '</span></p>';
+      $("#player-ep-source").html (html);
+      }
+    }
 
   if (home_stack_name == 'hottest')
     $("#home-type").html (translations ['hottest']);
@@ -2063,6 +2121,13 @@ function set_hash (newhash)
       $("#fb-like-container").show();
       try { FB.XFBML.parse(); } catch (error) {};
       }
+    $("#player-holder .favorite .favorite-body span").text (translations ['favorite'])
+    if (player_real_channel in pool)
+      {
+      var channel = pool [player_real_channel];
+      if (channel ['curatorid'] == curatorid && (channel ['nature'] == '11' || channel ['nature'] == '12'))
+        $("#player-holder .favorite .favorite-body span").text (translations ['unfavorite'])
+      }
     }
   }
 
@@ -2494,6 +2559,7 @@ function parse_program_data (data)
         var end_titles = [];
         if (pinfo ['submeta'].match (/:/))
           {
+          log ('HAS SUBMETA');
           var submetas = pinfo ['submeta'].split (/\n--/);
           for (var m in submetas)
             {
@@ -2513,6 +2579,7 @@ function parse_program_data (data)
                 }
               if ('message' in kvs && 'subepisode' in kvs)
                 {
+                log ('might have titlecard, type is: ' + kvs ['type']);
                 if (kvs ['type'].match (/begin/i))
                   begin_titles [parseInt (kvs ['subepisode'])] = kvs;
                 else if (kvs ['type'].match (/end/i))
@@ -2545,12 +2612,17 @@ function parse_program_data (data)
               pcopy ['begin-title'] = begin_titles [j+1];
             if ((j+1) in end_titles)
               pcopy ['end-title'] = end_titles [j+1];
+            pcopy ['umbrella'] = pcopy ['id'];
             programgrid [pcopy ['id'] + '-' + (j+1)] = pcopy;
             }
           }
         else
           {
           pinfo ['sort'] = ++count;
+          if (1 in begin_titles)
+            pinfo ['begin-title'] = begin_titles [1];
+          if (1 in end_titles)
+            pinfo ['end-title'] = end_titles [1];
           programgrid [pinfo ['id']] = pinfo;
           }
         }
@@ -2697,68 +2769,85 @@ var hottest_stack = [];
 
 function process_channel_stack (stackname, data)
   {
-  var html = '';
   var count = 0;
   var stack = [];
+
   var lines = data.split ('\n');
   var fields = lines[0].split ('\t');
+
   if (fields[0] != '0')
     {
     log ('error with channel stack: ' + line);
     return;
     }
+
   for (var i = 2; i < lines.length; i++)
     {
-    if (lines [i] != '')
+    if (lines [i] != '' && lines [i] != '--')
       {
       log ("STACK " + stackname + ": " + lines [i]);
       var channel = line_to_channel (lines[i]);
       pool [channel ['id']] = channel;
       stack [++count] = channel;
-      var ago = ageof (channel ['timestamp'], true);
-      var funf = (first_position_with_this_id (channel ['id']) > 0) ? translations ['unfollow'] : translations ['follow'];
-      html += '<li id="guide-' + stackname + '-' + count + '">';
-      html += '<div class="guide-trending-box">';
-      html += '<p class="guide-trending-tab"><span>' + funf + '</span></p>';
-      html += '<img src="' + channel ['thumb1'] + '" class="thumbnail">';
-      html += '<div class="btn-watch"></div>';
-      html += '</div>';
-      html += '<p class="min-title"><span>' + channel ['name'] + '</span></p>';
-      html += '<p class="min-description ellipsis multiline">';
-      html += '<span>' + channel ['desc'] + '</span>';
-      html += '</p>';
-      html += '<p class="min-meta">';
-      var plural = channel ['count'] == 1 ? translations ['episode'] : translations ['episodes'];
-      html += '<span>' + channel ['count'] + ' ' + plural + ' </span><span class="divider">|</span><span>' + ago + '</span>';
-      html += '</p>';
-      html += '<p class="min-curator"><span>' + translations ['curatorby'] + '</span><span class="name">' + channel ['curatorname'] + '</span></p>';
-      html += '</li>';
       }
     }
 
   if (stackname == 'trending')
-    {
     trending_stack = stack;
-    gt_cursor = 0;
-    $("#gt-list").html (html);
-    gt_bindings();
-    }
   else if (stackname == 'recommended')
     {
     if (recommended_stack && recommended_stack.length > 0)
       recommended_stack_in_waiting = stack
     else
-      {
       recommended_stack = stack;
-      gr_cursor = 0;
-      $("#gr-list").html (html);
-      gr_bindings();
-      }
     }
   else if (stackname == 'hottest')
     hottest_stack = stack;
   else if (stackname == 'featured')
     featured_stack = stack;
+
+  guide_stacks();
+  }
+
+function guide_stacks()
+  {
+  gt_cursor = 0;
+  $("#gt-list").html (guide_stack_html ("trending", trending_stack));
+  gt_bindings();
+
+  gr_cursor = 0;
+  $("#gr-list").html (guide_stack_html ("recommended", recommended_stack));
+  gr_bindings();
+  }
+
+function guide_stack_html (stackname, stack)
+  {
+  var html = '';
+
+  for (var i = 1; i < stack.length; i++)
+    {
+    var channel = stack [i];
+    var ago = ageof (channel ['timestamp'], true);
+    var funf = (first_position_with_this_id (channel ['id']) > 0) ? translations ['unfollow'] : translations ['follow'];
+    html += '<li id="guide-' + stackname + '-' + i + '">';
+    html += '<div class="guide-trending-box">';
+    html += '<p class="guide-trending-tab"><span>' + funf + '</span></p>';
+    html += '<img src="' + channel ['thumb1'] + '" class="thumbnail">';
+    html += '<div class="btn-watch"></div>';
+    html += '</div>';
+    html += '<p class="min-title"><span>' + channel ['name'] + '</span></p>';
+    html += '<p class="min-description ellipsis multiline">';
+    html += '<span>' + channel ['desc'] + '</span>';
+    html += '</p>';
+    html += '<p class="min-meta">';
+    var plural = channel ['count'] == 1 ? translations ['episode'] : translations ['episodes'];
+    html += '<span>' + channel ['count'] + ' ' + plural + ' </span><span class="divider">|</span><span>' + ago + '</span>';
+    html += '</p>';
+    html += '<p class="min-curator"><span>' + translations ['curatorby'] + '</span><span class="name">' + channel ['curatorname'] + '</span></p>';
+    html += '</li>';
+    }
+
+  return html;
   }
 
 function home_trending()
@@ -3633,9 +3722,8 @@ function activate()
   document.onkeydown=kp;
   redraw_ipg();
 
-  process_our_url();
-
-  finish_activation();
+  if (!process_our_url())
+    finish_activation ("[activate]");
   }
 
 function process_our_url()
@@ -3646,12 +3734,17 @@ function process_our_url()
   var has_custom_path = path != '' && path != '9x9' && path != '5f' && path != '9x9/' && path != '5f/' && !path.match (/^share\//);
 
   if (!custom_but_is_now_logged_in && (has_custom_path || (location.hash != '' && location.hash != '#')))
+    {
     custom_url (path);
+    return true;
+    }
+
+  return false;
   }
 
-function finish_activation()
+function finish_activation (why)
   {
-  log ('finish activation');
+  log ('finish activation: ' + why);
 
   $("#blue").hide();
 
@@ -3816,7 +3909,7 @@ function custom_url (path)
       }
     else
       {
-      notice_ok (thumbing, translations ['badlanding'], "switch_to_ipg(); finish_activation()");
+      notice_ok (thumbing, translations ['badlanding'], "switch_to_ipg(); finish_activation('[custom_url]')");
       }
     });
   }
@@ -3867,7 +3960,7 @@ function view_landing_inner()
   {
   log ('view landing inner');
   player_mute_override = 'unmute';
-  load_programs_then (jumpstart_channel, "finish_activation()");
+  load_programs_then (jumpstart_channel, "finish_activation('[view_landing_inner]')");
   }
 
 function unsubscribe_from_mailings (utoken)
@@ -3935,7 +4028,6 @@ function jumpstart()
     jumpstart_program = program_line [1];
 
   jumpstart_program = dot_qualify_program_id (jumpstart_channel, jumpstart_program);
-  // if (jumpstart_program in programgrid || !jumpstart_program)
   if (jumpstart_program in programgrid)
     {
     jumpstart_inner();
@@ -3993,7 +4085,7 @@ function load_programs_then (channel_id, callback)
       else if (('' + jumpstart_program + '-1') in programgrid)
         {
         jumpstart_program = '' + jumpstart_program + '-1'
-        log ("sub-episodic program found: " + jumpstart_program);
+        log ("sub-episodic program found: " + jumpstart_program + ", callback: " + callback);
         eval (callback);
         }
       else
@@ -4051,18 +4143,19 @@ function jumpstart_inner()
 
   var grid = first_position_with_this_id (jumpstart_channel);
 
+  program_lineup (jumpstart_channel);
+
   /* Youtubeisms */
   jumpstart_program = dot_qualify_program_id (jumpstart_channel, jumpstart_program);
 
   log ('-- js -- jumpstart_channel: ' + jumpstart_channel);
   log ('-- js -- jumpstart_program: ' + jumpstart_program);
-  if ('nature' in pool [jumpstart_channel])
+  if (jumpstart_channel in pool && 'nature' in pool [jumpstart_channel])
     log ('-- js --    channel nature: ' + pool [jumpstart_channel]['nature']);
   log ('-- js --  at grid location: ' + grid);
   log ('-- js --    programs there: ' + programs_in_channel (grid));
   log ('-- js --   in program grid: ' + (jumpstart_program in programgrid));
 
-  program_lineup (jumpstart_channel);
   if (!jumpstart_program && n_program_line > 0)
     {
     jumpstart_program = program_line [1];
@@ -4078,6 +4171,7 @@ function jumpstart_inner()
   if (! (jumpstart_program in programgrid))
     {
     log ('********************** jumpstart_inner: program expired: ' + jumpstart_program);
+    log ("program line: " + program_line);
     notice_ok (thumbing, translations ['expired'], "guide()");
     return;
     }
@@ -8275,6 +8369,8 @@ function guide_inner()
   fresh_layer ("guide");
   set_hash ("#!guide");
 
+  guide_stacks();
+
   $("#gt-list").css ("top", "0");
   $("#gr-list").css ("top", "0");
 
@@ -8891,7 +8987,7 @@ function redraw_subscribe()
   {
   if (thumbing == 'player')
     {
-    redraw_player_subscribe_button()
+    redraw_player_subscribe_button();
     if (player_mode != 'guide')
       adjust_column_of_subscriptions ("#pl-list", player_stack);
     }
@@ -8990,7 +9086,12 @@ function favorite()
 
   var program_arg;
 
-  if (program_id.match (/\./))
+  if ('umbrella' in program)
+    {
+    /* this is a sub-episode. Use the parent episode number */
+    program_arg = 'program=' + program ['umbrella'];
+    }
+  else if (program_id.match (/\./))
     {
     var video_id = program_id.match (/\.(.*)$/)[1];
     program_arg = 'video=' + video_id + '&' + 'name=' + encodeURIComponent (program ['name']) +
@@ -8999,18 +9100,22 @@ function favorite()
   else
     program_arg = 'program=' + program_id;
 
-  var query = '/playerAPI/favorite?user=' + user + '&' + 'channel=' + channel ['id'] + '&' + program_arg + rx();
+  var deletion = (channel ['curatorid'] == curatorid && (channel ['nature'] == '11' || channel ['nature'] == '12'));
+  var delflag = deletion ? '&' + 'delete=true' : '';
+
+  var query = '/playerAPI/favorite?user=' + user + '&' + 'channel=' + channel ['id'] + '&' + program_arg + delflag + rx();
   var d = $.get (query, function (data)
     {
     var lines = data.split ('\n');
     var fields = lines[0].split ('\t');
+    pop_with = "#popmessage-player-info";
     if (fields[0] != '0')
-      log ("error favoriting: " + lines[0]);
-    else
       {
-      pop_with = "#popmessage-player-info";
-      player_pop_message ("Added to your favorites.");
+      log ("error favoriting: " + lines[0]);
+      player_pop_message ((deletion ? "error unfavoriting: " : "error favoriting: ") + lines[0]);
       }
+    else
+      player_pop_message (deletion ? translations ['remfav'] : translations ['addfav']);
     });
   }
 
@@ -9707,6 +9812,7 @@ function player_ep_click (id)
   program_cursor = id;
   $("#p-li-" + program_cursor).addClass ("on");
   player_metainfo();
+  current_episode_phase = 0;
   store_play_yt();
   }
 
@@ -9828,6 +9934,7 @@ function player_flip_inner (cursor)
   ipg_metainfo();
   player_metainfo();
   redraw_program_line();
+  current_episode_phase = 0;
   store_play_yt();
   player_show_yt_quality();
   store_yt_render_volume();
@@ -10263,12 +10370,7 @@ function save_language_setting()
 
 function refresh_after_language_change()
   {
-  if (thumbing == 'home')
-    home();
-  else if (thumbing == 'curator')
-    curation (current_curator_page);
-  else if (thumbing == 'about')
-    developer ($("#developer-menu li h1.on").parent().attr("data-doc"));
+  redraw_layer_if_possible();
   }
 
 function sitelocation_dropdown()
@@ -10408,6 +10510,7 @@ dblocks = blocks;
     try { $("#developer-slider .slider-vertical").slider ("destroy"); } catch (error) {};
     $("#developer-slider").css ({ height: $(window).height() - $("#developer-constrain").offset().top - $("#developer-layer .reco-shelf").height() - 10 });
     scrollbar ("#developer-constrain", "#developer-list", "#developer-slider");
+    setTimeout ('$("#developer-slider .slider-vertical").slider ("value", "100")', 5);
     $("#developer-menu li h1").removeClass ("on");
     $("#developer-menu li").each (function()
       {
@@ -11703,192 +11806,7 @@ var recommends = [];
 
 function store()
   {
-home();
-return;
-  log ('-- store --');
-  store_inner();
-  if (jumpstart_channel != '') 
-    {
-    store_recommended (false);
-    log ("JUMPSTART: " + jumpstart_channel);
-    jumpstart();
-    }
-  else if (store_tab)
-    {
-    /* special handling for landing pages */
-    if (landing_page_override)
-      {
-      if ( !(1 in recommends) || recommends [1]['id'] != landing_page_override)
-        {
-        store_load_recommended (false);
-        store_last_channel = recommends [1]['content'][1];
-        store_last_program_index = 1;
-        }
-      }
-    /* try to resume playing whatever was playing when we last left the store */
-    log ('store: resume playing: ' + store_last_channel + ', program position: ' + store_last_program_index);
-    program_lineup (store_last_channel);
-    program_cursor = store_last_program_index;
-    if (store_preview_type == 'share')
-      store_set_channel (1, 1, store_last_channel, store_last_program_index);
-    redraw_store_preview();
-    update_store_channel_bubble (pool [store_last_channel]);
-    ipg_metainfo();
-    store_play_yt();
-    }
-  else
-    {
-    store_recommended (true);
-    allcats = {};
-    }
-  }
-
-function store_inner()
-  {
-  thumbing = 'store';
-  log ('store inner');
-
-  update_cart_bubble (channels_in_guide());
-  close_all_dropdowns();
-
-  /* show the thumbnails now by default */
-  $("#ep-switcher").addClass ("on");
-  $("#preview-ep, #preview-ep-meta").show();
-
-  mini_player = 1;
-
-  if (player_mute_override == 'unmute')
-    {
-    player_mute = false;
-    $("#btn-sound").addClass ("on");
-    }
-  else if (!user_has_set_muting)
-    {
-    /* turned this off */
-    // player_mute = true;
-    $("#btn-sound").removeClass ("on");
-    }
-
-  if (ambient_volume == undefined)
-    {
-    player_mute = false;
-    ambient_volume = 0.4;
-    set_ambient_volume();
-    $("#btn-sound").addClass ("on");
-    }
-
-  for (i = 1; i <= 3; i++)
-    ytmini[i] = ytmini_video_id[i] = ytmini_why[i] = undefined;
-
-  tvpreview_kickstart = false;
-  store_yt_init();
-
-  $("#store-layer, #preview-promo p").show();
-  $("#guide-layer, #search-layer, #player-layer, #hint-layer, #hint-bubble").hide();
-  header();
-
-  if (username == 'Guest')
-    {
-    $("#hint-layer, #hint-bubble").show();
-    $("#hint-bubble").hide(); /* Dan asked to temporarily turn this off 22mar2012 */
-    $("#hint-bubble .link").unbind();
-    $("#hint-bubble .link").click (help);
-    $("#hint-layer").css ("pointer-events", "none");
-    $("#btn-hint2tutorial").unbind();
-    $("#btn-hint2tutorial").click (help);
-    $("body").unbind();
-    $("body").click (function() { $("#hint-layer, #hint-bubble").hide(); });
-    setTimeout ('$("#hint-bubble").hide()', 7000);
-    $("#hint-1").delay (500) .fadeIn (500);
-    $("#hint-2").delay (1000).fadeIn (500);
-    $("#hint-3").delay (1500).fadeIn (500);
-    }
-
-  $("#recommended").unbind();
-  $("#recommended").click (function() { store_recommended (true); });
-
-  $("#category").unbind();
-  $("#category").click (store_category);
-
-  $("#yourown").unbind();
-  $("#yourown").click (store_yourown);
-
-  $("#btn-sound").unbind();
-  $("#btn-sound").click (store_sound);
-
-  $("#btn-preview-play").unbind();
-  $("#btn-preview-play").click (store_play_or_pause);
-
-  $("#btn-info").unbind();
-  $("#btn-info").click (store_info);
-
-  setup_cart();
-
-  $("#search-field").focus( function()
-    {
-    $(this).addClass ("hasFocus");
-    if ($("#search-field").val() == 'Search' || $("#search-field").val() == translations ['search'])
-      $("#search-field").val ('');
-    });
-
-  $("#search-field").blur( function() 
-    {
-    $(this).removeClass ("hasFocus");
-    if ($("#search-field").val() == '')
-      $("#search-field").val (translations ['search']);
-    });
-
-  $("#btn-programlang").unbind();
-  $("#btn-programlang").click (function (event) { event.stopPropagation(); sitelocation_dropdown(); });
-
-  if (sphere == 'zh')
-    $("#selected-programlang span").html ('中文頻道');
-  else
-    $("#selected-programlang span").html ('English Channels');
-
-  clearInterval (promo_timex);
-  promo_timex = setInterval (switch_promo, 7500);
-
-  update_sphere_display();
-
-  $("#programlang li").eq(0).unbind();
-  $("#programlang li").eq(0).click (function() { set_sphere ('en'); });
-  $("#programlang li").eq(1).unbind();
-  $("#programlang li").eq(1).click (function() { set_sphere ('zh'); });
-  }
-
-function store_up()
-  {
-  log ('store up');
-  flip_prev();
-  }
-
-function store_down()
-  {
-  log ('store down');
-  flip_next();
-  }
-
-function store_left()
-  {
-  log ('store left');
-  flip_prev_episode();
-  if (program_cursor < program_first || program_cursor > program_first + 2)
-    {
-    program_first = parseInt (program_cursor);
-    redraw_store_preview();
-    }
-  }
-
-function store_right()
-  {
-  log ('store right');
-  flip_next_episode();
-  if (program_cursor < program_first || program_cursor > program_first + 2)
-    {
-    program_first = parseInt (program_cursor);
-    redraw_store_preview();
-    }
+  home();
   }
 
 function set_sphere (region)
@@ -11911,24 +11829,6 @@ function update_sphere_display()
     $("#programlang li").eq(1).addClass("on");
   else
     $("#programlang li").eq(0).addClass("on");
-  }
-
-var promo_timex;
-var promo_index = 1;
-var n_promos = 2;
-
-function switch_promo()
-  {
-  $("#preview-promo p").hide();
-  promo_index++;
-  if (promo_index > n_promos)
-    promo_index = 1;
-  var promo = translations ['promo' + promo_index];
-  $("#preview-promo p").html (promo);
-  $("#preview-promo p").hide();
-  $("#preview-promo p").fadeIn (400);
-  $("#app-store").unbind();
-  $("#app-store").click (function() { window.open ("http://itunes.apple.com/us/app/9x9.tv/id443352510?mt=8", "_blank"); });
   }
 
 function store_info()
@@ -12375,125 +12275,10 @@ function recommended_click (event, id)
 
 function redraw_setbubbleclick()
   {
-return;
-  var html = '';
-
-  html += '<div id="setbubbleclick-slider" class="slider-wrap"><div class="slider-vertical"></div></div>';
-  html += '<img src="' + nroot + 'add_bubble_tip_left.png" class="left-bubble-tip">';
-  html += '<img src="' + nroot + 'add_bubble_tip_right.png" class="right-bubble-tip">';
-  html += '<p id="btn-setbub-close">';
-  html += '<img src="' + nroot + 'btn_delete_off.png" class="off">';
-  html += '<img src="' + nroot + 'btn_delete_on.png" class="on"></p>';
-  html += '<div id="setbubbleclick-content">';
-  html += '<div class="setbubbleclick-category-content">';
-  html += '<ul id="setbubbleclick-list" class="setbubbleclick-level3-list"></ul>';
-  html += '</div>';
-  html += '</div>';
-
-  $("#setbubbleclick").html (html);
-
-  /* an ugly dance to set the vertical position of the triangle */
-  var offset = $("#rec-" + store_recommend_index).offset();
-  // log ("BUBBLE top:" + offset.top + " left:" + offset.left);
-  $("#setbubbleclick .left-bubble-tip").css ("top", "-2.5em");
-  var offset2em = $("#setbubbleclick .left-bubble-tip").offset();
-  $("#setbubbleclick .left-bubble-tip, #setbubbleclick .right-bubble-tip").css("top", (offset.top - offset2em.top) + "px");
-
-  log ('redraw_setbubbleclick: ' + store_recommend_index);
-
-  var set = recommends [store_recommend_index];
-  log ('redraw_setbubbleclick count: ' + set['count']);
-
-  $("#setbubbleclick-list").html (""); 
-  // scrollbar ("#setbubbleclick-content", "#setbubbleclick-list", "#setbubbleclick-slider");
-
-  html = '';
-  html += '<li>';
-  html += '<span class="setbubbleclick-title">' + set ['name'] + '</span>';
-  html += '<span class="setbubbleclick-description">' + set ['desc'] + '</span>';
-  html += '<span class="setbubbleclick-channel">' + set ['count'] + ' channels</span>';
-  html += '</li>';
-
-  var channel_rows = 0;
-  for (var i = 1; i <= recommends [store_recommend_index]['count']; i++)
-    {
-    if (i in set ['content'])
-      {
-      var channel = set ['content'][i];
-      html += '<li class="line">';
-      html += '<p class="on"><span class="icon-ch">';
-      html += '<img src="' + nroot + 'setbubble_click_icon_ch_off.png" class="off">';
-      html += '<img src="' + nroot + 'setbubble_click_icon_ch_on.png" class="on"></span>';
-      html += '<span class="ch-name">' + channel ['name'] + '</span></p>';
-      html += '</li>';
-      channel_rows++;
-      }
-    }
-
-  $("#setbubbleclick-list").html (html); 
-  setbubbleclick_highlight();
-
-  var which_column = (store_recommend_index - 1) % 3;
-  $("#setbubbleclick .right-bubble-tip, #setbubbleclick .left-bubble-tip").hide();
-  if (which_column == 0)
-    {
-    $("#setbubbleclick .left-bubble-tip").show();
-    $("#setbubbleclick").css ("margin-left", "11.5em");
-    }
-  else if (which_column == 1)
-    {
-    $("#setbubbleclick .left-bubble-tip").show();
-    $("#setbubbleclick").css ("margin-left", "19.6em");
-    }
-  else if (which_column == 2)
-    {
-    $("#setbubbleclick .right-bubble-tip").show();
-    $("#setbubbleclick").css ("margin-left", "7.9em");
-    }
-  scrollbar ("#setbubbleclick-content", "#setbubbleclick-list", "#setbubbleclick-slider");
-
-  $("#btn-setbub-close").click (function() { $("#setbubbleclick").hide(); });
-  $("#setbubbleclick-list .line").click (function (event)
-    {
-    event.stopPropagation();
-    store_direction = '!';
-    store_set_channel (store_cat, 1 +  $("#setbubbleclick-list .line").index (this));
-    // $("#chOrder").html (possible_ch);
-    });
   }
 
 function setbubbleclick_highlight()
   {
-  if ($("#setbubbleclick").css ("display") == 'none')
-    return;
-
-  $(".setbubbleclick-level3-list p").removeClass ("on");
-  if (store_index != undefined)
-    {
-    var current = $(".setbubbleclick-level3-list p").eq(store_index-1);
-    if (!current) return;
-    $(current).addClass ("on");
-    var pos = $(current).position();
-    if (!pos) return;
-    var curtop = pos.top;
-    log ('setbubbleclick offset: ' + curtop);
-    var sliderval = $("#setbubbleclick-slider .slider-vertical").slider ("value");
-    if (!isNaN (sliderval))
-      {
-      var t = -1 * parseInt ($("#setbubbleclick-list").position().top);
-      log ('setbubbleclick: curtop: ' + curtop + ', sliding top: ' + t);
-      if (curtop < t || curtop > t + $("#setbubbleclick-content").height())
-        {
-        var pct = (curtop * 100) / $("#setbubbleclick-list").height();
-        $("#setbubbleclick-slider .slider-vertical").slider ("value", 100-pct);
-        log ("setbubbleclick: rejiggering to " + (100-pct) + "%");
-        }
-      else
-        log ("setbubbleclick: within range");
-      }
-    else
-      log ("setbubbleclick_highlight: sliderval not available");
-    }
   }
 
 var rec_cache = {};
@@ -13160,161 +12945,6 @@ function store_set_channel_inner()
 
 function redraw_store_preview()
   {
-return;
-  if (thumbing != 'store' && thumbing != 'store-wait')
-    {
-    log ("redraw_store_preview: not in store, won't redraw");
-    return;
-    }
-
-  log ('redraw_store_preview');
-
-  var channel = pool [store_channel];
-  program_lineup (channel ['id']);
-
-  set_hash ("#!" + channel ['id']);
-
-  $("#index-ch-title, #meta-ch-title").html (fixed_up_program_name (channel ['name']));
-  $("#preview-ch-title .text-holder span").html (channel ['name']);
-
-  if (store_preview_type == 'category')
-    {
-    var category = allcats [store_cat];
-    // $("#index-catg-title").html (category ['name']);
-    $("#meta-set-title").html (category ['name']);
-    }
-  else if (store_preview_type == 'recommended')
-    {
-    var set = recommends [store_recommend_index];
-    // $("#index-catg-title").html (set ['name']);
-    $("#meta-set-title").html (set ['name']);
-    }
-  else if (store_preview_type == 'share')
-    {
-    // $("#index-catg-title").html ('Shared');
-    $("#meta-set-title").html ('Shared');
-    }
-  else if (store_preview_type == 'search')
-    {
-    // $("#index-catg-title").html ("Search Results");
-    $("#meta-set-title").html ("Search Results");
-    }
-
-  var n_channels = channels_in_set_or_category (store_preview_type, store_cat);
-
-  var html = '';
-  for (var i = 1; i <= n_channels; i++)
-    html += '<li></li>';
-  $("#flip-ch-index").html (html);
-  // $("#flip-ch-index li").css ("height", (100 / n_channels) + "%");
-  $("#flip-ch-index li").css ("height", ($("#flip-ch-index").height() / n_channels));
-
-  var will_show_flip = (store_index != previous_store_index);
-  // if (store_index != previous_store_index)
-    {
-    previous_store_index = store_index;
-    $("#flip-ch-index li").removeClass ("on");
-    $("#flip-ch-index li:nth-child(" + store_index + ")").addClass ("on")
-    setbubbleclick_highlight();
-    $("#chOrder").html (store_index);
-    $("#chNum").html (n_channels);
-    if (true || will_show_flip)
-      show_flip_bubble();
-    }
-
-  $("#flip-ch-index li.on").unbind();
-  $("#flip-ch-index li.on").live ("mouseover", function()
-    {
-    // flip_timex = setTimeout (function() { $("#flip-bubble").fadeIn (400); }, 400);
-    show_flip_bubble();
-    });
-  $("#flip-ch-index li.on").live ("mouseout", function()
-    {
-    // $("#flip-bubble").fadeOut (400);
-    // clearTimeout (flip_timex);
-    });
-
-  var html = '';
-  for (var i = program_first; i <= program_first + 2 && i <= n_program_line; i++)
-    {
-    var program = programgrid [program_line [i]];
-    var age = '';
-    if ('timestamp' in program)
-      age = ageof (program ['timestamp'], false);
-    var duration = durationof (program ['duration']);
-    if (duration == '0:00')
-      duration = '';
-    html += '<li id="sp-' + i + '"><img src="' + program ['thumb'] + '" class="thumbnail"><p class="duration"><span>' + duration + '</span></p></li>';
-    }
-
-  $("#preview-ep-list").html (html);
-
-  if (!program_cursor)
-    { program_cursor = 1; }
-  if (program_cursor)
-    $("#sp-" + program_cursor).addClass ("on");
-
-  var program = programgrid [program_line [program_cursor]];
-  if (program)
-    {
-    // $("#preview-ep-meta .ep-title").html (fixed_up_program_name (program ['name']));
-    $("#meta-ep-title").html (fixed_up_program_name (program ['name']));
-    // $("#preview-ep-meta .amount").html (program_cursor + '/' + n_program_line);
-    }
-  else
-    {
-    // $("#preview-ep-meta .ep-title").html ('No programs');
-    $("#meta-ep-title").html ('No programs');
-    // $("#preview-ep-meta .amount").html ('0 / 0');
-    }
-
-if (false)
-{
-  $("#btn-flip-preview").unbind();
-  $("#btn-flip-preview").click (function (event) { event.stopPropagation(); flip_random(); });
-
-  $("#btn-flip-back").unbind();
-  $("#btn-flip-back").click (flip_back);
-
-  $("#btn-flip-next").unbind();
-  $("#btn-flip-next").click (function (event) { event.stopPropagation(); flip_next(); });
-
-  $("#btn-flip-prev").unbind();
-  $("#btn-flip-prev").click (function (event) { event.stopPropagation(); flip_prev(); });
-}
-store_bind();
-
-  $("#ep-switcher").unbind();
-  $("#ep-switcher").click (ep_switcher);
-
-  $("#preview-ep-list li").unbind();
-  $("#preview-ep-list li").click (function() { store_ep_click ($(this).attr("id")); });
-  $("#preview-ep-list li").hover (store_ep_hover_in, store_ep_hover_out);
-
-  redraw_store_add_button();
-  store_yt_render_volume();
-
-  if (program_first != 1)
-    {
-    $("#preview-arrow-left").show();
-    $("#preview-arrow-left").unbind();
-    $("#preview-arrow-left").click (store_arrow_left);
-    }
-  else
-    $("#preview-arrow-left").hide();
-
-  if (program_first + 3 <= n_program_line)
-    {
-    $("#preview-arrow-right").show();
-    $("#preview-arrow-right").unbind();
-    $("#preview-arrow-right").click (store_arrow_right);
-    }
-  else
-    $("#preview-arrow-right").hide();
-
-  $("#btn-add-ch-L").hover (add_button_hover_in, add_button_hover_out);
-
-  $("#btn-flip-preview").hover (flip_preview_hover_in, flip_preview_hover_out);
   }
 
 var flipr_bubble_timex;
@@ -13732,8 +13362,9 @@ function perform_search (text)
 
   $("#search-layer").removeClass ("lost").removeClass ("found");
   $("#search-layer").addClass ("found");
-  fresh_layer ("search");
 
+  fresh_layer ("search");
+  thumbing = 'search';
   set_hash ("#!search");
 
   $("#no-result").hide();
@@ -14144,11 +13775,19 @@ function pause_and_mute_all_video()
     }
   }
 
+var tc_timex;
+var tc_duration;
+var tc_start;
+
 function play_titlecard (which, titlecard)
   {
   var titlecard_is_playing = current_episode;
 
-  log ('play ' + which + ' titlecard: ' + titlecard ['message']);
+  log ('play ' + which + ' (duration ' + titlecard ['duration'] + ') titlecard: ' + titlecard ['message']);
+
+  tc_timex = setInterval ("titlecard_ticker()", 20);
+  tc_duration = titlecard ['duration'];
+  tc_start = new Date().getTime();
 
   $("#tc").show();
   $('#tc').titlecard ('cancel');
@@ -14166,6 +13805,7 @@ function play_titlecard (which, titlecard)
     },
   function()
     {
+    clearInterval (tc_timex);
     log ('titlecard callback!');
     if (current_episode != titlecard_is_playing)
       {
@@ -14185,6 +13825,19 @@ function play_titlecard (which, titlecard)
       flip_next_episode();
       }
     });
+  }
+
+function titlecard_ticker()
+  {
+  if (current_episode_phase == 1 || current_episode_phase == 5)
+    {
+    var diff = (new Date().getTime() - tc_start) / 1000;
+    var pct = 100 * diff / tc_duration;
+    // log ('titlecard tick! duration=' + tc_duration + ' diff: ' + diff + ' pct: ' + pct);
+    $("#btn-knob").css ("left", pct + '%');
+    }
+  else
+    clearInterval (tc_timex);
   }
 
 function any_lingering_end_titlecard()
@@ -14307,39 +13960,13 @@ function play_this_youtube_video (pid)
     }
 
   var program = programgrid [pid];
-  // $("#preview-ep-meta .ep-title").html (fixed_up_program_name (program ['name']));
   $("#meta-ep-title").html (fixed_up_program_name (program ['name']));
   show_ep_title();
 
   var video_id = url.match (/v=([^&;]+)/)[1];
-
   video_log (thumbing, pid, video_id);
 
-  $("#btn-knob").draggable ({ containment: "#video-control", axis: "x" });
-  $("#progress-bar").droppable
-       ({
-           revert: function() { progdrag_end ("revert"); },
-           revert: function() { progdrag_end ("deactivate"); },
-           accept: "#btn-knob",
-           activeClass: "progdrag",
-           tolerance: "touch",
-           greedy: true,
-           drop: function() { progdrag_end ("drop"); }
-       });
-
-  $("#btn-dragger").draggable ({ containment: "#volume-bar", axis: "x" });
-  $("#volume-bar").droppable
-       ({
-           revert: function() { voldrag_end ("revert"); },
-           revert: function() { voldrag_end ("deactivate"); },
-           accept: "#btn-dragger",
-           activeClass: "voldrag",
-           tolerance: "touch",
-           greedy: true,
-           drop: function() { voldrag_end ("drop"); }
-       });
-
-  /* $("#btn-volume").click(function() { $(this).toggleClass("mute"); }); */
+  progress_and_volume_bar();
 
   log ('store preview play yt: ' + video_id + ' (playing: ' +
            ytmini_video_id[1] + '/' + ytmini_why[1] + ', ' +
@@ -14704,6 +14331,42 @@ function audio_preload_is_ready_ii (slot)
     }
   }
 
+function progress_and_volume_bar()
+  {
+  // $("#btn-knob, #btn-dragger").unbind();
+  // $("#progress-bar, #volume-bar").unbind();
+
+  $("#btn-dragger").draggable ({ containment: "#volume-bar", axis: "x" });
+  $("#volume-bar").droppable
+       ({
+           revert: function() { voldrag_end ("revert"); },
+           revert: function() { voldrag_end ("deactivate"); },
+           accept: "#btn-dragger",
+           activeClass: "voldrag",
+           tolerance: "touch",
+           greedy: true,
+           drop: function() { voldrag_end ("drop"); }
+       });
+
+  /* $("#btn-volume").click(function() { $(this).toggleClass("mute"); }); */
+
+  /* only permit the progress bar to be dragged when video is playing */
+  if (current_episode_phase == 3)
+    {
+    $("#btn-knob").draggable ({ containment: "#video-control", axis: "x" });
+    $("#progress-bar").droppable
+       ({
+           revert: function() { progdrag_end ("revert"); },
+           revert: function() { progdrag_end ("deactivate"); },
+           accept: "#btn-knob",
+           activeClass: "progdrag",
+           tolerance: "touch",
+           greedy: true,
+           drop: function() { progdrag_end ("drop"); }
+       });
+     }
+  }
+
 function store_yt_init()
   {
   log ('setting up youtube mini');
@@ -15048,8 +14711,7 @@ if (current_tube == 'aux')
     if (!slider_sliding)
       $("#progress-bar").slider ("value", pct);
       }
-    //if (!progdrag)
-    if (! $("#progress-bar").hasClass ("progdrag"))
+    if (! $("#progress-bar").hasClass ("progdrag") && current_episode_phase == 3)
       $("#btn-knob").css ("left", pct + '%');
     }
 
@@ -15278,7 +14940,7 @@ function continue_acceptance (position, channel_info)
 function browse_accept_success (position, channel_id)
   {
   redraw_subscribe();
-  player_pop_message ("This channel has been added to your Guide.");
+  player_pop_message (translations ['hasbeenadded']);
   browse_accept_callback();
   }
 
@@ -15397,7 +15059,7 @@ function unfollow (real_channel, callback)
     update_cart_bubble (channels_in_guide());
     log ('unfollow successful');
     redraw_subscribe();
-    player_pop_message ("This channel has been removed from your Guide.");
+    player_pop_message (translations ['hasbeenremoved']);
 
     relay_post ("UPDATE");
     report ('c', 'unsubscribe [' + thumbing + '] ' + real_channel + ' ' + gridloc);
@@ -17159,7 +16821,7 @@ function curation_inner (id)
     var h = $("#curator-profile-photo img").height();
     if (h > 181)
       $("#curator-profile-photo img").css ("height", 181);
-    var w = $("#curator-profile-photo img").height();
+    var w = $("#curator-profile-photo img").width();
     if (w > 181)
       $("#curator-profile-photo img").css ("width", 181);
     });
@@ -18076,6 +17738,7 @@ function fresh_layer (id)
   header();
   clearTimeout (guide_timex);
   clearTimeout (home_timex);
+  current_episode_phase = 0;
   }
 
 function home()
