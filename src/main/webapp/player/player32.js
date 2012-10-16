@@ -1,4 +1,4 @@
-﻿/* players */
+﻿/* players mogwai3 */
 
 var current_tube = '';
 var wmode = 'transparent';
@@ -265,7 +265,6 @@ var language_en =
   passmatch: 'The two passwords you entered do not match.',
   sixchar: 'Please choose a password of at least six characters.',
   signupfail: 'Signup failure',
-  tooken: 'This email has been used',
   suberr: 'Cannot add the channel to Smart Guide now',
   syschan: 'System channel cannot be deleted',
   deletethis: 'Do you want to delete this channel?',
@@ -490,8 +489,8 @@ var language_en =
   conferr: 'Error saving your configuration',
   nochanguide: 'No channels in your guide!',
   badcaptcha: 'Oops! Looks like the verification word was entered incorrectly. Please try again.',
-  badpass: "Email and password don't match, please try again",
-  alreadyin: 'This channel is already in your Guide',
+  badpass: 'The email or password you entered was incorrect. Please try again.',
+  alreadyin: 'That channel is already in your Guide',
   mustlogin: 'You must be logged in to use this feature',
   trynextep: 'Try next episode',
   nextchan: 'Next channel',
@@ -520,9 +519,7 @@ var language_en =
   unfollow: 'Unfollow',
   location: 'Location',
   favorite: 'Favorite',
-  unfavorite: 'Unfavorite',
   imfollowing: "I'm Following",
-  isfollowing: 'Channels %1 is following',
   followbychannel: "Sorted by channel number",
   followbyupdate: "Sorted by update time",
   mostpop: 'The most popular tags:',
@@ -562,7 +559,7 @@ var language_en =
   saveprofile: 'Save Profile',
   a_aboutus: 'About us',
   a_help: 'Help',
-  a_report: 'Feedback',
+  a_report: 'Report',
   a_termspolicy: 'Terms & Policy',
   a_contactus: 'Contact us',
   a_partners: 'Partners',
@@ -573,12 +570,7 @@ var language_en =
   oldpassword: 'Old Password',
   newpassword: 'New Password',
   newpasswordverify: 'Repeat New Password',
-  cancel: 'Cancel',
-  followingme: 'Following Me',
-  mypageurl: "My Page's URL",
-  plzaccept: 'Please accept the agreements below.',
-  addfav: 'Added to your Favorites',
-  remfav: 'Removed from your Favorites'
+  cancel: 'Cancel'
   };
 
 var language_tw =
@@ -627,11 +619,9 @@ var language_tw =
   thanx: '已登出，記得常回來9x9.tv！',
   logfail: '登入失敗',
   validmail: '請輸入正確的Email帳號',
-  _passmatch: '輸入的密碼需相同',
-  passmatch: '輸入密碼不一致，請重新輸入',
+  passmatch: '輸入的密碼需相同',
   sixchar: '密碼長度至少6個字元',
   signupfail: '註冊失敗，請再試一次',
-  tooken: '此信箱已被使用',
   suberr: '無法訂閱，請稍候再試',
   syschan: '系統頻道不可刪除',
   deletethis: '確定刪除此頻道？',
@@ -691,8 +681,7 @@ var language_tw =
   oneempty: '您只剩一個頻道空格。',
   noempty: '您的頻道表已滿，刪除頻道後才能訂閱',
   empties: '您還剩 1% 個頻道空格',
-  _aboutus: '關於9x9',
-  aboutus: '關於我們',
+  aboutus: '關於9x9',
   newusers: '註冊',
   signup: '註冊',
   successful: '新增成功',
@@ -858,8 +847,8 @@ var language_tw =
   conferr: 'Error saving your configuration',
   nochanguide: 'No channels in your guide!',
   badcaptcha: 'Oops! Looks like the verification word was entered incorrectly. Please try again.',
-  badpass: '信箱或密碼輸入不正確，請重新輸入',
-  alreadyin: '這個頻道已經在你的頻道表中',
+  badpass: 'The email or password you entered was incorrect. Please try again.',
+  alreadyin: 'That channel is already in your Guide',
   mustlogin: 'You must be logged in to use this feature',
   trynextep: '看下一個節目',
   nextchan: '換另一個頻道',
@@ -889,10 +878,8 @@ var language_tw =
   location: '所在地',
   _favorite: '喜愛,愛好',
   favorite: '喜歡',
-  unfavorite: 'Un-喜歡',
   _imfollowing: '已訂閱(頻道)',
   imfollowing: '我的訂閱',
-  isfollowing: '我的訂閱',
   followbychannel: "定頻模式",
   followbyupdate: "動態模式",
   mostpop: '熱門標籤',
@@ -914,11 +901,9 @@ var language_tw =
   email: '信箱',
   password: '密碼',
   repeatpassword: '再次輸入密碼',
-  _yourname: '你的姓名',
-  yourname: '用戶名稱',
+  yourname: '你的姓名',
   createmyaccount: '送出',
-  _thiswillbe: '這將是9x9的其他用戶看到你的用戶名。',
-  thiswillbe: '創建新用戶名稱',
+  thiswillbe: '這將是9x9的其他用戶看到你的用戶名。',
   signfb: '使用FaceBook登入',
   agreement: '我已讀完並同意遵守隱私權政策與使用條款',
   createanewchannel: '創建頻道',
@@ -938,19 +923,14 @@ var language_tw =
   a_termspolicy: '政策條款',
   a_contactus: '聯繫我們',
   a_partners: '合作夥伴',
-  a_curators: '創建頻道',
+  a_curators: '策展人',
   a_press: '活動紀錄',
   a_contest: '頻道策展大賽',
   full: '你的頻道表已經滿了,請刪除現存頻道以加入新頻道',
   oldpassword: '舊密碼',
   newpassword: '新密碼',
   newpasswordverify: '再次輸入新密碼',
-  cancel: '取消',
-  followingme: '個粉絲',
-  mypageurl: '專頁連結',
-  plzaccept: '請接受以下的隱私權政策與使用條款',
-  addfav: 'Added to your Favorites',
-  remfav: 'Removed from your Favorites'
+  cancel: '取消'
   };
 
 var translations = language_en;
@@ -1025,23 +1005,8 @@ function elastic_innards()
 /* these are executed ONLY if a .resize was called, and not merely elastic() */
 function after_elastic()
   {
-  redraw_layer_if_possible();
-  }
-
-function redraw_layer_if_possible()
-  {
   if (thumbing == 'home')
     home();
-  else if (thumbing == 'curator')
-    curation (current_curator_page);
-  else if (thumbing == 'about')
-    developer ($("#developer-menu li h1.on").parent().attr("data-doc"));
-  else if (thumbing == 'guide')
-    guide();
-  else if (thumbing == 'browse')
-    browse_category (current_browse_index);
-  else if (thumbing == 'search')
-    perform_search (last_search_term);
   }
 
 function adjust_sliders()
@@ -1292,9 +1257,10 @@ function set_language (lang)
   $("#settings-layer #left li .title").eq(1).html (translations ['yourname']);
   $("#settings-layer #left li .title").eq(2).html (translations ['password']);
   $("#settings-layer #left li .title").eq(3).html (translations ['settingsabout']);
+  $("#settings-panel-change li .hint").eq(0).html (translations ['password'])
   $("#settings-panel-change li .hint").eq(0).html (translations ['oldpassword'])
-  $("#settings-panel-change li .hint").eq(1).html (translations ['newpassword'])
-  $("#settings-panel-change li .hint").eq(2).html (translations ['newpasswordverify'])
+  $("#settings-panel-change li .hint").eq(0).html (translations ['newpassword'])
+  $("#settings-panel-change li .hint").eq(0).html (translations ['newpasswordverify'])
   $("#btn-save-profile .btn-gray-middle").html (translations ['saveprofile']);
   $("#settings-layer #right .title").html (translations ['aboutimage']);
   $("#btn-change-password .btn-gray-middle").html (translations ['changepassword']);
@@ -1312,11 +1278,6 @@ function set_language (lang)
   $("#btn-home-sign-in-fb .btn-fb-middle").html (translations ['signfb']);
   $("#signup-checkbox-txt").html (translations ['agreement']);
 
-  $("#curator-activity li .item").eq(0).html (translations ['nchannels']);
-  $("#curator-activity li .item").eq(1).html (translations ['imfollowing']);
-  $("#curator-activity li .item").eq(2).html (translations ['followingme']);
-  $("#curator-page b").html (translations ['mypageurl']);
-
   /* about dropdown */
   $("#developer-dropdown li").eq(0).html (translations ['a_aboutus']);
   $("#developer-dropdown li").eq(1).html (translations ['a_help']);
@@ -1327,46 +1288,6 @@ function set_language (lang)
   $("#developer-dropdown li").eq(6).html (translations ['a_curators']);
   $("#developer-dropdown li").eq(7).html (translations ['a_press']);
   $("#developer-dropdown li").eq(8).html (translations ['a_contest']);
-  if (language == 'zh')
-    {
-    $("#developer-dropdown li").eq(7).show();
-    $("#developer-dropdown li").eq(8).show();
-    }
-  else
-    {
-    $("#developer-dropdown li").eq(7).hide();
-    $("#developer-dropdown li").eq(8).hide();
-    }
-  /* TEMP FIX */
-  $("#developer-dropdown li").eq(8).attr ("data-doc", "v-contest");
-
-// NOT LETTING ME DO WHAT WE NEED...
-// <div id="player-ep-source">
-// <p id="ch-source">From <span>Mountain Biker gets taken out by BUCK Footage</span></p>
-// <p id="video-source">on <span>YouTube</span></p>
-// <p id="curator-source">by <span>Moutain Biker's News</span></p>
-// </div>
-
-  if (false)
-    {
-    var p_ch_source = $("#ch-source span").text();
-    var p_video_source = $("#video-source span").text();
-    var p_curator_source = $("#curator-source span").text();
-    if (language == 'zh')
-      {
-      html =  '<p id="curator-source">' + translations ['curatorby'] + ' <span>' + p_curator_source + '</span></p>';
-      html += '<p id="video-source">' + translations ['curatoron'] + '<span>' + p_video_source + '</span></p>';
-      html += '<p id="ch-source">' + translations ['curatorfrom'] + ' <span>' + p_ch_source + '</span></p>';
-      $("#player-ep-source").html (html);
-      }
-    else
-      {
-      html =  '<p id="ch-source">' + translations ['curatorfrom'] + ' <span>' + p_ch_source + '</span></p>';
-      html += '<p id="video-source">' + translations ['curatoron'] + ' <span>' + p_video_source + '</span></p>';
-      html += '<p id="curator-source">' + translations ['curatorby'] + ' <span>' + p_curator_source + '</span></p>';
-      $("#player-ep-source").html (html);
-      }
-    }
 
   if (home_stack_name == 'hottest')
     $("#home-type").html (translations ['hottest']);
@@ -1385,7 +1306,6 @@ function set_language (lang)
 
   translate_top_level_categories();
   footer_locale();
-  header();
   }
 
 function footer_locale()
@@ -1656,23 +1576,12 @@ function init()
 
   /* disable until it works */
   $("#signin-panel-signin .forgot").hide();
-
-  if ($("#popmessage-home").length == 0)
-    $("#home-layer").append('<div id="popmessage-home"><p class="popmessage-left"></p><p class="popmessage-middle"><p class="popmessage-right"></p></div>');
   }
 
 function set_username_clicks()
   {
   $("#signin").unbind();
-  $("#signin").click (function()
-    {
-    var saved_thumbing = thumbing;
-    new_signup (function()
-      {
-      if (saved_thumbing == 'home')
-        home();
-      });
-    });
+  $("#signin").click (new_signup);
   $("#profile").unbind();
   $("#profile").click (function (event)
     {
@@ -1798,7 +1707,6 @@ function setup_piwik()
 
 function reverse_engineer_program_id (episode_id)
   {
-log ("REVERSE ENGINEER: " + episode_id + " FROM: " + program_line);
   for (var i = 1; i <= n_program_line; i++)
     {
     if (episode_id == youtube_of (program_line [i]))
@@ -1808,9 +1716,8 @@ log ("REVERSE ENGINEER: " + episode_id + " FROM: " + program_line);
 
 function track_episode (set_id, channel_id, episode_id)
   {
-  log ("&&&&&&&&&&&&&&&&&& TRACK :: CHANNEL:" + channel_id + " EPISODE:" + episode_id);
-  track_without_piwik (set_id, channel_id, episode_id);
   piwik_track_episode (set_id, channel_id, episode_id)
+  track_without_piwik (set_id, channel_id, episode_id);
   into_player_history (set_id, channel_id, episode_id);
   }
 
@@ -2116,13 +2023,6 @@ function set_hash (newhash)
       $("#fb-like-container").html ('<div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href="' + url + '"></div>');
       $("#fb-like-container").show();
       try { FB.XFBML.parse(); } catch (error) {};
-      }
-    $("#player-holder .favorite .favorite-body span").text (translations ['favorite'])
-    if (player_real_channel in pool)
-      {
-      var channel = pool [player_real_channel];
-      if (channel ['curatorid'] == curatorid && (channel ['nature'] == '11' || channel ['nature'] == '12'))
-        $("#player-holder .favorite .favorite-body span").text (translations ['unfavorite'])
       }
     }
   }
@@ -2555,7 +2455,6 @@ function parse_program_data (data)
         var end_titles = [];
         if (pinfo ['submeta'].match (/:/))
           {
-          log ('HAS SUBMETA');
           var submetas = pinfo ['submeta'].split (/\n--/);
           for (var m in submetas)
             {
@@ -2575,7 +2474,6 @@ function parse_program_data (data)
                 }
               if ('message' in kvs && 'subepisode' in kvs)
                 {
-                log ('might have titlecard, type is: ' + kvs ['type']);
                 if (kvs ['type'].match (/begin/i))
                   begin_titles [parseInt (kvs ['subepisode'])] = kvs;
                 else if (kvs ['type'].match (/end/i))
@@ -2608,17 +2506,12 @@ function parse_program_data (data)
               pcopy ['begin-title'] = begin_titles [j+1];
             if ((j+1) in end_titles)
               pcopy ['end-title'] = end_titles [j+1];
-            pcopy ['umbrella'] = pcopy ['id'];
             programgrid [pcopy ['id'] + '-' + (j+1)] = pcopy;
             }
           }
         else
           {
           pinfo ['sort'] = ++count;
-          if (1 in begin_titles)
-            pinfo ['begin-title'] = begin_titles [1];
-          if (1 in end_titles)
-            pinfo ['end-title'] = end_titles [1];
           programgrid [pinfo ['id']] = pinfo;
           }
         }
@@ -2647,26 +2540,17 @@ function fetch_channels()
   {
   log ('******* obtaining channels');
 
-  fetch_channels_then (function()
-    {
-    update_cart_bubble (channels_in_guide());
-    all_channels_fetched = true;
-
-    if (add_jumpstart_channel)
-      {
-      add_jumpstart_channel_inner();
-      return;
-      }
-
-    after_fetch_channels (false);
-    });
-  }
-
-function fetch_channels_then (callback)
-  {
   var query = "/playerAPI/channelLineup?user=" + user + '&' + 'setInfo=true' + rx();
+
   var d = $.get (query, function (data)
     {
+    var n = 0;
+    var conv = {};
+
+    for (var y = 1; y <= 9; y++)
+      for (var x = 1; x <= 9; x++)
+        conv [++n] = "" + y + "" + x;
+
     var lines = data.split ('\n');
     log ('number of lines obtained: ' + lines.length);
 
@@ -2676,12 +2560,23 @@ function fetch_channels_then (callback)
       log_and_alert ('server error: ' + lines [0]);
       return;
       }
+
+    if (false && username.match (/^XYZ/))
+      alert ('query ' + query + ' : ' + data);
+
     process_channel_lineup (data);
 
-    if (typeof (callback) == 'function')
-      callback (fields[0]);
-    else
-      eval (callback);
+    update_cart_bubble (channels_in_guide());
+
+    all_channels_fetched = true;
+
+    if (add_jumpstart_channel)
+      {
+      add_jumpstart_channel_inner();
+      return;
+      }
+
+    after_fetch_channels (false);
     });
   }
 
@@ -2765,85 +2660,68 @@ var hottest_stack = [];
 
 function process_channel_stack (stackname, data)
   {
+  var html = '';
   var count = 0;
   var stack = [];
-
   var lines = data.split ('\n');
   var fields = lines[0].split ('\t');
-
   if (fields[0] != '0')
     {
     log ('error with channel stack: ' + line);
     return;
     }
-
   for (var i = 2; i < lines.length; i++)
     {
-    if (lines [i] != '' && lines [i] != '--')
+    if (lines [i] != '')
       {
       log ("STACK " + stackname + ": " + lines [i]);
       var channel = line_to_channel (lines[i]);
       pool [channel ['id']] = channel;
       stack [++count] = channel;
+      var ago = ageof (channel ['timestamp'], true);
+      var funf = (first_position_with_this_id (channel ['id']) > 0) ? translations ['unfollow'] : translations ['follow'];
+      html += '<li id="guide-' + stackname + '-' + count + '">';
+      html += '<div class="guide-trending-box">';
+      html += '<p class="guide-trending-tab"><span>' + funf + '</span></p>';
+      html += '<img src="' + channel ['thumb1'] + '" class="thumbnail">';
+      html += '<div class="btn-watch"></div>';
+      html += '</div>';
+      html += '<p class="min-title"><span>' + channel ['name'] + '</span></p>';
+      html += '<p class="min-description ellipsis multiline">';
+      html += '<span>' + channel ['desc'] + '</span>';
+      html += '</p>';
+      html += '<p class="min-meta">';
+      var plural = channel ['count'] == 1 ? translations ['episode'] : translations ['episodes'];
+      html += '<span>' + channel ['count'] + ' ' + plural + ' </span><span class="divider">|</span><span>' + ago + '</span>';
+      html += '</p>';
+      html += '<p class="min-curator"><span>' + translations ['curatorby'] + '</span><span class="name">' + channel ['curatorname'] + '</span></p>';
+      html += '</li>';
       }
     }
 
   if (stackname == 'trending')
+    {
     trending_stack = stack;
+    gt_cursor = 0;
+    $("#gt-list").html (html);
+    gt_bindings();
+    }
   else if (stackname == 'recommended')
     {
     if (recommended_stack && recommended_stack.length > 0)
       recommended_stack_in_waiting = stack
     else
+      {
       recommended_stack = stack;
+      gr_cursor = 0;
+      $("#gr-list").html (html);
+      gr_bindings();
+      }
     }
   else if (stackname == 'hottest')
     hottest_stack = stack;
   else if (stackname == 'featured')
     featured_stack = stack;
-
-  guide_stacks();
-  }
-
-function guide_stacks()
-  {
-  gt_cursor = 0;
-  $("#gt-list").html (guide_stack_html ("trending", trending_stack));
-  gt_bindings();
-
-  gr_cursor = 0;
-  $("#gr-list").html (guide_stack_html ("recommended", recommended_stack));
-  gr_bindings();
-  }
-
-function guide_stack_html (stackname, stack)
-  {
-  var html = '';
-
-  for (var i = 1; i < stack.length; i++)
-    {
-    var channel = stack [i];
-    var ago = ageof (channel ['timestamp'], true);
-    var funf = (first_position_with_this_id (channel ['id']) > 0) ? translations ['unfollow'] : translations ['follow'];
-    html += '<li id="guide-' + stackname + '-' + i + '">';
-    html += '<div class="guide-trending-box">';
-    html += '<p class="guide-trending-tab"><span>' + funf + '</span></p>';
-    html += '<img src="' + channel ['thumb1'] + '" class="thumbnail">';
-    html += '<div class="btn-watch"></div>';
-    html += '</div>';
-    html += '<p class="min-title"><span>' + channel ['name'] + '</span></p>';
-    html += '<p class="min-description ellipsis multiline">';
-    html += '<span>' + channel ['desc'] + '</span>';
-    html += '</p>';
-    html += '<p class="min-meta">';
-    var plural = channel ['count'] == 1 ? translations ['episode'] : translations ['episodes'];
-    html += '<span>' + channel ['count'] + ' ' + plural + ' </span><span class="divider">|</span><span>' + ago + '</span>';
-    html += '</p>';
-    html += '<p class="min-curator"><span>' + translations ['curatorby'] + '</span><span class="name">' + channel ['curatorname'] + '</span></p>';
-    html += '</li>';
-    }
-
-  return html;
   }
 
 function home_trending()
@@ -2944,7 +2822,7 @@ function home_trending_inner (id)
     {
     event.stopPropagation();
     log ("home main follow pressed: " + channel ['id']);
-    pop_with = "#popmessage-home";
+    pop_with = "";
 
     function tr_callback()
        {
@@ -2977,7 +2855,7 @@ function reset_home_trending_scope (id)
 function home_trending_arrow_up()
   {
   var id = $("#trending-stories-right li.on").attr ("id").replace (/^trending-/, '');
-  var new_id = (id <= 1) ? trending_stack.length - 1 : --id;
+  var new_id = (id <= 1) ? 9 : --id;
   reset_home_trending_scope (new_id);
   home_trending_inner (new_id);
   }
@@ -2985,7 +2863,7 @@ function home_trending_arrow_up()
 function home_trending_arrow_down()
   {
   var id = $("#trending-stories-right li.on").attr ("id").replace (/^trending-/, '');
-  var new_id = (parseInt (id) + 1 >= trending_stack.length) ? 1 : ++id;
+  var new_id = (id >= 9) ? 1 : ++id;
   reset_home_trending_scope (new_id);
   home_trending_inner (new_id);
   }
@@ -3008,8 +2886,7 @@ function home_subscriptions()
 
   if (username != 'Guest')
     {
-    var fol = translations ['isfollowing'].replace (/%1/, username);
-    $("#followings-wrap h1").html (fol + ' (<span id="home-follow-count">' + channels_in_guide() + '</span>/72)');
+    $("#followings-wrap h1").html (translations ['imfollowing'] + ' (<span id="home-follow-count">' + channels_in_guide() + '</span>/72)');
     home_subscriptions_stack = generate_updates_stack();
     }
   else
@@ -3174,8 +3051,8 @@ function redraw_home_right_column (stack)
     log ('billboard quickfollow '+ home_stack_name + ': ' + id);
     var clicked_stack = which_billboard_stack (home_stack_name);
     var channel = clicked_stack [id];
-    pop_with = "#popmessage-home";
-    browse_accept (channel ['id']);
+    pop_with = "";
+    browse_accept (channel ['id'], "guide()");
     });
 
   $("#home-billboard li .pl-curator").unbind();
@@ -3442,8 +3319,7 @@ function gr_click (id)
 
 function line_to_channel (line)
   {
-  var default_thumb = 'http://9x9ui.s3.amazonaws.com/mock22/images/guide_ch_default.png';
-
+  var default_thumb = nroot + 'guide_ch_default.png';
   var fields = line.split ('\t');
 
   if (!fields[1])
@@ -4291,8 +4167,8 @@ function youtube_of (program)
     var pinfo = programgrid [program];
     for (var field in { url1:0, url2:0, url3:0 })
       {
-      if (field in pinfo && pinfo [field].match (/\?v=([^\&;]*)/))
-        return pinfo [field].match (/\?v=([^\&;]*)/) [1];
+      if (field in pinfo && pinfo [field].match (/\?v=([^\&]*)/))
+        return pinfo [field].match (/\?v=([^\&]*)/) [1];
       }
     }
   }
@@ -4300,7 +4176,6 @@ function youtube_of (program)
 function best_url (program)
   {
   var desired;
-  var ret = '';
 
   if (! (program in programgrid))
     {
@@ -4321,19 +4196,19 @@ function best_url (program)
 
   if (programgrid [program]['url1'].match (ext))
     {
-    ret = programgrid [program]['url1'];
+    return programgrid [program]['url1'];
     }
   else if (programgrid [program]['url2'].match (ext))
     {
-    ret = programgrid [program]['url2'];
+    return programgrid [program]['url2'];
     }
   else if (programgrid [program]['url3'].match (ext))
     {
-    ret = programgrid [program]['url3'];
+    return programgrid [program]['url3'];
     }
   else if (programgrid [program]['url4'].match (ext))
     {
-    ret = programgrid [program]['url4'];
+    return programgrid [program]['url4'];
     }
   else
     {
@@ -4341,17 +4216,10 @@ function best_url (program)
       {
       var p = programgrid [program][f];
       if (! (p.match (/^(|null|fp:null|fp:)$/)))
-        {
-        ret = p;
-        break;
-        }
+        return p;
       }
+    return '';
     }
-
-  if (ret.match (/;/))
-    ret = ret.replace (/;.*/, '');
-
-  return ret;
   }
 
 function play_first_program_in (chan)
@@ -5443,6 +5311,24 @@ function keypress (keycode)
       submit_user_report ("Automated comment");
       break;
     }
+  }
+
+var shazam_save_thumbing;
+
+function shazam()
+  {
+  shazam_save_thumbing = thumbing;
+
+  $("#shazam-layer").show();
+  $("#btn-shazam-signin").unbind();
+
+  $("#btn-shazam-signin").click (function() { $("#shazam-layer").hide(); after_sign = "shazam_inner()"; new_submit_login(); });
+  $("#btn-shazam-cancel").click (function() { $("#shazam-layer").hide(); thumbing = shazam_save_thumbing; });
+  }
+
+function shazam_inner()
+  {
+  quicklogin (user);
   }
 
 function add_more_channels()
@@ -7262,7 +7148,7 @@ function user_blur()
   log ('user blur: ' + $(this).attr("id"));
   }
 
-function new_submit_login (callback_on_success)
+function new_submit_login()
   {
   var things = [];
 
@@ -7309,29 +7195,8 @@ function new_submit_login (callback_on_success)
       /* wipe out the current guest account program+channel data */
       wipe();
 
-      if (false)
-        {
-        /* FORCE USE OF quickLogin. THIS WORKS, BUT IT IS RATHER SLOW. */
-        do_this_after_fetch_channels = after_sign;
-        after_sign = undefined;
-        quicklogin (user);
-        return;
-        }
-
       activated = false;
 
-      $("#waiting-layer").show();
-      fetch_channels_then (function()
-        {
-        $("#waiting-layer").hide();
-        if (typeof (callback_on_success) == 'function')
-          callback_on_success();
-        else
-          eval (callback_on_success);
-        });
-      return;
-
-      /* NOTREACHED */
       fetch_everything();
 
       if (saved_thumbing)
@@ -7417,7 +7282,93 @@ function error_login_fail()
   user_cursor = 'L-email';
   }
 
-function new_submit_signup (callback_on_success)
+function submit_signup()
+  {
+  var things = [];
+  var params = { 'S-name': 'name', 'S-email': 'email', 'S-password': 'password' };
+
+  // this is broken in earlier Opera, appears to be Javascript implementation bug
+  for (var p in params)
+    {
+    var v = $('#' + p).val();
+    v = encodeURIComponent (v);
+    things.push ( params [p] + '=' + v );
+    }
+
+  if (! $("#S-email").val().match (/\@/))
+    {
+    notice_ok ('user', translations ['validmail'], "error_bad_email()");
+    return;
+    }
+
+  if ($("#S-password").val() != $("#S-password2").val())
+    {
+    notice_ok ('user', translations ['passmatch'], "error_password()");
+    return;
+    }
+
+  if ($("#S-password").val().length < 6)
+    {
+    notice_ok ('user', translations ['sixchar'], "error_password()");
+    return;
+    }
+
+  var serialized = things.join ('&') + '&' + 'user=' + user + mso() + rx();
+  log ('signup: ' + serialized);
+
+  userid = undefined;
+  $("#waiting-layer").show();
+
+  $.post ("/playerAPI/signup", serialized, function (data)
+    {
+    $("#waiting-layer").hide();
+
+    log ('signup response: ' + data);
+
+    var lines = data.split ('\n');
+    var fields = lines[0].split ('\t');
+
+    if (fields [0] == "0")
+      {
+      for (var i = 2; i < lines.length; i++)
+        {
+        process_login_data_line (lines [i])
+        fields = lines [i].split ('\t');
+        if (fields [0] == 'token')
+          relay_post ("CONTROLLER " + user + ' ' + encodeURIComponent (username));
+        }
+
+      set_username();
+      log ('[login via signup] welcome ' + username + ', AKA ' + user);
+      solicit();
+
+      report ('u', 'signup ' + user + ' ' + username);
+
+      via_share = false;
+
+      /* wipe out the current guest account program+channel data */
+      wipe();
+      escape();
+
+      fetch_everything();
+
+      if (saved_thumbing)
+        {
+        thumbing = saved_thumbing;
+        saved_thumbing = undefined;
+        }
+      }
+    else
+      {
+      if (fields[1])
+        notice_ok ('user', translations ['signupfail'] + ': ' + fields [1], "error_signup_fail()");
+      else
+        notice_ok ('user', translations ['signupfail'], "error_signup_fail()");
+      }
+    });
+  }
+
+function new_submit_signup()
   {
   var things = [];
 
@@ -7434,18 +7385,21 @@ function new_submit_signup (callback_on_success)
   if (! $("#signup-email").val().match (/\@/))
     {
     pw_signup_error (translations ['validmail']);
+    // notice_ok ('user', translations ['validmail'], "error_bad_email()");
     return;
     }
 
   if ($("#signup-password").val() != $("#signup-password2").val())
     {
     pw_signup_error (translations ['passmatch']);
+    // notice_ok ('user', translations ['passmatch'], "error_password()");
     return;
     }
 
   if ($("#signup-password").val().length < 6)
     {
     pw_signup_error (translations ['sixchar']);
+    // notice_ok ('user', translations ['sixchar'], "error_password()");
     return;
     }
 
@@ -7502,23 +7456,19 @@ function new_submit_signup (callback_on_success)
         after_sign = undefined;
         eval (temp);
         }
-
-      if (typeof (callback_on_success) == 'function')
-        callback_on_success();
-      else
-        eval (callback_on_success);
       }
     else
       {
       if (fields[1])
         {
-        if (fields[0] == '202')
-          pw_signup_error (translations ['tooken']);
-        else
-          pw_signup_error (translations ['signupfail'] + ': ' + fields [1]);
+        pw_signup_error (translations ['signupfail'] + ': ' + fields [1]);
+        // notice_ok (thumbing, translations ['signupfail'] + ': ' + fields [1], "error_signup_fail()");
         }
       else
+        {
         pw_signup_error (translations ['signupfail']);
+        notice_ok (thumbing, translations ['signupfail'], "error_signup_fail()");
+        }
       }
     });
   }
@@ -8360,8 +8310,6 @@ function guide_inner()
   fresh_layer ("guide");
   set_hash ("#!guide");
 
-  guide_stacks();
-
   $("#gt-list").css ("top", "0");
   $("#gr-list").css ("top", "0");
 
@@ -8610,13 +8558,6 @@ function player (mode, cursor)
   $("#pl-menu li").removeClass ("on");
   $("#pl-note").hide();
 
-  if ((player_mode == 'guide' || player_mode == 'updates') && channels_in_guide() == 0)
-    {
-    /* If a login is in process (Guest clicked on "9" button), we may not have the channels yet */
-    fetch_channels_then (function() { player (mode, cursor); });
-    return;
-    }
-
   if (player_mode == 'guide')
     {
     $("#myfollow2").addClass ("on");
@@ -8655,7 +8596,7 @@ function player (mode, cursor)
     $("#pl-type").text (translations ['featured']);
     }
   else if (player_mode == 'curator-ch' || player_mode == 'curator-follow')
-    $("#pl-type").text (current_curator_name);
+    $("#pl-type").text ("Curator's");
 
   redraw_player_column();
 
@@ -8920,7 +8861,7 @@ function redraw_player_column()
     log ('player quickfollow: ' + id);
     var channel = player_stack [id];
     pop_with = "#popmessage-player-list";
-    browse_accept (channel ['id'], function() { log ("GREAT SUCCESS"); });
+    browse_accept (channel ['id']);
     });
 
   $("#pl-list li .pl-curator").unbind();
@@ -8978,7 +8919,7 @@ function redraw_subscribe()
   {
   if (thumbing == 'player')
     {
-    redraw_player_subscribe_button();
+    redraw_player_subscribe_button()
     if (player_mode != 'guide')
       adjust_column_of_subscriptions ("#pl-list", player_stack);
     }
@@ -9077,12 +9018,7 @@ function favorite()
 
   var program_arg;
 
-  if ('umbrella' in program)
-    {
-    /* this is a sub-episode. Use the parent episode number */
-    program_arg = 'program=' + program ['umbrella'];
-    }
-  else if (program_id.match (/\./))
+  if (program_id.match (/\./))
     {
     var video_id = program_id.match (/\.(.*)$/)[1];
     program_arg = 'video=' + video_id + '&' + 'name=' + encodeURIComponent (program ['name']) +
@@ -9091,10 +9027,7 @@ function favorite()
   else
     program_arg = 'program=' + program_id;
 
-  var deletion = (channel ['curatorid'] == curatorid && (channel ['nature'] == '11' || channel ['nature'] == '12'));
-  var delflag = deletion ? '&' + 'delete=true' : '';
-
-  var query = '/playerAPI/favorite?user=' + user + '&' + 'channel=' + channel ['id'] + '&' + program_arg + delflag + rx();
+  var query = '/playerAPI/favorite?user=' + user + '&' + 'channel=' + channel ['id'] + '&' + program_arg + rx();
   var d = $.get (query, function (data)
     {
     var lines = data.split ('\n');
@@ -9104,7 +9037,7 @@ function favorite()
     else
       {
       pop_with = "#popmessage-player-info";
-      player_pop_message (deletion ? translations ['remfav'] : translations ['addfav']);
+      player_pop_message ("Added to your favorites.");
       }
     });
   }
@@ -9802,7 +9735,6 @@ function player_ep_click (id)
   program_cursor = id;
   $("#p-li-" + program_cursor).addClass ("on");
   player_metainfo();
-  current_episode_phase = 0;
   store_play_yt();
   }
 
@@ -9924,7 +9856,6 @@ function player_flip_inner (cursor)
   ipg_metainfo();
   player_metainfo();
   redraw_program_line();
-  current_episode_phase = 0;
   store_play_yt();
   player_show_yt_quality();
   store_yt_render_volume();
@@ -10242,6 +10173,9 @@ function header()
   $("#player").unbind();
   $("#player").click (player_button);
 
+  // $("#btn-account").unbind();
+  // $("#btn-account").click (function (event) { event.stopPropagation(); account_dropdown(); });
+
   $("#btn-developer").unbind();
   $("#btn-developer").click (function (event) { event.stopPropagation(); developer_dropdown(); });
 
@@ -10325,7 +10259,6 @@ function sitelang_dropdown()
       set_language ('en');
       footer_locale();
       save_language_setting();
-      refresh_after_language_change();
       }
     close_all_dropdowns();
     });
@@ -10337,7 +10270,6 @@ function sitelang_dropdown()
       set_language ('zh');
       footer_locale();
       save_language_setting();
-      refresh_after_language_change();
       }
     close_all_dropdowns();
     });
@@ -10356,11 +10288,6 @@ function save_language_setting()
       if (fields [0] != '0')
         notice_ok (thumbing, 'Error saving language: ' + fields[1], "");
       });
-  }
-
-function refresh_after_language_change()
-  {
-  redraw_layer_if_possible();
   }
 
 function sitelocation_dropdown()
@@ -10485,7 +10412,7 @@ function developer_panel (doc)
   $("#developer-content").html ("");
   $("#developer-title h1").html ("");
   $("#developer-download").hide();
-  var query = '/playerAPI/staticContent?key=' + doc + '&' + 'lang=' + language + rx();
+  var query = '/playerAPI/staticContent?key=' + doc + '&' + 'lang=en' + rx();
   var d = $.get (query, function (data)
     {
     var blocks = data.split ('--\n');
@@ -10496,11 +10423,7 @@ dblocks = blocks;
     if (stuff.match (/<!--INIT([\s\S]*?)-->/))
       xjs = stuff.match(/<!--INIT([\s\S]*?)-->/)[1]
     $("#developer-content").html (stuff);
-    $("#developer-constrain").css ({ height: $(window).height() - $("#developer-constrain").offset().top - $("#developer-layer .reco-shelf").height() });
-    try { $("#developer-slider .slider-vertical").slider ("destroy"); } catch (error) {};
-    $("#developer-slider").css ({ height: $(window).height() - $("#developer-constrain").offset().top - $("#developer-layer .reco-shelf").height() - 10 });
     scrollbar ("#developer-constrain", "#developer-list", "#developer-slider");
-    setTimeout ('$("#developer-slider .slider-vertical").slider ("value", "100")', 5);
     $("#developer-menu li h1").removeClass ("on");
     $("#developer-menu li").each (function()
       {
@@ -10509,7 +10432,6 @@ dblocks = blocks;
       });
     set_hash ("#!aboot=" + doc.replace (/^v-/, ''));
     eval (xjs);
-    header();
     });
   }
 
@@ -11796,7 +11718,192 @@ var recommends = [];
 
 function store()
   {
-  home();
+home();
+return;
+  log ('-- store --');
+  store_inner();
+  if (jumpstart_channel != '') 
+    {
+    store_recommended (false);
+    log ("JUMPSTART: " + jumpstart_channel);
+    jumpstart();
+    }
+  else if (store_tab)
+    {
+    /* special handling for landing pages */
+    if (landing_page_override)
+      {
+      if ( !(1 in recommends) || recommends [1]['id'] != landing_page_override)
+        {
+        store_load_recommended (false);
+        store_last_channel = recommends [1]['content'][1];
+        store_last_program_index = 1;
+        }
+      }
+    /* try to resume playing whatever was playing when we last left the store */
+    log ('store: resume playing: ' + store_last_channel + ', program position: ' + store_last_program_index);
+    program_lineup (store_last_channel);
+    program_cursor = store_last_program_index;
+    if (store_preview_type == 'share')
+      store_set_channel (1, 1, store_last_channel, store_last_program_index);
+    redraw_store_preview();
+    update_store_channel_bubble (pool [store_last_channel]);
+    ipg_metainfo();
+    store_play_yt();
+    }
+  else
+    {
+    store_recommended (true);
+    allcats = {};
+    }
+  }
+
+function store_inner()
+  {
+  thumbing = 'store';
+  log ('store inner');
+
+  update_cart_bubble (channels_in_guide());
+  close_all_dropdowns();
+
+  /* show the thumbnails now by default */
+  $("#ep-switcher").addClass ("on");
+  $("#preview-ep, #preview-ep-meta").show();
+
+  mini_player = 1;
+
+  if (player_mute_override == 'unmute')
+    {
+    player_mute = false;
+    $("#btn-sound").addClass ("on");
+    }
+  else if (!user_has_set_muting)
+    {
+    /* turned this off */
+    // player_mute = true;
+    $("#btn-sound").removeClass ("on");
+    }
+
+  if (ambient_volume == undefined)
+    {
+    player_mute = false;
+    ambient_volume = 0.4;
+    set_ambient_volume();
+    $("#btn-sound").addClass ("on");
+    }
+
+  for (i = 1; i <= 3; i++)
+    ytmini[i] = ytmini_video_id[i] = ytmini_why[i] = undefined;
+
+  tvpreview_kickstart = false;
+  store_yt_init();
+
+  $("#store-layer, #preview-promo p").show();
+  $("#guide-layer, #search-layer, #player-layer, #hint-layer, #hint-bubble").hide();
+  header();
+
+  if (username == 'Guest')
+    {
+    $("#hint-layer, #hint-bubble").show();
+    $("#hint-bubble").hide(); /* Dan asked to temporarily turn this off 22mar2012 */
+    $("#hint-bubble .link").unbind();
+    $("#hint-bubble .link").click (help);
+    $("#hint-layer").css ("pointer-events", "none");
+    $("#btn-hint2tutorial").unbind();
+    $("#btn-hint2tutorial").click (help);
+    $("body").unbind();
+    $("body").click (function() { $("#hint-layer, #hint-bubble").hide(); });
+    setTimeout ('$("#hint-bubble").hide()', 7000);
+    $("#hint-1").delay (500) .fadeIn (500);
+    $("#hint-2").delay (1000).fadeIn (500);
+    $("#hint-3").delay (1500).fadeIn (500);
+    }
+
+  $("#recommended").unbind();
+  $("#recommended").click (function() { store_recommended (true); });
+
+  $("#category").unbind();
+  $("#category").click (store_category);
+
+  $("#yourown").unbind();
+  $("#yourown").click (store_yourown);
+
+  $("#btn-sound").unbind();
+  $("#btn-sound").click (store_sound);
+
+  $("#btn-preview-play").unbind();
+  $("#btn-preview-play").click (store_play_or_pause);
+
+  $("#btn-info").unbind();
+  $("#btn-info").click (store_info);
+
+  setup_cart();
+
+  $("#search-field").focus( function()
+    {
+    $(this).addClass ("hasFocus");
+    if ($("#search-field").val() == 'Search' || $("#search-field").val() == translations ['search'])
+      $("#search-field").val ('');
+    });
+
+  $("#search-field").blur( function() 
+    {
+    $(this).removeClass ("hasFocus");
+    if ($("#search-field").val() == '')
+      $("#search-field").val (translations ['search']);
+    });
+
+  $("#btn-programlang").unbind();
+  $("#btn-programlang").click (function (event) { event.stopPropagation(); sitelocation_dropdown(); });
+
+  if (sphere == 'zh')
+    $("#selected-programlang span").html ('中文頻道');
+  else
+    $("#selected-programlang span").html ('English Channels');
+
+  clearInterval (promo_timex);
+  promo_timex = setInterval (switch_promo, 7500);
+
+  update_sphere_display();
+
+  $("#programlang li").eq(0).unbind();
+  $("#programlang li").eq(0).click (function() { set_sphere ('en'); });
+  $("#programlang li").eq(1).unbind();
+  $("#programlang li").eq(1).click (function() { set_sphere ('zh'); });
+  }
+
+function store_up()
+  {
+  log ('store up');
+  flip_prev();
+  }
+
+function store_down()
+  {
+  log ('store down');
+  flip_next();
+  }
+
+function store_left()
+  {
+  log ('store left');
+  flip_prev_episode();
+  if (program_cursor < program_first || program_cursor > program_first + 2)
+    {
+    program_first = parseInt (program_cursor);
+    redraw_store_preview();
+    }
+  }
+
+function store_right()
+  {
+  log ('store right');
+  flip_next_episode();
+  if (program_cursor < program_first || program_cursor > program_first + 2)
+    {
+    program_first = parseInt (program_cursor);
+    redraw_store_preview();
+    }
   }
 
 function set_sphere (region)
@@ -11819,6 +11926,24 @@ function update_sphere_display()
     $("#programlang li").eq(1).addClass("on");
   else
     $("#programlang li").eq(0).addClass("on");
+  }
+
+var promo_timex;
+var promo_index = 1;
+var n_promos = 2;
+
+function switch_promo()
+  {
+  $("#preview-promo p").hide();
+  promo_index++;
+  if (promo_index > n_promos)
+    promo_index = 1;
+  var promo = translations ['promo' + promo_index];
+  $("#preview-promo p").html (promo);
+  $("#preview-promo p").hide();
+  $("#preview-promo p").fadeIn (400);
+  $("#app-store").unbind();
+  $("#app-store").click (function() { window.open ("http://itunes.apple.com/us/app/9x9.tv/id443352510?mt=8", "_blank"); });
   }
 
 function store_info()
@@ -12265,10 +12390,125 @@ function recommended_click (event, id)
 
 function redraw_setbubbleclick()
   {
+return;
+  var html = '';
+
+  html += '<div id="setbubbleclick-slider" class="slider-wrap"><div class="slider-vertical"></div></div>';
+  html += '<img src="' + nroot + 'add_bubble_tip_left.png" class="left-bubble-tip">';
+  html += '<img src="' + nroot + 'add_bubble_tip_right.png" class="right-bubble-tip">';
+  html += '<p id="btn-setbub-close">';
+  html += '<img src="' + nroot + 'btn_delete_off.png" class="off">';
+  html += '<img src="' + nroot + 'btn_delete_on.png" class="on"></p>';
+  html += '<div id="setbubbleclick-content">';
+  html += '<div class="setbubbleclick-category-content">';
+  html += '<ul id="setbubbleclick-list" class="setbubbleclick-level3-list"></ul>';
+  html += '</div>';
+  html += '</div>';
+
+  $("#setbubbleclick").html (html);
+
+  /* an ugly dance to set the vertical position of the triangle */
+  var offset = $("#rec-" + store_recommend_index).offset();
+  // log ("BUBBLE top:" + offset.top + " left:" + offset.left);
+  $("#setbubbleclick .left-bubble-tip").css ("top", "-2.5em");
+  var offset2em = $("#setbubbleclick .left-bubble-tip").offset();
+  $("#setbubbleclick .left-bubble-tip, #setbubbleclick .right-bubble-tip").css("top", (offset.top - offset2em.top) + "px");
+
+  log ('redraw_setbubbleclick: ' + store_recommend_index);
+
+  var set = recommends [store_recommend_index];
+  log ('redraw_setbubbleclick count: ' + set['count']);
+
+  $("#setbubbleclick-list").html (""); 
+  // scrollbar ("#setbubbleclick-content", "#setbubbleclick-list", "#setbubbleclick-slider");
+
+  html = '';
+  html += '<li>';
+  html += '<span class="setbubbleclick-title">' + set ['name'] + '</span>';
+  html += '<span class="setbubbleclick-description">' + set ['desc'] + '</span>';
+  html += '<span class="setbubbleclick-channel">' + set ['count'] + ' channels</span>';
+  html += '</li>';
+
+  var channel_rows = 0;
+  for (var i = 1; i <= recommends [store_recommend_index]['count']; i++)
+    {
+    if (i in set ['content'])
+      {
+      var channel = set ['content'][i];
+      html += '<li class="line">';
+      html += '<p class="on"><span class="icon-ch">';
+      html += '<img src="' + nroot + 'setbubble_click_icon_ch_off.png" class="off">';
+      html += '<img src="' + nroot + 'setbubble_click_icon_ch_on.png" class="on"></span>';
+      html += '<span class="ch-name">' + channel ['name'] + '</span></p>';
+      html += '</li>';
+      channel_rows++;
+      }
+    }
+
+  $("#setbubbleclick-list").html (html); 
+  setbubbleclick_highlight();
+
+  var which_column = (store_recommend_index - 1) % 3;
+  $("#setbubbleclick .right-bubble-tip, #setbubbleclick .left-bubble-tip").hide();
+  if (which_column == 0)
+    {
+    $("#setbubbleclick .left-bubble-tip").show();
+    $("#setbubbleclick").css ("margin-left", "11.5em");
+    }
+  else if (which_column == 1)
+    {
+    $("#setbubbleclick .left-bubble-tip").show();
+    $("#setbubbleclick").css ("margin-left", "19.6em");
+    }
+  else if (which_column == 2)
+    {
+    $("#setbubbleclick .right-bubble-tip").show();
+    $("#setbubbleclick").css ("margin-left", "7.9em");
+    }
+  scrollbar ("#setbubbleclick-content", "#setbubbleclick-list", "#setbubbleclick-slider");
+
+  $("#btn-setbub-close").click (function() { $("#setbubbleclick").hide(); });
+  $("#setbubbleclick-list .line").click (function (event)
+    {
+    event.stopPropagation();
+    store_direction = '!';
+    store_set_channel (store_cat, 1 +  $("#setbubbleclick-list .line").index (this));
+    // $("#chOrder").html (possible_ch);
+    });
   }
 
 function setbubbleclick_highlight()
   {
+  if ($("#setbubbleclick").css ("display") == 'none')
+    return;
+
+  $(".setbubbleclick-level3-list p").removeClass ("on");
+  if (store_index != undefined)
+    {
+    var current = $(".setbubbleclick-level3-list p").eq(store_index-1);
+    if (!current) return;
+    $(current).addClass ("on");
+    var pos = $(current).position();
+    if (!pos) return;
+    var curtop = pos.top;
+    log ('setbubbleclick offset: ' + curtop);
+    var sliderval = $("#setbubbleclick-slider .slider-vertical").slider ("value");
+    if (!isNaN (sliderval))
+      {
+      var t = -1 * parseInt ($("#setbubbleclick-list").position().top);
+      log ('setbubbleclick: curtop: ' + curtop + ', sliding top: ' + t);
+      if (curtop < t || curtop > t + $("#setbubbleclick-content").height())
+        {
+        var pct = (curtop * 100) / $("#setbubbleclick-list").height();
+        $("#setbubbleclick-slider .slider-vertical").slider ("value", 100-pct);
+        log ("setbubbleclick: rejiggering to " + (100-pct) + "%");
+        }
+      else
+        log ("setbubbleclick: within range");
+      }
+    else
+      log ("setbubbleclick_highlight: sliderval not available");
+    }
   }
 
 var rec_cache = {};
@@ -12935,6 +13175,161 @@ function store_set_channel_inner()
 
 function redraw_store_preview()
   {
+return;
+  if (thumbing != 'store' && thumbing != 'store-wait')
+    {
+    log ("redraw_store_preview: not in store, won't redraw");
+    return;
+    }
+
+  log ('redraw_store_preview');
+
+  var channel = pool [store_channel];
+  program_lineup (channel ['id']);
+
+  set_hash ("#!" + channel ['id']);
+
+  $("#index-ch-title, #meta-ch-title").html (fixed_up_program_name (channel ['name']));
+  $("#preview-ch-title .text-holder span").html (channel ['name']);
+
+  if (store_preview_type == 'category')
+    {
+    var category = allcats [store_cat];
+    // $("#index-catg-title").html (category ['name']);
+    $("#meta-set-title").html (category ['name']);
+    }
+  else if (store_preview_type == 'recommended')
+    {
+    var set = recommends [store_recommend_index];
+    // $("#index-catg-title").html (set ['name']);
+    $("#meta-set-title").html (set ['name']);
+    }
+  else if (store_preview_type == 'share')
+    {
+    // $("#index-catg-title").html ('Shared');
+    $("#meta-set-title").html ('Shared');
+    }
+  else if (store_preview_type == 'search')
+    {
+    // $("#index-catg-title").html ("Search Results");
+    $("#meta-set-title").html ("Search Results");
+    }
+
+  var n_channels = channels_in_set_or_category (store_preview_type, store_cat);
+
+  var html = '';
+  for (var i = 1; i <= n_channels; i++)
+    html += '<li></li>';
+  $("#flip-ch-index").html (html);
+  // $("#flip-ch-index li").css ("height", (100 / n_channels) + "%");
+  $("#flip-ch-index li").css ("height", ($("#flip-ch-index").height() / n_channels));
+
+  var will_show_flip = (store_index != previous_store_index);
+  // if (store_index != previous_store_index)
+    {
+    previous_store_index = store_index;
+    $("#flip-ch-index li").removeClass ("on");
+    $("#flip-ch-index li:nth-child(" + store_index + ")").addClass ("on")
+    setbubbleclick_highlight();
+    $("#chOrder").html (store_index);
+    $("#chNum").html (n_channels);
+    if (true || will_show_flip)
+      show_flip_bubble();
+    }
+
+  $("#flip-ch-index li.on").unbind();
+  $("#flip-ch-index li.on").live ("mouseover", function()
+    {
+    // flip_timex = setTimeout (function() { $("#flip-bubble").fadeIn (400); }, 400);
+    show_flip_bubble();
+    });
+  $("#flip-ch-index li.on").live ("mouseout", function()
+    {
+    // $("#flip-bubble").fadeOut (400);
+    // clearTimeout (flip_timex);
+    });
+
+  var html = '';
+  for (var i = program_first; i <= program_first + 2 && i <= n_program_line; i++)
+    {
+    var program = programgrid [program_line [i]];
+    var age = '';
+    if ('timestamp' in program)
+      age = ageof (program ['timestamp'], false);
+    var duration = durationof (program ['duration']);
+    if (duration == '0:00')
+      duration = '';
+    html += '<li id="sp-' + i + '"><img src="' + program ['thumb'] + '" class="thumbnail"><p class="duration"><span>' + duration + '</span></p></li>';
+    }
+
+  $("#preview-ep-list").html (html);
+
+  if (!program_cursor)
+    { program_cursor = 1; }
+  if (program_cursor)
+    $("#sp-" + program_cursor).addClass ("on");
+
+  var program = programgrid [program_line [program_cursor]];
+  if (program)
+    {
+    // $("#preview-ep-meta .ep-title").html (fixed_up_program_name (program ['name']));
+    $("#meta-ep-title").html (fixed_up_program_name (program ['name']));
+    // $("#preview-ep-meta .amount").html (program_cursor + '/' + n_program_line);
+    }
+  else
+    {
+    // $("#preview-ep-meta .ep-title").html ('No programs');
+    $("#meta-ep-title").html ('No programs');
+    // $("#preview-ep-meta .amount").html ('0 / 0');
+    }
+
+if (false)
+{
+  $("#btn-flip-preview").unbind();
+  $("#btn-flip-preview").click (function (event) { event.stopPropagation(); flip_random(); });
+
+  $("#btn-flip-back").unbind();
+  $("#btn-flip-back").click (flip_back);
+
+  $("#btn-flip-next").unbind();
+  $("#btn-flip-next").click (function (event) { event.stopPropagation(); flip_next(); });
+
+  $("#btn-flip-prev").unbind();
+  $("#btn-flip-prev").click (function (event) { event.stopPropagation(); flip_prev(); });
+}
+store_bind();
+
+  $("#ep-switcher").unbind();
+  $("#ep-switcher").click (ep_switcher);
+
+  $("#preview-ep-list li").unbind();
+  $("#preview-ep-list li").click (function() { store_ep_click ($(this).attr("id")); });
+  $("#preview-ep-list li").hover (store_ep_hover_in, store_ep_hover_out);
+
+  redraw_store_add_button();
+  store_yt_render_volume();
+
+  if (program_first != 1)
+    {
+    $("#preview-arrow-left").show();
+    $("#preview-arrow-left").unbind();
+    $("#preview-arrow-left").click (store_arrow_left);
+    }
+  else
+    $("#preview-arrow-left").hide();
+
+  if (program_first + 3 <= n_program_line)
+    {
+    $("#preview-arrow-right").show();
+    $("#preview-arrow-right").unbind();
+    $("#preview-arrow-right").click (store_arrow_right);
+    }
+  else
+    $("#preview-arrow-right").hide();
+
+  $("#btn-add-ch-L").hover (add_button_hover_in, add_button_hover_out);
+
+  $("#btn-flip-preview").hover (flip_preview_hover_in, flip_preview_hover_out);
   }
 
 var flipr_bubble_timex;
@@ -13352,9 +13747,8 @@ function perform_search (text)
 
   $("#search-layer").removeClass ("lost").removeClass ("found");
   $("#search-layer").addClass ("found");
-
   fresh_layer ("search");
-  thumbing = 'search';
+
   set_hash ("#!search");
 
   $("#no-result").hide();
@@ -13430,23 +13824,20 @@ sblocks = blocks;
          html += '</span>' + translations ['views'] + '<span class="divider">|</span><span class="follower-number">' + fields[7] + '</span>' + translations ['followers'] + '</p>';
          html += '<p class="channel-owned"><span class="channel-number">' + fields[5] + '</span>' + cplural + '</p>';
          html += '</div>';
-         if (fields[8])
+         if (parseInt (fields[8]) > 0)
            {
            shelf_count++;
            var channel = pool [fields[8]];
-           var is_empty_favorites = channel ['id'].match (/^f-/);
            var ago = ageof (channel ['timestamp'], true);
            searchshelf_stack [shelf_count] = channel;
-           html += '<div id="search-shelf-' + shelf_count + '" class="curator-shelf-item" data-channel="' + channel ['id'] + '">';
+           html += '<div id="search-shelf-' + shelf_count + '" class="curator-shelf-item">';
            html += '<p class="pl-title-line"><span class="pl-title">' + channel ['name'] + '</span></p>';
            html += '<p class="pl-curator-line"><span>' + translations ['curatorby'] + '</span><span class="pl-curator">' + channel ['curatorname'] + '</span></p>';
-           if (!is_empty_favorites)
-             html += '<p class="icon-pl"></p>';
+           html += '<p class="icon-pl"></p>';
            html += '<img src="' + channel ['thumb1'] + '" class="thumb1">';
            html += '<img src="' + channel ['thumb2'] + '" class="thumb2">';
            html += '<img src="' + channel ['thumb3'] + '" class="thumb3">';
-           if (!is_empty_favorites)
-             html += '<p class="pl-sign"><span>' + ago + '</span></p>';
+           html += '<p class="pl-sign"><span>' + ago + '</span></p>';
            html += '</div>';
            }
          html += '</li>';
@@ -13535,40 +13926,10 @@ sblocks = blocks;
      $("#result-summary").show();
 
      $("#curator-result li .curator-result-item").unbind();
-     $("#curator-result li .curator-result-item").click (function()
-       {
-       var id = $(this).attr("id");
-       log ('search curator click: ' + id);
-       var curator_id = $("#" + id).attr ("data-curator-id");
-       curation (curator_id);
-       });
+     $("#curator-result li .curator-result-item").click (function() { search_curator_click ($(this).attr("id")); });
 
      $("#curator-result li .curator-shelf-item").unbind();
-     $("#curator-result li .curator-shelf-item").click (function()
-       {
-       var id = $(this).attr("id").replace (/^search-shelf-/, '');
-       var channel_id = $(this).attr ("data-channel");
-       var channel = pool [channel_id];
-       log ('search curator shelf click: ' + id);
-       if (channel ['id'].match (/^f-/))
-         {
-         // notice_ok (thumbing, "This channel is an empty Favorites channel that cannot be played. If you think it won't be empty in the future, you can still Follow to it by visiting this curator's page and clicking Follow button on the channel box which contains this channel.", '');
-         return;
-         }
-       player_stack = searchshelf_stack;
-       player ('search', parseInt (id));
-       });
-
-     $("#curator-result li .curator-shelf-item .pl-curator").unbind();
-     $("#curator-result li .curator-shelf-item .pl-curator").click (function (event)
-       {
-       event.stopPropagation();
-       var id = $(this).parent().parent().attr("id");
-       log ('search curator shelf curatorname click: ' + id);
-       var channel_id = $("#" + id).attr ("data-channel");
-       var channel = pool [channel_id];
-       curation (channel ['curatorid']);
-       });
+     $("#curator-result li .curator-shelf-item").click (function() { search_curator_shelf_click ($(this).attr("id")); });
 
      $("#channel-result li").unbind();
      $("#channel-result li").click (function() { search_channel_click ($(this).attr("id")); });
@@ -13647,6 +14008,21 @@ function redraw_curator_pagination()
     log ('curator page ' + id);
     set_search_curator_page (id);
     });
+  }
+
+function search_curator_click (id)
+  {
+  log ('search curator click: ' + id);
+  var curator_id = $("#" + id).attr ("data-curator-id");
+  curation (curator_id);
+  }
+
+function search_curator_shelf_click (id)
+  {
+  log ('search curator shelf click: ' + id);
+  id = id.replace (/^search-shelf-/, '');
+  player_stack = searchshelf_stack;
+  player ('search', parseInt (id));
   }
 
 function search_channel_click (id)
@@ -13765,19 +14141,11 @@ function pause_and_mute_all_video()
     }
   }
 
-var tc_timex;
-var tc_duration;
-var tc_start;
-
 function play_titlecard (which, titlecard)
   {
   var titlecard_is_playing = current_episode;
 
-  log ('play ' + which + ' (duration ' + titlecard ['duration'] + ') titlecard: ' + titlecard ['message']);
-
-  tc_timex = setInterval ("titlecard_ticker()", 20);
-  tc_duration = titlecard ['duration'];
-  tc_start = new Date().getTime();
+  log ('play ' + which + ' titlecard: ' + titlecard ['message']);
 
   $("#tc").show();
   $('#tc').titlecard ('cancel');
@@ -13795,7 +14163,6 @@ function play_titlecard (which, titlecard)
     },
   function()
     {
-    clearInterval (tc_timex);
     log ('titlecard callback!');
     if (current_episode != titlecard_is_playing)
       {
@@ -13815,19 +14182,6 @@ function play_titlecard (which, titlecard)
       flip_next_episode();
       }
     });
-  }
-
-function titlecard_ticker()
-  {
-  if (current_episode_phase == 1 || current_episode_phase == 5)
-    {
-    var diff = (new Date().getTime() - tc_start) / 1000;
-    var pct = 100 * diff / tc_duration;
-    // log ('titlecard tick! duration=' + tc_duration + ' diff: ' + diff + ' pct: ' + pct);
-    $("#btn-knob").css ("left", pct + '%');
-    }
-  else
-    clearInterval (tc_timex);
   }
 
 function any_lingering_end_titlecard()
@@ -13950,13 +14304,39 @@ function play_this_youtube_video (pid)
     }
 
   var program = programgrid [pid];
+  // $("#preview-ep-meta .ep-title").html (fixed_up_program_name (program ['name']));
   $("#meta-ep-title").html (fixed_up_program_name (program ['name']));
   show_ep_title();
 
   var video_id = url.match (/v=([^&;]+)/)[1];
+
   video_log (thumbing, pid, video_id);
 
-  progress_and_volume_bar();
+  $("#btn-knob").draggable ({ containment: "#video-control", axis: "x" });
+  $("#progress-bar").droppable
+       ({
+           revert: function() { progdrag_end ("revert"); },
+           revert: function() { progdrag_end ("deactivate"); },
+           accept: "#btn-knob",
+           activeClass: "progdrag",
+           tolerance: "touch",
+           greedy: true,
+           drop: function() { progdrag_end ("drop"); }
+       });
+
+  $("#btn-dragger").draggable ({ containment: "#volume-bar", axis: "x" });
+  $("#volume-bar").droppable
+       ({
+           revert: function() { voldrag_end ("revert"); },
+           revert: function() { voldrag_end ("deactivate"); },
+           accept: "#btn-dragger",
+           activeClass: "voldrag",
+           tolerance: "touch",
+           greedy: true,
+           drop: function() { voldrag_end ("drop"); }
+       });
+
+  /* $("#btn-volume").click(function() { $(this).toggleClass("mute"); }); */
 
   log ('store preview play yt: ' + video_id + ' (playing: ' +
            ytmini_video_id[1] + '/' + ytmini_why[1] + ', ' +
@@ -13977,7 +14357,15 @@ function play_this_youtube_video (pid)
       try { ytmini[i].pauseVideo(); } catch (error) {};
       ytmini_why[i] = 'active';
       $("#ym" + i).css ("zIndex", "27");
-      track_episode (undefined, player_real_channel, video_id);
+      if (thumbing == 'player' || thumbing == 'player-wait')
+        track_episode (undefined, player_real_channel, video_id);
+      else if (thumbing == 'store' || thumbing == 'store-wait')
+        {
+        track_episode (undefined, store_channel, video_id);
+        track_episode (store_cat, store_channel, video_id);
+        store_last_channel = store_channel;
+        store_last_program_index = program_cursor;
+        }
       var youtube_thinks;
       try { youtube_thinks = ytmini[i].getVideoUrl(); } catch (error) {};
       log ('youtube thinks: ' + youtube_thinks);
@@ -14019,7 +14407,15 @@ function play_this_youtube_video (pid)
       ytmini_why [mini_player] = 'active';
       $("#ym" + mini_player).css ("zIndex", "27");
       start_yt_mini_tick();
-      track_episode (undefined, player_real_channel, video_id);
+      if ((thumbing == 'player' || thumbing == 'player-wait') && player_mode == 'guide')
+        track_episode (undefined, player_real_channel, video_id);
+      else if (thumbing == 'store' || thumbing == 'store-wait')
+        {
+        track_episode (undefined, store_channel, video_id);
+        track_episode (store_cat, store_channel, video_id);
+        store_last_channel = store_channel;
+        store_last_program_index = program_cursor;
+        }
       }
 
     preload_youtube_videos();
@@ -14319,42 +14715,6 @@ function audio_preload_is_ready_ii (slot)
     audio_stream [slot].pause();
     audio_stream [slot].setPosition (0);
     }
-  }
-
-function progress_and_volume_bar()
-  {
-  // $("#btn-knob, #btn-dragger").unbind();
-  // $("#progress-bar, #volume-bar").unbind();
-
-  $("#btn-dragger").draggable ({ containment: "#volume-bar", axis: "x" });
-  $("#volume-bar").droppable
-       ({
-           revert: function() { voldrag_end ("revert"); },
-           revert: function() { voldrag_end ("deactivate"); },
-           accept: "#btn-dragger",
-           activeClass: "voldrag",
-           tolerance: "touch",
-           greedy: true,
-           drop: function() { voldrag_end ("drop"); }
-       });
-
-  /* $("#btn-volume").click(function() { $(this).toggleClass("mute"); }); */
-
-  /* only permit the progress bar to be dragged when video is playing */
-  if (current_episode_phase == 3)
-    {
-    $("#btn-knob").draggable ({ containment: "#video-control", axis: "x" });
-    $("#progress-bar").droppable
-       ({
-           revert: function() { progdrag_end ("revert"); },
-           revert: function() { progdrag_end ("deactivate"); },
-           accept: "#btn-knob",
-           activeClass: "progdrag",
-           tolerance: "touch",
-           greedy: true,
-           drop: function() { progdrag_end ("drop"); }
-       });
-     }
   }
 
 function store_yt_init()
@@ -14701,7 +15061,8 @@ if (current_tube == 'aux')
     if (!slider_sliding)
       $("#progress-bar").slider ("value", pct);
       }
-    if (! $("#progress-bar").hasClass ("progdrag") && current_episode_phase == 3)
+    //if (!progdrag)
+    if (! $("#progress-bar").hasClass ("progdrag"))
       $("#btn-knob").css ("left", pct + '%');
     }
 
@@ -14770,7 +15131,11 @@ function browse_play (channel_id)
 
 function browse_accept_via_signin (channel)
   {
-  browse_accept (channel, browse_accept_callback_f);
+  /* if 0 channels, wait for load -- user cannot delete system channel */
+  if (channels_in_guide() == 0)
+    do_this_after_fetch_channels = "browse_accept(" + channel + ")";
+  else
+    browse_accept (channel);
   }
 
 var browse_accept_callback_f;
@@ -14801,14 +15166,16 @@ function browse_accept (channel, callback)
   if (channels_in_guide() >= 72)
     {
     redraw_subscribe();
-    notice_ok (thumbing, translations ['full'], "browse_accept_callback()");
+    notice_ok (thumbing, translations ['full'], "");
+    browse_accept_callback();
     return;
     }
 
   if (first_position_with_this_id (channel) > 0)
     {
     redraw_subscribe();
-    notice_ok (thumbing, translations ['alreadyin'], "browse_accept_callback()");
+    log_and_alert ("Already subscribed!");
+    browse_accept_callback();
     return;
     }
   else
@@ -14900,7 +15267,6 @@ function continue_acceptance (position, channel_info)
 
   redraw_store_add_button();
   redraw_ipg();
-  home_subscriptions();
   elastic();
   calculate_empties();
   update_cart_bubble (channels_in_guide());
@@ -16755,19 +17121,18 @@ function visit_youtube_channel_externally()
   }
 
 var current_curator_page;
-var current_curator_name;
 
 function curation (id)
   {
   log ("curation: " + id);
-
-  fresh_layer ('curator');
-  thumbing = 'curator';
-
   current_curator_page = id;
-  current_curator_name = '';
 
   var showing = "curator"; /* or "visitor" */
+
+  $(".stage").hide();
+  header();
+  $("#nav li").removeClass ("on");
+  $("#browse").addClass ("on");
 
   set_hash ('#!curator=' + id);
 
@@ -16793,8 +17158,6 @@ function curation_inner (id)
   log ('curation inner: ' + id);
   var curat = curator_pool [id];
 
-  current_curator_name = curat ['name'];
-
   $("#curator-activity-followers").text (curat ['followers']);
 
   $("#curator-profile-name").text (curat ['name']);
@@ -16806,32 +17169,9 @@ function curation_inner (id)
   $("#curator-url").text (curat ['url']);
   $("#curator-declaration").text (curat ['desc']);
   // $("#curator-profile-photo img").attr ("src", curat ['thumb']);
-  load_constrained_image ("#curator-profile-photo img", curat ['thumb'], function()
-    {
-    var h = $("#curator-profile-photo img").height();
-    if (h > 181)
-      $("#curator-profile-photo img").css ("height", 181);
-    var w = $("#curator-profile-photo img").width();
-    if (w > 181)
-      $("#curator-profile-photo img").css ("width", 181);
-    });
+  load_constrained_image ("#curator-profile-photo img", curat ['thumb']);
   $("#curator-ch-num").text ("(" + curat ['channelcount'] + ")");
   $("#curator-fol-num").text ("(" + curat ['followers'] + ")");
-
-  if (language == 'en')
-    {
-    $("#curator-tabs .left div p").html
-      ('<span class="name">' + curat ['name'] + '</span>\'s Channels<span id="curator-ch-num" class="number">(' + curat ['channelcount'] + ')</span>');
-    $("#curator-tabs .right div p").html
-      ('<span class="name">' + curat ['name'] + '</span>\'s Followings<span id="curator-ch-num" class="number">(' + curat ['followers'] + ')</span>');
-    }
-  else
-    {
-    $("#curator-tabs .left div p").html 
-      ('<span class="name">' + curat ['name'] + '</span> 的頻道<span id="curator-ch-num" class="number">(' + curat ['channelcount'] + ')</span>');
-    $("#curator-tabs .right div p").html 
-      ('<span class="name">' + curat ['name'] + '</span> 的訂閱<span id="curator-ch-num" class="number">(' + curat ['followers'] + ')</span>');
-    }
 
   load_curator_channels (id);
 
@@ -16894,8 +17234,8 @@ function load_curator_then (id, callback)
     return;
     }
 
-  // var query = '/playerAPI/curator?curator=' + id + rx();
-  var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
+  var query = '/playerAPI/curator?curator=' + id + rx();
+  // var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
   var d = $.get (query, function (data)
     {
     var lines = data.split ('\n');
@@ -16947,8 +17287,8 @@ function load_curator_channels (id)
   channel_scrollbar_activated = false;
   following_scrollbar_activated = false;
 
-  // var query = '/playerAPI/curator?curator=' + id + rx();
-  var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
+  var query = '/playerAPI/curator?curator=' + id + rx();
+  // var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
   var d = $.get (query, function (data)
     {
     var blocks = data.split (/^--$/m);
@@ -17047,7 +17387,6 @@ function load_curator_channels (id)
 
         var ago = ageof (channel ['timestamp'], true);
         var funf = ( first_position_with_this_id (channel ['id']) > 0 ) ? translations ['unfollow'] : translations ['follow'];
-        var eplural = channel ['count'] == 1 ? translations ['nepisode'] : translations ['episode'];
 
         html += '<li id="curator-follow-' + su_count + '">';
         html += '<p class="channel-title">' + channel ['name'] + '</p>';
@@ -17058,10 +17397,10 @@ function load_curator_channels (id)
         html += '<img src="' + channel ['thumb3'] + '" class="thumb3">';
         html += '<p class="followed-curator-photo"><img src="' + channel ['curatorthumb'] + '"></p>';
         html += '<div class="channel-meta">';
-        html += '<p>' + channel ['count'] + ' ' + eplural + '<span class="divider">|</span>' + ago + '</p>';
+        html += '<p>' + channel ['count'] + ' Episodes<span class="divider">|</span>' + ago + '</p>';
         // html += '<p class="next-update">Next Update: Whenever</p>';
         html += '</div>';
-        html += '<p class="followed-curator">' + translations ['curatorby'] + '<span>' + channel ['curatorname'] + '</span></p>';
+        html += '<p class="followed-curator">by<span>' + channel ['curatorname'] + '</span></p>';
         html += '</li>';
         }
       $("#following-list").html (html);
@@ -17728,7 +18067,6 @@ function fresh_layer (id)
   header();
   clearTimeout (guide_timex);
   clearTimeout (home_timex);
-  current_episode_phase = 0;
   }
 
 function home()
@@ -17788,11 +18126,11 @@ function new_signup (callback)
   $("#signin-layer").show();
   $("#signin-layer").css ("top", "0px");
   pw_error_reset();
-  signup_field_init (callback);
+  signup_field_init();
   pause_and_mute_everything();
   }
 
-function signup_field_init (callback)
+function signup_field_init()
   {
   input_init (translations ['email'], "#return-email");
   input_init (translations ['yourname'], "#signup-name");
@@ -17808,13 +18146,9 @@ function signup_field_init (callback)
   $("#btn-home-sign-in").unbind();
   $("#btn-home-sign-in").click (function() 
     {
-    new_submit_login (function()
-      {
-      if (typeof (callback) == 'function')
-        callback();
-      else
-        eval (callback);
-      });
+    // $("#signin-layer").hide(); <-- done in new_submit_login
+    // after_sign = "signin_inner()";
+    new_submit_login();
     });
 
   $("#btn-home-create-account").unbind();
@@ -17836,15 +18170,13 @@ function verify_and_submit_signup()
   {
   if (! ($("#signup-checkbox").hasClass ("on")))
     {
-    pw_signup_error (translations ['plzaccept']);
+    pw_signup_error ("Please accept the agreements below.");
     return;
     }
 
-  new_submit_signup (function()
-    {
-    if (thumbing == 'home')
-      home();
-    });
+  // $("#signin-layer").hide(); <-- done in new_submit_signup
+  // after_sign = "signin_inner()";
+  new_submit_signup();
   }
 
 function pw_signin_error (text)
@@ -17898,7 +18230,6 @@ function input_init (hint, input)
 
 function input_pw_init (field)
   {
-  $(field).val ('');
   $(field).focus (function()
     {
     $(field).siblings (".hint").hide();
@@ -17968,17 +18299,16 @@ function up_progress (file, completed, total)
   $("#per").html (pct + "%");
   }
 
-function load_constrained_image (id, url, callback)
+function load_constrained_image (id, url)
   {
   var img = new Image();
   img.onload = function()
     {
     if (img.width > img.height)
-      $(id).css ({ width: "100%", height: "auto", 'margin-left': "auto", 'margin-right': "auto" });
+      $(id).css ({ width: "100%", height: "auto" });
     else
-      $(id).css ({ width: "auto", height: "100%", 'margin-left': "auto", 'margin-right': "auto" });
+      $(id).css ({ width: "auto", height: "100%" });
     $(id).attr ("src", img.src);
-    if (callback) callback();
     };
   img.src = url;
   }
