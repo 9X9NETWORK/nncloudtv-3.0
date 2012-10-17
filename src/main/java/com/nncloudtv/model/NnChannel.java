@@ -105,6 +105,7 @@ public class NnChannel implements Serializable {
     public static final short STATUS_ERROR = 1;
     public static final short STATUS_PROCESSING = 2;
     public static final short STATUS_WAIT_FOR_APPROVAL = 3;
+    public static final short STATUS_REMOVED = 4;
     //invalid
     public static final short STATUS_INVALID_FORMAT = 51;
     public static final short STATUS_URL_NOT_FOUND = 53;
