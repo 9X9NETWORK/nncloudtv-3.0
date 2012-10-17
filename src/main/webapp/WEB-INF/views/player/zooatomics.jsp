@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock27"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock33"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -47,7 +47,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai6.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai7.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -170,22 +170,29 @@ soundManager.onready(function()
 <!-- Header End -->
 
 <!-- Curator Bubble Begin -->
+<!-- Curator Bubble Begin -->
+
 <div id="curator-bubble">
   <ul id="icon-social">
+    <li id="twitter"></li>
     <li id="facebook"></li>
+    <li id="blogger"></li>
+    <li id="google"></li>
   </ul>
-  <div id="curator-info" class="ellipsis multiline">
-    <p id="curator-thumb"><img src="thumbnail/curator_09.png"></p>
-    <p id="curator-name-bubble">Liz Lisa</p>
-    <p id="curator-intro"></p>
+  <div id="curator-info">
+    <p id="curator-thumb"><img src="thumbnail/profile_default50.png"></p>
+    <p id="curator-name-bubble"></p>
+    <p id="curator-intro" class="ellipsis multiline"><span></span></p>
   </div>
+  <div id="top-ch-name">My Top Channel: <p></p></div>
   <div id="curator-ch-meta">
-    <p id="top-ch-name">My Top Channel: Coffee Shop</p> 
-    <p>50 Episodes<span class="divider">|</span>1 day ago</p>
-    <p>100 Views</p>
+    <p></p>
   </div>
-  <p class="icon-pl"></p>
-  <img src="thumbnail/coffee_01.png" class="thumb1"><img src="thumbnail/coffee_02.png" class="thumb2"><img src="thumbnail/coffee_03.png" class="thumb3">
+  <div class="thumb">
+      <p class="icon-pl"></p>
+      <img src="" class="thumb1"><img src="" class="thumb2"><img src="" class="thumb3"> 
+  	  <p class="pl-sign"><span></span></p>
+  </div>
 </div>
 <!-- Curator Bubble End -->
 
@@ -300,17 +307,17 @@ soundManager.onready(function()
       <div id="fb-like-container" style="display: none">
         <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href=""></div>
       </div>
-      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">This channel has been added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>
+      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle"></p><p class="popmessage-right"></p></div>
     </div>
     <p id="video-placeholder"></p>
     <div id="player-ep-bar">
       <p id="btn-ep-left"></p>
       <p id="btn-ep-right"></p>
       <p id="player-ep-meta">
-        <span class="ep-title">Mountain Biker gets taken out by BUCK - CRAZY Footage</span>
-        <span class="ep-index">(3/50)</span>
+        <span class="ep-title"></span>
+        <span class="ep-index">(0/0)</span>
         <span>-</span>
-        <span class="ep-age">3 months ago</span>
+        <span class="ep-age"></span>
       </p>
       <div id="player-ep-constrain">
         <ul id="player-ep-list">
@@ -318,19 +325,20 @@ soundManager.onready(function()
       </div>
     </div>
     <div id="player-ep-source">
-      <p id="ch-source">From <span>Mountain Biker gets taken out by BUCK Footage</span></p>
+      <p id="ch-source">From <span></span></p>
       <p id="video-source">on <span>YouTube</span></p>
-      <p id="curator-source">by <span>Moutain Biker's News</span></p>
+      <p id="curator-source">by <span></span></p>
     </div>
-    <div id="curator-photo"><img src="thumbnail/curator_01.png"></div>
+    <div id="curator-photo"><img src=""></div>
     <div id="curator-title">
       <span>Curator:</span>
-      <p id="curator-name">Moutain Biker</p>
+      <p id="curator-name"></p>
     </div>
-    <p id="curator-description" class="ellipsis multiline">To watch mountain bike videos. Bikes, gear reviews and ratings from other riders. To watch mountain bike videos. Bikes, gear reviews and ratings from other riders. Don't wait no longer. Subscript now.</p>
+    <p id="curator-description" class="ellipsis multiline"><span></span></p>
+
     <div id="bubble">
       <p id="bubble-title">Show me more</p>
-      <p id="bubble-wording" class="ellipsis multiline">Want to buy a new stuff for your bike?</p>
+      <p id="bubble-wording" class="ellipsis multiline"></p>
     </div>
     <div id="flipr">
       <p id="flipr-playpause"></p>
@@ -373,11 +381,14 @@ soundManager.onready(function()
       <li class="left on" id="channel"><span id="btn-manage"></span><div><p><span class="name"></span>'s Channels<span id="curator-ch-num" class="number">(0)</span></p></div></li>
       <li class="right" id="following"><div><p><span class="name"></span>'s Followings<span id="curator-fol-num" class="number">(0)</span></p></div></li>
     </ul>
-    <ul id="manage-tip">
-      <li id="tip-left"></li>
-      <li id="tip-center">Manage your channels</li>
-      <li id="tip-right"></li>
-    </ul>
+    <span class="manage-tip">
+      <img src="${nroot}/images/bg_tip_top.png" alt="" />
+      <span class="tip-center">
+        <span class="tip-left"></span>
+        <span class="text">Manage your channels</span>
+        <span class="tip-right"></span>
+      </span>
+    </span>
     <div class="curator-panel" id="channel-panel">
       <div id="channel-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
       <div class="curator-panel-constrain" id="channel-constrain">
@@ -447,58 +458,55 @@ soundManager.onready(function()
     <div id="reco-result-constrain">   
       <ul id="reco-result">
         <li>
-          <p class="channel-title">Summer Vacation</p>
+          <p class="channel-title"></p>
           <p class="btn-action"><span>Follow</span></p>
           <p class="icon-pl"></p>
-          <img src="thumbnail/vacation_01.png" class="thumb1">
-          <img src="thumbnail/vacation_02.png" class="thumb2">
-          <img src="thumbnail/vacation_03.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_02.png"></p>
+          <img src="" class="thumb1">
+          <img src="" class="thumb2">
+          <img src="" class="thumb3">
+          <p class="followed-curator-photo"><img src=""></p>
           <div class="channel-meta">
             <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
             <p class="next-update">Next Update: Tomorrow</p>
           </div>
-          <p class="followed-curator">by<span>Cunnie Pan</span></p>
+          <p class="followed-curator">by<span></span></p>
         </li>
         <li>
-          <p class="channel-title">Coffee House</p>
+          <p class="channel-title"></p>
           <p class="btn-action"><span>Follow</span></p>
           <p class="icon-pl"></p>
-          <img src="thumbnail/coffee_01.png" class="thumb1">
-          <img src="thumbnail/coffee_02.png" class="thumb2">
-          <img src="thumbnail/coffee_03.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_03.png"></p>
+          <img src="" class="thumb1">
+          <img src="" class="thumb2">
+          <img src="" class="thumb3">
+          <p class="followed-curator-photo"><img src=""></p>
           <div class="channel-meta">
             <p>30 Episodes<span class="divider">|</span>10 minutes ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
           </div>
           <p class="followed-curator">by<span>Cunnie Pan</span></p>
         </li>
         <li>
-          <p class="channel-title">Mountain Bike</p>
+          <p class="channel-title"></p>
           <p class="btn-action"><span>Follow</span></p>
           <p class="icon-pl"></p>
-          <img src="thumbnail/01-1.png" class="thumb1">
-          <img src="thumbnail/01-2.png" class="thumb2">
-          <img src="thumbnail/01-3.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_04.png"></p>
+          <img src="" class="thumb1">
+          <img src="" class="thumb2">
+          <img src="" class="thumb3">
+          <p class="followed-curator-photo"><img src=""></p>
           <div class="channel-meta">
             <p>30 Episodes<span class="divider">|</span>1 day ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
           </div>
           <p class="followed-curator">by<span>Cunnie Pan</span></p>
         </li>
         <li>
-          <p class="channel-title">World Class Limited Sport</p>
+          <p class="channel-title"></p>
           <p class="btn-action"><span>Follow</span></p>
           <p class="icon-pl"></p>
-          <img src="thumbnail/epi_01.png" class="thumb1">
-          <img src="thumbnail/epi_02.png" class="thumb2">
-          <img src="thumbnail/epi_03.png" class="thumb3">
-          <p class="followed-curator-photo"><img src="thumbnail/curator_08.png"></p>
+          <img src="" class="thumb1">
+          <img src="" class="thumb2">
+          <img src="" class="thumb3">
+          <p class="followed-curator-photo"><img src=""></p>
           <div class="channel-meta">
             <p>30 Episodes<span class="divider">|</span>1 day ago</p>
-            <p class="next-update">Next Update: Tomorrow</p>
           </div>
           <p class="followed-curator">by<span>Cunnie Pan</span></p>
         </li>  
@@ -559,12 +567,12 @@ soundManager.onready(function()
     <img src="${nroot}/images/bg_guide_bubble2.png" id="bg2" class="bg">
     <img src="${nroot}/images/bg_guide_bubble3.png" id="bg3" class="bg">
     <h3><span></span></h3>
-    <img src="${nroot}/thumbnail/photo/11.jpg" class="thumbnail1">
-    <img src="${nroot}/thumbnail/photo/12.jpg" class="thumbnail2">
-    <img src="${nroot}/photo/13.jpg" class="thumbnail3">
+    <img src="" class="thumbnail1">
+    <img src="" class="thumbnail2">
+    <img src="" class="thumbnail3">
     <div id="ch-meta">
-      <p><span id="ch-meta-count">10 Episodes</span></p>
-      <p><span id="ch-meta-ago">2 day ago</span></p>
+      <p><span id="ch-meta-count"></span></p>
+      <p><span id="ch-meta-ago"></span></p>
       <p><span>by</span><span class="name" id="ch-meta-curator">Vialo</span></p>
       <p id="ch-brief" class="ellipsis multiline"><span></span></p>
     </div>
@@ -649,7 +657,7 @@ soundManager.onready(function()
               <p><span>2 day ago</span></p>
               <p><span>by</span><span class="name">Vialo</span></p>
            </span>
-          <p id="ch-brief" class="ellipsis multiline"><span>It is involved in range of activities to promot travel to Japan by the activities oversea as well as these tourists to promot their best activities.</span></p>
+          <p id="ch-brief" class="ellipsis multiline"><span></span></p>
         </li>
         <li class="default" id="bubble-default">
           <h3><span></span></h3>
@@ -664,7 +672,7 @@ soundManager.onready(function()
               <p><span></span></p>
               <p><span>by</span><span class="name">Vialo</span></p>
            </span>
-          <p id="ch-brief" class="ellipsis multiline"><span>It is involved in range of activities to promot travel to Japan by the activities oversea as well as these tourists to promot their best activities.</span></p>
+          <p id="ch-brief" class="ellipsis multiline"><span></span></p>
 	</li>
         </ul>
       </div>
@@ -794,15 +802,8 @@ soundManager.onready(function()
               <input value="" class="input-c" id="settings-username">
               <p class="input-r"></p>
             </div>
-            <!--div id="btn-settings-check" class="btn-gray">
-              <p class="btn-gray-left"></p>
-              <p class="btn-gray-middle">Check</p>
-              <p class="btn-gray-right"></p>
-            </div-->
-            <!--p class="username-p-position">The username is composed of 8-16 English letters or numbers or low line.</span><br>
-            This username has already been used, please type another one.</p-->
           </div>
-        </li-->
+        </li>
         <li>
           <p class="title title-position">Password</p>
           <div class="data">
@@ -816,7 +817,9 @@ soundManager.onready(function()
         <li>
           <p class="title">About</p>
           <p class="data">
-            <textarea class="about-textarea" id="settings-about"></textarea>
+            <p class="textarea">
+              <span><textarea class="about-textarea" id="settings-about"></textarea></span>
+            </p>
           </p>
         </li>
         <!--li>
@@ -858,39 +861,6 @@ soundManager.onready(function()
       <div id="right">
 
 
-<!--
-        <p class="title">Image</p>
-        <div class="imagebox">
-          <p class="l"></p>
-          <div class="c">
-            <div id="imagebox-upload-box">
-        	<div id="imagebox-upload-wrap">
-                <span id="per">50%</span>
-                <div id="bar">
-                  <p class="bar_l"></p>
-                  <p class="bar_m"></p>
-                  <p class="bar_r"></p>
-	        </div>
-              </div>
-              <p class="imagebox-upload-wrap-p">Sample.jpg<br><br>00:52 remaining</p>
-        	  <div id="btn-cancel-upload-image" class="btn-white">
-                <p class="btn-white-left"></p>
-                <p class="btn-white-middle">Cancel</p>
-                <p class="btn-white-right"></p>
-              </div>
-            </div>
-            <img src="${nroot}/thumbnail/curator_05.png">
-          </div>
-          <p class="r"></p>
-          <div id="btn-upload" class="btn-gray">
-            <p class="btn-gray-left"></p>
-            <p class="btn-gray-middle">Upload a image</p>
-            <p class="btn-gray-right"></p>
-          </div>
-        </div>
--->
-
-
         <p class="title">Image</p>
         <div class="imagebox">
           <p class="l"></p>
@@ -925,7 +895,6 @@ soundManager.onready(function()
               </div>
           </div>
         </div>
-
 
 
 
@@ -979,15 +948,15 @@ soundManager.onready(function()
           <li>
             <p class="passwor-incorrect">Old password is incorrect.<br>Two passwords don't match, please retype.</p>
           </li>
-          <div id="btn-change-return-password" class="btn-gray">
-            <p class="btn-gray-left"></p>
-            <p class="btn-gray-middle">Change password</p>
-            <p class="btn-gray-right"></p>
+          <div id="btn-change-return-password" class="btn-white">
+            <p class="btn-white-left"></p>
+            <p class="btn-white-middle">Change password</p>
+            <p class="btn-white-right"></p>
           </div>
-          <div id="btn-cancel-password" class="btn-gray">
-            <p class="btn-gray-left"></p>
-            <p class="btn-gray-middle">Cancel</p>
-            <p class="btn-gray-right"></p>
+          <div id="btn-cancel-password" class="btn-white">
+            <p class="btn-white-left"></p>
+            <p class="btn-white-middle">Cancel</p>
+            <p class="btn-white-right"></p>
           </div>
         </ul>
       </div>
