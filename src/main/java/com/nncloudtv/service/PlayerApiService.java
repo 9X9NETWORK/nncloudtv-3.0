@@ -1203,18 +1203,30 @@ public class PlayerApiService {
         String[] value = values.split(",");
         String password = "";
         String oldPassword = "";
-        if (key.length != value.length)
+        if (key.length != value.length) {
+            log.info("key and value length mismatches!");
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
+        }
         String[] valid = {"name", "year", "password", 
-                "oldPassword", "sphere", "ui-lang", "gender", "description", "image"};        
+                "oldPassword", "sphere", "ui-lang", "gender", "description", "image"};
+        //description,lang,name
         HashSet<String> dic = new HashSet<String>();
         for (int i=0; i<valid.length; i++) {
             dic.add(valid[i]);
         }
         for (int i=0; i<key.length; i++) {
-            if (!dic.contains(key[i]))
+            if (!dic.contains(key[i])) {
+                log.info("contains not valid key value!");
                 return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
+            }
             String theValue = value[i];
+            try {
+                theValue = URLDecoder.decode(theValue, "utf-8");
+                theValue = NnStringUtil.htmlSafeAndTruncated(theValue);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }                
+            
             if (key[i].equals("name")) {
                 if (theValue.equals(NnUser.GUEST_NAME))
                     return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
@@ -1224,14 +1236,8 @@ public class PlayerApiService {
                 user.setImageUrl(theValue);
             if (key[i].equals("year"))
                 user.setDob(theValue);
-            if (key[i].equals("description")) {
-                try {
-                    theValue = URLDecoder.decode(theValue, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }                
-                user.setIntro(NnStringUtil.htmlSafeAndTruncated(theValue));
-            }
+            if (key[i].equals("description"))
+                user.setIntro(theValue);
             if (key[i].equals("password"))
                 password = theValue;                
             if (key[i].equals("oldPassword"))
@@ -1647,6 +1653,12 @@ public class PlayerApiService {
         List<String> data = new ArrayList<String>();
         return this.assembleSections(data);
     }
+    
+    public String auxLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+        List<String> data = new ArrayList<String>();
+        return this.assembleSections(data);
+    }
+    
     /**
      * 1. user info
      * 2. channel lineup (grid)
