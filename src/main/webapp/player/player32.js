@@ -1,4 +1,4 @@
-﻿/* players mogwai6 */
+﻿/* players mogwai7 */
 
 var current_tube = '';
 var wmode = 'transparent';
@@ -217,7 +217,7 @@ var via_share_path = '';
 
 var root = 'http://9x9ui.s3.amazonaws.com/9x9playerV68a/images/';
 //var nroot = 'http://9x9ui.s3.amazonaws.com/9x9playerV104/images/';
-var nroot = 'http://9x9ui.s3.amazonaws.com/mock24/images/';
+var nroot = 'http://9x9ui.s3.amazonaws.com/mock33/images/';
 var no_thumbnail_image = 'http://9x9ui.s3.amazonaws.com/no-thumbnail-image.jpg';
 
 var language_en =
@@ -539,6 +539,7 @@ var language_en =
   curatorby: 'by',
   curatorfrom: 'From',
   curatoron: 'on',
+  clipfrom: 'From',
   taiwan: 'Taiwan',
   usa: 'USA',
   email: 'E-mail',
@@ -580,7 +581,9 @@ var language_en =
   addfav: 'Added to your Favorites',
   remfav: 'Removed from your Favorites',
   hasbeenadded: 'This channel has been added to your Guide.',
-  hasbeenremoved: 'This channel has been removed from your Guide.'
+  hasbeenremoved: 'This channel has been removed from your Guide.',
+  myc: 'Manage your channels',
+  nowplaying: 'Now Playing'
   };
 
 var language_tw =
@@ -911,6 +914,7 @@ var language_tw =
   curatorby: '來自',
   curatorfrom: '來自',
   curatoron: '於',
+  clipfrom: '上傳的',
   taiwan: '台灣',
   usa: '美國',
   email: '信箱',
@@ -954,7 +958,9 @@ var language_tw =
   addfav: '此頻道已經添加到您喜歡的頻道表',
   remfav: '此頻道已從您喜歡的頻道表中刪除',
   hasbeenadded: '此頻道已經添加到您的頻道表',
-  hasbeenremoved: '此頻道已從您的頻道表中刪除'
+  hasbeenremoved: '此頻道已從您的頻道表中刪除',
+  myc: 'Manage your channels',
+  nowplaying: 'Now Playing'
   };
 
 var translations = language_en;
@@ -1026,10 +1032,15 @@ function elastic_innards()
   adjust_sliders();
   }
 
-/* these are executed ONLY if a .resize was called, and not merely elastic() */
+/* these are executed ONLY if a .resize was called, and not merely elastic(). Since redraw_layer_if_possible
+   may contain some very expensive operations, call it at most once per second */
+
+var elastic_timex;
+
 function after_elastic()
   {
-  redraw_layer_if_possible();
+  clearTimeout (elastic_timex);
+  elastic_timex = setTimeout ("redraw_layer_if_possible()", 1000);
   }
 
 function redraw_layer_if_possible()
@@ -1302,8 +1313,9 @@ function set_language (lang)
   $("#btn-save-profile .btn-gray-middle").html (translations ['saveprofile']);
   $("#settings-layer #right .title").html (translations ['aboutimage']);
   $("#btn-change-password .btn-gray-middle").html (translations ['changepassword']);
-  $("#btn-change-return-password .btn-gray-middle").html (translations ['changepassword']);
-  $("#btn-cancel-password .btn-gray-middle").html (translations ['cancel']);
+  $("#btn-change-return-password .btn-white-middle").html (translations ['changepassword']);
+  $("#btn-cancel-password .btn-white-middle").html (translations ['cancel']);
+  $("#curator-main .manage-tip .text").html (translations ['myc']);
 
   $("#btn-home-sign-in .btn-white-middle").html (translations ['signin']);
   $("#return-email, #signup-email").val (translations ['email']);
@@ -1344,6 +1356,9 @@ function set_language (lang)
   /* TEMP FIX */
   $("#developer-dropdown li").eq(8).attr ("data-doc", "v-contest");
 
+  $("#signin-layer .signinpic").attr ("src", nroot + ((language == 'zh') ? 'sign_in_zh.png' : 'sign_in.png'));
+  $("#signin-layer .signuppic").attr ("src", nroot + ((language == 'zh') ? 'sign_up_zh.png' : 'sign_up.png'));
+
 // NOT LETTING ME DO WHAT WE NEED...
 // <div id="player-ep-source">
 // <p id="ch-source">From <span>Mountain Biker gets taken out by BUCK Footage</span></p>
@@ -1351,25 +1366,29 @@ function set_language (lang)
 // <p id="curator-source">by <span>Moutain Biker's News</span></p>
 // </div>
 
-  if (false)
+  if (true)
     {
+    var html = '';
     var p_ch_source = $("#ch-source span").text();
     var p_video_source = $("#video-source span").text();
     var p_curator_source = $("#curator-source span").text();
+
+    /* Note that the last two elements must be listed in reverse order, not what you expect:
+       "Floating to the right reverses the order of the elements. This is the expected behavior */
+
     if (language == 'zh')
       {
       html =  '<p id="curator-source">' + translations ['curatorby'] + ' <span>' + p_curator_source + '</span></p>';
-      html += '<p id="video-source">' + translations ['curatoron'] + '<span>' + p_video_source + '</span></p>';
-      html += '<p id="ch-source">' + translations ['curatorfrom'] + ' <span>' + p_ch_source + '</span></p>';
-      $("#player-ep-source").html (html);
+      html += '<p id="ch-source">' + translations ['clipfrom'] + ' <span>' + p_ch_source + '</span></p>';
+      html += '<p id="video-source">' + translations ['curatoron'] + ' <span>' + p_video_source + '</span></p>';
       }
     else
       {
-      html =  '<p id="ch-source">' + translations ['curatorfrom'] + ' <span>' + p_ch_source + '</span></p>';
+      html =  '<p id="ch-source">' + translations ['clipfrom'] + ' <span>' + p_ch_source + '</span></p>';
       html += '<p id="video-source">' + translations ['curatoron'] + ' <span>' + p_video_source + '</span></p>';
       html += '<p id="curator-source">' + translations ['curatorby'] + ' <span>' + p_curator_source + '</span></p>';
-      $("#player-ep-source").html (html);
       }
+    $("#player-ep-source").html (html);
     }
 
   if (home_stack_name == 'hottest')
@@ -1814,7 +1833,7 @@ function track_episode (set_id, channel_id, episode_id)
   {
   log ("&&&&&&&&&&&&&&&&&& TRACK :: CHANNEL:" + channel_id + " EPISODE:" + episode_id);
   track_without_piwik (set_id, channel_id, episode_id);
-  piwik_track_episode (set_id, channel_id, episode_id)
+  // piwik_track_episode (set_id, channel_id, episode_id)
   into_player_history (set_id, channel_id, episode_id);
   }
 
@@ -1920,36 +1939,51 @@ function track_without_piwik (set_id, channel_id, episode_id)
   if ((channel_id + '.' + episode_id) in programgrid)
     full_episode_id = channel_id + '.' + episode_id;
 
+  var episode_unmapped = full_episode_id;
   var episode_mapped = 'ep' + full_episode_id;
   if (episode_mapped.match (/\./))
+    {
+    episode_unmapped = episode_id;
     episode_mapped = 'yt' + episode_id;
-      
+    }
+
+  var subepisode;
   var programinfo = programgrid [full_episode_id];
   if (!programinfo)
     {
-    var pid = reverse_engineer_program_id (episode_id);
+    var pid = reverse_engineer_program_id (episode_unmapped);
     if (pid)
+      {
       programinfo = programgrid [pid];
+      episode_unmapped = pid;
+      if ('umbrella' in programinfo)
+        {
+        episode_unmapped = programinfo ['umbrella'];
+        subepisode = pid;
+        }
+      }
     }
 
-  // var prefix = (thumbing == 'player' || thumbing == 'player-wait') ? '/view/' : '/pre/';
   var prefix = '/view/';
 
-  // pageTitle = prefix + channel ['name'] + '(ch' + channel ['id'] + ')/' + programinfo ['name'] + '(' + episode_mapped + ')';
-  pageTitle = prefix + 'ch' + channel ['id'] + '/' + episode_mapped;
+  if (subepisode)
+    {
+    // pageTitle = prefix + 'ch' + channel ['id'] + '/' + episode_unmapped + '/' + subepisode + '/' + episode_mapped;
+    pageTitle = prefix + 'ch' + channel ['id'] + '/' + episode_unmapped + '/' + episode_mapped;
+    }
+  else if (episode_mapped.match (/^yt/))
+    pageTitle = prefix + 'ch' + channel ['id'] + '/' + episode_mapped;
+  else
+    pageTitle = prefix + 'ch' + channel ['id'] + '/' + episode_unmapped + '/' + episode_mapped;
 
   var acct = document.location.host.match (/(dev|stage|alpha)/) ? 'UA-31930874-1' : 'UA-21595932-1';
 
   log ("GOOGLE ANALYTICS (ep): " + pageTitle);
-  _gaq.push (['_setAccount', acct]);
-  // _gaq.push (['_setCustomVar', 1, "pageTitle", programinfo ['name']]);
   _gaq.push (['_set', 'title', programinfo ['name']]);
   _gaq.push (['_trackPageview', pageTitle]);
 
   pageTitle = prefix + 'ch' + channel ['id'];
   log ("GOOGLE ANALYTICS (ch): " + pageTitle);
-  _gaq.push (['_setAccount', acct]);
-  // _gaq.push (['_setCustomVar', 1, "pageTitle", channel ['name']]);
   _gaq.push (['_set', 'title', channel ['name']]);
   _gaq.push (['_trackPageview', pageTitle]);
   }
@@ -2879,7 +2913,7 @@ function redraw_home_trending (starting_at)
       var plural = channel ['count'] == 1 ? translations ['episode'] : translations ['episodes'];
       log ("trending: " + channel ['id']);
       html += '<li id="trending-' + t + '">';
-      html += '<span class="r-frame">';
+      html += '<div class="r-frame">';
       html += '<p class="m-frame">';
       html += '<img src="' + channel ['thumb1'] + '" class="trending-stories-right-list-pic">';
       html += '<div class="epi">';
@@ -2891,7 +2925,7 @@ function redraw_home_trending (starting_at)
       html += '<p class="trending-stories-right-list-name">' + channel ['name'] + '</p>';
       html += '<p class="trending-stories-right-list-time">' + ago + '</p>';
       html += '</p>';
-      html += '</span>';
+      html += '</div>';
       html += '</li>';
       if (++count >= 5) break;
       }
@@ -3036,7 +3070,7 @@ function home_subscriptions()
       html += '<li id="home-channel-' + i + '">';
       html += '<div class="thumb">';
       html += '<p class="icon-pl"></p>';
-      html += '<img src="' + channel ['thumb1'] + '" class="thumb1">';
+      html += '<div class="thumbnail-wrapper"><img src="' + channel ['thumb1'] + '" class="thumb1"></div>';
       html += '<img src="' + channel ['thumb2'] + '" class="thumb2">';
       html += '<img src="' + channel ['thumb3'] + '" class="thumb3">';
       html += '</div>';
@@ -3053,6 +3087,15 @@ function home_subscriptions()
       }
     }
   $("#followings-box").html (html);
+
+  /* resize thumbnails */
+  if (true)
+    {
+    $("#followings-box .thumbnail-wrapper img").each (function()
+      {
+      load_thumbnail_156x88 (this, $(this).attr ("src"));
+      });
+    }
 
   $("#followings-box li").unbind();
   $("#followings-box li").click (function() { home_subscriptions_play ($(this).attr ("id")); });
@@ -3079,6 +3122,21 @@ if (false)
       curation (home_subscriptions_stack [id]['curatorid']);
     });
 }
+  }
+
+function load_thumbnail_156x88 (id, url, callback)
+  {
+  var img = new Image();
+  img.onload = function()
+    {
+    if (img.width == img.height)
+      $(id).css ({ width: "156px", height: "156px", 'margin-top': "-34px", 'margin-right': "0", 'margin-bottom': "0", 'margin-left': "0" });
+    else
+      $(id).css ({ width: "100%", height: "100%", 'margin-top': "0", 'margin-right': "0", 'margin-bottom': "0", 'margin-left': "0" });
+    $(id).attr ("src", img.src);
+    if (callback) callback();
+    };
+  img.src = url;
   }
 
 function home_subscriptions_play (id)
@@ -3722,8 +3780,10 @@ function activate()
   document.onkeydown=kp;
   redraw_ipg();
 
+  process_our_url();
+
   if (!process_our_url())
-    finish_activation ("[activate]");
+    finish_activation();
   }
 
 function process_our_url()
@@ -3742,9 +3802,9 @@ function process_our_url()
   return false;
   }
 
-function finish_activation (why)
+function finish_activation()
   {
-  log ('finish activation: ' + why);
+  log ('finish activation');
 
   $("#blue").hide();
 
@@ -3823,6 +3883,7 @@ function custom_url (path)
   else if ((location.hash).match (/\!(directory|home|about|aboot|curator|settings)/))
     {
     log ('special page: ' + location.hash);
+    finish_activation();
     return;
     }
   else if ((location.hash).match (/\!landing=([^\&=]+)/))
@@ -3909,7 +3970,7 @@ function custom_url (path)
       }
     else
       {
-      notice_ok (thumbing, translations ['badlanding'], "switch_to_ipg(); finish_activation('[custom_url]')");
+      notice_ok (thumbing, translations ['badlanding'], "switch_to_ipg(); finish_activation()");
       }
     });
   }
@@ -3960,7 +4021,7 @@ function view_landing_inner()
   {
   log ('view landing inner');
   player_mute_override = 'unmute';
-  load_programs_then (jumpstart_channel, "finish_activation('[view_landing_inner]')");
+  load_programs_then (jumpstart_channel, "finish_activation()");
   }
 
 function unsubscribe_from_mailings (utoken)
@@ -4028,6 +4089,7 @@ function jumpstart()
     jumpstart_program = program_line [1];
 
   jumpstart_program = dot_qualify_program_id (jumpstart_channel, jumpstart_program);
+  // if (jumpstart_program in programgrid || !jumpstart_program)
   if (jumpstart_program in programgrid)
     {
     jumpstart_inner();
@@ -4085,7 +4147,7 @@ function load_programs_then (channel_id, callback)
       else if (('' + jumpstart_program + '-1') in programgrid)
         {
         jumpstart_program = '' + jumpstart_program + '-1'
-        log ("sub-episodic program found: " + jumpstart_program + ", callback: " + callback);
+        log ("sub-episodic program found: " + jumpstart_program);
         eval (callback);
         }
       else
@@ -8071,22 +8133,28 @@ function featured_curator_events()
     $("#curator-info").attr ("data-id", curator ['id']);
     $("#curator-bubble #curator-thumb img").attr ("src", curator ['thumb']);
     $("#curator-name-bubble").text (curator ['name']);
-    $("#curator-intro").text (curator ['desc']);
+    $("#curator-intro span").text (curator ['desc']);
     if (curator ['topchan'] && (curator ['topchan'] in pool))
       {
       var channel = pool [curator ['topchan']];
-      var plural = (channel ['count'] == 1) ? translations ['episode'] : translations ['episodes'];
+      log ("featured curator top channel: " + channel ['id']);
+      var eplural = (channel ['count'] == 1) ? translations ['episode'] : translations ['episodes'];
+      var vplural = (channel ['viewcount'] == 1) ? translations ['view'] : translations ['views'];
       var ago = ageof (channel ['timestamp'], true);
       $("#top-ch-name").text (translations ['mytopchannel'] + ': ' + channel ['name']);
       $("#curator-bubble .thumb1").attr ("src", channel ['thumb1']);
       $("#curator-bubble .thumb2").attr ("src", channel ['thumb2']);
       $("#curator-bubble .thumb3").attr ("src", channel ['thumb3']);
-      $("#curator-ch-meta p").eq(1).html (channel ['count'] + ' ' + plural + '<span class="divider">|</span>' + ago);
-      $("#curator-ch-meta p").eq(2).html (channel ['viewcount'] + ' ' + translations ['views']);
+      $("#curator-ch-meta p").eq(1).html (channel ['count'] + ' ' + eplural + '<span class="divider">|</span>' + channel ['viewcount'] + ' ' + vplural);
+      $("#curator-bubble .thumb .pl-sign span").html (ago);
       $("#curator-ch-meta, #curator-bubble .thumb1, #curator-bubble .thumb2, #curator-bubble .thumb3, #curator-bubble .icon-pl").show();
       }
     else
+      {
+      log ("featured curator has no top channel");
       $("#curator-ch-meta, #curator-bubble .thumb1, #curator-bubble .thumb2, #curator-bubble .thumb3, #curator-bubble .icon-pl").hide();
+      }
+    $("#icon-social").hide(); /* until it does something */
     ellipses();
     });
   $("#curator-list img").mouseout (function()
@@ -9064,7 +9132,7 @@ function player_column_shelf_html (channel, use_this_id, display_number)
     html += '<p class="btn-quickfollow" style="visibility: visible"></p>';
   else
     html += '<p class="btn-quickfollow" style="visibility: hidden"></p>';
-  html += '<p class="pl-hilite"></p>';
+  html += '<p class="pl-hilite"><span class="now-playing">' + translations ['nowplaying'] + '</span></p>';
   html += '<p class="pl-title-line"><span class="pl-number">' + display_number + '.</span><span class="pl-title">' + channel ['name'] + '</span></p>';
   html += '<p class="pl-curator-line"><span>' + translations ['curatorby'] + '</span><span class="pl-curator">' + channel ['curatorname'] + '</span></p>';
   html += '<p class="icon-pl"></p>';
@@ -9155,7 +9223,7 @@ function GNU_player_metainfo (real_channel)
 
   $("#curator-photo img").attr ("src", channel ['curatorthumb']);
   $("#curator-name").html (curator_name);
-  $("#curator-description").html (channel ['curatordesc']);
+  $("#curator-description span").html (channel ['curatordesc']);
   $("#ch-title").html (channel ['name']);
 
   if (! (program_cursor in program_line))
@@ -9172,15 +9240,15 @@ function GNU_player_metainfo (real_channel)
     {
     var ago = ageof (program ['timestamp'], true);
     $("#ep-title, #player-ep-meta .ep-title").html (fixed_up_program_name (program ['name']));
-    $("#ch-source").html (translations ['curatorfrom'] + ' <span>' + program ['name'] + '</span>');
+    $("#ch-source").html (translations ['clipfrom'] + ' <span>' + program ['name'] + '</span>');
     $("#player-ep-meta .ep-age").html (ago);
     $("#player-ep-meta .ep-index").html ('(' + program_cursor + '/' + channel ['count'] + ')');
     }
 
   if (channel ['nature'] == '3' || channel ['nature'] == '4')
-    $("#curator-source").html (translations ['curatorby'] + '<span>' + channel ['extra'] + '</span>');
+    $("#curator-source").html (translations ['curatorby'] + ' <span>' + channel ['extra'] + '</span>');
   else
-    $("#curator-source").html (translations ['curatorby'] + '<span>' + channel ['curatorname'] + '</span>');
+    $("#curator-source").html (translations ['curatorby'] + ' <span>' + channel ['curatorname'] + '</span>');
 
   $("#player-ep-source").show();
   }
@@ -9822,6 +9890,7 @@ function player_next()
 
   var real_channel;
   $("#pl-list li").removeClass ("on");
+  $("#pl-list li .pl-highlight span").removeClass ("on");
 
   if (player_mode == 'guide')
     {
@@ -9829,6 +9898,7 @@ function player_next()
     ipg_cursor = current_channel = next_channel_square (ipg_cursor);
     scroll_player_column_to (ipg_cursor);
     $("#channel-" + ipg_cursor).addClass ("on");
+    $("#channel-" + ipg_cursor + " .pl-highlight span").addClass ("on");
     real_channel = channelgrid [ipg_cursor]['id'];
     }
   else
@@ -9839,6 +9909,7 @@ function player_next()
       player_cursor = 1;
     scroll_player_column_to (player_cursor);
     $("#channel-" + player_cursor).addClass ("on");
+    $("#channel-" + player_cursor + " .pl-highlight span").addClass ("on");
     real_channel = player_stack [player_cursor]['id'];
     }
 
@@ -9852,12 +9923,14 @@ function player_prev()
 
   var real_channel;
   $("#pl-list li").removeClass ("on");
+  $("#pl-list li .pl-highlight span").removeClass ("on");
 
   if (player_mode == 'guide')
     {
     ipg_cursor = current_channel = previous_channel_square_setwise (ipg_cursor);
     scroll_player_column_to (ipg_cursor);
     $("#channel-" + ipg_cursor).addClass ("on");
+    $("#channel-" + ipg_cursor + " .pl-highlight span").addClass ("on");
     real_channel = channelgrid [ipg_cursor]['id'];
     }
   else
@@ -9868,6 +9941,7 @@ function player_prev()
       player_cursor = player_stack.length - 1;
     scroll_player_column_to (player_cursor);
     $("#channel-" + player_cursor).addClass ("on");
+    $("#channel-" + player_cursor + " .pl-highlight span").addClass ("on");
     real_channel = player_stack [player_cursor]['id'];
     }
 
@@ -13795,13 +13869,14 @@ function play_titlecard (which, titlecard)
   $('#tc').titlecard
     ({
     text: titlecard ['message'],
-    align: 'center',
-    effect: 'fade',
-    duration: titlecard ['duration'],
-    fontSize: 20,
-    fontColor: 'white',
-    fontWeight: 'bold',
-    backgroundColor: 'black'
+    align: 'align' in titlecard ? titlecard ['align'] : 'center',
+    effect: 'effect' in titlecard ? titlecard ['effect'] : 'fade',
+    duration: 'duration' in titlecard ? parseInt (titlecard ['duration']) : 7,
+    fontSize: 'size' in titlecard ? parseInt (titlecard ['size']) : 20,
+    fontColor: 'color' in titlecard ? titlecard ['color'] : '#ffffff',
+    fontWeight: 'weight' in titlecard ? titlecard ['fontweight'] : 'normal',
+    fontStyle: 'style' in titlecard ? titlecard ['style'] : 'normal',
+    backgroundColor: 'bgcolor' in titlecard ? titlecard ['bgcolor'] : '#000000'
     },
   function()
     {
@@ -13825,6 +13900,8 @@ function play_titlecard (which, titlecard)
       flip_next_episode();
       }
     });
+
+  pause_and_mute_everything();
   }
 
 function titlecard_ticker()
@@ -15059,6 +15136,7 @@ function unfollow (real_channel, callback)
     update_cart_bubble (channels_in_guide());
     log ('unfollow successful');
     redraw_subscribe();
+    home_subscriptions();
     player_pop_message (translations ['hasbeenremoved']);
 
     relay_post ("UPDATE");
@@ -16851,21 +16929,26 @@ function curation_inner (id)
   $("#following").unbind();
   $("#following").click (following_panel);
 
-  if (username != 'Guest' && id == curatorid)
+  btn_manage();
+  }
+
+function btn_manage()
+  {
+  if (username != 'Guest' && $("#channel").hasClass ("on") && current_curator_page == curatorid)
     {
     $("#btn-manage").show();
     $("#btn-manage").unbind();
     $("#btn-manage").mouseover (function()
       {
-      var tloc = $("#channel").offset();
-      var tl = tloc.left-30;
-      var tt = tloc.top+25;
-      $("#manage-tip").css ({ left: tl, top: tt });
-      $("#manage-tip").fadeIn (300);
+      var tloc = $("#channel").position();
+      var tl = tloc.left + 0;
+      var tt = tloc.top + 95;
+      $("#curator-main .manage-tip").css ({ left: tl, top: tt });
+      $("#curator-main .manage-tip").fadeIn (250);
       });
     $("#btn-manage").mouseout (function()
       {
-      $("#manage-tip").fadeOut (300);
+      $("#curator-main .manage-tip").fadeOut (250);
       });
     $("#btn-manage").click (function() { seamless_exit ("/cms/index.html"); });
     }
@@ -16880,6 +16963,7 @@ function channel_panel()
   $("#following-panel").hide();
   $("#channel-panel").show();
   activate_channel_scrollbar();
+  btn_manage();
   }
 
 function following_panel()
@@ -16889,6 +16973,7 @@ function following_panel()
   $("#channel-panel").hide();
   $("#following-panel").show();
   activate_following_scrollbar();
+  btn_manage();
   }
 
 var curator_pool = {};
@@ -16904,7 +16989,6 @@ function load_curator_then (id, callback)
     return;
     }
 
-  // var query = '/playerAPI/curator?curator=' + id + rx();
   var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
   var d = $.get (query, function (data)
     {
@@ -16957,7 +17041,6 @@ function load_curator_channels (id)
   channel_scrollbar_activated = false;
   following_scrollbar_activated = false;
 
-  // var query = '/playerAPI/curator?curator=' + id + rx();
   var query = '/playerAPI/curator?curator=' + id + '&' + 'user=' + user + rx();
   var d = $.get (query, function (data)
     {
@@ -17156,6 +17239,19 @@ function curator_ch_click (id)
   else
     {
     player_stack = curator_ch_stack;
+    var to_be_played = player_stack [parseInt (id)]['id'];
+    /* remove any magic channels */
+    for (var i = 1; i < player_stack.length; i++)
+      {
+      if (player_stack [i]['id'].match (/^f-/))
+        player_stack.splice (i, 1);
+      }
+    /* now find our place again */
+    for (var i = 1; i < player_stack.length; i++)
+      {
+      if (player_stack [i]['id'] == to_be_played)
+        id = i;
+      }
     player ('curator-ch', parseInt (id));
     }
   }
