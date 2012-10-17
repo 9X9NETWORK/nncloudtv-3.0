@@ -476,7 +476,7 @@ public class ApiUser extends ApiGeneric {
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)
-    public @ResponseBody NnChannel channelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
+    public @ResponseBody NnChannel userChannelCreate(HttpServletRequest req, HttpServletResponse resp, @PathVariable("userId") String userIdStr) {
         
         NnChannelManager channelMngr = new NnChannelManager();
         
@@ -634,6 +634,8 @@ public class ApiUser extends ApiGeneric {
         }
         
         channel.setUserIdStr(null); // unlink
+        channel.setStatus(NnChannel.STATUS_REMOVED);
+        channel.setPublic(false);
         channelMngr.save(channel);
         
         return "OK";
