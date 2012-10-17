@@ -1,8 +1,6 @@
 package com.nncloudtv.web.api;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1763,6 +1761,28 @@ public class PlayerApiController {
         return output;                 
     }
 
+    @RequestMapping(value="auxLogin", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String auxLogin(
+            @RequestParam(value="token", required=false) String token,
+            @RequestParam(value="email", required=false) String email,
+            @RequestParam(value="password", required=false) String password,            
+            @RequestParam(value="rx", required = false) String rx,            
+            HttpServletRequest req,
+            HttpServletResponse resp) {        
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS)
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            output = playerApiService.auxLogin(token, email, password, req, resp);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;                 
+    }
+    
     /**
      * Mix of sphere related content listing 
      *   
