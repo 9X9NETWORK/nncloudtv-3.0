@@ -167,8 +167,9 @@ public class NnProgramManager {
     }
     
     public void delete(NnProgram program) {
-    
+        long cId = program.getChannelId();
         dao.delete(program);
+        this.processCache(cId);
     }
     
     public void delete(List<NnProgram> programs) {
@@ -211,6 +212,10 @@ public class NnProgramManager {
         return programs;
     }    
 
+    public static String getCntViewCacheName(long channelId, String programId) {
+        return "ch" + String.valueOf(channelId) + "-ep" + programId;
+    }
+    
     public String findPlayerProgramInfoByChannel(long channelId) {
         String cacheKey = "nnprogram(" + channelId + ")";
         String result = (String)CacheFactory.get(cacheKey);
@@ -411,7 +416,7 @@ public class NnProgramManager {
                     String[] lines = favoriteStr.split("\n");
                     for (String line : lines) {
                         //replace with favorite's own channel id and program id
-                           Pattern pattern = Pattern.compile("\t.*?\t");
+                        Pattern pattern = Pattern.compile("\t.*?\t");
                         Matcher m = pattern.matcher(line);
                         if (m.find()) {
                             line = m.replaceFirst("\t" + String.valueOf(p.getId()) + "\t");
