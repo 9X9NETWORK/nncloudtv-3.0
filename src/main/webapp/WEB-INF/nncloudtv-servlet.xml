@@ -45,5 +45,14 @@
       </property> 
       <property name="defaultEncoding" value="UTF-8"/>
     </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+      <property name="messageConverters" value="jsonConverter"/>
+    </bean>
+
+    <bean id="jsonConverter" class="com.xxx.xxx.xxx.common.PrettyPrintMappingJacksonHttpMessageConverter">
+      <property name="supportedMediaTypes" value="application/json"/>
+      <property name="prettyPrint" value="true"/>
+    </bean>
 	    	
 </beans>

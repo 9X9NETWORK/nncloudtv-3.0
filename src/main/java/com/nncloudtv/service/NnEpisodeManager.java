@@ -212,17 +212,14 @@ public class NnEpisodeManager {
             } else {
                 delta = (endTime > startTime) ? (endTime - startTime) : 0;
             }
-            
             totalDuration += delta;
             
             delta = 0;
             titleCards = titleCardMngr.findByProgramId(program.getId());
-            if (titleCards != null) {
-                for (TitleCard titleCard : titleCards) {
-                    delta += titleCard.getDurationLong();
-                }
-                totalDuration += delta;
+            for (TitleCard titleCard : titleCards) {
+                delta += titleCard.getDurationInt();
             }
+            totalDuration += delta;
         }
         
         return totalDuration;

@@ -928,17 +928,8 @@ public class ApiContent extends ApiGeneric {
         
         for (NnEpisode episode : results) {
             
-            if (episode.getDuration() == 0) {
-                episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
-                if(episode.getDuration() > 0) {
-                    episodeMngr.save(episode);
-                }
-            }
-            
             episode.setName(NnStringUtil.revertHtml(episode.getName()));
             episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
-            
-            
             episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
         }
         
@@ -1020,13 +1011,6 @@ public class ApiContent extends ApiGeneric {
         if (episode == null) {
             notFound(resp, "Episode Not Found");
             return null;
-        }
-        
-        if (episode.getDuration() == 0) {
-            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
-            if(episode.getDuration() > 0) {
-                episodeMngr.save(episode);
-            }
         }
         
         episode.setSeq(episodeMngr.getEpisodeSeq(episode));
@@ -1111,6 +1095,7 @@ public class ApiContent extends ApiGeneric {
             rerun = true;
         }
         
+        episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
         episode = episodeMngr.save(episode, rerun);
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));

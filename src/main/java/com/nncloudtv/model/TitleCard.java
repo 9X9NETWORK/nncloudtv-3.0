@@ -134,15 +134,15 @@ public class TitleCard implements Serializable {
         return duration;
     }
     
-    public Long getDurationLong() {
+    public int getDurationInt() {
         
         if (this.duration == null) {
-            return (long) 0;
+            return 0;
         }
         
-        Long duration = (long) 0;
+        int duration = 0;
         try {
-            duration = Long.valueOf(this.duration);
+            duration = Integer.valueOf(this.duration);
         } catch (NumberFormatException e) {
         }
         
