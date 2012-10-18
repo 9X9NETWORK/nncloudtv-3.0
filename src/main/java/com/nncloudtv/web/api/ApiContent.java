@@ -353,13 +353,9 @@ public class ApiContent extends ApiGeneric {
         
         programMngr.delete(program);
         
-        NnEpisode episode = episodeMngr.findById(episodeId);
-        if (episode != null) {
-            if (episode.getDuration() > 0) {
-                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-                episodeMngr.save(episode);
-            }
-        }
+        
+        //        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+        
         
         return "OK";
     }
@@ -434,10 +430,9 @@ public class ApiContent extends ApiGeneric {
         titlecardMngr.delete(titlecardDeleteList);
         programMngr.delete(programDeleteList);
         
-        if (episode.getDuration() > 0) {
-            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-            episodeMngr.save(episode);
-        }
+        
+        //    episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+        
         
         return "OK";
     }
@@ -1560,14 +1555,9 @@ public class ApiContent extends ApiGeneric {
             titleCard.setBgImage(bgImage);
         }
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
-        if (episode != null) {
-            if (episode.getDuration() > 0) {
-                episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-                episodeMngr.save(episode);
-            }
-        }
+        
+        //        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+        
         
         titleCard = titleCardMngr.save(titleCard);
         
@@ -1598,18 +1588,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        NnProgramManager programMngr = new NnProgramManager();
-        NnProgram program = programMngr.findById(titleCard.getProgramId());
-        if (program != null) {
-            NnEpisodeManager episodeMngr = new NnEpisodeManager();
-            NnEpisode episode = episodeMngr.findById(program.getEpisodeId());
-            if (episode != null) {
-                if (episode.getDuration() > 0) {
-                    episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-                    episodeMngr.save(episode);
-                }
-            }
-        }
+        
+        //            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
+        
         
         titleCardMngr.delete(titleCard);
         
