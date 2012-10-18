@@ -39,8 +39,7 @@ public class NnEpisode implements Serializable {
     @Persistent
     private boolean isPublic; 
     
-    // TODO: make it persistent
-    @NotPersistent
+    @Persistent
     private Date scheduleDate;
     
     @Persistent
@@ -58,8 +57,7 @@ public class NnEpisode implements Serializable {
     @Persistent
     private int duration;
     
-    // TODO: make it persistent
-    @NotPersistent
+    @Persistent
     private int seq;
     
     public NnEpisode(long channelId) {
