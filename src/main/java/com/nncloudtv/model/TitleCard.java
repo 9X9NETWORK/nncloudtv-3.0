@@ -1,6 +1,8 @@
 package com.nncloudtv.model;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import javax.jdo.annotations.Column;
@@ -186,7 +188,43 @@ public class TitleCard implements Serializable {
     }
 
     public String getPlayerSyntax() {
-        return playerSyntax;
+        if (getMessage() == null) 
+            return null;
+        String syntax = "";
+        String encoding = "UTF-8";
+        try {
+            String breakEncoding = URLEncoder.encode("\n", encoding);
+            syntax += "message: " + getMessage() + breakEncoding;
+            if (getType() == TitleCard.TYPE_BEGIN)
+                syntax += "type: begin" + breakEncoding;
+            else
+                syntax += "type: end" + breakEncoding;
+            if (getDuration() != null)
+                syntax += "duration: " + getDuration() + breakEncoding;
+            if (getStyle() != null)
+                syntax += "style: " + getStyle() + breakEncoding;
+            if (getSize() != null)
+                syntax += "size: " + getSize() + breakEncoding;
+            if (getColor() != null)
+                syntax += "color: " + getColor() + breakEncoding;
+            if (getEffect() != null)
+                syntax += "effect: " + getEffect() + breakEncoding;
+            if (getAlign() != null)
+                syntax += "align: " + getAlign() + breakEncoding;
+            if (getBgColor() != null)
+                syntax += "bgcolor: " + getBgColor() + breakEncoding;
+            if (getBgImage() != null)
+                syntax += "bgimage: " + getBgImage() + breakEncoding;
+            if (getWeight() != null)
+                syntax += "weight: " + getWeight() + breakEncoding;
+            
+            System.out.println("syntax in title card:" + syntax);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return syntax;        
+        //return playerSyntax;
     }
 
     public void setPlayerSyntax(String playerSyntax) {
