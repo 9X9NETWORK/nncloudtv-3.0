@@ -38,17 +38,7 @@ public class NnProgramManager {
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        int seq = episodeMngr.getEpisodeSeq(episode);
-        
-        program.setSeq(seq);
         program = save(program);
-        
-        // first program join episode
-        if (seq == 0) {
-            
-            episodeMngr.reorderChannelEpisodes(episode.getChannelId());
-            
-        }
         
         // non-specified sub-position
         if (program.getSubSeqInt() == 0) {

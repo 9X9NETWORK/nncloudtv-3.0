@@ -47,6 +47,7 @@ public class NnEpisodeManager {
             
             episode.setPublishDate(new Date());
             episode.setPublic(rerun);
+            episode.setSeq(0);
             save(episode);
             
             reorderChannelEpisodes(episode.getChannelId());
@@ -156,7 +157,7 @@ public class NnEpisodeManager {
     
         NnProgramManager programMngr = new NnProgramManager();
         List<NnEpisode> episodes = findByChannelIdSorted(channelId);
-        List<NnEpisode> removes = new ArrayList<NnEpisode>();
+/*        List<NnEpisode> removes = new ArrayList<NnEpisode>();
         
         // remove empty episode which will not be sorted
         for (NnEpisode episode : episodes) {
@@ -166,17 +167,22 @@ public class NnEpisodeManager {
             }
         }
         episodes.remove(removes);
-        
+*/        
         List<NnProgram> reorderedPrograms = new ArrayList<NnProgram>(); 
         for (int i = 0; i < episodes.size(); i++) {
             
             List<NnProgram> programs = programMngr.findByEpisodeId(episodes.get(i).getId());
             
-            for (NnProgram program : programs) {
+            if (programs != null) {
+                for (NnProgram program : programs) {
                 
-                program.setSeq(i + 1);
+                    program.setSeq(i + 1);
+                }
+                reorderedPrograms.addAll(programs);
             }
-            reorderedPrograms.addAll(programs);
+            
+            episodes.get(i).setSeq(i + 1);
+            save(episodes.get(i));
         }
         programMngr.save(reorderedPrograms);
     }

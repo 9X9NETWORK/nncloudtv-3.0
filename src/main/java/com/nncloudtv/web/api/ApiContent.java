@@ -590,6 +590,13 @@ public class ApiContent extends ApiGeneric {
         program.setPublishDate(new Date());
         program.setPublic(true);
         
+        // episode sequence
+        if (episode.getSeq() != 0) {
+            program.setSeq(episode.getSeq());
+        } else {
+            program.setSeq(episodeMngr.getEpisodeSeq(episode));
+        }
+        
         program = programMngr.create(episode, program);
         
         program.setName(NnStringUtil.revertHtml(program.getName()));
@@ -923,7 +930,15 @@ public class ApiContent extends ApiGeneric {
             
         }
         
-        episodeMngr.populateEpisodesSeq(results);
+        List<NnEpisode> needPopulateSeq = new ArrayList<NnEpisode>();
+        for (NnEpisode episode : results) {
+            if (episode.getSeq() == 0) {
+                needPopulateSeq.add(episode);
+            }
+        }
+        results.removeAll(needPopulateSeq);
+        episodeMngr.populateEpisodesSeq(needPopulateSeq);
+        results.addAll(needPopulateSeq);
         Collections.sort(results, episodeMngr.getEpisodePublicSeqComparator());
         
         for (NnEpisode episode : results) {
@@ -1013,7 +1028,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        episode.setSeq(episodeMngr.getEpisodeSeq(episode));
+        if (episode.getSeq() == 0) {
+            episode.setSeq(episodeMngr.getEpisodeSeq(episode));
+        }
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
         
@@ -1180,9 +1197,13 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
+        // seq
+        episode.setSeq(0);
+        
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         episode = episodeMngr.save(episode);
+        episodeMngr.reorderChannelEpisodes(channelId);
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
