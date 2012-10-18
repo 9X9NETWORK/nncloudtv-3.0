@@ -171,8 +171,10 @@ public class NnChannelManager {
         Iterator<Entry<Long, String>> it = map.entrySet().iterator();      
         while (it.hasNext()) {
             Map.Entry<Long, String> pairs = (Map.Entry<Long, String>)it.next();
-            log.info("remove tag_map: key:" + pairs.getKey());
-            tagMngr.deleteChannel(pairs.getKey(), c.getId());
+            if (pairs.getKey() > 5) { //TODO tag id < 5 is special tags, but better give it special attribute, won't live long this way 
+                log.info("remove tag_map: key:" + pairs.getKey());
+                tagMngr.deleteChannel(pairs.getKey(), c.getId());
+            }
         }
     }
     
