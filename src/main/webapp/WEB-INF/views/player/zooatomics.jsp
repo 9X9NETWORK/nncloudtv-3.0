@@ -652,12 +652,12 @@ soundManager.onready(function()
           <img src="" class="thumbnail1">
           <img src="" class="thumbnail2">
           <img src="" class="thumbnail3">
-          <span id="ch-meta">
+          <div id="ch-meta">
               <p><span>10 Episodes</span></p>
               <p><span>2 day ago</span></p>
-              <p><span>by</span><span class="name">Vialo</span></p>
-           </span>
-          <p id="ch-brief" class="ellipsis multiline"><span></span></p>
+              <p><span>by</span><span class="name"></span></p>
+              <p id="ch-brief" class="ellipsis multiline"><span></span></p>
+           </div>
         </li>
         <li class="default" id="bubble-default">
           <h3><span></span></h3>
@@ -667,12 +667,12 @@ soundManager.onready(function()
           </div>
           <img src="${nroot}/images/guide_ep_default2.png" class="thumbnail2">
           <img src="${nroot}/images/guide_ep_default2.png" class="thumbnail3">
-          <span id="ch-meta">
+          <div id="ch-meta">
               <p><span>0 Episodes</span></p>
               <p><span></span></p>
-              <p><span>by</span><span class="name">Vialo</span></p>
-           </span>
-          <p id="ch-brief" class="ellipsis multiline"><span></span></p>
+              <p><span>by</span><span class="name"></span></p>
+              <p id="ch-brief" class="ellipsis multiline"><span></span></p>
+          </div>
 	</li>
         </ul>
       </div>
@@ -765,9 +765,36 @@ soundManager.onready(function()
     <div id="homerightbox">
       <p id="home-type">Hottest</p>
       <ul id="home-menu">
-        <li id="hottest" class="on"></li>
-        <li id="featured"></li>
-        <li id="recommended"></li>
+        <li id="hottest" class="on">
+          <span class="manage-tip">
+            <img src="${nroot}/images/bg_tip_top.png" alt="" />
+            <span class="tip-center">
+              <span class="tip-left"></span>
+              <span class="text">Hottest</span>
+              <span class="tip-right"></span> 
+            </span>  
+          </span>
+        </li>
+        <li id="featured">
+          <span class="manage-tip">
+            <img src="${nroot}/images/bg_tip_top.png" alt="" />
+            <span class="tip-center">
+              <span class="tip-left"></span>
+              <span class="text">Featured</span>
+              <span class="tip-right"></span> 
+            </span>  
+          </span>
+        </li>
+        <li id="recommended">
+          <span class="manage-tip">
+            <img src="${nroot}/images/bg_tip_top.png" alt="" />
+            <span class="tip-center">
+              <span class="tip-left"></span>
+              <span class="text">Recommended</span>
+              <span class="tip-right"></span> 
+            </span>  
+          </span>
+        </li>
       </ul>
       <ul id="home-billboard">
       </ul>
