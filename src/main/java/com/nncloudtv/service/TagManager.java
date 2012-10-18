@@ -77,8 +77,10 @@ public class TagManager {
 
     public void deleteChannel(long tagId, long channelId) {
         TagMap map = this.findByTagAndChannel(tagId, channelId);
-        if (map != null)
+        if (map != null) {
+            log.info("tag removed: tagId(" + tagId + ") channelId(" + channelId + ")");
         	dao.deleteTagMap(map);
+        }
     }    
     
     public TagMap findByTagAndChannel(long tagId, long channelId) {
