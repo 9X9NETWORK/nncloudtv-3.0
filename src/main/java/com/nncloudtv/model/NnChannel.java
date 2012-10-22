@@ -2,6 +2,7 @@ package com.nncloudtv.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -10,7 +11,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.service.CounterFactory;
 
 /**
  * a Channel
@@ -151,6 +154,9 @@ public class NnChannel implements Serializable {
 
     @NotPersistent    
     private int cntView; //viewing count, in shard table
+
+    @NotPersistent    
+    private int cntVisit; //cnt visit count
     
     @Persistent 
     private Date createDate;
@@ -177,6 +183,7 @@ public class NnChannel implements Serializable {
     @NotPersistent    
     private long categoryId;
 
+    protected static final Logger log = Logger.getLogger(NnChannel.class.getName());    
         
     public NnChannel(String name, String intro, String imageUrl) {
         this.name = name;
@@ -411,13 +418,24 @@ public class NnChannel implements Serializable {
         this.cntSubscribe = cntSubscribe;
     }
 
-    public int getCntView() {
+    public int getCntView() {        
+        String name = "v_ch" + id;        
+        String result = (String)CacheFactory.get(name);
+        if (result != null) {
+            return Integer.parseInt(result);
+        }
+        log.info("cnt view not in the cache:" + name);
+        CounterFactory factory = new CounterFactory();
+        cntView = factory.getCount(name); 
+        CacheFactory.set(name, String.valueOf(cntView));
         return cntView;
     }
-
+    
+    /*
     public void setCntView(int cntView) {
         this.cntView = cntView;
     }
+    */
 
     public short getShard(String userId) {
         if (userId == null)
@@ -517,4 +535,20 @@ public class NnChannel implements Serializable {
         this.moreImageUrl = moreImageUrl;
     }
 
+    public int getCntVisit() {
+        String name = "u_ch" + id;        
+        String result = (String)CacheFactory.get(name);
+        if (result != null) {
+            return Integer.parseInt(result);
+        }
+        log.info("cnt view not in the cache:" + name);
+        CounterFactory factory = new CounterFactory();
+        cntVisit = factory.getCount(name); 
+        CacheFactory.set(name, String.valueOf(cntVisit));
+        return cntVisit;
+    }
+
+    public void setCntVisit(int cntVisit) {
+        this.cntVisit = cntVisit;
+    }    
 }
