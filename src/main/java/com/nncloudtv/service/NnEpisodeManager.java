@@ -182,17 +182,12 @@ public class NnEpisodeManager {
             for (NnProgram program : programs) {
                 if (program.getEpisodeId() == episodes.get(i).getId()) {
                     episodePrograms.add(program);
-                }
-            }
-            // List<NnProgram> programs = programMngr.findByEpisodeId(episodes.get(i).getId());
-            
-            if (episodePrograms.size() > 0) {
-                for (NnProgram program : episodePrograms) {
-                
                     program.setSeq(i + 1);
+                    reorderedPrograms.add(program);
                 }
-                reorderedPrograms.addAll(episodePrograms);
             }
+            
+            programs.removeAll(episodePrograms);
             
             episodes.get(i).setSeq(i + 1);
             reorderedEpisodes.add(episodes.get(i));
