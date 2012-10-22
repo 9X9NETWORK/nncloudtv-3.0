@@ -251,7 +251,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
             String sql = "select * " +
                            "from nnprogram " +
                          " where episodeId in " +
-                          "(select id from nnepisode where channelId = " + channelId + " and isPublic=true and status=0 order by seq) " + 
+                          "(select id from nnepisode where channelId = " + channelId + " and isPublic=true order by seq) " + 
                           "order by seq, subSeq"; //TODO, order by seq is wrong
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
