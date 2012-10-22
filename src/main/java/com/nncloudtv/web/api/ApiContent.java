@@ -946,6 +946,80 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "channels/{channelId}/episodes/sorting", method = RequestMethod.PUT)
+    public @ResponseBody
+    String channelEpisodesSorting(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        String episodeIdsStr = req.getParameter("episodes");
+        if (episodeIdsStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        String[] episodeIdStrList = episodeIdsStr.split(",");
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        List<NnEpisode> episodes = episodeMngr.findByChannelId(channelId); // it must same as channelEpisodes result
+        List<Long> episodeIdList = new ArrayList<Long>();
+        for (NnEpisode episode : episodes) {
+            episodeIdList.add(episode.getId());
+        }
+        
+        List<Long> orderedEpisodeIdList = new ArrayList<Long>();
+        for (String episodeIdStr : episodeIdStrList) {
+            
+            Long episodeId = null;
+            try {
+                
+                episodeId = Long.valueOf(episodeIdStr);
+                
+            } catch(Exception e) {
+            }
+            if (episodeId != null) {
+                orderedEpisodeIdList.add(episodeId);
+                if (episodeIdList.indexOf(episodeId) > -1) {
+                    episodeIdList.remove(episodeId);
+                }
+            }
+        }
+        // parameter should contain all episodeId
+        if (episodeIdList.size() != 0) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        short counter = 1;
+        NnEpisode episode;
+        for (Long episodeId : orderedEpisodeIdList) {
+            episode = episodeMngr.findById(episodeId);
+            episode.setSeq(counter);
+            episodeMngr.save(episode);
+            counter++;
+        }
+        
+        episodeMngr.reorderChannelEpisodes(channelId);
+        
+        return "OK";
+    }
+    
     @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.DELETE)
     public @ResponseBody
     String episodeDelete(HttpServletRequest req, HttpServletResponse resp,

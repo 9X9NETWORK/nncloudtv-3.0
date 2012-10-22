@@ -36,8 +36,6 @@ public class NnProgramManager {
     
     public NnProgram create(NnEpisode episode, NnProgram program) {
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        
         program = save(program);
         
         // non-specified sub-position
@@ -45,9 +43,7 @@ public class NnProgramManager {
             reorderEpisodePrograms(episode.getId());
         }
         
-        // update episode duration
         //    episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-        
         
         return program;
     }
