@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.OperationTimeoutException;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.dao.ShardedCounter;
+import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.CounterShard;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.service.DepotService;
 import com.nncloudtv.service.NnChannelManager;
@@ -286,5 +292,27 @@ public class DepotController {
             resp = depotService.handleException(e);
         }
         return resp;
-    }       
+    }
+
+    @RequestMapping(value="resetViewCntCache", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String resetViewCntCache() {
+        MemcachedClient cache = null;
+        try {
+            cache = CacheFactory.getClient();
+        } catch (OperationTimeoutException e) {
+            log.info("memcache down");
+            return "memcache error";
+        }
+        List<CounterShard> counters = ShardedCounter.getViewCounters();
+        log.info("reset counters:" + counters.size());
+        for (CounterShard c : counters) {
+            if (cache != null) { 
+                log.info("cache name:" + c.getCounterName() + "; value:" + c.getCount());
+                cache.set(c.getCounterName(), CacheFactory.EXP_DEFAULT, String.valueOf(c.getCount()));
+            }            
+        }
+        cache.shutdown();        
+        return "OK";
+    }
+    
 }
