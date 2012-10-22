@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -519,28 +518,6 @@ public class NnChannelManager {
         return channels;
     }    
     
-    //!!! different channel might have program count == 0
-    public List<NnChannel> findGoodChannelsByCategoryId(long categoryId) {
-        //channels within a category
-        //CategoryChannelManager ccMngr = new CategoryChannelManager();
-        List<NnChannel> channels = new ArrayList<NnChannel>();
-        /*
-        List<CategoryChannel> ccs = (List<CategoryChannel>) ccMngr.findAllByCategoryId(categoryId);
-
-        //retrieve channels
-        List<NnChannel> channels = new ArrayList<NnChannel>();
-        for (CategoryChannel cc : ccs) {
-            NnChannel channel = this.findById(cc.getChannelId());
-            if (channel != null && 
-                channel.getStatus() == NnChannel.STATUS_SUCCESS &&  
-                channel.isPublic()) { 
-                channels.add(channel);
-            }
-        }                
-        */
-        return channels; 
-    }
-
     public List<NnChannel> findByType(short type) {
         return dao.findByType(type);        
     }
@@ -736,9 +713,6 @@ public class NnChannelManager {
     }
     
     public String composeChannelLineupStr(NnChannel c) {
-        Random r = new Random();
-        int viewCount = r.nextInt(300);
-
         //name and last episode title
         //favorite channel name will be overwritten later
         String name = c.getName() == null ? "" : c.getName();
@@ -785,8 +759,7 @@ public class NnChannelManager {
         }
 
         //3 subscribers info
-        String subscriberProfile = "";
-        String subscriberImage = "";
+        /*
         String subscribersIdStr = c.getSubscribersIdStr();
         if (c.getContentType() != NnChannel.CONTENTTYPE_FAKE_FAVORITE && 
             subscribersIdStr != null) {
@@ -805,6 +778,7 @@ public class NnChannelManager {
                 subscriberImage = subscriberImage.replaceFirst("\\|", "");
             }
         }
+        */
 
         /*
         String id = Long.toString(c.getId());
@@ -815,8 +789,6 @@ public class NnChannelManager {
         short contentType = c.getContentType();
         if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
             contentType = NnChannel.CONTENTTYPE_FAVORITE;
-        if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
-            viewCount = 0; //TODO removed
         String[] ori = {String.valueOf(c.getSeq()), //REPLACE
                         c.getIdStr(),
                         name,
@@ -833,14 +805,15 @@ public class NnChannelManager {
                         "", //recently watched program
                         c.getOriName(),
                         String.valueOf(c.getCntSubscribe()), //cnt subscribe, replace
-                        String.valueOf(viewCount), //view count //REPLACE
+                        //String.valueOf(viewCount), //view count //REPLACE
+                        String.valueOf(c.getCntView()),
                         c.getTag(),
                         curatorProfile, //curator id
                         userName,
                         userIntro,
                         userImageUrl,
-                        subscriberProfile,
-                        subscriberImage,
+                        "", //used to be subscriber profile urls, will be removed
+                        "", //used to be subscriber image urls
                         lastEpisodeTitle,
                        };
 
