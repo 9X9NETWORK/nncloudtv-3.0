@@ -32,7 +32,7 @@
   <span id="btn-account">${admin}</span>
 </div>
 <div id="ui_tabs">
-	<h3>Login with Username and Password (Custom Page)</h3> 
+	<h3>Login with Username and Password</h3> 
 	<c:if test="${not empty error}">
 		<div class="errorblock">
 			Your login attempt was not successful, try again.<br /> Caused :
