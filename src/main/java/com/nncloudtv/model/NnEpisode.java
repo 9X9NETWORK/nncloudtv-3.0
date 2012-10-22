@@ -2,6 +2,7 @@ package com.nncloudtv.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -10,10 +11,15 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.service.CounterFactory;
+
 @PersistenceCapable(table="nnepisode", detachable="true")
 public class NnEpisode implements Serializable {
     private static final long serialVersionUID = -2365225197711392350L;
 
+    protected static final Logger log = Logger.getLogger(NnEpisode.class.getName());
+    
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
@@ -151,15 +157,24 @@ public class NnEpisode implements Serializable {
 		this.seq = seq;
 	}
 
-    public int getCntView() {
-    
+    public int getCntView() {    
+        String name = "v_ch" + channelId + "_" + id;        
+        String result = (String)CacheFactory.get(name);
+        if (result != null) {
+            return Integer.parseInt(result);
+        }
+        log.info("cnt view not in the cache:" + name);
+        CounterFactory factory = new CounterFactory();
+        cntView = factory.getCount(name); 
+        CacheFactory.set(name, String.valueOf(cntView));
         return cntView;
     }
 
-    public void setCntView(int cntView) {
-    
+    /*
+    public void setCntView(int cntView) {    
         this.cntView = cntView;
     }
+    */
 
     public int getDuration() {
     
