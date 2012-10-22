@@ -406,7 +406,7 @@ public class NnProgramManager {
         log.info("no favorite channel");
         return empty;
     }
-    
+            
     /**
      * player programInfo entry for iOS
      * @param channelId system channel id
@@ -441,10 +441,10 @@ public class NnProgramManager {
     //player programInfo entry
     public String findPlayerProgramInfoByChannel(long channelId) {
         String cacheKey = "nnprogram(" + channelId + ")";
-//        String result = (String)CacheFactory.get(cacheKey);
-//        if (CacheFactory.isRunning && result != null) { 
-//            return result;
-//        }        
+        String result = (String)CacheFactory.get(cacheKey);
+        if (CacheFactory.isRunning && result != null) { 
+            return result;
+        }        
         NnChannel c = new NnChannelManager().findById(channelId);
         if (c == null)
             return "";
@@ -615,7 +615,6 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                System.out.println("name:" + name);
                 result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, card);
             }
         }
@@ -632,7 +631,6 @@ public class NnProgramManager {
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
         String output = "";
-        System.out.println("--before compose---" + name);
         String[] ori = {String.valueOf(e.getChannelId()), 
                         "e" + String.valueOf(e.getId()), 
                         name, 
