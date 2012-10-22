@@ -7,16 +7,15 @@
         http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  
     <http auto-config="true">
-
-    <!--
-    <intercept-url pattern="/playerAPI/login" requires-channel="https"/>
-    <intercept-url pattern="/playerAPI/signup" requires-channel="https"/>
-    <intercept-url pattern="/admin/**" requires-channel="https"/>     
-    <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-    <form-login login-page="/login" default-target-url="/admin/index/ui"
+      <!--
+      <intercept-url pattern="/playerAPI/login" requires-channel="https"/>
+      <intercept-url pattern="/playerAPI/signup" requires-channel="https"/>
+       -->    
+      <intercept-url pattern="/admin/**" requires-channel="https"/>     
+      <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+      <form-login login-page="/login" default-target-url="/admin/index/ui"
             authentication-failure-url="/loginfailed" />
-    <logout logout-success-url="/logout" />
-     -->    
+      <logout logout-success-url="/logout" />
     </http>
      
     <authentication-manager>
