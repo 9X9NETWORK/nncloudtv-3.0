@@ -1,13 +1,13 @@
 package com.nncloudtv.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
@@ -191,7 +191,6 @@ public class NnProgramDao extends GenericDao<NnProgram> {
                           "where channelId = " + c.getId() + " " + 
                             "and isPublic = true " +
                             "and status != " + NnProgram.STATUS_ERROR + " " +
-                            "and publishDate > " + new Date().getTime() + " " +
              "order by " + ordering;
 
             log.info("sql:" + sql);
@@ -245,6 +244,29 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         return program;        
     }    
 
+    public List<NnProgram> findPlayerNnProgramsByChannel(long channelId) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<NnProgram> detached = new ArrayList<NnProgram>();
+        try {
+            String sql = "select * " +
+                           "from nnprogram " +
+                         " where episodeId in " +
+                          "(select id from nnepisode where channelId = " + channelId + " and isPublic=true and status=0 order by seq) " + 
+                          "order by seq, subSeq"; //TODO, order by seq is wrong
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(NnProgram.class);
+            @SuppressWarnings("unchecked")
+            List<NnProgram> results = (List<NnProgram>) query.execute();
+            detached = (List<NnProgram>)pm.detachCopyAll(results);
+        } finally {            
+            pm.close();
+        } 
+        return detached;
+        
+    }
+    
+    
     //based on one program id to find all sub-episodes belong to the same episode
     //use scenario: such as "reference" lookup
     public List<NnProgram> findProgramsByEpisode(long episodeId) {
