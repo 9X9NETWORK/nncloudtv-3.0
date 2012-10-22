@@ -13,7 +13,7 @@ import com.nncloudtv.model.NnChannel;
 
 public class NnChannelDao extends GenericDao<NnChannel> {
     
-    protected static final Logger log = Logger.getLogger(MsoDao.class.getName());
+    protected static final Logger log = Logger.getLogger(NnChannelDao.class.getName());
     
     public NnChannelDao() {
         super(NnChannel.class);
