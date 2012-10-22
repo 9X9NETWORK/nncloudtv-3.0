@@ -33,7 +33,7 @@ public class AdminIndexController {
           model.addAttribute("message", "Spring Security Custom Form example");
           return "hello"; 
      }
-     
+
      @RequestMapping(value="login", method = RequestMethod.GET)
      public String login(ModelMap model) {          
           model.addAttribute("root", MsoConfigManager.getExternalRootPath());          
@@ -63,7 +63,7 @@ public class AdminIndexController {
                          HttpServletResponse response,
                          Principal principal)
                throws IOException {          
-          //String name = principal.getName();
+          String name = principal.getName();
           System.out.println("root path:" + MsoConfigManager.getExternalRootPath());
           //model.addAttribute("username", name);
           model.addAttribute("root", MsoConfigManager.getExternalRootPath());          
