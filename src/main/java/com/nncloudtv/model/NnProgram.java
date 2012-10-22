@@ -214,13 +214,13 @@ public class NnProgram implements Serializable {
     }
     
     public String getPlayerIntro() {
-    	String intro = this.getIntro(); 
-        if (intro != null) {
-            int len = (intro.length() > 256 ? 256 : intro.length()); 
-        	intro = intro.replaceAll("\\s", " ");                
-        	intro = intro.substring(0, len);           
+    	String pintro = this.getIntro(); 
+        if (pintro != null) {
+            int len = (pintro.length() > 256 ? 256 : pintro.length()); 
+        	pintro = pintro.replaceAll("\\s", " ");                
+        	pintro = pintro.substring(0, len);           
         }
-        return name;    	
+        return pintro;    	
     	
     }
 
