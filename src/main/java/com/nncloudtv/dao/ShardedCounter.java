@@ -15,8 +15,11 @@
 
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -36,7 +39,8 @@ import com.nncloudtv.model.CounterShard;
  */
 public class ShardedCounter {
   private String counterName;
-
+  protected static final Logger log = Logger.getLogger(ShardedCounter.class.getName());
+  
   public void create(Counter counterEntity) {
       PersistenceManager pm = PMF.getContent().getPersistenceManager();
       try {
@@ -54,6 +58,26 @@ public class ShardedCounter {
     return counterName;
   }
 
+  public static List<CounterShard> getViewCounters() {        
+      PersistenceManager pm = PMF.getContent().getPersistenceManager();
+      List<CounterShard> detached = new ArrayList<CounterShard>();
+      try {
+          String sql =              
+              "select * from counter_shard where counterName like ('u_%') or ('v_%')";
+          log.info("Sql=" + sql);
+          Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+          q.setClass(CounterShard.class);
+          @SuppressWarnings("unchecked")
+          List<CounterShard> results = (List<CounterShard>) q.execute();
+          detached = (List<CounterShard>)pm.detachCopyAll(results);
+      } finally {
+          pm.close();
+      }
+
+      return detached;     
+  }
+  
+  
   private Counter getThisCounter(PersistenceManager pm) {
     Counter current = null;
     Query thisCounterQuery = pm.newQuery(Counter.class,
@@ -152,8 +176,8 @@ public class ShardedCounter {
 
   public void increment() {
     increment(1);
-  }
-
+  }  
+  
   public void increment(int count) {
     // Find how many shards are in this counter.
     int shardCount = 0;
