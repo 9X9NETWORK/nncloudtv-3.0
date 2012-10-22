@@ -364,8 +364,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);    
         
         //pdr process
-        PdrManager pdrMngr = new PdrManager();
-        pdrMngr.processWatched(userToken, deviceToken, pdr); 
+        PdrManager pdrMngr = new PdrManager(); 
         NnUser user = null;
         if (userToken != null) { 
             //verify input
@@ -1417,6 +1416,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);                
     }
 
+    //deprecated
     public String loadShare(long id) {
         NnUserShareManager shareMngr = new NnUserShareManager();
         NnUserShare share= shareMngr.findById(id);
@@ -1429,7 +1429,7 @@ public class PlayerApiService {
         if (program != null) {
             List<NnProgram> programs = new ArrayList<NnProgram>();
             programs.add(program);
-            result[0] = programMngr.composeProgramInfo(programs);
+            result[0] = ""; //need to be something if not deprecated
         } else {            
             result[0] = share.getChannelId() + "\t" + share.getProgramIdStr() + "\n";            
         }
