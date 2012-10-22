@@ -32,6 +32,17 @@ public class NnEpisodeManager {
         
     }
     
+    public List<NnEpisode> save(List<NnEpisode> episodes) {
+        
+        Date now = new Date();
+        
+        for (NnEpisode episode : episodes) {
+            episode.setUpdateDate(now);
+        }
+        
+        return dao.saveAll(episodes);
+    }
+    
     public NnEpisode save(NnEpisode episode, boolean rerun) {
     
         // rerun: to make episode on top again and public
@@ -159,23 +170,35 @@ public class NnEpisodeManager {
         
         NnProgramManager programMngr = new NnProgramManager();
         List<NnEpisode> episodes = findByChannelIdSorted(channelId);
+        List<NnProgram> programs = programMngr.findByChannelId(channelId);
+        List<NnProgram> episodePrograms = new ArrayList<NnProgram>();
+        List<NnEpisode> reorderedEpisodes = new ArrayList<NnEpisode>();
+        List<NnProgram> reorderedPrograms = new ArrayList<NnProgram>();
         
-        List<NnProgram> reorderedPrograms = new ArrayList<NnProgram>(); 
         for (int i = 0; i < episodes.size(); i++) {
             
-            List<NnProgram> programs = programMngr.findByEpisodeId(episodes.get(i).getId());
+            episodePrograms.clear();
             
-            if (programs != null) {
-                for (NnProgram program : programs) {
+            for (NnProgram program : programs) {
+                if (program.getEpisodeId() == episodes.get(i).getId()) {
+                    episodePrograms.add(program);
+                }
+            }
+            // List<NnProgram> programs = programMngr.findByEpisodeId(episodes.get(i).getId());
+            
+            if (episodePrograms.size() > 0) {
+                for (NnProgram program : episodePrograms) {
                 
                     program.setSeq(i + 1);
                 }
-                reorderedPrograms.addAll(programs);
+                reorderedPrograms.addAll(episodePrograms);
             }
             
             episodes.get(i).setSeq(i + 1);
-            save(episodes.get(i));
+            reorderedEpisodes.add(episodes.get(i));
         }
+        
+        save(reorderedEpisodes);
         programMngr.save(reorderedPrograms);
     }
     
