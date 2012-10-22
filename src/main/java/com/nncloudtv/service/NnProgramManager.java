@@ -576,10 +576,10 @@ public class NnProgramManager {
         }
         for (NnEpisode e : episodes) {
             List<NnProgram> list = (List<NnProgram>) map.get(e.getId());
-            Collections.sort(list, getProgramSeqComparator());
             if (list == null)
                 log.info("episode:" + e.getId() + " have no programs");
             if (list != null && list.size() > 0) {
+                Collections.sort(list, getProgramSeqComparator());
                 String videoUrl = "|";
                 String name = e.getName();
                 String imageUrl = e.getImageUrl();
