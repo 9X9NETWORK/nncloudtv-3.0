@@ -1655,7 +1655,41 @@ public class PlayerApiService {
     }
     
     public String auxLogin(String token, String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+        //1. user info
         List<String> data = new ArrayList<String>();
+        log.info ("[quickLogin] verify user: " + token);
+        String userInfo = "";
+        if (token != null) {
+            userInfo = this.userTokenVerify(token, req, resp);
+        } else if (email != null || password != null) {        
+            userInfo = this.login(email, password, req, resp);            
+        } else {
+            userInfo = this.guestRegister(req, resp);
+        }
+        if (this.getStatus(userInfo) != NnStatusCode.SUCCESS) {
+            return userInfo;
+        }        
+        String sphere = "en";
+        Pattern pattern = Pattern.compile(".*sphere\t((en|zh)).*", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(userInfo);
+        if (matcher.matches()) {
+            sphere = matcher.group(1);
+        }        
+        data.add(userInfo);
+        //2. trending
+        log.info ("[quickLogin] trending channels");
+        String trending = this.channelStack(Tag.TRENDING, sphere, token, null);
+        data.add(trending);
+        if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
+        //3. hottest
+        log.info ("[quickLogin] hot channels");
+        String hot = this.channelStack(Tag.HOT, sphere, token, null);
+        data.add(hot);
+        if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
+            return this.assembleSections(data);
+        }
         return this.assembleSections(data);
     }
     
@@ -1701,7 +1735,6 @@ public class PlayerApiService {
         data.add(curatorInfo);
         //4. trending
         log.info ("[quickLogin] trending channels");
-        
         String trending = this.channelStack(Tag.TRENDING, sphere, token, null);
         data.add(trending);
         if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
