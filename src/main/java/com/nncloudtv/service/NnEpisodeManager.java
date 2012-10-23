@@ -45,19 +45,11 @@ public class NnEpisodeManager {
     
     public NnEpisode save(NnEpisode episode, boolean rerun) {
     
-        // rerun: to make episode on top again and public
+        // rerun - to make episode on top again and public
         if (rerun) {
             
-            NnProgramManager programMngr = new NnProgramManager();
-            List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
-            
-            for (NnProgram program : programs) {
-                program.setSeq(0);
-            }
-            programMngr.save(programs);
-            
             episode.setPublishDate(new Date());
-            episode.setPublic(rerun);
+            episode.setPublic(true);
             episode.setSeq(0);
             save(episode);
             

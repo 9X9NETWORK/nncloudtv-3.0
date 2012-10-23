@@ -1147,22 +1147,56 @@ public class ApiContent extends ApiGeneric {
             episode.setImageUrl(imageUrl);
         }
         
+        // scheduleDate
+        String scheduleDateStr = req.getParameter("scheduleDate");
+        if (scheduleDateStr != null) {
+            
+            if (scheduleDateStr.isEmpty()) {
+                
+                episode.setScheduleDate(null);
+                
+            } else {
+                
+                Long scheduleDateLong = null;
+                try {
+                    scheduleDateLong = Long.valueOf(scheduleDateStr);
+                } catch (NumberFormatException e) {
+                }
+                if (scheduleDateLong == null) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+                
+                episode.setScheduleDate(new Date(scheduleDateLong));
+            }
+        }
+        
         // publishDate
         String publishDateStr = req.getParameter("publishDate");
         if (publishDateStr != null) {
             
-            Long publishDateLong = null;
-            try {
-                publishDateLong = Long.valueOf(publishDateStr);
-            } catch (NumberFormatException e) {
+            if (publishDateStr.isEmpty()) {
+                
+                episode.setPublishDate(null);
+                
+            } else if (publishDateStr.equalsIgnoreCase("NOW")) {
+                
+                episode.setPublishDate(new Date());
+                
+            } else {
+                
+                Long publishDateLong = null;
+                try {
+                    publishDateLong = Long.valueOf(publishDateStr);
+                } catch (NumberFormatException e) {
+                }
+                if (publishDateLong == null) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+                
+                episode.setPublishDate(new Date(publishDateLong));
             }
-            if (publishDateLong == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            
-            Date publishDate = new Date(publishDateLong);
-            episode.setPublishDate(publishDate);
         }
         
         // isPublic
