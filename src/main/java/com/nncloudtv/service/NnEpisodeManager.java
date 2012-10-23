@@ -168,15 +168,14 @@ public class NnEpisodeManager {
     
     public void reorderChannelEpisodes(long channelId) {
         
-        NnProgramManager programMngr = new NnProgramManager();
+        //NnProgramManager programMngr = new NnProgramManager();
         List<NnEpisode> episodes = findByChannelIdSorted(channelId);
-        List<NnProgram> programs = programMngr.findByChannelId(channelId);
-        List<NnProgram> episodePrograms = new ArrayList<NnProgram>();
-        List<NnEpisode> reorderedEpisodes = new ArrayList<NnEpisode>();
-        List<NnProgram> reorderedPrograms = new ArrayList<NnProgram>();
+        //List<NnProgram> programs = programMngr.findByChannelId(channelId);
+        //List<NnProgram> episodePrograms = new ArrayList<NnProgram>();
+        //List<NnProgram> reorderedPrograms = new ArrayList<NnProgram>();
         
         for (int i = 0; i < episodes.size(); i++) {
-            
+            /*
             episodePrograms.clear();
             
             for (NnProgram program : programs) {
@@ -188,13 +187,12 @@ public class NnEpisodeManager {
             }
             
             programs.removeAll(episodePrograms);
-            
+            */
             episodes.get(i).setSeq(i + 1);
-            reorderedEpisodes.add(episodes.get(i));
         }
         
-        save(reorderedEpisodes);
-        programMngr.save(reorderedPrograms);
+        save(episodes);
+        //programMngr.save(reorderedPrograms);
     }
     
     public void delete(NnEpisode episode) {
