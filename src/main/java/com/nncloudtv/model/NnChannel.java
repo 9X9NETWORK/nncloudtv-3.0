@@ -41,6 +41,10 @@ public class NnChannel implements Serializable {
     @NotPersistent
     private String moreImageUrl;
     
+    //be warned: for youtube channels, imageUrl actually include 3 imageUrls, separated by "|"
+    //related functions are: getMoreImageUrl(three episode), 
+    //                       getPlayerPrefImageUrl(reflect the status), 
+    //                       getOneImageUrl (to get one image in "|" situation)
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String imageUrl; 
@@ -167,7 +171,7 @@ public class NnChannel implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=25)    
     private String userIdStr; //format: shard-userId, example: 1-1
-
+    
     //can be removed if player making a separate query
     //format: shard-userId, example: 1-1, separated by ";"
     //up to 3 subscribers
@@ -251,7 +255,15 @@ public class NnChannel implements Serializable {
     public String getImageUrl() {
         return imageUrl;
     }
-
+    
+    public String getOneImageUrl() {
+        String oneImageUrl = imageUrl;
+        if (imageUrl != null && imageUrl.contains("|")) {
+            oneImageUrl = oneImageUrl.substring(0, oneImageUrl.indexOf("|"));
+        }
+        return oneImageUrl;
+    }
+    
     public String getPlayerPrefImageUrl() {
         String imageUrl = getImageUrl();
         if ((getStatus() == NnChannel.STATUS_ERROR) || 
@@ -525,8 +537,7 @@ public class NnChannel implements Serializable {
         this.cntEpisode = cntEpisode;
     }
 
-    public String getMoreImageUrl() {
-    
+    public String getMoreImageUrl() {    
         return moreImageUrl;
     }
 
