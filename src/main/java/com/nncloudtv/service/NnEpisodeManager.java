@@ -47,6 +47,8 @@ public class NnEpisodeManager {
         // rerun - to make episode on top again and public
         if (rerun) {
             
+            log.info("rerun!");
+            
             episode.setPublishDate(new Date());
             episode.setPublic(true);
             episode.setSeq(0);
@@ -54,6 +56,8 @@ public class NnEpisodeManager {
             
             reorderChannelEpisodes(episode.getChannelId());
         }
+        
+        log.info("publishDate = " + episode.getPublishDate());
         
         return save(episode);
     }

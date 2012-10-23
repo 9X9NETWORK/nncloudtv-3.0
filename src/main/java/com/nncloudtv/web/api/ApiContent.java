@@ -1175,8 +1175,11 @@ public class ApiContent extends ApiGeneric {
         String publishDateStr = req.getParameter("publishDate");
         if (publishDateStr != null) {
             
+            log.info("publishDate = " + publishDateStr);
+            
             if (publishDateStr.isEmpty()) {
                 
+                log.info("set publishDate to null");
                 episode.setPublishDate(null);
                 
             } else if (publishDateStr.equalsIgnoreCase("NOW")) {
