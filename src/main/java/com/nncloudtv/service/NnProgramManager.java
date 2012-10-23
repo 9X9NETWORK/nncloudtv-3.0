@@ -580,7 +580,7 @@ public class NnProgramManager {
                 log.info("episode:" + e.getId() + " have no programs");
             if (list != null && list.size() > 0) {
                 Collections.sort(list, getProgramSeqComparator());
-                String videoUrl = "|";
+                String videoUrl = "";
                 String name = getNotPipedProgramInfoData(e.getName());
                 String imageUrl = e.getImageUrl();
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
