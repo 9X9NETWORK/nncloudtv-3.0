@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock33"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock35"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -47,7 +47,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai7.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai8.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -279,7 +279,47 @@ soundManager.onready(function()
       <p id="bar-arrowdown"></p>
     </div>
     <div id="pl-switcher">
-      <ul id="pl-menu"><li id="trending" title="Trending"></li><li id="recommendation" title="Recommended"></li><li id="myfollow1" title="I'm Following (by Update Time)"></li><li id="myfollow2" title="I'm Following (by Channel Number)"></li></ul>
+      <ul id="pl-menu">
+        <li id="trending">
+          <span class="manage-tip">
+            <span class="tip-top"></span>
+            <span class="tip-content">
+              <span class="tip-left"></span>
+              <span class="tip-text">Trending</span>
+              <span class="tip-right"></span> 
+            </span>  
+          </span>
+        </li>
+        <li id="recommendation">
+          <span class="manage-tip">
+            <span class="tip-top"></span>
+            <span class="tip-content">
+              <span class="tip-left"></span>
+              <span class="tip-text">Recommended</span>
+              <span class="tip-right"></span> 
+            </span>  
+          </span>
+        </li>
+        <li id="myfollow1">
+          <span class="manage-tip">
+            <span class="tip-top"></span>
+            <span class="tip-content">
+              <span class="tip-left"></span>
+              <span class="tip-text">I'm Following (by Update Time)</span>
+              <span class="tip-right"></span> 
+            </span>  
+        </li>
+        <li id="myfollow2">
+          <span class="manage-tip">
+            <span class="tip-top"></span>
+            <span class="tip-content">
+              <span class="tip-left"></span>
+              <span class="tip-text">I'm Following (by Channel Number)</span>
+              <span class="tip-right"></span> 
+            </span>  
+        </li>
+        </li>
+      </ul>
       <p id="pl-type">Trending Stories</p>
       <p id="pl-note">(Sorted by updated time)</p>
       <div id="popmessage-player-list" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">Added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>
@@ -378,17 +418,27 @@ soundManager.onready(function()
   </div>
   <div id="curator-main">
     <ul id="curator-tabs">
-      <li class="left on" id="channel"><span id="btn-manage"></span><div><p><span class="name"></span>'s Channels<span id="curator-ch-num" class="number">(0)</span></p></div></li>
-      <li class="right" id="following"><div><p><span class="name"></span>'s Followings<span id="curator-fol-num" class="number">(0)</span></p></div></li>
+      <li class="left on" id="channel">
+        <span id="btn-manage">
+          <span class="manage-tip">
+            <span class="tip-top"></span>
+            <span class="tip-content">
+              <span class="tip-left"></span>
+              <span class="tool-text">Manage your channels</span>
+              <span class="tip-right"></span>
+            </span>
+          </span>
+        </span>
+        <div>
+          <p><span class="name"></span>'s Channels<span id="curator-ch-num" class="number">(0)</span></p>
+        </div>
+      </li>
+      <li class="right" id="following">
+        <div>
+          <p><span class="name"></span>'s Followings<span id="curator-fol-num" class="number">(0)</span></p>
+        </div>
+      </li>
     </ul>
-    <span class="manage-tip">
-      <img src="${nroot}/images/bg_tip_top.png" alt="" />
-      <span class="tip-center">
-        <span class="tip-left"></span>
-        <span class="text">Manage your channels</span>
-        <span class="tip-right"></span>
-      </span>
-    </span>
     <div class="curator-panel" id="channel-panel">
       <div id="channel-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
       <div class="curator-panel-constrain" id="channel-constrain">
@@ -757,7 +807,7 @@ soundManager.onready(function()
       </div>
       <hr>
       <div id="followings-wrap">
-        <h1>My Followings (20/72)</h1>
+        <h1>My Followings (0/72)</h1>
         <ul id="followings-box">
         </ul>
       </div>
@@ -767,30 +817,30 @@ soundManager.onready(function()
       <ul id="home-menu">
         <li id="hottest" class="on">
           <span class="manage-tip">
-            <img src="${nroot}/images/bg_tip_top.png" alt="" />
-            <span class="tip-center">
+            <span class="tip-top"></span>
+            <span class="tip-content"> 
               <span class="tip-left"></span>
-              <span class="text">Hottest</span>
+              <span class="tool-text">Hottest</span>
               <span class="tip-right"></span> 
             </span>  
           </span>
         </li>
         <li id="featured">
           <span class="manage-tip">
-            <img src="${nroot}/images/bg_tip_top.png" alt="" />
-            <span class="tip-center">
+            <span class="tip-top"></span>
+            <span class="tip-content"> 
               <span class="tip-left"></span>
-              <span class="text">Featured</span>
+              <span class="tool-text">Featured</span>
               <span class="tip-right"></span> 
             </span>  
           </span>
         </li>
         <li id="recommended">
           <span class="manage-tip">
-            <img src="${nroot}/images/bg_tip_top.png" alt="" />
-            <span class="tip-center">
+            <span class="tip-top"></span>
+            <span class="tip-content"> 
               <span class="tip-left"></span>
-              <span class="text">Recommended</span>
+              <span class="tool-text">Recommended</span>
               <span class="tip-right"></span> 
             </span>  
           </span>
