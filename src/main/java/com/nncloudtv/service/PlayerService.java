@@ -18,6 +18,7 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 
 public class PlayerService {
@@ -44,17 +45,28 @@ public class PlayerService {
     }
     
     public Model prepareEpisode(Model model, String pid,
-            HttpServletResponse resp) {        
+            HttpServletResponse resp) {
+        if (pid == null)
+            return model;
         if (pid.matches("[0-9]+")) {
             NnProgramManager programMngr = new NnProgramManager();
             NnProgram program = programMngr.findById(Long.valueOf(pid));
             if (program != null) {
-                log.info("episode found = " + pid);
+                log.info("nnprogram found = " + pid);
                 model.addAttribute("fbName", NnStringUtil.htmlSafeChars(program.getName()));
                 model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(program.getIntro()));
                 model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(program.getImageUrl()));
             }
-        } else {
+        } else if (pid.matches("e[0-9]+")){
+            String eid = pid.replace("e", "");
+            NnEpisodeManager episodeMngr = new NnEpisodeManager();
+            NnEpisode episode = episodeMngr.findById(Long.valueOf(eid));
+            if (episode != null) {
+                log.info("nnepisode found = " + eid);
+                model.addAttribute("fbName", NnStringUtil.htmlSafeChars(episode.getName()));
+                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(episode.getIntro()));
+                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(episode.getImageUrl()));
+            }
             /*
             Map<String, String> entry = YouTubeLib.getYouTubeVideoEntry(pid);
             model.addAttribute("fbName", NnStringUtil.htmlSafeChars(entry.get("title")));
@@ -68,6 +80,9 @@ public class PlayerService {
     public Model prepareChannel(Model model, String cid,
             HttpServletResponse resp) {
         NnChannelManager channelMngr = new NnChannelManager();
+        if (cid == null || !cid.matches("[0-9]+")) {
+            return model;
+        }
         NnChannel channel = channelMngr.findById(Long.valueOf(cid));
         if (channel != null) {
             log.info("found channel = " + cid);
