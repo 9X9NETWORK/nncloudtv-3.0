@@ -19,11 +19,11 @@ cursor.execute("""
    select id, channelId, scheduleDate from  nnepisode where scheduleDate < date_add(now(), interval 10 minute);
    """)                                                                                
 rows = cursor.fetchall()
-i=0
-for r in rows:                                               
+i=0     
+for r in rows:  
    eid = r[0]
    cid = r[1]
-   print "publish eid:" + str(eid)
+   print "publish eid:" + str(eid) + "; its cid: " + str(cid) 
    # update its property 
    cursor.execute("""
       update nnepisode                                                     
@@ -38,16 +38,18 @@ for r in rows:
       order by seq
       """, (cid, eid))       
    seqrows = cursor.fetchall()
-   i = 2
+   j = 2
    for seqr in seqrows:
       seid = seqr[0]
       print "modify all episode seq - eid:" + str(seid) + " with seq: " + str(i) 
-      cursor.execute("""
+      cursor.execute("""                                                
          update nnepisode
             set seq = %s
           where id = %s
          """, (i, seid))    
-      i = i + 1
+      j = j + 1
    dbcontent.commit()
-
-dbcontent.close()          
+   i = i + 1
+   
+dbcontent.close()
+print "episode published:" + str(i)
