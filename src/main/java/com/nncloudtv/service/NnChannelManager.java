@@ -805,7 +805,6 @@ public class NnChannelManager {
                         "", //recently watched program
                         c.getOriName(),
                         String.valueOf(c.getCntSubscribe()), //cnt subscribe, replace
-                        //String.valueOf(viewCount), //view count //REPLACE
                         String.valueOf(c.getCntView()),
                         c.getTag(),
                         curatorProfile, //curator id
@@ -864,24 +863,6 @@ public class NnChannelManager {
         }
         return channels;
     }        
-    /*
-    public static String getCntViewCacheName(long id) {
-        return "ch" + id;
-    }
-        
-    public int getCntView(long id) {
-        String name = getCntViewCacheName(id);
-        String result = (String)CacheFactory.get(name);
-        if (result != null) {
-            return Integer.parseInt(result);
-        } 
-        log.info("cache: ch cnt view not cached");        
-        CounterFactory factory = new CounterFactory();
-        int count = factory.getCount(name); 
-        CacheFactory.set(name, count);
-        return count;
-    }
-    */
     
     public Comparator<NnChannel> getChannelUpdateDateComparator() {
         
