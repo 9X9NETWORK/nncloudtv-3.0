@@ -441,12 +441,10 @@ public class NnProgramManager {
     //player programInfo entry
     public String findPlayerProgramInfoByChannel(long channelId) {
         String cacheKey = "nnprogram(" + channelId + ")";
-        /*
         String result = (String)CacheFactory.get(cacheKey);
         if (CacheFactory.isRunning && result != null) { 
             return result;
         } 
-        */
         NnChannel c = new NnChannelManager().findById(channelId);
         if (c == null)
             return "";
@@ -584,7 +582,6 @@ public class NnProgramManager {
                 Collections.sort(list, getProgramSeqComparator());
                 String videoUrl = "|";
                 String name = getNotPipedProgramInfoData(e.getName());
-                System.out.println("<< ori name>>" + e.getName() + ";non piped:" + name);
                 String imageUrl = e.getImageUrl();
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
                 String card = "";
