@@ -337,7 +337,6 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnProgramManager programMngr = new NnProgramManager();
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
@@ -349,17 +348,12 @@ public class ApiContent extends ApiGeneric {
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
         titleCardMngr.delete(titleCards);
         
-        long episodeId = program.getEpisodeId();
-        
         programMngr.delete(program);
-        
-        
-        //        episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-        
         
         return "OK";
     }
     
+    // delete programs in one episode
     @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.DELETE)
     public @ResponseBody
     String programsDelete(HttpServletRequest req, HttpServletResponse resp,
@@ -429,10 +423,6 @@ public class ApiContent extends ApiGeneric {
         
         titlecardMngr.delete(titlecardDeleteList);
         programMngr.delete(programDeleteList);
-        
-        
-        //    episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-        
         
         return "OK";
     }
@@ -1275,22 +1265,59 @@ public class ApiContent extends ApiGeneric {
         episode.setImageUrl(imageUrl);
         episode.setChannelId(channel.getId());
         
+        // scheduleDate
+        String scheduleDateStr = req.getParameter("scheduleDate");
+        if (scheduleDateStr != null) {
+            
+            if (scheduleDateStr.isEmpty()) {
+                
+                episode.setScheduleDate(null);
+                
+            } else {
+                
+                Long scheduleDateLong = null;
+                try {
+                    scheduleDateLong = Long.valueOf(scheduleDateStr);
+                } catch (NumberFormatException e) {
+                }
+                if (scheduleDateLong == null) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+                
+                episode.setScheduleDate(new Date(scheduleDateLong));
+            }
+        }
+        
         // publishDate
         String publishDateStr = req.getParameter("publishDate");
         if (publishDateStr != null) {
             
-            Long publishDateLong = null;
-            try {
-                publishDateLong = Long.valueOf(publishDateStr);
-            } catch (NumberFormatException e) {
-            }
-            if (publishDateLong == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
+            log.info("publishDate = " + publishDateStr);
             
-            Date publishDate = new Date(publishDateLong);
-            episode.setPublishDate(publishDate);
+            if (publishDateStr.isEmpty()) {
+                
+                log.info("set publishDate to null");
+                episode.setPublishDate(null);
+                
+            } else if (publishDateStr.equalsIgnoreCase("NOW")) {
+                
+                episode.setPublishDate(new Date());
+                
+            } else {
+                
+                Long publishDateLong = null;
+                try {
+                    publishDateLong = Long.valueOf(publishDateStr);
+                } catch (NumberFormatException e) {
+                }
+                if (publishDateLong == null) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+                
+                episode.setPublishDate(new Date(publishDateLong));
+            }
         }
         
         // isPublic
