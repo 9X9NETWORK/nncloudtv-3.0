@@ -952,6 +952,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
@@ -961,19 +962,21 @@ public class ApiContent extends ApiGeneric {
         
         String episodeIdsStr = req.getParameter("episodes");
         if (episodeIdsStr == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            return null;
+            episodeMngr.reorderChannelEpisodes(channelId);
+            return "OK";
         }
         String[] episodeIdStrList = episodeIdsStr.split(",");
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         List<NnEpisode> episodes = episodeMngr.findByChannelId(channelId); // it must same as channelEpisodes result
+        List<NnEpisode> orderedEpisodes = new ArrayList<NnEpisode>();
         List<Long> episodeIdList = new ArrayList<Long>();
+        List<Long> checkedEpisodeIdList = new ArrayList<Long>();
         for (NnEpisode episode : episodes) {
             episodeIdList.add(episode.getId());
+            checkedEpisodeIdList.add(episode.getId());
         }
         
-        List<Long> orderedEpisodeIdList = new ArrayList<Long>();
+        int index;
         for (String episodeIdStr : episodeIdStrList) {
             
             Long episodeId = null;
@@ -984,28 +987,26 @@ public class ApiContent extends ApiGeneric {
             } catch(Exception e) {
             }
             if (episodeId != null) {
-                orderedEpisodeIdList.add(episodeId);
-                if (episodeIdList.indexOf(episodeId) > -1) {
-                    episodeIdList.remove(episodeId);
+                index = episodeIdList.indexOf(episodeId);
+                if (index > -1) {
+                    orderedEpisodes.add(episodes.get(index));
+                    checkedEpisodeIdList.remove(episodeId);
                 }
             }
         }
         // parameter should contain all episodeId
-        if (episodeIdList.size() != 0) {
+        if (checkedEpisodeIdList.size() != 0) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
         
-        short counter = 1;
-        NnEpisode episode;
-        for (Long episodeId : orderedEpisodeIdList) {
-            episode = episodeMngr.findById(episodeId);
+        int counter = 1;
+        for (NnEpisode episode : orderedEpisodes) {
             episode.setSeq(counter);
-            episodeMngr.save(episode);
             counter++;
         }
         
-        episodeMngr.reorderChannelEpisodes(channelId);
+        episodeMngr.save(orderedEpisodes);
         
         return "OK";
     }
