@@ -441,10 +441,12 @@ public class NnProgramManager {
     //player programInfo entry
     public String findPlayerProgramInfoByChannel(long channelId) {
         String cacheKey = "nnprogram(" + channelId + ")";
+        /*
         String result = (String)CacheFactory.get(cacheKey);
         if (CacheFactory.isRunning && result != null) { 
             return result;
-        }        
+        } 
+        */
         NnChannel c = new NnChannelManager().findById(channelId);
         if (c == null)
             return "";
@@ -581,9 +583,10 @@ public class NnProgramManager {
             if (list != null && list.size() > 0) {
                 Collections.sort(list, getProgramSeqComparator());
                 String videoUrl = "|";
-                String name = e.getName();
+                String name = getNotPipedProgramInfoData(e.getName());
+                System.out.println("<< ori name>>" + e.getName() + ";non piped:" + name);
                 String imageUrl = e.getImageUrl();
-                String intro = e.getIntro();                        
+                String intro = getNotPipedProgramInfoData(e.getIntro());                        
                 String card = "";
                 int i=1;
                 for (NnProgram p : list) { //sub-episodes
@@ -627,6 +630,13 @@ public class NnProgramManager {
         return value;
     }
     
+    //TODO make all piped string coming through here, actually process all player string here
+    private String getNotPipedProgramInfoData(String str) {
+        if (str == null) return null;
+        str = str.replaceAll("\\|", "\\\\|");
+        return str;
+    }
+        
     public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String card) {
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
