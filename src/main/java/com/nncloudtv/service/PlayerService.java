@@ -88,7 +88,7 @@ public class PlayerService {
             log.info("found channel = " + cid);
             model.addAttribute("fbName", NnStringUtil.htmlSafeChars(channel.getName()));
             model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(channel.getIntro()));
-            model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(channel.getImageUrl()));
+            model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(channel.getOneImageUrl()));
         }
         return model;
     }
@@ -196,11 +196,11 @@ public class PlayerService {
                 model.addAttribute("crawlChannelTitle", c.getName());
                 //in case not enough episode data, use channel for default  
                 model.addAttribute("crawlEpisodeTitle", c.getName());
-                model.addAttribute("crawlVideoThumb", c.getImageUrl());
-                model.addAttribute("crawlEpThumb1", c.getImageUrl());                
+                model.addAttribute("crawlVideoThumb", c.getOneImageUrl());
+                model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
                 model.addAttribute("fbName", NnStringUtil.htmlSafeChars(c.getName()));
                 model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));
-                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getImageUrl()));                
+                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getOneImageUrl()));                
                 NnProgramManager programMngr = new NnProgramManager();
                 List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
                 if (programs.size() > 0) {
