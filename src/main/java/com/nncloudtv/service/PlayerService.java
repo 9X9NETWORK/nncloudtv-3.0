@@ -125,6 +125,8 @@ public class PlayerService {
             log.info("matched 3:" + matched);
             matched = matched.replaceAll("episode=[^&]*&?", "");
             log.info("matched 4:" + matched);
+            matched = matched.replaceAll("fb_action=[^&]*&?", "");
+            log.info("matched 5:" + matched);            
             if (matched.length() > 0)
                 return "?" + matched;
         }
@@ -161,7 +163,7 @@ public class PlayerService {
             }            
             epStr = "!ep=" + pid;
         }
-        log.info(queryStr + "#!ch=" + cid + epStr);
+        log.info("rewritten url to : " + queryStr + "#!ch=" + cid + epStr);
         return queryStr + "#!ch=" + cid + epStr;
     }
     
