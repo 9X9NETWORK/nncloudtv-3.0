@@ -1,8 +1,6 @@
 package com.nncloudtv.web;
 
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.service.NnChannelManager;
-import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.PlayerService;
 
 @Controller
@@ -131,42 +125,14 @@ public class PlayerController {
                        @RequestParam(value="ep", required=false) String ep) {
         //additional params
         PlayerService service = new PlayerService();
-        String queryStr = service.rewrite(req);
-        System.out.println("query str:" + queryStr);
-        String cid = channel;
-        if (ch != null)
-            cid = ch;
-        String pid = episode;
-        if (ep != null)
-            pid = ep;
-        String epStr = "";
-        if (pid != null) {
-            Pattern pattern = Pattern.compile("[\\d]*");
-            Matcher matcher = pattern.matcher(cid);
-            if (matcher.matches()) {
-                NnChannel c = new NnChannelManager().findById(Long.parseLong(cid));
-                if (c != null) {
-                    if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
-                        matcher = pattern.matcher(pid);
-                        if (matcher.matches()) {
-                            NnProgram p = new NnProgramManager().findById(Long.parseLong(pid));
-                            if (p != null) {
-                                log.info("before pid:" + pid + ";after pid:" + p.getEpisodeId());
-                                pid = String.valueOf("e" + p.getEpisodeId());                                
-                            }
-                        }
-                    }
-                }
-            }            
-            epStr = "!ep=" + pid;
-        }
-        log.info(queryStr + "#!ch=" + cid + epStr);
-        return "redirect:/" + queryStr + "#!ch=" + cid + epStr;
+        String str = service.getQueryString(req, channel, episode, ch, ep);
+        return "redirect:/" + str;
     }
     
     @RequestMapping("flview")
     public String flview(@RequestParam(value="mso",required=false) String mso, 
-                       HttpServletRequest req, HttpServletResponse resp, Model model, 
+                       HttpServletRequest req, HttpServletResponse resp, Model model,                       
+                       @RequestParam(value="fb_action", required=false) String fb_action,
                        @RequestParam(value="channel", required=false) String channel,
                        @RequestParam(value="episode", required=false) String episode,
                        @RequestParam(value="js",required=false) String js,
@@ -175,6 +141,11 @@ public class PlayerController {
                        @RequestParam(value="ep", required=false) String ep) {
         try {
             PlayerService service = new PlayerService();
+            if (fb_action != null) {
+                log.info("fb_action:" + fb_action);
+                String str = service.getQueryString(req, channel, episode, ch, ep);
+                return "redirect:/" + str;
+            }
             String cid = channel != null ? channel : ch;
             String pid = episode != null ? episode : ep;
             model = service.prepareBrand(model, mso, resp);
