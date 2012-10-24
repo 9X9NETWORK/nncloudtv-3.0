@@ -1,4 +1,5 @@
-# scheduler to publish the pisode
+# scheduler to publish the episode
+# cron job is scheduled to run at every hour xx:58
 
 import urllib, urllib2
 import os
@@ -7,7 +8,7 @@ import MySQLdb
 import time
 import string
 import codecs
-
+                                  
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
                              passwd = "",
@@ -15,11 +16,14 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              use_unicode = True,
                              db = "nncloudtv_content")
 cursor = dbcontent.cursor()
-cursor.execute("""
-   select id, channelId, scheduleDate, isPublic from  nnepisode where scheduleDate < date_add(now(), interval 10 minute);   
-   """)                                                                                
+cursor.execute("""                             
+   select id, channelId, scheduleDate, isPublic 
+     from  nnepisode 
+     where scheduleDate > now()              
+       and scheduleDate < date_add(now(), interval 10 minute);   
+   """)                                                                                                                      
 rows = cursor.fetchall()
-i=0 #episode published  
+i=0 #episode published                                      
 k=0 #episode re-run
 for r in rows:  
    eid = r[0]
