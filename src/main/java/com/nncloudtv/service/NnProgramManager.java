@@ -586,6 +586,7 @@ public class NnProgramManager {
             if (list != null && list.size() > 0) {
                 Collections.sort(list, getProgramSeqComparator());
                 String videoUrl = "";
+                String audioUrl = "";
                 String name = getNotPipedProgramInfoData(e.getName());
                 String imageUrl = e.getImageUrl();
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
@@ -606,9 +607,17 @@ public class NnProgramManager {
                             cardMap.remove(cardKey2);                            
                         }
                     }
+                    if (p.getStartTime() != null && p.getStartTime().equals("0") &&
+                        p.getEndTime() != null && p.getEndTime().equals("0")) {
+                        p.setStartTime("");
+                        p.setEndTime("");
+                    }
+                    audioUrl += "|" + p.getAudioFileUrl();
+                    audioUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
+                    audioUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
                     videoUrl += "|" + p.getFileUrl();
-                    videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";   
-                    videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";                                        
+                    videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
+                    videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
                     intro += "|" + p.getPlayerIntro();
@@ -620,7 +629,7 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, card);
+                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, audioUrl, card);
             }
         }
         return result;
@@ -638,8 +647,8 @@ public class NnProgramManager {
         str = str.replaceAll("\\|", "\\\\|");
         return str;
     }
-        
-    public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String card) {
+
+    public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String audioUrl, String card) {
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
         String output = "";
@@ -654,10 +663,11 @@ public class NnProgramManager {
                         videoUrl,
                         "", //url2
                         "", //url3
-                        "", //url4           
+                        audioUrl, //audio file           
                         String.valueOf(e.getUpdateDate().getTime()),
-                        "",
+                        "", //comment
                         card};
+                
         output = output + NnStringUtil.getDelimitedStr(ori);
         output = output.replaceAll("null", "");
         
