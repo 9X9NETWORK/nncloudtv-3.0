@@ -132,7 +132,6 @@ public class PlayerController {
     @RequestMapping("flview")
     public String flview(@RequestParam(value="mso",required=false) String mso, 
                        HttpServletRequest req, HttpServletResponse resp, Model model,                       
-                       @RequestParam(value="fb_action", required=false) String fb_action,
                        @RequestParam(value="channel", required=false) String channel,
                        @RequestParam(value="episode", required=false) String episode,
                        @RequestParam(value="js",required=false) String js,
@@ -141,9 +140,19 @@ public class PlayerController {
                        @RequestParam(value="ep", required=false) String ep) {
         try {
             PlayerService service = new PlayerService();
-            if (fb_action != null) {
-                log.info("fb_action:" + fb_action);
-                String str = service.getQueryString(req, channel, episode, ch, ep);
+            String queryStr = req.getQueryString();
+            log.info("query str:" + queryStr);
+            //#!ch=x!ep=y
+            if (queryStr != null && queryStr.contains("fb")) {
+                log.info("extra stuff from fb" + queryStr);
+                String cid = channel != null ? channel : ch;
+                String pid = episode != null ? episode : ep;
+                String str = js != null ? "js=" + js : "";
+                str += str.length() != 0 ? "&" : "";
+                str += cid != null ? "#!ch=" + cid : "";
+                str += cid != null ? "" : "#";
+                str += pid != null ? "!ep=" + pid : "";
+                log.info("redirect to url:" + str);
                 return "redirect:/" + str;
             }
             String cid = channel != null ? channel : ch;
