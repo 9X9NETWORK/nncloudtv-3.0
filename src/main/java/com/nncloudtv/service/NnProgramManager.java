@@ -223,11 +223,16 @@ public class NnProgramManager {
         return dao.findByChannelAndSeq(channelId, NnStringUtil.seqToStr(seq));
     }
         
-    public String processCache(long channelId) {
-        String cacheKey = this.getCacheKey(channelId);
-        String str = findPlayerProgramInfoByChannel(channelId);
-        CacheFactory.set(cacheKey, str);
-        return str;
+    public void processCache(long channelId) {
+        String cacheKey = this.getCacheKey(channelId);        
+        NnChannel c = new NnChannelManager().findById(channelId);
+        if (c == null)
+            return;
+        log.info("re-assemble program info cache:" + channelId);
+        String output = this.assembleProgramInfo(c);
+        if (CacheFactory.isRunning) { 
+            CacheFactory.set(cacheKey, output);
+        }
     }    
     
     public String retrieveCache(String key) {
@@ -453,7 +458,7 @@ public class NnProgramManager {
             CacheFactory.set(cacheKey, output);
         }
         return output;
-    }    
+    }
     
     //find "good" programs, to find nnchannel type of programs, use findPlayerNnProgramsByChannel
     public List<NnProgram> findPlayerProgramsByChannel(long channelId) {
