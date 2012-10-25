@@ -294,6 +294,17 @@ public class DepotController {
         return resp;
     }
 
+    @RequestMapping("getDepotServer")
+    public ResponseEntity<String> getDepotServer(HttpServletRequest req) {
+        DepotService depot = new DepotService();
+        String[] transcodingEnv = depot.getTranscodingEnv(req);
+        String transcodingServer = transcodingEnv[0];
+        String callbackUrl = transcodingEnv[1];
+        String output = "transcodingServer:" + transcodingServer + "\n" + ";callbackUrl:" + callbackUrl;
+        return NnNetUtil.textReturn(output);        
+    }
+    
+    //format 
     @RequestMapping(value="resetViewCntCache", produces = "text/plain; charset=utf-8")
     public @ResponseBody String resetViewCntCache() {
         MemcachedClient cache = null;
