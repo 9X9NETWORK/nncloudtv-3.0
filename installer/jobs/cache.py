@@ -10,6 +10,7 @@ import time
 import string
 import codecs
 
-url = "http://localhost:8080/playerAPI/flush"
+url = "http://stage.9x9.tv/playerAPI/flush"
 urllib2.urlopen(url).read()
-
+url = "http://stage.9x9.tv/playerAPI/programCache?channel=8600"
+urllib2.urlopen(url).read()
