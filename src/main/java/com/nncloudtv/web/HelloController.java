@@ -1,23 +1,13 @@
 package com.nncloudtv.web;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.jdo.JDOFatalDataStoreException;
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -29,24 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
-import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.QueueFactory;
-import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.Mso;
-import com.nncloudtv.model.MsoConfig;
-import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.Pdr;
-import com.nncloudtv.service.DepotService;
 import com.nncloudtv.service.EmailService;
-import com.nncloudtv.service.MsoConfigManager;
-import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.PdrManager;
-import com.nncloudtv.service.PlayerApiService;
 import com.nncloudtv.web.json.facebook.FBPost;
 import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
@@ -57,14 +37,7 @@ public class HelloController {
 
     //protected static final Logger log = Logger.getLogger(HelloController.class.getName());
     protected static final Logger log = Logger.getLogger(HelloController.class);
-        
-    @RequestMapping("welcome")
-    public @ResponseBody String welcome() {
-        String url = "|http://www.youtube.com/watch?v=zdZya6yATn0";
-        System.out.println(url.replaceFirst("\\|", ""));        
-        return url;
-    }
-    
+
     //basic test
     @RequestMapping("world")
     public ModelAndView world(HttpServletRequest req) throws Exception {
@@ -74,6 +47,7 @@ public class HelloController {
         return new ModelAndView("hello/hello", "message", message);
     }    
 
+    //log test
     @RequestMapping("log")
     public ModelAndView log()  {
         for (int i=0; i<100; i++) {
@@ -86,49 +60,8 @@ public class HelloController {
         System.out.println("----- hello console -----");
         return new ModelAndView("hello", "message", "log");
     }    
-    
-    @RequestMapping("timeout")
-    public ModelAndView timeout(HttpServletRequest req) throws Exception {
-        HttpSession session = req.getSession();
-        session.setMaxInactiveInterval(1);
-        for (long i=0; i<500000000; i++) {
-            System.out.println(i);
-            for (long j=0; j<500000000; j++) {            
-            }            
-        }
-        String message = "Hello NnCloudTv";
-        return new ModelAndView("hello", "message", message);
-    }    
-    
-    /*
-    @RequestMapping("root")
-    public ModelAndView root() { 
-        String message = "Hello NnCloudTv";
-        return new ModelAndView("hello", "message", message);
-    } 
-    */   
-    
-    @RequestMapping("locale")
-    public ModelAndView locale(HttpServletRequest req) {
-        String message = "locale name: " + req.getLocalName() + "<br/>" + 
-                         "locale address: " + req.getLocalAddr() + "<br/>" +  
-                         req.getLocale().getLanguage();        
-        return new ModelAndView("hello", "message", message);
-    }            
-    
-    @RequestMapping("search")
-    public @ResponseBody String search(
-            @RequestParam String text,
-            HttpServletRequest req) {
-        List<NnChannel> channels = NnChannelDao.search(text, false);
-        String result = "size:" + channels.size();
-        for (NnChannel c : channels) {
-            result += c.getId() + ";" + c.getName() + "<br/>";
-        }
-        return result;
-    }            
-    
-    //test email service
+        
+    //email service test
     @RequestMapping("email")
     public @ResponseBody String email(
             @RequestParam String toEmail, 
@@ -139,25 +72,6 @@ public class HelloController {
         service.sendEmail(mail, null, null);
         return "email sent";
     }            
-
-    /*
-    @RequestMapping("slave")
-    public @ResponseBody String slave() throws Exception{
-        PersistenceManager pm = PMF.getAnalyticsSlave().getPersistenceManager();
-        try {
-            long id = 1;
-            Pdr pdr = (Pdr)pm.getObjectById(Pdr.class, id);
-            if (pdr != null)
-                log.info("<<< detached >>> " + pdr.getId());
-            else 
-                log.info("<<< detached >>> pdr is empty");
-        } catch (JDOObjectNotFoundException e) {
-        } finally {
-            pm.close();
-        }        
-        return "OK";
-    }    
-     */ 
         
     //db test
     @RequestMapping("pdr")
@@ -189,13 +103,14 @@ public class HelloController {
         return "OK";
     }                
     
-    @RequestMapping("cache_set")
-    public ResponseEntity<String> cache_set() {
+    //cache test
+    @RequestMapping("cache")
+    public ResponseEntity<String> cache() {
         String output = "No Cache";
         
         String cacheValue = (String)CacheFactory.get("hello");
         output = "original: " + cacheValue + "\n";
-                
+
         if (CacheFactory.isRunning) {
             output += "it's running"  + "\n";
             if (cacheValue == null) {
@@ -208,42 +123,8 @@ public class HelloController {
         }
         
         return NnNetUtil.textReturn(output);
-    }
-    
-    @RequestMapping("jdo_cached")
-    public ResponseEntity<String> jdoCached() {
-        MsoConfigManager configMngr = new MsoConfigManager();
-        MsoConfig c = configMngr.findByItem("test");
-        return NnNetUtil.textReturn(c.getValue());
-    }
-
-    @RequestMapping("set")
-    public ResponseEntity<String> set(
-            @RequestParam String value) {
-        MsoManager msoMngr = new MsoManager();
-        Mso mso = msoMngr.findNNMso();
-        MsoConfigManager configMngr = new MsoConfigManager();
-        MsoConfig c = configMngr.findByItem("test");
-        c.setValue(value);
-        configMngr.save(mso, c);
-        return NnNetUtil.textReturn("set value");
-    }
-
-    @RequestMapping("get")
-    public ResponseEntity<String> get() {
-        MsoConfigManager configMngr = new MsoConfigManager();
-        MsoConfig c = configMngr.findByItem("test");
-        return NnNetUtil.textReturn(c.getValue());
-    }
-    
-    @RequestMapping("queue_visitor") 
-    public ResponseEntity<String> queue_db() {
-        boolean status = MsoConfigManager.isQueueEnabled(true);
-        PlayerApiService service = new PlayerApiService();
-        int cnt = service.addMsoInfoVisitCounter(false);
-        return NnNetUtil.textReturn(String.valueOf(status) + ";" + cnt);
-    }
-    
+    }        
+        
     /**
      * MQ / MQCallback - tiny MQ loopback test
      * 
@@ -252,8 +133,7 @@ public class HelloController {
      * @param req
      * @param msg
      * @return
-     */
-    
+     */    
     @RequestMapping("MQ")
     public @ResponseBody String MQ(HttpServletRequest req, @RequestParam(required=false) String msg) {        
         FacebookError json = new FacebookError(); // none of FB business though
@@ -277,23 +157,7 @@ public class HelloController {
         
     }
     
-    /*
-    @RequestMapping("fanout")
-    public @ResponseBody String fanout(@RequestParam String exchange_name) throws IOException {
-        ConnectionFactory factory = new ConnectionFactory();
-       Connection connection = factory.newConnection("localhost");
-       Channel channel = connection.createChannel();
-
-       channel.exchangeDeclare(exchange_name, "fanout");
-       String message = "hello superman";
-       channel.basicPublish(exchange_name, "", null, message.getBytes());
-       System.out.println(" [x] Sent '" + message + "'");
-       channel.close();
-       connection.close();
-       return "OK";
-    }
-    */
-
+    //queue test
     @RequestMapping("queue")
     public @ResponseBody String queue(HttpServletRequest req, @RequestParam String msg) throws IOException {
         ChannelInfo info = new ChannelInfo();
@@ -317,78 +181,6 @@ public class HelloController {
         */
         return "OK";
     }
-    
-    @RequestMapping("youtube")
-    public ModelAndView youtube() { 
-        Map<String, String> maps = YouTubeLib.getYouTubeEntry("nike", true);
-        String msg = "thumbnail:" + maps.get("thumbnail") + "<br/>";
-        msg += "title:" + maps.get("title") + "<br/>";
-        msg += "description:" + maps.get("description") + "<br/>";
-        msg += "status:" + maps.get("status") + "<br/><br/><br/><br/>";
-
-        maps = YouTubeLib.getYouTubeEntry("android", true);
-        msg += "thumbnail:" + maps.get("thumbnail") + "<br/>";
-        msg += "title:" + maps.get("title") + "<br/>";
-        msg += "description:" + maps.get("description") + "<br/>";
-        msg += "status:" + maps.get("status") + "<br/><br/><br/><br/>";
-        
-        maps = YouTubeLib.getYouTubeEntry("98145fdd67deb31d", false);
-        msg += "thumbnail:" + maps.get("thumbnail") + "<br/>";
-        msg += "title:" + maps.get("title") + "<br/>";
-        msg += "description:" + maps.get("description") + "<br/>";
-        msg += "status:" + maps.get("status") + "<br/><br/><br/><br/>";
-
-        maps = YouTubeLib.getYouTubeEntry("98145fdd67d", false);
-        msg += "thumbnail:" + maps.get("thumbnail") + "<br/>";
-        msg += "title:" + maps.get("title") + "<br/>";
-        msg += "description:" + maps.get("description") + "<br/>";
-        msg += "status:" + maps.get("status") + "<br/>";
-                
-        return new ModelAndView("hello", "message", msg);
-    }    
- 
-    @RequestMapping("fiveHundred")
-    public ModelAndView fiveHundred(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setStatus(500);
-        return new ModelAndView("hello", "message", "msg");
-    }
-    
-    @RequestMapping("error")
-    public ModelAndView error(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        throw new Exception();
-    }
-    
-    //rabbitmqctl list_queues
-    /*
-    @RequestMapping("receive")
-    public @ResponseBody String receive() throws IOException, InterruptedException {
-        String queue_name = "hello";
-        ConnectionFactory factory = new ConnectionFactory();
-        Connection connection = factory.newConnection("localhost");
-        Channel channel = connection.createChannel();
-
-        //channel.queueDeclare(queue_name, false, false, false, null);
-        channel.queueDeclare(queue_name, false, false, false, false, null);
-        System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-        QueueingConsumer consumer = new QueueingConsumer(channel);
-        channel.basicConsume(queue_name, true, consumer);
-        
-        QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-        String message = new String(delivery.getBody());
-        System.out.println(" [x] Received '" + message + "'");
-
-        return "OK";
-    }
-    */
-    @RequestMapping("getDepotServer")
-    public ResponseEntity<String> getDepotServer(HttpServletRequest req) {
-        DepotService depot = new DepotService();
-        String[] transcodingEnv = depot.getTranscodingEnv(req);
-        String transcodingServer = transcodingEnv[0];
-        String callbackUrl = transcodingEnv[1];
-        String output = "transcodingServer:" + transcodingServer + "\n" + ";callbackUrl:" + callbackUrl;
-        return NnNetUtil.textReturn(output);        
-    }
 
     //test ip behind proxy, aka load balancer
     @RequestMapping("getIp")
@@ -399,9 +191,9 @@ public class HelloController {
         return NnNetUtil.textReturn(output);
     }
     
+    //fb test    
     @RequestMapping("FB")
-    public ResponseEntity<String> FB(HttpServletRequest req) {
-        
+    public ResponseEntity<String> FB(HttpServletRequest req) {        
         String now = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).format(new Date()).toString();
         
         FBPost fbPost = new FBPost(now, "FB/MQ loopback test", "http://www.iteye.com/upload/logo/user/76967/bf3e420a-8e22-36b8-84e2-1b31c23407f1.jpg");
@@ -415,7 +207,6 @@ public class HelloController {
         
         return NnNetUtil.textReturn("OK");
     }
-
     
 }
     
