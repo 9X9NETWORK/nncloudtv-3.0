@@ -344,6 +344,14 @@ public class NnUserManager {
         return result;
     }
     
+    public String composeSubscriberInfoStr(List<NnChannel> channels) {
+        for (NnChannel c : channels) {
+            if (c.getContentType() != NnChannel.CONTENTTYPE_FAKE_FAVORITE) {                
+            }
+        }
+        return "";
+    }
+    
     public String composeCuratorInfoStr(NnUser user, String channelId, HttpServletRequest req) {
         //#!curator=xxxxxxxx
         String profileUrl = "";
