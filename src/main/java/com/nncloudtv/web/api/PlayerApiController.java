@@ -1,28 +1,32 @@
 package com.nncloudtv.web.api;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.spy.memcached.MemcachedClient;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
-import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.service.IosService;
 import com.nncloudtv.service.MsoManager;
-import com.nncloudtv.service.NnEpisodeManager;
+import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnStatusMsg;
 import com.nncloudtv.service.PlayerApiService;
 
@@ -724,6 +728,26 @@ public class PlayerApiController {
         return output;
     }    
 
+    @RequestMapping(value="subscriberLineup", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String subscriberLineup(
+            @RequestParam(value="v", required=false) String v,
+            @RequestParam(value="user", required=false) String userToken,            
+            @RequestParam(value="curator", required=false) String curatorIdStr,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            this.prepService(req, true);
+            output = playerApiService.subscriberLineup(userToken, curatorIdStr);
+        } catch (Exception e){
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }    
+    
     /**
      * Get program information based on query criteria.
      * 
@@ -2001,20 +2025,32 @@ public class PlayerApiController {
         String url = FacebookLib.getDialogOAuthPath();
         return "redirect:" + url;
     }
-    
-    @RequestMapping(value="episodeUpdate", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String piwikCreate(
-            @RequestParam(value="epId", required=false) long epId ) {
-        NnEpisodeManager mngr = new NnEpisodeManager();
-        NnEpisode e = new NnEpisodeManager().findById(epId);
-        if (e != null) {
-            int duration = mngr.calculateEpisodeDuration(e);
-            log.info("new duration:" + duration);
-            e.setDuration(duration);
-            mngr.save(e);
+
+    //temp solution
+    @RequestMapping("flush")
+    public ResponseEntity<String> flush() {
+        MemcachedClient cache = CacheFactory.getClient();
+        if (cache != null) {
+            try {
+                cache.flush().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            cache.shutdown();
         }
+        return NnNetUtil.textReturn("flush");
+    }
+
+    @RequestMapping(value="programCache", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String programCache(
+            @RequestParam(value="channel", required=false) long chId ) {
+        NnProgramManager mngr = new NnProgramManager();
+        mngr.processCache(chId);
         return "OK";
                 
     }
 
+    
 }
