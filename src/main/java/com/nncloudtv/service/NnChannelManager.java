@@ -307,6 +307,10 @@ public class NnChannelManager {
         return channel;
     }
     
+    public List<NnChannel> saveOrderedChannels(List<NnChannel> channels) {
+        return dao.saveAll(channels);
+    }
+    
     public void saveChannelToCategory (long channelId, long categoryId, long oldCategoryId) {        
         List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
         if (oldCategoryId == 0) { // newly created

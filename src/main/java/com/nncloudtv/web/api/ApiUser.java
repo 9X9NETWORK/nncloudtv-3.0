@@ -435,12 +435,15 @@ public class ApiUser extends ApiGeneric {
         
         NnChannelManager channelMngr = new NnChannelManager();
         List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, false);
+        List<NnChannel> orderedChannels = new ArrayList<NnChannel>();
         List<Long> channelIdList = new ArrayList<Long>();
+        List<Long> checkedChannelIdList = new ArrayList<Long>();
         for (NnChannel channel : channels) {
             channelIdList.add(channel.getId());
+            checkedChannelIdList.add(channel.getId());
         }
         
-        List<Long> orderedChannelIdList = new ArrayList<Long>();
+        int index;
         for (String channelIdStr : channelIdStrList) {
             
             Long channelId = null;
@@ -451,26 +454,26 @@ public class ApiUser extends ApiGeneric {
             } catch(Exception e) {
             }
             if (channelId != null) {
-                orderedChannelIdList.add(channelId);
-                if (channelIdList.indexOf(channelId) > -1) {
-                    channelIdList.remove(channelId);
+                index = channelIdList.indexOf(channelId);
+                if (index > -1) {
+                    orderedChannels.add(channels.get(index));
+                    checkedChannelIdList.remove(channelId);
                 }
             }
         }
         // parameter should contain all channelId
-        if (channelIdList.size() != 0) {
+        if (checkedChannelIdList.size() != 0) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
         
         short counter = 1;
-        NnChannel channel;
-        for (Long channelId : orderedChannelIdList) {
-            channel = channelMngr.findById(channelId);
+        for (NnChannel channel : orderedChannels) {
             channel.setSeq(counter);
-            channelMngr.save(channel);
             counter++;
         }
+        
+        channelMngr.saveOrderedChannels(orderedChannels);
         
         return "OK";
     }
