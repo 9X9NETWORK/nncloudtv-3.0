@@ -64,6 +64,7 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
             Query query = pm.newQuery(NnEpisode.class);
             query.setFilter("channelId == channelIdParam && isPublic == isPublicParam");
             query.declareParameters("long channelIdParam, boolean isPublicParam");
+            query.setOrdering("seq");
             @SuppressWarnings("unchecked")
             List<NnEpisode> episodes = (List<NnEpisode>)query.execute(channelId, true);
             if (episodes.size() > 0) {
