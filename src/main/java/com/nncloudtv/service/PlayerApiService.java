@@ -497,7 +497,7 @@ public class PlayerApiService {
             page = (int) (startIndex / limit) + 1;
         }        
         if (tagStr != null) {
-            channels = catMngr.findChannelsByTag(cid, true, tagStr);            
+            channels = catMngr.findChannelsByTag(cid, true, tagStr); //TODO removed            
         } else {
             channels = catMngr.listChannels(page, limit, cat.getId());
         }
@@ -520,7 +520,7 @@ public class PlayerApiService {
             }
         }
         result[2] += chMngr.composeChannelLineupCache(channels);
-        return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
     public String channelStack(String stack, String lang, String userToken, String channel) {
@@ -552,6 +552,22 @@ public class PlayerApiService {
         }
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
+    }
+
+    public String subscriberLineup(String userToken, String curatorIdStr) {
+        NnUser curator = userMngr.findByProfileUrl(curatorIdStr);
+        if (curator == null)
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        if (curator.getToken().equals(userToken)) {
+            log.info("find channels curator himself created");
+            channels = chMngr.findByUserAndHisFavorite(curator, 0, false);
+        } else {
+            log.info("find curator channels");
+            channels = chMngr.findByUserAndHisFavorite(curator, 0, true);
+        }
+        userMngr.composeSubscriberInfoStr(channels);
+        return "";
     }
     
     //TODO rewrite
@@ -687,7 +703,7 @@ public class PlayerApiService {
         if (Integer.parseInt(grid) < 0 || Integer.parseInt(grid) > 81) {            
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }
-        url = url.trim();    
+        url = url.trim();
         //verify user
         NnUser user = userMngr.findByToken(userToken);
         if (user == null) 
