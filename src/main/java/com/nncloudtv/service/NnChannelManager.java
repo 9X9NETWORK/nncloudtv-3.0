@@ -730,15 +730,29 @@ public class NnChannelManager {
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED ||
             c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
-            NnProgramManager pMngr = new NnProgramManager();
-            List<NnProgram> programs = pMngr.findByChannelId(c.getId()); //TODO find good program
-            Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
-            for (int i=0; i<3; i++) {
-                if (i < programs.size()) {
-                   lastEpisodeTitle = programs.get(0).getName();
-                   imageUrl += "|" + programs.get(i).getImageUrl();
-                } else {
-                   i=4;
+            if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
+                NnProgramManager pMngr = new NnProgramManager();
+                List<NnProgram> programs = pMngr.findPlayerProgramsByChannel(c.getId());
+                Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
+                for (int i=0; i<3; i++) {
+                    if (i < programs.size()) {
+                       lastEpisodeTitle = programs.get(0).getName();
+                       imageUrl += "|" + programs.get(i).getImageUrl();
+                    } else {
+                       i=4;
+                    }
+                }
+            } else {
+                NnEpisodeManager eMngr = new NnEpisodeManager();
+                List<NnEpisode> episodes = eMngr.findPlayerEpisodes(c.getId());
+                Collections.sort(episodes, eMngr.getEpisodePublicSeqComparator());
+                for (int i=0; i<3; i++) {
+                    if (i < episodes.size()) {
+                       lastEpisodeTitle = episodes.get(0).getName();
+                       imageUrl += "|" + episodes.get(i).getImageUrl();
+                    } else {
+                       i=4;
+                    }
                 }
             }
         }
