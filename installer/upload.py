@@ -1,3 +1,4 @@
+import urllib, urllib2
 import shutil, os, re, sys, smtplib, commands
 import paramiko
 from email.MIMEText import MIMEText
@@ -121,4 +122,13 @@ if server == "2":
   stdin, stdout, stderr = ssh.exec_command('cd bin/v32;./deploy_all_wars.sh')
   print stdout.readlines()
   ssh.close()                                  
+  
+#---- memcache ----
+print "\n"                                                       
+answer = raw_input('Clean memcache? (1.yes 2.exit) : ')
+if answer == "1":
+   url = "http://www.9x9.tv/playerAPI/flush"                                                         
+   urllib2.urlopen(url).read()
+   print "--- cache cleaned ---"
+
   
