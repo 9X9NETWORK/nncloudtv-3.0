@@ -15,10 +15,8 @@ public class VersionController {
         String appVersion = "3.1.12.3";
         String svn = "2766";
         String packagedTime = "2012-06-01 00:04:01.456000";
-        String player = "mogwai3";
         String info = "app version: " + appVersion + "\n"; 
         info += "svn: " + svn + "\n";
-        info += "player: " + player + "\n";
         info += "packaged time: " + packagedTime + "\n";
         return NnNetUtil.textReturn(info);
     }
