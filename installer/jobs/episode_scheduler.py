@@ -65,16 +65,17 @@ for r in rows:
             update nnepisode
                set seq = %s
              where id = %s
-            """, (j, seid))                 
+            """, (j, seid))                     
          j = j + 1                     
       k = k + 1
    dbcontent.commit()                         
    i = i + 1                  
                                                                           
-dbcontent.close()         
-
-url = "http://localhost:8080/playerAPI/flush"
-urllib2.urlopen(url).read()
+dbcontent.close()    
+if i > 1:
+   print "flush cache" 
+   url = "http://localhost:8080/playerAPI/flush"
+   urllib2.urlopen(url).read()
 
 print "total episode published:" + str(i)
 print "episode re-run:" + str(k)
