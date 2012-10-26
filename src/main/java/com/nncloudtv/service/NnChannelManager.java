@@ -833,8 +833,8 @@ public class NnChannelManager {
                         "", //used to be subscriber image urls
                         lastEpisodeTitle,
                        };
-
         String output = NnStringUtil.getDelimitedStr(ori);
+        output = output.replaceAll("null", "");
         return output;
     }
 
