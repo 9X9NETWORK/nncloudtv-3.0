@@ -613,11 +613,19 @@ public class NnProgramManager {
                         p.setEndTime("");
                     }
                     audioUrl += "|" + p.getAudioFileUrl();
-                    audioUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
-                    audioUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
+                    if (audioUrl != null) {
+                        audioUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
+                        audioUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
+                    } else {
+                        audioUrl += ";;";
+                    }
                     videoUrl += "|" + p.getFileUrl();
-                    videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
-                    videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
+                    if (videoUrl != null) {
+                        videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
+                        videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
+                    } else {
+                        videoUrl += ";;";
+                    }
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
                     intro += "|" + p.getPlayerIntro();
