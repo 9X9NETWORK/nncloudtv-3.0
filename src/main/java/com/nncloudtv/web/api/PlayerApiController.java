@@ -1436,6 +1436,8 @@ public class PlayerApiController {
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req) {        
         log.info("ipgShare:" + id);        
+        return playerApiService.assembleMsgs(NnStatusCode.API_DEPRECATED, null);
+        /*
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
         try {
             this.prepService(req, true);
@@ -1445,7 +1447,8 @@ public class PlayerApiController {
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);
         }
-        return output;                        
+        return output;
+        */                        
     }
 
     /**
