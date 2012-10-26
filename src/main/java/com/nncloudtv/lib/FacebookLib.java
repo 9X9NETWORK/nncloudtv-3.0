@@ -144,10 +144,18 @@ public class FacebookLib {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line = reader.readLine();
                 reader.close();
-                log.info(line);
-                data[0] = line.split("access_token=")[1].split("&expires=")[0];
-                if (line.split("expires=").length > 0)
-                    data[1] = line.split("expires=")[1];
+                log.info("return from oauth/access_token:" + line);
+                try {
+                    if (line.contains("expires")) {
+                        data[0] = line.split("access_token=")[1].split("&expires=")[0];
+                        if (line.split("expires=").length > 0)
+                            data[1] = line.split("expires=")[1];
+                    } else {
+                        data[0] = line.split("access_token=")[1];
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 log.info("token:" + data[0]);
                 log.info("expires:" + data[1]);
             } else {
