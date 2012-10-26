@@ -1,5 +1,7 @@
 package com.nncloudtv.web;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,22 +59,37 @@ public class WatchDogController {
                 for (int i=0; i < data.length; i++) {
                     if (i == 0)  output += "channel id:";
                     if (i == 1)  output += "program id:"; 
-                    if (i == 2)  output += "name:";
+                    if (i == 2 ) output += "name:";                        
                     if (i == 3)  output += "description:";
                     if (i == 4)  output += "content type:";
                     if (i == 5)  output += "duration:";
                     if (i == 6)  output += "image url:";
                     if (i == 7)  output += "image large url:";
-                    if (i == 8)  output += "video url:";
+                    if (i == 8)  output += "video url:";                         
                     if (i == 9)  output += "url2:";
                     if (i == 10) output += "url3:";
                     if (i == 11) output += "audior url:";
                     if (i == 12) output += "last update time:";
                     if (i == 13) output += "comment:";
                     if (i == 14) output += "title card:";
-                    output += data[i] + "\n";
+                    if (data[i] != null && (i == 2 || i == 3 || i == 6 || i == 8 || i == 11)) {
+                        String sub[] = data[i].split("\\|");
+                        output += "\n";
+                        for (int j=0; j < sub.length; j++) {
+                            int index = j+1;
+                            output += "(" + index + ")" + sub[j] + "\n";
+                        }
+                    } else if (data[i] != null && i == 14) {
+                        try {
+                            output += "\n" + URLDecoder.decode(data[i], "utf-8") + "--\n";
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }                
+                    } else {   
+                        output += data[i] + "\n";
+                    }
                 }
-                output += "--\n";
+                output += "----\n";
             }
         }
                     
