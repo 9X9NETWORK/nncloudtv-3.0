@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.service.MsoManager;
+import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.PlayerApiService;
 import com.nncloudtv.web.api.NnStatusCode;
@@ -93,6 +95,51 @@ public class WatchDogController {
             }
         }
                     
+        return output;        
+    }
+
+    @RequestMapping(value="channelLineup", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String channelLineup(
+            @RequestParam(value="channel", required=false) String channel) {
+        NnChannelManager mngr = new NnChannelManager();
+        NnChannel c = mngr.findById(Long.parseLong(channel));
+        if (c == null)
+            return "channel does not exist";
+        String result = mngr.composeChannelLineupStr(c);
+        if (result == null) {
+            return "error, can't be null";
+        }
+        String[] data = result.split("\t");
+        String output = "";
+        for (int i=0; i < data.length; i++) {
+            if (i == 0)  output += "grid:";
+            if (i == 1)  output += "channel id:"; 
+            if (i == 2 ) output += "name:";                        
+            if (i == 3)  output += "description:";
+            if (i == 4)  output += "image:";
+            if (i == 5)  output += "episode count:";
+            if (i == 6)  output += "type:";
+            if (i == 7)  output += "status:";
+            if (i == 8)  output += "content type:";
+            if (i == 9)  output += "source url:";
+            if (i == 10)  output += "update time:";
+            if (i == 11)  output += "sorting:";
+            if (i == 12)  output += "piwik:";
+            if (i == 13)  output += "recently watched program:";
+            if (i == 14)  output += "youtube original name:";
+            if (i == 15)  output += "subscriber count:";
+            if (i == 16)  output += "view count:";
+            if (i == 17)  output += "tag:";
+            if (i == 18)  output += "curator id:";
+            if (i == 19)  output += "curator name:";
+            if (i == 20)  output += "curator description:";
+            if (i == 21)  output += "curator image url:";
+            if (i == 22)  output += "subscriber profile urls:";
+            if (i == 23)  output += "subscriber thumbnail urls:";
+            if (i == 24)  output += "last episode title:";
+            output += data[i] + "\n";            
+        }
+        
         return output;        
     }
     
