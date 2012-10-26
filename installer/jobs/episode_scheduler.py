@@ -36,21 +36,21 @@ for r in rows:
    else:
       isPublic = False
    print "publish eid:" + str(eid) + "; its cid: " + str(cid) + ";schedule date:" + str(scheduleDate) + ";isPublic:"  
-   # update its property 
+   # update its property     
    cursor.execute("""                     
       update nnepisode                                                     
          set isPublic = true, publishDate = now(), scheduleDate = null    
        where id = %s                                    
       """, (eid))       
    if isPublic: #rerun        
-      print "--- rerun ---"
+      print "--- rerun ---"        
       cursor.execute("""  
          update nnepisode                                                     
             set seq = 1                           
           where id = %s                                    
          """, (eid))              
       # change the specific episode to seq = 1                                                    
-      cursor.execute("""
+      cursor.execute("""           
          select id, seq from nnepisode                                                                   
           where channelId = %s              
             and id != %s                             
@@ -65,12 +65,16 @@ for r in rows:
             update nnepisode
                set seq = %s
              where id = %s
-            """, (j, seid))    
-         j = j + 1 
+            """, (j, seid))                 
+         j = j + 1                     
       k = k + 1
    dbcontent.commit()                         
-   i = i + 1      
+   i = i + 1                  
                                                                           
-dbcontent.close()
+dbcontent.close()         
+
+url = "http://localhost:8080/playerAPI/flush"
+urllib2.urlopen(url).read()
+
 print "total episode published:" + str(i)
 print "episode re-run:" + str(k)
