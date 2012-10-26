@@ -649,6 +649,12 @@ public class NnProgramManager {
     }
 
     public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String audioUrl, String card) {
+        //zero file to play
+        if (videoUrl != null && videoUrl.equals("|;;"))
+            videoUrl = "";
+        if (audioUrl != null && audioUrl.equals("|;;"))
+            audioUrl = "";
+            
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
         String output = "";
