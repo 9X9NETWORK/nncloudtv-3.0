@@ -587,6 +587,7 @@ public class NnProgramManager {
                 Collections.sort(list, getProgramSeqComparator());
                 String videoUrl = "";
                 String audioUrl = "";
+                String duration = String.valueOf(e.getDuration());
                 String name = getNotPipedProgramInfoData(e.getName());
                 String imageUrl = e.getImageUrl();
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
@@ -629,6 +630,7 @@ public class NnProgramManager {
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
                     intro += "|" + p.getPlayerIntro();
+                    duration += "|" + p.getDurationInt();
                     i++;
                 }
                 /*
@@ -637,7 +639,7 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, audioUrl, card);
+                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, audioUrl, duration, card);
             }
         }
         return result;
@@ -656,7 +658,7 @@ public class NnProgramManager {
         return str;
     }
 
-    public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String audioUrl, String card) {
+    public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String audioUrl, String duration, String card) {
         //zero file to play
         if (videoUrl != null && videoUrl.equals("|;;"))
             videoUrl = "";
