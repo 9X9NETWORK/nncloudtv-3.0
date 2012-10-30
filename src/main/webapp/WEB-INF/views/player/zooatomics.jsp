@@ -349,7 +349,7 @@ soundManager.onready(function()
                 <p class="input-l-g"></p>
                 <p class="input-m-g"> 
                     <img src="${nroot}/images/icon_email.png" class="icon-set">
-                    <input class="textfield" type="text" id="return-email" value="E-mail" />
+                    <input class="textfield" type="text" id="pl-return-email" value="E-mail" />
                 </p>
                 <p class="input-r-g"></p>
             </div>
@@ -357,7 +357,7 @@ soundManager.onready(function()
                 <p class="input-l-g"></p>
                 <p class="input-m-g">
                     <img src="${nroot}/images/icon_password.png" class="icon-set">
-                    <input class="textfield" type="text" id="return-password" value="Password" />
+                    <input class="textfield" type="text" id="pl-return-password" value="Password" />
                 </p>
                 <p class="input-r-g"></p>
             </div>
@@ -1216,43 +1216,39 @@ soundManager.onready(function()
 
 
 
-<!-- signin Begin -->
+<!-- Sign In Begin--> 
 <div id="signin-layer" class="stage">
-  <div id="signin-holder"> 
+  <div id="signin-holder">
     <p class="l"></p>
-    <div class="m"> 
+    <div class="m">
       <p id="btn-signin-close"></p>
-      <div id="signin-panel-signin"> 
-        <img src="${nroot}/images/sign_in.png" class="signinpic">
+      <div id="signin-panel-signin"> <img src="${nroot}/images/sign_in.png" class="signinpic">
         <ul>
-          <li> 
-            <p class="input-l"></p> 
-            <p class="input-m">
-              <img src="${nroot}/images/icon_email.png" class="icon-set">
+          <li>
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <img src="${nroot}/images/icon_email.png" class="icon-set">
               <input class="textfield" type="text" id="return-email" value="E-mail" />
-            </p> 
-            <p class="input-r"></p>
+            </p>
+            <p class="input-r-g"></p>
           </li>
           <li>
-            <p class="input-l"></p>
-            <p class="input-m">
-              <span id="return-password-hint" class="hint">Password</span>
-              <img src="${nroot}/images/icon_password.png" class="icon-set">
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <span id="return-password-hint" class="hint">Password</span> <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="return-password" value="" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li>
             <div id="btn-home-sign-in" class="btn-white">
-              <p class="btn-white-left"></p> 
-              <p class="btn-white-middle">Sign In</p> 
+              <p class="btn-white-left"></p>
+              <p class="btn-white-middle">Sign In</p>
               <p class="btn-white-right"></p>
             </div>
           </li>
-          <li class="forgot">
-            <p><a href="#" class="under">Forgot password?</a></p>
-          </li>
           <li class="tail">
+            <div class="forgot">
+            	<p id="btn-forgot-password">Forgot password?</p>
+            </div>
             <p class="signin-email-error">Email and password do not match, please try again.</p>
             <div id="btn-home-sign-in-fb" class="btn-fb">
               <p class="btn-fb-left"></p>
@@ -1262,63 +1258,57 @@ soundManager.onready(function()
           </li>
         </ul>
       </div>
-      <div id="signin-panel-signup">
-        <img src="${nroot}/images/sign_up.png" class="signuppic">
+      <div id="signin-panel-signup"> <img src="${nroot}/images/sign_up.png" class="signuppic">
         <ul>
           <li class="h82">
-            <p class="input-l"></p>
-            <p class="input-m">
-              <img src="${nroot}/images/icon_user.png" class="icon-set">
-              <input class="textfield" type="text" id="signup-name" value="Your Name" />
-			</p>
-            <p class="input-r"></p>
-            <p class="create-p">This will be your name as other 9x9 users see you.</p>
-            <p class="create-p-error">Only can use 8-­16 English letters, number, low line. This username has already been used, please type another one.</p>
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <img src="${nroot}/images/icon_user.png" class="icon-set">
+              <input class="textfield" type="text" id="signup-name" value="User Name" />
+            </p>
+            <p class="input-r-g"></p>
+            <p class="create-p note">This will be your name as other 9x9 users see you.</p>
+            <p class="create-p-error"></p>
           </li>
-          <li> 
-            <p class="input-l"></p>
-            <p class="input-m">
-              <img src="${nroot}/images/icon_email.png" class="icon-set">
+          <li>
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <img src="${nroot}/images/icon_email.png" class="icon-set">
               <input class="textfield" type="text" id="signup-email" value="E-mail" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li>
-            <p class="input-l"></p>
-            <p class="input-m">
-              <span id="signup-password-hint" class="hint">Password</span>
-              <img src="${nroot}/images/icon_password.png" class="icon-set">
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <span id="signup-password-hint" class="hint">Password</span> <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="signup-password" value="" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li>
-            <p class="input-l"></p>
-            <p class="input-m">
-              <span id="signup-password-hint2" class="hint">Repeat Password</span>
-              <img src="${nroot}/images/icon_password.png" class="icon-set">
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <span id="signup-password-hint2" class="hint">Repeat Password</span> <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="signup-password2" value="" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li class="tail">
-            <p class="signup-message-error">This email has been used.<br>Two passwords don't match, please retype.</p>
+            <p class="signup-message-error"></p>
             <div class="signup-message">
-              <p id="signup-checkbox"></p>             
+              <p id="signup-checkbox"></p>
               <p id="signup-checkbox-txt">I have read and accepted the <a href="#" class="under">User Agreement</a> and <a href="#" class="under">Privacy Policy</a></p>
             </div>
-		    <div id="btn-home-create-account" class="btn-white">
+            <div id="btn-home-create-account" class="btn-white">
               <p class="btn-white-left"></p>
               <p class="btn-white-middle">Create My Account</p>
               <p class="btn-white-right"></p>
-            </div>	
+            </div>
           </li>
         </ul>
       </div>
     </div>
-    <p class="r"></p> </div>
+    <p class="r"></p>
+  </div>
 </div>
-<!-- signin End --> 
+<!-- Sign In End --> 
 
 
 
