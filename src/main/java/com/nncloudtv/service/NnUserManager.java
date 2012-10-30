@@ -61,7 +61,7 @@ public class NnUserManager {
         if (user == null || me == null)
             return null;
         if (me.getUsername() != null) {
-            String imageUrl = "http://graph.facebook.com/" + me.getUpdated_time() + "/picture";
+            String imageUrl = "http://graph.facebook.com/" + me.getUsername() + "/picture";
             user.setImageUrl(imageUrl);
         }
         user.setEmail(me.getId());
