@@ -1549,15 +1549,17 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        TitleCardManager titleCardMngr = new TitleCardManager();
-        NnProgramManager programMngr = new NnProgramManager();
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        List<NnProgram> programs = programMngr.findByEpisodeId(episodeId);
-        List<TitleCard> results = new ArrayList<TitleCard>();
-        
-        for (NnProgram program : programs) {
-            results.addAll(titleCardMngr.findByProgramId(program.getId()));
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            
+            notFound(resp, "Episode Not Found");
+            return null;
         }
+        
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> results = titleCardMngr.findByEpisodeId(episodeId);
         
         for (TitleCard result : results) {
             result.setMessage(NnStringUtil.revertHtml(result.getMessage()));
