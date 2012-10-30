@@ -29,8 +29,9 @@ public class TitleCardManager {
         Date now = new Date();
         card.setUpdateDate(now);
         //card.setPlayerSyntax(this.generatePlayerSyntax(card));
+        card = dao.save(card);
         new NnProgramManager().processCache(card.getChannelId());        
-        return dao.save(card);
+        return card;
     }
     
     public void delete(TitleCard card) {
