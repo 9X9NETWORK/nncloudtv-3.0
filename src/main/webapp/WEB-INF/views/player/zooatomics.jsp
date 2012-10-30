@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock35"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock37"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -30,12 +30,6 @@
 
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
 
-<!--
-<script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/jquery-ui.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/i18n/jquery-ui-i18n.min.js"></script>
--->
-
 <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
 
@@ -47,7 +41,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai9.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai10.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -121,6 +115,18 @@ soundManager.onready(function()
 </script>
 
 <title>9x9.tv</title>
+
+<style>
+.progress-titlecard {
+	width: 5%;
+	height:8px;
+	background: #666;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 32;
+}
+</style>
 
 </head>
 
@@ -246,8 +252,9 @@ soundManager.onready(function()
   <div id="video-control">
     <p id="btn-knob"></p>
     <div id="progress-bar">
-      <p id="loaded"></p>
       <p id="played"></p>
+      <ul id="titlecards"></ul>
+      <ul id="sub-ep"></ul>
     </div>
     <ul>
       <li id="btn-play"></li>
@@ -274,119 +281,163 @@ soundManager.onready(function()
 <div id="player-layer" class="stage">
   <div id="player-sidebar">
     <p id="player-sidebar-shadow"></p>
-    <div id="bar-controller">
-      <p id="bar-arrowup"></p>
-      <p id="bar-arrowdown"></p>
-    </div>
     <div id="pl-switcher">
+      <div id="popmessage-player-list">
+          <div id="popmessage-player-list-holder">
+            <p class="popmessage-left"></p>
+            <p class="popmessage-middle">Added to <span class="btn-popmessage-guide">your Guide</span>.</p>
+            <p class="popmessage-right"></p>
+          </div>
+      </div>
       <ul id="pl-menu">
-        <li id="trending">
-          <span class="manage-tip">
-            <span class="tip-top"></span>
-            <span class="tip-content">
-              <span class="tip-left"></span>
-              <span class="tip-text">Trending</span>
-              <span class="tip-right"></span> 
-            </span>  
-          </span>
+        <li id="trending" class="on">
+        	<span class="manage-tip">
+                    <span class="tip-top"></span>
+                    <span class="tip-content">
+                        <span class="tip-left"></span>
+                        <span class="tip-text">Trending</span>
+                        <span class="tip-right"></span> 
+                    </span>  
+            </span>
         </li>
-        <li id="recommendation">
-          <span class="manage-tip">
-            <span class="tip-top"></span>
-            <span class="tip-content">
-              <span class="tip-left"></span>
-              <span class="tip-text">Recommended</span>
-              <span class="tip-right"></span> 
-            </span>  
-          </span>
+        <li id="youmaylike">
+        	<span class="manage-tip">
+                    <span class="tip-top"></span>
+                    <span class="tip-content">
+                        <span class="tip-left"></span>
+                        <span class="tip-text">You May Like</span>
+                        <span class="tip-right"></span> 
+                    </span>  
+            </span>
         </li>
         <li id="myfollow1">
-          <span class="manage-tip">
-            <span class="tip-top"></span>
-            <span class="tip-content">
-              <span class="tip-left"></span>
-              <span class="tip-text">I'm Following (by Update Time)</span>
-              <span class="tip-right"></span> 
-            </span>  
+        	<span class="manage-tip">
+                    <span class="tip-top"></span>
+                    <span class="tip-content">
+                        <span class="tip-left"></span>
+                        <span class="tip-text">I'm Following (Sorted by updated time)</span>
+                        <span class="tip-right"></span> 
+                    </span>  
+            </span>
         </li>
         <li id="myfollow2">
-          <span class="manage-tip">
-            <span class="tip-top"></span>
-            <span class="tip-content">
-              <span class="tip-left"></span>
-              <span class="tip-text">I'm Following (by Channel Number)</span>
-              <span class="tip-right"></span> 
-            </span>  
-        </li>
+       		 <span class="manage-tip">
+                    <span class="tip-top"></span>
+                    <span class="tip-content">
+                        <span class="tip-left"></span>
+                        <span class="tip-text">I'm Following (Sorted by channel number)</span>
+                        <span class="tip-right"></span> 
+                    </span>  
+            </span>
         </li>
       </ul>
       <p id="pl-type">Trending Stories</p>
       <p id="pl-note">(Sorted by updated time)</p>
-      <div id="popmessage-player-list" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle">Added to <span>your Guide.</span></p><p class="popmessage-right"></p></div>
     </div>
-    <div id="pl-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
+    <div id="pl-slider" class="slider-wrap">
+      <div class="slider-vertical"></div>
+    </div>
     <div id="pl-constrain">
-    <ul id="pl-list">
-    </ul>
+      <ul id="pl-list">
+      </ul>
+    </div>
+    <div id="pl-constrain-new">
+        <p id="pl-constrain-new-top">Sign in with 9x9.tv and follow the channels you like. Share your favorite channels and a lot more.</p>
+        <div id="pl-constrain-new-holder">
+            <img src="images/sign_in.png" class="signinpic">
+            <div>
+                <p class="input-l-g"></p>
+                <p class="input-m-g"> 
+                    <img src="${nroot}/images/icon_email.png" class="icon-set">
+                    <input class="textfield" type="text" id="return-email" value="E-mail" />
+                </p>
+                <p class="input-r-g"></p>
+            </div>
+            <div>
+                <p class="input-l-g"></p>
+                <p class="input-m-g">
+                    <img src="${nroot}/images/icon_password.png" class="icon-set">
+                    <input class="textfield" type="text" id="return-password" value="Password" />
+                </p>
+                <p class="input-r-g"></p>
+            </div>
+            <div id="btn-playback-sign-in" class="btn-white">
+                <p class="btn-white-left"></p>
+                <p class="btn-white-middle">Sign In</p>
+                <p class="btn-white-right"></p>
+            </div>
+            <div id="btn-playback-forgot-password">
+                Forgot password?
+            </div>
+            <p class="error">
+                Email and password do not match, please try again.
+            </p>
+            <div id="btn-playback-sign-in-fb" class="btn-fb">
+                <p class="btn-fb-left"></p>
+                <p class="btn-fb-middle">Sign in with Facebook</p>
+                <p class="btn-fb-right"></p>
+            </div>
+	</div>
+        <p id="pl-constrain-new-bottom">Do not have an account?<span>Sign up</span></p>
+    </div>
+    <div id="pl-constrain-return">
+        <p><span>Cunnie Pan!</span></p>
+        <br/>
+        <p>Follow channels you like and watch them from your Guide.</p>
+        <br/>
+        <p><span class="btn-playback-tutorial">Show me how.</span></p>
     </div>
   </div>
-    
   <div id="player-holder">
-    <div id="player-ch-info" style="display: none">
-      <p id="ch-title"></p>
-      <p id="ep-title"></p>
-      <p id="btn-follow"><span>Follow this Channel</span></p>
-      <ul class="favorite">
-        <li class="favorite-head"></li>
-        <li class="favorite-body"><span>Favorite</span></li>
-        <li class="favorite-tail"></li>
-        <li class="favorite-bubble-left"></li>
-        <li class="favorite-bubble-center"><span style="display: none">172K</span></li>
-        <li class="favorite-bubble-right"></li>
-      </ul>
-      <div id="fb-like-container" style="display: none">
-        <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial" data-href=""></div>
+    <div id="player-ch-info">
+      <p id="ep-title">Mountain Biker gets taken out by BUCK - CRAZY Footage</p>
+      <div id="player-ep-source">
+          <p id="ch-source">&#8212; <span>Mountain Biker gets taken out by BUCK Footage Part 1</span></p>
+          <p id="curator-source">by <span>Moutain Biker's News</span></p>
+          <p id="video-source">from <span>YouTube</span></p>
       </div>
-      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle"></p><p class="popmessage-right"></p></div>
     </div>
     <p id="video-placeholder"></p>
     <div id="player-ep-bar">
       <p id="btn-ep-left"></p>
       <p id="btn-ep-right"></p>
-      <p id="player-ep-meta">
-        <span class="ep-title"></span>
-        <span class="ep-index">(0/0)</span>
-        <span>-</span>
-        <span class="ep-age"></span>
-      </p>
+      <p id="player-ep-meta"> <span class="ep-title">Mountain Biker gets taken out by BUCK - CRAZY Footage</span> </p>
       <div id="player-ep-constrain">
         <ul id="player-ep-list">
         </ul>
       </div>
     </div>
-    <div id="player-ep-source">
-      <p id="ch-source">From <span></span></p>
-      <p id="video-source">on <span>YouTube</span></p>
-      <p id="curator-source">by <span></span></p>
-    </div>
     <div id="curator-photo"><img src=""></div>
-    <div id="curator-title">
-      <span>Curator:</span>
-      <p id="curator-name"></p>
+    <div id="curator-title"> <span>Curator:</span>
+      <p id="curator-name">Moutain Biker</p>
     </div>
     <p id="curator-description" class="ellipsis multiline"><span></span></p>
-
-    <div id="bubble">
-      <p id="bubble-title">Show me more</p>
-      <p id="bubble-wording" class="ellipsis multiline"></p>
-    </div>
     <div id="flipr">
       <p id="flipr-playpause"></p>
       <p id="flipr-arrowup"></p>
       <p id="flipr-arrowdown"></p>
-      <p id="flipr-arrowleft"></p>
-      <p id="flipr-arrowright"></p>
+      <p id="flipr-arrowleft">
+      	<span class="gray-manage-tip-m-b"> 
+          <span class="gray-tip-content-m-b"> 
+            <span class="gray-tip-left-m-b"></span>
+            <span class="arrow-hint">Double-click for the next episode.</span>
+            <span class="gray-tip-right-m-b"></span> 
+          </span>
+          <span class="gray-tip-bottom"></span> 
+	</span>
+      </p>
+      <p id="flipr-arrowright">
+      	<span class="gray-manage-tip-m-b"> 
+          <span class="gray-tip-content-m-b"> 
+            <span class="gray-tip-left-m-b"></span>
+            <span class="arrow-hint">Double-click for the prev episode.</span>
+            <span class="gray-tip-right-m-b"></span> 
+          </span>
+          <span class="gray-tip-bottom"></span> 
+        </span>
+      </p>
     </div>
+    <p id="btn-follow"><span>Follow this Channel</span></p>
   </div>
 </div>
 <!-- Player Layer End -->
