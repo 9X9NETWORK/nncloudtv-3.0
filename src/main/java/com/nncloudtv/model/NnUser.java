@@ -36,9 +36,11 @@ public class NnUser implements Serializable {
     @Persistent
     private long msoId; //which mso a user belongs to
     
+    //unique key, can be a facebook id
+    //to get "email email", use getUserEmail
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
-    private String email; //unique key
+    private String email; 
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -100,6 +102,8 @@ public class NnUser implements Serializable {
     public static String GUEST_EMAIL = "guest@9x9.com";
     public static String GUEST_NAME = "Guest";
     
+    //used to store facebook account email
+    //to get "facebook id", use getUserFbId()
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String fbId;
