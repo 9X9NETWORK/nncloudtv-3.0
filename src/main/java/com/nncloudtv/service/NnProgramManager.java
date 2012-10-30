@@ -673,7 +673,7 @@ public class NnProgramManager {
                         name, 
                         intro,
                         "1", //content type, more accurate should be piped
-                        String.valueOf(e.getDuration()),
+                        duration,
                         imageUrl,
                         "", //imageLargeUrl
                         videoUrl,
