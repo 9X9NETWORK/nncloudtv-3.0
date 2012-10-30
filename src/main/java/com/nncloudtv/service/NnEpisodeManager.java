@@ -193,7 +193,7 @@ public class NnEpisodeManager {
         NnProgramManager programMngr = new NnProgramManager();
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
-        List<TitleCard> titleCards = null;
+        List<TitleCard> titleCards = titleCardMngr.findByEpisodeId(episode.getId());
         
         int totalDuration = 0;
         
@@ -210,12 +210,10 @@ public class NnEpisodeManager {
             }
             totalDuration += delta;
             
-            delta = 0;
-            titleCards = titleCardMngr.findByProgramId(program.getId());
-            for (TitleCard titleCard : titleCards) {
-                delta += titleCard.getDurationInt();
-            }
-            totalDuration += delta;
+        }
+        
+        for (TitleCard titleCard : titleCards) {
+            totalDuration += titleCard.getDurationInt();
         }
         
         return totalDuration;

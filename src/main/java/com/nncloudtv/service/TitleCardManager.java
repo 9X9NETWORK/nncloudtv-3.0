@@ -2,13 +2,17 @@ package com.nncloudtv.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.TitleCardDao;
+import com.nncloudtv.model.NnEpisode;
+import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.TitleCard;
 
 @Service
@@ -86,5 +90,34 @@ public class TitleCardManager {
     public TitleCard findByProgramIdAndType(long programId, short type) {
     
         return dao.findByProgramIdAndType(programId, type);
+    }
+    
+    public List<TitleCard> findByEpisodeId(long episodeId) {
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        List<NnProgram> programs = programMngr.findByEpisodeId(episodeId);
+        if (programs.size() == 0) {
+            return new ArrayList<TitleCard>();
+        }
+        HashMap<Long, NnProgram> programMap = new HashMap<Long, NnProgram>();
+        for (NnProgram program : programs) {
+            programMap.put(program.getId(), program);
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            return new ArrayList<TitleCard>();
+        }
+        
+        List<TitleCard> titleCardsFromEpisode = new ArrayList<TitleCard>();
+        List<TitleCard> titleCardsFromChannel = dao.findByChannel(episode.getChannelId());
+        for (TitleCard titleCard : titleCardsFromChannel) {
+            if (programMap.containsKey(titleCard.getProgramId())) {
+                titleCardsFromEpisode.add(titleCard);
+            }
+        }
+        
+        return titleCardsFromEpisode;
     }
 }
