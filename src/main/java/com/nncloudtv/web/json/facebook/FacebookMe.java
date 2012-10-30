@@ -7,7 +7,7 @@ public class FacebookMe implements Serializable {
     private static final long serialVersionUID = -314492580933897069L;
 
     private String id;
-    private String name;
+    private String name;    
     private String link;
     private String username;
     private String birthday;
@@ -16,6 +16,7 @@ public class FacebookMe implements Serializable {
     private String imageUrl;
     private String locale;
     private String updated_time;
+    private String accessToken;
     private short status;
     public static short STATUS_SUCCESS = 0;
     public static short STATUS_ERROR = 1;
@@ -98,5 +99,11 @@ public class FacebookMe implements Serializable {
         str += "locale:" + locale + "\t";
         str += "gender:" + gender + "\t";
         return str;
+    }
+    public String getAccessToken() {
+        return accessToken;
+    }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }    
 }

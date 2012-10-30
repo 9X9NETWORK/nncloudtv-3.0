@@ -118,6 +118,7 @@ public class FacebookLib {
                 mapper.configure(org.codehaus.jackson.map.DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 //StringEscapeUtils.unescapeJava(data[2])
                 FacebookMe me = mapper.readValue(line, FacebookMe.class);
+                me.setAccessToken(accessToken);
                 log.info("FACEBOOK: (me)-return:" + me.toString());                
                 return me;
             } else {

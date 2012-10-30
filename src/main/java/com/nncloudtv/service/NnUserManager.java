@@ -69,7 +69,8 @@ public class NnUserManager {
         user.setName(me.getName());
         user.setGender(me.getGender());
         user.setSphere(me.getLocale());
-        user.setDob(me.getBirthday());        
+        user.setDob(me.getBirthday());
+        user.setToken(me.getAccessToken());
         return user;
     }
     
