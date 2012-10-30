@@ -382,6 +382,13 @@ public class NnUser implements Serializable {
     public void setFbId(String fbId) {
         this.fbId = fbId;
     }
+
+    public String getUserFbId() {
+        if (this.isFbUser()) {
+            return email;
+        }
+        return null;
+    }
     
     public boolean isFbUser() {
         if (fbId != null)
