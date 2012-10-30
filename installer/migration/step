@@ -1,3 +1,43 @@
+create table nnuser_backup select * from nnuser;
+update nnuser set email=(@temp:=email), email=fbId, fbId=@temp where fbId is not null;
+delete from counter_shard where counterName like ('ch%');
+
+
+
+create index pdr_session on pdr (session);
+
+
+create index nnprogram_episodeId on nnprogram (episodeId);
+create index nnepisode_channelId on nnepisode(channelId);
+
+create index title_card_channelId on title_card(channelId);
+create index title_card_programId on title_card(programId);
+
+create index nnchannel_poolType on nnchannel(poolType);
+
+
+create index pdr_ip on pdr (ip);
+create index pdr_user_token on pdr (userToken);
+create index pdr_device_token on pdr (deviceToken);
+
+
+ALTER TABLE `nnepisode` CHANGE `publishDate` `publishDate` TIMESTAMP NULL
+alter table counter add UNIQUE KEY `counterName` (`counterName`);
+
+
+alter table nnepisode add column scheduleDate datetime;
+update nnepisode set scheduleDate = now();
+alter table nnepisode add column seq int(11) default 0;
+
+ALTER TABLE `title_card` CHANGE `playerSyntax` `playerSyntax` VARCHAR( 500 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL 
+
+insert into tag_map(id, tagId, channelId, updateDate) values(29, 4,8571,now());
+insert into tag_map(id, tagId, channelId, updateDate) values(36, 4,8816,now());
+insert into tag_map(id, tagId, channelId, updateDate) values(31, 4,8487,now());
+
+
+
+
 ================================================================
 production
 ================================================================
@@ -16,15 +56,28 @@ checkout a nncloudtv
 mysql slave
 -------------------------
 cd /var/db_backup/
-mv 20121002-nncloudtv_content.sql.bz2 content.sql.bz2
-mv 20121002-nncloudtv_nnuser1.sql.bz2 nnuser1.sql.bz2
+mv 20121004-nncloudtv_content.sql.bz2 content.sql.bz2
+mv 20121004-nncloudtv_nnuser1.sql.bz2 nnuser1.sql.bz2
                                                                                       
 sudo scp -i ~/keys/dev-west2.pem content.sql.bz2 ubuntu@dev4.9x9.tv:/home/ubuntu/files/nndb/content.sql.bz2
 sudo scp -i ~/keys/dev-west2.pem nnuser1.sql.bz2 ubuntu@dev4.9x9.tv:/home/ubuntu/files/nndb/nnuser1.sql.bz2
-
 sudo scp -i ~/keys/prod-west2.pem content.sql.bz2 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/content.sql.bz2
 sudo scp -i ~/keys/prod-west2.pem nnuser1.sql.bz2 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/nnuser1.sql.bz2
-                                                           
+sudo scp -i ~/keys/prod-west2.pem recommend.sql ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/recommend.sql    
+sudo scp -i ~/keys/prod-west2.pem faq.sql ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/faq.sql
+
+
+sudo scp -i ~/keys/prod-west2.pem 2726 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/2726
+
+mysqldump --user=root nncloudtv_content nncontent > faq.sql
+mysql -u -p nncloudtv_content < faq.sql
+
+
+mysqldump -u root -p nncloudtv_content mso > mso.sql
+sudo scp -i ~/keys/dev-west2.pem mso.sql ubuntu@dev1.9x9.tv:/home/ubuntu/files/nndb/mso.sql
+cat mso.sql | mysql nncloudtv_content -h localhost -u root -p
+
+sudo scp -i ~/keys/prod-west2.pem mso.sql ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/mso.sql
 
 -------------------------
 mysql new master
@@ -43,6 +96,9 @@ create database nncloudtv_content character set = utf8;
 
 cat content.sql | mysql nncloudtv_content -h localhost -u root -p
 cat nnuser1.sql | mysql nncloudtv_nnuser1 -h localhost -u root -p
+cat recommend.sql | mysql recommend -h localhost -u root -p
+
+cat 2726 | mysql nncloudtv_nnuser1 -h localhost -u root -p
 
 -------------------------
 use nncloudtv_content;
@@ -318,6 +374,55 @@ delete from nnuser_subscribe where userId = 37;
 delete from nnuser_subscribe_group where userId = 37;
 delete from nnuser_watched where userId = 37;
 
+delete from nnuser where id = 2229;
+delete from nnuser_subscribe where userId = 2229;
+delete from nnuser_channel_sorting where userId = 2229;
+delete from nnuser_pref where userId = 2229;
+delete from nnuser_share where userId = 2229;
+delete from nnuser_subscribe where userId = 2229;
+delete from nnuser_subscribe_group where userId = 2229;
+delete from nnuser_watched where userId = 2229;
+
+delete from nnuser where id = 2230;
+delete from nnuser_subscribe where userId = 2230;
+delete from nnuser_channel_sorting where userId = 2230;
+delete from nnuser_pref where userId = 2230;
+delete from nnuser_share where userId = 2230;
+delete from nnuser_subscribe where userId = 2230;
+delete from nnuser_subscribe_group where userId = 2230;
+delete from nnuser_watched where userId = 2230;
+
+delete from nnuser where id = 2244;
+delete from nnuser_subscribe where userId = 2244;
+delete from nnuser_channel_sorting where userId = 2244;
+delete from nnuser_pref where userId = 2244;
+delete from nnuser_share where userId = 2244;
+delete from nnuser_subscribe where userId = 2244;
+delete from nnuser_subscribe_group where userId = 2244;
+delete from nnuser_watched where userId = 2244;
+
+delete from nnuser where id = 2238;
+delete from nnuser_subscribe where userId = 2238;
+delete from nnuser_channel_sorting where userId = 2238;
+delete from nnuser_pref where userId = 2238;
+delete from nnuser_share where userId = 2238;
+delete from nnuser_subscribe where userId = 2238;
+delete from nnuser_subscribe_group where userId = 2238;
+delete from nnuser_watched where userId = 2238;
+
+delete from nnuser where id = 1454;
+delete from nnuser_subscribe where userId = 1454;
+delete from nnuser_channel_sorting where userId = 1454;
+delete from nnuser_pref where userId = 1454;
+delete from nnuser_share where userId = 1454;
+delete from nnuser_subscribe where userId = 1454;
+delete from nnuser_subscribe_group where userId = 1454;
+delete from nnuser_watched where userId = 1454;
+
+
+select id from nnuser where email = 'sandy19910937@gmail.com';
+select count(*) from nnuser_subscribe where userId=2226;
+
 alter table nnuser add UNIQUE KEY `userEmail` (`email`);
 
 use nncloudtv_content; 
@@ -341,11 +446,15 @@ update nnchannel set sphere = 'other' where sphere='world';
 
 alter table nnprogram drop column type;
 alter table nnprogram add column publishDate datetime;
-alter table nnprogram add column startTime varchar(255);
-alter table nnprogram add column endTime varchar(255);
+alter table nnprogram add column startTime varchar(255) default '0';
+alter table nnprogram add column endTime varchar(255) default '0';
 alter table nnprogram add column episodeId bigint(20) not null default 0;
+alter table nnprogram alter duration set default '0';
 update nnprogram set publishDate = updateDate;
 update nnprogram set episodeId=0;
+//update nnprogram set startTime = '0' where startTime is null;
+//update nnprogram set endTime = '0' where endTime is null;
+update nnprogram set duration = '0' where duration is null;
 
 alter table counter_shard alter count set default 0;
 alter table counter_shard alter shardNumber set default 0; 
@@ -381,7 +490,9 @@ update nnchannel set tag = '期待,心情' where id=6174;
 update nnchannel set tag = '开心,心情' where id=6175;
 update nnchannel set tag = 'radio, npr' where id=6403;
 update nnchannel set tag = '小朋友報新聞,從兒童的角度看世界' where id=7141;
-update nnprogram set seq='00000001', subSeq='00000001' where channelId in (select id from nnchannel where contentType=6) and seq = "" and subSeq=""; 
+
+update nnprogram set seq='00000001', subSeq='00000001' where channelId in (select id from nnchannel where contentType=6) and seq = "" and subSeq="";
+update nnprogram set seq='00000001', subSeq='00000001' where channelId in (select id from nnchannel where contentType=6) and seq is null and subSeq is null;
 
 delete from mso_config where id in (2,4);
 
@@ -396,6 +507,9 @@ create index nnuser1_token on nnuser (token);
 use nncloudtv_content;
 create index category_name on category (name);
 create index nnchannel_userIdStr on nnchannel (userIdStr);
+
+create index tagMap_channelId on tag_map (channelId);
+create index categoryMap_channelId on category_map (channelId);
 
 ---------------------------------------------
 use nncloudtv_nnuser2;
@@ -532,7 +646,6 @@ python channel_meta.py
 python category_cntChannel.py
 cd ../migration
 python billboard.py
-//TODO, english trending the same as chinese
 python trending.py
 //DANGER python subscribe.py
 cd ../jobs
@@ -566,8 +679,13 @@ alter table nnuser alter expires set default 0;
 //create nnuser_subscribe table
 //alter table nnuser_subscribe drop index userSubscribe;
 //alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);
+
+create index tag_map on nnuser_subscribe (seq);
+
 -----------------------------------------
 drop table nnuser_subscribe;
+create index nnuser1_subscribe_seq on nnuser_subscribe (seq);
+create index nnuser1_user_id on nnuser_subscribe (userId);
 CREATE TABLE `nnuser_subscribe` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `channelId` bigint(20) NOT NULL,
@@ -585,3 +703,29 @@ insert into nnuser_subscribe select * from nnuser_subscribe2;
 
 create nnuser_subscribe select * from nnuser_subscribe2;
 
+create nnuser_subscribe_backup select * from nnuser_subscribe;
+
+
+
+select count(*) from nnuser_subscribe where userId=2185;
+select count(*) from nnuser_subscribe where userId=2202;
+
+delete from nnuser where id = 2202;
+delete from nnuser_subscribe where userId = 2202;
+delete from nnuser_channel_sorting where userId = 2202;
+delete from nnuser_pref where userId = 2202;
+delete from nnuser_share where userId = 2202;
+delete from nnuser_subscribe where userId = 2202;
+delete from nnuser_subscribe_group where userId = 2202;
+delete from nnuser_watched where userId = 2202;
+
+
+ alter table nnuser add UNIQUE KEY `userEmail` (`email`);
+
+ 
+ SELECT 
+    EMAIL, COUNT(1)
+FROM
+    nnuser
+GROUP BY EMAIL
+HAVING COUNT(1) > 1
