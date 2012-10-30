@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.service.PlayerApiService;
@@ -31,23 +32,23 @@ public class FacebookController {
             @RequestParam(value="accessToken", required=false) String accessToken,
             @RequestParam(value="expirse", required=false) String expires                    
             ) throws IOException {
+        log.info("FACEBOOK: (login) - back from facebook page");
         NnNetUtil.logUrl(req);
-        log.info("---(fb/login) fb callback---");                                                      
-        log.info("error:" + error + ";errorReason:" + errorReason + 
-                 ";errorDescription:" + errorDescription + 
-                 ";accessToken:" + accessToken + ";stage:" + stage);
+        String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
+        log.info("FACEBOOK: (login) - our cookie:" + userCookie);                                                      
+        log.info("FACEBOOK: (login) error:" + error + ";errorReason:" + errorReason + 
+                            ";errorDescription:" + errorDescription + 
+                            ";accessToken:" + accessToken + ";stage:" + stage);
         if (code != null && accessToken == null) {
             String[] data = new FacebookLib().getOAuthAccessToken(code);
-            System.out.println("---- (fb/login)back to /fb/login ---");
+            log.info("FACEBOOK: (login) back from access token request");
             if (data[0] != null) {               
-                log.info("---- (fb/login)continue to signup with fb account ---");
+                log.info("FACEBOOK: (login) going to use data from facebook");
                 new PlayerApiService().fbSignup(data[0], data[1], req, resp);
-                log.info("---- (fb/login)finish signup with fb account ---");
+                log.info("FACEBOOK: (login) have used data from facebook to create a 9x9 account");
             }                         
         }
-        System.out.println("---- (fb/login) prepare to redirect ---");
+        log.info("FACEBOOK: (login) last step redirect to 9x9 player");
         return "redirect:/";
-        //return "redirect:/hello/world";
-        //return "redirect:/playerAPI/brandInfo";
     }
 }

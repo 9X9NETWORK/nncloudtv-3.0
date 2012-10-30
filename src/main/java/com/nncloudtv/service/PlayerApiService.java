@@ -59,6 +59,7 @@ import com.nncloudtv.model.UserInvite;
 import com.nncloudtv.validation.BasicValidator;
 import com.nncloudtv.validation.NnUserValidator;
 import com.nncloudtv.web.api.NnStatusCode;
+import com.nncloudtv.web.json.facebook.FacebookMe;
 
 @Service
 public class PlayerApiService {
@@ -181,30 +182,32 @@ public class PlayerApiService {
         return new IosService().listRecommended(lang);        
     }
     
+    //TODO move to usermanager
     public String fbSignup(String accessToken, String expires, HttpServletRequest req, HttpServletResponse resp) {
-        String[] data = new FacebookLib().getFbMe(accessToken);
-        String fbId = data[0];
-        String email = data[1]; //get from fb
-        String name = data[2];
-        String gender = data[3];
-        String locale = data[4];
-        String dob = data[5];
-        long expire = Long.parseLong(expires);
+        FacebookMe me = new FacebookLib().getFbMe(accessToken);
+
+        long expire = 0;
+        if (expires != null && expires.length() > 0)
+            expire = Long.parseLong(expires); //TODO pass to FacebookMe
         
-        NnUser user = userMngr.findByFbId(fbId);
+        NnUser user = userMngr.findByEmail(me.getId(), req);
+        log.info("find user in db from fbId:" + me.getId());
         if (user == null) {
-            System.out.println("signup with fb account:" + email);
-            user = new NnUser(email, name, fbId, accessToken);
-            user.setSphere(locale);        
-            user.setDob(dob);
-            user.setGender(gender);
+            log.info("FACEBOOK: signup with fb account:" + me.getEmail() + "(" + me.getId() + ")");
+            user = new NnUser(me.getEmail(), me.getName(), me.getId(), accessToken);
             user.setExpires(new Date().getTime() + expire);
             user.setTemp(false);
+            user = userMngr.setFbProfile(user, me);
             int status = userMngr.create(user, req, (short)0);
             if (status != NnStatusCode.SUCCESS)
                 return this.assembleMsgs(status, null);            
             userMngr.subscibeDefaultChannels(user);                            
-        }
+        } else {
+            user = userMngr.setFbProfile(user, me);            
+            log.info("FACEBOOK: original FB user login with fbId - " + user.getEmail() + ";email:" + user.getFbId());
+            userMngr.save(user);
+        }        
+        
         String[] result = {this.prepareUserInfo(user, null)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
@@ -292,6 +295,19 @@ public class PlayerApiService {
         if (user != null) {
             if (user.getEmail().equals(NnUser.GUEST_EMAIL))
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+            if (user.isFbUser()) {
+                FacebookLib lib = new FacebookLib();
+                FacebookMe me = lib.getFbMe(user.getToken());
+                if (me.getStatus() == FacebookMe.STATUS_ERROR) {
+                    log.info("FACEBOOK: access token invalid");
+                    CookieHelper.deleteCookie(resp, CookieHelper.USER);
+                    return this.assembleMsgs(NnStatusCode.USER_INVALID, null);                    
+                } else {
+                    user = userMngr.setFbProfile(user, me);
+                    log.info("reset fb info:" + user.getName());
+                }
+            }
+
             userMngr.save(user); //change last login time (ie updateTime)
         }
         String[] result = {""};
@@ -1027,7 +1043,7 @@ public class PlayerApiService {
         }        
         String[] result = {""};
         for (NnUser u : users) {
-            result[0] += u.getToken() + "\t" + u.getName() + "\t" + u.getEmail() + "\n";
+            result[0] += u.getToken() + "\t" + u.getName() + "\t" + u.getUserEmail() + "\n";
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1086,7 +1102,7 @@ public class PlayerApiService {
             map.put("s", NnStatusCode.USER_INVALID);
             return map;
         }
-        if (!guestOK && user.getEmail().equals(NnUser.GUEST_EMAIL) ) {
+        if (!guestOK && user.getUserEmail().equals(NnUser.GUEST_EMAIL) ) {
             map.put("s", NnStatusCode.USER_PERMISSION_ERROR);
             return map;
         }
@@ -1196,8 +1212,8 @@ public class PlayerApiService {
             log.info("subject:" + subject);
             log.info("content:" + body);
             NnEmail mail = new NnEmail(toEmail, toName, 
-                                       user.getEmail(), user.getName(), 
-                                       user.getEmail(), subject, body);
+                                       user.getUserEmail(), user.getName(), 
+                                       user.getUserEmail(), subject, body);
             service.sendEmail(mail, "userfeedback@9x9.tv", "userfeedback");
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
@@ -1211,9 +1227,11 @@ public class PlayerApiService {
         //verify user
         NnUser user = userMngr.findByToken(userToken);
         if (user == null) 
-            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-        if (user.getEmail().equals(NnUser.GUEST_EMAIL))
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
+        if (user.getUserEmail().equals(NnUser.GUEST_EMAIL))
             return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);        
+        if (user.isFbUser())
+            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null); 
         String[] key = items.split(",");
         String[] value = values.split(",");
         String password = "";
@@ -1302,7 +1320,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         String[] result = {""};     
         result[0] += assembleKeyValue("name", user.getName());
-        result[0] += assembleKeyValue("email", user.getEmail());
+        result[0] += assembleKeyValue("email", user.getUserEmail());
         result[0] += assembleKeyValue("description", user.getIntro());
         result[0] += assembleKeyValue("image", user.getImageUrl());
         String gender = "";
@@ -1335,7 +1353,7 @@ public class PlayerApiService {
             guestMngr.delete(guest);
         }
         EmailService service = new EmailService();
-        NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);        
+        NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getUserEmail(), subject, content);        
         service.sendEmail(mail, null, null);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
@@ -1844,7 +1862,7 @@ public class PlayerApiService {
         List<NnUser> users = userMngr.search(email, name, null);
         String[] result = {""};
         for (NnUser u : users) {
-            result[0] += u.getEmail() + "\t" + u.getName() + "\n";
+            result[0] += u.getUserEmail() + "\t" + u.getName() + "\n";
         }        
         return this.assembleMsgs(NnStatusCode.SUCCESS, result); 
     }
@@ -1875,7 +1893,7 @@ public class PlayerApiService {
         invite = new UserInviteDao().save(invite);
         String content = UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req); 
         NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE,                                   
-                                   user.getName(), user.getEmail(), UserInvite.getInviteSubject(), 
+                                   user.getName(), user.getUserEmail(), UserInvite.getInviteSubject(), 
                                    content);
         log.info("email content:" + UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req));
         service.sendEmail(mail, null, null);
@@ -1941,12 +1959,12 @@ public class PlayerApiService {
                 NnUser u = userMngr.findById(invite.getInviteeId(), invite.getShard());
                 if (u != null) {
                     String content = "";
-                    if (umap.containsKey(u.getEmail())) {
-                        content = (String)cmap.get(u.getEmail()) + ";" + c.getName();
-                        cmap.put(u.getEmail(), content);
+                    if (umap.containsKey(u.getUserEmail())) {
+                        content = (String)cmap.get(u.getUserEmail()) + ";" + c.getName();
+                        cmap.put(u.getUserEmail(), content);
                     } else {
-                        umap.put(u.getEmail(), u);
-                        cmap.put(u.getEmail(), c.getName());
+                        umap.put(u.getUserEmail(), u);
+                        cmap.put(u.getUserEmail(), c.getName());
                     }                    
                 }
             }
@@ -1956,13 +1974,13 @@ public class PlayerApiService {
         while(i.hasNext()) { 
             Map.Entry me = (Map.Entry)i.next();
             NnUser u = (NnUser) me.getValue();
-            String ch = (String) cmap.get(u.getEmail());
+            String ch = (String) cmap.get(u.getUserEmail());
             String subject = UserInvite.getNotifySubject(ch);
             String content = UserInvite.getNotifyContent(ch);
-            log.info("send to " + u.getEmail());
+            log.info("send to " + u.getUserEmail());
             log.info("subject:" + subject);
             log.info("content:" + content);
-            NnEmail mail = new NnEmail(u.getEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getEmail(), subject, content);        
+            NnEmail mail = new NnEmail(u.getUserEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getUserEmail(), subject, content);        
             new EmailService().sendEmail(mail, null, null);                        
         }         
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);

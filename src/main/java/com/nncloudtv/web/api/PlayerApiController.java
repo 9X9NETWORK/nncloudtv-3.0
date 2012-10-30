@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.memcached.MemcachedClient;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,12 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.IosService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnStatusMsg;
+import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerApiService;
 
 /**
@@ -2024,8 +2027,10 @@ public class PlayerApiController {
      * Link of facebook login
      */
     @RequestMapping(value="fbLogin")
-    public String fbLogin() {
+    public String fbLogin(HttpServletRequest req) {
         String url = FacebookLib.getDialogOAuthPath();
+        String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
+        log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;
     }
 
@@ -2055,5 +2060,22 @@ public class PlayerApiController {
                 
     }
 
+    @RequestMapping(value="resetFbProfile", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String resetFbProfile(@RequestParam(value="id", required=false) long id) {
+        NnUserManager mngr = new NnUserManager();
+        NnUser user = mngr.findById(id);
+        String output = "";
+        if (user != null) {
+            if (user.getName() != null) {
+                String name = user.getName();
+                name = StringEscapeUtils.unescapeJava(name);
+                output += name;
+                user.setName(name);
+            }
+            mngr.save(user);
+        }
+        output += "\n" + user.getName();         
+        return "name:" + output;        
+    }    
     
 }

@@ -134,9 +134,9 @@ public class NnUser implements Serializable {
 
     //for facebook
     public NnUser(String email, String name, String fbId, String fbToken) {
-        this.email = email;
+        this.email = fbId;
         this.name = name;
-        this.fbId = fbId;
+        this.fbId = email;
         this.token = fbToken;
     }
     
@@ -147,7 +147,7 @@ public class NnUser implements Serializable {
         this.name = name;
         this.type = type;
         this.msoId = msoId;
-    }
+    }        
     
     public long getId() {
         return id;
@@ -165,6 +165,13 @@ public class NnUser implements Serializable {
         return email;
     }
 
+    public String getUserEmail() {
+        if (this.isFbUser()) {
+            return fbId;
+        }
+        return email;
+    }
+    
     public void setEmail(String email) {
         this.email = email;
     }
@@ -376,4 +383,9 @@ public class NnUser implements Serializable {
         this.fbId = fbId;
     }
     
+    public boolean isFbUser() {
+        if (fbId != null)
+            return true;
+        return false;
+    }    
 }

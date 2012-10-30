@@ -959,7 +959,7 @@ public class NnChannelManager {
             return false;
         }
         
-        if ((user.getEmail() != null) && user.getEmail().equals(mail)) {
+        if ((user.getUserEmail() != null) && user.getUserEmail().equals(mail)) {
             return true;
         }
         

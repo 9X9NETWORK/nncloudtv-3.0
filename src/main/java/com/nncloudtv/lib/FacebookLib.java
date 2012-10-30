@@ -26,6 +26,7 @@ import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.web.json.facebook.FBPost;
 import com.nncloudtv.web.json.facebook.FacebookError;
+import com.nncloudtv.web.json.facebook.FacebookMe;
 import com.nncloudtv.web.json.facebook.FacebookPage;
 import com.nncloudtv.web.json.facebook.FacebookResponse;
 
@@ -74,45 +75,53 @@ public class FacebookLib {
         return result;
     }
     
-    //TODO change to json object
-    public String[] getFbMe(String accessToken) {
-        log.info("-- query facebook me --");
-        String[] data = {null, null, null, null, null, null};
+    public String getProfilePic(String username) {
         try {
-            URL url = new URL("https://graph.facebook.com/me?access_token=" + URLEncoder.encode(accessToken, "utf-8"));
+            URL url = new URL(" http://graph.facebook.com/" + username + "/picture");
+            log.info("FACEBOOK:(profile pic)-query:" + url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("GET");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = reader.readLine();
-            reader.close();
-            log.info(line);
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                data[0] = line.split("\"id\":\"")[1].split(",")[0].replace("\"", "");
-                String email = line.split("\"email\":\"")[1].split(",")[0].replace("\"", "").replace("\\u0040", "@");
-                data[1] = email;
-                try {
-                   data[2] = line.split("\"name\":\"")[1].split(",")[0].replace("\"", "");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                   data[2] = ""; 
-                }
-                try {
-                    data[3] = line.split("\"gender\":\"")[1].split(",")[0].replace("\"", "");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    data[3] = ""; 
-                }
-                try {
-                    data[4] = line.split("\"locale\":\"")[1].split(",")[0].replace("\"", "");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    data[4] = ""; 
-                }
-                try {
-                    data[5] = line.split("\"birthday\":\"")[1].split(",")[0].replace("\"", "");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    data[5] = "";
-                }
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+                String line = reader.readLine();
+                reader.close();
+                log.info(line);     
+                return line;
             } else {
-                log.info("response status:" + connection.getResponseCode() + ";" + connection.getResponseMessage());                
+                log.info("FACEBOOK: (profile pic)-response status:" + connection.getResponseCode() + " with url: " + url.toString());
+            }                
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public FacebookMe getFbMe(String accessToken) {
+        try {
+            URL url = new URL("https://graph.facebook.com/me?access_token=" + URLEncoder.encode(accessToken, "utf-8"));
+            log.info("FACEBOOK:(me)-query:" + url.toString());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+                String line = reader.readLine();
+                reader.close();
+                log.info(line);                        
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(org.codehaus.jackson.map.DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                //StringEscapeUtils.unescapeJava(data[2])
+                FacebookMe me = mapper.readValue(line, FacebookMe.class);
+                log.info("FACEBOOK: (me)-return:" + me.toString());                
+                return me;
+            } else {
+                log.info("FACEBOOK: (me)-response status:" + connection.getResponseCode() + " with url: " + url.toString());
             }
         } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -121,11 +130,12 @@ public class FacebookLib {
         } catch (IOException e) {
                 e.printStackTrace();
         }
-        return data;
+        FacebookMe me = new FacebookMe();
+        me.setStatus(FacebookMe.STATUS_ERROR);
+        return me;
     }
     
     public String[] getOAuthAccessToken(String code){
-        log.info("---- getOAuthAccessToken ----");
         String urlBase = "https://graph.facebook.com/oauth/access_token";
         String data[] = {null, null}; //token, expires
         try {
@@ -139,12 +149,12 @@ public class FacebookLib {
             connection.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(params);
-            writer.close(); 
+            writer.close();
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line = reader.readLine();
                 reader.close();
-                log.info("return from oauth/access_token:" + line);
+                log.info("FACEBOOK: (oauth)-return:" + line);
                 try {
                     if (line.contains("expires")) {
                         data[0] = line.split("access_token=")[1].split("&expires=")[0];
@@ -154,12 +164,12 @@ public class FacebookLib {
                         data[0] = line.split("access_token=")[1];
                     }
                 } catch (Exception e) {
+                    log.info("FACEBOOK: (oauth) get token error");
                     e.printStackTrace();
                 }
-                log.info("token:" + data[0]);
-                log.info("expires:" + data[1]);
+                log.info("FACEBOOK: (oauth token)-token:" + data[0] + "; expires:" + data[1]);
             } else {
-                log.info("response status:" + connection.getResponseCode());
+                log.info("FACEBOOK: (oauth token)-failed response status:" + connection.getResponseCode());
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -178,7 +188,6 @@ public class FacebookLib {
                      "&redirect_uri=" + redirectUri +
                      "&scope=" + scope +
                      "&state=" + state;
-        log.info("oauth dialog:" + url);
         return url;
     }
 

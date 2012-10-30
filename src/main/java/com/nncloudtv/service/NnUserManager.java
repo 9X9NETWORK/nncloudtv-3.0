@@ -26,6 +26,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnGuest;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.web.api.NnStatusCode;
+import com.nncloudtv.web.json.facebook.FacebookMe;
 
 @Service
 public class NnUserManager {
@@ -56,6 +57,22 @@ public class NnUserManager {
         return NnStatusCode.SUCCESS;
     }
 
+    public NnUser setFbProfile(NnUser user, FacebookMe me) {
+        if (user == null || me == null)
+            return null;
+        if (me.getUsername() != null) {
+            String imageUrl = "http://graph.facebook.com/" + me.getUpdated_time() + "/picture";
+            user.setImageUrl(imageUrl);
+        }
+        user.setEmail(me.getId());
+        user.setFbId(me.getEmail());
+        user.setName(me.getName());
+        user.setGender(me.getGender());
+        user.setSphere(me.getLocale());
+        user.setDob(me.getBirthday());        
+        return user;
+    }
+    
     //TODO replace name with none-digit/characters
     public String generateProfile(String name) {
     	String profile = RandomStringUtils.randomNumeric(10);
@@ -179,8 +196,10 @@ public class NnUserManager {
     }    
     
     //TODO able to assign shard
+    //find by email means find by unique id
     public NnUser findByEmail(String email, HttpServletRequest req) {
         short shard= NnUserManager.getShardByLocale(req);
+        log.info("find by email:" + email.toLowerCase());
         return dao.findByEmail(email.toLowerCase(), shard);
     }
     

@@ -39,6 +39,7 @@ public class YouTubeLib {
      *    http://www.youtube.com/profile?user=<usrid>
      * 3. merge the following youtube playlist formats to one, http://www.youtube.com/view_play_list?p=<pid>
      *    http://www.youtube.com/view_play_list?p=<pid>
+     *    http://www.youtube.com/playlist?list=PL03D59E2ECDDA66DF
      *    http://www.youtube.com/user/UCBerkeley#p/c/<pid>
      *    http://www.youtube.com/user/UCBerkeley#g/c/<pid>
      *    http://www.youtube.com/user/UCBerkeley#p/c/<pid>/0/-dQltKG3NlI
@@ -99,6 +100,14 @@ public class YouTubeLib {
         while (m.find()) {
             url = "http://www.youtube.com/view_play_list?p=" + m.group(6);
         }
+        // http://www.youtube.com/playlist?list=03D59E2ECDDA66DF
+        reg = "^(http|https)://?(www.)?youtube.com/playlist?list=(\\w+)";
+        pattern = Pattern.compile(reg);
+        m = pattern.matcher(urlStr);
+        while (m.find()) {
+            url = "http://www.youtube.com/view_play_list?p=" + m.group(4);
+        }
+
         
         if (url != null) { 
             url = url.toLowerCase();
