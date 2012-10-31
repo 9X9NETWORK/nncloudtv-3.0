@@ -590,6 +590,7 @@ public class NnProgramManager {
                 String duration = String.valueOf(e.getDuration());
                 String name = getNotPipedProgramInfoData(e.getName());
                 String imageUrl = e.getImageUrl();
+                String imageLargeUrl = e.getImageUrl();
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
                 String card = "";
                 String contentType = "";
@@ -632,6 +633,7 @@ public class NnProgramManager {
                     }                    
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
+                    imageLargeUrl += "|" + p.getImageLargeUrl();
                     intro += "|" + p.getPlayerIntro();
                     duration += "|" + p.getDurationInt();
                     contentType += "|" + p.getContentType();
@@ -643,7 +645,7 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, audioUrl, duration, card, contentType);
+                result += composeEpisodeInfoStr(e, name, intro, imageUrl, imageLargeUrl, videoUrl, audioUrl, duration, card, contentType);
             }
         }
         return result;
@@ -664,7 +666,7 @@ public class NnProgramManager {
 
     public String composeEpisodeInfoStr(NnEpisode e, 
              String name, String intro, 
-             String imageUrl, String videoUrl, String audioUrl, 
+             String imageUrl, String imageLargeUrl, String videoUrl, String audioUrl, 
              String duration, String card,
              String contentType) {
         //zero file to play
@@ -688,7 +690,7 @@ public class NnProgramManager {
                         contentType,
                         duration,
                         imageUrl,
-                        "", //imageLargeUrl
+                        imageLargeUrl, //imageLargeUrl
                         videoUrl,
                         "", //url2
                         "", //url3
