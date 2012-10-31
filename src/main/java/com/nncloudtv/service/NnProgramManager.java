@@ -586,7 +586,6 @@ public class NnProgramManager {
             if (list != null && list.size() > 0) {
                 Collections.sort(list, getProgramSeqComparator());
                 String videoUrl = "";
-                String audioUrl = "";
                 String duration = String.valueOf(e.getDuration());
                 String name = getNotPipedProgramInfoData(e.getName());
                 String imageUrl = e.getImageUrl();
@@ -615,22 +614,16 @@ public class NnProgramManager {
                         p.setStartTime("");
                         p.setEndTime("");
                     }
-                    //audioUrl += "|" + p.getAudioFileUrl();                    
-                    audioUrl += p.getAudioFileUrl() == null ? "|" : "|" + p.getAudioFileUrl();                    
-                    if (audioUrl != null && audioUrl.length() > 0) {
-                        audioUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
-                        audioUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
-                    } else {
-                        audioUrl += ";;";
-                    }
-                    //videoUrl += "|" + p.getFileUrl();
-                    videoUrl += p.getFileUrl() == null ? "|" : "|" + p.getFileUrl();
-                    if (videoUrl != null && videoUrl.length() > 0) {
-                        videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
-                        videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
-                    } else {
-                        videoUrl += ";;";
-                    }                    
+                    String f1 = p.getFileUrl();
+                    if (p.getAudioFileUrl() != null)
+                        f1 = p.getAudioFileUrl();
+                    log.info("f1:" + f1);
+                    videoUrl += "|" + f1;
+                    String d1 = (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
+                    String d2 = (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
+                    videoUrl += d1;
+                    videoUrl += d2;
+                    log.info("video url :" + videoUrl);
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
                     imageLargeUrl += "|" + p.getImageLargeUrl();
@@ -645,7 +638,7 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                result += composeEpisodeInfoStr(e, name, intro, imageUrl, imageLargeUrl, videoUrl, audioUrl, duration, card, contentType);
+                result += composeEpisodeInfoStr(e, name, intro, imageUrl, imageLargeUrl, videoUrl, duration, card, contentType);
             }
         }
         return result;
@@ -666,20 +659,10 @@ public class NnProgramManager {
 
     public String composeEpisodeInfoStr(NnEpisode e, 
              String name, String intro, 
-             String imageUrl, String imageLargeUrl, String videoUrl, String audioUrl, 
+             String imageUrl, String imageLargeUrl, String videoUrl, 
              String duration, String card,
              String contentType) {
-        //zero file to play
-        if (videoUrl != null && videoUrl.length() == 3) //|;;                                                 
-            videoUrl = "";
-        if (audioUrl != null && audioUrl.length() == 3) //|;;
-            audioUrl = "";
-        if (audioUrl != null && audioUrl.length() > 0) {
-            log.info("put audio url in video field:" + audioUrl);
-            videoUrl = audioUrl;
-            audioUrl = "";
-        }
-            
+        //zero file to play            
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
         String output = "";
@@ -694,7 +677,7 @@ public class NnProgramManager {
                         videoUrl,
                         "", //url2
                         "", //url3
-                        audioUrl, //audio file           
+                        "", //audio file           
                         String.valueOf(e.getUpdateDate().getTime()),
                         "", //comment
                         card};
