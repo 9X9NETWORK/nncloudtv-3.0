@@ -917,7 +917,7 @@ public class NnChannelManager {
         } else {
             NnEpisodeManager episodeMngr = new NnEpisodeManager();
             String filter = "channelId == " + channel.getId();
-            List<NnEpisode> episodes = episodeMngr.list(1, 50, "updateDate", "desc", filter);
+            List<NnEpisode> episodes = episodeMngr.list(1, 50, "seq", "asc", filter);
             
             for (int i = 0; i < episodes.size() && imgs.size() < 3; i++) {
                 
