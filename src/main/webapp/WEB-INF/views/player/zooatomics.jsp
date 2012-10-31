@@ -264,18 +264,17 @@ soundManager.onready(function()
         <p id="volume-bar"></p>
         <p id="btn-dragger"></p>
       </li>
-      <!--li id="left-edge"></li>
+      <li id="left-edge"></li>
       <li id="btn-favorite">
         <span class="gray-manage-tip-m"> 
           <span class="gray-tip-top"></span> 
           <span class="gray-tip-content-m"> 
             <span class="gray-tip-left-m"></span>
-              <span class="favorite-content">This episode has been added to your favorite channel</span>
-              <span class="btn-share-fb"></span>
+              <span class="favorite-content">Click to add this to your Favorites</span>
             <span class="gray-tip-right-m"></span>
           </span>
         </span> 
-      </li-->
+      </li>
       <li id="left-edge"></li>
       <li id="btn-like">
         <div id="fb-like-container">
