@@ -264,8 +264,24 @@ soundManager.onready(function()
         <p id="volume-bar"></p>
         <p id="btn-dragger"></p>
       </li>
+      <!--li id="left-edge"></li>
+      <li id="btn-favorite">
+        <span class="gray-manage-tip-m"> 
+          <span class="gray-tip-top"></span> 
+          <span class="gray-tip-content-m"> 
+            <span class="gray-tip-left-m"></span>
+              <span class="favorite-content">This episode has been added to your favorite channel</span>
+              <span class="btn-share-fb"></span>
+            <span class="gray-tip-right-m"></span>
+          </span>
+        </span> 
+      </li-->
       <li id="left-edge"></li>
-      <li id="btn-shopping"></li>
+      <li id="btn-like">
+        <div id="fb-like-container">
+        </div>
+      </li>
+      <li id="left-edge"></li>
       <li id="btn-expand"></li>
       <li id="btn-shrink"></li>
       <li id="play-time">
@@ -1037,44 +1053,38 @@ soundManager.onready(function()
 </div>
 <!-- Setting Layer End --> 
 
+
 <!-- Setting Layer Change password Begin-->
 <div id="settings-change-layer">
-  <div id="settings-change-holder"> 
+  <div id="settings-change-holder">
     <p class="l"></p>
-    <div class="m"> 
+    <div class="m">
       <p id="btn-change-close"></p>
-      <div id="settings-panel-change"> 
-        <img src="${nroot}/images/change_password.png" class="changepic">
+      <div id="settings-panel-change"> <img src="${nroot}/images/change_password.png" class="changepic">
         <ul>
-          <li> 
-            <p class="input-l"></p>
-            <p class="input-m-set">
-              <span class="hint">Old Password</span>
-              <img src="${nroot}/images/icon_password.png" class="icon-set">
+          <li>
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <span class="hint">Old Password</span> <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="settings-old-pw" value="" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li>
-            <p class="input-l"></p>
-            <p class="input-m-set">
-              <span class="hint">New Password</span>
-              <img src="${nroot}/images/icon_password.png" class="icon-set">
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <span class="hint">New Password</span> <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="settings-new-pw1" value="" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li>
-            <p class="input-l"></p>
-            <p class="input-m-set">
-              <span class="hint">Repeat New Password</span>
-              <img src="${nroot}/images/icon_password.png" class="icon-set">
+            <p class="input-l-g"></p>
+            <p class="input-m-g"> <span class="hint">Repeat New Password</span> <img src="${nroot}/images/icon_password.png" class="icon-set">
               <input class="textfield" type="password" id="settings-new-pw2" value="" />
             </p>
-            <p class="input-r"></p>
+            <p class="input-r-g"></p>
           </li>
           <li>
-            <p class="passwor-incorrect">Old password is incorrect.<br>Two passwords don't match, please retype.</p>
+            <p class="passwor-incorrect"></p>
           </li>
           <div id="btn-change-return-password" class="btn-white">
             <p class="btn-white-left"></p>
@@ -1093,6 +1103,7 @@ soundManager.onready(function()
   </div>
 </div>
 <!-- Setting Layer Change password End --> 
+
 
 <!-- Settings notification Begin-->
 <div id="settings-notification-layer"  class="stage">
