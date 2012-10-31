@@ -32,6 +32,7 @@ import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnStatusMsg;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.json.facebook.FacebookMe;
 
 /**
  * This is API specification for 9x9 Player. Please note although the document is written in JavaDoc form, it is generic Web Service API via HTTP request-response, no Java necessary.
@@ -2060,8 +2061,8 @@ public class PlayerApiController {
                 
     }
 
-    @RequestMapping(value="resetFbProfile", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String resetFbProfile(@RequestParam(value="id", required=false) long id) {
+    @RequestMapping(value="resetFbName", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String resetFbName(@RequestParam(value="id", required=false) long id) {
         NnUserManager mngr = new NnUserManager();
         NnUser user = mngr.findById(id);
         String output = "";
@@ -2077,5 +2078,26 @@ public class PlayerApiController {
         output += "\n" + user.getName();         
         return "name:" + output;        
     }    
+
+    @RequestMapping(value="resetFbPic", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String resetFbPic(@RequestParam(value="id", required=false) long id) {
+        NnUserManager mngr = new NnUserManager();
+        NnUser user = mngr.findById(id);
+        String output = "";
+        if (user != null) {
+            FacebookLib lib = new FacebookLib();
+            FacebookMe me = lib.getFbMe(user.getToken());
+            if (me.getStatus() == FacebookMe.STATUS_SUCCESS) {
+                String imageUrl = "http://graph.facebook.com/" + me.getUsername() + "/picture";
+                user.setImageUrl(imageUrl);
+                log.info("fb token still valid:" + user.getId());
+                mngr.save(user);
+            } else {
+                log.info("fb token valid no more:" + user.getId());
+            }
+        }
+        output += "\n" + user.getName();         
+        return "name:" + output;
+    }
     
 }
