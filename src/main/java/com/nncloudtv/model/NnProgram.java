@@ -50,6 +50,10 @@ public class NnProgram implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String imageUrl;
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String imageLargeUrl;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -189,6 +193,14 @@ public class NnProgram implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }    
+
+    public String getImageLargeUrl() {
+        return imageLargeUrl;
+    }
+
+    public void setImageLargeUrl(String imageLargeUrl) {
+        this.imageLargeUrl = imageLargeUrl;
     }
 
     public Date getCreateDate() {
