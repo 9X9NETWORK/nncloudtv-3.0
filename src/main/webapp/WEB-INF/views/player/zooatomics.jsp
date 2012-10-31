@@ -265,6 +265,9 @@ soundManager.onready(function()
         <p id="btn-dragger"></p>
       </li>
       <li id="left-edge"></li>
+      <li id="btn-expand"></li>
+      <li id="btn-shrink"></li>
+      <li id="left-edge"></li>
       <li id="btn-favorite">
         <span class="gray-manage-tip-m"> 
           <span class="gray-tip-top"></span> 
@@ -280,9 +283,6 @@ soundManager.onready(function()
         <div id="fb-like-container">
         </div>
       </li>
-      <li id="left-edge"></li>
-      <li id="btn-expand"></li>
-      <li id="btn-shrink"></li>
       <li id="play-time">
         <span id="played-length">0:14</span><span class="divider">/</span><span id="total-length">3:25</span>
       </li>
@@ -411,6 +411,7 @@ soundManager.onready(function()
           <p id="curator-source">by <span>Moutain Biker's News</span></p>
           <p id="video-source">from <span>YouTube</span></p>
       </div>
+      <div id="popmessage-player-info" style="display: none"><p class="popmessage-left"></p><p class="popmessage-middle"></p><p class="popmessage-right"></p></div>
     </div>
     <p id="video-placeholder"></p>
     <div id="player-ep-bar">
