@@ -1230,8 +1230,6 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         if (user.getUserEmail().equals(NnUser.GUEST_EMAIL))
             return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);        
-        if (user.isFbUser())
-            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null); 
         String[] key = items.split(",");
         String[] value = values.split(",");
         String password = "";
@@ -1248,10 +1246,17 @@ public class PlayerApiService {
             dic.add(valid[i]);
         }
         for (int i=0; i<key.length; i++) {
-            if (!dic.contains(key[i])) {
+           if (!dic.contains(key[i])) {
                 log.info("contains not valid key value!");
                 return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
             }
+           if (user.isFbUser()) {
+               if (!key[i].equals("sphere") && !key[i].equals("ui-lang")) {
+                   log.info("fbuser: not permitted key:" + key);
+                   return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
+               }
+               log.info("fbuser: otherwise key:" + key);
+           }
             String theValue = value[i];
             try {
                 theValue = URLDecoder.decode(theValue, "utf-8");
