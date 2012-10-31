@@ -162,6 +162,7 @@ public class FacebookLib {
                         if (line.split("expires=").length > 0)
                             data[1] = line.split("expires=")[1];
                     } else {
+                        log.info("FACEBOOK: (oauth)-return does NOT have expires");
                         data[0] = line.split("access_token=")[1];
                     }
                 } catch (Exception e) {
