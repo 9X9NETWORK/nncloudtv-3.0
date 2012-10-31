@@ -1192,7 +1192,7 @@ public class PlayerApiService {
         NnUserReportManager reportMngr = new NnUserReportManager();
         String[] result = {""};        
         NnUserReport report = reportMngr.save(user, device, session, type, item, content);
-        if (report != null) {
+        if (report != null && user != null) {
             result[0] = PlayerApiService.assembleKeyValue("id", String.valueOf(report.getId()));
             EmailService service = new EmailService();
             String toEmail = "feedback@9x9.tv";
