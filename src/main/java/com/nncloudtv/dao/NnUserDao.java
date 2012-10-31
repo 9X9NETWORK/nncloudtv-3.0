@@ -31,8 +31,8 @@ public class NnUserDao extends GenericDao<NnUser> {
             String sql = "";
             if (generic != null) {
                 sql = "select * from nnuser " + 
-                       "where lower(name) like lower('%" + generic + "%') " +  
-                       "   or lower(intro) like lower('%" + generic + "%')";
+                       "where lower(name) like lower(\"%" + generic + "%\") " +  
+                       "   or lower(intro) like lower(\"%" + generic + "%\")";                              
             } else {
                sql = "select * from nnuser " + "where ";                      
                if (email != null) {

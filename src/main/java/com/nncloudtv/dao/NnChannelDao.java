@@ -68,8 +68,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         try {
             String sql = 
                 "select * from nnchannel " +
-                 "where (lower(name) like lower('%" + queryStr + "%')" +   
-                    "|| lower(intro) like lower('%" + queryStr + "%'))";
+                 "where (lower(name) like lower(\"%" + queryStr + "%\")" +
+                    "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
             if (!all) {
                 sql += " and status = " + NnChannel.STATUS_SUCCESS;
                 sql += " and isPublic = true";
