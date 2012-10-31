@@ -430,16 +430,21 @@ public class NnChannel implements Serializable {
         this.cntSubscribe = cntSubscribe;
     }
 
-    public int getCntView() {        
-        String name = "v_ch" + id;        
-        String result = (String)CacheFactory.get(name);
-        if (result != null) {
-            return Integer.parseInt(result);
+    public int getCntView() {      
+        try {
+            String name = "v_ch" + id;        
+            String result = (String)CacheFactory.get(name);
+            if (result != null) {
+                return Integer.parseInt(result);
+            }
+            log.info("cnt view not in the cache:" + name);
+            CounterFactory factory = new CounterFactory();
+            cntView = factory.getCount(name); 
+            CacheFactory.set(name, String.valueOf(cntView));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
-        log.info("cnt view not in the cache:" + name);
-        CounterFactory factory = new CounterFactory();
-        cntView = factory.getCount(name); 
-        CacheFactory.set(name, String.valueOf(cntView));
         return cntView;
     }
     
@@ -547,15 +552,20 @@ public class NnChannel implements Serializable {
     }
 
     public int getCntVisit() {
-        String name = "u_ch" + id;        
-        String result = (String)CacheFactory.get(name);
-        if (result != null) {
-            return Integer.parseInt(result);
+        try {
+            String name = "u_ch" + id;        
+            String result = (String)CacheFactory.get(name);
+            if (result != null) {
+                return Integer.parseInt(result);
+            }
+            log.info("cnt view not in the cache:" + name);
+            CounterFactory factory = new CounterFactory();
+            cntVisit = factory.getCount(name); 
+            CacheFactory.set(name, String.valueOf(cntVisit));
+        } catch (Exception e){
+            e.printStackTrace();
+            return 0;
         }
-        log.info("cnt view not in the cache:" + name);
-        CounterFactory factory = new CounterFactory();
-        cntVisit = factory.getCount(name); 
-        CacheFactory.set(name, String.valueOf(cntVisit));
         return cntVisit;
     }
 
