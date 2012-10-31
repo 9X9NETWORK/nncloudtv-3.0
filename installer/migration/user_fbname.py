@@ -20,11 +20,13 @@ rows = cursor.fetchall()
 i = 0
 for r in rows:
    uid = r[0]
-   url = "http://localhost:8080/playerAPI/resetFbProfile?id=" + str(uid)
+   url = "http://localhost:8080/playerAPI/resetFbName?id=" + str(uid)
    print url
    urllib2.urlopen(url).read()
+   url = "http://localhost:8080/playerAPI/resetFbPic?id=" + str(uid)
+   urllib2.urlopen(url).read()
+   print url
    i = i + 1
- 
 
 dbuser.commit()
 cursor.close ()
