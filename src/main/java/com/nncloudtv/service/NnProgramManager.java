@@ -592,6 +592,7 @@ public class NnProgramManager {
                 String imageUrl = e.getImageUrl();
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
                 String card = "";
+                String contentType = "";
                 int i=1;
                 for (NnProgram p : list) { //sub-episodes
                     String cardKey1 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_BEGIN); 
@@ -613,24 +614,27 @@ public class NnProgramManager {
                         p.setStartTime("");
                         p.setEndTime("");
                     }
-                    audioUrl += "|" + p.getAudioFileUrl();
-                    if (audioUrl != null) {
+                    //audioUrl += "|" + p.getAudioFileUrl();                    
+                    audioUrl += p.getAudioFileUrl() == null ? "|" : "|" + p.getAudioFileUrl();                    
+                    if (audioUrl != null && audioUrl.length() > 0) {
                         audioUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
                         audioUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
                     } else {
                         audioUrl += ";;";
                     }
-                    videoUrl += "|" + p.getFileUrl();
-                    if (videoUrl != null) {
+                    //videoUrl += "|" + p.getFileUrl();
+                    videoUrl += p.getFileUrl() == null ? "|" : "|" + p.getFileUrl();
+                    if (videoUrl != null && videoUrl.length() > 0) {
                         videoUrl += (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
                         videoUrl += (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
                     } else {
                         videoUrl += ";;";
-                    }
+                    }                    
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
                     intro += "|" + p.getPlayerIntro();
                     duration += "|" + p.getDurationInt();
+                    contentType += "|" + p.getContentType();
                     i++;
                 }
                 /*
@@ -639,7 +643,7 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, audioUrl, duration, card);
+                result += composeEpisodeInfoStr(e, name, intro, imageUrl, videoUrl, audioUrl, duration, card, contentType);
             }
         }
         return result;
@@ -658,12 +662,21 @@ public class NnProgramManager {
         return str;
     }
 
-    public String composeEpisodeInfoStr(NnEpisode e, String name, String intro, String imageUrl, String videoUrl, String audioUrl, String duration, String card) {
+    public String composeEpisodeInfoStr(NnEpisode e, 
+             String name, String intro, 
+             String imageUrl, String videoUrl, String audioUrl, 
+             String duration, String card,
+             String contentType) {
         //zero file to play
-        if (videoUrl != null && videoUrl.equals("|;;"))
+        if (videoUrl != null && videoUrl.length() == 3) //|;;                                                 
             videoUrl = "";
-        if (audioUrl != null && audioUrl.equals("|;;"))
+        if (audioUrl != null && audioUrl.length() == 3) //|;;
             audioUrl = "";
+        if (audioUrl != null && audioUrl.length() > 0) {
+            log.info("put audio url in video field:" + audioUrl);
+            videoUrl = audioUrl;
+            audioUrl = "";
+        }
             
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
@@ -672,7 +685,7 @@ public class NnProgramManager {
                         "e" + String.valueOf(e.getId()), 
                         name, 
                         intro,
-                        "1", //content type, more accurate should be piped
+                        contentType,
                         duration,
                         imageUrl,
                         "", //imageLargeUrl

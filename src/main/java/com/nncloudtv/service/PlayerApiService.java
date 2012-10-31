@@ -151,7 +151,7 @@ public class PlayerApiService {
             output += assembleKeyValue("userid", String.valueOf(user.getIdStr()));
             output += assembleKeyValue("curator", String.valueOf(user.getProfileUrl()));
             String fbUser = "0";
-            if (user.getFbId() != null)
+            if (user.isFbUser())
                 fbUser = "1";
             output += assembleKeyValue("fbUser", fbUser);
             NnUserPrefManager prefMngr = new NnUserPrefManager();

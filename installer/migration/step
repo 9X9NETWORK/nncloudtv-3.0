@@ -1,5 +1,8 @@
 create table nnuser_backup select * from nnuser;
 update nnuser set email=(@temp:=email), email=fbId, fbId=@temp where fbId is not null;
+create index nnguest_token on nnguest (token);
+
+
 delete from counter_shard where counterName like ('ch%');
 
 
