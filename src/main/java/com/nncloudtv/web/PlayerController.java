@@ -146,12 +146,7 @@ public class PlayerController {
             isIos = true;
             
         }
-        /*
-        if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
-            log.info("request from ios");
-            isIos = true;
-        }
-        */
+        isIos = true;
         try {
             PlayerService service = new PlayerService();
             String queryStr = req.getQueryString();
@@ -170,14 +165,16 @@ public class PlayerController {
                     if (cid != null)
                         iosStr += pid != null ? "&ep=" + pid : "";
                     log.info("ios redirect url:" + iosStr);
-                    return "redirect:" + iosStr;
-                }                
+                    model.addAttribute("fliprUrl", iosStr);
+                    return "player/ios";
+                    //return "redirect:" + iosStr;
+                }
                 String str = js != null ? "js=" + js : "";
                 str += str.length() != 0 ? "&" : "";
                 str += cid != null ? "#!ch=" + cid : "";
                 str += cid != null ? "" : "#";
                 str += pid != null ? "!ep=" + pid : "";
-                log.info("redirect to url:" + str);                    
+                log.info("redirect to url:" + str);
                 return "redirect:/" + str;
             }
             String cid = channel != null ? channel : ch;
