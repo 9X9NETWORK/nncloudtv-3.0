@@ -52,7 +52,7 @@ public class NnProgramManager {
         program.setUpdateDate(now);
         program.setChannelId(channel.getId());
         dao.save(program);
-        this.processCache(channel.getId());
+        resetCache(channel.getId());
         
         //!!!!! clean plus "hook, auto share to facebook"
         //set channel count
@@ -97,7 +97,7 @@ public class NnProgramManager {
         
         log.info("channel count = " + channelIds.size());
         for (Long channelId : channelIds) {
-            processCache(channelId);
+            resetCache(channelId);
         }
         
         return programs;
@@ -117,7 +117,7 @@ public class NnProgramManager {
         program.setUpdateDate(now);
         program = dao.save(program);
         
-        this.processCache(program.getChannelId());
+        resetCache(program.getChannelId());
         
         return program;
     }
@@ -138,7 +138,7 @@ public class NnProgramManager {
     public void delete(NnProgram program) {
         long cId = program.getChannelId();
         dao.delete(program);
-        this.processCache(cId);
+        resetCache(cId);
     }
     
     public void delete(List<NnProgram> programs) {
@@ -160,7 +160,7 @@ public class NnProgramManager {
         
         log.info("channel count = " + channelIds.size());
         for (Long channelId : channelIds) {
-            processCache(channelId);
+            resetCache(channelId);
         }
     }
     
@@ -222,7 +222,15 @@ public class NnProgramManager {
     public List<NnProgram> findByChannelIdAndSeq(long channelId, Short seq) {
         return dao.findByChannelAndSeq(channelId, NnStringUtil.seqToStr(seq));
     }
+    
+    public void resetCache(long channelId) {
         
+        if (CacheFactory.isRunning) {
+            log.info("reset program info cache: " + channelId);
+            CacheFactory.delete(getCacheKey(channelId));
+        }
+    }
+    
     public void processCache(long channelId) {
         String cacheKey = this.getCacheKey(channelId);        
         NnChannel c = new NnChannelManager().findById(channelId);

@@ -907,7 +907,7 @@ public class ApiContent extends ApiGeneric {
         
         if (page > 0 && rows > 0) {
             
-            results = episodeMngr.list(page, rows, null, null, "channelId == " + channelId);
+            results = episodeMngr.list(page, rows, "seq", "asc", "channelId == " + channelId);
             
         } else {
             
@@ -924,7 +924,7 @@ public class ApiContent extends ApiGeneric {
         results.removeAll(needPopulateSeq);
         episodeMngr.populateEpisodesSeq(needPopulateSeq);
         results.addAll(needPopulateSeq);
-        Collections.sort(results, episodeMngr.getEpisodePublicSeqComparator());
+        Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
         
         for (NnEpisode episode : results) {
             

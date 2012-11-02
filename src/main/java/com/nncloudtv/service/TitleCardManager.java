@@ -30,7 +30,7 @@ public class TitleCardManager {
         card.setUpdateDate(now);
         //card.setPlayerSyntax(this.generatePlayerSyntax(card));
         card = dao.save(card);
-        new NnProgramManager().processCache(card.getChannelId());        
+        new NnProgramManager().resetCache(card.getChannelId());        
         return card;
     }
     
@@ -39,16 +39,32 @@ public class TitleCardManager {
             return;
         }
         dao.delete(card);
-        new NnProgramManager().processCache(card.getChannelId());
+        new NnProgramManager().resetCache(card.getChannelId());
     }
     
-    public void delete(List<TitleCard> titlecards) {    
+    public void delete(List<TitleCard> titlecards) {
+        
         if (titlecards == null || titlecards.size() == 0) {
             return;
-        }        
+        }
+        
+        List<Long> channelIds = new ArrayList<Long>();
+        
+        for (TitleCard titlecard : titlecards) {
+            
+            if (channelIds.indexOf(titlecard.getChannelId()) < 0) {
+                channelIds.add(titlecard.getChannelId());
+            }
+        }
+        
         dao.deleteAll(titlecards);
-        //assumption: multiple titlecards operation will have the same channel id 
-        new NnProgramManager().processCache(titlecards.get(0).getChannelId());
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        
+        log.info("channel count = " + channelIds.size());
+        for (Long channelId : channelIds) {
+            programMngr.resetCache(channelId);
+        }
     }
     
     public List<TitleCard> findByProgramId(long programId) {

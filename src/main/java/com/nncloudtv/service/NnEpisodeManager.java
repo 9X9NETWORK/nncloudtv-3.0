@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -27,6 +28,8 @@ public class NnEpisodeManager {
         
         episode.setUpdateDate(now);
         
+        new NnProgramManager().resetCache(episode.getChannelId());
+        
         return dao.save(episode);
         
     }
@@ -34,9 +37,21 @@ public class NnEpisodeManager {
     public List<NnEpisode> save(List<NnEpisode> episodes) {
         
         Date now = new Date();
+        List<Long> channelIds = new ArrayList<Long>();
         
         for (NnEpisode episode : episodes) {
             episode.setUpdateDate(now);
+            
+            if (channelIds.indexOf(episode.getChannelId()) < 0) {
+                channelIds.add(episode.getChannelId());
+            }
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        
+        log.info("channel count = " + channelIds.size());
+        for (Long channelId : channelIds) {
+            programMngr.resetCache(channelId);
         }
         
         return dao.saveAll(episodes);
@@ -55,6 +70,8 @@ public class NnEpisodeManager {
             save(episode);
             
             reorderChannelEpisodes(episode.getChannelId());
+            
+            return episode;
         }
         
         log.info("publishDate = " + episode.getPublishDate());
@@ -175,6 +192,7 @@ public class NnEpisodeManager {
     
     public void delete(NnEpisode episode) {
     
+        new NnProgramManager().resetCache(episode.getChannelId());
         dao.delete(episode);
     }
     
