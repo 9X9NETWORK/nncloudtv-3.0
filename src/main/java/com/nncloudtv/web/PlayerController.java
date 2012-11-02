@@ -140,10 +140,18 @@ public class PlayerController {
                        @RequestParam(value="ep", required=false) String ep) {
         boolean isIos = false;
         String userAgent = req.getHeader("user-agent");
+        log.info("user agent:" + userAgent);
+        if (userAgent.contains("iPhone") || userAgent.contains("iPad")) {
+            log.info("request from ios");
+            isIos = true;
+            
+        }
+        /*
         if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
             log.info("request from ios");
             isIos = true;
         }
+        */
         try {
             PlayerService service = new PlayerService();
             String queryStr = req.getQueryString();
@@ -162,7 +170,7 @@ public class PlayerController {
                     if (cid != null)
                         iosStr += pid != null ? "&ep=" + pid : "";
                     log.info("ios redirect url:" + iosStr);
-                    return "redirect:/" + iosStr;
+                    return "redirect:" + iosStr;
                 }                
                 String str = js != null ? "js=" + js : "";
                 str += str.length() != 0 ? "&" : "";
