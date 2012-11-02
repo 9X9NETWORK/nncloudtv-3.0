@@ -142,7 +142,6 @@ public class NnUserDao extends GenericDao<NnUser> {
         } finally {
             pm.close();
         }
-        System.out.println("?????????????");
         return user;
     }
     

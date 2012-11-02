@@ -242,6 +242,33 @@ public class PlayerApiController {
         return output;
     }    
     
+    @RequestMapping(value="fbSignup", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String fbSignup(HttpServletRequest req, HttpServletResponse resp) {
+        FacebookMe me = new FacebookMe();
+        
+        me.setId(req.getParameter("id"));
+        me.setName(req.getParameter("name"));
+        me.setUsername(req.getParameter("username"));
+        me.setBirthday(req.getParameter("birthday"));
+        me.setEmail(req.getParameter("email"));
+        me.setLocale(req.getParameter("locale"));
+        me.setAccessToken(req.getParameter("token"));
+        String expire = req.getParameter("expire");
+
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        
+        try {
+            this.prepService(req, true);
+            output = playerApiService.fbDeviceSignup(me, expire, req, resp);
+        } catch (Exception e){
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+            
+     }
+    
     /**
      * Verify user token <br/>
      * Example: http://host:port/playerAPI/userTokenVerify?token=QQl0l208W2C4F008980F
@@ -829,8 +856,6 @@ public class PlayerApiController {
         log.info("player input - userToken=" + userToken+ "; url=" + url + 
                  ";grid=" + grid + ";categoryId=" + categoryIds +
                  ";rx=" + rx + ";tags" + tags + ";lang=" + lang);
-        return playerApiService.assembleMsgs(NnStatusCode.API_DEPRECATED, null);
-        /*
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
         try {
             int status = this.prepService(req, true);
@@ -844,7 +869,6 @@ public class PlayerApiController {
             NnLogUtil.logThrowable(t);
         }
         return output;
-        */        
     }
 
     /**
@@ -1218,7 +1242,7 @@ public class PlayerApiController {
      * @return
      */
     @RequestMapping(value="forgotPassword", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String setUserProfile(
+    public @ResponseBody String forgotPassword(
             @RequestParam(value="email", required=false)String email,
             HttpServletRequest req,
             HttpServletResponse resp) {        
@@ -1245,8 +1269,8 @@ public class PlayerApiController {
      * @return
      */
     @RequestMapping(value="resetPassword", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String setUserProfile(
-    		@RequestParam(value="email", required=false)String email,
+    public @ResponseBody String resetPassword(
+            @RequestParam(value="email", required=false)String email,
             @RequestParam(value="token", required=false)String token,
             @RequestParam(value="password", required=false)String password,
             HttpServletRequest req,

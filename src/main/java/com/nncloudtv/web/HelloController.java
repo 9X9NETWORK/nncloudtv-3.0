@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.QueueFactory;
@@ -29,6 +30,7 @@ import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.PdrManager;
 import com.nncloudtv.web.json.facebook.FBPost;
 import com.nncloudtv.web.json.facebook.FacebookError;
+import com.nncloudtv.web.json.facebook.FacebookMe;
 import com.nncloudtv.web.json.transcodingservice.ChannelInfo;
  
 @Controller
@@ -69,9 +71,12 @@ public class HelloController {
             HttpServletRequest req) {
         EmailService service = new EmailService();
         NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, "share 9x9", NnEmail.SEND_EMAIL_SHARE, "hello", "world");
+        mail.setBody("<h1>hello</h1>");
+        mail.setHtml(true);
         service.sendEmail(mail, null, null);
+        
         return "email sent";
-    }            
+    }
         
     //db test
     @RequestMapping("pdr")
@@ -206,6 +211,30 @@ public class HelloController {
         QueueFactory.add("/CMSAPI/postToFacebook", fbPost);
         
         return NnNetUtil.textReturn("OK");
+    }
+    
+    @RequestMapping("fbMe")
+    public ResponseEntity<String> fbMe(HttpServletRequest req) {
+        FacebookLib lib = new FacebookLib();
+        String accessToken = "AAAF7oZCnYjt4BAArGAWMX5GUOuXooF60R3L8ZAqAfFHZAUAq9CAZBXDmCjEip1g6Ok7llSU3cg84ARGUeFoilJx3HMeHpNRlBcRKXpz71gZDZD";
+        //String accessToken = "AAAF7oZCnYjt4BAArGAWMX5GUOuXooF60R3L8ZAqAfFHZAUAq9CAZBXDmC";
+        FacebookMe me = lib.getFbMe(accessToken);
+        String output = me.getEmail();
+        output += "\n" + me.getId(); //get from fb
+        output += "\n" + me.getName();
+        output += "\n" + me.getGender();
+        output += "\n" + me.getLocale();
+        output += "\n" + me.getBirthday();
+        output += "\n" + me.getStatus();
+        return NnNetUtil.textReturn(output);
+    }
+
+    @RequestMapping("fbPic")
+    public String fbPic(HttpServletRequest req) {
+        return "hello/hello";
+//        FacebookLib lib = new FacebookLib();
+//        String output = lib.getProfilePic("ywntseng");
+//        return NnNetUtil.textReturn(output);
     }
     
 }

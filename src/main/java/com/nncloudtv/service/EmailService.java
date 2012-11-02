@@ -20,15 +20,15 @@ import com.nncloudtv.model.NnEmail;
  */
 @Service
 public class EmailService {
-        
+
     //TODO change
     public void sendEmail(NnEmail email, String bcc, String bccName) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "ec2-50-112-96-199.us-west-2.compute.amazonaws.com"); 
         Session session = Session.getDefaultInstance(props, null);
         
-        try {
-            Message msg = new MimeMessage(session);
+        try {            
+            MimeMessage msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(email.getSendEmail(), email.getSendName()));
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email.getToEmail(), email.getToName()));
             if (bcc != null)
@@ -37,7 +37,12 @@ public class EmailService {
             Address addrs[] = {addr};
             msg.setReplyTo(addrs);
             msg.setSubject(email.getSubject());
-            msg.setText(email.getBody());
+            if (email.isHtml()) {
+                //msg.setContent("<h1>Hello</h1>", "text/html");
+                msg.setContent(email.getBody(), "text/html");
+            } else {
+                msg.setText(email.getBody());
+            }
             Transport.send(msg);
         } catch (Exception e) {
             NnLogUtil.logException(e);

@@ -138,21 +138,40 @@ public class PlayerController {
                        @RequestParam(value="jsp",required=false) String jsp,
                        @RequestParam(value="ch", required=false) String ch,
                        @RequestParam(value="ep", required=false) String ep) {
+        boolean isIos = false;
+        String userAgent = req.getHeader("user-agent");
+        if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
+            log.info("request from ios");
+            isIos = true;
+        }
+        isIos = true;
         try {
             PlayerService service = new PlayerService();
             String queryStr = req.getQueryString();
             log.info("query str:" + queryStr);
-            //#!ch=x!ep=y
             if (queryStr != null && queryStr.contains("fb")) {
                 log.info("extra stuff from fb" + queryStr);
                 String cid = channel != null ? channel : ch;
                 String pid = episode != null ? episode : ep;
+                if (isIos) {
+                    //http://www.9x9.tv/flview?ch=572&ep=pVf0dc15igo&fb_action_ids=10151150850017515%2C10151148373067515%2C10151148049832515%2C10151148017797515%2C10151140220097515&fb_action_types=og.likes&fb_source=other_multiline&action_object_map=%7B%2210151150850017515%22%3A369099836508025%2C%2210151148373067515%22%3A518842601477880%2C%2210151148049832515%22%3A486192988067672%2C%2210151148017797515%22%3A374063942680087%2C%2210151140220097515%22%3A209326199200849%2C%2210151140216042515%22%3A361904300567180%7D
+                    //to flipr://www.9x9.tv/view?ch=572&ep=pVf0dc15igo                    
+                    String root = NnNetUtil.getUrlRoot(req);
+                    root = root.replace("http://", "");
+                    String iosStr = "flipr://" + root;
+                    iosStr += cid != null ? "/view?ch=" + cid : "";
+                    if (cid != null)
+                        iosStr += pid != null ? "&ep=" + pid : "";
+                    log.info("ios redirect url:" + iosStr);
+                    return "hello/hello";
+                    //return "redirect:/" + iosStr;
+                }                
                 String str = js != null ? "js=" + js : "";
                 str += str.length() != 0 ? "&" : "";
                 str += cid != null ? "#!ch=" + cid : "";
                 str += cid != null ? "" : "#";
                 str += pid != null ? "!ep=" + pid : "";
-                log.info("redirect to url:" + str);
+                log.info("redirect to url:" + str);                    
                 return "redirect:/" + str;
             }
             String cid = channel != null ? channel : ch;

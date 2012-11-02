@@ -19,6 +19,8 @@ public class NnEmail {
     private String subject;
     
     private String body;
+    
+    private boolean isHtml;
 
     public NnEmail(String toEmail, String toName, 
     		       String senderEmail, String senderName, 
@@ -93,6 +95,14 @@ public class NnEmail {
 
     public void setReplyToEmail(String replyToEmail) {
         this.replyToEmail = replyToEmail;
-    }    
+    }
+
+    public boolean isHtml() {
+        return isHtml;
+    }
+
+    public void setHtml(boolean isHtml) {
+        this.isHtml = isHtml;
+    }
     
 }

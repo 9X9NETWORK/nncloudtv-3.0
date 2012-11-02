@@ -182,10 +182,11 @@ public class PlayerApiService {
         return new IosService().listRecommended(lang);        
     }
     
-    //TODO move to usermanager
-    public String fbSignup(String accessToken, String expires, HttpServletRequest req, HttpServletResponse resp) {
-        FacebookMe me = new FacebookLib().getFbMe(accessToken);
-
+    public String fbDeviceSignup(FacebookMe me, String expire, HttpServletRequest req, HttpServletResponse resp) {
+        return this.fbSignup(me, expire, req, resp);
+    }
+    
+    private String fbSignup(FacebookMe me, String expires, HttpServletRequest req, HttpServletResponse resp) {
         long expire = 0;
         if (expires != null && expires.length() > 0)
             expire = Long.parseLong(expires); //TODO pass to FacebookMe
@@ -194,14 +195,14 @@ public class PlayerApiService {
         log.info("find user in db from fbId:" + me.getId());
         if (user == null) {
             log.info("FACEBOOK: signup with fb account:" + me.getEmail() + "(" + me.getId() + ")");
-            user = new NnUser(me.getEmail(), me.getName(), me.getId(), accessToken);
+            user = new NnUser(me.getEmail(), me.getName(), me.getId(), me.getAccessToken());
             user.setExpires(new Date().getTime() + expire);
             user.setTemp(false);
             user = userMngr.setFbProfile(user, me);
             int status = userMngr.create(user, req, (short)0);
             if (status != NnStatusCode.SUCCESS)
                 return this.assembleMsgs(status, null);            
-            userMngr.subscibeDefaultChannels(user);                            
+            userMngr.subscibeDefaultChannels(user);
         } else {
             user = userMngr.setFbProfile(user, me);            
             log.info("FACEBOOK: original FB user login with fbId - " + user.getEmail() + ";email:" + user.getFbId());
@@ -211,7 +212,12 @@ public class PlayerApiService {
         String[] result = {this.prepareUserInfo(user, null)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+    }
         
+    //TODO move to usermanager
+    public String fbWebSignup(String accessToken, String expires, HttpServletRequest req, HttpServletResponse resp) {
+        FacebookMe me = new FacebookLib().getFbMe(accessToken);
+        return this.fbSignup(me, expires, req, resp);
     }
     
     public String signup(String email, String password, String name, String token,
@@ -1555,8 +1561,25 @@ public class PlayerApiService {
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
-        String phrase = email + "&" + userMngr.forgotPwdToken(user);
-        log.info("phrase:" + phrase);
+        if (user.isFbUser())
+            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
+        
+
+        EmailService service = new EmailService();
+        String link = NnNetUtil.getUrlRoot(req) + "/#!resetPassword!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);        
+        log.info("link:" + link);
+        String subject = "Forgotten Password";
+        String sentense = "<p>To reset the password, click on the link or copy and paste the following link into the address bar of your browser</p>";
+        String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";
+
+        NnEmail mail = new NnEmail(
+                email, user.getName(), 
+                NnEmail.SEND_EMAIL_SHARE, "noreply", NnEmail.SEND_EMAIL_SHARE,                                     
+                subject, body);
+        
+        mail.setHtml(true);
+        service.sendEmail(mail, null, null);
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
@@ -1565,13 +1588,20 @@ public class PlayerApiService {
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
-        if (userMngr.forgotPwdToken(user) == token) {
+        String forgotPwdToken = userMngr.forgotPwdToken(user);
+        log.info("forgotPwdToken:" + forgotPwdToken + ";token user passes:" + token);
+        if (forgotPwdToken.equals(token)) {
             user.setPassword(password);
             userMngr.resetPassword(user);
+            userMngr.save(user);
+            log.info("reset password success:" + user.getEmail());
+        } else {
+            log.info("reset password token mismatch");
+            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
-    
+
     public String search(String text, String stack, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);

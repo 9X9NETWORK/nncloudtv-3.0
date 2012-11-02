@@ -44,7 +44,7 @@ public class FacebookController {
             log.info("FACEBOOK: (login) back from access token request");
             if (data[0] != null) {               
                 log.info("FACEBOOK: (login) going to use data from facebook");
-                new PlayerApiService().fbSignup(data[0], data[1], req, resp);
+                new PlayerApiService().fbWebSignup(data[0], data[1], req, resp);
                 log.info("FACEBOOK: (login) have used data from facebook to create a 9x9 account");
             }                         
         }
