@@ -144,7 +144,6 @@ public class PlayerController {
             log.info("request from ios");
             isIos = true;
         }
-        isIos = true;
         try {
             PlayerService service = new PlayerService();
             String queryStr = req.getQueryString();
@@ -163,8 +162,7 @@ public class PlayerController {
                     if (cid != null)
                         iosStr += pid != null ? "&ep=" + pid : "";
                     log.info("ios redirect url:" + iosStr);
-                    return "hello/hello";
-                    //return "redirect:/" + iosStr;
+                    return "redirect:/" + iosStr;
                 }                
                 String str = js != null ? "js=" + js : "";
                 str += str.length() != 0 ? "&" : "";
