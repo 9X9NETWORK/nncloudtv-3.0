@@ -209,6 +209,13 @@ public class PlayerService {
         if (m.find()) {            
             youtubeEp = m.group(2);
             episodeShare = true;
+        }
+        pattern = Pattern.compile("(ep=)(e\\d+)");
+        m = pattern.matcher(escaped);
+        if (m.find()) {            
+            ep = m.group(2);
+            episodeShare = true;
+            youtubeEp = null;
         }        
         if (ch == null) {
             pattern = Pattern.compile("^\\d+$");
@@ -236,44 +243,74 @@ public class PlayerService {
                 model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
                 model.addAttribute("fbName", NnStringUtil.htmlSafeChars(c.getName()));
                 model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));
-                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getOneImageUrl()));                
-                NnProgramManager programMngr = new NnProgramManager();
-                List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
-                if (programs.size() > 0) {
-                    int i=1;                    
-                    if (ep == null)
-                        ep = String.valueOf(programs.get(0).getId());
-                    for (NnProgram p : programs) {
+                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getOneImageUrl()));  
+
+                if (ep != null && ep.startsWith("e")) {
+                    ep = ep.replaceFirst("e", "");
+                    NnEpisodeManager episodeMngr = new NnEpisodeManager(); 
+                    List<NnEpisode> episodes = episodeMngr.findPlayerEpisodes(c.getId());
+                    int i = 1;                    
+                    for (NnEpisode e : episodes) {
                         if (i > 1 && i < 4) {
-                            model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
-                            System.out.println("crawlEpThumb" + i + ":" + p.getImageUrl());
+                            model.addAttribute("crawlEpThumb" + i, e.getImageUrl());
+                            System.out.println("crawlEpThumb" + i + ":" + e.getImageUrl());
                             i++;
                         }
-                        if (p.getId() == Long.parseLong(ep)) {
-                            model.addAttribute("crawlVideoThumb", p.getImageUrl());
-                            model.addAttribute("crawlEpisodeTitle", p.getName());
-                            model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
-                            if (episodeShare)
-                               model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(p.getIntro()));
+                        if (e.getId() == Long.parseLong(ep)) {
+                            model.addAttribute("crawlVideoThumb", e.getImageUrl());
+                            model.addAttribute("crawlEpisodeTitle", e.getName());
+                            model.addAttribute("crawlEpThumb" + i, e.getImageUrl());
+                            if (episodeShare) {
+                               model.addAttribute("fbName", NnStringUtil.htmlSafeChars(e.getName()));   
+                               model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(e.getIntro()));
+                            }
                             i++;
                         }
                         if (i == 4) {
                             break;
                         }
+                    }            
+                } else {
+                    NnProgramManager programMngr = new NnProgramManager();
+                    List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(c.getId());
+                    if (programs.size() > 0) {
+                        int i=1;                    
+                        if (ep == null)
+                            ep = String.valueOf(programs.get(0).getId());
+                        for (NnProgram p : programs) {
+                            if (i > 1 && i < 4) {
+                                model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+                                System.out.println("crawlEpThumb" + i + ":" + p.getImageUrl());
+                                i++;
+                            }
+                            if (p.getId() == Long.parseLong(ep)) {
+                                model.addAttribute("crawlVideoThumb", p.getImageUrl());
+                                model.addAttribute("crawlEpisodeTitle", p.getName());
+                                model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
+                                if (episodeShare) {
+                                   model.addAttribute("fbName", NnStringUtil.htmlSafeChars(p.getName()));
+                                   model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(p.getIntro()));
+                                }
+                                i++;
+                            }
+                            if (i == 4) {
+                                break;
+                            }
+                        }
+                    } else {                    
+                        if (youtubeEp != null) {
+                            Map<String, String> result = YouTubeLib.getYouTubeVideo(youtubeEp);
+                            model.addAttribute("crawlEpisodeTitle", result.get("title"));
+                            model.addAttribute("crawlVideoThumb", result.get("imageUrl"));
+                            model.addAttribute("crawlEpThumb1", result.get("imageUrl"));
+                            model.addAttribute("crawlEpThumb2", result.get("imageUrl"));
+                            model.addAttribute("crawlEpThumb3", result.get("imageUrl"));
+                        }
                     }
-                } else {                    
-                    if (youtubeEp != null) {
-                        Map<String, String> result = YouTubeLib.getYouTubeVideo(youtubeEp);
-                        model.addAttribute("crawlEpisodeTitle", result.get("title"));
-                        model.addAttribute("crawlVideoThumb", result.get("imageUrl"));
-                        model.addAttribute("crawlEpThumb1", result.get("imageUrl"));
-                        model.addAttribute("crawlEpThumb2", result.get("imageUrl"));
-                        model.addAttribute("crawlEpThumb3", result.get("imageUrl"));
+                    if (episodeShare) {
+                        model.addAttribute("fbName", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlEpisodeTitle")));
+                        model.addAttribute("fbImg", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlVideoThumb")));
                     }
-                }
-                if (episodeShare) {
-                    model.addAttribute("fbName", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlEpisodeTitle")));
-                    model.addAttribute("fbImg", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlVideoThumb")));
                 }
             }
         }
