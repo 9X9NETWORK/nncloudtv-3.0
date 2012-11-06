@@ -26,6 +26,8 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
         try {
             pm.makePersistent(sub);
             sub = pm.detachCopy(sub);
+        } catch (javax.jdo.JDODataStoreException e) {
+            
         } finally {
             pm.close();
         }

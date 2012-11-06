@@ -758,24 +758,20 @@ public class PlayerApiService {
         
         //subscribe
         NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-        NnUserSubscribe s = subMngr.subscribeChannel(user, channel.getId(), Short.parseShort(grid), MsoIpg.TYPE_GENERAL);
+        subMngr.subscribeChannel(user, channel.getId(), Short.parseShort(grid), MsoIpg.TYPE_GENERAL);
         String result[] = {""};
-        if (s != null) {
-            return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);
-        } else {
-            String channelName = "";
-            //!!!!! make it function
-            if (channel.getSourceUrl() != null && channel.getSourceUrl().contains("http://www.youtube.com"))
-                channelName = YouTubeLib.getYouTubeChannelName(channel.getSourceUrl());
-            if (channel.getContentType() == NnChannel.CONTENTTYPE_FACEBOOK) 
-                channelName = channel.getSourceUrl();            
-            String output[]= {String.valueOf(channel.getId()),                             
-                              channel.getName(),
-                              channel.getImageUrl(),
-                              String.valueOf(channel.getContentType()),
-                              channelName};
-            result[0] = NnStringUtil.getDelimitedStr(output);
-        }        
+        String channelName = "";
+        if (channel.getSourceUrl() != null && channel.getSourceUrl().contains("http://www.youtube.com"))
+            channelName = YouTubeLib.getYouTubeChannelName(channel.getSourceUrl());
+        if (channel.getContentType() == NnChannel.CONTENTTYPE_FACEBOOK) 
+            channelName = channel.getSourceUrl();            
+        String output[]= {String.valueOf(channel.getId()),                             
+                          channel.getName(),
+                          channel.getImageUrl(),
+                          String.valueOf(channel.getContentType()),
+                          channelName};
+        result[0] = NnStringUtil.getDelimitedStr(output);
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
@@ -1566,7 +1562,7 @@ public class PlayerApiService {
         
 
         EmailService service = new EmailService();
-        String link = NnNetUtil.getUrlRoot(req) + "/#!resetPassword!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);        
+        String link = NnNetUtil.getUrlRoot(req) + "/#!resetpwd!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);        
         log.info("link:" + link);
         String subject = "Forgotten Password";
         String sentense = "<p>To reset the password, click on the link or copy and paste the following link into the address bar of your browser</p>";
@@ -1583,7 +1579,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String resetPassword(String email, String token, String password, HttpServletRequest req) {
+    public String resetpwd(String email, String token, String password, HttpServletRequest req) {
         NnUser user = userMngr.findByEmail(email, req);
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);

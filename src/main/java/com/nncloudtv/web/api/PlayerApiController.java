@@ -1268,8 +1268,8 @@ public class PlayerApiController {
      * @param password
      * @return
      */
-    @RequestMapping(value="resetPassword", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String resetPassword(
+    @RequestMapping(value="resetpwd", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String resetpwd(
             @RequestParam(value="email", required=false)String email,
             @RequestParam(value="token", required=false)String token,
             @RequestParam(value="password", required=false)String password,
@@ -1282,7 +1282,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
             }
-            output = playerApiService.resetPassword(email, token, password, req);
+            output = playerApiService.resetpwd(email, token, password, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

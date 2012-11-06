@@ -83,8 +83,7 @@ public class PlayerController {
             model = service.preparePlayer(model, js, jsp);
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
-            }
-            //String prefLanguage = req.getHeader("Accept-Language");        
+            }        
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);
         }
