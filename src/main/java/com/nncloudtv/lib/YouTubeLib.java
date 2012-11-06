@@ -278,12 +278,9 @@ public class YouTubeLib {
             }
             if (!channel) {                
                 results.put("title", feed.title);
-                System.out.println("------------" + feed.title + "----------");
-                System.out.println("------------" + feed.subtitle + "----------");
-                System.out.println("------------" + feed.logo + "----------");
-                System.out.println("-------author-----" + feed.author + "----------");
                 results.put("author", feed.author);
                 results.put("description", feed.description);
+                log.info("play list title:" + feed.title + "; author:" + feed.author + "; description:" + feed.description);
             }
         } catch (IOException e) {
             results.put("status", String.valueOf(NnStatusCode.ERROR));
