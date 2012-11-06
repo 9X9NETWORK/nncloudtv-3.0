@@ -1241,8 +1241,8 @@ public class PlayerApiController {
      * @param email
      * @return
      */
-    @RequestMapping(value="forgotPassword", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String forgotPassword(
+    @RequestMapping(value="forgotpwd", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String forgotpwd(
             @RequestParam(value="email", required=false)String email,
             HttpServletRequest req,
             HttpServletResponse resp) {        
@@ -1253,7 +1253,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
             }
-            output = playerApiService.forgotPassword(email, req);
+            output = playerApiService.forgotpwd(email, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

@@ -1552,7 +1552,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String forgotPassword(String email, HttpServletRequest req) {
+    public String forgotpwd(String email, HttpServletRequest req) {
         NnUser user = userMngr.findByEmail(email, req);
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
