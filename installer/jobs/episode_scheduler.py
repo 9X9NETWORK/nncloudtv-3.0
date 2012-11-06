@@ -31,18 +31,18 @@ for r in rows:
    scheduleDate = r[2]                                                                 
    isPublic = r[3]                     
    print 'Success' if isPublic == '\x00' else 'Fail'
-   if isPublic == '\x00':           
-      isPublic = True
-   else:
+   if isPublic == '\x00':  
       isPublic = False
-   print "publish eid:" + str(eid) + "; its cid: " + str(cid) + ";schedule date:" + str(scheduleDate) + ";isPublic:"  
+   else:
+      isPublic = True
+   print "publish eid:" + str(eid) + "; its cid: " + str(cid) + ";schedule date:" + str(scheduleDate) + ";isPublic:" + str(isPublic)  
    # update its property     
    cursor.execute("""                     
       update nnepisode                                                     
          set isPublic = true, publishDate = now(), scheduleDate = null    
        where id = %s                                    
       """, (eid))       
-   if isPublic: #rerun        
+   if isPublic == True:  #rerun    
       print "--- rerun ---"        
       cursor.execute("""  
          update nnepisode                                                     
