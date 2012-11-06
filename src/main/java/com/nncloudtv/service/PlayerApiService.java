@@ -747,8 +747,9 @@ public class PlayerApiService {
         }
         
         //create a new channel
+        lang = this.checkLang(lang);
         if (channel == null) {
-            channel = chMngr.create(url, null, req);
+            channel = chMngr.create(url, null, lang, req);
             if (channel == null) {
                 return this.assembleMsgs(NnStatusCode.CHANNEL_URL_INVALID, null);
             }            

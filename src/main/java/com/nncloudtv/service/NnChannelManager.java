@@ -21,7 +21,6 @@ import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.lib.PiwikLib;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
 import com.nncloudtv.model.CategoryMap;
@@ -45,7 +44,7 @@ public class NnChannelManager {
     private NnChannelDao dao = new NnChannelDao();
     private CategoryMapDao catMapDao = new CategoryMapDao();
     
-    public NnChannel create(String sourceUrl, String name, HttpServletRequest req) {
+    public NnChannel create(String sourceUrl, String name, String lang, HttpServletRequest req) {
         if (sourceUrl == null) 
             return null;
         String url = this.verifyUrl(sourceUrl);
@@ -77,8 +76,10 @@ public class NnChannelManager {
                 String youtubeName = YouTubeLib.getYouTubeChannelName(url);
                 if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL) {
                     info = YouTubeLib.getYouTubeEntry(youtubeName, true);
+                    info.put("type", "channel");
                 } else {
                     info = YouTubeLib.getYouTubeEntry(youtubeName, false);
+                    info.put("type", "playlist");
                 }
                 if (!info.get("status").equals(String.valueOf(NnStatusCode.SUCCESS)))
                     return null;
@@ -94,9 +95,20 @@ public class NnChannelManager {
                     channel.setIntro(info.get("description"));
                 if (info.get("thumbnail") != null)
                     channel.setImageUrl(info.get("thumbnail"));
-            }            
+                if (info.get("author") == null) {
+                    log.info("channel can't find author:" + youtubeName + ";url:" + sourceUrl);
+                    channel.setPublic(false);
+                }
+                NnUserManager mngr = new NnUserManager();
+                NnUser user = mngr.createFakeYoutube(info, req);
+                channel.setUserIdStr(user.getIdStr());
+            }
         }
         channel.setPublic(false);
+        channel.setLang(lang);
+        Date now = new Date();
+        channel.setCreateDate(now);
+        channel.setUpdateDate(now);
         channel = this.save(channel);
         if (channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
             channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
@@ -105,10 +117,12 @@ public class NnChannelManager {
         }
         
         // piwik
+        /*
         if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
             channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {            
             PiwikLib.createPiwikSite(channel.getId());
-        }        
+        } 
+        */       
         return channel;
     }
 

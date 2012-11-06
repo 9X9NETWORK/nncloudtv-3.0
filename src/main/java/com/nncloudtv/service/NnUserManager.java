@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnGuest;
@@ -57,6 +59,30 @@ public class NnUserManager {
         return NnStatusCode.SUCCESS;
     }
 
+    public NnUser createFakeYoutube(Map<String, String> info, HttpServletRequest req) {
+        String name = info.get("author");
+        if (name == null)
+            return null;
+        String imageUrl = info.get("thumbnail");
+        if (info.get("type").equals("playlist")) {
+            System.out.println("author???:" + name);
+            Map<String, String> authorData = YouTubeLib.getYouTubeEntry(name, true);
+            imageUrl = authorData.get("thumbnail");
+        }
+        String email = name + "@9x9.tv";
+        NnUser user = this.findByEmail(email, req);
+        if (user != null)
+            return user;
+        user = new NnUser(email, "9x9x9x", name, NnUser.TYPE_FAKE_YOUTUBE);        
+        user.setShard((short)1);
+        user.setMsoId(1);
+        user.setProfileUrl(name);
+        user.setImageUrl(imageUrl);
+        user = this.save(user);
+        log.info("fake youtube user created:" + email);
+        return user;
+    }
+    
     public NnUser setFbProfile(NnUser user, FacebookMe me) {
         if (user == null || me == null)
             return null;

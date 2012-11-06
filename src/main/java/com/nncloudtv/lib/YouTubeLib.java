@@ -52,6 +52,7 @@ public class YouTubeLib {
      *    http://www.youtube.com/davidbrucehughes#g/a
      *    http://www.youtube.com/user/davidbrucehughes#g/p
      * Example2: they should all become http://www.youtube.com/user/view_play_list?p=03D59E2ECDDA66DF
+     *    http://www.youtube.com/playlist?list=PL03D59E2ECDDA66DF
      *    http://www.youtube.com/view_play_list?p=03D59E2ECDDA66DF
      *    http://www.youtube.com/user/UCBerkeley#p/c/03D59E2ECDDA66DF
      *    http://www.youtube.com/user/UCBerkeley#g/c/095393D5B42B2266
@@ -72,6 +73,7 @@ public class YouTubeLib {
         for (int i=0; i<invalid.length; i++) {
             dic.add(invalid[i]);
         }
+        //youtube channel
         String url = null;
         String reg = "^(http|https)://?(www.)?youtube.com/(user/|profile\\?user=)?(\\w+)";        
         Pattern pattern = Pattern.compile(reg);
@@ -80,37 +82,41 @@ public class YouTubeLib {
             if (dic.contains(m.group(4))) {return null;}
             url = "http://www.youtube.com/user/" + m.group(4);
         }
+        //youtube playlist
         reg = "^(http|https)://?(www.)?youtube.com/(user/|profile\\?user=)?(.+)(#(p/c|g/c|grid/user)/(\\w+))";
         pattern = Pattern.compile(reg);
         m = pattern.matcher(urlStr);
         while (m.find()) {
             url = "http://www.youtube.com/view_play_list?p=" + m.group(7);
         }
-        
         reg = "^(http|https)://?(www.)?youtube.com/view_play_list\\?p=(\\w+)";
         pattern = Pattern.compile(reg);
         m = pattern.matcher(urlStr);        
         while (m.find()) {
+            //log.info("match:view_play_list\\?p=(\\w+)");
             url = "http://www.youtube.com/view_play_list?p=" + m.group(3);
-        }
-        
-        reg = "^(http|https)://?(www.)?youtube.com/(.+)?(p|list)=(PL)?(\\w+)";
+        }        
+        //http://www.youtube.com/playlist?list=PLJ2QT-PhqTiI-BWE0Efr4rhbfVO-Qg_4q
+        reg = "^(http|https)://?(www.)?youtube.com/(.+)?(p|list)=(PL)?([\\w|_|-]+)";
         pattern = Pattern.compile(reg);
         m = pattern.matcher(urlStr);
         while (m.find()) {
+            //log.info("match:(p|list)=(PL)?(\\w+)");
             url = "http://www.youtube.com/view_play_list?p=" + m.group(6);
         }
+
         // http://www.youtube.com/playlist?list=03D59E2ECDDA66DF
-        reg = "^(http|https)://?(www.)?youtube.com/playlist?list=(\\w+)";
+        // http://www.youtube.com/playlist?list=PL03D59E2ECDDA66DF               
+        reg = "^(http|https)://?(www.)?youtube.com/playlist?list=(PL)?(\\w+)";
         pattern = Pattern.compile(reg);
         m = pattern.matcher(urlStr);
         while (m.find()) {
-            url = "http://www.youtube.com/view_play_list?p=" + m.group(4);
+            //log.info("match playlist?list=(PL)?(\\w+)");
+            url = "http://www.youtube.com/view_play_list?p=" + m.group(5);
         }
 
-        
         if (url != null) { 
-            url = url.toLowerCase();
+            //url = url.toLowerCase();
             if (url.equals("http://www.youtube.com/user/watch")) {
                 url = null;
             }
@@ -132,10 +138,17 @@ public class YouTubeLib {
 
     public static class VideoFeed {
        @Key String title;
+       @Key String subtitle;
+       @Key String logo;
        @Key String description;
+       @Key String author;
        @Key List<Video> items;
     }
 
+    public static class Author {
+        @Key String name;
+    }
+    
     public static class MyFeed {
        @Key List<Video> items;
     }
@@ -176,7 +189,7 @@ public class YouTubeLib {
                   headers.gdataVersion = "2";
                   request.setHeaders(headers);
                }
-            });    
+            });
         return factory;
     }
 
@@ -248,22 +261,28 @@ public class YouTubeLib {
             YouTubeUrl videoUrl = new YouTubeUrl("https://gdata.youtube.com/feeds/api/videos");
             if (channel) {
                 videoUrl.author = userIdStr;
+                results.put("author", userIdStr);
             } else {
                 videoUrl = new YouTubeUrl("https://gdata.youtube.com/feeds/api/playlists/" + userIdStr);
             }
-            videoUrl.maxResults = 1;            
-            request = factory.buildGetRequest(videoUrl);            
+            videoUrl.maxResults = 1;
+            request = factory.buildGetRequest(videoUrl);
             feed = request.execute().parseAs(VideoFeed.class);
             if (feed.items != null) {
-                Video video = feed.items.get(0);
+                Video video = feed.items.get(0);                
                 results.put("title", video.title);
                 results.put("description", video.description);
                 if (!channel) {
                     results.put("thumbnail", video.video.thumbnail.sqDefault);
                 }
             }
-            if (!channel) {
+            if (!channel) {                
                 results.put("title", feed.title);
+                System.out.println("------------" + feed.title + "----------");
+                System.out.println("------------" + feed.subtitle + "----------");
+                System.out.println("------------" + feed.logo + "----------");
+                System.out.println("-------author-----" + feed.author + "----------");
+                results.put("author", feed.author);
                 results.put("description", feed.description);
             }
         } catch (IOException e) {

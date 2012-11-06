@@ -65,7 +65,7 @@ public class AdminChannelController {
         NnChannel c = channelMngr.findBySourceUrl(channelMngr.verifyUrl(url));
         if (c != null)
             return "Existed channel:" + c.getId();
-        c = channelMngr.create(url, name, req);
+        c = channelMngr.create(url, name, "en", req);
         if (c == null)
             return "Fail"; 
         c.setPublic(isPublic);
