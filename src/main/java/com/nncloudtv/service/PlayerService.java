@@ -263,6 +263,7 @@ public class PlayerService {
                             if (episodeShare) {
                                model.addAttribute("fbName", NnStringUtil.htmlSafeChars(e.getName()));   
                                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(e.getIntro()));
+                               model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(e.getImageUrl()));
                             }
                             i++;
                         }
@@ -290,6 +291,7 @@ public class PlayerService {
                                 if (episodeShare) {
                                    model.addAttribute("fbName", NnStringUtil.htmlSafeChars(p.getName()));
                                    model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(p.getIntro()));
+                                   model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(p.getImageUrl()));
                                 }
                                 i++;
                             }
