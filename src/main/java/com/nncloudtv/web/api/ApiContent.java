@@ -936,6 +936,7 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    // TODO: need to be optimized
     @RequestMapping(value = "channels/{channelId}/episodes/sorting", method = RequestMethod.PUT)
     public @ResponseBody
     String channelEpisodesSorting(HttpServletRequest req,
@@ -1007,6 +1008,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         episodeMngr.save(orderedEpisodes);
+        channelMngr.save(channel); // update channel updateDate
         
         return "OK";
     }
@@ -1322,7 +1324,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         // isPublic
-        episode.setPublic(true); // TODO: workaround, to be remove
+        episode.setPublic(false); // default is draft
         String isPublicStr = req.getParameter("isPublic");
         if (isPublicStr != null) {
             Boolean isPublic = Boolean.valueOf(isPublicStr);
