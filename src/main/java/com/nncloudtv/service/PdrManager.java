@@ -66,7 +66,7 @@ public class PdrManager {
             }
         }
         if (pdr.length() > 65535) {
-            pdr = pdr.substring(0, 65534);
+            pdr = pdr.substring(0, 65530);
         }
         Pdr raw = new Pdr(user, device, sessionId, pdr.trim());            
         raw.setIp(ip);
