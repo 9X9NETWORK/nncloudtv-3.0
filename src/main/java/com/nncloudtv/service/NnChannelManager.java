@@ -127,14 +127,14 @@ public class NnChannelManager {
     }
 
     public String processCache(NnChannel c) {
-        String cacheKey = this.getCacheKey(c.getId());
+        String cacheKey = NnChannelManager.getCacheKey(c.getId());
         String str = this.composeChannelLineupStr(c); 
         CacheFactory.set(cacheKey, str);
         return str;
     }
 
     //example: nnchannel(channel_id)
-    public String getCacheKey(long channelId) {
+    public static String getCacheKey(long channelId) {
         String str = "nnchannel(" + channelId + ")"; 
         return str;
     }
@@ -318,10 +318,12 @@ public class NnChannelManager {
             this.processChannelRelatedCounter(channels);
         }
         this.processChannelTag(channel);
+        this.resetCache(channel.getId());
         return channel;
     }
     
     public List<NnChannel> saveOrderedChannels(List<NnChannel> channels) {
+        resetCache(channels);
         return dao.saveAll(channels);
     }
     
@@ -704,6 +706,20 @@ public class NnChannelManager {
         return sorting;
     }
 
+    
+    public void resetCache(List<NnChannel> channels) {
+        for (NnChannel c : channels) {
+            resetCache(c.getId());
+        }
+    }
+    
+    public void resetCache(long channelId) {        
+        if (CacheFactory.isRunning) {
+            log.info("reset channel info cache: " + channelId);
+            CacheFactory.delete(getCacheKey(channelId));
+        }
+    }
+    
     public String composeChannelLineupCache(List<NnChannel> channels) {
         String output = "";
         for (NnChannel c : channels) {
@@ -716,10 +732,10 @@ public class NnChannelManager {
                 String str = this.composeChannelLineupStr(c) + "\n";
                 if (CacheFactory.isRunning)
                     CacheFactory.set(cacheKey, str);
-                output += str + "\n";                
+                output += str + "\n";
             }
         }
-        return output;        
+        return output;
     }
     
     public String composeChannelLineup(List<NnChannel> channels) {
@@ -728,9 +744,16 @@ public class NnChannelManager {
             output += this.composeChannelLineupStr(c) + "\n";
         }
         return output;        
-    }
+    }    
     
     public String composeChannelLineupStr(NnChannel c) {
+        System.out.println("#######");
+        String result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));
+        if (CacheFactory.isRunning && result != null) {
+            System.out.println("channel lineup from cache");
+            return result;
+        }
+        System.out.println("!!!!!!");
         //name and last episode title
         //favorite channel name will be overwritten later
         String name = c.getName() == null ? "" : c.getName();
@@ -849,6 +872,8 @@ public class NnChannelManager {
                        };
         String output = NnStringUtil.getDelimitedStr(ori);
         output = output.replaceAll("null", "");
+        if (CacheFactory.isRunning)
+            CacheFactory.set(NnChannelManager.getCacheKey(c.getId()), output);
         return output;
     }
 

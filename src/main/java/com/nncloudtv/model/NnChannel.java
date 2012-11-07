@@ -188,7 +188,10 @@ public class NnChannel implements Serializable {
     private long categoryId;
 
     protected static final Logger log = Logger.getLogger(NnChannel.class.getName());    
-        
+
+    public NnChannel() {        
+    }
+    
     public NnChannel(String name, String intro, String imageUrl) {
         this.name = name;
         this.intro = intro;

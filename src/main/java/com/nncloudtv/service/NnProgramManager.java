@@ -223,11 +223,11 @@ public class NnProgramManager {
         return dao.findByChannelAndSeq(channelId, NnStringUtil.seqToStr(seq));
     }
     
-    public void resetCache(long channelId) {
-        
+    public void resetCache(long channelId) {        
         if (CacheFactory.isRunning) {
             log.info("reset program info cache: " + channelId);
             CacheFactory.delete(getCacheKey(channelId));
+            CacheFactory.delete(NnChannelManager.getCacheKey(channelId));
         }
     }
     

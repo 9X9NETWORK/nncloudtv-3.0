@@ -2075,53 +2075,5 @@ public class PlayerApiController {
         }
         return NnNetUtil.textReturn("flush");
     }
-
-    @RequestMapping(value="programCache", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String programCache(
-            @RequestParam(value="channel", required=false) long chId ) {
-        NnProgramManager mngr = new NnProgramManager();
-        mngr.processCache(chId);
-        return "OK";
-                
-    }
-
-    @RequestMapping(value="resetFbName", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String resetFbName(@RequestParam(value="id", required=false) long id) {
-        NnUserManager mngr = new NnUserManager();
-        NnUser user = mngr.findById(id);
-        String output = "";
-        if (user != null) {
-            if (user.getName() != null) {
-                String name = user.getName();
-                name = StringEscapeUtils.unescapeJava(name);
-                output += name;
-                user.setName(name);
-            }
-            mngr.save(user);
-        }
-        output += "\n" + user.getName();         
-        return "name:" + output;        
-    }    
-
-    @RequestMapping(value="resetFbPic", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String resetFbPic(@RequestParam(value="id", required=false) long id) {
-        NnUserManager mngr = new NnUserManager();
-        NnUser user = mngr.findById(id);
-        String output = "";
-        if (user != null) {
-            FacebookLib lib = new FacebookLib();
-            FacebookMe me = lib.getFbMe(user.getToken());
-            if (me.getStatus() == FacebookMe.STATUS_SUCCESS) {
-                String imageUrl = "http://graph.facebook.com/" + me.getUsername() + "/picture";
-                user.setImageUrl(imageUrl);
-                log.info("fb token still valid:" + user.getId());
-                mngr.save(user);
-            } else {
-                log.info("fb token valid no more:" + user.getId());
-            }
-        }
-        output += "\n" + user.getName();         
-        return "name:" + output;
-    }
     
 }

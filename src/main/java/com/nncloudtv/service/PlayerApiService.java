@@ -541,7 +541,8 @@ public class PlayerApiService {
                 result[1] += t + "\n";
             }
         }
-        result[2] += chMngr.composeChannelLineupCache(channels);
+        //result[2] += chMngr.composeChannelLineupCache(channels);
+        result[2] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     

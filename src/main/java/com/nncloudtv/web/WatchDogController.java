@@ -138,9 +138,23 @@ public class WatchDogController {
             if (i == 23)  output += "subscriber thumbnail urls:";
             if (i == 24)  output += "last episode title:";
             output += data[i] + "\n";            
-        }
-        
+        }        
         return output;        
+    }
+    
+    @RequestMapping(value="programCache", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String programCache(
+            @RequestParam(value="channel", required=false) long chId ) {
+        NnProgramManager mngr = new NnProgramManager();
+        mngr.processCache(chId);
+        return "OK";                
+    }
+
+    @RequestMapping(value="channelCache", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String channelCache(@RequestParam(value="channel", required=false) long chId ) {            
+        NnChannelManager mngr = new NnChannelManager();
+        mngr.resetCache(chId); 
+        return "OK";                
     }
     
 }
