@@ -153,6 +153,7 @@ public class PlayerController {
                 log.info("extra stuff from fb" + queryStr);
                 String cid = channel != null ? channel : ch;
                 String pid = episode != null ? episode : ep;
+                /*
                 if (isIos) {
                     //http://www.9x9.tv/flview?ch=572&ep=pVf0dc15igo&fb_action_ids=10151150850017515%2C10151148373067515%2C10151148049832515%2C10151148017797515%2C10151140220097515&fb_action_types=og.likes&fb_source=other_multiline&action_object_map=%7B%2210151150850017515%22%3A369099836508025%2C%2210151148373067515%22%3A518842601477880%2C%2210151148049832515%22%3A486192988067672%2C%2210151148017797515%22%3A374063942680087%2C%2210151140220097515%22%3A209326199200849%2C%2210151140216042515%22%3A361904300567180%7D
                     //to flipr://www.9x9.tv/view?ch=572&ep=pVf0dc15igo                    
@@ -165,8 +166,8 @@ public class PlayerController {
                     log.info("ios redirect url:" + iosStr);
                     model.addAttribute("fliprUrl", iosStr);
                     return "player/ios";
-                    //return "redirect:" + iosStr;
                 }
+                */
                 String str = js != null ? "js=" + js : "";
                 str += str.length() != 0 ? "&" : "";
                 str += cid != null ? "#!ch=" + cid : "";
