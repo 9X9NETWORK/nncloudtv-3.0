@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock37"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock40"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -41,7 +41,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai10.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai11.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -264,10 +264,27 @@ soundManager.onready(function()
         <p id="volume-bar"></p>
         <p id="btn-dragger"></p>
       </li>
-      <li id="left-edge"></li>
+      <li class="left-edge"></li>
       <li id="btn-expand"></li>
       <li id="btn-shrink"></li>
-      <li id="left-edge"></li>
+      <li id="btn-share">
+        <span class="gray-manage-tip-m"> 
+          <span class="gray-tip-top"></span> 
+          <span class="gray-tip-content-m"> 
+            <span class="gray-tip-left-m"></span>
+            <span class="input-l-g"></span>
+            <span class="input-m-g">
+              <input name="" class="textfield" type="text" value="" id="share-url">
+            <!--span class="btn-share-copy"></span-->
+          </span>
+          <span class="input-r-g"></span>
+          <span class="btn-share-mail"></span>
+          <span class="btn-share-fb">
+            <!--a href="http://www.facebook.com/share.php?u=http://www.9x9.tv" onclick="return fbs_click()" hidefocus="true" target="_blank"></a-->
+          </span>
+          <span class="gray-tip-right-m"></span> </span>
+        </span> 
+      </li>
       <li id="btn-favorite">
         <span class="gray-manage-tip-m"> 
           <span class="gray-tip-top"></span> 
@@ -278,7 +295,7 @@ soundManager.onready(function()
           </span>
         </span> 
       </li>
-      <li id="left-edge"></li>
+      <li class="right edge fb"></li>
       <li id="btn-like">
         <div id="fb-like-container">
         </div>
@@ -286,7 +303,7 @@ soundManager.onready(function()
       <li id="play-time">
         <span id="played-length">0:14</span><span class="divider">/</span><span id="total-length">3:25</span>
       </li>
-      <li id="right-edge"></li>
+      <li class="right-edge"></li>
     </ul>
   </div>
 </div>
@@ -678,7 +695,13 @@ soundManager.onready(function()
 <!-- Guide Begin -->
 <div id="guide-layer" class="stage">
   <h2><span id="guide-imfollowing-banner">I'm Following</span> (<span id="chNum">20</span>/72)</h2>
-  
+  <div id="guide-add">
+    <div class="btn-gray">
+      <p class="btn-gray-left"></p>
+      <p class="btn-gray-middle">Add your own</p>
+      <p class="btn-gray-right"></p>
+    </div>
+  </div>
   <div id="guide-bubble">
     <img src="${nroot}/images/bg_guide_bubble1.png" id="bg1" class="bg">
     <img src="${nroot}/images/bg_guide_bubble2.png" id="bg2" class="bg">
@@ -818,6 +841,34 @@ soundManager.onready(function()
   </div>
 </div>
 <!-- Guide Layer End -->
+
+<!-- Add Your Own Layer Begin -->
+<div id="guide-add-layer">
+  <div id="guide-add-holder">
+  	<div id="guide-add-left"></div>
+	<div id="guide-add-mid">
+    	<p id="guide-add-close"></p> 
+		<img class="guide-add-title" src="${nroot}/images/guide_add_title.png">
+        <p class="msg">Enter Toutube Channel or Playlist URL:</p>
+        <p class="input-l-g"></p>
+        <p class="input-m-g">
+        	<img class="icon-set" src="${nroot}/images/icon_youtube_gray.png">
+        	<input name="" class="textfield" type="text" value="http://www.youtube.com/user/" id="guide-add-url">
+        </p>
+        <p class="input-r-g"></p>
+        <p class="note">We don't accept URLs for single videos.</p>
+        <div id="guide-add-btn-holder">
+            <div class="btn-white" id="btn-guide-add">
+                <p class="btn-white-left"></p>
+                <p class="btn-white-middle">Add this channel</p>
+                <p class="btn-white-right"></p>
+            </div> 
+        </div>
+    </div>
+    <div id="guide-add-right"></div>
+  </div>
+</div> 
+<!-- Add Your Own Layer End --> 
 
 
 
@@ -1322,6 +1373,41 @@ soundManager.onready(function()
 <!-- Sign In End --> 
 
 
+<!-- Forgot Password Begin-->
+<div id="forgot-password-layer" class="stage">
+  <div id="forgot-password-holder"> 
+    <div class="l"></div>
+    <div class="m">
+      <p id="btn-forgot-password-close"></p>
+      <img src="${nroot}/images/fogot_password.png" class="forgotpic">
+      <div class="forgot-password-dada">
+        <div class="input-outlay">
+          <p class="input-l-g"></p>
+          <p class="input-m-g"> <span class="hint"></span> <img src="${nroot}/images/icon_password.png" class="icon-set">
+            <input class="textfield" type="email" id="forgot-pw" value="" />
+          </p>
+          <p class="input-r-g"></p>
+         </div>
+          <p class="msg note">Enter your email address and we'll send you instructions.</p>
+          <p class="msg-error">The email you entered doesn't have an associated user account. Please try again.</p>
+          <div id="btn-forgot-password-reset" class="btn-white">
+            <p class="btn-white-left"></p>
+            <p class="btn-white-middle">Reset</p>
+            <p class="btn-white-right"></p>
+          </div>
+          <p class="back-to-sign">Back to sign in</p>
+        </div>
+        <div class="forgot-password-msg">
+       	   <p class="msg">Success!<br>
+                          You should receive an email shortly.<br>
+                          If you still need assistance, please <a href="#">contact us.</a></p>
+        </div>
+    </div>
+    <div class="r"></div>
+  </div>
+</div>
+<!-- Forgot Password End-->
+
 
 <!-- Developer Layer Begin --> 
 <div id="developer-layer" class="stage">
@@ -1350,6 +1436,93 @@ soundManager.onready(function()
   </div>
 </div>
 <!-- Developer Layer End -->
+
+
+<!-- Email Share Layer Begin -->
+<div id="email-share-layer" class="stage">
+  <div id="email-share-holder">
+  	<div id="email-share-left"></div>
+	<div id="email-share-mid">
+    	<p id="email-share-close"></p> 
+        <img class="email-share-title" src="${nroot}/images/email_share_title.png">
+        <p class="msg">To:</p>
+        <p class="input-l-g"></p>
+        <p class="input-m-g">
+          <input name="" class="textfield" type="text" value="Enter email address" id="email-share-to">
+        </p>
+        <p class="input-r-g"></p>
+        <p class="msg">Message:<span class="note">(150 characters maximum)</span></p>
+        <p class="textarea-g"> 
+          <span>
+            <textarea class="textarea-g" id="email-share-message"></textarea>
+          </span>
+        </p>
+        <p class="msg">Word Verification:</span></p>
+        <p class="input-l-g"></p>
+        <p class="input-m-g">
+          <input name="" class="textfield" type="text" value="Enter word" id="email-share-captcha">
+        </p>
+        <p class="input-r-g"></p>
+        <div id="email-share-captch">
+           <div class="btn-white-m" id="btn-email-share-captch">
+             <p class="btn-white-left-m"></p>
+             <p class="btn-white-middle-m">
+               <img class="email-share-captch-graph" src="">
+               <span class="email-share-captch-refresh"></span>
+             </p>
+             <p class="btn-white-right-m"></p>
+           </div>  
+        </div>
+        <div id="email-share-btn-holder">
+          <div class="btn-white" id="btn-email-share-send">
+            <p class="btn-white-left"></p>
+            <p class="btn-white-middle">Send</p>
+            <p class="btn-white-right"></p>
+          </div> 
+          <div class="btn-white" id="btn-email-share-cancel">
+            <p class="btn-white-left"></p>
+            <p class="btn-white-middle">Cancel</p>
+            <p class="btn-white-right"></p>
+          </div> 
+        </div>
+    </div>
+    <div id="email-share-right"></div>
+  </div>
+</div> 
+<!-- Email Share Layer End --> 
+
+<!-- IE Teaser layer Begin -->
+<div id="ie-teaser-layer">
+  <div id="ie-teaser-holder"> 
+    <p id="ie-teaser-title">
+    	<img src="${nroot}/images/ie_teaser_icon.png" class="ie-teaser-icon">
+        You are currently using Internet Explorer
+    </p>
+    <p id="ie-teaser-close"></p>
+    <p class="ie-teaser-msg">To get the full 9x9.tv experience, please view in Chrome or Firefox.</p>
+    <div class="footer">
+	  <p class="ie-teaser-msg">To download Chrome or Firefox:</p>
+      <ul id="ie-teaser-browser">
+      	<li class="ie-teaser-chrome">
+	    	<p class="btn-white-left-l"></p>
+            <p class="btn-white-middle-l"><img src="${nroot}/images/ie_teaser_chrome.png" class="ie-teaser-logo">Google Chrome</p>
+            <p class="btn-white-right-l"></p>
+        </li>
+        <li class="ie-teaser-firefox">
+	        <p class="btn-white-left-l"></p>
+    	    <p class="btn-white-middle-l"><img src="${nroot}/images/ie_teaser_firefox.png" class="ie-teaser-logo">Mozilla Firefox</p>
+            <p class="btn-white-right-l"></p>
+        </li>
+      </ul>
+      <div class="btn-white" id="btn-ie-teaser-ok">
+                <p class="btn-white-left"></p>
+                <p class="btn-white-middle">Continue to 9x9.tv</p>
+                <p class="btn-white-right"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- IE Teaser layer End --> 
 
 
 
@@ -1382,7 +1555,7 @@ soundManager.onready(function()
 
 <div id="waiting-layer">
   <div id="waiting-holder">
-    <img src="temporary/loading.gif">
+    <img src="${nroot}/temporary/loading.gif">
     <p>One moment...</p>
   </div>
 </div>
@@ -1402,7 +1575,7 @@ soundManager.onready(function()
 
 <div id="error-layer">
   <div id="error-holder">
-    <img src="temporary/icon_error.png" id="icon-error">
+    <img src="${nroot}/temporary/icon_error.png" id="icon-error">
     <p><span>Ooops....9x9 player has crashed.<br>Please reload the page to try again.</span></p>
     <p class="btn" id="btn-error-ok"><span>OK</span></p>
   </div>
