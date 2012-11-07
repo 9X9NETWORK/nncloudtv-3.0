@@ -145,7 +145,6 @@ public class PlayerController {
             isIos = true;
             
         }
-        isIos = true;
         try {
             PlayerService service = new PlayerService();
             String queryStr = req.getQueryString();
