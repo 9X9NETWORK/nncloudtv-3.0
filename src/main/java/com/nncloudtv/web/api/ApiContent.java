@@ -735,44 +735,6 @@ public class ApiContent extends ApiGeneric {
         return savedChannel;
     }
     
-    @RequestMapping(value = "channels/{channelId}/programs", method = RequestMethod.GET)
-    public @ResponseBody
-    List<NnProgram> channelPrograms(HttpServletRequest req,
-            HttpServletResponse resp,
-            @PathVariable("channelId") String channelIdStr) {
-        
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (channelId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnProgramManager programMngr = new NnProgramManager();
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel channel = channelMngr.findById(channelId);
-        
-        if (channel == null) {
-            notFound(resp, "Channel Not Found");
-            return null;
-        }
-        
-        List<NnProgram> results = programMngr.findByChannelId(channelId);
-        Collections.sort(results, programMngr.getProgramSeqComparator());
-        
-        for (NnProgram program : results) {
-            program.setName(NnStringUtil.revertHtml(program.getName()));
-            program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
-        }
-         
-        log.info("program count = " + results.size());
-        
-        return results;
-    }
-    
     @RequestMapping(value = "channels/{channelId}/isOwner", method = RequestMethod.GET)
     public @ResponseBody
     Boolean isChannelOwner(HttpServletRequest req, HttpServletResponse resp,
