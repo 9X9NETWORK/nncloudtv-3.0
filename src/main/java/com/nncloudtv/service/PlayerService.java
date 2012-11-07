@@ -242,7 +242,7 @@ public class PlayerService {
                 model.addAttribute("crawlVideoThumb", c.getOneImageUrl());
                 model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
                 model.addAttribute("fbName", NnStringUtil.htmlSafeChars(c.getName()));
-                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));
+                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));                
                 model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getOneImageUrl()));  
 
                 if (ep != null && ep.startsWith("e")) {
@@ -313,6 +313,12 @@ public class PlayerService {
                         model.addAttribute("fbName", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlEpisodeTitle")));
                         model.addAttribute("fbImg", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlVideoThumb")));
                     }
+                }
+                String fbDescription = (String) model.asMap().get("fbDescription");
+                if (fbDescription == null || fbDescription.length() == 0) {
+                    String fbName = (String) model.asMap().get("fbName");
+                    log.info("fb description empty, overwitten by fbname:" + fbName);
+                    model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(fbName));
                 }
             }
         }
