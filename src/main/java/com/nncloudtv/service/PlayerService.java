@@ -316,9 +316,7 @@ public class PlayerService {
                 }
                 String fbDescription = (String) model.asMap().get("fbDescription");
                 if (fbDescription == null || fbDescription.length() == 0) {
-                    String fbName = (String) model.asMap().get("fbName");
-                    log.info("fb description empty, overwitten by fbname:" + fbName);
-                    model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(fbName));
+                    model.addAttribute("fbDescription", " ");
                 }
             }
         }
