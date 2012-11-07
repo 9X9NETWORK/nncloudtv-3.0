@@ -56,6 +56,7 @@ public class NnUserManager {
         }            
             
         dao.save(user);
+        resetChannelCache(user);        
         return NnStatusCode.SUCCESS;
     }
 
@@ -204,9 +205,16 @@ public class NnUserManager {
         }
         user.setEmail(user.getEmail().toLowerCase());
         user.setUpdateDate(new Date());
+        resetChannelCache(user);
         return dao.save(user);
     }
 
+    public void resetChannelCache(NnUser user) {
+        NnChannelManager chMngr = new NnChannelManager();
+        List<NnChannel> channels = chMngr.findByUser(user, 0, false);
+        chMngr.resetCache(channels);
+    }
+    
     /**
      * GAE can only write 5 records a sec, maybe safe enough to do so w/out DB retrieving.
      * taking the chance to speed up signin (meaning not to consult DB before creating the account).

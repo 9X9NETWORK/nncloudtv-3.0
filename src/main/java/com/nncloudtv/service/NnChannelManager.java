@@ -747,13 +747,11 @@ public class NnChannelManager {
     }    
     
     public String composeChannelLineupStr(NnChannel c) {
-        System.out.println("#######");
         String result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));
         if (CacheFactory.isRunning && result != null) {
-            System.out.println("channel lineup from cache");
             return result;
         }
-        System.out.println("!!!!!!");
+        log.info("channel lineup NOT from cache:" + c.getId());
         //name and last episode title
         //favorite channel name will be overwritten later
         String name = c.getName() == null ? "" : c.getName();
