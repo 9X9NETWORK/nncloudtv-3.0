@@ -67,19 +67,22 @@ public class NnChannelManager {
             channel.setImageUrl(info[1]);
             channel.setStatus(NnChannel.STATUS_SUCCESS);            
         } else {
-            channel.setImageUrl(NnChannel.IMAGE_PROCESSING_URL);
-            channel.setName("Processing");
-            channel.setStatus(NnChannel.STATUS_PROCESSING);
+            if (channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
+                channel.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {    
+                channel.setImageUrl(NnChannel.IMAGE_PROCESSING_URL);
+                channel.setName("Processing");
+                channel.setStatus(NnChannel.STATUS_PROCESSING);
+            }            
             if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
                 channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
                 Map<String, String> info = null;
                 String youtubeName = YouTubeLib.getYouTubeChannelName(url);
                 if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL) {
                     info = YouTubeLib.getYouTubeEntry(youtubeName, true);
-                    info.put("type", "channel");
+                    info.put("type", "channel"); //to create fake youtube account
                 } else {
                     info = YouTubeLib.getYouTubeEntry(youtubeName, false);
-                    info.put("type", "playlist");
+                    info.put("type", "playlist"); //to create fake youtube account
                 }
                 if (!info.get("status").equals(String.valueOf(NnStatusCode.SUCCESS)))
                     return null;
