@@ -1078,7 +1078,7 @@ soundManager.onready(function()
               </div>           
             </div>           
                 <div class="profile181" style="overflow:hidden;">
-                	<img src="thumbnail/modern-wedding-dresses.jpg">
+                	<img src="">
                 </div>            
             </div>
           <p class="r"></p>
