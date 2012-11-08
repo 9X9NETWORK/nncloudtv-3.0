@@ -17,6 +17,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -121,7 +122,7 @@ public class YouTubeLib {
                 url = null;
             }
         }
-        //log.info("original url:" + urlStr + ";result=" + url);        
+        log.info("original url:" + urlStr + ";result=" + url);        
         //if (!youTubeCheck(result)) {return null;} //till the function is fixed        
         return url;        
     }
@@ -161,7 +162,7 @@ public class YouTubeLib {
         @Key Player player;
         @Key Video video;
     }
-        
+    
     public static class Thumbnail {
         @Key String sqDefault;                    
     }
@@ -265,7 +266,7 @@ public class YouTubeLib {
             } else {
                 videoUrl = new YouTubeUrl("https://gdata.youtube.com/feeds/api/playlists/" + userIdStr);
             }
-            videoUrl.maxResults = 1;
+            videoUrl.maxResults = 1;            
             request = factory.buildGetRequest(videoUrl);
             feed = request.execute().parseAs(VideoFeed.class);
             if (feed.items != null) {
@@ -273,7 +274,11 @@ public class YouTubeLib {
                 results.put("title", video.title);
                 results.put("description", video.description);
                 if (!channel) {
-                    results.put("thumbnail", video.video.thumbnail.sqDefault);
+                    if (video.video != null && video.video.thumbnail != null) {
+                        results.put("thumbnail", video.video.thumbnail.sqDefault);
+                    } else {
+                        log.info("video no thumbnail:" + videoUrl);
+                    }
                 }
             }
             if (!channel) {                
@@ -282,6 +287,9 @@ public class YouTubeLib {
                 results.put("description", feed.description);
                 log.info("play list title:" + feed.title + "; author:" + feed.author + "; description:" + feed.description);
             }
+        } catch (HttpResponseException e) {
+            results.put("status", String.valueOf(NnStatusCode.ERROR));            
+            log.info("youtube http response error:" + e.getResponse().getStatusCode());
         } catch (IOException e) {
             results.put("status", String.valueOf(NnStatusCode.ERROR));
             NnLogUtil.logException(e);
