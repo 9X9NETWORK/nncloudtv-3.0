@@ -708,8 +708,17 @@ public class PlayerApiService {
             channelOutput += new IosService().composeChannelLineup(channels);
         else
             channelOutput += chMngr.composeChannelLineup(channels);
+        if (channelPos && channelOutput != null) {
+            String adjust = "";            
+            log.info("adjust sequence of channellineup for user:" + user.getId());
+            String[] lines = channelOutput.split("\n");
+            for (int i=0; i<lines.length; i++) {
+                lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
+                adjust += lines[i] + "\n";
+            }
+            channelOutput = adjust;
+        }
         result.add(channelOutput);
-        
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
     }

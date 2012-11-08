@@ -747,12 +747,10 @@ public class NnChannelManager {
     }    
     
     public String composeChannelLineupStr(NnChannel c) {
-        /*
         String result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));
         if (CacheFactory.isRunning && result != null && c.getId() != 0) {
             return result;
         }
-        */
         log.info("channel lineup NOT from cache:" + c.getId());
         //name and last episode title
         //favorite channel name will be overwritten later
@@ -844,7 +842,7 @@ public class NnChannelManager {
         short contentType = c.getContentType();
         if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
             contentType = NnChannel.CONTENTTYPE_FAVORITE;
-        String[] ori = {String.valueOf(c.getSeq()), //REPLACE
+        String[] ori = {"0", //seq
                         c.getIdStr(),
                         name,
                         c.getIntro(),
