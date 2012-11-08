@@ -1565,14 +1565,31 @@ public class PlayerApiService {
 
         String link = NnNetUtil.getUrlRoot(req) + "/#!resetpwd!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);        
         log.info("link:" + link);
+        
+        NnContentManager contentMngr = new NnContentManager();
+        String lang = user.getLang();
+        lang = this.checkLang(lang);
+        NnContent content = contentMngr.findByItemAndLang("resetpwd", lang);        
         String subject = "Forgotten Password";
         String sentense = "<p>To reset the password, click on the link or copy and paste the following link into the address bar of your browser</p>";
-        String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";
+        String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";            
+        if (content != null) {
+            log.info("get email template from admin portal");
+            body = content.getValue();
+            body = body.replace("Hello,<br>", "Hello " + user.getName() + ",<br>");
+            body = body.replace("<a href=\"#\" style=\"color:#777777;font-weight:bold;\">Click here</a> to reset your 9x9.tv password.", 
+                                "<a href=\"" + link + "\" style=\"color:#777777;font-weight:bold;\">Click here</a> to reset your 9x9.tv password.");
+            body = body.replace("<a href=\"#\" style=\"color:#777777;font-weight:bold;\">http://9x9.tv/username/number</a>",
+                                "<a href=\"" + link + "\" style=\"color:#777777;font-weight:bold;\">" + link + "</a>");
+            body = body.replace("<a href=\"#\" style=\"border:0;\"><img src=\"http://s3.amazonaws.com/9x9ui/war/v2/images/resetpwd/btn.png\"", 
+                                "<a href=\"" + link + "\" style=\"border:0;\"><img src=\"http://s3.amazonaws.com/9x9ui/war/v2/images/resetpwd/btn.png\"");
+
+        }
 
         EmailService service = new EmailService();
         NnEmail mail = new NnEmail(
                 email, user.getName(), 
-                NnEmail.SEND_EMAIL_SHARE, "noreply", NnEmail.SEND_EMAIL_SHARE,                                     
+                NnEmail.SEND_EMAIL_NOREPLY, "noreply", NnEmail.SEND_EMAIL_NOREPLY,                                     
                 subject, body);
         
         mail.setHtml(true);
