@@ -754,7 +754,7 @@ public class NnChannelManager {
         log.info("channel lineup NOT from cache:" + c.getId());
         //name and last episode title
         //favorite channel name will be overwritten later
-        String name = c.getName() == null ? "" : c.getName();
+        String name = c.getPlayerName() == null ? "" : c.getPlayerName();
         String[] split = name.split("\\|");
         name = split.length == 2 ? split[0] : name;
         String lastEpisodeTitle = split.length == 2 ? split[1] : "";
@@ -845,7 +845,7 @@ public class NnChannelManager {
         String[] ori = {"0", //seq
                         c.getIdStr(),
                         name,
-                        c.getIntro(),
+                        c.getPlayerIntro(),
                         imageUrl, //c.getPlayerPrefImageUrl(),                        
                         String.valueOf(c.getCntEpisode()),
                         String.valueOf(c.getType()),

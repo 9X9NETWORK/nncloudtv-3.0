@@ -245,6 +245,25 @@ public class NnChannel implements Serializable {
         return intro;
     }
 
+    public String getPlayerName() {
+        String name = this.getName(); 
+        if (name != null) {         
+           name = name.replaceAll("\\s", " ");
+        }
+        return name;        
+    }
+    
+    public String getPlayerIntro() {
+        String pintro = this.getIntro(); 
+        if (pintro != null) {
+            int len = (pintro.length() > 256 ? 256 : pintro.length()); 
+            pintro = pintro.replaceAll("\\s", " ");                
+            pintro = pintro.substring(0, len);           
+        }
+        return pintro;      
+        
+    }
+    
     public void setIntro(String intro) {
         if (intro != null) {
             intro = intro.replaceAll("\n", " ");
