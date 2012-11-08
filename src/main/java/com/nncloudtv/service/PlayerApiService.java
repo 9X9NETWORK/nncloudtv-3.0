@@ -1643,7 +1643,7 @@ public class PlayerApiService {
         */
         //List<NnChannel> channels = chMngr.searchBySvi(text, userShard, userId, sphere);
         List<NnChannel> channels = NnChannelManager.search(text, false);
-        String[] result = {"", "", "", ""}; //count, curator along with channels, channel, suggestion channel
+        String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
         List<NnUser> users = userMngr.search(null, null, text);
