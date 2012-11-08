@@ -10,6 +10,7 @@ public class NnEmail {
     private String toName;
     
     public static String SEND_EMAIL_SHARE = "share@9x9.tv";
+    public static String SEND_EMAIL_NOREPLY = "noreply@notify.9x9.tv";
     private String senderEmail;
     
     private String senderName;
