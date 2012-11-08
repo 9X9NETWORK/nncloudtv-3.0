@@ -1563,13 +1563,13 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
         
 
-        EmailService service = new EmailService();
         String link = NnNetUtil.getUrlRoot(req) + "/#!resetpwd!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);        
         log.info("link:" + link);
         String subject = "Forgotten Password";
         String sentense = "<p>To reset the password, click on the link or copy and paste the following link into the address bar of your browser</p>";
         String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";
 
+        EmailService service = new EmailService();
         NnEmail mail = new NnEmail(
                 email, user.getName(), 
                 NnEmail.SEND_EMAIL_SHARE, "noreply", NnEmail.SEND_EMAIL_SHARE,                                     
