@@ -8,14 +8,14 @@ import time
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
-                             passwd = "letlet",
+                             passwd = "",
                              charset = "utf8",
                              use_unicode = True,
                              db = "nncloudtv_content")
 
 dbuser = MySQLdb.connect (host = "localhost",
                           user = "root",
-                          passwd = "letlet",
+                          passwd = "",
                           charset = "utf8",
                           use_unicode = True,
                           db = "nncloudtv_nnuser1")
@@ -112,6 +112,9 @@ for line in feed:
   dbcontent.commit()  
   userCursor.close ()
   contentCursor.close ()
+
+url = "http://localhost:8080/playerAPI/flush"
+urllib2.urlopen(url).read()
 
 print "record done:" + str(i)
 #feed.close()
