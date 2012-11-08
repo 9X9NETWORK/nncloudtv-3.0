@@ -668,7 +668,7 @@ public class NnChannelManager {
 
     //TODO change to list, and merge with byUser, and subList is not real
     //used only in player for specific occasion
-    public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit, boolean isPlayer) {
+    public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit, boolean isPlayer) {        
         String userIdStr = user.getShard() + "-" + user.getId();
         List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
         boolean needToFake = true;
@@ -748,7 +748,7 @@ public class NnChannelManager {
     
     public String composeChannelLineupStr(NnChannel c) {
         String result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));
-        if (CacheFactory.isRunning && result != null) {
+        if (CacheFactory.isRunning && result != null && c.getId() != 0) {
             return result;
         }
         log.info("channel lineup NOT from cache:" + c.getId());
