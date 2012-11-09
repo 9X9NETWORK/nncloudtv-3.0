@@ -245,8 +245,6 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        boolean recalculateDuration = false;
-        
         // name
         String name = req.getParameter("name");
         if (name != null) {
@@ -294,7 +292,6 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             program.setStartTime(startTime);
-            recalculateDuration = true;
         }
         
         // endTime
@@ -310,10 +307,16 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             program.setEndTime(endTime);
-            recalculateDuration = true;
         }
         
-        program = programMngr.save(program, recalculateDuration);
+        // duration = endTime - startTime
+        if ((program.getEndTimeInt() - program.getStartTimeInt()) > 0) {
+            program.setDuration((short)(program.getEndTimeInt() - program.getStartTimeInt()));
+        } else {
+            program.setDuration((short)0);
+        }
+        
+        program = programMngr.save(program);
         
         program.setName(NnStringUtil.revertHtml(program.getName()));
         program.setIntro(NnStringUtil.revertHtml(program.getIntro()));
@@ -497,19 +500,21 @@ public class ApiContent extends ApiGeneric {
         // duration
         String durationStr = req.getParameter("duration");
         if (durationStr == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            return null;
+            
+            program.setDuration((short)0);
+            
+        } else {
+            Short duration = null;
+            try {
+                duration = Short.valueOf(durationStr);
+            } catch (NumberFormatException e) {
+            }
+            if (duration == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            program.setDuration(duration);
         }
-        Short duration = null;
-        try {
-            duration = Short.valueOf(durationStr);
-        } catch (NumberFormatException e) {
-        }
-        if (duration == null) {
-            badRequest(resp, INVALID_PARAMETER);
-            return null;
-        }
-        program.setDuration(duration);
         
         // startTime
         String startTimeStr = req.getParameter("startTime");
@@ -549,6 +554,13 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             program.setEndTime(endTime);
+        }
+        
+        // duration = endTime - startTime
+        if ((program.getEndTimeInt() - program.getStartTimeInt()) > 0) {
+            program.setDuration((short)(program.getEndTimeInt() - program.getStartTimeInt()));
+        } else {
+            program.setDuration((short)0);
         }
         
         NnProgramManager programMngr = new NnProgramManager();

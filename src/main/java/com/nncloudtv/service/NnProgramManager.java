@@ -122,19 +122,6 @@ public class NnProgramManager {
         return program;
     }
     
-    public NnProgram save(NnProgram program, boolean recalculateEpisodeDuration) {
-            
-        if (program == null) {
-            return program;
-        }
-        
-        program = save(program);
-                
-        //episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.        
-        
-        return program;
-    }
-    
     public void delete(NnProgram program) {
         long cId = program.getChannelId();
         dao.delete(program);
