@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock40"/>
+<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock42"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -41,7 +41,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai11.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai12.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
@@ -272,17 +272,19 @@ soundManager.onready(function()
           <span class="gray-tip-top"></span> 
           <span class="gray-tip-content-m"> 
             <span class="gray-tip-left-m"></span>
-            <span class="input-l-g"></span>
-            <span class="input-m-g">
-              <input name="" class="textfield" type="text" value="" id="share-url">
-            <!--span class="btn-share-copy"></span-->
+            <span class="btn-share-url">
+              <span class="input-l-g"></span>
+              <span class="input-m-g">
+                <input name="" class="textfield" type="text" value="" id="share-url">
+              </span>
+              <span class="input-r-g"></span>
+            </span>
+            <span class="btn-share-mail"></span>
+            <span class="btn-share-fb">
+              <img src="${nroot}/images/icon_facebook_l.png">
+            </span>
+            <span class="gray-tip-right-m"></span>
           </span>
-          <span class="input-r-g"></span>
-          <span class="btn-share-mail"></span>
-          <span class="btn-share-fb">
-            <!--a href="http://www.facebook.com/share.php?u=http://www.9x9.tv" onclick="return fbs_click()" hidefocus="true" target="_blank"></a-->
-          </span>
-          <span class="gray-tip-right-m"></span> </span>
         </span> 
       </li>
       <li id="btn-favorite">
@@ -290,7 +292,14 @@ soundManager.onready(function()
           <span class="gray-tip-top"></span> 
           <span class="gray-tip-content-m"> 
             <span class="gray-tip-left-m"></span>
-              <span class="favorite-content">Click to add this to your Favorites</span>
+            <span class="favorite-content">
+              <span class="favor" style="display: none">Click to add this to your <span class="btn-popmessage-curator">Favorites</span>.</span>
+              <span class="unfavor" style="display: none">Click to remove this from your <span class="btn-popmessage-curator">Favorites</span>.</span>
+              <span class="favorite-share">Share with your friends:</span>
+            </span> 
+            <span class="btn-share-fb" style="display: none">
+              <img src="${nroot}/images/icon_facebook_l.png">
+            </span>
             <span class="gray-tip-right-m"></span>
           </span>
         </span> 
@@ -849,7 +858,7 @@ soundManager.onready(function()
 	<div id="guide-add-mid">
     	<p id="guide-add-close"></p> 
 		<img class="guide-add-title" src="${nroot}/images/guide_add_title.png">
-        <p class="msg">Enter Toutube Channel or Playlist URL:</p>
+        <p class="msg">Enter YouTube Channel or Playlist URL:</p>
         <p class="input-l-g"></p>
         <p class="input-m-g">
         	<img class="icon-set" src="${nroot}/images/icon_youtube_gray.png">
@@ -881,14 +890,35 @@ soundManager.onready(function()
 <div id="home-layer" class="stage">
 <div id="home-slider" class="slider-wrap"><div class="slider-vertical"></div></div>
 <div id="home-constrain">
-    <div id="home-list">
-    <div id="banner">
-      <p class="l"></p>
-      <p class="r"></p>
-      <p id="closebtn"></p>
-      <p class="home-title"></p> 
-      <img src="${nroot}/thumbnail/banner.png">
-    </div>
+  <div id="home-list">
+    <ul id="banner">
+      <li class="banner1">  
+        <p class="l"></p>
+        <p class="r"></p>
+        <img src="${nroot}/thumbnail/title01.png" class="banner-title"> 
+        <img src="${nroot}/thumbnail/banner01.png" class="banner-thumb">
+        <div class="google-play"></div>
+        <div class="app-store"></div>
+      </li>
+      <li class="banner2">  
+        <p class="l"></p>
+        <p class="r"></p>
+        <img src="${nroot}/thumbnail/title02.png" class="banner-title"> 
+        <img src="${nroot}/thumbnail/banner02.png" class="banner-thumb"> 
+      </li>
+      <li class="banner3">  
+        <p class="l"></p>
+        <p class="r"></p>
+        <img src="${nroot}/thumbnail/title03.png" class="banner-title"> 
+        <div class="banner-thumb"></div>
+      </li>
+      <li class="banner4">  
+        <p class="l"></p>
+        <p class="r"></p>
+        <img src="${nroot}/thumbnail/title04.png" class="banner-title"> 
+        <img src="${nroot}/thumbnail/banner04.png" class="banner-thumb"> 
+      </li>
+    </ul>
     <div id="homeleftbox">
       <h1><span id="home-trending-banner">Trending Stories</span> (9)</h1>
       <div id="trending-stories">
