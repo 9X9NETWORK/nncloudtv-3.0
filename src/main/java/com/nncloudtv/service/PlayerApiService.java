@@ -712,9 +712,11 @@ public class PlayerApiService {
             String adjust = "";            
             log.info("adjust sequence of channellineup for user:" + user.getId());
             String[] lines = channelOutput.split("\n");
-            for (int i=0; i<lines.length; i++) {
-                lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
-                adjust += lines[i] + "\n";
+            if (channels.size() > 0) {
+                for (int i=0; i<lines.length; i++) {
+                    lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
+                    adjust += lines[i] + "\n";
+                }
             }
             channelOutput = adjust;
         }
