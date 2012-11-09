@@ -1,10 +1,11 @@
 # update nnchannel update time based on nnprogram
 
+import urllib, urllib2
 import MySQLdb
 
 conn = MySQLdb.connect (host = "localhost",
                         user = "root",
-                        passwd = "letlet",
+                        passwd = "",
                         charset = "utf8", 
                         use_unicode = True,                                               
                         db = "nncloudtv_content")
@@ -36,9 +37,14 @@ try:
        cursor.execute (""" 
            update nnchannel                 
               set updateDate = %s 
-            where id = %s """, (updateDate, cid))        
-    
+            where id = %s """, (updateDate, cid))                
   conn.commit()
+  for m in map_rows:
+    cid = m[0]
+    url = "http://localhost:8080/wd/channelCache?channel=" + str(cid)
+    print url
+    urllib2.urlopen(url).read()
+  
   cursor.close ()
   conn.close ()
 
