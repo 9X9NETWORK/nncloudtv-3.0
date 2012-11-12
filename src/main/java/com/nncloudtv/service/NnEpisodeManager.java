@@ -216,18 +216,7 @@ public class NnEpisodeManager {
         int totalDuration = 0;
         
         for (NnProgram program : programs) {
-            
-            int startTime = program.getStartTimeInt();
-            int endTime = program.getEndTimeInt();
-            
-            int delta = 0;
-            if (startTime == 0 && endTime == 0) {
-                delta = program.getDurationInt();
-            } else {
-                delta = (endTime > startTime) ? (endTime - startTime) : 0;
-            }
-            totalDuration += delta;
-            
+            totalDuration += program.getDurationInt();
         }
         
         for (TitleCard titleCard : titleCards) {
