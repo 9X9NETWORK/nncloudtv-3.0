@@ -94,6 +94,8 @@ public class NnChannelManager {
                     if (name == null)
                         channel.setName(oriName);
                 }
+                if (info.get("totalItems") != null)
+                    channel.setCntEpisode(Integer.parseInt(info.get("totalItems")));
                 if (info.get("description") != null)
                     channel.setIntro(info.get("description"));
                 if (info.get("thumbnail") != null)

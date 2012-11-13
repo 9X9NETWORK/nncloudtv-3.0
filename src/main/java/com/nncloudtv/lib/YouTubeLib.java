@@ -220,6 +220,7 @@ public class YouTubeLib {
     }
     
     //return key "status", "title", "thumbnail", "description"
+    //TODO boolean channel removed, can easily tell by format
     public static Map<String, String> getYouTubeEntry(String userIdStr, boolean channel) {        
         //http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html
         Map<String, String> results = new HashMap<String, String>();
@@ -270,6 +271,7 @@ public class YouTubeLib {
             videoUrl.maxResults = 1;            
             request = factory.buildGetRequest(videoUrl);
             feed = request.execute().parseAs(VideoFeed.class);
+            results.put("totalItems", String.valueOf(feed.totalItems));            
             if (feed.items != null) {
                 Video video = feed.items.get(0);                
                 results.put("title", video.title);
