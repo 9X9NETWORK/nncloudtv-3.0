@@ -35,7 +35,7 @@ public class TitleCard implements Serializable {
     private String duration;
 
     @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
+    @Column(jdbcType="VARCHAR", length=2000)
     private String message;
 
     @Persistent
