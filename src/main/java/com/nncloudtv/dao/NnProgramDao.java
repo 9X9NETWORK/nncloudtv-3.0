@@ -276,7 +276,7 @@ public class NnProgramDao extends GenericDao<NnProgram> {
             String sql = "select id " +
             		       "from nnprogram " +
             		      "where episodeId = " + episodeId + " " +
-            		      "order by seq, subSeq";
+            		      "order by subSeq"; // seq is not be maintain anymore
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnProgram.class);
