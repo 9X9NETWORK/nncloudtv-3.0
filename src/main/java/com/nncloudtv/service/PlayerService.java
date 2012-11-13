@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 
 import com.nncloudtv.lib.CookieHelper;
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Mso;
@@ -42,6 +43,29 @@ public class PlayerService {
             CookieHelper.deleteCookie(resp, CookieHelper.MSO); //delete brand cookie
         }
         return model;        
+    }
+
+    //http://www.9x9.tv/flview?ch=572&ep=pVf0dc15igo&fb_action_ids=10151150850017515%2C10151148373067515%2C10151148049832515%2C10151148017797515%2C10151140220097515&fb_action_types=og.likes&fb_source=other_multiline&action_object_map=%7B%2210151150850017515%22%3A369099836508025%2C%2210151148373067515%22%3A518842601477880%2C%2210151148049832515%22%3A486192988067672%2C%2210151148017797515%22%3A374063942680087%2C%2210151140220097515%22%3A209326199200849%2C%2210151140216042515%22%3A361904300567180%7D
+    //to flipr://www.9x9.tv/view?ch=572&ep=pVf0dc15igo                    
+    public String getRedirectIosUrl(String cid, String pid, HttpServletRequest req) {
+        String root = NnNetUtil.getUrlRoot(req);
+        root = root.replace("http://", "");
+        String iosStr = "flipr://" + root;
+        iosStr += cid != null ? "/view?ch=" + cid : "";
+        if (cid != null)
+            iosStr += pid != null ? "&ep=" + pid : "";
+        log.info("ios redirect url:" + iosStr);
+        return iosStr;
+    }
+    
+    public boolean isIos(HttpServletRequest req) {
+        String userAgent = req.getHeader("user-agent");
+        log.info("user agent:" + userAgent);
+        if (userAgent.contains("iPhone") || userAgent.contains("iPad")) {
+            log.info("request from ios");
+            return true;            
+        }        
+        return false;
     }
     
     public Model prepareEpisode(Model model, String pid,
