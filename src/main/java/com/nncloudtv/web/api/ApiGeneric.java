@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.NnUserManager;
 
 public class ApiGeneric {
 	
@@ -28,6 +32,14 @@ public class ApiGeneric {
 			internalError(resp, e);
 		}
 	}
+	
+	public void forbidden(HttpServletResponse resp) {
+        try {
+            resp.sendError(403);
+        } catch (IOException e) {
+            internalError(resp, e);
+        }
+    }
 	
 	public void notFound(HttpServletResponse resp, String message) {
 		
@@ -93,5 +105,19 @@ public class ApiGeneric {
 		} catch (IOException ex) {
 			NnLogUtil.logException(ex);
 		}
+	}
+	
+	public NnUser userIdentify(HttpServletRequest req) {
+	    
+	    String token = CookieHelper.getCookie(req, "user");
+	    if (token == null) {
+            return null;
+        }
+	    NnUserManager userMngr = new NnUserManager();
+	    NnUser user = userMngr.findByToken(token);
+        if (user == null) {
+            return null;
+        }
+	    return user;
 	}
 }

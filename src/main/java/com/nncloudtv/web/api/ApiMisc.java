@@ -39,6 +39,11 @@ public class ApiMisc extends ApiGeneric {
 	public @ResponseBody Map<String, String> s3Attributes(HttpServletRequest req, HttpServletResponse resp) {
 		
 		// TODO: verify authentication
+	    NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
 		
 		String prefix = req.getParameter("prefix");
 		String type = req.getParameter("type");

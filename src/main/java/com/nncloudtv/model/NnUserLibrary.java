@@ -61,6 +61,20 @@ public class NnUserLibrary implements Serializable {
     public String getUserIdStr() {
         return userIdStr;
     }
+    
+    public long getUserId() {
+        return getUserId(userIdStr);
+    }
+    
+    public long getUserId(String userId) {
+        if (userId == null)
+            return 0;
+        String[] splits = userId.split("-");
+        if (splits.length > 1)
+            return Short.parseShort(splits[1]);
+        else
+            return Short.parseShort(userId);        
+    }
 
     public void setUserIdStr(String userIdStr) {
         this.userIdStr = userIdStr;

@@ -27,6 +27,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.TitleCard;
@@ -65,6 +66,15 @@ public class ApiContent extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -107,6 +117,15 @@ public class ApiContent extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -163,6 +182,15 @@ public class ApiContent extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -242,6 +270,18 @@ public class ApiContent extends ApiGeneric {
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
             notFound(resp, "Program Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
             return null;
         }
         
@@ -348,6 +388,18 @@ public class ApiContent extends ApiGeneric {
             return "Program Not Found";
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
         // delete title cards
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
@@ -381,6 +433,18 @@ public class ApiContent extends ApiGeneric {
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
             notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
             return null;
         }
         
@@ -450,6 +514,18 @@ public class ApiContent extends ApiGeneric {
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
             notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
             return null;
         }
         
@@ -645,6 +721,15 @@ public class ApiContent extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -860,6 +945,15 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         List<NnEpisode> results = new ArrayList<NnEpisode>();
         
@@ -928,6 +1022,15 @@ public class ApiContent extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -1006,6 +1109,18 @@ public class ApiContent extends ApiGeneric {
             return "Episode Not Found";
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
         // delete shopping_info
         NnAdManager adMngr = new NnAdManager();
         NnAd nnAd = adMngr.findByEpisode(episode);
@@ -1023,9 +1138,6 @@ public class ApiContent extends ApiGeneric {
         }
         titlecardMngr.delete(titlecards);
         programMngr.delete(programs);
-        
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel channel = channelMngr.findById(episode.getChannelId());
         
         // delete episode
         episodeMngr.delete(episode);
@@ -1089,6 +1201,18 @@ public class ApiContent extends ApiGeneric {
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
             notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
             return null;
         }
         
@@ -1208,6 +1332,15 @@ public class ApiContent extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -1379,6 +1512,18 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
         episode.setAdId(0);
         episodeMngr.save(episode);
         
@@ -1411,6 +1556,18 @@ public class ApiContent extends ApiGeneric {
         NnEpisode episode = episodeMngr.findById(episodeId);
         if (episode == null) {
             notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
             return null;
         }
         
@@ -1561,6 +1718,18 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
         // type
         String typeStr = req.getParameter("type");
         if (typeStr == null) {
@@ -1701,9 +1870,17 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        
-        //            episode.setDuration(0); // set 0 to notify episode get operation to recalculate duration.
-        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(titleCard.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
         
         titleCardMngr.delete(titleCard);
         
@@ -1732,6 +1909,15 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != lib.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         lib.setName(NnStringUtil.revertHtml(lib.getName()));
         
         return lib;
@@ -1756,6 +1942,15 @@ public class ApiContent extends ApiGeneric {
         NnUserLibrary lib = libMngr.findById(id);
         if (lib == null) {
             notFound(resp, "Item Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != lib.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -1794,6 +1989,15 @@ public class ApiContent extends ApiGeneric {
         NnUserLibrary lib = libMngr.findById(id);
         if (lib == null) {
             return "Item Not Found";
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != lib.getUserId()) {
+            forbidden(resp);
+            return null;
         }
         
         libMngr.delete(lib);

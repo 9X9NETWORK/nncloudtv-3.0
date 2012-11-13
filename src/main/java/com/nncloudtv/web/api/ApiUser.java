@@ -166,6 +166,15 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         NnProgramManager programMngr = new NnProgramManager();
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
@@ -235,6 +244,15 @@ public class ApiUser extends ApiGeneric {
         NnUser user = userMngr.findById(userId);
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -315,6 +333,15 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         NnUserLibraryManager libMngr = new NnUserLibraryManager();
         
         // name, url
@@ -383,6 +410,15 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         NnChannelManager channelMngr = new NnChannelManager();
         results = channelMngr.findByUserAndHisFavorite(user, 0, false);
         
@@ -423,6 +459,15 @@ public class ApiUser extends ApiGeneric {
         NnUser user = userMngr.findById(userId);
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -497,6 +542,15 @@ public class ApiUser extends ApiGeneric {
         NnUser user = userMngr.findById(userId);
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -611,14 +665,13 @@ public class ApiUser extends ApiGeneric {
         } catch (NumberFormatException e) {
         }
         if (channelId == null) {
-            badRequest(resp, INVALID_PATH_PARAMETER);
+            notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
-            
             notFound(resp, "Channel Not Found");
             return null;
         }
@@ -629,12 +682,30 @@ public class ApiUser extends ApiGeneric {
         } catch (NumberFormatException e) {
         }
         if (userId == null) {
-            
-            badRequest(resp, INVALID_PATH_PARAMETER);
+            notFound(resp, INVALID_PATH_PARAMETER);
             return null;
-        } else if (userId != channel.getUserId()) {
-            
-            return "Not The Channel Owner";
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        NnUser user = userMngr.findById(userId);
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
+            return null;
+        }
+        
+        if (userId != channel.getUserId()) {
+            //return "Not The Channel Owner";
+            forbidden(resp);
+            return null;
         }
         
         channel.setUserIdStr(null); // unlink
@@ -664,6 +735,15 @@ public class ApiUser extends ApiGeneric {
         NnUser user = userMngr.findById(userId);
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -721,6 +801,15 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         NnUserPrefManager prefMngr = new NnUserPrefManager();
         NnUserPref userPref = null;
         
@@ -758,6 +847,15 @@ public class ApiUser extends ApiGeneric {
         NnUser user = userMngr.findById(userId);
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUser.getId() != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
