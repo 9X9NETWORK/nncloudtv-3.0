@@ -195,7 +195,12 @@ public class PlayerController {
     public String support() {
         return "general/support";
     }    
-        
+
+    @RequestMapping("tanks")
+    public String tanks() {        
+        return "player/tanks";
+    }
+    
     /*
      * used for dns redirect watch dog 
      */

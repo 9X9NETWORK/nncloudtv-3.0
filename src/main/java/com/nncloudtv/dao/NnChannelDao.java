@@ -143,7 +143,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         List<NnChannel> channels = new ArrayList<NnChannel>(); 
         try {
             Query q = pm.newQuery(NnChannel.class);
-            q.setOrdering("cntSubscribe desc");
+            //q.setOrdering("cntSubscribe desc");
+            q.setOrdering("seq asc");
             if (limit != 0)
                 q.setRange(0, limit);            
             if (isPlayer) {
