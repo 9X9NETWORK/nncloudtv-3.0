@@ -22,7 +22,6 @@ import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnGuest;
@@ -65,12 +64,18 @@ public class NnUserManager {
         if (name == null)
             return null;
         String imageUrl = info.get("thumbnail");
+
+        /*
         if (info.get("type").equals("playlist")) {
-            System.out.println("author???:" + name);
+            log.info("author:" + name);            
             Map<String, String> authorData = YouTubeLib.getYouTubeEntry(name, true);
             imageUrl = authorData.get("thumbnail");
         }
+        */
+        name = name.toLowerCase();
+        name = name.replaceAll("\\s", "");
         String email = name + "@9x9.tv";
+        log.info("fake youtube email:" + email);
         NnUser user = this.findByEmail(email, req);
         if (user != null)
             return user;

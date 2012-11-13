@@ -143,6 +143,7 @@ public class YouTubeLib {
        @Key String logo;
        @Key String description;
        @Key String author;
+       @Key int totalItems;
        @Key List<Video> items;
     }
 
@@ -206,8 +207,8 @@ public class YouTubeLib {
             videoUrl.maxResults = 1;
             request = factory.buildGetRequest(videoUrl);
             feed = request.execute().parseAs(MyFeed.class);
-            if (feed.items != null) {
-                Video video = feed.items.get(0);
+            if (feed.items != null) {                
+                Video video = feed.items.get(0);                
                 results.put("title", video.title);
                 results.put("description", video.description);
                 results.put("imageUrl", video.thumbnail.sqDefault);
@@ -283,7 +284,7 @@ public class YouTubeLib {
             }
             if (!channel) {                
                 results.put("title", feed.title);
-                results.put("author", feed.author);
+                results.put("author", feed.author);                
                 results.put("description", feed.description);
                 log.info("play list title:" + feed.title + "; author:" + feed.author + "; description:" + feed.description);
             }
