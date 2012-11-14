@@ -132,6 +132,7 @@ public class NnStringUtil {
         if (str == null || str.length() == 0) {
             return str;
         }
+        log.info("length = " + length);
         
         for (int i = length; i > 0; i--) {
             String truncated = truncateUTF8(str, i);
