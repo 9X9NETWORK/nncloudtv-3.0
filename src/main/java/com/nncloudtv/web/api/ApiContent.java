@@ -1751,7 +1751,7 @@ public class ApiContent extends ApiGeneric {
             badRequest(resp, MISSING_PARAMETER);
             return null;
         }
-        titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message));
+        titleCard.setMessage(NnStringUtil.htmlSafeAndTruncated(message, 2000));
         
         // duration
         String duration = req.getParameter("duration");
