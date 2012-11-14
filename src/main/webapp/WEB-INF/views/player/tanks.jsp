@@ -8,8 +8,11 @@ function closeWin()
 </script>
 </head>
 <body onload="closeWin()">
-
-<input type="button" value="Close Window" onclick="closeWin()" />
-
+<center>
+<br/><br/>
+<div style="align:center">
+<input type="button" value="Close Window" onclick="closeWin()" style="height: 30px; width: 150px"/>
+</div>
+</center>
 </body>
 </html>
