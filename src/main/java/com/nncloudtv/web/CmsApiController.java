@@ -17,8 +17,8 @@ public class CmsApiController {
     
     class NnProgramSeqComparator implements Comparator<NnProgram> {
         public int compare(NnProgram program1, NnProgram program2) {
-            int seq1 = (program1.getSeq() == null) ? 0 : Integer.valueOf(program1.getSeq());
-            int seq2 = (program2.getSeq() == null) ? 0 : Integer.valueOf(program2.getSeq());
+            int seq1 = (program1.getSubSeq() == null) ? 0 : Integer.valueOf(program1.getSubSeq());
+            int seq2 = (program2.getSubSeq() == null) ? 0 : Integer.valueOf(program2.getSubSeq());
             return (seq1 - seq2);
         }
     }

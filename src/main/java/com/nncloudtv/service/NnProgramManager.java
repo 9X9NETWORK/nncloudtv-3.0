@@ -331,7 +331,7 @@ public class NnProgramManager {
         
         List<NnProgram> programs = findByEpisodeId(episodeId);
         
-        Collections.sort(programs, getProgramSeqComparator());
+        Collections.sort(programs, getProgramComparator("subSeq"));
         
         log.info("programs.size() = " + programs.size());
         
@@ -354,35 +354,24 @@ public class NnProgramManager {
             }
             return new ProgramComparator();            
         }
-        //default, seq and subSeq
+        if (sort.equals("subSeq")) {
+            class ProgramComparator implements Comparator<NnProgram> {
+                public int compare(NnProgram program1, NnProgram program2) {
+                    int subSeq1 = program1.getSubSeqInt();
+                    int subSeq2 = program2.getSubSeqInt();
+                    return (subSeq1 - subSeq2);
+                }
+            }
+            return new ProgramComparator();
+        }
+        //default, subSeq
         class NnProgramSeqComparator implements Comparator<NnProgram> {            
-            public int compare(NnProgram program1, NnProgram program2) {                
-                int seq1 = program1.getSeqInt();
-                int seq2 = program2.getSeqInt();
+            public int compare(NnProgram program1, NnProgram program2) {
                 int subSeq1 = program1.getSubSeqInt();
                 int subSeq2 = program2.getSubSeqInt();                
-                return (seq1 == seq2) ? (subSeq1 - subSeq2) : (seq1 - seq2);                
-            }
-        }        
-        return new NnProgramSeqComparator();       
-    }
-    
-    public Comparator<NnProgram> getProgramSeqComparator() {
-        
-        class NnProgramSeqComparator implements Comparator<NnProgram> {
-            
-            public int compare(NnProgram program1, NnProgram program2) {
-                
-                int seq1 = program1.getSeqInt();
-                int seq2 = program2.getSeqInt();
-                int subSeq1 = program1.getSubSeqInt();
-                int subSeq2 = program2.getSubSeqInt();
-                
-                return (seq1 == seq2) ? (subSeq1 - subSeq2) : (seq1 - seq2);
-                
+                return (subSeq1 - subSeq2);
             }
         }
-        
         return new NnProgramSeqComparator();
     }
     
@@ -579,7 +568,7 @@ public class NnProgramManager {
             if (list == null)
                 log.info("episode:" + e.getId() + " have no programs");
             if (list != null && list.size() > 0) {
-                Collections.sort(list, getProgramSeqComparator());
+                Collections.sort(list, getProgramComparator("subSeq"));
                 String videoUrl = "";
                 String duration = String.valueOf(e.getDuration());
                 String name = getNotPipedProgramInfoData(e.getName());

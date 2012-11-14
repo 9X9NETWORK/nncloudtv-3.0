@@ -979,15 +979,6 @@ public class ApiContent extends ApiGeneric {
             
         }
         
-        List<NnEpisode> needPopulateSeq = new ArrayList<NnEpisode>();
-        for (NnEpisode episode : results) {
-            if (episode.getSeq() == 0) {
-                needPopulateSeq.add(episode);
-            }
-        }
-        results.removeAll(needPopulateSeq);
-        episodeMngr.populateEpisodesSeq(needPopulateSeq);
-        results.addAll(needPopulateSeq);
         Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
         
         for (NnEpisode episode : results) {
@@ -1172,9 +1163,6 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        if (episode.getSeq() == 0) {
-            episode.setSeq(episodeMngr.getEpisodeSeq(episode));
-        }
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
         

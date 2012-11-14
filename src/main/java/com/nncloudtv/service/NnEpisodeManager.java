@@ -88,37 +88,6 @@ public class NnEpisodeManager {
         return dao.findByChannelId(channelId);
     }
     
-    public void populateEpisodesSeq(List<NnEpisode> episodes) {
-        
-        if (episodes == null) {
-            return;
-        }
-        
-        for (NnEpisode episode : episodes) {
-            
-            episode.setSeq(getEpisodeSeq(episode));
-        }
-    }
-    
-    public int getEpisodeSeq(NnEpisode episode) {
-        
-        if (episode == null) {
-            return 0;
-        }
-        
-        if (episode.getSeq() == 0) {
-            NnProgramManager programMngr = new NnProgramManager();
-            NnProgram program = programMngr.findOneByEpisodeId(episode.getId());
-            if (program == null) {
-                return 0;
-            }
-            return program.getSeqInt();
-        } else {
-            return episode.getSeq();
-        }
-        
-    }
-    
     public int getProgramCnt(NnEpisode episode) {
         
         if (episode == null) {
@@ -169,18 +138,10 @@ public class NnEpisodeManager {
         return new NnEpisodeSeqComparator();
     }
     
-    public List<NnEpisode> findByChannelIdSorted(long channelId) {
-        
-        List<NnEpisode> episodes = findByChannelId(channelId);
-        populateEpisodesSeq(episodes);
-        Collections.sort(episodes, getEpisodeSeqComparator());
-        
-        return episodes;
-    }
-    
     public void reorderChannelEpisodes(long channelId) {
         
-        List<NnEpisode> episodes = findByChannelIdSorted(channelId);
+        List<NnEpisode> episodes = findByChannelId(channelId);
+        Collections.sort(episodes, getEpisodeSeqComparator());
         
         for (int i = 0; i < episodes.size(); i++) {
             
