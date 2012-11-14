@@ -322,11 +322,6 @@ public class NnProgramManager {
         return dao.findProgramsByEpisode(episodeId); // sorted already
     }
     
-    public NnProgram findOneByEpisodeId(long episodeId) {
-        
-        return dao.findProgramByEpisode(episodeId);
-    }
-    
     public void reorderEpisodePrograms(long episodeId) {
         
         List<NnProgram> programs = findByEpisodeId(episodeId);

@@ -289,29 +289,5 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         return detached;        
     }
     
-    // used for get episode's seq where it's stored in program.
-    public NnProgram findProgramByEpisode(long episodeId) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        NnProgram detached = null;
-        try {
-            String sql = "select id " +
-                           "from nnprogram " +
-                          "where episodeId = " + episodeId + " " +
-                          "limit 0,1";
-            log.info("sql:" + sql);
-            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-            q.setClass(NnProgram.class);
-            @SuppressWarnings("unchecked")
-            List<NnProgram> programs = (List<NnProgram>) q.execute();
-            if (programs.size() > 0) {
-                detached = pm.detachCopy(programs.get(0));
-            }
-            
-        } finally {
-            pm.close();
-        }
-        return detached;        
-    }
-    
 //select count(*) from nnprogram where seq = (select seq from nnprogram where id = )    
 }
