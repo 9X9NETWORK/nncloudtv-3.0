@@ -379,16 +379,17 @@ public class NnUserManager {
         return dao.findByProfileUrl(profileUrl);
     }
 
-    public String composeCuratorInfo(List<NnUser> users, boolean chCntLimit, HttpServletRequest req) {
+    public String composeCuratorInfo(List<NnUser> users, boolean chCntLimit, boolean isAllChannel, HttpServletRequest req) {
+        log.info("looking for all channels of a curator?" + isAllChannel);
         String result = "";
         NnChannelManager chMngr = new NnChannelManager();
         List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
         for (NnUser u : users) {
             List<NnChannel> channels = new ArrayList<NnChannel>();
             if (chCntLimit) {
-                channels = chMngr.findByUserAndHisFavorite(u, 1, true);
+                channels = chMngr.findByUserAndHisFavorite(u, 1, isAllChannel);
             } else {
-                channels = chMngr.findByUserAndHisFavorite(u, 0, true);
+                channels = chMngr.findByUserAndHisFavorite(u, 0, isAllChannel);
             }
             curatorChannels.addAll(channels);            
             String ch = "";

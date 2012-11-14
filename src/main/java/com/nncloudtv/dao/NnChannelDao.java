@@ -138,7 +138,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     }
     
     @SuppressWarnings("unchecked")
-    public List<NnChannel> findByUser(String userIdStr, int limit, boolean isPlayer) {
+    public List<NnChannel> findByUser(String userIdStr, int limit, boolean isAll) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> channels = new ArrayList<NnChannel>(); 
         try {
@@ -147,14 +147,14 @@ public class NnChannelDao extends GenericDao<NnChannel> {
             q.setOrdering("seq asc");
             if (limit != 0)
                 q.setRange(0, limit);            
-            if (isPlayer) {
-                q.setFilter("userIdStr == userIdStrParam && isPublic == isPublicParam && status == statusParam");
-                q.declareParameters("String userIdStrParam, boolean isPublicParam, short statusParam");
-                channels = (List<NnChannel>) q.execute(userIdStr, true, NnChannel.STATUS_SUCCESS);
-            } else {
+            if (isAll) {
                 q.setFilter("userIdStr == userIdStrParam");
                 q.declareParameters("String userIdStrParam");
                 channels = (List<NnChannel>) q.execute(userIdStr);
+            } else {
+                q.setFilter("userIdStr == userIdStrParam && isPublic == isPublicParam && status == statusParam");
+                q.declareParameters("String userIdStrParam, boolean isPublicParam, short statusParam");
+                channels = (List<NnChannel>) q.execute(userIdStr, true, NnChannel.STATUS_SUCCESS);
             }
             
             channels = (List<NnChannel>)pm.detachCopyAll(channels);

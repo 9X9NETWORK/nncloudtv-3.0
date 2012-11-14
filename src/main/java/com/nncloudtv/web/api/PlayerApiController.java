@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.memcached.MemcachedClient;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,12 +24,11 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
-import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.service.IosService;
 import com.nncloudtv.service.MsoManager;
-import com.nncloudtv.service.NnProgramManager;
+import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnStatusMsg;
-import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerApiService;
 import com.nncloudtv.web.json.facebook.FacebookMe;
 
@@ -1990,13 +1988,14 @@ public class PlayerApiController {
     @RequestMapping(value="curator", produces = "text/plain; charset=utf-8")
     public @ResponseBody String curator(
             @RequestParam(value="curator", required=false) String profile,             
+            @RequestParam(value="user", required=false) String user,
             @RequestParam(value="stack", required=false) String stack,
             HttpServletRequest req,
             HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);        
-            output = playerApiService.curator(profile, stack, req);
+            output = playerApiService.curator(profile, user, stack, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -2074,6 +2073,20 @@ public class PlayerApiController {
             cache.shutdown();
         }
         return NnNetUtil.textReturn("flush");
+    }
+ 
+    @RequestMapping(value="episodeUpdate", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String episodeUpdate(
+            @RequestParam(value="epId", required=false) long epId ) {
+        NnEpisodeManager mngr = new NnEpisodeManager();
+        NnEpisode e = new NnEpisodeManager().findById(epId);
+        if (e != null) {
+            int duration = mngr.calculateEpisodeDuration(e);
+            log.info("new duration:" + duration);
+            e.setDuration(duration);
+            mngr.save(e);
+        }
+        return "OK";                
     }
     
 }

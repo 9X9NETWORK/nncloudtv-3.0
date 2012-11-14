@@ -584,10 +584,10 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (curator.getToken().equals(userToken)) {
             log.info("find channels curator himself created");
-            channels = chMngr.findByUserAndHisFavorite(curator, 0, false);
+            channels = chMngr.findByUserAndHisFavorite(curator, 0, true);
         } else {
             log.info("find curator channels");
-            channels = chMngr.findByUserAndHisFavorite(curator, 0, true);
+            channels = chMngr.findByUserAndHisFavorite(curator, 0, false);
         }
         userMngr.composeSubscriberInfoStr(channels);
         return "";
@@ -664,10 +664,10 @@ public class PlayerApiService {
             List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
             if (curator.getToken().equals(userToken)) {
                 log.info("find channels curator himself created");
-                curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, false);
-            } else {
-                log.info("find curator channels");
                 curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, true);
+            } else {
+                log.info("find channels curator created for public");
+                curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, false);
             }
             //List<NnChannel> curatorChannels = chMngr.findByUserAndHisFavorite(curator, 0, true);
             for (NnChannel c : curatorChannels) {
@@ -1660,7 +1660,7 @@ public class PlayerApiService {
         List<NnUser> users = userMngr.search(null, null, text);
         int endIndex = (users.size() > 9) ? 9: users.size();
         users = users.subList(0, endIndex);
-        result[1] += userMngr.composeCuratorInfo(users, true, req);
+        result[1] += userMngr.composeCuratorInfo(users, true, false, req);
         
         //if none matched, return suggestion channels
         List<NnChannel> suggestion = new ArrayList<NnChannel>();
@@ -1826,7 +1826,7 @@ public class PlayerApiService {
         }
         //3. featured curators
         log.info ("[quickLogin] featured curators");
-        String curatorInfo = this.curator(null, "featured", req);
+        String curatorInfo = this.curator(null, null, "featured", req);
         data.add(curatorInfo);
         //4. trending
         log.info ("[quickLogin] trending channels");
@@ -2047,10 +2047,11 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String curator(String profile, String stack, HttpServletRequest req) {
+    public String curator(String profile, String userToken, String stack, HttpServletRequest req) {
         if (stack == null && profile == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
+        
         List<NnUser> users = new ArrayList<NnUser>();
         if (profile != null) {
             NnUser user = userMngr.findByProfileUrl(profile);
@@ -2060,11 +2061,25 @@ public class PlayerApiService {
         } else {
             users = userMngr.findFeatured();
         }
+        NnUser user = null;
+        if (userToken != null) {
+            user = userMngr.findByToken(userToken);            
+        }
+        
         String[] result = {"", ""};
+        boolean isAllChannel = false;
+        if (profile != null && user != null && users.size() > 0 && users.get(0).getToken().equals(user.getToken())) {
+            log.info("find curator channels");
+            isAllChannel = true;
+        } else {
+            log.info("find channels curator created for public");
+        }
+        
+ 
         if (stack != null)
-            result[0] = userMngr.composeCuratorInfo(users, true, req);
+            result[0] = userMngr.composeCuratorInfo(users, true, isAllChannel, req);
         else
-            result[0] = userMngr.composeCuratorInfo(users, false, req);
+            result[0] = userMngr.composeCuratorInfo(users, false, isAllChannel, req);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 }

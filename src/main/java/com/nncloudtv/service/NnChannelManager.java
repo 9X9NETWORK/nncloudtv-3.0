@@ -673,9 +673,9 @@ public class NnChannelManager {
 
     //TODO change to list, and merge with byUser, and subList is not real
     //used only in player for specific occasion
-    public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit, boolean isPlayer) {        
+    public List<NnChannel> findByUserAndHisFavorite(NnUser user, int limit, boolean isAll) {        
         String userIdStr = user.getShard() + "-" + user.getId();
-        List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
+        List<NnChannel> channels = dao.findByUser(userIdStr, limit, isAll);
         boolean needToFake = true;
         for (NnChannel c : channels) {
             if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
