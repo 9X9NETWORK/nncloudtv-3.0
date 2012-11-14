@@ -7,10 +7,9 @@ function closeWin()
 }
 </script>
 </head>
-<body>
+<body onload="closeWin()">
 
 <input type="button" value="Close Window" onclick="closeWin()" />
 
 </body>
 </html>
-
