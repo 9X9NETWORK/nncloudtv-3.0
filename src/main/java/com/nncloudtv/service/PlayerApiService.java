@@ -1610,6 +1610,10 @@ public class PlayerApiService {
     }
 
     public String resetpwd(String email, String token, String password, HttpServletRequest req) {
+        if (email == null || token == null || password == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+
         NnUser user = userMngr.findByEmail(email, req);
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
