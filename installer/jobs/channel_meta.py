@@ -21,7 +21,7 @@ dbuser = MySQLdb.connect (host = "localhost",
                           db = "nncloudtv_nnuser1")
 
 
-url = 'http://channelwatch.9x9.tv/dan/feed.out'
+url = 'http://channelwatch.9x9.tv/dan/basic.feed.txt'
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 values = {'language' : 'Python' }
 headers = { 'User-Agent' : user_agent }
