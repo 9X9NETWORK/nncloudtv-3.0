@@ -435,7 +435,7 @@ public class ApiUser extends ApiGeneric {
             }
         }
         
-        Collections.sort(results, channelMngr.getChannelUpdateDateComparator());
+        Collections.sort(results, channelMngr.getChannelComparator("seq"));
         
         return results;
     }
