@@ -142,19 +142,27 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> channels = new ArrayList<NnChannel>(); 
         try {
-            Query q = pm.newQuery(NnChannel.class);
-            //q.setOrdering("cntSubscribe desc");
-            q.setOrdering("seq asc");
-            if (limit != 0)
-                q.setRange(0, limit);            
             if (isAll) {
+                Query q = pm.newQuery(NnChannel.class);
+                q.setOrdering("seq asc");
                 q.setFilter("userIdStr == userIdStrParam");
                 q.declareParameters("String userIdStrParam");
+                if (limit != 0)
+                    q.setRange(0, limit);            
                 channels = (List<NnChannel>) q.execute(userIdStr);
-            } else {
-                q.setFilter("userIdStr == userIdStrParam && isPublic == isPublicParam && status == statusParam");
-                q.declareParameters("String userIdStrParam, boolean isPublicParam, short statusParam");
-                channels = (List<NnChannel>) q.execute(userIdStr, true, NnChannel.STATUS_SUCCESS);
+            } else {                
+                String sql = 
+                    "select * from nnchannel " +
+                     "where  userIdStr = '" + userIdStr + "' " +
+                       " and isPublic=true " +
+                       " and (status=0 or status=3) " +
+                       " order by seq "; 
+                if (limit != 0)
+                    sql += " limit " + limit;
+                log.info("Sql=" + sql);
+                Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+                q.setClass(NnChannel.class);
+                channels = (List<NnChannel>) q.execute();                                
             }
             
             channels = (List<NnChannel>)pm.detachCopyAll(channels);
