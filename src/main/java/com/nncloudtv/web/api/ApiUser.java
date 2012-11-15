@@ -420,7 +420,7 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
-        results = channelMngr.findByUserAndHisFavorite(user, 0, false);
+        results = channelMngr.findByUserAndHisFavorite(user, 0, true);
         
         for (NnChannel channel : results) {
             
@@ -479,7 +479,7 @@ public class ApiUser extends ApiGeneric {
         String[] channelIdStrList = channelIdsStr.split(",");
         
         NnChannelManager channelMngr = new NnChannelManager();
-        List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, false);
+        List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, true);
         List<NnChannel> orderedChannels = new ArrayList<NnChannel>();
         List<Long> channelIdList = new ArrayList<Long>();
         List<Long> checkedChannelIdList = new ArrayList<Long>();
