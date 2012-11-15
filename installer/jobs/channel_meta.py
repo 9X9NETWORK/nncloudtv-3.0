@@ -4,7 +4,7 @@ import urllib, urllib2
 import os
 from array import *
 import MySQLdb
-import time
+import time, datetime
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
@@ -20,6 +20,29 @@ dbuser = MySQLdb.connect (host = "localhost",
                           use_unicode = True,
                           db = "nncloudtv_nnuser1")
 
+pwd = os.path.dirname(os.path.realpath(__file__))
+md5_file = pwd + '/basic.feed.txt.md5'
+md5_url = 'http://channelwatch.9x9.tv/dan/basic.feed.txt.md5'
+f = open(md5_file, 'r')
+md5 = f.read()
+f.close()
+user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+values = {'language' : 'Python' }
+headers = { 'User-Agent' : user_agent }
+data = urllib.urlencode(values)
+req_md5 = urllib2.Request(md5_url, data, headers)
+response = urllib2.urlopen(req_md5)
+md5_new = response.readline()
+
+if md5_new == md5:
+  print "same\n"
+  quit()
+
+print datetime.datetime.now()
+print "\n"
+f = open(md5_file, 'w')
+f.write(md5_new)
+f.close()
 
 url = 'http://channelwatch.9x9.tv/dan/basic.feed.txt'
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
