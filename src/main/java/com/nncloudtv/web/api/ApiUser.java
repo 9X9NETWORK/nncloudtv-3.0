@@ -578,7 +578,7 @@ public class ApiUser extends ApiGeneric {
         NnChannel channel = new NnChannel(name, intro, imageUrl);
         channel.setContentType(NnChannel.CONTENTTYPE_MIXED);
         channel.setPublic(false);
-        channel.setStatus(NnChannel.STATUS_PROCESSING);
+        channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
         channel.setPoolType(NnChannel.POOL_BASE);
         channel.setUserIdStr(user.getShard(), user.getId());
         
