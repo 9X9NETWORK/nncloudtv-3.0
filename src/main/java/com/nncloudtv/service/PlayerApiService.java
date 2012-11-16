@@ -911,9 +911,9 @@ public class PlayerApiService {
                 }
             }
         } else {
-            if (version < 32) {
+            if (version < 32) {                
                 programInfoStr = new IosService().findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
-                if (programInfoStr != null) {
+                if (programInfoStr != null && new PlayerService().isIos(req)) {
                     String[] lines = programInfoStr.split("\n");
                     String debugStr = "";
                     if (lines.length > 0) {
@@ -924,9 +924,7 @@ public class PlayerApiService {
                         }
                     }
                     log.info("ios program info debug string:" + debugStr);
-                }
-                //if (new PlayerService().isIos(req)) {                   
-                //}                    
+                }                                   
             } else {            
                 programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
             }
