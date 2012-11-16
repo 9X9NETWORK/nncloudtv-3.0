@@ -818,7 +818,7 @@ public class PlayerApiController {
         try {
             this.prepService(req, true);        
             boolean isUserInfo = Boolean.parseBoolean(userInfo);
-            output =  playerApiService.programInfo(channelIds, userToken, ipgId, isUserInfo, sidx, limit);
+            output =  playerApiService.programInfo(channelIds, userToken, ipgId, isUserInfo, sidx, limit, req);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

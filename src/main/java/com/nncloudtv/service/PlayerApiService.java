@@ -310,7 +310,7 @@ public class PlayerApiService {
                     return this.assembleMsgs(NnStatusCode.USER_INVALID, null);                    
                 } else {
                     user = userMngr.setFbProfile(user, me);
-                    log.info("reset fb info:" + user.getName());
+                    log.info("reset fb info:" + user.getId());
                 }
             }
 
@@ -876,7 +876,7 @@ public class PlayerApiService {
     
     public String programInfo(String channelIds, String userToken, 
                                   String ipgId, boolean userInfo,
-                                  String sidx, String limit) {
+                                  String sidx, String limit, HttpServletRequest req) {
         if (channelIds == null || (channelIds.equals("*") && userToken == null && ipgId == null)) {           
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
@@ -913,6 +913,20 @@ public class PlayerApiService {
         } else {
             if (version < 32) {
                 programInfoStr = new IosService().findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
+                if (programInfoStr != null) {
+                    String[] lines = programInfoStr.split("\n");
+                    String debugStr = "";
+                    if (lines.length > 0) {
+                        for (int i=0; i<lines.length; i++) {
+                            String[] tabs = lines[i].split("\t");
+                            if (tabs.length > 1)
+                                debugStr += tabs[1] + "; ";
+                        }
+                    }
+                    log.info("ios program info debug string:" + debugStr);
+                }
+                //if (new PlayerService().isIos(req)) {                   
+                //}                    
             } else {            
                 programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
             }
