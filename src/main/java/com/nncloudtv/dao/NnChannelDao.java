@@ -144,7 +144,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         try {
             if (isAll) {
                 Query q = pm.newQuery(NnChannel.class);
-                q.setOrdering("seq asc");
+                q.setOrdering("seq asc, contentType asc");
                 q.setFilter("userIdStr == userIdStrParam");
                 q.declareParameters("String userIdStrParam");
                 if (limit != 0)
@@ -156,7 +156,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                      "where  userIdStr = '" + userIdStr + "' " +
                        " and isPublic=true " +
                        " and (status=0 or status=3) " +
-                       " order by seq "; 
+                       " order by seq, contentType "; 
                 if (limit != 0)
                     sql += " limit " + limit;
                 log.info("Sql=" + sql);
