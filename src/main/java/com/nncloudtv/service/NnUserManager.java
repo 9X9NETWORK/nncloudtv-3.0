@@ -92,7 +92,7 @@ public class NnUserManager {
     public NnUser setFbProfile(NnUser user, FacebookMe me) {
         if (user == null || me == null)
             return null;
-        if (me.getUsername() != null) {
+        if (me.getId() != null) {
             String imageUrl = "http://graph.facebook.com/" + me.getId() + "/picture";
             user.setImageUrl(imageUrl);
         }
