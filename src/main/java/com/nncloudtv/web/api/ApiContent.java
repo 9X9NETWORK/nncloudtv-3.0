@@ -1293,7 +1293,23 @@ public class ApiContent extends ApiGeneric {
             rerun = true;
         }
         
-        episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        // duration
+        String durationStr = req.getParameter("duration");
+        if (durationStr != null) {
+            Short duration = null;
+            try {
+                duration = Short.valueOf(durationStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((duration == null) || (duration <= 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            episode.setDuration(duration);
+        } else {
+            episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
+        }
+        
         episode = episodeMngr.save(episode, rerun);
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
