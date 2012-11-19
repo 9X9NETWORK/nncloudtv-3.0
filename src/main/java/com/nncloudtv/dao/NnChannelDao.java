@@ -71,7 +71,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                  "where (lower(name) like lower(\"%" + queryStr + "%\")" +
                     "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
             if (!all) {
-                sql += " and status = " + NnChannel.STATUS_SUCCESS;
+                sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
                 sql += " and isPublic = true";
             }
             sql += " limit 9";        
