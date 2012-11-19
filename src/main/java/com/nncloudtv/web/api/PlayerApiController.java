@@ -2052,8 +2052,8 @@ public class PlayerApiController {
      */
     @RequestMapping(value="fbLogin")
     public String fbLogin(HttpServletRequest req,
-            @RequestParam(value="subChannel", required=false) String subChannel) {            
-        String url = FacebookLib.getDialogOAuthPath(subChannel);        
+            @RequestParam(value="subCh", required=false) String subCh) {            
+        String url = FacebookLib.getDialogOAuthPath(subCh);        
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;
