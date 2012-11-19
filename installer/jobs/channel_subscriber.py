@@ -1,4 +1,4 @@
-# update channel subscriber count
+# update channel subscribers user id
 import MySQLdb
 import sqlite3
 
@@ -13,7 +13,7 @@ try:
   cursor = conn.cursor()
   #TODO nnuser2 table as well
   cursor.execute("""
-    select id from nnchannel
+    select id from nnchannel order by id
       """)
 
   rows = cursor.fetchall()
