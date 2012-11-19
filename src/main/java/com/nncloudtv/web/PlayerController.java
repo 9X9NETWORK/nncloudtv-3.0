@@ -36,7 +36,7 @@ public class PlayerController {
         try {
             PlayerService service = new PlayerService();
             model = service.prepareBrand(model, mso, resp);
-            model = service.preparePlayer(model, js, jsp);            
+            model = service.preparePlayer(model, js, jsp, req);            
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
             }
@@ -54,7 +54,7 @@ public class PlayerController {
         try {
             PlayerService service = new PlayerService();
             model = service.prepareBrand(model, mso, resp);
-            model = service.preparePlayer(model, js, jsp);            
+            model = service.preparePlayer(model, js, jsp, req);            
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
             }
@@ -80,7 +80,7 @@ public class PlayerController {
                 model = service.prepareCrawled(model, escaped);
                 return "player/crawled";
             }
-            model = service.preparePlayer(model, js, jsp);
+            model = service.preparePlayer(model, js, jsp, req);
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
             }        
@@ -124,7 +124,6 @@ public class PlayerController {
                        @RequestParam(value="ep", required=false) String ep) {
         //additional params
         PlayerService service = new PlayerService();
-        /*
         boolean isIos = service.isIos(req);
         if (isIos) {
             String cid = channel != null ? channel : ch;
@@ -135,7 +134,6 @@ public class PlayerController {
                 return "player/ios";
             }
         }
-        */
         String str = service.getQueryString(req, channel, episode, ch, ep);
         return "redirect:/" + str;
     }
@@ -157,14 +155,12 @@ public class PlayerController {
                 log.info("extra stuff from fb" + queryStr);
                 String cid = channel != null ? channel : ch;
                 String pid = episode != null ? episode : ep;
-                /*
                 boolean isIos = service.isIos(req);
                 if (isIos) {
                     String iosStr = service.getRedirectIosUrl(cid, pid, req);
                     model.addAttribute("fliprUrl", iosStr);
                     return "player/ios";
                 }
-                */
                 String str = js != null ? "js=" + js : "";
                 str += str.length() != 0 ? "&" : "";
                 str += cid != null ? "#!ch=" + cid : "";
@@ -176,7 +172,7 @@ public class PlayerController {
             String cid = channel != null ? channel : ch;
             String pid = episode != null ? episode : ep;
             model = service.prepareBrand(model, mso, resp);
-            model = service.preparePlayer(model, js, jsp);
+            model = service.preparePlayer(model, js, jsp, req);
             model = service.prepareChannel(model, cid, resp);
             model = service.prepareEpisode(model, pid, resp);
             if (jsp != null && jsp.length() > 0) {

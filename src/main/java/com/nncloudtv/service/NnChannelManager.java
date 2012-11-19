@@ -817,8 +817,9 @@ public class NnChannelManager {
         }
 
         //3 subscribers info
-        /*
         String subscribersIdStr = c.getSubscribersIdStr();
+        String subscriberProfile = "";
+        String subscriberImage = "";
         if (c.getContentType() != NnChannel.CONTENTTYPE_FAKE_FAVORITE && 
             subscribersIdStr != null) {
             String[] list = subscribersIdStr.split(";");
@@ -836,7 +837,6 @@ public class NnChannelManager {
                 subscriberImage = subscriberImage.replaceFirst("\\|", "");
             }
         }
-        */
 
         /*
         String id = Long.toString(c.getId());
@@ -869,8 +869,8 @@ public class NnChannelManager {
                         userName,
                         userIntro,
                         userImageUrl,
-                        "", //used to be subscriber profile urls, will be removed
-                        "", //used to be subscriber image urls
+                        subscriberProfile, //used to be subscriber profile urls, will be removed
+                        subscriberImage, //used to be subscriber image urls
                         lastEpisodeTitle,
                        };
         String output = NnStringUtil.getDelimitedStr(ori);

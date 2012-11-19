@@ -117,7 +117,7 @@ public class PlayerService {
         return model;
     }
 
-    public Model preparePlayer(Model model, String js, String jsp) {
+    public Model preparePlayer(Model model, String js, String jsp, HttpServletRequest req) {
         model.addAttribute("js", "");
         if (js != null && js.length() > 0) {
             model.addAttribute("js", js);
@@ -125,6 +125,7 @@ public class PlayerService {
         if (jsp != null && jsp.length() > 0) {
             log.info("alternate is enabled: " + jsp);
         }
+        model.addAttribute("locale", NnUserManager.findLocaleByHttpRequest(req));
         return model;
     }
 

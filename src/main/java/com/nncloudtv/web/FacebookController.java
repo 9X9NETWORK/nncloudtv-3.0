@@ -24,6 +24,7 @@ public class FacebookController {
     public String login(
             HttpServletRequest req,
             HttpServletResponse resp,
+            @RequestParam(value="subChannel", required=false) String subChannel,            
             @RequestParam(value="stage", required=false) String stage,
             @RequestParam(value="code", required=false) String code,
             @RequestParam(value="error", required=false) String error,
@@ -32,7 +33,7 @@ public class FacebookController {
             @RequestParam(value="accessToken", required=false) String accessToken,
             @RequestParam(value="expirse", required=false) String expires                    
             ) throws IOException {
-        log.info("FACEBOOK: (login) - back from facebook page");
+        log.info("FACEBOOK: (login) - back from facebook page(subchannel):" + subChannel);
         NnNetUtil.logUrl(req);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: (login) - our cookie:" + userCookie);                                                      
@@ -48,7 +49,10 @@ public class FacebookController {
                 log.info("FACEBOOK: (login) have used data from facebook to create a 9x9 account");
             }                         
         }
-        log.info("FACEBOOK: (login) last step redirect to 9x9 player");
-        return "redirect:/";
+        String redirectPath = "/";
+        if (subChannel != null)
+            redirectPath = "#!subCh=" + subChannel;
+        log.info("FACEBOOK: (login) last step redirect to 9x9 player:" + redirectPath);
+        return "redirect:" + redirectPath;
     }
 }

@@ -28,7 +28,10 @@ public class TagManager {
             for (TagMap m : map) {
                 NnChannel c = chMngr.findById(m.getChannelId());
                 if (c != null)
-                    channels.add(c);
+                    if (!player)
+                        channels.add(c);
+                    if (player && c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS)
+                        channels.add(c);
             }
         }        
         return channels;

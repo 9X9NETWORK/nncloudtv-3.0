@@ -144,7 +144,8 @@ public class FacebookLib {
             String params = "client_id=" + clientId +             
                             "&code=" + code + 
                             "&client_secret=" + secret +
-                            "&redirect_uri=" + redirectUri;                 
+                            "&redirect_uri=" + redirectUri;
+            log.info("FACEBOOK: (oauth) params:" + params);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -181,13 +182,15 @@ public class FacebookLib {
         return data;
     }
     
-    public static String getDialogOAuthPath() {        
+    public static String getDialogOAuthPath(String subChannel) {        
         String scope = "user_likes,user_location,user_interests,email,user_birthday";
         String state = FacebookLib.generateState();
         String urlBase = "http://www.facebook.com/dialog/oauth?";
+        String modifiedRedirectUri = subChannel == null ? redirectUri : redirectUri + "?subChannel=" + subChannel;
         String url = urlBase +
                      "client_id=" + clientId +
-                     "&redirect_uri=" + redirectUri +
+                     "&redirect_uri=" + modifiedRedirectUri +
+                     //"&redirect_uri=" + redirectUri +
                      "&scope=" + scope +
                      "&state=" + state;
         return url;

@@ -161,6 +161,7 @@ public class NnUserManager {
             URL url = new URL("http://brussels.teltel.com/geoip/?ip=" + ip);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
             connection.setDoOutput(true);
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 log.info("findLocaleByHttpRequest() IP service returns error:" + connection.getResponseCode());                
@@ -174,6 +175,8 @@ public class NnUserManager {
             rd.close();            
         } catch (java.net.SocketTimeoutException e) {
            log.info("socket timeout");   
+        } catch (java.net.SocketException e) {
+           log.info("socket connect exception");
         } catch (Exception e) {
             log.info("exception");
             NnLogUtil.logException(e);
