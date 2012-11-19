@@ -20,13 +20,13 @@ try:
   for row in rows:
     cid = row[0]
     cursor.execute("""
-      select distinct userId from nncloudtv_nnuser1.nnuser_subscribe where channelId = 2 order by rand() limit 3;
-        """)
+      select distinct userId from nncloudtv_nnuser1.nnuser_subscribe where channelId = %s order by rand() limit 3;
+        """, (cid))
     user_rows = cursor.fetchall()
     uidStr = ""
     for ur in user_rows:
        uid = ur[0]
-       uidStr = uidStr + str(uid) + ";"
+       uidStr = uidStr + "1-" + str(uid) + ";"
     if len(uidStr) > 0:
        print "update ch " + str(cid) + " with uids: " + uidStr
        cursor.execute("""
