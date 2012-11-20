@@ -30,9 +30,6 @@ for r in rows:
    url = "http://localhost:8080/playerAPI/episodeUpdate?epId=" + str(eid)
    print url
    urllib2.urlopen(url).read()
-
    print "eid:" + str(eid) 
-   if i > 5:
-      break
 
 dbcontent.close()
