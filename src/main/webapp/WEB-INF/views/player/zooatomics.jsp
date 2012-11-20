@@ -5,8 +5,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="usabucket" value="http://9x9ui.s3.amazonaws.com"/>
+<c:set var="asiabucket" value="http://9x9ui-j.s3-website-ap-northeast-1.amazonaws.com"/>
+
+<c:if test="${locale == \"zh\"}">
+<c:set var="bucket" value="${asiabucket}"/>
+</c:if>
+<c:if test="${locale != \"zh\"}">
+<c:set var="bucket" value="${usabucket}"/>
+</c:if>
+
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
-<c:set var="nroot" value="http://9x9ui.s3.amazonaws.com/mock42"/>
+<c:set var="nroot" value="${bucket}/mock42"/>
 
 <!-- $Revision: 2612 $ -->
 
@@ -28,33 +39,33 @@
 <link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
 <link rel="stylesheet" href="${nroot}/stylesheets/temporary.css" />
 
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
+<link rel="stylesheet" href="${bucket}/contest/contest.css" />
 
 <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/all.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/swfobject.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/all.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/scripts/swfobject.js"></script>
 <script type="text/javascript" charset="utf-8" src="${root}/javascripts/jquery.swfobject.1-1-1.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/flowplayer-3.2.4.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/scripts/flowplayer-3.2.4.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/swfupload.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mogwai14.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/mogwai14.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
+<script type="text/javascript" charset="utf-8" src="${usabucket}/${js}.js"></script>
 </c:if>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.V3.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.HOME.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.mousewheel.3.0.6.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.ba-hashchange.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/vertical.slider.V3.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/vertical.slider.HOME.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/jquery.mousewheel.3.0.6.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/jquery.ba-hashchange.min.js"></script>
 
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/nn-sdk.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.titlecard.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/soundmanager/soundmanager2.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/nn-sdk.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/jquery.titlecard.js"></script>
 
 <script type="text/javascript">
 var analytz = false;
