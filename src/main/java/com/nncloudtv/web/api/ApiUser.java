@@ -478,8 +478,16 @@ public class ApiUser extends ApiGeneric {
         }
         String[] channelIdStrList = channelIdsStr.split(",");
         
+        // the result should be same as userChannels but not include fake channel
         NnChannelManager channelMngr = new NnChannelManager();
         List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, true);
+        for (NnChannel channel : channels) {
+            if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
+                channels.remove(channel);
+                break;
+            }
+        }
+        
         List<NnChannel> orderedChannels = new ArrayList<NnChannel>();
         List<Long> channelIdList = new ArrayList<Long>();
         List<Long> checkedChannelIdList = new ArrayList<Long>();

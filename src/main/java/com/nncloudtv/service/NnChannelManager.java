@@ -691,6 +691,7 @@ public class NnChannelManager {
             c.setNote(c.getFakeId(user.getProfileUrl())); //shortcut, maybe not very appropriate
             c.setStatus(NnChannel.STATUS_SUCCESS);
             c.setPublic(true);
+            c.setSeq((short)(channels.size()+1));
             channels.add(c);
         }
         if (limit == 0) {
