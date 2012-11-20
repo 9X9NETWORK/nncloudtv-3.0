@@ -128,11 +128,9 @@ public class PlayerController {
         if (isIos) {
             String cid = channel != null ? channel : ch;
             String pid = episode != null ? episode : ep;
-            if (isIos) {
-                String iosStr = service.getRedirectIosUrl(cid, pid, req);
-                model.addAttribute("fliprUrl", iosStr);
-                return "player/ios";
-            }
+            String iosStr = service.getRedirectIosUrl(cid, pid, req);
+            model.addAttribute("fliprUrl", iosStr);
+            return "player/ios";
         }
         String str = service.getQueryString(req, channel, episode, ch, ep);
         return "redirect:/" + str;
