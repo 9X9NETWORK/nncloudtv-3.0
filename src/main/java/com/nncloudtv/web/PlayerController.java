@@ -125,9 +125,11 @@ public class PlayerController {
         //additional params
         PlayerService service = new PlayerService();
         boolean isIos = service.isIos(req);
+        isIos = true;
         if (isIos) {
             String cid = channel != null ? channel : ch;
             String pid = episode != null ? episode : ep;
+            pid = service.findFirstSubepisodeId(pid);
             String iosStr = service.getRedirectIosUrl(cid, pid, req);
             model.addAttribute("fliprUrl", iosStr);
             return "player/ios";
@@ -155,6 +157,7 @@ public class PlayerController {
                 String pid = episode != null ? episode : ep;
                 boolean isIos = service.isIos(req);
                 if (isIos) {
+                    pid = service.findFirstSubepisodeId(pid);
                     String iosStr = service.getRedirectIosUrl(cid, pid, req);
                     model.addAttribute("fliprUrl", iosStr);
                     return "player/ios";
