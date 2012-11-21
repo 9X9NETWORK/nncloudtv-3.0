@@ -575,9 +575,9 @@ public class PlayerApiService {
             }
             String output = "";
             if (isReduced) {
-                output = chMngr.composeChannelLineup(chs);
-            } else {
                 output = chMngr.composeReducedChannelLineup(chs);
+            } else {
+                output = chMngr.composeChannelLineup(chs);
             }
             result.add(output);
         }

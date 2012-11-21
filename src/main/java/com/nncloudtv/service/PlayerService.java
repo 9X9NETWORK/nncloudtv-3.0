@@ -68,6 +68,21 @@ public class PlayerService {
         return false;
     }
     
+    public String findFirstSubepisodeId(String eId) {
+        if (eId != null && eId.contains("e")) {
+            String eid = eId.replace("e", "");
+            NnEpisodeManager episodeMngr = new NnEpisodeManager();
+            NnEpisode episodeObj = episodeMngr.findById(Long.valueOf(eid));
+            if (episodeObj != null) {
+                List<NnProgram> programs = new NnProgramManager().findByEpisodeId(episodeObj.getId());
+                if (programs.size() > 0)
+                    eId = String.valueOf(programs.get(0).getId());
+            }
+        }
+        log.info("first subepisode id:" + eId);
+        return eId;        
+    }
+    
     public Model prepareEpisode(Model model, String pid,
             HttpServletResponse resp) {
         if (pid == null)
