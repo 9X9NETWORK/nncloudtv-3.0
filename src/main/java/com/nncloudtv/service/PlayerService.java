@@ -69,7 +69,7 @@ public class PlayerService {
     }
     
     public String findFirstSubepisodeId(String eId) {
-        if (eId != null && eId.contains("e")) {
+        if (eId != null && eId.matches("e[0-9]+")) {
             String eid = eId.replace("e", "");
             NnEpisodeManager episodeMngr = new NnEpisodeManager();
             NnEpisode episodeObj = episodeMngr.findById(Long.valueOf(eid));
