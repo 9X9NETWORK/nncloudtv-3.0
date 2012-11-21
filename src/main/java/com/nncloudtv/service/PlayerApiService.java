@@ -25,7 +25,9 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.dao.NnChannelDao;
+import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.dao.UserInviteDao;
+import com.nncloudtv.dao.YtProgramDao;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.FacebookLib;
@@ -56,6 +58,7 @@ import com.nncloudtv.model.NnUserSubscribeGroup;
 import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.UserInvite;
+import com.nncloudtv.model.YtProgram;
 import com.nncloudtv.validation.BasicValidator;
 import com.nncloudtv.validation.NnUserValidator;
 import com.nncloudtv.web.api.NnStatusCode;
@@ -546,7 +549,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
-    public String channelStack(String stack, String lang, String userToken, String channel) {
+    public String channelStack(String stack, String lang, String userToken, String channel, boolean isReduced) {
         if (stack == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
 
@@ -570,7 +573,12 @@ public class PlayerApiService {
             if (s.equals("mayLike")) {
                 chs = new RecommendService().findMayLike(userToken, channel, lang);                
             }
-            String output = chMngr.composeChannelLineup(chs);
+            String output = "";
+            if (isReduced) {
+                output = chMngr.composeChannelLineup(chs);
+            } else {
+                output = chMngr.composeReducedChannelLineup(chs);
+            }
             result.add(output);
         }
         String size[] = new String[result.size()];
@@ -600,7 +608,8 @@ public class PlayerApiService {
                                 boolean userInfo, 
                                 String channelIds, 
                                 boolean setInfo, 
-                                boolean isRequired ) {                                 
+                                boolean isRequired,
+                                boolean isReduced) {                                 
 
         //verify input
         if (((userToken == null && userInfo == true) || 
@@ -704,10 +713,18 @@ public class PlayerApiService {
             }
         }
         String channelOutput = "";
-        if (version < 32)
+        if (version < 32) {
+            log.info("output ios string");
             channelOutput += new IosService().composeChannelLineup(channels);
-        else
-            channelOutput += chMngr.composeChannelLineup(channels);
+        } else {
+            if (isReduced) {
+                log.info("output reduced string");
+                channelOutput += chMngr.composeReducedChannelLineup(channels);
+            } else {
+                log.info("output v32 string");
+                channelOutput += chMngr.composeChannelLineup(channels);
+            }
+        }
         if (channelPos && channelOutput != null) {
             String adjust = "";            
             log.info("adjust sequence of channellineup for user:" + user.getId());
@@ -1789,14 +1806,14 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. trending
         log.info ("[quickLogin] trending channels");
-        String trending = this.channelStack(Tag.TRENDING, sphere, token, null);
+        String trending = this.channelStack(Tag.TRENDING, sphere, token, null, false);
         data.add(trending);
         if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //3. hottest
         log.info ("[quickLogin] hot channels");
-        String hot = this.channelStack(Tag.HOT, sphere, token, null);
+        String hot = this.channelStack(Tag.HOT, sphere, token, null, false);
         data.add(hot);
         if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
@@ -1835,7 +1852,7 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup(token, null, null, false, null, true, false);
+        String lineup = this.channelLineup(token, null, null, false, null, true, false, false);
         data.add(lineup);
         if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
@@ -1846,28 +1863,28 @@ public class PlayerApiService {
         data.add(curatorInfo);
         //4. trending
         log.info ("[quickLogin] trending channels");
-        String trending = this.channelStack(Tag.TRENDING, sphere, token, null);
+        String trending = this.channelStack(Tag.TRENDING, sphere, token, null, false);
         data.add(trending);
         if (this.getStatus(trending) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //5. recommended
         log.info ("[quickLogin] recommended channels");
-        String recommended = this.channelStack(Tag.RECOMMEND, sphere, token, null);        
+        String recommended = this.channelStack(Tag.RECOMMEND, sphere, token, null, false);        
         data.add(recommended);
         if (this.getStatus(recommended) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //6. featured
         log.info ("[quickLogin] featured channels");
-        String featured = this.channelStack(Tag.FEATURED, sphere, token, null);
+        String featured = this.channelStack(Tag.FEATURED, sphere, token, null, false);
         data.add(featured);
         if (this.getStatus(featured) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
         }
         //7. hottest
         log.info ("[quickLogin] hot channels");
-        String hot = this.channelStack(Tag.HOT, sphere, token, null);
+        String hot = this.channelStack(Tag.HOT, sphere, token, null, false);
         data.add(hot);
         if (this.getStatus(hot) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
@@ -2090,12 +2107,132 @@ public class PlayerApiService {
         } else {
             log.info("find channels curator created for public");
         }
-        
- 
+         
         if (stack != null)
             result[0] = userMngr.composeCuratorInfo(users, true, isAllChannel, req);
         else
             result[0] = userMngr.composeCuratorInfo(users, false, isAllChannel, req);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
+    
+    public String virtualChannel(String stack, String lang, String userToken) {
+        if (stack == null && userToken == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        NnUser user = null;
+        if (userToken != null) {
+            user = userMngr.findByToken(userToken);
+            if (user == null) {
+                NnGuest guest = new NnGuestManager().findByToken(userToken);
+                if (guest == null)
+                    return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+                else
+                    return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+            }
+            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
+            channels.addAll(subMngr.findSubscribedChannels(user));
+            log.info("virtual channel find by subscriptions:" + user.getId());
+        } else if (stack != null) {
+            lang = this.checkLang(lang);
+            log.info("virtual channel find by stack:" + stack + ";lang=" + lang);
+            String[] cond = stack.split(",");
+            for (String s : cond) { 
+                if (s.equals(Tag.FEATURED)) {
+                    channels.addAll(chMngr.findBillboard(Tag.FEATURED, lang));
+                }
+                if (s.equals(Tag.HOT)) {
+                    channels.addAll(chMngr.findBillboard(Tag.HOT, lang));               
+                }
+                if (s.equals("trending")) {
+                    channels.addAll(chMngr.findBillboard(Tag.TRENDING, lang));               
+                }
+                if (s.equals(Tag.RECOMMEND)) {
+                    channels.addAll(new RecommendService().findRecommend(userToken, lang));
+                }
+                if (s.equals("mayLike")) {
+                    return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+                }
+            }
+        }
+        List<String> result = new ArrayList<String>();        
+        List<YtProgram> ytprograms = new YtProgramDao().findByChannels(channels);
+        int end = 0;
+        int start = 0;
+        String output = "";
+        List<NnProgram> nnprograms = new NnProgramDao().findByChannels(channels);
+        TreeMap<Date, Object> map = new TreeMap<Date, Object>();
+        for (NnProgram p : nnprograms) {
+            map.put(p.getUpdateDate(), p);                
+        }
+        log.info("nnprogram entry:" + nnprograms.size());
+        for (YtProgram p : ytprograms) {
+            map.put(p.getUpdateDate(), p);                
+        }
+        log.info("ytnprogram entry:" + ytprograms.size());
+        Iterator<Entry<Date, Object>> it = map.entrySet().iterator();
+        List<Object> list = new ArrayList<Object>();
+        while (it.hasNext()) {
+            Map.Entry<Date, Object> pairs = (Map.Entry<Date, Object>)it.next();
+            list.add(pairs.getValue());
+        }
+        /*
+        for (int i=0; i < list.size(); i++) {
+            if (list.get(i).getClass().getSimpleName().equals("YtProgram")) {
+                YtProgram p = (YtProgram) list.get(i);
+                System.out.println("yt date:" + p.getId() + ";" + p.getUpdateDate());
+            } else {
+                NnProgram p = (NnProgram) list.get(i);
+                System.out.println("nn date:" + p.getId() + ";" + p.getUpdateDate());
+            }
+        }
+        */        
+        end = list.size()-1;
+        start = end - 50;
+        if (start < 0) start = 0;
+        log.info("start index:" + start + "; end index:" + end);            
+        for (int i=end; i>start; i--) {
+            if (list.get(i).getClass().getSimpleName().equals("YtProgram")) {
+                YtProgram p = (YtProgram) list.get(i);
+                String[] ori = {
+                        String.valueOf(p.getChannelId()),
+                        p.getYtVideoId(),
+                        p.getName(),
+                        p.getDuration(),
+                        p.getImageUrl(),
+                        p.getIntro(),
+                };                                        
+                log.info("ytprogram date:" + p.getUpdateDate());
+                String ytprogramInfo = NnStringUtil.getDelimitedStr(ori);
+                ytprogramInfo = ytprogramInfo.replaceAll("null", "");
+                output += ytprogramInfo;
+            } else {
+                NnProgram p = (NnProgram) list.get(i);
+                String fileUrl = p.getFileUrl();
+                if (fileUrl != null && fileUrl.contains("watch?v=")) {
+                    int fstart = fileUrl.indexOf("watch?v=") + 8;
+                    int fend = fileUrl.indexOf("&");                
+                    fend = fend == -1 ? fileUrl.length() : fend;
+                    fileUrl = fileUrl.substring(fstart, fend);
+                }
+                String[] ori = {
+                        String.valueOf(p.getChannelId()),
+                        fileUrl,
+                        p.getName(),
+                        p.getDuration(),
+                        p.getImageUrl(),
+                        p.getIntro(),
+                };                    
+                log.info("nnprogram date:" + p.getUpdateDate());
+                String programInfo = NnStringUtil.getDelimitedStr(ori);
+                programInfo = programInfo.replaceAll("null", "");
+                output += programInfo;
+            }
+        }
+                
+        result.add(output);
+        String size[] = new String[result.size()];
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));        
+    }
+    
 }

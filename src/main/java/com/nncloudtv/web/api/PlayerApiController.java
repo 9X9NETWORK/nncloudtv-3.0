@@ -639,6 +639,7 @@ public class PlayerApiController {
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="channel", required=false) String channel,
+            @RequestParam(value="reduced", required=false) String reduced,            
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -649,7 +650,8 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            output = playerApiService.channelStack(stack, lang, userToken, channel);    
+            boolean isReduced= Boolean.parseBoolean(reduced);            
+            output = playerApiService.channelStack(stack, lang, userToken, channel, isReduced);    
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -657,6 +659,7 @@ public class PlayerApiController {
         }
         return output;
     }
+    
     /**
      * Get channel information 
      * 
@@ -738,6 +741,7 @@ public class PlayerApiController {
             @RequestParam(value="required", required=false) String required,
             @RequestParam(value="tag", required=false) String tag,
             @RequestParam(value="category", required=false) String category,
+            @RequestParam(value="reduced", required=false) String reduced,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -748,7 +752,8 @@ public class PlayerApiController {
             boolean isUserInfo = Boolean.parseBoolean(userInfo);
             boolean isSetInfo = Boolean.parseBoolean(setInfo);
             boolean isRequired = Boolean.parseBoolean(required);
-            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired);
+            boolean isReduced= Boolean.parseBoolean(reduced);
+            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -2088,6 +2093,39 @@ public class PlayerApiController {
             mngr.save(e);
         }
         return "OK";                
+    }
+ 
+    /**
+     * Get list of channel based on stack
+     *  
+     * @param stack leagle value includes "recommend", "hot", "mayLike", "featured", "trending"
+     * @param lang
+     * @param userToken
+     * @param channel
+     * @return Reference channelLineup
+     */
+    @RequestMapping(value="virtualChannel", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String virtualChannel(
+            @RequestParam(value="stack", required=false) String stack,
+            @RequestParam(value="lang", required=false) String lang,
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.virtualChannel(stack, lang, userToken);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
     }
     
 }

@@ -743,6 +743,26 @@ public class NnChannelManager {
         }
         return output;
     }
+
+    public String composeReducedChannelLineup(List<NnChannel> channels) {
+        String output = "";
+        for (NnChannel c : channels) {
+            output += this.composeReducedChannelLineupStr(c) + "\n";
+        }
+        return output;        
+    }    
+
+    public String composeReducedChannelLineupStr(NnChannel c) {
+        String[] ori = {c.getIdStr(),
+                        c.getName(),
+                        c.getPlayerIntro(),
+                        c.getPlayerPrefImageUrl(),                         
+                        convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
+                       };
+        String output = NnStringUtil.getDelimitedStr(ori);
+        output = output.replaceAll("null", "");
+        return output;
+    }
     
     public String composeChannelLineup(List<NnChannel> channels) {
         String output = "";

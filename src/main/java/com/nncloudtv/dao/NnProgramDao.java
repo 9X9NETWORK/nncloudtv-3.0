@@ -289,5 +289,31 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         return detached;        
     }
     
-//select count(*) from nnprogram where seq = (select seq from nnprogram where id = )    
+    public List<NnProgram> findByChannels(List<NnChannel> channels) {
+        List<NnProgram> detached = new ArrayList<NnProgram>();
+        String ids = "";
+        for (NnChannel c : channels) {
+            ids += "," + String.valueOf(c.getId());
+        }
+        if (ids.length() == 0) return detached;
+        if (ids.length() > 0) ids = ids.replaceFirst(",", "");
+        log.info("find in these channels:" + ids);
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        try {
+            String sql = "select * " +
+                           "from nnprogram " +
+                         " where channelId in (" + ids + ") " + 
+                         " order by updateDate desc limit 50";
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(NnProgram.class);
+            @SuppressWarnings("unchecked")
+            List<NnProgram> results = (List<NnProgram>) query.execute();
+            detached = (List<NnProgram>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        } 
+        return detached;        
+    }
+    
 }
