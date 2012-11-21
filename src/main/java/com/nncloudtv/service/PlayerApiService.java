@@ -2189,8 +2189,8 @@ public class PlayerApiService {
         */        
         end = list.size()-1;
         start = end - 50;
-        if (start < 0) start = 0;
-        log.info("start index:" + start + "; end index:" + end);            
+        start = start < 0 ? 0 : start;
+        log.info("start index:" + start + "; end index:" + end);
         for (int i=end; i>start; i--) {
             if (list.get(i).getClass().getSimpleName().equals("YtProgram")) {
                 YtProgram p = (YtProgram) list.get(i);
