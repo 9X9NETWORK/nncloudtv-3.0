@@ -34,6 +34,13 @@ public class FacebookLib {
     protected static final Logger log = Logger.getLogger(FacebookLib.class.getName());
 
     //TODO move to db or property file
+    //dev
+    /*
+    protected static String clientId = "248267975300785";
+    protected static String secret = "89f743a2c4088bc167b88ddc5d4575d1";
+    protected static String redirectUri = "http://dev.teltel.com:8080/fb/login";
+    */
+    
     //dev1
     protected static String clientId = "417419178315486";
     protected static String secret = "bb96e3578cfb0822796810601d554e97";
@@ -183,6 +190,7 @@ public class FacebookLib {
     }
     
     public static String getDialogOAuthPath(String subChannel) {        
+        // add "publish_actions" to scope to enable FacebookLib.postToFacebook()
         String scope = "user_likes,user_location,user_interests,email,user_birthday";
         String state = FacebookLib.generateState();
         String urlBase = "http://www.facebook.com/dialog/oauth?";

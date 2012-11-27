@@ -22,12 +22,14 @@ import com.google.api.client.util.ArrayMap;
 import com.nncloudtv.lib.AmazonLib;
 import com.nncloudtv.lib.AuthLib;
 import com.nncloudtv.lib.CookieHelper;
+import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.web.json.facebook.FBPost;
 
 @Controller
 @RequestMapping("api")
@@ -243,6 +245,89 @@ public class ApiMisc extends ApiGeneric {
         resp.setContentType(PLAIN_TEXT_UTF8);
         
         return message + "\n";
+    }
+	
+    @RequestMapping(value = "sns/facebook", method = RequestMethod.POST)
+    public @ResponseBody String postToFacebook(HttpServletRequest req, HttpServletResponse resp) {
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        
+        FBPost fbPost = new FBPost();
+        
+        // message
+        String message = req.getParameter("message");
+        if (message != null){
+            fbPost.setMessage(message);
+        }
+        
+        // picture
+        String picture = req.getParameter("picture");
+        if (picture != null){
+            fbPost.setPicture(picture);
+        }
+        
+        // link
+        String link = req.getParameter("link");
+        if (link != null){
+            fbPost.setLink(link);
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null){
+            fbPost.setName(name);
+        }
+        
+        // caption
+        String caption = req.getParameter("caption");
+        if (caption != null){
+            fbPost.setCaption(caption);
+        }
+        
+        // description
+        String description = req.getParameter("description");
+        if (description != null){
+            fbPost.setDescription(description);
+        }
+        
+        // facebookId
+        if (verifiedUser.isFbUser()) {
+            fbPost.setFacebookId(verifiedUser.getEmail());
+        } else {
+            String facebookId = req.getParameter("facebookId");
+            if (facebookId != null){
+                fbPost.setFacebookId(facebookId);
+            }
+        }
+         
+        // accessToken
+        if (verifiedUser.isFbUser()) {
+            fbPost.setAccessToken(verifiedUser.getToken());
+        } else {
+            String accessToken = req.getParameter("accessToken");
+            if (accessToken != null){
+                fbPost.setAccessToken(accessToken);
+            }
+        }
+        
+        if(fbPost.getFacebookId() == null || fbPost.getAccessToken() == null) {
+            return "not link to facebook";
+        }
+        
+        try {
+            log.info(fbPost.toString());
+            FacebookLib.postToFacebook(fbPost);
+        } catch (IOException e) {
+            NnLogUtil.logException(e);
+            internalError(resp, e);
+            return null;
+        }
+        
+        return "OK";
     }
 
 }
