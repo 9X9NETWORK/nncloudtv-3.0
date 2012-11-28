@@ -2207,6 +2207,7 @@ public class PlayerApiService {
                 String ytprogramInfo = NnStringUtil.getDelimitedStr(ori);
                 ytprogramInfo = ytprogramInfo.replaceAll("null", "");
                 output += ytprogramInfo;
+                output += "\n";
             } else {
                 NnProgram p = (NnProgram) list.get(i);
                 String fileUrl = p.getFileUrl();
@@ -2229,6 +2230,7 @@ public class PlayerApiService {
                 String programInfo = NnStringUtil.getDelimitedStr(ori);
                 programInfo = programInfo.replaceAll("null", "");
                 output += programInfo;
+                output += "\n";
             }
         }
                 
