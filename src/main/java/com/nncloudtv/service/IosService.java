@@ -62,12 +62,12 @@ public class IosService {
     public String composeChannelLineup(List<NnChannel> channels) {
         String result = "";
         for (NnChannel c : channels) {
-            String name = c.getName();
+            String name = c.getPlayerName();
             if (name != null)
                 name = name.replaceAll("\n", " ").replaceAll("\t", " ");
             String[] split = name.split("\\|");
             name = split.length == 2 ? split[0] : name;            
-            String intro = c.getIntro();        
+            String intro = c.getPlayerIntro();        
             if (intro != null)
                 intro = intro.replaceAll("\n", " ").replaceAll("\t", " ");
             String imageUrl = c.getPlayerPrefImageUrl();
