@@ -757,10 +757,15 @@ public class NnChannelManager {
     }    
 
     public String composeReducedChannelLineupStr(NnChannel c) {
-        String ytName = c.getSourceUrl() != null ? YouTubeLib.getYouTubeChannelName(c.getSourceUrl()) : "";
+        String ytName = c.getSourceUrl() != null ? YouTubeLib.getYouTubeChannelName(c.getSourceUrl()) : "";        
+        String name = c.getPlayerName();
+        if (name != null) {
+            String[] split = name.split("\\|");
+            name = split.length == 2 ? split[0] : name;            
+        }
         String[] ori = {"0",
                         c.getIdStr(),
-                        c.getPlayerName(),
+                        name,
                         c.getPlayerIntro(),
                         c.getPlayerPrefImageUrl(),
                         String.valueOf(c.getContentType()),
