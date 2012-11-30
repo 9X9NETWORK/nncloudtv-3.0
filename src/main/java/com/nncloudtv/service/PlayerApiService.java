@@ -2200,18 +2200,19 @@ public class PlayerApiService {
                 String[] ori = {
                         String.valueOf(p.getChannelId()),
                         p.getYtVideoId(),
-                        p.getName(),
+                        p.getPlayerName(),
                         String.valueOf(p.getUpdateDate().getTime()),
                         p.getDuration(),
                         p.getImageUrl(),
-                        p.getIntro(),
-                };                                        
-                log.info("ytprogram date:" + p.getUpdateDate());
+                        p.getPlayerIntro(),
+                };
                 String output = NnStringUtil.getDelimitedStr(ori);
                 output = output.replaceAll("null", "");
-                programInfo += output;
-                chMap.put(p.getChannelId(), null);                
                 output += "\n";
+                log.info("ch id:" + p.getChannelId() + "; ytprogram id:" + p.getYtVideoId());
+                log.info("ytoutput:" + output);
+                chMap.put(p.getChannelId(), null);                
+                programInfo += output;
             } else {
                 NnProgram p = (NnProgram) list.get(i);
                 String fileUrl = p.getFileUrl();
@@ -2224,18 +2225,19 @@ public class PlayerApiService {
                 String[] ori = {
                         String.valueOf(p.getChannelId()),
                         fileUrl,
-                        p.getName(),
+                        p.getPlayerName(),
                         String.valueOf(p.getUpdateDate().getTime()),
                         p.getDuration(),
                         p.getImageUrl(),
-                        p.getIntro(),
+                        p.getPlayerIntro(),
                 };                    
-                log.info("nnprogram date:" + p.getUpdateDate());
                 String output = NnStringUtil.getDelimitedStr(ori);
                 output = output.replaceAll("null", "");
-                programInfo += output;
-                chMap.put(p.getChannelId(), null);
                 output += "\n";
+                chMap.put(p.getChannelId(), null);
+                log.info("ch id:" + p.getChannelId() + "; nnprogram id:" + p.getId());
+                log.info("nnoutput:" + output);                
+                programInfo += output;
             }
         }
         Iterator<Entry<Long, NnChannel>> chit = chMap.entrySet().iterator();

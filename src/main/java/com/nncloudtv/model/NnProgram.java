@@ -232,8 +232,7 @@ public class NnProgram implements Serializable {
         	pintro = pintro.replaceAll("\\s", " ");                
         	pintro = pintro.substring(0, len);           
         }
-        return pintro;    	
-    	
+        return pintro;
     }
 
     public void setIntro(String intro) {
