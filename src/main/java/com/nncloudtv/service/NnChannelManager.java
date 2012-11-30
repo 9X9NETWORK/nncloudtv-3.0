@@ -576,7 +576,11 @@ public class NnChannelManager {
         } else if (name.equals(Tag.FEATURED)) {
             channels = service.findBillboardPool(9, lang);
         } else if (name.equals(Tag.HOT)) {
-            channels = service.findBillboardPool(9, lang);
+            //channels = service.findBillboardPool(9, lang);
+            TagManager tagMngr = new TagManager();        
+            name += "(9x9" + lang + ")";
+            channels = tagMngr.findChannelsByTag(name, true);
+            log.info("find billboard, tag:" + name);            
         }        
         Collections.sort(channels, this.getChannelComparator("updateDate"));
         return channels;
@@ -753,17 +757,23 @@ public class NnChannelManager {
     }    
 
     public String composeReducedChannelLineupStr(NnChannel c) {
-        String[] ori = {c.getIdStr(),
+        String ytName = c.getSourceUrl() != null ? YouTubeLib.getYouTubeChannelName(c.getSourceUrl()) : "";
+        String[] ori = {"0",
+                        c.getIdStr(),
                         c.getName(),
                         c.getPlayerIntro(),
-                        c.getPlayerPrefImageUrl(),                         
-                        convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()),
+                        c.getPlayerPrefImageUrl(),
+                        String.valueOf(c.getContentType()),
+                        ytName,
+                        String.valueOf(c.getCntEpisode()),
+                        String.valueOf(c.getType()),
+                        String.valueOf(c.getStatus()),
                        };
         String output = NnStringUtil.getDelimitedStr(ori);
         output = output.replaceAll("null", "");
         return output;
     }
-    
+        
     public String composeChannelLineup(List<NnChannel> channels) {
         String output = "";
         for (NnChannel c : channels) {

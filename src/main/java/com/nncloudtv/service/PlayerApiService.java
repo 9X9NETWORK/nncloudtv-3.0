@@ -2121,6 +2121,7 @@ public class PlayerApiService {
         }
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnUser user = null;
+        boolean chPos = false;
         if (userToken != null) {
             user = userMngr.findByToken(userToken);
             if (user == null) {
@@ -2132,6 +2133,7 @@ public class PlayerApiService {
             }
             NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
             channels.addAll(subMngr.findSubscribedChannels(user));
+            chPos = true;
             log.info("virtual channel find by subscriptions:" + user.getId());
         } else if (stack != null) {
             lang = this.checkLang(lang);
@@ -2159,15 +2161,16 @@ public class PlayerApiService {
         List<YtProgram> ytprograms = new YtProgramDao().findByChannels(channels);
         int end = 0;
         int start = 0;
-        String output = "";
+        String programInfo = "";
         List<NnProgram> nnprograms = new NnProgramDao().findByChannels(channels);
         TreeMap<Date, Object> map = new TreeMap<Date, Object>();
+        HashMap<Long, NnChannel> chMap = new HashMap<Long, NnChannel>();
         for (NnProgram p : nnprograms) {
-            map.put(p.getUpdateDate(), p);                
+            map.put(p.getUpdateDate(), p);
         }
         log.info("nnprogram entry:" + nnprograms.size());
         for (YtProgram p : ytprograms) {
-            map.put(p.getUpdateDate(), p);                
+            map.put(p.getUpdateDate(), p);
         }
         log.info("ytnprogram entry:" + ytprograms.size());
         Iterator<Entry<Date, Object>> it = map.entrySet().iterator();
@@ -2204,9 +2207,10 @@ public class PlayerApiService {
                         p.getIntro(),
                 };                                        
                 log.info("ytprogram date:" + p.getUpdateDate());
-                String ytprogramInfo = NnStringUtil.getDelimitedStr(ori);
-                ytprogramInfo = ytprogramInfo.replaceAll("null", "");
-                output += ytprogramInfo;
+                String output = NnStringUtil.getDelimitedStr(ori);
+                output = output.replaceAll("null", "");
+                programInfo += output;
+                chMap.put(p.getChannelId(), null);                
                 output += "\n";
             } else {
                 NnProgram p = (NnProgram) list.get(i);
@@ -2227,14 +2231,39 @@ public class PlayerApiService {
                         p.getIntro(),
                 };                    
                 log.info("nnprogram date:" + p.getUpdateDate());
-                String programInfo = NnStringUtil.getDelimitedStr(ori);
-                programInfo = programInfo.replaceAll("null", "");
-                output += programInfo;
+                String output = NnStringUtil.getDelimitedStr(ori);
+                output = output.replaceAll("null", "");
+                programInfo += output;
+                chMap.put(p.getChannelId(), null);
                 output += "\n";
             }
         }
-                
-        result.add(output);
+        Iterator<Entry<Long, NnChannel>> chit = chMap.entrySet().iterator();
+        List<NnChannel> chList = new ArrayList<NnChannel>();        
+        while (chit.hasNext()) {            
+            Map.Entry<Long, NnChannel> pairs = (Map.Entry<Long, NnChannel>)chit.next();
+            Long id = pairs.getKey();
+            NnChannel ch = chMngr.findById(id);
+            if (ch != null) {
+                chList.add(ch);
+            }
+        }
+        String channelInfo = chMngr.composeReducedChannelLineup(chList);
+        if (chPos) {
+           String adjust = "";            
+           log.info("adjust sequence of channellineup for user:" + user.getId());
+           String[] lines = channelInfo.split("\n");
+           if (channels.size() > 0) {
+               for (int i=0; i<lines.length; i++) {                   
+                   lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
+                   log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
+                   adjust += lines[i] + "\n";
+               }
+           }
+           channelInfo = adjust;
+        }            
+        result.add(channelInfo);                
+        result.add(programInfo);
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));        
     }

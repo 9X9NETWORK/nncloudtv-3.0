@@ -45,8 +45,7 @@ public class NnProgramManager {
         return program;
     }
     
-    public void create(NnChannel channel, NnProgram program) {
-        
+    public void create(NnChannel channel, NnProgram program) {        
         Date now = new Date();
         program.setCreateDate(now);
         program.setUpdateDate(now);
