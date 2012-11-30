@@ -760,7 +760,7 @@ public class NnChannelManager {
         String ytName = c.getSourceUrl() != null ? YouTubeLib.getYouTubeChannelName(c.getSourceUrl()) : "";
         String[] ori = {"0",
                         c.getIdStr(),
-                        c.getName(),
+                        c.getPlayerName(),
                         c.getPlayerIntro(),
                         c.getPlayerPrefImageUrl(),
                         String.valueOf(c.getContentType()),
