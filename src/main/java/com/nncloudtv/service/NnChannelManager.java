@@ -763,11 +763,13 @@ public class NnChannelManager {
             String[] split = name.split("\\|");
             name = split.length == 2 ? split[0] : name;            
         }
+        String imageUrl = c.getPlayerPrefImageUrl();
+        imageUrl = imageUrl.indexOf("|") < 0 ? imageUrl : imageUrl.substring(0, imageUrl.indexOf("|"));
         String[] ori = {"0",
                         c.getIdStr(),
                         name,
                         c.getPlayerIntro(),
-                        c.getPlayerPrefImageUrl(),
+                        imageUrl,
                         String.valueOf(c.getContentType()),
                         ytName,
                         String.valueOf(c.getCntEpisode()),
