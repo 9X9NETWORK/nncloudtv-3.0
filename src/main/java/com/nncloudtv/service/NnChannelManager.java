@@ -576,11 +576,13 @@ public class NnChannelManager {
         } else if (name.equals(Tag.FEATURED)) {
             channels = service.findBillboardPool(9, lang);
         } else if (name.equals(Tag.HOT)) {
-            //channels = service.findBillboardPool(9, lang);
+            channels = service.findBillboardPool(9, lang);
+            /*
             TagManager tagMngr = new TagManager();        
             name += "(9x9" + lang + ")";
             channels = tagMngr.findChannelsByTag(name, true);
-            log.info("find billboard, tag:" + name);            
+            log.info("find billboard, tag:" + name);
+            */            
         }        
         Collections.sort(channels, this.getChannelComparator("updateDate"));
         return channels;
