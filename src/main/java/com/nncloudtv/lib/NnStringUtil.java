@@ -164,7 +164,7 @@ public class NnStringUtil {
                    .replaceAll("<",  "&lt;")
                    .replaceAll(">",  "&gt;")
                    .replaceAll("\"", "&quot;")
-                   .replaceAll("|", " "); // not for htmlSafe but for player parsing
+                   .replaceAll("\\|", " "); // not for htmlSafe but for player parsing
     }
     
     public static String validateLangCode(String lang) {
