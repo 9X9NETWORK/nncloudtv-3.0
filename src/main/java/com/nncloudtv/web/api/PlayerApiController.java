@@ -357,8 +357,9 @@ public class PlayerApiController {
         return output;
     }
 
-    /**
-     * For directory query. Returns list of categories    
+    /**   
+     * This API is used for version before 3.2.
+     * For directory query. Returns list of categories.   
      * 
      * @param lang en or zh 
      * @return <p>Block one, the requested category info. Always one for now. Block two, list of categories.
@@ -436,9 +437,9 @@ public class PlayerApiController {
     }
 
     /**
+     * This API is used for version before 3.2.
      * Retrieves set information
      * 
-     * @deprecated
      * @param set set id
      * @param landing the name used as part of the URL. query with either set or landing 
      * @return first block: status <br/>
@@ -475,9 +476,17 @@ public class PlayerApiController {
      * Get channel list based on tag. 
      * 
      * @param name tag name. currently only one name is supported
+     * @param start the start of the index
+     * @param count count of records returned
      * @return list of channel information <br/>
-     *         First block is tag id and tag name. <br/> 
-     *         Second block is list of channel information.
+     *         First block is tag id, tag name, start index, counts of records. <br/> 
+     *         Second block is list of channel information. Please reference channelLineup, version = 32 <br/>
+     *         Example of the first block: <br/>
+     *              id    1539<br/>
+     *              name    news<br/>
+     *              start   1<br/>
+     *              count   1<br/>
+     *              total   1<br/>
      */
     @RequestMapping(value="tagInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String tagInfo(
@@ -499,12 +508,13 @@ public class PlayerApiController {
         return output;                
     }
     
-    /**
-     * Get list of channels under the category. 
-     * If tag is supplemented, channels with the tag under this category will be returned. 
-     * 
+    /** 
+     * Get list of channels under the category. Start and count is for the channel records in the last block.  
+     *  
      * @param category category id
-     * @param tag tag name. only one tag is supported
+     * @param start the start of the index
+     * @param count count of records
+     * 
      * @return First block has category info, id and name. <br/>
      *         Second block lists the most popular tags. Separated by \n <br/> 
      *         Third block lists channels under the category. Format please reference channelLineup.
@@ -517,7 +527,7 @@ public class PlayerApiController {
      *         tech<br/>
      *         gaming<br/>
      *         --<br/>
-     *         (channelLineup)         
+     *         (channelLineup version > 32)         
      */
     @RequestMapping(value="categoryInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String categoryInfo(
@@ -625,12 +635,12 @@ public class PlayerApiController {
     }    
 
     /**
-     * Get list of channel based on stack
+     * Get list of channel based on special stack
      *  
-     * @param stack leagle value includes "recommend", "hot", "mayLike", "featured", "trending"
-     * @param lang
-     * @param userToken
-     * @param channel
+     * @param stack legal values include "recommend", "hot", "mayLike", "featured", "trending"
+     * @param lang language, en or zh
+     * @param userToken user token, used for recommend
+     * @param channel channel id, used for recommend
      * @return Reference channelLineup
      */
     @RequestMapping(value="channelStack", produces = "text/plain; charset=utf-8")
@@ -685,7 +695,7 @@ public class PlayerApiController {
      *         channel id, <br/>
      *         channel name, <br/> 
      *         channel description, <br/> 
-     *         channel image url, separeted by |, max 3<br/>
+     *         channel image url, separeted by |, max 3, version before 3.2 will have one image url without |<br/>
      *         program count, <br/> 
      *         channel type(integer, see note), <br/> 
      *         channel status(integer, see note), <br/>
@@ -696,14 +706,17 @@ public class PlayerApiController {
      *         piwik id, <br/> 
      *         last watched episode <br/>
      *         youtube real channel name <br/>
-     *         subscription count <br/>
+     *         subscription count. it is the last field of the version before 3.2.<br/>
      *         view count <br/>
      *         tags, separated by comma. example "run,marathon" <br/>         
      *         curator id <br/>
      *         curator name <br/>
      *         curator description <br/>
      *         curator imageUrl <br/>
-     *         </blockquote>
+     *         subscriber ids, separated by "|" <br/>
+     *         subscriber images, separated by "|" <br/>
+     *         last episode title
+     *         </blockquote>                  
      *         <p>
      *         set type: TYPE_USER = 1; TYPE_READONLY = 2;
      *         <p>
@@ -762,6 +775,9 @@ public class PlayerApiController {
         return output;
     }    
 
+    /**
+     * To be ignored 
+     */
     @RequestMapping(value="subscriberLineup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String subscriberLineup(
             @RequestParam(value="v", required=false) String v,
@@ -798,13 +814,25 @@ public class PlayerApiController {
      * @param  user user's unique identifier, it is required for wildcard query
      * @param  userInfo true or false. Whether to return user information as login. If asked, it will be returned after status code. 
      * @param  ipg  ipg's unique identifier, it is required for wildcard query
+     * @param  sidx the start index for pagination
+     * @param  limit the count of records
      * @return <p>Programs info. Each program is separate by \n.</p>
      *          <p>Program info has: <br/>
-     *            channelId, programId, programName, description(max length=256),<br/>
-     *            programType, duration, <br/>
-     *            programThumbnailUrl, programLargeThumbnailUrl, <br/>
-     *            url1(mpeg4/slideshow), url2(webm), url3(flv more likely), url4(audio), <br/> 
-     *            publish date timestamp</p>
+     *            channelId <br/>
+     *            programId <br/>
+     *            program name, version after 3.2 has "|" to separated between sub-episodes <br/>
+     *            description(max length=256), version after 3.2 has "|" to separated between sub-episodes<br/>
+     *            programType, version after 3.2 has "|" to separated between sub-episodes<br/>
+     *            duration, version after 3.2 has "|" to separated between sub-episodes<br/>
+     *            programThumbnailUrl, version after 3.2 has "|" to separated between sub-episodes<br/>
+     *            programLargeThumbnailUrl, version after 3.2 has "|" to separated between sub-episodes<br/>
+     *            url1(mpeg4/slideshow), <br/> 
+     *            url2(webm), <br/> 
+     *            url3(flv more likely), <br/>
+     *            url4(audio), <br/> 
+     *            publish date timestamp, version before 3.2 stops here<br/>
+     *            reserved<br/>
+     *            title card <br/>
      */
     @RequestMapping(value="programInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String programInfo(
@@ -1035,7 +1063,8 @@ public class PlayerApiController {
     }
 
     /**
-     * List recommendation sets 
+     * Used for version before 3.2.
+     * List recommendation sets.
      * 
      * @return <p>lines of set info.
      *         <p>Set info includes set id, set name, set description, set image, set channel count. Fields are separated by tab.          
@@ -1144,12 +1173,16 @@ public class PlayerApiController {
     }    
 
     /**
-     * For users to report problem. Either user or device needs to be provided.
+     * For users to report anything. Either user or device needs to be provided.
+     * User report content can either use "comment" (version before 3.2), or "key" and "value" pair.
      * 
      * @param user user token
      * @param device device token
      * @param session session id, same as pdr session id
-     * @param comment user's problem description
+     * @param type type of report, not required, examples like feedback, sales, problem
+     * @param comment user's problem description. Can be omitted if use key/value.
+     * @param key used with value, like key and value pair
+     * @param value used with key
      * @return report id
      */
     @RequestMapping(value="userReport", produces = "text/plain; charset=utf-8")
@@ -1192,7 +1225,7 @@ public class PlayerApiController {
     }
 
     /**
-     * Set user profile information
+     * Set user profile information. Facebook users will be turned down for most of the options.
      * 
      * @param user user token
      * @param <p>key keys include "name", "email", "gender", "year", "sphere", "ui-lang", "password", "oldPassword", "description", "image". <br/> 
@@ -1239,10 +1272,10 @@ public class PlayerApiController {
     }    
 
     /**
-     * Request to reset the password. System will send out an email 
+     * Request to reset the password. System will send out an email to designated email address. 
      *  
-     * @param email
-     * @return
+     * @param email user email
+     * @return status
      */
     @RequestMapping(value="forgotpwd", produces = "text/plain; charset=utf-8")
     public @ResponseBody String forgotpwd(
@@ -1266,10 +1299,12 @@ public class PlayerApiController {
     }    
 
     /**
+     * Reset password
      * 
-     * @param token
-     * @param password
-     * @return
+     * @param token token in the email
+     * @param email user's email
+     * @param password user's new password
+     * @return status
      */
     @RequestMapping(value="resetpwd", produces = "text/plain; charset=utf-8")
     public @ResponseBody String resetpwd(
@@ -1299,7 +1334,7 @@ public class PlayerApiController {
      * 
      * @param user user token
      * @return <p>Data returns in key and value pair. Key and value is tab separated. Each pair is \n separated.<br/>
-     *            keys include "name", "email", "gender", "year", "sphere" "ui-lang", "description", "image"<br/></p>"
+     *            keys include "name", "email", "gender", "year", "sphere" "ui-lang", "description", "image"</p>
      *         <p>Example<br/>: name John <br/>email john@example.com<br/>ui-lang en                 
      */    
     @RequestMapping(value="getUserProfile", produces = "text/plain; charset=utf-8")
@@ -1417,6 +1452,7 @@ public class PlayerApiController {
     }
 
     /**
+     * @deprecated
      * Save User Sharing
      *
      * @param user user's unique identifier
@@ -1454,6 +1490,7 @@ public class PlayerApiController {
     }    
 
     /**
+     * @deprecated
      * Load User Sharing
      *
      * @param id unique identifier from saveShare
@@ -1483,6 +1520,7 @@ public class PlayerApiController {
     }
 
     /**
+     * @deprecated
      * User's recently watched channel and its episode.
      * 
      * @param user user token
@@ -1583,12 +1621,15 @@ public class PlayerApiController {
      * 
      * @param search search text
      * @return matched channels and curators
+     *         <p> 
+     *         For version before 3.2, search returns a list of channel info. Please reference channelLineup. 
+     *         For version 3.2, search returns in 5 blocks. Describes as follows.
      *         <p>
      *         First block: general statistics. Format in the following paragraph <br/>
      *         Second block: list of curators. Please reference curator api <br/>
-     *         Third block: curatos' channels. <br/>
+     *         Third block: curatos' channels. Please reference channelLineup api.<br/>
      *         Forth block: List of matched channels. Please reference channelLineup api<br/>
-     *         Fifth block: List of suggested channels. It will only return values when there's no match of curator and channel.<br/>              
+     *         Fifth block: List of suggested channels. It will only return things when there's no match of curator and channel.<br/>              
      *         <p>  
      *         General statistics: (item name : number of return records : total number of records)<br/>
      *         curator    4    4 <br/> 
@@ -1645,7 +1686,7 @@ public class PlayerApiController {
     }
 
     /**
-     * Create a 9x9 channel
+     * Create a 9x9 channel. To be ignored.
      * 
      * @param name name
      * @param description description
@@ -1680,7 +1721,7 @@ public class PlayerApiController {
     }
 
     /**
-     * Create a 9x9 program
+     * Create a 9x9 program. To be ignored.
      * 
      * @param channel channel id
      * @param name name
@@ -1721,7 +1762,7 @@ public class PlayerApiController {
     }
     
     /**
-     * Set program property
+     * Set program properties. To be ignored.
      * 
      * @param program program id
      * @param property program property
@@ -1753,7 +1794,7 @@ public class PlayerApiController {
     }
 
     /**
-     * Set channel property
+     * Set channel property. To be ignored.
      * 
      * @param channel channel id
      * @param property channel property
@@ -1794,7 +1835,6 @@ public class PlayerApiController {
      * @param token if not empty, will do userTokenVerify
      * @param email if token is not provided, will do login check with email and password
      * @param password password 
-     * @param rx rx
      * @return please reference api introduction
      */
     @RequestMapping(value="quickLogin", produces = "text/plain; charset=utf-8")
@@ -1819,6 +1859,18 @@ public class PlayerApiController {
         return output;                 
     }
 
+    /**
+     * Mix of account authentication and directory listing  
+     * 
+     * If token is provided, will do userTokenVerify.
+     * If token is not provided, will do login
+     * If token and email/password is not provided, will do guestRegister.
+     *  
+     * @param token if not empty, will do userTokenVerify
+     * @param email if token is not provided, will do login check with email and password
+     * @param password password 
+     * @return please reference api introduction
+     */
     @RequestMapping(value="auxLogin", produces = "text/plain; charset=utf-8")
     public @ResponseBody String auxLogin(
             @RequestParam(value="token", required=false) String token,
@@ -1872,7 +1924,12 @@ public class PlayerApiController {
         return output;                 
     }
     
-    /* ios flipr demo feature*/    
+    /**
+     * iOS flipr demo feature. Users search. 
+     * 
+     * @param email email address
+     * @param name user name
+     */
     @RequestMapping(value="graphSearch", produces = "text/plain; charset=utf-8")
     public @ResponseBody String graphSearch(
             @RequestParam(value="email", required=false) String email,            
@@ -1892,7 +1949,15 @@ public class PlayerApiController {
         return output;
     }
 
-    /* ios flipr demo feature*/
+    /**
+     * iOS flipr demo feature. Invite users
+     * 
+     * @param userToken user token
+     * @param toEmail invitee email
+     * @param toName invitee name
+     * @param channel channel id
+     * @return status
+     */
     @RequestMapping(value="userInvite", produces = "text/plain; charset=utf-8")
     public @ResponseBody String userInvite(
             @RequestParam(value="user", required=false) String userToken,                                        
@@ -1913,7 +1978,12 @@ public class PlayerApiController {
         return output;
     }
 
-    /* ios flipr demo feature*/
+    /**
+     * iOS flipr demo feature, search users. Check user invitation status.
+     * 
+     * @param token invitation token
+     * @return status
+     */
     @RequestMapping(value="inviteStatus", produces = "text/plain; charset=utf-8")
     public @ResponseBody String inviteStatus(
             @RequestParam(value="token", required=false) String token,                                        
@@ -1931,7 +2001,14 @@ public class PlayerApiController {
         return output;
     }
 
-    /* ios flipr demo feature*/
+    /**
+     * iOS flipr demo feature, search users. Check invite status
+     * 
+     * @param userToken user token
+     * @param toEmail disconnect email
+     * @param channel channel id
+     * @return status
+     */
     @RequestMapping(value="disconnect", produces = "text/plain; charset=utf-8")
     public @ResponseBody String disconnect(
             @RequestParam(value="user", required=false) String userToken,                                        
@@ -1951,7 +2028,13 @@ public class PlayerApiController {
         return output;
     }
 
-    /* ios flipr demo feature*/
+    /**
+     * iOS flipr demo feature, search users. Notify subscribers with channel status.
+     * 
+     * @param userToken user token
+     * @param channel channel id
+     * @return status
+     */
     @RequestMapping(value="notifySubscriber", produces = "text/plain; charset=utf-8")
     public @ResponseBody String notifySubscriber(
             @RequestParam(value="user", required=false) String userToken,
@@ -1977,7 +2060,8 @@ public class PlayerApiController {
      * @param curator curator id
      * @param stack if specify "featued" will return list of featured curators
      * @param profile curator's 9x9 url
-     * @return list of curator information. First block: <br/>
+     * @return list of curator information. <br/>
+     *         First block: <br/>
      *         curator id, <br/>
      *         curator name,<br/>
      *         curator description<br/> 
@@ -2064,7 +2148,9 @@ public class PlayerApiController {
         return "redirect:" + url;
     }
 
-    //temp solution
+    /**
+     * @deprecated 
+     */
     @RequestMapping("flush")
     public ResponseEntity<String> flush() {
         MemcachedClient cache = CacheFactory.getClient();
@@ -2081,6 +2167,9 @@ public class PlayerApiController {
         return NnNetUtil.textReturn("flush");
     }
  
+    /**
+     * @deprecated 
+     */
     @RequestMapping(value="episodeUpdate", produces = "text/plain; charset=utf-8")
     public @ResponseBody String episodeUpdate(
             @RequestParam(value="epId", required=false) long epId ) {
@@ -2096,13 +2185,13 @@ public class PlayerApiController {
     }
  
     /**
-     * Get list of channel based on stack
+     * Get list of episodes based on stack. Work in progress.
      *  
      * @param stack leagle value includes "recommend", "hot", "mayLike", "featured", "trending"
      * @param lang
      * @param userToken
      * @param channel
-     * @return Reference channelLineup
+     * @return Reference channelLineup and programInfo. Work in progress.
      */
     @RequestMapping(value="virtualChannel", produces = "text/plain; charset=utf-8")
     public @ResponseBody String virtualChannel(
