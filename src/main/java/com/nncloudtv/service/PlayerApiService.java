@@ -75,7 +75,7 @@ public class PlayerApiService {
     private Locale locale;
     private Mso mso;
     private int version = 32;    
-    
+
     public int getVersion() {
         return version;
     }
@@ -2160,15 +2160,15 @@ public class PlayerApiService {
         List<String> result = new ArrayList<String>();        
         List<YtProgram> ytprograms = new YtProgramDao().findByChannels(channels);
         int end = 0;
-        int start = 0;
+        int start = 0;        
         String programInfo = "";
-        List<NnProgram> nnprograms = new NnProgramDao().findByChannels(channels);
+        //List<NnProgram> nnprograms = new NnProgramDao().findByChannels(channels);
         TreeMap<Date, Object> map = new TreeMap<Date, Object>();
         HashMap<Long, NnChannel> chMap = new HashMap<Long, NnChannel>();
-        for (NnProgram p : nnprograms) {
-            map.put(p.getUpdateDate(), p);
-        }
-        log.info("nnprogram entry:" + nnprograms.size());
+        //for (NnProgram p : nnprograms) {
+        //    map.put(p.getUpdateDate(), p);
+        //}
+        //log.info("nnprogram entry:" + nnprograms.size());
         for (YtProgram p : ytprograms) {
             map.put(p.getUpdateDate(), p);
         }
@@ -2189,7 +2189,7 @@ public class PlayerApiService {
                 System.out.println("nn date:" + p.getId() + ";" + p.getUpdateDate());
             }
         }
-        */        
+        */
         end = list.size()-1;
         start = end - 50;
         start = start < 0 ? 0 : start;
