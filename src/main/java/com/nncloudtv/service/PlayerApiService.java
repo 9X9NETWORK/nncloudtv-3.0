@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.dao.NnChannelDao;
-import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.dao.YtProgramDao;
 import com.nncloudtv.lib.AuthLib;

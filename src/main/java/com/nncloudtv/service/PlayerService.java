@@ -276,14 +276,14 @@ public class PlayerService {
             NnChannelManager channelMngr = new NnChannelManager();        
             NnChannel c = channelMngr.findById(Long.parseLong(ch));
             if (c != null) {
-                model.addAttribute("crawlChannelTitle", c.getName());
+                model.addAttribute("crawlChannelTitle", NnStringUtil.revertHtml(c.getName()));
                 //in case not enough episode data, use channel for default  
-                model.addAttribute("crawlEpisodeTitle", c.getName());
+                model.addAttribute("crawlEpisodeTitle", NnStringUtil.revertHtml(c.getName()));
                 model.addAttribute("crawlVideoThumb", c.getOneImageUrl());
                 model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
-                model.addAttribute("fbName", NnStringUtil.htmlSafeChars(c.getName()));
-                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(c.getIntro()));                
-                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(c.getOneImageUrl()));  
+                model.addAttribute("fbName", NnStringUtil.revertHtml(c.getName()));
+                model.addAttribute("fbDescription", NnStringUtil.revertHtml(c.getIntro()));                
+                model.addAttribute("fbImg", NnStringUtil.revertHtml(c.getOneImageUrl()));  
 
                 if (ep != null && ep.startsWith("e")) {
                     ep = ep.replaceFirst("e", "");
@@ -298,12 +298,12 @@ public class PlayerService {
                         }
                         if (e.getId() == Long.parseLong(ep)) {
                             model.addAttribute("crawlVideoThumb", e.getImageUrl());
-                            model.addAttribute("crawlEpisodeTitle", e.getName());
+                            model.addAttribute("crawlEpisodeTitle", NnStringUtil.revertHtml(e.getName()));
                             model.addAttribute("crawlEpThumb" + i, e.getImageUrl());
                             if (episodeShare) {
-                               model.addAttribute("fbName", NnStringUtil.htmlSafeChars(e.getName()));   
-                               model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(e.getIntro()));
-                               model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(e.getImageUrl()));
+                               model.addAttribute("fbName", NnStringUtil.revertHtml(e.getName()));   
+                               model.addAttribute("fbDescription", NnStringUtil.revertHtml(e.getIntro()));
+                               model.addAttribute("fbImg", NnStringUtil.revertHtml(e.getImageUrl()));
                             }
                             i++;
                         }
@@ -326,11 +326,11 @@ public class PlayerService {
                             }
                             if (p.getId() == Long.parseLong(ep)) {
                                 model.addAttribute("crawlVideoThumb", p.getImageUrl());
-                                model.addAttribute("crawlEpisodeTitle", p.getName());
+                                model.addAttribute("crawlEpisodeTitle", NnStringUtil.revertHtml(p.getName()));
                                 model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
                                 if (episodeShare) {
-                                   model.addAttribute("fbName", NnStringUtil.htmlSafeChars(p.getName()));
-                                   model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(p.getIntro()));
+                                   model.addAttribute("fbName", NnStringUtil.revertHtml(p.getName()));
+                                   model.addAttribute("fbDescription", NnStringUtil.revertHtml(p.getIntro()));
                                    model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(p.getImageUrl()));
                                 }
                                 i++;
@@ -350,8 +350,8 @@ public class PlayerService {
                         }
                     }
                     if (episodeShare) {
-                        model.addAttribute("fbName", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlEpisodeTitle")));
-                        model.addAttribute("fbImg", NnStringUtil.htmlSafeChars((String)model.asMap().get("crawlVideoThumb")));
+                        model.addAttribute("fbName", NnStringUtil.revertHtml((String)model.asMap().get("crawlEpisodeTitle")));
+                        model.addAttribute("fbImg", NnStringUtil.revertHtml((String)model.asMap().get("crawlVideoThumb")));
                     }
                 }
                 String fbDescription = (String) model.asMap().get("fbDescription");
