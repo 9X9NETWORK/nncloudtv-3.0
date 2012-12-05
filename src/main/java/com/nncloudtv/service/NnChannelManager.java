@@ -1050,5 +1050,21 @@ public class NnChannelManager {
         
         return false;
     }
+
+    public void reorderUserChannels(NnUser user) {
+        
+        // the results should be same as ApiUser.userChannels() GET operation, but not include fake channel.
+        String userIdStr = user.getShard() + "-" + user.getId();
+        List<NnChannel> channels = dao.findByUser(userIdStr, 0, true);
+        
+        Collections.sort(channels, getChannelComparator("seq"));
+        
+        for (int i = 0; i < channels.size(); i++) {
+            
+            channels.get(i).setSeq((short)(i + 1));
+        }
+        
+        saveOrderedChannels(channels);
+    }
     
 }

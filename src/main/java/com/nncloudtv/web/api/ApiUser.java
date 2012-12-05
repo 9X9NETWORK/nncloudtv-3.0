@@ -638,7 +638,12 @@ public class ApiUser extends ApiGeneric {
             channel.setSphere(LangTable.LANG_EN);
         }
         
+        // seq
+        channel.setSeq((short)0);
+        
         channel = channelMngr.save(channel);
+        
+        channelMngr.reorderUserChannels(user);
         
         long channelId = channel.getId();
         String categoryIdStr = req.getParameter("categoryId");
