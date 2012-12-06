@@ -276,14 +276,14 @@ public class PlayerService {
             NnChannelManager channelMngr = new NnChannelManager();        
             NnChannel c = channelMngr.findById(Long.parseLong(ch));
             if (c != null) {
-                model.addAttribute("crawlChannelTitle", NnStringUtil.revertHtml(c.getName()));
+                model.addAttribute("crawlChannelTitle", c.getName());
                 //in case not enough episode data, use channel for default  
-                model.addAttribute("crawlEpisodeTitle", NnStringUtil.revertHtml(c.getName()));
+                model.addAttribute("crawlEpisodeTitle", c.getName());
                 model.addAttribute("crawlVideoThumb", c.getOneImageUrl());
                 model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
-                model.addAttribute("fbName", NnStringUtil.revertHtml(c.getName()));
-                model.addAttribute("fbDescription", NnStringUtil.revertHtml(c.getIntro()));                
-                model.addAttribute("fbImg", NnStringUtil.revertHtml(c.getOneImageUrl()));  
+                model.addAttribute("fbName", PlayerService.revertHtml(c.getName()));
+                model.addAttribute("fbDescription", PlayerService.revertHtml(c.getIntro()));                
+                model.addAttribute("fbImg", c.getOneImageUrl());  
 
                 if (ep != null && ep.startsWith("e")) {
                     ep = ep.replaceFirst("e", "");
@@ -298,12 +298,12 @@ public class PlayerService {
                         }
                         if (e.getId() == Long.parseLong(ep)) {
                             model.addAttribute("crawlVideoThumb", e.getImageUrl());
-                            model.addAttribute("crawlEpisodeTitle", NnStringUtil.revertHtml(e.getName()));
+                            model.addAttribute("crawlEpisodeTitle", e.getName());
                             model.addAttribute("crawlEpThumb" + i, e.getImageUrl());
                             if (episodeShare) {
-                               model.addAttribute("fbName", NnStringUtil.revertHtml(e.getName()));   
-                               model.addAttribute("fbDescription", NnStringUtil.revertHtml(e.getIntro()));
-                               model.addAttribute("fbImg", NnStringUtil.revertHtml(e.getImageUrl()));
+                               model.addAttribute("fbName", PlayerService.revertHtml(e.getName()));   
+                               model.addAttribute("fbDescription", PlayerService.revertHtml(e.getIntro()));
+                               model.addAttribute("fbImg", e.getImageUrl());
                             }
                             i++;
                         }
@@ -326,12 +326,12 @@ public class PlayerService {
                             }
                             if (p.getId() == Long.parseLong(ep)) {
                                 model.addAttribute("crawlVideoThumb", p.getImageUrl());
-                                model.addAttribute("crawlEpisodeTitle", NnStringUtil.revertHtml(p.getName()));
+                                model.addAttribute("crawlEpisodeTitle", p.getName());
                                 model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
                                 if (episodeShare) {
-                                   model.addAttribute("fbName", NnStringUtil.revertHtml(p.getName()));
-                                   model.addAttribute("fbDescription", NnStringUtil.revertHtml(p.getIntro()));
-                                   model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(p.getImageUrl()));
+                                   model.addAttribute("fbName", PlayerService.revertHtml(p.getName()));
+                                   model.addAttribute("fbDescription", PlayerService.revertHtml(p.getIntro()));
+                                   model.addAttribute("fbImg", p.getImageUrl());
                                 }
                                 i++;
                             }
@@ -363,4 +363,12 @@ public class PlayerService {
         
         return model;
     }
+    
+    public static String revertHtml(String str) {
+        if (str == null) return null;
+         return str.replaceAll("&gt;", ">")
+                   .replaceAll("&lt;", "<")
+                   .replaceAll("&amp;", "&");
+    }
+    
 }
