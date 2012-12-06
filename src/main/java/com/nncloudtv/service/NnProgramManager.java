@@ -595,13 +595,13 @@ public class NnProgramManager {
                     String f1 = p.getFileUrl();
                     if (p.getAudioFileUrl() != null)
                         f1 = p.getAudioFileUrl();
-                    log.info("f1:" + f1);
+                    //log.info("f1:" + f1);
                     videoUrl += "|" + f1;
                     String d1 = (p.getStartTime() != null) ? ";" + p.getStartTime() : ";";
                     String d2 = (p.getEndTime() != null) ? ";" + p.getEndTime() : ";";
                     videoUrl += d1;
                     videoUrl += d2;
-                    log.info("video url :" + videoUrl);
+                    //log.info("video url :" + videoUrl);
                     name += "|" + p.getPlayerName();
                     imageUrl += "|" + p.getImageUrl();
                     imageLargeUrl += "|" + p.getImageLargeUrl();
