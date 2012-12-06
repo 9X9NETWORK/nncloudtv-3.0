@@ -97,7 +97,7 @@ public class PlayerApiService {
         } else if (e.getClass().equals(CommunicationsException.class)) {
             return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
         } 
-            
+
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         NnLogUtil.logException((Exception) e);
         return output;
@@ -2209,7 +2209,7 @@ public class PlayerApiService {
                 output = output.replaceAll("null", "");
                 output += "\n";
                 log.info("ch id:" + p.getChannelId() + "; ytprogram id:" + p.getYtVideoId());
-                log.info("ytoutput:" + output);
+                //log.info("ytoutput:" + output);
                 chMap.put(p.getChannelId(), null);                
                 programInfo += output;
             } else {
@@ -2235,7 +2235,7 @@ public class PlayerApiService {
                 output += "\n";
                 chMap.put(p.getChannelId(), null);
                 log.info("ch id:" + p.getChannelId() + "; nnprogram id:" + p.getId());
-                log.info("nnoutput:" + output);                
+                //log.info("nnoutput:" + output);                
                 programInfo += output;
             }
         }
