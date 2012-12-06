@@ -753,10 +753,7 @@ public class NnChannelManager {
     public String composeReducedChannelLineup(List<NnChannel> channels) {
         String output = "";
         for (NnChannel c : channels) {
-            if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
-                c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-                output += this.composeReducedChannelLineupStr(c) + "\n";
-            }
+           output += this.composeReducedChannelLineupStr(c) + "\n";
         }
         return output;        
     }    
