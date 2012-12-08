@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerService;
 
 @Controller
@@ -102,9 +104,20 @@ public class PlayerController {
             @RequestParam(value="mso",required=false) String mso,
             HttpServletRequest req, HttpServletResponse resp, Model model) {
         if (name != null) {
+            if (name.matches("[a-zA-Z].+")) {
+                NnUser user = new NnUserManager().findByProfileUrl(name);
+                if (user != null) {
+                    log.info("user enter from curator brand url:" + name);
+                    name = "#!" + user.getProfileUrl();
+                } else {
+                    log.info("invalid curator brand url:" + name);
+                    name = "";
+                }
+            }
             PlayerService service = new PlayerService();
-            String url = service.rewrite(req); 
-            return "redirect:/" + url + "#!landing=" + name;
+            String url = service.rewrite(req) + name;
+            log.info("redirect url:" + url);
+            return "redirect:/" + url;
         }
         return "player/zooatomics";
     }
