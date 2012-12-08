@@ -6,20 +6,15 @@ intro	9x9
 --
 id	138
 name	華視綜合頻道
-imageUrl	http://i.ytimg.com/i/dpxNQgqL3276yjrK03gMXA/1.jpg
+imageUrl	http://i.ytimg.com/vi/AKkeflFUqRU/default.jpg
 piwik	
 --
-1	9460	華視綜藝頻道	華視綜藝頻道	http://i.ytimg.com/i/dpxNQgqL3276yjrK03gMXA/1.jpg	0	0	0	3	tbsctsshow	1352158813000	1			華視綜藝頻道	1
-2	9461	華視戲劇頻道	華視戲劇頻道	http://i.ytimg.com/i/waaEghUjz2Xb23yxm85rCw/1.jpg	0	0	0	3	ctsprog	1352158831000	1			華視戲劇頻道	0
-3	9462	華視教學頻道	華視教學頻道	http://i.ytimg.com/i/56wjbQvOLl6FKoCXv04tfQ/1.jpg	0	0	0	3	ctseducation	1352158834000	1			華視教學頻道	0
-4	9463	2012第47屆電視金鐘獎頒獎典禮	2012第47屆電視金鐘獎頒獎典禮	http://i.ytimg.com/i/DBp1z53HdgFDmF5rjh4-Ig/1.jpg	0	0	0	3	2012goldenbell	1352158837000	1			2012第47屆電視金鐘獎頒獎典禮	0
-5	9487	101年第47屆電視金鐘獎【完整內容】	101年第47屆電視金鐘獎【完整內容】	http://i.ytimg.com/vi/T3qiYmb4aXU/default.jpg	0	0	0	4	nw5Q1yXvIrx7nmu5Tgf09Sn1oyMsDVzV	1352238055000	1			101年第47屆電視金鐘獎【完整內容】	0
-6	9488	包青天之開封奇案	包青天之開封奇案	http://i.ytimg.com/vi/AKkeflFUqRU/default.jpg	0	0	0	4	8MwjIpV5cFUsuu1DPYboveIn5OSSRvhR	1352238060000	1			包青天之開封奇案	0
-7	9489	愛情睡醒了	愛情睡醒了	http://i.ytimg.com/vi/A76zS7w2UDs/default.jpg	0	0	0	4	8MwjIpV5cFViv4QZv9SC1jlSd59VUsip	1352238061000	1			愛情睡醒了	0
-8	9490	POWER星期天	POWER星期天	http://i.ytimg.com/vi/nO4F0vsN7Zg/default.jpg	0	0	0	4	J2QT-PhqTiIxxWaUw8QF0SGJt-OzJpqe	1352238061000	1			POWER星期天	0
-9	9491	好吃夯仔內	好吃夯仔內	http://i.ytimg.com/vi/2o6YFvvEHJ0/default.jpg	0	0	0	4	zlt9nxVmI3uaz1om7foB6y3aWugKEzNt	1352238061000	1			好吃夯仔內	0
-10	9492	南北大不同	南北大不同	http://i.ytimg.com/vi/AeOzPc7EkZc/default.jpg	0	0	0	4	zlt9nxVmI3sXDBH7q9WjxnQTMEzpIN5i	1352238061000	1			南北大不同	0
-11	9493	天才衝衝衝	天才衝衝衝	http://i.ytimg.com/vi/LWOu03IdCDE/default.jpg	0	0	0	4	J2QT-PhqTiKOXvct6muC4Qw5FlMpz0lO	1352238061000	1			天才衝衝衝	0
-12	9494	氣到我家-VOD	景氣到我家-VOD	http://i.ytimg.com/vi/EdCacP21iO4/default.jpg	0	0	0	4	J2QT-PhqTiIi1lKM2ceyaDl654im3vqW	1352238061000	1			景氣到我家-VOD	0
-13	9495	周末快樂頌-VOD	周末快樂頌-VOD	http://i.ytimg.com/vi/_fIxG2OGRRg/default.jpg	0	0	0	4	J2QT-PhqTiI2vkXI3uceun0v_rjgxovq	1352238061000	1			周末快樂頌-VOD	0
-14	9496	十點名人堂-VOD	十點名人堂-VOD	http://i.ytimg.com/vi/K1t5GN8girk/default.jpg	0	0	0	4	J2QT-PhqTiI1BaEUwQo7zGJM-dfzLQuI	1352238061000	1			十點名人堂-VOD	0
+1	9488	包青天之開封奇案	包青天之開封奇案	http://i.ytimg.com/vi/AKkeflFUqRU/default.jpg	0	0	0	4	8MwjIpV5cFUsuu1DPYboveIn5OSSRvhR	1352238060000	1			包青天之開封奇案	0
+2	9489	愛情睡醒了	愛情睡醒了	http://i.ytimg.com/vi/A76zS7w2UDs/default.jpg	0	0	0	4	8MwjIpV5cFViv4QZv9SC1jlSd59VUsip	1352238061000	1			愛情睡醒了	1
+3	9490	POWER星期天	POWER星期天	http://i.ytimg.com/vi/nO4F0vsN7Zg/default.jpg	0	0	0	4	J2QT-PhqTiIxxWaUw8QF0SGJt-OzJpqe	1352238061000	1			POWER星期天	1
+4	9491	好吃夯仔內	好吃夯仔內	http://i.ytimg.com/vi/2o6YFvvEHJ0/default.jpg	0	0	0	4	zlt9nxVmI3uaz1om7foB6y3aWugKEzNt	1352238061000	1			好吃夯仔內	1
+5	9492	南北大不同	南北大不同	http://i.ytimg.com/vi/AeOzPc7EkZc/default.jpg	0	0	0	4	zlt9nxVmI3sXDBH7q9WjxnQTMEzpIN5i	1352238061000	1			南北大不同	0
+6	9493	天才衝衝衝	天才衝衝衝	http://i.ytimg.com/vi/LWOu03IdCDE/default.jpg	0	0	0	4	J2QT-PhqTiKOXvct6muC4Qw5FlMpz0lO	1352238061000	1			天才衝衝衝	1
+7	9494	氣到我家-VOD	景氣到我家-VOD	http://i.ytimg.com/vi/EdCacP21iO4/default.jpg	0	0	0	4	J2QT-PhqTiIi1lKM2ceyaDl654im3vqW	1352238061000	1			景氣到我家-VOD	1
+8	9495	周末快樂頌-VOD	周末快樂頌-VOD	http://i.ytimg.com/vi/_fIxG2OGRRg/default.jpg	0	0	0	4	J2QT-PhqTiI2vkXI3uceun0v_rjgxovq	1352238061000	1			周末快樂頌-VOD	0
+9	9496	十點名人堂-VOD	十點名人堂-VOD	http://i.ytimg.com/vi/K1t5GN8girk/default.jpg	0	0	0	4	J2QT-PhqTiI1BaEUwQo7zGJM-dfzLQuI	1352238061000	1			十點名人堂-VOD	2
