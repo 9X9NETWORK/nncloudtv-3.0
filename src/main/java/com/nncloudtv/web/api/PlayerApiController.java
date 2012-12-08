@@ -820,16 +820,19 @@ public class PlayerApiController {
      *          <p>Program info has: <br/>
      *            channelId <br/>
      *            programId <br/>
-     *            program name, version after 3.2 has "|" to separated between sub-episodes <br/>
-     *            description(max length=256), version after 3.2 has "|" to separated between sub-episodes<br/>
-     *            programType, version after 3.2 has "|" to separated between sub-episodes<br/>
-     *            duration, version after 3.2 has "|" to separated between sub-episodes<br/>
-     *            programThumbnailUrl, version after 3.2 has "|" to separated between sub-episodes<br/>
-     *            programLargeThumbnailUrl, version after 3.2 has "|" to separated between sub-episodes<br/>
-     *            url1(mpeg4/slideshow), <br/> 
-     *            url2(webm), <br/> 
-     *            url3(flv more likely), <br/>
-     *            url4(audio), <br/> 
+     *            program name, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode name and follows by each sub-episode's name. <br/>
+     *            description(max length=256), version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode description and follows by each sub-episode's description.<br/>
+     *            programType, version after 3.2 has "|" to separate between sub-episodes, expect the first field to be empty since it has no umbrella program type.<br/>
+     *            duration, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode duration and follows by each sub-episode's duration.<br/>
+     *            programThumbnailUrl, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode image and follows by each sub-episode's image.<br/>
+     *            programLargeThumbnailUrl, version after 3.2 has "|" to separate between sub-episodes, rule same as programThumbnailUrl<br/>
+     *            url1(mpeg4/slideshow), version after 3.2 has "|" to separate between videos. 
+     *            Each unit starts with a video url, separated by ";" is the start time (unit is seconds), 
+     *            after the next ";" is the end play time of the video. Expect the first field to be empty since there is no umbrella video url.
+     *            Example: |http://www.youtube.com/watch?v=TDpqS6GS_OQ;50;345|http://www.youtube.com/watch?v=JcmKq9kmP5U;0;380<br/> 
+     *            url2(webm), reserved<br/> 
+     *            url3(flv more likely), reserved<br/>
+     *            url4(audio), reserved<br/> 
      *            publish date timestamp, version before 3.2 stops here<br/>
      *            reserved<br/>
      *            title card <br/>
