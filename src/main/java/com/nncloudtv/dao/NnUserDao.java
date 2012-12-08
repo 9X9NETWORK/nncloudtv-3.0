@@ -284,15 +284,20 @@ public class NnUserDao extends GenericDao<NnUser> {
     }    
     
     public NnUser findByProfileUrl(String profileUrl) {
+        if (profileUrl == null) return null;
+        profileUrl = profileUrl.toLowerCase();
         NnUser user = null;
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();        
         try {
             for (int i=0;i<2;i++) {
-                Query query = pm.newQuery(NnUser.class);
-                query.setFilter("profileUrl == profileUrlParam");
-                query.declareParameters("String profileUrlParam");        
+                String sql = "select * " +
+                               "from nnuser " +
+                             " where lower(profileUrl) = '" + profileUrl + "'";
+                log.info("sql:" + sql);
+                Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+                query.setClass(NnUser.class);
                 @SuppressWarnings("unchecked")
-                List<NnUser> results = (List<NnUser>) query.execute(profileUrl);
+                List<NnUser> results = (List<NnUser>) query.execute();
                 if (results.size() > 0) {
                     user = results.get(0);
                     i = 2;
