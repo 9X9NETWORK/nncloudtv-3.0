@@ -119,13 +119,18 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     }    
 
     //select id from nnchannel where poolType > 10 order by rand() limit 10;
-    public List<NnChannel> findSpecial(short type, int limit) {
+    public List<NnChannel> findSpecial(short type, String lang, int limit) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>(); 
         try {
-            String sql = "select * from nnchannel where poolType >= " + type + " order by rand()";
+            String sql = "select * " +
+            		      " from nnchannel " + 
+            		     " where poolType >= " + type + 
+                           " and (lang = '" + lang + " 'or lang = 'others')" + 
+                           " order by rand()";
             if (limit > 0) 
                 sql += " limit " + limit;
+            log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnChannel.class);
             @SuppressWarnings("unchecked")
