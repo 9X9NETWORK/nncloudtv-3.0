@@ -39,7 +39,6 @@ public class RecommendService {
             channels = this.findShallowChannels(cid);
         } else {
             NnUser user = new NnUserManager().findByToken(userToken);
-            System.out.println("what the hell?:" + userToken);
             if (user != null) {
                 System.out.println("what the user u find:" + user.getId());
                 channels = this.findDeepChannels(user);
@@ -77,7 +76,7 @@ public class RecommendService {
                 Deep deep = deepDao.findByUser(user.getShard(), user.getId());
                 if (deep != null) {
                     log.info("recommend: user get recommendation from fdm pool " + userToken);
-                    channels = this.findFdm(9);
+                    channels = this.findFdm(user.getSphere(), 9);
                 } else {
                     log.info("recommend: freshman user get recommendation from billboard pool " + userToken);
                     channels = this.findBillboardPool(9, lang);
@@ -93,7 +92,7 @@ public class RecommendService {
     
     //randomly pick from billboard, based on language
     public List<NnChannel> findBillboardPool(int limit, String lang) {
-        List<NnChannel> channels = chDao.findSpecial(NnChannel.POOL_BILLBOARD, limit);
+        List<NnChannel> channels = chDao.findSpecial(NnChannel.POOL_BILLBOARD, lang, limit);
         List<NnChannel> recommended = new ArrayList<NnChannel>();
         int i=0;
         for (NnChannel c : channels) {
@@ -106,8 +105,8 @@ public class RecommendService {
     }
 
     //randomly pick from fdm    
-    public List<NnChannel> findFdm(int limit) {
-        List<NnChannel> channels = chDao.findSpecial(NnChannel.POOL_FDM, limit);
+    public List<NnChannel> findFdm(String lang, int limit) {
+        List<NnChannel> channels = chDao.findSpecial(NnChannel.POOL_FDM, lang, limit);
         List<NnChannel> recommended = new ArrayList<NnChannel>();
         int i=0;
         for (NnChannel c : channels) {
