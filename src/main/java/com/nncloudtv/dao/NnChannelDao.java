@@ -124,8 +124,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         List<NnChannel> detached = new ArrayList<NnChannel>(); 
         try {
             String sql = "select * " +
+                          " from nnchannel " + 
             		     " where poolType >= " + type + 
-            		     " from nnchannel " + 
                            " and (lang = '" + lang + " 'or lang = 'other')" + 
                            " order by rand()";
             if (limit > 0) 
