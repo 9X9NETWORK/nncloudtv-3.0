@@ -16,7 +16,7 @@
 <c:set var="bucket" value="${usabucket}"/>
 </c:if>
 
-<c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
+<c:set var="root" value="${usabucket}/9x9playerV68a"/>
 <c:set var="nroot" value="${bucket}/mock42"/>
 
 <!-- $Revision: 2612 $ -->
@@ -52,7 +52,7 @@
 <script type="text/javascript" charset="utf-8" src="${bucket}/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="${bucket}/mogwai14.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/mogwai15.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="${usabucket}/${js}.js"></script>
