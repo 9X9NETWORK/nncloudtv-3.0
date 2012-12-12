@@ -335,6 +335,13 @@ public class NnUser implements Serializable {
         return profileUrl;
     }
 
+    public String getBrandUrl() {
+        if (profileUrl != null && profileUrl.matches("[a-zA-Z].+")) {
+            return "~" + profileUrl;
+        }
+        return profileUrl;
+    }
+    
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
     }

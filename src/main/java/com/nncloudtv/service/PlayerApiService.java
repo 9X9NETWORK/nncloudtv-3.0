@@ -2268,5 +2268,8 @@ public class PlayerApiService {
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));        
     }
-    
+
+    public String frontpage(String time, String lang) {        
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);        
+    }
 }

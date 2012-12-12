@@ -350,7 +350,7 @@ public class PlayerApiController {
             this.prepService(req, true);
             output = playerApiService.brandInfo(req);
         } catch (Exception e) {
-            output = playerApiService.handleException(e);            
+            output = playerApiService.handleException(e);
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);
         }
@@ -2203,8 +2203,7 @@ public class PlayerApiController {
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
-            HttpServletResponse resp) {
-        
+            HttpServletResponse resp) {        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             int status = this.prepService(req, true);
@@ -2219,5 +2218,26 @@ public class PlayerApiController {
         }
         return output;
     }
-    
+ 
+    @RequestMapping(value="frontpage", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String headline(                      
+            @RequestParam(value="time", required=false) String time,
+            @RequestParam(value="lang", required=false) String lang,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.frontpage(time, lang);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;        
+    }
 }

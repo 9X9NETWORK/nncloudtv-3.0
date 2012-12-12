@@ -848,7 +848,7 @@ public class NnChannelManager {
             userName = u.getName();
             userIntro = u.getIntro();
             userImageUrl = u.getImageUrl();
-            curatorProfile = u.getProfileUrl();
+            curatorProfile = u.getBrandUrl();
             if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
                 log.info("change favorite channel name and thumbnail");
                 name = userName + "'s Favorite";

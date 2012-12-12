@@ -418,10 +418,11 @@ public class NnUserManager {
     public String composeCuratorInfoStr(NnUser user, String channelId, HttpServletRequest req) {
         //#!curator=xxxxxxxx
         String profileUrl = "";
-        if (user.getProfileUrl() != null)
+        if (user.getProfileUrl() != null) {
             profileUrl = NnNetUtil.getUrlRoot(req) + "/#!curator=" + user.getProfileUrl();
+        }
         String[] info = {
-                user.getProfileUrl(),                
+                user.getBrandUrl(),                
                 user.getName(),
                 user.getIntro(),
                 user.getImageUrl(),
