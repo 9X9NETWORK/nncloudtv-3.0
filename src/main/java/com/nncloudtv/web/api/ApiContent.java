@@ -29,7 +29,6 @@ import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
-import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.NnAdManager;
@@ -78,21 +77,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        NnChannelPref pref = null;
         NnChannelPrefManager prefMngr = new NnChannelPrefManager();
         
-        // fbUserId
-        pref = prefMngr
-                .findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
-        if (pref != null) {
-            prefMngr.delete(pref);
-        }
-        
-        // accessToken
-        pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
-        if (pref != null) {
-            prefMngr.delete(pref);
-        }
+        prefMngr.delete(prefMngr.findByChannelIdAndItem(channelId, NnChannelPref.FB_AUTOSHARE));
         
         return "OK";
     }
@@ -137,34 +124,32 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        NnChannelPref pref = null;
+        String[] fbUserIdList = fbUserId.split(",");
+        String[] accessTokenList = accessToken.split(",");
+        
+        if (fbUserIdList.length != accessTokenList.length) {
+            
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        List<NnChannelPref> prefList = new ArrayList<NnChannelPref>();
         NnChannelPrefManager prefMngr = new NnChannelPrefManager();
         
-        // fbUserId
-        pref = prefMngr
-                .findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
-        if (pref != null) {
-            pref.setValue(fbUserId);
-        } else {
-            pref = new NnChannelPref(channel, NnUserPref.FB_USER_ID, fbUserId);
+        for (int i = 0; i < fbUserIdList.length; i++) {
+            prefList.add(new NnChannelPref(channel, NnChannelPref.FB_AUTOSHARE, prefMngr.composeFacebookAutoshare(fbUserIdList[i], accessTokenList[i])));
         }
-        prefMngr.save(pref);
         
-        // accessToken
-        pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
-        if (pref != null) {
-            pref.setValue(accessToken);
-        } else {
-            pref = new NnChannelPref(channel, NnUserPref.FB_TOKEN, accessToken);
-        }
-        prefMngr.save(pref);
+        prefMngr.delete(prefMngr.findByChannelIdAndItem(channelId, NnChannelPref.FB_AUTOSHARE));
+        
+        prefMngr.save(prefList);
         
         return "OK";
     }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> facebookAutosharing(HttpServletRequest req,
+    List<Map<String, Object>> facebookAutosharing(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("channelId") String channelIdStr) {
         
@@ -195,31 +180,23 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnChannelPrefManager prefMngr = new NnChannelPrefManager();
-        NnChannelPref pref = null;
-        Map<String, Object> result = new TreeMap<String, Object>();
-        String fbUserId = null;
-        String accessToken = null;
+        List<NnChannelPref> prefList = prefMngr.findByChannelIdAndItem(channelId, NnChannelPref.FB_AUTOSHARE);
         
-        // fbUserId
-        pref = prefMngr
-                .findByChannelIdAndItem(channelId, NnUserPref.FB_USER_ID);
-        if (pref != null) {
-            fbUserId = pref.getValue();
-            result.put("userId", fbUserId);
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        Map<String, Object> result;
+        String[] parsedObj;
+        for (NnChannelPref pref : prefList) {
+            parsedObj = prefMngr.parseFacebookAutoshare(pref.getValue());
+            if (parsedObj == null) {
+                continue;
+            }
+            result = new TreeMap<String, Object>();
+            result.put("userId", parsedObj[0]);
+            result.put("accessToken", parsedObj[1]);
+            results.add(result);
         }
         
-        // accessToken
-        pref = prefMngr.findByChannelIdAndItem(channelId, NnUserPref.FB_TOKEN);
-        if (pref != null) {
-            accessToken = pref.getValue();
-            result.put("accessToken", accessToken);
-        }
-        
-        if (accessToken != null && fbUserId != null) {
-            return result;
-        }
-        
-        return null;
+        return results;
     }
     
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.GET)

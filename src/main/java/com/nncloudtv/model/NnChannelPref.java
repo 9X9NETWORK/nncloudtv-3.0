@@ -28,6 +28,8 @@ public class NnChannelPref implements Serializable {
     @Column(jdbcType="VARCHAR", length=255)
     private String item;
     
+    public static final String FB_AUTOSHARE = "fb-autoshare";
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String value;

@@ -39,10 +39,10 @@ public class NnChannelPrefDao extends GenericDao<NnChannelPref> {
 		return prefList;
 	}
 	
-	public NnChannelPref findByChannelIdAndItem(long channelId, String item) {
+	public List<NnChannelPref> findByChannelIdAndItem(long channelId, String item) {
 		
-		NnChannelPref pref = null;
-		PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+	    List<NnChannelPref> prefList = new ArrayList<NnChannelPref>();
+		PersistenceManager pm = PMF.getContent().getPersistenceManager();
 		
 		try {
 			Query query = pm.newQuery(NnChannelPref.class);
@@ -50,14 +50,12 @@ public class NnChannelPrefDao extends GenericDao<NnChannelPref> {
 			query.declareParameters("long channelIdParam, String itemParam");
 			@SuppressWarnings("unchecked")
 			List<NnChannelPref> results = (List<NnChannelPref>) query.execute(channelId, item);
-			if (results.size() > 0) {		
-				pref = (NnChannelPref) pm.detachCopy(results.get(0));
-			}
+			prefList = (List<NnChannelPref>) pm.detachCopyAll(results);
 		} catch (JDOObjectNotFoundException e) {
 		} finally {
 			pm.close();
 		}
-		return pref;
+		return prefList;
 	}
 	
 }
