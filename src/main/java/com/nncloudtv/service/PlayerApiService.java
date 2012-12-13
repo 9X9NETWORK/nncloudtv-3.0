@@ -2138,21 +2138,13 @@ public class PlayerApiService {
             lang = this.checkLang(lang);
             log.info("virtual channel find by stack:" + stack + ";lang=" + lang);
             String[] cond = stack.split(",");
-            for (String s : cond) { 
-                if (s.equals(Tag.FEATURED)) {
-                    channels.addAll(chMngr.findBillboard(Tag.FEATURED, lang));
-                }
-                if (s.equals(Tag.HOT)) {
-                    channels.addAll(chMngr.findBillboard(Tag.HOT, lang));               
-                }
-                if (s.equals("trending")) {
-                    channels.addAll(chMngr.findBillboard(Tag.TRENDING, lang));               
-                }
+            for (String s : cond) {                 
                 if (s.equals(Tag.RECOMMEND)) {
                     channels.addAll(new RecommendService().findRecommend(userToken, lang));
-                }
-                if (s.equals("mayLike")) {
+                } else if (s.equals("mayLike")) {                
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+                } else {
+                    channels.addAll(chMngr.findBillboard(s, lang));
                 }
             }
         }
@@ -2269,7 +2261,9 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));        
     }
 
-    public String frontpage(String time, String lang) {        
+    public String frontpage(String time, String stack, String user) {
+        //DashboardDao dao = new DashboardDao();
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);        
     }
 }

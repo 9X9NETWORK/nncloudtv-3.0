@@ -414,7 +414,7 @@ public class PlayerApiController {
      *           </p> 
      */    
     @RequestMapping(value="pdr", produces = "text/plain; charset=utf-8")
-    public void pdr(
+    public @ResponseBody String pdr(
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="device", required=false) String deviceToken,
             @RequestParam(value="session", required=false) String session,
@@ -459,6 +459,7 @@ public class PlayerApiController {
                 e.printStackTrace();
             }
         }
+        return playerApiService.assembleMsgs(NnStatusCode.SUCCESS, null); 
             
 //        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
 //        //if (!root.equals(pdrServer)) {
@@ -2286,9 +2287,10 @@ public class PlayerApiController {
     }
  
     @RequestMapping(value="frontpage", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String headline(                      
+    public @ResponseBody String frontpage(                      
             @RequestParam(value="time", required=false) String time,
-            @RequestParam(value="lang", required=false) String lang,
+            @RequestParam(value="stack", required=false) String stack,
+            @RequestParam(value="user", required=false) String user,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -2298,7 +2300,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            output = playerApiService.frontpage(time, lang);    
+            output = playerApiService.frontpage(time, stack, user);    
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
