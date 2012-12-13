@@ -1,5 +1,8 @@
 package com.nncloudtv.web.api;
 
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -411,7 +414,7 @@ public class PlayerApiController {
      *           </p> 
      */    
     @RequestMapping(value="pdr", produces = "text/plain; charset=utf-8")
-    public String pdr(
+    public void pdr(
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="device", required=false) String deviceToken,
             @RequestParam(value="session", required=false) String session,
@@ -423,22 +426,55 @@ public class PlayerApiController {
         String pdrServer = "http://v32d.9x9.tv";
         String prod1 = "http://www.9x9.tv";
         String prod2 = "http://9x9.tv";
-        String path = "";        
-        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
-        //if (!root.equals(pdrServer)) {
-            String queryStr = req.getQueryString(); //user=a&session=1
-            if (queryStr != null && !queryStr.equals("null"))
-                queryStr = "?" + queryStr;
-            else 
-                queryStr = "";
-            path = "/playerAPI/pdrServer" + queryStr;
-            String url = pdrServer + path;
-            log.info("url:" + url);
-            log.info("redirect to v32d");
-            return "redirect:" + url;
+        String path = "";
+        
+        /*
+        String userToken = req.getParameter("user");
+        String deviceToken = req.getParameter("device");
+        String session = req.getParameter("session");
+        String pdr = req.getParameter("session");
+        */
+        //if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
+        if (!root.equals(pdrServer)) {
+            path = "/playerAPI/pdrServer";
+            URL url;
+            try {        
+                String urlStr = pdrServer + path;
+                String params = "user=" + userToken + 
+                 "&device=" + deviceToken + 
+                 "&session=" + session +
+                 "&pdr=" + pdr +                     
+                 "&rx=" + rx;
+                url = new URL(urlStr);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(params);
+                writer.close();
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    log.info("redirection failed");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        log.info("path:" + path);
-        return "redirect:" + path;
+            
+//        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
+//        //if (!root.equals(pdrServer)) {
+//            String queryStr = req.getQueryString(); //user=a&session=1
+//            if (queryStr != null && !queryStr.equals("null"))
+//                queryStr = "?" + queryStr;
+//            else 
+//                queryStr = "";
+//            path = "/playerAPI/pdrServer" + queryStr;
+//            String url = pdrServer + path;
+//            log.info("url:" + url);
+//            log.info("redirect to v32d");
+//            return "redirect:" + url;
+//        }
+//        log.info("path:" + path);
+//        return "redirect:" + path;
     }
 
     @RequestMapping(value="pdrServer", produces = "text/plain; charset=utf-8")
