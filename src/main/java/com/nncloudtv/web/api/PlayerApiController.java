@@ -434,8 +434,8 @@ public class PlayerApiController {
         String session = req.getParameter("session");
         String pdr = req.getParameter("session");
         */
-        //if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
-        if (!root.equals(pdrServer)) {
+        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
+        //if (!root.equals(pdrServer)) {
             path = "/playerAPI/pdrServer";
             URL url;
             try {        
