@@ -50,6 +50,7 @@ public class PdrManager {
     public void processPdr(NnUser user, NnDevice device, String sessionId, String pdr, String ip) {        
         if (pdr == null) {return;}        
         PdrManager pdrMngr = new PdrManager();        
+        /*
         NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
         String reg = "\\sw\t(\\d++)\t(\\w++)";        
         Pattern pattern = Pattern.compile(reg);
@@ -65,6 +66,7 @@ public class PdrManager {
                 }
             }
         }
+        */
         if (pdr.length() > 65535) {
             pdr = pdr.substring(0, 65530);
         }
