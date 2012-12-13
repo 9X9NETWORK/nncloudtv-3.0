@@ -217,6 +217,7 @@ public class NnProgramManager {
         }
     }
     
+    /*
     public void processCache(long channelId) {
         String cacheKey = this.getCacheKey(channelId);        
         NnChannel c = new NnChannelManager().findById(channelId);
@@ -227,13 +228,16 @@ public class NnProgramManager {
         if (CacheFactory.isRunning) { 
             CacheFactory.set(cacheKey, output);
         }
-    }    
+    } 
+    */   
     
+    /*
     public String retrieveCache(String key) {
         log.info("cache key:" + key);
         String value = (String)CacheFactory.get(key);
         return value;
     }
+    */
     
     //example: nnprogram(channel_id)
     public String getCacheKey(long channelId) {
@@ -424,10 +428,14 @@ public class NnProgramManager {
     //player programInfo entry
     public String findPlayerProgramInfoByChannel(long channelId) {
         String cacheKey = "nnprogram(" + channelId + ")";
-        String result = (String)CacheFactory.get(cacheKey);
-        if (CacheFactory.isRunning && result != null) { 
-            return result;
-        } 
+        try {
+            String result = (String)CacheFactory.get(cacheKey);
+            if (result != null) { 
+                return result;
+            } 
+        } catch (Exception e) {
+            log.info("memcache error");
+        }
         NnChannel c = new NnChannelManager().findById(channelId);
         if (c == null)
             return "";

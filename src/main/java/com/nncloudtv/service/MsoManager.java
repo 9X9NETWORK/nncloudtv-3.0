@@ -57,14 +57,16 @@ public class MsoManager {
     public String[] getBrandInfoCache(boolean cacheReset) {
         String cacheKey = "brandInfo";
         String[] result = {""};
-        String[] cached = (String[]) CacheFactory.get(cacheKey);
-        if (CacheFactory.isRunning && !cacheReset) {
+        try {
+            String[] cached = (String[]) CacheFactory.get(cacheKey);
             if (cached != null) {
-                log.info("get brandInfo from cache");
+                log.info("get brandInfo from cache:" + cached.length);
                 return cached;
             }
+        } catch (Exception e) {
+            log.info("memcache error");
         }
-        
+        log.info("brand info not from cache");
         Mso mso = this.findNNMso();
         if (mso == null) {return null; }
         MsoConfigManager configMngr = new MsoConfigManager();

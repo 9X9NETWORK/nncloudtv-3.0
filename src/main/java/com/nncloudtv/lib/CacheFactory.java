@@ -28,7 +28,7 @@ public class CacheFactory {
             properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
             String server = properties.getProperty("server");
             //log.info("memcache server:" + server);
-            cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));            
+            cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
         } catch (IOException e) {
            log.severe("memcache io exception");
            cache = null;
@@ -39,7 +39,7 @@ public class CacheFactory {
         return cache;
     }    
 
-    public static Object get(String key) {        
+    public static Object get(String key) {
         MemcachedClient cache = CacheFactory.getClient();
         CacheFactory.isRunning = false;
         Object obj = null;
@@ -48,14 +48,17 @@ public class CacheFactory {
             CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
+        } catch (NullPointerException e) {
+            log.severe("memcache not found");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown();            
+            if (cache != null)
+                cache.shutdown();            
         }
         return obj;
-    }    
+    }
 
     public static Object set(String key, Object obj) {        
         MemcachedClient cache = CacheFactory.getClient();
@@ -66,12 +69,15 @@ public class CacheFactory {
             myObj = cache.get(key);
             CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
-            log.severe("set OperationTimeoutException");
+            log.severe("memcache OperationTimeoutException");
+        } catch (NullPointerException e) {
+            log.severe("memcache not found");
         } catch (Exception e) {
-            log.severe("set Exception");
+            log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown();
+            if (cache != null)
+                cache.shutdown();
         }
         return myObj;
     }    

@@ -131,12 +131,14 @@ public class NnChannelManager {
         return channel;
     }
 
+    /*
     public String processCache(NnChannel c) {
         String cacheKey = NnChannelManager.getCacheKey(c.getId());
         String str = this.composeChannelLineupStr(c); 
         CacheFactory.set(cacheKey, str);
         return str;
     }
+    */
 
     //example: nnchannel(channel_id)
     public static String getCacheKey(long channelId) {
@@ -583,7 +585,12 @@ public class NnChannelManager {
             channels = tagMngr.findChannelsByTag(name, true);
             log.info("find billboard, tag:" + name);
             */            
-        }        
+        } else {
+            TagManager tagMngr = new TagManager();        
+            name += "(9x9" + lang + ")";
+            log.info("find billboard, tag:" + name);
+            channels = tagMngr.findChannelsByTag(name, true);            
+        }
         Collections.sort(channels, this.getChannelComparator("updateDate"));
         return channels;
     }
@@ -732,6 +739,7 @@ public class NnChannelManager {
         }
     }
     
+    /*
     public String composeChannelLineupCache(List<NnChannel> channels) {
         String output = "";
         for (NnChannel c : channels) {
@@ -749,6 +757,7 @@ public class NnChannelManager {
         }
         return output;
     }
+    */
 
     public String composeReducedChannelLineup(List<NnChannel> channels) {
         String output = "";
@@ -792,8 +801,14 @@ public class NnChannelManager {
     }    
     
     public String composeChannelLineupStr(NnChannel c) {
-        String result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));
-        if (CacheFactory.isRunning && result != null && c.getId() != 0) {
+        String result = null;
+        try {
+            result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));            
+        } catch (Exception e) {
+            log.info("memcache error");
+        }
+        if (result != null && c.getId() != 0) { //id = 0 means fake channel, it is dynamic
+            log.info("get channel lineup from cache");
             return result;
         }
         log.info("channel lineup NOT from cache:" + c.getId());

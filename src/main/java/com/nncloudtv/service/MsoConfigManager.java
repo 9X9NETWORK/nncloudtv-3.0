@@ -88,12 +88,14 @@ public class MsoConfigManager {
 
     public static boolean getBooleanValueFromCache(String key, boolean cacheReset) {
         String cacheKey = "msoconfig(" + key + ")";
-        String result = (String)CacheFactory.get(cacheKey);        
-        if (!cacheReset && CacheFactory.isRunning) {
+        try {        
+            String result = (String)CacheFactory.get(cacheKey);        
             if (result != null){
                 log.info("value from cache: key=" + cacheKey + "value=" + result);            
                 return NnStringUtil.stringToBool(result);
             }            
+        } catch (Exception e) {
+            log.info("memcache error");
         }
         boolean value = false;
         MsoConfig config = new MsoConfigDao().findByItem(key);
@@ -127,29 +129,5 @@ public class MsoConfigManager {
         return configDao.findByItem(item);
     }
 
-    /*
-    public void processCache(MsoConfig config) {
-        MemcachedClient cache = CacheFactory.get();
-        String cacheKey = this.getCacheKey(config.getItem());
-        if (cache != null) { 
-            cache.set(cacheKey, CacheFactory.EXP_DEFAULT, config.getValue());
-        }
-    }
-    
-    //only 9x9 mso's config is cached
-    public MsoConfig retrieveCache(String item) {
-        MemcachedClient cache = CacheFactory.get();
-        MsoConfig config = null;
-        if (cache != null) { 
-            config = (MsoConfig)cache.get(item);
-        }
-        return config;
-    }
-
-    //mso_config(item), example mso_config(debug) 
-    public String getCacheKey(String item) {
-        return "mso_config(" + item + ")";
-    }
-    */
 }
 

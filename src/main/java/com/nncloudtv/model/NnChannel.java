@@ -460,9 +460,10 @@ public class NnChannel implements Serializable {
                 return Integer.parseInt(result);
             }
             log.info("cnt view not in the cache:" + name);
-            CounterFactory factory = new CounterFactory();
+            CounterFactory factory = new CounterFactory();            
             cntView = factory.getCount(name); 
-            CacheFactory.set(name, String.valueOf(cntView));
+            if (CacheFactory.isRunning)
+                CacheFactory.set(name, String.valueOf(cntView));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -581,11 +582,14 @@ public class NnChannel implements Serializable {
                 return Integer.parseInt(result);
             }
             log.info("cnt view not in the cache:" + name);
-            CounterFactory factory = new CounterFactory();
-            cntVisit = factory.getCount(name); 
-            CacheFactory.set(name, String.valueOf(cntVisit));
+            CounterFactory factory = new CounterFactory();            
+            cntVisit = factory.getCount(name);
+            if (CacheFactory.isRunning)
+                CacheFactory.set(name, String.valueOf(cntVisit));
         } catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("msg:" + e.getMessage());
+            System.out.println("cause:" + e.getCause());
             return 0;
         }
         return cntVisit;
