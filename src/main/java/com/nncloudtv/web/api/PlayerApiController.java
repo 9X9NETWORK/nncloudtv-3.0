@@ -142,7 +142,7 @@ public class PlayerApiController {
             log.info("from iOS");
         }
         */
-        if (log)
+        if (log) 
             NnNetUtil.logUrl(req);
         HttpSession session = req.getSession();
         session.setMaxInactiveInterval(60);
@@ -411,7 +411,38 @@ public class PlayerApiController {
      *           </p> 
      */    
     @RequestMapping(value="pdr", produces = "text/plain; charset=utf-8")
-    public @ResponseBody String pdr(
+    public String pdr(
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="device", required=false) String deviceToken,
+            @RequestParam(value="session", required=false) String session,
+            @RequestParam(value="pdr", required=false) String pdr,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String root = NnNetUtil.getUrlRoot(req); //http://dev.9x9.tv
+        String pdrServer = "http://v32d.9x9.tv";
+        String prod1 = "http://www.9x9.tv";
+        String prod2 = "http://9x9.tv";
+        String path = "";        
+        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
+        //if (!root.equals(pdrServer)) {
+            String queryStr = req.getQueryString(); //user=a&session=1
+            if (queryStr != null && !queryStr.equals("null"))
+                queryStr = "?" + queryStr;
+            else 
+                queryStr = "";
+            path = "/playerAPI/pdrServer" + queryStr;
+            String url = pdrServer + path;
+            log.info("url:" + url);
+            log.info("redirect to v32d");
+            return "redirect:" + url;
+        }
+        log.info("path:" + path);
+        return "redirect:" + path;
+    }
+
+    @RequestMapping(value="pdrServer", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String pdrServer(
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="device", required=false) String deviceToken,
             @RequestParam(value="session", required=false) String session,
@@ -424,8 +455,7 @@ public class PlayerApiController {
         try {
             int status = this.prepService(req, false);
             if (status != NnStatusCode.SUCCESS) {
-                return 
-                        playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
             output = playerApiService.pdr(userToken, deviceToken, session, pdr, req);
         } catch (Exception e) {
@@ -435,7 +465,7 @@ public class PlayerApiController {
         }
         return output;
     }
-
+    
     /**
      * This API is used for version before 3.2.
      * Retrieves set information
