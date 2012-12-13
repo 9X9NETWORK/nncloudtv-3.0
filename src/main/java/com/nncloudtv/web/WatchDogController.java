@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.Tag;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.service.TagManager;
 import com.nncloudtv.web.api.NnStatusCode;
 
 @Controller
@@ -146,7 +148,7 @@ public class WatchDogController {
     public @ResponseBody String programCache(
             @RequestParam(value="channel", required=false) long chId ) {
         NnProgramManager mngr = new NnProgramManager();
-        mngr.processCache(chId);
+        mngr.resetCache(chId);
         return "OK";                
     }
 
@@ -156,5 +158,40 @@ public class WatchDogController {
         mngr.resetCache(chId); 
         return "OK";                
     }
+
+    @RequestMapping(value="channelSubmit", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String channelCache(
+            HttpServletRequest req,
+            @RequestParam(value="url", required=false) String url, 
+            @RequestParam(value="name", required=false) String name) {            
+        NnChannelManager mngr = new NnChannelManager();
+        NnChannel c = mngr.create(url, name, "en", req);
+        if ( c!= null)
+            return c.getIdStr();
+        return "channel submission failed";                
+    }
+
+    @RequestMapping(value="tag", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String tag(
+            HttpServletRequest req, 
+            @RequestParam(value="name", required=false) String name) {            
+        TagManager tagMngr = new TagManager();
+        Tag t = tagMngr.findByName(name);
+        if (t == null) {
+            t = new Tag(name);
+            tagMngr.save(t);
+        }
+        return "t id:" + t.getId();                
+    }
+
+    @RequestMapping(value="tagMap", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String tagMap(
+            HttpServletRequest req, 
+            @RequestParam(value="tagId", required=false) long tagId,            
+            @RequestParam(value="chId", required=false) long chId) {
+        TagManager tagMngr = new TagManager();
+        tagMngr.createTagMap(tagId, chId);
+        return "OK";                
+    }    
     
 }
