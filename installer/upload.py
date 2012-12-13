@@ -13,6 +13,8 @@ from datetime import datetime
 
 def getSSH(server):
    host = "stage.9x9.tv"
+   if server == "pdr":
+     host = "v32d.9x9.tv"
    if server == "prod":    
      host = "moveout-log.9x9.tv"     
    
@@ -83,10 +85,13 @@ if server == "1":
   print "--- uploading to stage server ---"                                                 
   os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@stage.9x9.tv:/home/ubuntu/files/root.war")
   os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@stage.9x9.tv:/home/ubuntu/files/cms.war")
-if server == "2":        
-  print "--- uploading to deploy server ---"                             
-  ssh = getSSH("prod")
+if server == "2":     
+  print "--- uploading to pdr server ---"                                                 
+  os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@v32d.9x9.tv:/home/ubuntu/files/root.war")
+  os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@v32d.9x9.tv:/home/ubuntu/files/cms.war")
   
+  print "--- uploading to deploy server ---"                             
+  ssh = getSSH("prod")  
   stdin, stdout, stderr = ssh.exec_command('mkdir /var/www/updates/root/' + version)
   stdin, stdout, stderr = ssh.exec_command('mkdir /var/www/updates/cms/' + version)  
   print "[moveout-log] ls /var/www/updates/root"
@@ -117,6 +122,9 @@ if server == "1":
   print stdout.readlines()                                                   
   ssh.close()
 if server == "2":  
+  print "--- deploying to pdr server ---"
+  ssh = getSSH("pdr")
+  stdin, stdout, stderr = ssh.exec_command('cd files;sh installer.sh')
   print "--- deploying to prod server ---"
   ssh = getSSH("prod")
   stdin, stdout, stderr = ssh.exec_command('cd bin/v32;./deploy_all_wars.sh')
