@@ -1,6 +1,35 @@
+update nnuser set profileURl='MusicDay' where id=5035;
+update nnuser set profileURl='TVHS' where id=2909;
+
+
+alter table title_card modify message varchar(2000);
+create table nnchannel_backup select * from nnchannel;
+apt-get install python-gdata
+
+update nnchannel set status=3
+ where createDate > '2012_10_05 00:00:00' 
+   and contentType = 6
+   and id not in (select channelId from tag_map where tagId < 5)
+   and userIdStr not in ('1-1835', '1-2267','1-2417','1-2500','1-2533','1-2954','1-5033','1-5035')
+
+---------------------------------------------------------------------   
+   
+select id, name, createDate, userIdStr from nnchannel 
+ where createDate > '2012_10_05 00:00:00' 
+   and contentType = 6
+   and id not in (select channelId from tag_map where tagId < 5)
+   and userIdStr not in ('1-1835', '1-2267','1-2417','1-2500','1-2533','1-2954','1-5033','1-5035')
+   
+- test youtube "channel" not playlist's 9x9 account
+- get episode count for both channel and playlist
+- batch program to get duration
+- build procedures
+
+
 create table nnuser_backup select * from nnuser;
 update nnuser set email=(@temp:=email), email=fbId, fbId=@temp where fbId is not null;
 create index nnguest_token on nnguest (token);
+
 
 
 delete from counter_shard where counterName like ('ch%');
@@ -88,7 +117,7 @@ mysql new master
 bunzip2 content.sql.bz2
 bunzip2 nnuser1.sql.bz2
 
-================================================================
+=================================================a===============
 schema changes
 ================================================================
 create database nncloudtv_nnuser1 character set = utf8;
