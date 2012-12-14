@@ -230,6 +230,13 @@ rabbitmqctl status
 Memcached
 ================================
 > apt-get install memcached
+> service memcached start
+> telnet localhost 11211
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+stats
+>  vi /etc/memcached.conf 
 
 ================================
 Mail server

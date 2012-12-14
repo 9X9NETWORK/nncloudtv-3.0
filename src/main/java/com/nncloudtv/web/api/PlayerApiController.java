@@ -2268,6 +2268,7 @@ public class PlayerApiController {
             @RequestParam(value="stack", required=false) String stack,
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="channel", required=false) String channel,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {        
@@ -2277,7 +2278,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            output = playerApiService.virtualChannel(stack, lang, userToken);    
+            output = playerApiService.virtualChannel(stack, lang, userToken, channel, true);    
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

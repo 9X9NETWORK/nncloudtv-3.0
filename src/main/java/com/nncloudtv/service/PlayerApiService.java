@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
+import com.nncloudtv.dao.DashboardDao;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.dao.YtProgramDao;
@@ -36,6 +37,7 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
 import com.nncloudtv.model.Category;
+import com.nncloudtv.model.Dashboard;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -661,7 +663,7 @@ public class PlayerApiService {
         boolean channelPos = true;
         if (channelIds == null && curatorIdStr == null) {
             //find subscribed channels 
-            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
+            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();            
             channels = subMngr.findSubscribedChannels(user);
             log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
         } else if (curatorIdStr != null) {
@@ -725,17 +727,9 @@ public class PlayerApiService {
             }
         }
         if (channelPos && channelOutput != null) {
-            String adjust = "";            
-            log.info("adjust sequence of channellineup for user:" + user.getId());
-            String[] lines = channelOutput.split("\n");
-            if (channels.size() > 0) {
-                for (int i=0; i<lines.length; i++) {
-                    lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
-                    adjust += lines[i] + "\n";
-                }
-            }
-            channelOutput = adjust;
+            channelOutput = this.chAdjust(channels, channelOutput);
         }
+        
         result.add(channelOutput);
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
@@ -1161,7 +1155,7 @@ public class PlayerApiService {
         if (guest.getCaptchaId() == 0)
             return NnStatusCode.CAPTCHA_INVALID;
         Captcha c = new CaptchaManager().findById(guest.getCaptchaId());
-        System.out.println(guest.getGuessTimes() + ";" + NnGuest.GUESS_MAXTIMES);
+        log.info(guest.getGuessTimes() + ";" + NnGuest.GUESS_MAXTIMES);
         if (guest.getGuessTimes() >= NnGuest.GUESS_MAXTIMES)
             return NnStatusCode.CAPTCHA_TOOMANY_TRIES;
         if (!c.getFileName().equals(fileName) || 
@@ -1324,7 +1318,6 @@ public class PlayerApiService {
             if (key[i].equals("oldPassword"))
                 oldPassword = theValue;                
             if (key[i].equals("sphere")) {
-                System.out.println("sphere check:" + theValue);
                 if ((theValue == null) || (this.checkLang(theValue) == null))
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
                 user.setSphere(theValue);
@@ -1464,7 +1457,6 @@ public class PlayerApiService {
             return this.assembleMsgs((Integer)map.get("s"), null);
         }
         NnUser user = (NnUser) map.get("u");
-        System.out.println("user???" + user.getId());
         NnUserChannelSorting sorting = new NnUserChannelSorting(user.getId(), 
                                            Long.parseLong(channelId), Short.parseShort(sort));
         NnUserChannelSortingManager sortingMngr = new NnUserChannelSortingManager();
@@ -2030,7 +2022,6 @@ public class PlayerApiService {
 
     @SuppressWarnings({ "rawtypes" })
     public String notifySubscriber(String userToken, String channel, HttpServletRequest req) {
-        System.out.println("notifySubscriber");
         NnUser user = userMngr.findByToken(userToken);            
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
@@ -2113,11 +2104,13 @@ public class PlayerApiService {
             result[0] = userMngr.composeCuratorInfo(users, false, isAllChannel, req);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
-    
-    public String virtualChannel(String stack, String lang, String userToken) {
-        if (stack == null && userToken == null) {
+        
+    public String virtualChannel(String stack, String lang, String userToken, String channel, boolean isPrograms) {
+        //check input
+        if (stack == null && userToken == null && channel == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
+        //get channels
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnUser user = null;
         boolean chPos = false;
@@ -2138,7 +2131,7 @@ public class PlayerApiService {
             lang = this.checkLang(lang);
             log.info("virtual channel find by stack:" + stack + ";lang=" + lang);
             String[] cond = stack.split(",");
-            for (String s : cond) {                 
+            for (String s : cond) {
                 if (s.equals(Tag.RECOMMEND)) {
                     channels.addAll(new RecommendService().findRecommend(userToken, lang));
                 } else if (s.equals("mayLike")) {                
@@ -2147,89 +2140,42 @@ public class PlayerApiService {
                     channels.addAll(chMngr.findBillboard(s, lang));
                 }
             }
+        } else if (channel != null) {
+            log.info("virtual channel find by channel ids:" + channel);
+            String[] chArr = channel.split(",");
+            if (chArr.length > 1) {
+                List<Long> list = new ArrayList<Long>();
+                for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
+                channels.addAll(chMngr.findByIds(list));
+            }
         }
+        if (!isPrograms) {
+            String channelInfo = chMngr.composeReducedChannelLineup(channels);
+            if (chPos)
+                channelInfo = this.chAdjust(channels, channelInfo);
+            log.info("virtual channel, return channel only");
+            return this.assembleMsgs(NnStatusCode.SUCCESS, new String[] {channelInfo});
+        }    
+        //get programs
         List<String> result = new ArrayList<String>();        
         List<YtProgram> ytprograms = new YtProgramDao().findByChannels(channels);
-        int end = 0;
-        int start = 0;        
         String programInfo = "";
-        //List<NnProgram> nnprograms = new NnProgramDao().findByChannels(channels);
-        TreeMap<Date, Object> map = new TreeMap<Date, Object>();
         HashMap<Long, NnChannel> chMap = new HashMap<Long, NnChannel>();
-        //for (NnProgram p : nnprograms) {
-        //    map.put(p.getUpdateDate(), p);
-        //}
-        //log.info("nnprogram entry:" + nnprograms.size());
         for (YtProgram p : ytprograms) {
-            map.put(p.getUpdateDate(), p);
-        }
-        log.info("ytnprogram entry:" + ytprograms.size());
-        Iterator<Entry<Date, Object>> it = map.entrySet().iterator();
-        List<Object> list = new ArrayList<Object>();
-        while (it.hasNext()) {
-            Map.Entry<Date, Object> pairs = (Map.Entry<Date, Object>)it.next();
-            list.add(pairs.getValue());
-        }
-        /*
-        for (int i=0; i < list.size(); i++) {
-            if (list.get(i).getClass().getSimpleName().equals("YtProgram")) {
-                YtProgram p = (YtProgram) list.get(i);
-                System.out.println("yt date:" + p.getId() + ";" + p.getUpdateDate());
-            } else {
-                NnProgram p = (NnProgram) list.get(i);
-                System.out.println("nn date:" + p.getId() + ";" + p.getUpdateDate());
-            }
-        }
-        */
-        end = list.size()-1;
-        start = end - 50;
-        start = start < 0 ? 0 : start;
-        log.info("start index:" + start + "; end index:" + end);
-        for (int i=end; i>start; i--) {
-            if (list.get(i).getClass().getSimpleName().equals("YtProgram")) {
-                YtProgram p = (YtProgram) list.get(i);
-                String[] ori = {
-                        String.valueOf(p.getChannelId()),
-                        p.getYtVideoId(),
-                        p.getPlayerName(),
-                        String.valueOf(p.getUpdateDate().getTime()),
-                        p.getDuration(),
-                        p.getImageUrl(),
-                        p.getPlayerIntro(),
-                };
-                String output = NnStringUtil.getDelimitedStr(ori);
-                output = output.replaceAll("null", "");
-                output += "\n";
-                log.info("ch id:" + p.getChannelId() + "; ytprogram id:" + p.getYtVideoId());
-                //log.info("ytoutput:" + output);
-                chMap.put(p.getChannelId(), null);                
-                programInfo += output;
-            } else {
-                NnProgram p = (NnProgram) list.get(i);
-                String fileUrl = p.getFileUrl();
-                if (fileUrl != null && fileUrl.contains("watch?v=")) {
-                    int fstart = fileUrl.indexOf("watch?v=") + 8;
-                    int fend = fileUrl.indexOf("&");                
-                    fend = fend == -1 ? fileUrl.length() : fend;
-                    fileUrl = fileUrl.substring(fstart, fend);
-                }
-                String[] ori = {
-                        String.valueOf(p.getChannelId()),
-                        fileUrl,
-                        p.getPlayerName(),
-                        String.valueOf(p.getUpdateDate().getTime()),
-                        p.getDuration(),
-                        p.getImageUrl(),
-                        p.getPlayerIntro(),
-                };                    
-                String output = NnStringUtil.getDelimitedStr(ori);
-                output = output.replaceAll("null", "");
-                output += "\n";
-                chMap.put(p.getChannelId(), null);
-                log.info("ch id:" + p.getChannelId() + "; nnprogram id:" + p.getId());
-                //log.info("nnoutput:" + output);                
-                programInfo += output;
-            }
+            chMap.put(p.getChannelId(), null);
+            String[] ori = {
+                    String.valueOf(p.getChannelId()),
+                    p.getYtVideoId(),
+                    p.getPlayerName(),
+                    String.valueOf(p.getUpdateDate().getTime()),
+                    p.getDuration(),
+                    p.getImageUrl(),
+                    p.getPlayerIntro(),
+            };
+            String output = NnStringUtil.getDelimitedStr(ori);
+            output = output.replaceAll("null", "");
+            output += "\n";
+            programInfo += output;
         }
         Iterator<Entry<Long, NnChannel>> chit = chMap.entrySet().iterator();
         List<NnChannel> chList = new ArrayList<NnChannel>();        
@@ -2243,27 +2189,63 @@ public class PlayerApiService {
         }
         String channelInfo = chMngr.composeReducedChannelLineup(chList);
         if (chPos) {
-           String adjust = "";            
-           log.info("adjust sequence of channellineup for user:" + user.getId());
-           String[] lines = channelInfo.split("\n");
-           if (channels.size() > 0) {
-               for (int i=0; i<lines.length; i++) {                   
-                   lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
-                   log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
-                   adjust += lines[i] + "\n";
-               }
-           }
-           channelInfo = adjust;
-        }            
+            log.info("adjust sequence of channellineup for user:" + user.getId());
+            channelInfo = this.chAdjust(channels, channelInfo);
+        }
         result.add(channelInfo);                
         result.add(programInfo);
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));        
     }
 
-    public String frontpage(String time, String stack, String user) {
-        //DashboardDao dao = new DashboardDao();
+    private String chAdjust(List<NnChannel> channels, String channelInfo) {
+        String adjust = "";            
+        String[] lines = channelInfo.split("\n");
+        if (channels.size() > 0) {
+            for (int i=0; i<lines.length; i++) {                   
+                lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
+                log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
+                adjust += lines[i] + "\n";
+            }
+        }
+        return adjust;
         
-        return this.assembleMsgs(NnStatusCode.SUCCESS, null);        
+    }
+    
+    public String frontpage(String time, String stack, String user) {
+        DashboardDao dao = new DashboardDao();
+        short baseTime = Short.valueOf(time);
+        List<Dashboard> list = dao.findFrontpage(baseTime);
+        //section 1: items
+        log.info("board size:" + list.size());
+        List<String> data = new ArrayList<String>();
+        String[] itemOutput = {""};
+        List<Dashboard> openList = new ArrayList<Dashboard>();
+        for (Dashboard d : list) {
+            if (d.getOpened() == 1)
+                openList.add(d);
+            String[] ori = {
+               d.getName(),
+               String.valueOf(d.getType()),
+               d.getStackName(),
+               String.valueOf(d.getOpened()),
+            };
+            itemOutput[0] += NnStringUtil.getDelimitedStr(ori) + "\n";            
+        }
+        itemOutput[0] = itemOutput[0].replaceAll("null", "");
+        itemOutput[0] = this.assembleMsgs(NnStatusCode.SUCCESS, itemOutput);
+        data.add(itemOutput[0]);
+        try {
+            //section 2: virtual channels
+            String virtualOutput = "";
+            for (Dashboard d : openList) {
+                virtualOutput = this.virtualChannel(d.getStackName(), LangTable.LANG_EN, user, null, false);
+            }
+            data.add(virtualOutput);
+            return this.assembleSections(data);
+        } catch (Exception e) {
+            NnLogUtil.logException((Exception) e);
+            return this.assembleSections(data);
+        }
     }
 }

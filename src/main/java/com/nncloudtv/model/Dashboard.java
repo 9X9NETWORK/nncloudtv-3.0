@@ -8,6 +8,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+/**
+ * For android device. Things to display when device boots up 
+ *
+ */
 @PersistenceCapable(table="dashboard", detachable="true")
 public class Dashboard implements Serializable {
         

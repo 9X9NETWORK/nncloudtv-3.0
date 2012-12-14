@@ -24,6 +24,8 @@ public class TagDao extends GenericDao<Tag> {
         try {
             pm.makePersistent(tm);
             tm = pm.detachCopy(tm);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             pm.close();
         }

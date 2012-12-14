@@ -181,7 +181,7 @@ public class WatchDogController {
             t = new Tag(name);
             tagMngr.save(t);
         }
-        return "t id:" + t.getId();                
+        return String.valueOf(t.getId());                
     }
 
     @RequestMapping(value="tagMap", produces = "text/plain; charset=utf-8")

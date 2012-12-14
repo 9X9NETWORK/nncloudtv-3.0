@@ -93,6 +93,7 @@ public class NnUserSubscribeManager {
     
     public List<NnChannel> findSubscribedChannels(NnUser user) {
         List<NnUserSubscribe> subs = subDao.findAllByUser(user);
+        log.info("subscription size:" + subs.size());        
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnChannelManager channelMngr = new NnChannelManager();
         //CntSubscribeManager cntMngr = new CntSubscribeManager();
@@ -110,6 +111,7 @@ public class NnUserSubscribeManager {
                 channels.add(c);
             }
         }
+        log.info("finall subs size:" + channels.size());        
         return channels;             
     }
 

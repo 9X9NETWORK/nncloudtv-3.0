@@ -50,7 +50,6 @@ public class MsoManager {
     
     public Mso findNNMso() {
         List<Mso> list = this.findByType(Mso.TYPE_NN);
-        System.out.println("list.size:" + list.size());
         return list.get(0);
     }
     
