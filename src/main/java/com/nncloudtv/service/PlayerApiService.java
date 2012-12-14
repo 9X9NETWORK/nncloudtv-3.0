@@ -2143,9 +2143,9 @@ public class PlayerApiService {
         } else if (channel != null) {
             log.info("virtual channel find by channel ids:" + channel);
             String[] chArr = channel.split(",");
-            if (chArr.length > 1) {
+            if (chArr.length > 0) {
                 List<Long> list = new ArrayList<Long>();
-                for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}
+                for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}                
                 channels.addAll(chMngr.findByIds(list));
             }
         }
