@@ -154,7 +154,7 @@ public class PlayerController {
     
     @RequestMapping("android")
     public String android() {
-        log.info("android homepage");
+        log.info("android landing");
         return "player/android";
     }
     
