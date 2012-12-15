@@ -510,9 +510,9 @@ public class PlayerApiService {
         if (cat == null)
             return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
         List<NnChannel> channels = new ArrayList<NnChannel>();
-        if (start == null || count.length() == 0)
+        if (start == null)
             start = "1";
-        if (count == null || count.length() == 0)
+        if (count == null)
             count = "200";
         int startIndex = Integer.parseInt(start);
         int limit = Integer.valueOf(count);
@@ -1652,7 +1652,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String search(String text, String stack, HttpServletRequest req) {                       
+    public String search(String text, String stack, String start, String count, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         if (version < 32) {
@@ -1677,7 +1677,14 @@ public class PlayerApiService {
         }
         */
         //List<NnChannel> channels = chMngr.searchBySvi(text, userShard, userId, sphere);
-        List<NnChannel> channels = NnChannelManager.search(text, false);
+        if (start == null)
+            start = "1";
+        if (count == null)
+            count = "9";
+        int startIndex = Integer.parseInt(start);
+        int limit = Integer.parseInt(count);
+                
+        List<NnChannel> channels = NnChannelManager.search(text, false, startIndex, limit);
         String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
@@ -2160,9 +2167,7 @@ public class PlayerApiService {
         List<String> result = new ArrayList<String>();        
         List<YtProgram> ytprograms = new YtProgramDao().findByChannels(channels);
         String programInfo = "";
-        HashMap<Long, NnChannel> chMap = new HashMap<Long, NnChannel>();
         for (YtProgram p : ytprograms) {
-            chMap.put(p.getChannelId(), null);
             String[] ori = {
                     String.valueOf(p.getChannelId()),
                     p.getYtVideoId(),
@@ -2177,17 +2182,7 @@ public class PlayerApiService {
             output += "\n";
             programInfo += output;
         }
-        Iterator<Entry<Long, NnChannel>> chit = chMap.entrySet().iterator();
-        List<NnChannel> chList = new ArrayList<NnChannel>();        
-        while (chit.hasNext()) {            
-            Map.Entry<Long, NnChannel> pairs = (Map.Entry<Long, NnChannel>)chit.next();
-            Long id = pairs.getKey();
-            NnChannel ch = chMngr.findById(id);
-            if (ch != null) {
-                chList.add(ch);
-            }
-        }
-        String channelInfo = chMngr.composeReducedChannelLineup(chList);
+        String channelInfo = chMngr.composeReducedChannelLineup(channels);
         if (chPos) {
             log.info("adjust sequence of channellineup for user:" + user.getId());
             channelInfo = this.chAdjust(channels, channelInfo);
@@ -2215,13 +2210,14 @@ public class PlayerApiService {
     public String frontpage(String time, String stack, String user) {
         DashboardDao dao = new DashboardDao();
         short baseTime = Short.valueOf(time);
-        List<Dashboard> list = dao.findFrontpage(baseTime);
+        List<Dashboard> baseList = dao.findFrontpage(baseTime);
         //section 1: items
-        log.info("board size:" + list.size());
+        log.info("board size:" + baseList.size());
         List<String> data = new ArrayList<String>();
         String[] itemOutput = {""};
-        List<Dashboard> openList = new ArrayList<Dashboard>();
-        for (Dashboard d : list) {
+        List<Dashboard> openList = new ArrayList<Dashboard>(); //things need to call virtualChannel
+        
+        for (Dashboard d : baseList) {
             if (d.getOpened() == 1)
                 openList.add(d);
             String[] ori = {
@@ -2229,6 +2225,7 @@ public class PlayerApiService {
                String.valueOf(d.getType()),
                d.getStackName(),
                String.valueOf(d.getOpened()),
+               String.valueOf(d.getIcon()),
             };
             itemOutput[0] += NnStringUtil.getDelimitedStr(ori) + "\n";            
         }

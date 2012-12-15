@@ -103,6 +103,7 @@ public class PlayerController {
             @RequestParam(value="js",required=false) String js,
             @RequestParam(value="mso",required=false) String mso,
             HttpServletRequest req, HttpServletResponse resp, Model model) {
+        PlayerService service = new PlayerService();
         if (name != null) {
             if (name.matches("[a-zA-Z].+")) {
                 NnUser user = new NnUserManager().findByProfileUrl(name);
@@ -114,11 +115,12 @@ public class PlayerController {
                     name = "";
                 }
             }
-            PlayerService service = new PlayerService();
             String url = service.rewrite(req) + name;
             log.info("redirect url:" + url);
             return "redirect:/" + url;
         }
+        //should never hit here, intercept by index
+        service.preparePlayer(model, js, jsp, req);
         return "player/zooatomics";
     }
     
@@ -149,6 +151,13 @@ public class PlayerController {
         String str = service.getQueryString(req, channel, episode, ch, ep);
         return "redirect:/" + str;
     }
+    
+    @RequestMapping("android")
+    public String android() {
+        log.info("android homepage");
+        return "player/android";
+    }
+    
     
     @RequestMapping("flview")
     public String flview(@RequestParam(value="mso",required=false) String mso, 

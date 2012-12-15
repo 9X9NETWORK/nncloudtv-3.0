@@ -443,8 +443,8 @@ public class NnChannelManager {
         return channels;
     }
     
-    public static List<NnChannel> search(String queryStr, boolean all) {
-        return NnChannelDao.search(queryStr, all);        
+    public static List<NnChannel> search(String queryStr, boolean all, int start, int count) {
+        return NnChannelDao.search(queryStr, all, start, count);
     }
     
     /**

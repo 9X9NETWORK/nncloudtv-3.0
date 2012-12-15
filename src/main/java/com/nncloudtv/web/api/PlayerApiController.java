@@ -1710,6 +1710,8 @@ public class PlayerApiController {
     @RequestMapping(value="search", produces = "text/plain; charset=utf-8")
     public @ResponseBody String search(
             @RequestParam(value="text", required=false) String text,
+            @RequestParam(value="start", required=false) String start,
+            @RequestParam(value="count", required=false) String count,            
             @RequestParam(value="stack", required=false) String stack,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
@@ -1717,7 +1719,7 @@ public class PlayerApiController {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             this.prepService(req, true);
-            output = playerApiService.search(text, stack, req);
+            output = playerApiService.search(text, stack, start, count, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

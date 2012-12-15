@@ -158,7 +158,8 @@ public class NnUserManager {
         log.info("try to find ip behind proxy " + ip);
         String country = "";
         try {
-            URL url = new URL("http://brussels.teltel.com/geoip/?ip=" + ip);
+            //URL url = new URL("http://brussels.teltel.com/geoip/?ip=" + ip);
+            URL url = new URL("http://geoip.9x9.tv/geoip/?ip=" + ip);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);

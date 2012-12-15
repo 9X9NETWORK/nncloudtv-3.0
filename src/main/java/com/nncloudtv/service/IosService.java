@@ -133,7 +133,7 @@ public class IosService {
     }    
 
 	public String search(String text) {
-		List<NnChannel> searchResults = NnChannelManager.search(text, false);
+		List<NnChannel> searchResults = NnChannelManager.search(text, false, 1, 9);
 		String[] result = {""};
 		result[0] = this.composeChannelLineup(searchResults);
 		return new PlayerApiService().assembleMsgs(NnStatusCode.SUCCESS, result);

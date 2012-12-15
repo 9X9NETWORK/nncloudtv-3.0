@@ -23,6 +23,8 @@ public class DashboardDao  extends GenericDao<Dashboard> {
             		     " where ((timeStart != 0 or timeEnd != 0) and timeEnd > " + baseTime + " and timeStart <= " + baseTime + ")" +
             		     " or (timeStart = 0 and timeEnd = 0) order by seq";
             log.info("Sql=" + sql);
+            //String sql = "select * from dashboard order by seq";
+            //select * from dashboard order by seq, timeStart;
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(Dashboard.class);
             @SuppressWarnings("unchecked")

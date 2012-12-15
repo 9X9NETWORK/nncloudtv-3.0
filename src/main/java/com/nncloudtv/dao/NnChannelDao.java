@@ -62,7 +62,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
 
     //replaced with Apache Lucene
     @SuppressWarnings("unchecked")
-    public static List<NnChannel> search(String queryStr, boolean all) {        
+    public static List<NnChannel> search(String queryStr, boolean all, int start, int count) {        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {

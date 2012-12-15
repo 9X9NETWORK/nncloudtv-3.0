@@ -28,6 +28,10 @@ public class Dashboard implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String stackName;
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String icon;
     
     @Persistent
     private short timeStart;
@@ -107,5 +111,13 @@ public class Dashboard implements Serializable {
     public void setStackName(String stackName) {
         this.stackName = stackName;
     }
-        
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+    
 }
