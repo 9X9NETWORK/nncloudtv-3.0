@@ -595,6 +595,17 @@ public class NnChannelManager {
         return channels;
     }
 
+    public List<NnChannel> findStack(String name, String lang) {
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        if (name == null)
+            return channels;
+        name += "(9x9" + lang + ")";
+        log.info("find stack, tag:" + name);
+        channels = dao.findChannelsByTag(name);
+        Collections.sort(channels, this.getChannelComparator("updateDate"));
+        return channels;
+    }
+    
     public Comparator<NnChannel> getChannelComparator(String sort) {
         if (sort.equals("seq")) {
             class ChannelComparator implements Comparator<NnChannel> {

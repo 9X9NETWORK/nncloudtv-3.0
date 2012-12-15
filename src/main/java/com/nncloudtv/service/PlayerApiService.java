@@ -2144,7 +2144,7 @@ public class PlayerApiService {
                 } else if (s.equals("mayLike")) {                
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
                 } else {
-                    channels.addAll(chMngr.findBillboard(s, lang));
+                    channels.addAll(chMngr.findStack(s, lang));
                 }
             }
         } else if (channel != null) {
@@ -2216,14 +2216,32 @@ public class PlayerApiService {
         List<String> data = new ArrayList<String>();
         String[] itemOutput = {""};
         List<Dashboard> openList = new ArrayList<Dashboard>(); //things need to call virtualChannel
-        
+
+        //for on previously
+        Dashboard daypart = null;
+        for(Dashboard d : baseList) {
+            if (baseTime < d.getTimeEnd() && baseTime >= d.getTimeStart()) {
+                daypart = d;
+                log.info("land on :" + d.getName());
+                break;
+            }
+        }
         for (Dashboard d : baseList) {
             if (d.getOpened() == 1)
                 openList.add(d);
+            String stackname = d.getStackName();
+            if (d.getAttr() == -1 && daypart != null) {
+                Dashboard previous = dao.findById(daypart.getAttr());
+                if (previous != null)
+                    stackname = previous.getStackName();
+                log.info("previous on name:" + stackname);
+            }
+            if (d.getType() == Dashboard.TYPE_STACK && d.getStackName() == null)
+                stackname = "recommend";            
             String[] ori = {
                d.getName(),
                String.valueOf(d.getType()),
-               d.getStackName(),
+               stackname,
                String.valueOf(d.getOpened()),
                String.valueOf(d.getIcon()),
             };

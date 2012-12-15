@@ -44,6 +44,17 @@ public class Dashboard implements Serializable {
 
     @Persistent
     private short type;
+    public static final short TYPE_STACK = 0;
+    public static final short TYPE_SUBSCRIPTION = 1;
+    public static final short TYPE_ACCOUNT = 2;
+    public static final short TYPE_CHANNEL = 3;
+    public static final short TYPE_DIR = 4;
+    public static final short TYPE_SEARCH = 5;
+
+    //for stack with time, attr indicates the "previously on" id
+    //for "previously on", attr is -1
+    @Persistent
+    private short attr; 
     
     @Persistent
     private short seq;
@@ -118,6 +129,14 @@ public class Dashboard implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public short getAttr() {
+        return attr;
+    }
+
+    public void setAttr(short attr) {
+        this.attr = attr;
     }
     
 }

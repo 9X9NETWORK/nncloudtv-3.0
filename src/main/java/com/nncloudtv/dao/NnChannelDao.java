@@ -46,6 +46,29 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         }
         return channel;
     }
+
+    //find good channels, for all needs to be extended
+    public List<NnChannel> findChannelsByTag(String name) {        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<NnChannel> detached = new ArrayList<NnChannel>();
+        try {
+            String sql = "select id from nnchannel " +
+                         " where id in " +
+                          " (select channelId from tag_map " +
+                            " where tagId = (select id from tag where name='" + name + "')) " +
+                         "order by rand() limit 9";
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnChannel.class);
+            @SuppressWarnings("unchecked")
+            List<NnChannel> results = (List<NnChannel>) q.execute();
+            detached = (List<NnChannel>)pm.detachCopyAll(results);
+        } catch (JDOObjectNotFoundException e) {
+        } finally {
+            pm.close();
+        }
+        return detached;        
+    }
     
     public NnChannel findById(long id) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();        
