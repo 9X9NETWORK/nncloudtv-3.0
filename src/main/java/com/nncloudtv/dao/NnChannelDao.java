@@ -52,11 +52,19 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
+            /*
             String sql = "select id from nnchannel " +
                          " where id in " +
                           " (select channelId from tag_map " +
                             " where tagId = (select id from tag where name='" + name + "')) " +
                          "order by rand() limit 9";
+            */
+            String sql = "select * from nnchannel where id in ( " + 
+                            "select distinct map.channelId " + 
+                               "from ytprogram yt, tag_map map " + 
+                              "where yt.channelId = map.channelId " +
+                                "and map.tagId = (select id from tag where name= '" + name + "')) " +
+                                "order by rand() limit 9;";
             log.info("Sql=" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnChannel.class);
