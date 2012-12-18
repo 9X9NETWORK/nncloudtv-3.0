@@ -20,7 +20,7 @@ dbuser = MySQLdb.connect (host = "localhost",
                           use_unicode = True,
                           db = "nncloudtv_nnuser1")
 
-pwd = os.path.dirname(os.path.realpath(__file__))
+pwd = os.path.dirname(os.path.realpath(__file__))                                  
 md5_file = pwd + '/basic.feed.txt.md5'
 md5_url = 'http://channelwatch.9x9.tv/dan/basic.feed.txt.md5'
 f = open(md5_file, 'r')
@@ -117,8 +117,10 @@ for line in feed:
        from nnchannel 
       where id = %s
       """, cId)      
-  oriUserIdStr = contentCursor.fetchone()[0]  
-  if oriUserIdStr == None:
+  user_row = contentCursor.fetchone()
+  if user_row == None:
+     #oriUserIdStr = contentCursor.fetchone()[0]  
+     #if oriUserIdStr == None:
      print "ch: " + cId + " oriUserId is null, add new user:" + userIdStr 
      contentCursor.execute("""    
         update nnchannel 
@@ -126,6 +128,8 @@ for line in feed:
          where id = %s                                 
          """, (imageUrl, userIdStr, updateDate, programCnt, cId))
   else:
+     oriUserIdStr = user_row[0]
+     print "!!! ori user id str !!! " + oriUserIdStr      
      contentCursor.execute("""    
         update nnchannel 
            set imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
