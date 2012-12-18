@@ -833,7 +833,7 @@ public class PlayerApiController {
             boolean isSetInfo = Boolean.parseBoolean(setInfo);
             boolean isRequired = Boolean.parseBoolean(required);
             boolean isReduced= Boolean.parseBoolean(reduced);
-            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced);
+            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced, req);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

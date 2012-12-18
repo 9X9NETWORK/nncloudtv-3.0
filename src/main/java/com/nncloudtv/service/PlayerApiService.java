@@ -144,7 +144,7 @@ public class PlayerApiService {
     }
     
     //Prepare user info, it is used by login, guest register, userTokenVerify
-    public String prepareUserInfo(NnUser user, NnGuest guest) {
+    public String prepareUserInfo(NnUser user, NnGuest guest, HttpServletRequest req) {
         String output = "";
         if (user != null) {
             output += assembleKeyValue("token", user.getToken());
@@ -167,7 +167,8 @@ public class PlayerApiService {
             output += assembleKeyValue("token", guest.getToken());
             output += assembleKeyValue("name", NnUser.GUEST_NAME);
             output += assembleKeyValue("lastLogin", "");            
-            output += assembleKeyValue("sphere", "en"); //TODO should depend on ip
+            String sphere = NnUserManager.findLocaleByHttpRequest(req);
+            output += assembleKeyValue("sphere", sphere); //TODO should depend on ip
         }
             
         return output;
@@ -213,7 +214,7 @@ public class PlayerApiService {
             userMngr.save(user);
         }        
         
-        String[] result = {this.prepareUserInfo(user, null)};        
+        String[] result = {this.prepareUserInfo(user, null, req)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -263,7 +264,7 @@ public class PlayerApiService {
             return this.assembleMsgs(status, null);
         
         userMngr.subscibeDefaultChannels(user);                            
-        String[] result = {this.prepareUserInfo(user, null)};        
+        String[] result = {this.prepareUserInfo(user, null, req)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -282,9 +283,11 @@ public class PlayerApiService {
         NnGuest guest = new NnGuest(NnGuest.TYPE_GUEST);
         mngr.save(guest, req);        
         
-        String[] result = {""};            
+        String[] result = {""};
+        String sphere = NnUserManager.findLocaleByHttpRequest(req);
         result[0] += assembleKeyValue("token", guest.getToken());
         result[0] += assembleKeyValue("name", NnUser.GUEST_NAME);
+        result[0] += assembleKeyValue("sphere", sphere);
         result[0] += assembleKeyValue("lastLogin", "");
 
         //prepare cookie and output
@@ -321,7 +324,7 @@ public class PlayerApiService {
             userMngr.save(user); //change last login time (ie updateTime)
         }
         String[] result = {""};
-        result[0] = this.prepareUserInfo(user, guest);
+        result[0] = this.prepareUserInfo(user, guest, req);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
@@ -610,7 +613,8 @@ public class PlayerApiService {
                                 String channelIds, 
                                 boolean setInfo, 
                                 boolean isRequired,
-                                boolean isReduced) {                                 
+                                boolean isReduced,
+                                HttpServletRequest req) {                                 
 
         //verify input
         if (((userToken == null && userInfo == true) || 
@@ -638,7 +642,7 @@ public class PlayerApiService {
         
         //user info
         if (userInfo)
-            result.add(this.prepareUserInfo(user, null));
+            result.add(this.prepareUserInfo(user, null, req));
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
         if (curatorIdStr == null && user != null ) {
             List<NnUserSubscribeGroup> groups = groupMngr.findByUser(user);    
@@ -807,7 +811,7 @@ public class PlayerApiService {
         String result[] = {""};
         NnUser user = userMngr.findAuthenticatedUser(email, password, req);
         if (user != null) {
-            result[0] = this.prepareUserInfo(user, null);
+            result[0] = this.prepareUserInfo(user, null, req);
             userMngr.save(user); //change last login time (ie updateTime)
             this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         } else {
@@ -949,7 +953,7 @@ public class PlayerApiService {
         if (userInfo) {
             if (user == null && userToken != null) 
                 user = userMngr.findByToken(userToken);
-                userInfoStr = this.prepareUserInfo(user, null);
+                userInfoStr = this.prepareUserInfo(user, null, req);
         }
         if (userInfo) {
             String[] result = {userInfoStr, programInfoStr};
@@ -1858,7 +1862,7 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup(token, null, null, false, null, true, false, false);
+        String lineup = this.channelLineup(token, null, null, false, null, true, false, false, req);
         data.add(lineup);
         if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
