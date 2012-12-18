@@ -1683,7 +1683,13 @@ public class PlayerApiService {
             count = "9";
         int startIndex = Integer.parseInt(start);
         int limit = Integer.parseInt(count);
-                
+        if (startIndex < 1)
+            startIndex = 1;
+        if (limit < 0 || limit > 9)
+            limit = 9;
+        startIndex = startIndex - 1;
+
+        //public static List<NnChannel> search(String queryStr, boolean total, boolean all, int start, int count) {
         List<NnChannel> channels = NnChannelManager.search(text, false, startIndex, limit);
         String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
         result[2] = chMngr.composeChannelLineup(channels);
@@ -1700,8 +1706,10 @@ public class PlayerApiService {
             result[3] = chMngr.composeChannelLineup(suggestion);
         }
         
+        long channelSize = NnChannelManager.searchSize(text, false);
+        
         result[0] = assembleKeyValue("curator", String.valueOf(users.size()) + "\t" + String.valueOf(users.size()));
-        result[0] += assembleKeyValue("channel", String.valueOf(channels.size()) + "\t" + String.valueOf(channels.size()));
+        result[0] += assembleKeyValue("channel", String.valueOf(channels.size()) + "\t" + String.valueOf(channelSize));
         result[0] += assembleKeyValue("suggestion", String.valueOf(suggestion.size()) + "\t" + String.valueOf(suggestion.size()));
         
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);

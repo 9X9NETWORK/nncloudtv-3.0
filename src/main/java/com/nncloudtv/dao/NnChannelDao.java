@@ -91,22 +91,47 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         return channel;        
     }    
 
+    public static long searchSize(String queryStr, boolean all) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        long size = 0;
+        try {
+            String sql = "select count(*) from nnchannel " + 
+                          "where (lower(name) like lower(\"%" + queryStr + "%\")" +
+                              "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
+            if (!all) {
+              sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
+              sql += " and isPublic = true";
+            }
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            @SuppressWarnings("rawtypes")
+            List results = (List) query.execute();
+            size = (Long)results.iterator().next();
+        } finally {
+            pm.close();
+        }
+        return size;
+    }
+    
     //replaced with Apache Lucene
     @SuppressWarnings("unchecked")
-    public static List<NnChannel> search(String queryStr, boolean all, int start, int count) {        
+    public static List<NnChannel> search(String queryStr, boolean all, int start, int limit) {
+        log.info("start:" + start + ";end:" + limit);
+        if (start == 0) start = 0;            
+        if (limit == 0) limit = 9;
+                    
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
-            String sql = 
-                "select * from nnchannel " +
-                 "where (lower(name) like lower(\"%" + queryStr + "%\")" +
-                    "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
+            String sql = "select * from nnchannel " + 
+                          "where (lower(name) like lower(\"%" + queryStr + "%\")" +
+                              "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
             if (!all) {
                 sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
                 sql += " and isPublic = true";
             }
-            sql += " limit 9";        
+            sql += " limit " + start + ", " + limit;
             log.info("Sql=" + sql);
+            
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnChannel.class);
             List<NnChannel> results = (List<NnChannel>) q.execute();
@@ -213,15 +238,18 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         NnChannel channel = null;
         try {
-            Query q = pm.newQuery(NnChannel.class);
-            q.setFilter("sourceUrl== sourceUrlParam");
-            q.declareParameters("String sourceUrlParam");
+            String sql = 
+                "select * from nnchannel " +
+                 "where lower(sourceUrl) = lower('" + url + "') ";
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnChannel.class);
             @SuppressWarnings("unchecked")
-            //List<NnChannel> channels = (List<NnChannel>) q.execute(url.toLowerCase());
-            List<NnChannel> channels = (List<NnChannel>) q.execute(url);
+            List<NnChannel> channels = (List<NnChannel>) q.execute();                                
             if (channels.size() > 0) {
                 channel = pm.detachCopy(channels.get(0));
             }
+            
         } finally {
             pm.close();
         }
