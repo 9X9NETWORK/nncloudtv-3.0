@@ -85,7 +85,7 @@ public class PlayerApiServiceTest {
     @Test
     public void testChannelLineup() {
         String user = "8s12689Ns28RN2992sut";
-        String channelStr = service.channelLineup(user, null, null, false, null, false, false, false);
+        String channelStr = service.channelLineup(user, null, null, false, null, false, false, false, req);
         //System.out.println("channelStr:" + channelStr);
         String sections[] = channelStr.split("--");
         System.out.println("sections length:" + sections.length);
