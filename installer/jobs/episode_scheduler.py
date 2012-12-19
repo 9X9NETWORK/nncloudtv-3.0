@@ -68,6 +68,11 @@ for r in rows:
             """, (j, seid))                     
          j = j + 1                     
       k = k + 1
+   cursor.execute("""                     
+      update nnchannel                                                     
+         set updateDate = now()    
+       where id = %s                                    
+      """, (cid))             
    dbcontent.commit()                         
    i = i + 1                  
                                                                           
