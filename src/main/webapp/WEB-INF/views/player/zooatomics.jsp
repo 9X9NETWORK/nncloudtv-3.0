@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="usabucket" value="http://9x9ui.s3.amazonaws.com"/>
+<c:set var="usabucket" value="http://9x9ui.s3-website-us-east-1.amazonaws.com"/>
 <c:set var="asiabucket" value="http://9x9ui-j.s3-website-ap-northeast-1.amazonaws.com"/>
 
 <c:if test="${locale == \"zh\"}">
