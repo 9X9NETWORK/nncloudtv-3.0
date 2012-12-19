@@ -301,7 +301,8 @@ public class NnChannelManager {
         Date now = new Date();
         if (channel.getCreateDate() == null)
             channel.setCreateDate(now);
-        channel.setUpdateDate(now);        
+        if (channel.getUpdateDate() == null)
+            channel.setUpdateDate(now);        
         if (channel.getIntro() != null) {
             channel.setIntro(channel.getIntro().replaceAll("\n", ""));
             channel.setIntro(channel.getIntro().replaceAll("\t", " "));
