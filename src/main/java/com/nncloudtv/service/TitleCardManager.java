@@ -74,16 +74,22 @@ public class TitleCardManager {
     public TitleCard findById(long id) {
         return dao.findById(id);
     }
-    
+
+    //@not used
     private String generatePlayerSyntax(TitleCard card) {
         if (card == null) return null;
         if (card.getMessage() == null) 
             return null;
         String syntax = "";
         String encoding = "UTF-8";
+        System.out.println("!!! enter new version !!!");
         try {
             String breakEncoding = URLEncoder.encode("\n", encoding);
-            syntax += "message: " + card.getMessage() + breakEncoding;
+            String msg = "";
+            if (card.getMessage() != null)
+                msg = URLEncoder.encode(card.getMessage(), encoding);
+            syntax += "message: " + msg + breakEncoding;
+            System.out.println("!!! msg:" + msg);
             if (card.getType() == TitleCard.TYPE_BEGIN)
                 syntax += "type: begin" + breakEncoding;
             else
