@@ -52,7 +52,7 @@
 <script type="text/javascript" charset="utf-8" src="${bucket}/swfupload.js"></script>
 
 <c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="${bucket}/mogwai15.js"></script>
+<script type="text/javascript" charset="utf-8" src="${bucket}/mogwai16.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="${usabucket}/${js}.js"></script>
