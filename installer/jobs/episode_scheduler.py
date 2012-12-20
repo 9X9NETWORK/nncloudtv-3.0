@@ -74,13 +74,15 @@ for r in rows:
        where id = %s                                    
       """, (cid))             
    dbcontent.commit()                         
+   url = "http://localhost:8080/wd/channelCache?channel=" + str(cid)
+   urllib2.urlopen(url).read()
    i = i + 1                  
                                                                           
 dbcontent.close()    
-if i > 1:
-   print "flush cache" 
-   url = "http://localhost:8080/playerAPI/flush"
-   urllib2.urlopen(url).read()
+#if i > 1:
+#   print "flush cache" 
+#   url = "http://localhost:8080/playerAPI/flush"
+#   urllib2.urlopen(url).read()
 
 print "total episode published:" + str(i)
 print "episode re-run:" + str(k)
