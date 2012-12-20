@@ -195,8 +195,9 @@ public class TitleCard implements Serializable {
         try {
             String breakEncoding = URLEncoder.encode("\n", encoding);
             String cardmsg = "";
-            if (getMessage() != null)
-                cardmsg = URLEncoder.encode(getMessage(), encoding);
+            if (getMessage() != null) {
+                cardmsg = URLEncoder.encode(getMessage(), encoding).replace("+", "%20");
+            }
             syntax += "message: " + cardmsg + breakEncoding;
             if (getType() == TitleCard.TYPE_BEGIN)
                 syntax += "type: begin" + breakEncoding;
