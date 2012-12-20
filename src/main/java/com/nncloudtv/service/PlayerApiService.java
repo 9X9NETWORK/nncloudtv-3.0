@@ -376,6 +376,8 @@ public class PlayerApiService {
         result[0] += PlayerApiService.assembleKeyValue("brandInfoCounter", String.valueOf(counter));
         //piwik
         result[0] += PlayerApiService.assembleKeyValue("piwik", "http://" + MsoConfigManager.getPiwikDomain() + "/");
+        String acceptLang = req.getHeader("Accept-Language");
+        result[0] += PlayerApiService.assembleKeyValue("acceptLang", acceptLang);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }    
 
