@@ -1904,8 +1904,8 @@ public class PlayerApiService {
         //8. category top level
         // log.info ("[quickLogin] top level categories: " + ((sphere == null) ? "default" : sphere));
         // hardcoding to English for now, and keeping translations on the player side
-        log.info ("[quickLogin] top level categories: en");
-        String categoryTop = this.category (null, "en", false);
+        log.info ("[quickLogin] top level categories: " + sphere);
+        String categoryTop = this.category (null, sphere, false);
         data.add(categoryTop);
         return this.assembleSections(data);
     }
