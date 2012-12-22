@@ -1606,8 +1606,11 @@ public class PlayerApiService {
         NnContentManager contentMngr = new NnContentManager();
         String lang = user.getLang();
         lang = this.checkLang(lang);
+        log.info("user language:" + lang);
         NnContent content = contentMngr.findByItemAndLang("resetpwd", lang);        
         String subject = "Forgotten Password";
+        if (lang.equals(LangTable.LANG_ZH))
+            subject = "忘記密碼";
         String sentense = "<p>To reset the password, click on the link or copy and paste the following link into the address bar of your browser</p>";
         String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";            
         if (content != null) {
