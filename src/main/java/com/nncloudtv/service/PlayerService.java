@@ -83,6 +83,23 @@ public class PlayerService {
         return eId;        
     }
     
+    private String prepareFb(String text, int type) {
+        //0 = name, 1 = description, 2 = image
+        if (type == 1) {
+            return PlayerService.revertHtml(text);
+        }
+        if (type == 2) {
+            if (text == null || text.length() == 0) {
+                return PlayerService.revertHtml(" ");
+            }
+            return PlayerService.revertHtml(text);
+        }
+        if (type == 3) {
+            return NnStringUtil.htmlSafeChars(text);
+        }
+        return PlayerService.revertHtml(text); 
+    }
+    
     public Model prepareEpisode(Model model, String pid,
             HttpServletResponse resp) {
         if (pid == null)
@@ -92,9 +109,9 @@ public class PlayerService {
             NnProgram program = programMngr.findById(Long.valueOf(pid));
             if (program != null) {
                 log.info("nnprogram found = " + pid);
-                model.addAttribute("fbName", NnStringUtil.htmlSafeChars(program.getName()));
-                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(program.getIntro()));
-                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(program.getImageUrl()));
+                model.addAttribute("fbName", this.prepareFb(program.getName(), 0));
+                model.addAttribute("fbDescription", this.prepareFb(program.getIntro(), 1));
+                model.addAttribute("fbImg", this.prepareFb(program.getImageUrl(), 2));
             }
         } else if (pid.matches("e[0-9]+")){
             String eid = pid.replace("e", "");
@@ -102,9 +119,9 @@ public class PlayerService {
             NnEpisode episode = episodeMngr.findById(Long.valueOf(eid));
             if (episode != null) {
                 log.info("nnepisode found = " + eid);
-                model.addAttribute("fbName", NnStringUtil.htmlSafeChars(episode.getName()));
-                model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(episode.getIntro()));
-                model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(episode.getImageUrl()));
+                model.addAttribute("fbName", this.prepareFb(episode.getName(), 0));
+                model.addAttribute("fbDescription", this.prepareFb(episode.getIntro(), 1));
+                model.addAttribute("fbImg", this.prepareFb(episode.getImageUrl(), 2));
             }
             /*
             Map<String, String> entry = YouTubeLib.getYouTubeVideoEntry(pid);
@@ -125,9 +142,9 @@ public class PlayerService {
         NnChannel channel = channelMngr.findById(Long.valueOf(cid));
         if (channel != null) {
             log.info("found channel = " + cid);
-            model.addAttribute("fbName", NnStringUtil.htmlSafeChars(channel.getName()));
-            model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(channel.getIntro()));
-            model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(channel.getOneImageUrl()));
+            model.addAttribute("fbName", this.prepareFb(channel.getName(), 0));
+            model.addAttribute("fbDescription", this.prepareFb(channel.getIntro(), 1));
+            model.addAttribute("fbImg", this.prepareFb(channel.getOneImageUrl(), 2));
         }
         return model;
     }
@@ -281,9 +298,9 @@ public class PlayerService {
                 model.addAttribute("crawlEpisodeTitle", c.getName());
                 model.addAttribute("crawlVideoThumb", c.getOneImageUrl());
                 model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
-                model.addAttribute("fbName", PlayerService.revertHtml(c.getName()));
-                model.addAttribute("fbDescription", PlayerService.revertHtml(c.getIntro()));                
-                model.addAttribute("fbImg", c.getOneImageUrl());  
+                model.addAttribute("fbName", this.prepareFb(c.getName(), 0));
+                model.addAttribute("fbDescription", this.prepareFb(c.getIntro(), 1));                
+                model.addAttribute("fbImg", this.prepareFb(c.getOneImageUrl(), 2));  
 
                 if (ep != null && ep.startsWith("e")) {
                     ep = ep.replaceFirst("e", "");
@@ -301,9 +318,9 @@ public class PlayerService {
                             model.addAttribute("crawlEpisodeTitle", e.getName());
                             model.addAttribute("crawlEpThumb" + i, e.getImageUrl());
                             if (episodeShare) {
-                               model.addAttribute("fbName", PlayerService.revertHtml(e.getName()));   
-                               model.addAttribute("fbDescription", PlayerService.revertHtml(e.getIntro()));
-                               model.addAttribute("fbImg", e.getImageUrl());
+                               model.addAttribute("fbName", this.prepareFb(e.getName(), 0));   
+                               model.addAttribute("fbDescription", this.prepareFb(e.getIntro(), 1));
+                               model.addAttribute("fbImg", this.prepareFb(e.getImageUrl(), 2));
                             }
                             i++;
                         }
@@ -329,9 +346,9 @@ public class PlayerService {
                                 model.addAttribute("crawlEpisodeTitle", p.getName());
                                 model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
                                 if (episodeShare) {
-                                   model.addAttribute("fbName", PlayerService.revertHtml(p.getName()));
-                                   model.addAttribute("fbDescription", PlayerService.revertHtml(p.getIntro()));
-                                   model.addAttribute("fbImg", p.getImageUrl());
+                                   model.addAttribute("fbName", this.prepareFb(p.getName(), 0));
+                                   model.addAttribute("fbDescription", this.prepareFb(p.getIntro(), 1));
+                                   model.addAttribute("fbImg", this.prepareFb(p.getImageUrl(), 2));
                                 }
                                 i++;
                             }
@@ -350,14 +367,16 @@ public class PlayerService {
                         }
                     }
                     if (episodeShare) {
-                        model.addAttribute("fbName", NnStringUtil.revertHtml((String)model.asMap().get("crawlEpisodeTitle")));
-                        model.addAttribute("fbImg", NnStringUtil.revertHtml((String)model.asMap().get("crawlVideoThumb")));
+                        model.addAttribute("fbName", this.prepareFb((String)model.asMap().get("crawlEpisodeTitle"), 0));
+                        model.addAttribute("fbImg", this.prepareFb((String)model.asMap().get("crawlVideoThumb"), 2));
                     }
                 }
+                /*
                 String fbDescription = (String) model.asMap().get("fbDescription");
                 if (fbDescription == null || fbDescription.length() == 0) {
                     model.addAttribute("fbDescription", " ");
                 }
+                */
             }
         }
         
@@ -366,9 +385,9 @@ public class PlayerService {
     
     public static String revertHtml(String str) {
         if (str == null) return null;
-         return str.replaceAll("&gt;", ">")
-                   .replaceAll("&lt;", "<")
-                   .replaceAll("&amp;", "&");
+        return str.replace("&gt;", ">")
+                  .replace("&lt;", "<")
+                  .replace("&amp;", "&");
     }
     
 }
