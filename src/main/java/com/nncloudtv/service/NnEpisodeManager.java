@@ -231,7 +231,7 @@ public class NnEpisodeManager {
             fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.TRADITIONAL_CHINESE));
         } else {
             //fbPost.setCaption("已在9x9.tv發佈節目");
-            fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.ENGLISH));
+            fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.US));
         }
         
         NnChannelPrefManager prefMngr = new NnChannelPrefManager();

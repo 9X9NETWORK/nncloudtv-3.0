@@ -189,6 +189,52 @@ public class FacebookLib {
         return data;
     }
     
+    public static String[] getLongLivedAccessToken(String shortLiveAccessToken){
+        String urlBase = "https://graph.facebook.com/oauth/access_token";
+        String data[] = {null, null}; //token, expires
+        try {
+            URL url = new URL(urlBase);
+            String params = "client_id=" + clientId +
+                            "&client_secret=" + secret +
+                            "&grant_type=fb_exchange_token" +
+                            "&fb_exchange_token=" + shortLiveAccessToken;
+            log.info("FACEBOOK: (oauth) params:" + params);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(params);
+            writer.close();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = reader.readLine();
+                reader.close();
+                log.info("FACEBOOK: (oauth)-return:" + line);
+                try {
+                    if (line.contains("expires")) {
+                        data[0] = line.split("access_token=")[1].split("&expires=")[0];
+                        if (line.split("expires=").length > 0)
+                            data[1] = line.split("expires=")[1];
+                    } else {
+                        log.info("FACEBOOK: (oauth)-return does NOT have expires");
+                        data[0] = line.split("access_token=")[1];
+                    }
+                } catch (Exception e) {
+                    log.info("FACEBOOK: (oauth) get token error");
+                    e.printStackTrace();
+                }
+                log.info("FACEBOOK: (oauth token)-token:" + data[0] + "; expires:" + data[1]);
+            } else {
+                log.info("FACEBOOK: (oauth token)-failed response status:" + connection.getResponseCode());
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+    
     public static String getDialogOAuthPath(String subChannel) {        
         // add "publish_actions" to scope to enable FacebookLib.postToFacebook()
         String scope = "user_likes,user_location,user_interests,email,user_birthday";
