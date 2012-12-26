@@ -317,7 +317,7 @@ public class FacebookLib {
         try {
             String fullpath = 
                     "https://graph.facebook.com/" + fbUserId + 
-                    "/accounts?access_token=" + URLEncoder.encode(accessToken, "US-ASCII");
+                    "/accounts?type=page&access_token=" + URLEncoder.encode(accessToken, "US-ASCII");
             log.info(fullpath);
             URL url = new URL(fullpath);
             
