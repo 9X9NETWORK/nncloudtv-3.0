@@ -189,7 +189,7 @@ public class FacebookLib {
         return data;
     }
     
-    public static String[] getLongLivedAccessToken(String shortLiveAccessToken){
+    public static String[] getLongLivedAccessToken(String shortLivedAccessToken){
         String urlBase = "https://graph.facebook.com/oauth/access_token";
         String data[] = {null, null}; //token, expires
         try {
@@ -197,7 +197,7 @@ public class FacebookLib {
             String params = "client_id=" + clientId +
                             "&client_secret=" + secret +
                             "&grant_type=fb_exchange_token" +
-                            "&fb_exchange_token=" + shortLiveAccessToken;
+                            "&fb_exchange_token=" + shortLivedAccessToken;
             log.info("FACEBOOK: (oauth) params:" + params);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);

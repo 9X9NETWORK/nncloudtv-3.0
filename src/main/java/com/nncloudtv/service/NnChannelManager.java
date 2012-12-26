@@ -1095,4 +1095,11 @@ public class NnChannelManager {
         saveOrderedChannels(channels);
     }
     
+    public void renewChannelUpdateDate(long channelId) {
+        Date now = new Date();
+        NnChannel channel = dao.findById(channelId);
+        channel.setUpdateDate(now);
+        dao.save(channel);
+    }
+    
 }
