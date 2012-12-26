@@ -29,14 +29,17 @@ import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
+import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
+import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.NnAdManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
+import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.service.TitleCardManager;
 
 @Controller
@@ -133,16 +136,27 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        List<NnChannelPref> prefList = new ArrayList<NnChannelPref>();
-        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
-        
-        for (int i = 0; i < fbUserIdList.length; i++) {
-            prefList.add(new NnChannelPref(channel, NnChannelPref.FB_AUTOSHARE, prefMngr.composeFacebookAutoshare(fbUserIdList[i], accessTokenList[i])));
+        NnUserPrefManager userPrefMngr = new NnUserPrefManager();
+        NnUserPref fbUserToken = userPrefMngr.findByUserAndItem(verifiedUser, NnUserPref.FB_TOKEN);
+        if (fbUserToken == null || fbUserToken.getValue() == null) {
+            forbidden(resp);
+            return null;
         }
         
-        prefMngr.delete(prefMngr.findByChannelIdAndItem(channelId, NnChannelPref.FB_AUTOSHARE));
+        List<NnChannelPref> prefList = new ArrayList<NnChannelPref>();
+        NnChannelPrefManager channelPrefMngr = new NnChannelPrefManager();
         
-        prefMngr.save(prefList);
+        for (int i = 0; i < fbUserIdList.length; i++) {
+            if (accessTokenList[i].equals(fbUserToken.getValue())) { // post to facebook time line use app token
+                prefList.add(new NnChannelPref(channel, NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], MsoConfigManager.getAutoshareFacebookApptoken())));
+            } else {
+                prefList.add(new NnChannelPref(channel, NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], accessTokenList[i])));
+            }
+        }
+        
+        channelPrefMngr.delete(channelPrefMngr.findByChannelIdAndItem(channelId, NnChannelPref.FB_AUTOSHARE));
+        
+        channelPrefMngr.save(prefList);
         
         return "OK";
     }
@@ -1296,8 +1310,9 @@ public class ApiContent extends ApiGeneric {
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
         
+        // mark as hook position
         if (autoShare == true) {
-            episodeMngr.autoShare(episode);
+            episodeMngr.autoShareToFacebook(episode);
             channelMngr.renewChannelUpdateDate(episode.getChannelId());
         }
         
@@ -1444,8 +1459,9 @@ public class ApiContent extends ApiGeneric {
         channel.setCntEpisode(channelMngr.calcuateEpisodeCount(channel));
         channelMngr.save(channel);
         
+        // mark as hook position 
         if (autoShare == true) {
-            episodeMngr.autoShare(episode);
+            episodeMngr.autoShareToFacebook(episode);
             channelMngr.renewChannelUpdateDate(channelId);
         }
         

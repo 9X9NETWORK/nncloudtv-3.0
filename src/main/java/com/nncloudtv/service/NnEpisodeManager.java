@@ -198,7 +198,7 @@ public class NnEpisodeManager {
     }
     
     // hook, auto share to facebook
-    public void autoShare(NnEpisode episode) {
+    public void autoShareToFacebook(NnEpisode episode) {
         
         FBPost fbPost = new FBPost(NnStringUtil.revertHtml(episode.getName()), NnStringUtil.revertHtml(episode.getIntro()), episode.getImageUrl());
         String url = "http://" + MsoConfigManager.getServerDomain() + "/#!ch=" + episode.getChannelId() + "!ep=e" + episode.getId();

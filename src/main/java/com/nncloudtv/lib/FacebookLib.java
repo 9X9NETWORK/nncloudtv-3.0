@@ -11,7 +11,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -25,9 +24,7 @@ import twitter4j.auth.AccessToken;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.web.json.facebook.FBPost;
-import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.facebook.FacebookMe;
-import com.nncloudtv.web.json.facebook.FacebookPage;
 import com.nncloudtv.web.json.facebook.FacebookResponse;
 
 public class FacebookLib {
