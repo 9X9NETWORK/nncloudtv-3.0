@@ -243,7 +243,8 @@ public class NnEpisodeManager {
             
             QueueFactory.add("/fb/postToFacebook", fbPost);
         }
-        
+        log.info("episode.getName():"+episode.getName());
+        log.info("fbPost.getName():"+fbPost.getName());
         log.info(fbPost.toString());
     }
     
