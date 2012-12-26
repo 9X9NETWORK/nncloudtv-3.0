@@ -37,7 +37,9 @@ import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.web.json.cms.UserFavorite;
+import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.facebook.FacebookPage;
+import com.nncloudtv.web.json.facebook.FacebookResponse;
 
 @Controller
 @RequestMapping("api")
@@ -786,6 +788,13 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
+        String[] longLivedAccessToken = FacebookLib.getLongLivedAccessToken(accessToken);
+        if (longLivedAccessToken[0] == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        accessToken = longLivedAccessToken[0];
+        
         NnUserPrefManager prefMngr = new NnUserPrefManager();
         NnUserPref userPref = null;
         
@@ -911,8 +920,25 @@ public class ApiUser extends ApiGeneric {
         }
         
         if (fbUserId != null && accessToken != null) {
-            List<FacebookPage> pages = FacebookLib.populatePageList(fbUserId, accessToken);
-            result.put("pages", pages);
+            //List<FacebookPage> pages = FacebookLib.populatePageList(fbUserId, accessToken);
+            List<FacebookPage> pages = null;
+            FacebookResponse response = FacebookLib.populatePageList(fbUserId, accessToken);
+            if (response == null) {
+                result.put("pages", "connect to facebook failed");
+            } else if (response.getData() != null) {
+                pages = response.getData();
+                log.info("pages count: " + pages.size());
+                result.put("pages", pages);
+            } else if (response.getError() != null) {
+                FacebookError error = response.getError();
+                log.warning("error message: " + error.getMessage());
+                log.warning("error type:" + error.getType());
+                result.put("pages", "error type:" + error.getType() + "; error message: " + error.getMessage());
+            } else {
+                log.warning("neither no data nor error");
+                result.put("pages", pages);
+            }
+            
         } else {
             resp.setContentType(APPLICATION_JSON_UTF8);
             return null;

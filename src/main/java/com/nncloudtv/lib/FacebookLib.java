@@ -350,7 +350,7 @@ public class FacebookLib {
     }
     
     
-    static public List<FacebookPage> populatePageList(String fbUserId, String accessToken) {
+    static public FacebookResponse populatePageList(String fbUserId, String accessToken) {
         
         log.info("fbUserId = " + fbUserId + ", accessToken = " + accessToken);
         
@@ -358,7 +358,8 @@ public class FacebookLib {
             return null;
         }
         
-        List<FacebookPage> pages = null;
+        //List<FacebookPage> pages = null;
+        FacebookResponse response = null;
         
         try {
             String fullpath = 
@@ -366,11 +367,16 @@ public class FacebookLib {
                     "/accounts?type=page&access_token=" + URLEncoder.encode(accessToken, "US-ASCII");
             log.info(fullpath);
             URL url = new URL(fullpath);
+            ObjectMapper mapper = new ObjectMapper();
             
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            
-            ObjectMapper mapper = new ObjectMapper();
-            FacebookResponse response = mapper.readValue(connection.getInputStream(), FacebookResponse.class);
+            //connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            if (connection.getResponseCode() >= 400) {
+                response = mapper.readValue(connection.getErrorStream(), FacebookResponse.class);
+            } else {
+                response = mapper.readValue(connection.getInputStream(), FacebookResponse.class);
+            }
+            /*
             if (response.getData() != null) {
                 pages = response.getData();
                 log.info("pages count: " + pages.size());
@@ -381,6 +387,7 @@ public class FacebookLib {
             } else {
                 log.warning("neither no data nor error");
             }
+            */
         } catch (MalformedURLException e) {
             logException(e);
         } catch (UnsupportedEncodingException e) {
@@ -389,7 +396,7 @@ public class FacebookLib {
             logException(e);
         }
         
-        return pages;
+        return response;
     }
     
     static private void logException(Exception e) {
