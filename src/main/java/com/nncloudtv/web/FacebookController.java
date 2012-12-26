@@ -61,20 +61,20 @@ public class FacebookController {
     }
     
     /**
-     * Post the FBPost object to facebook
-     * 
-     * @param fbPost FBPost object
-     */
-     @RequestMapping("postToFacebook")
-     public @ResponseBody void postToFacebook(@RequestBody FBPost fbPost, HttpServletRequest req) {
-         try {
-             log.info("server name: " + req.getServerName());
-             fbPost.setLink(fbPost.getLink().replaceFirst("localhost", req.getServerName()));
-             log.info(fbPost.toString());
-             FacebookLib.postToFacebook(fbPost);
-         } catch (IOException e) {
-             NnLogUtil.logException(e);
-         }
-     }
+    * Post the FBPost object to facebook
+    * 
+    * @param fbPost FBPost object
+    */
+    @RequestMapping("postToFacebook")
+    public @ResponseBody void postToFacebook(@RequestBody FBPost fbPost, HttpServletRequest req) {
+        try {
+            log.info("server name: " + req.getServerName());
+            fbPost.setLink(fbPost.getLink().replaceFirst("localhost", req.getServerName()));
+            log.info(fbPost.toString());
+            FacebookLib.postToFacebook(fbPost);
+        } catch (IOException e) {
+            NnLogUtil.logException(e);
+        }
+    }
      
 }
