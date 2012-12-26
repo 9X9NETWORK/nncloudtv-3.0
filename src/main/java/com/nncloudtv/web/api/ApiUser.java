@@ -31,6 +31,7 @@ import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
 import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnChannelPrefManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
@@ -796,11 +797,16 @@ public class ApiUser extends ApiGeneric {
         accessToken = longLivedAccessToken[0];
         
         NnUserPrefManager prefMngr = new NnUserPrefManager();
+        NnChannelPrefManager channelPrefMngr = new NnChannelPrefManager();
         NnUserPref userPref = null;
         
         // fbUserId
         userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_USER_ID);
         if (userPref != null) {
+            if (userPref.getValue().equals(fbUserId) == false) {
+                // remove all channels autoshare setting
+                channelPrefMngr.deleteAllChannelsFBbyUser(user);
+            }
             userPref.setValue(fbUserId);
         } else {
             userPref = new NnUserPref(user, NnUserPref.FB_USER_ID, fbUserId);
@@ -851,7 +857,11 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnUserPrefManager prefMngr = new NnUserPrefManager();
+        NnChannelPrefManager channelPrefMngr = new NnChannelPrefManager();
         NnUserPref userPref = null;
+        
+        // remove all channels autoshare setting
+        channelPrefMngr.deleteAllChannelsFBbyUser(user);
         
         // fbUserId
         userPref = prefMngr.findByUserAndItem(user, NnUserPref.FB_USER_ID);

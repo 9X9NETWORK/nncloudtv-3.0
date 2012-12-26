@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -7,7 +8,9 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnChannelPrefDao;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
+import com.nncloudtv.model.NnUser;
 
 @Service
 public class NnChannelPrefManager {
@@ -51,7 +54,7 @@ public class NnChannelPrefManager {
 	}
 	
 	public void delete(List<NnChannelPref> prefs) {
-	    if (prefs != null && prefs.size() != 0) {
+	    if (prefs != null && prefs.size() > 0) {
 	        prefDao.deleteAll(prefs);
 	    }
     }
@@ -74,4 +77,19 @@ public class NnChannelPrefManager {
 	    result[1] = value.substring(seperatorIndex + 1); // accessToken
 	    return result;
 	}
+	
+	public void deleteAllChannelsFBbyUser(NnUser user) {
+	    NnChannelManager channelMngr = new NnChannelManager();
+        List<NnChannel> channels = channelMngr.findByUser(user, 0, true);
+        List<NnChannelPref> channelPrefs = new ArrayList<NnChannelPref>();
+        List<NnChannelPref> temp;
+        for (NnChannel channel : channels) {
+            temp = findByChannelIdAndItem(channel.getId(), NnChannelPref.FB_AUTOSHARE);
+            if (temp != null && temp.size() > 0) {
+                channelPrefs.addAll(temp);
+            }
+        }
+        delete(channelPrefs);
+	}
+	
 }
