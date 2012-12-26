@@ -244,6 +244,7 @@ public class NnEpisodeManager {
             QueueFactory.add("/fb/postToFacebook", fbPost);
         }
         
+        log.info(fbPost.toString());
     }
     
 }
