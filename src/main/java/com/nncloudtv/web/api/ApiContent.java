@@ -213,6 +213,37 @@ public class ApiContent extends ApiGeneric {
         return results;
     }
     
+    @RequestMapping(value = "episodes/{episodeId}/scheduledAutosharing/facebook", method = RequestMethod.GET)
+    public @ResponseBody
+    String facebookAutosharingScheduled(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("episodeId") String episodeIdStr) {
+        
+        Long episodeId = null;
+        try {
+            episodeId = Long.valueOf(episodeIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (episodeId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        NnEpisode episode = episodeMngr.findById(episodeId);
+        if (episode == null) {
+            notFound(resp, "Episode Not Found");
+            return null;
+        }
+        
+        // mark as hook position
+        episodeMngr.autoShareToFacebook(episode);
+        //log.info("====================episode ID called : " + episodeId + "====================");
+        
+        return "OK";
+        //return "episode ID called : " + episodeId;
+    }
+    
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.GET)
     public @ResponseBody
     NnProgram program(@PathVariable("programId") String programIdStr,

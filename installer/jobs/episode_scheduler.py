@@ -8,6 +8,25 @@ import MySQLdb
 import time
 import string
 import codecs
+import pycurl
+#import pika
+
+class GetPage:
+    def __init__ (self, url):
+        self.contents = ''
+        self.url = url
+
+    def read_page (self, buf):
+        self.contents = self.contents + buf
+
+    def show_page (self):
+        print self.contents
+        
+
+autoshareCurl = pycurl.Curl()
+
+#connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+
                                   
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
@@ -30,7 +49,10 @@ for r in rows:
    cid = r[1]                           
    scheduleDate = r[2]                                                                 
    isPublic = r[3]                     
-   print 'Success' if isPublic == '\x00' else 'Fail'
+   if isPublic == '\x00':
+   	  print 'Success'
+   else:
+   	  print 'Fail'
    if isPublic == '\x00':  
       isPublic = False
    else:
@@ -76,9 +98,28 @@ for r in rows:
    dbcontent.commit()                         
    url = "http://localhost:8080/wd/channelCache?channel=" + str(cid)
    urllib2.urlopen(url).read()
+   
+   resultPage = GetPage("http://localhost/api/episodes/" + str(eid) + "/scheduledAutosharing/facebook")
+   autoshareCurl.setopt(autoshareCurl.URL, resultPage.url)
+   autoshareCurl.setopt(autoshareCurl.WRITEFUNCTION, resultPage.read_page)
+   autoshareCurl.perform()
+   print "autosharing episode ID : " + str(eid)
+   resultPage.show_page()
+   
+   #message = "http://localhost:8080/api/episodes/" + str(eid) + "/scheduledAutosharing/facebook"
+   #message = bytearray(message)
+   #channel = connection.channel()
+   #channel.queue_declare(queue='/')
+   #channel.basic_publish(exchange="", routing_key="QUEUE_NNCLOUDTV", body=message)
+   #channel.close()
+   
    i = i + 1                  
                                                                           
-dbcontent.close()    
+dbcontent.close()
+    
+autoshareCurl.close()
+#connection.close()
+
 #if i > 1:
 #   print "flush cache" 
 #   url = "http://localhost:8080/playerAPI/flush"
