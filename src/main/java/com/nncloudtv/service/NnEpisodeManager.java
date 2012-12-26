@@ -44,8 +44,11 @@ public class NnEpisodeManager {
     }
     
     public NnEpisode create(NnEpisode episode) {
-        autoShare(episode);
-        return save(episode);
+        NnEpisode savedEpisode = save(episode);
+        if (savedEpisode != null && savedEpisode.isPublic() == true) {
+            autoShare(savedEpisode);
+        }
+        return savedEpisode;
     }
     
     public List<NnEpisode> save(List<NnEpisode> episodes) {
