@@ -914,6 +914,7 @@ public class ApiUser extends ApiGeneric {
             List<FacebookPage> pages = FacebookLib.populatePageList(fbUserId, accessToken);
             result.put("pages", pages);
         } else {
+            resp.setContentType(APPLICATION_JSON_UTF8);
             return null;
         }
         

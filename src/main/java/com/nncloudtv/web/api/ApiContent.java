@@ -1422,7 +1422,7 @@ public class ApiContent extends ApiGeneric {
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
-        episode = episodeMngr.save(episode);
+        episode = episodeMngr.create(episode);
         episodeMngr.reorderChannelEpisodes(channelId);
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));

@@ -5,12 +5,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.nncloudtv.dao.NnEpisodeDao;
+import com.nncloudtv.lib.QueueFactory;
+import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnChannelPref;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.TitleCard;
+import com.nncloudtv.web.json.facebook.FBPost;
 
 public class NnEpisodeManager {
     
@@ -32,6 +41,11 @@ public class NnEpisodeManager {
         
         return dao.save(episode);
         
+    }
+    
+    public NnEpisode create(NnEpisode episode) {
+        autoShare(episode);
+        return save(episode);
     }
     
     public List<NnEpisode> save(List<NnEpisode> episodes) {
@@ -186,4 +200,54 @@ public class NnEpisodeManager {
         
         return totalDuration;
     }
+    
+    // hook, auto share to facebook
+    private void autoShare(NnEpisode episode) {
+        
+        FBPost fbPost = new FBPost(episode.getName(), episode.getIntro(), episode.getImageUrl());
+        String url = "http://" + MsoConfigManager.getServerDomain() + "/#!ch=" + episode.getChannelId() + "!ep=e" + episode.getId();
+        fbPost.setLink(url);
+        log.info("share link: " + url);
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(episode.getChannelId());
+        if (channel == null) {
+            return ;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        NnUser user = userMngr.findById(channel.getUserId());
+        if (user == null) {
+            return ;
+        }
+        
+        MessageSource messageSource = new ClassPathXmlApplicationContext("locale.xml");
+        if (user.getLang().equals("zh")) {
+            //fbPost.setCaption("Published an episode on 9x9.tv");
+            fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.TRADITIONAL_CHINESE));
+        } else {
+            //fbPost.setCaption("已在9x9.tv發佈節目");
+            fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.ENGLISH));
+        }
+        
+        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
+        List<NnChannelPref> prefList = prefMngr.findByChannelIdAndItem(episode.getChannelId(), NnChannelPref.FB_AUTOSHARE);
+        String facebookId, accessToken;
+        String[] parsedObj;
+        
+        for (NnChannelPref pref : prefList) {
+            parsedObj = prefMngr.parseFacebookAutoshare(pref.getValue());
+            if (parsedObj == null) {
+                continue;
+            }
+            facebookId = parsedObj[0];
+            accessToken = parsedObj[1];
+            fbPost.setFacebookId(facebookId);
+            fbPost.setAccessToken(accessToken);
+            
+            QueueFactory.add("/fb/postToFacebook", fbPost);
+        }
+        
+    }
+    
 }

@@ -21,6 +21,7 @@ public class ApiGeneric {
 	public static final String INVALID_PARAMETER = "Invalid Parameter";
 	public static final String INVALID_YOUTUBE_URL = "Invalid YouTube URL";
 	public static final String PLAIN_TEXT_UTF8 = "plain/text; charset=utf-8";
+	public static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
 	public static final String API_DOC = "API-DOC";
 	public static final String API_DOC_URL = "http://goo.gl/H7Jzl"; // API design document url
 	public static final String BLACK_HOLE = "Black Hole!";

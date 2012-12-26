@@ -7,13 +7,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.FacebookLib;
+import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.json.facebook.FBPost;
 
 @Controller
 @RequestMapping("fb")
@@ -55,4 +59,22 @@ public class FacebookController {
         log.info("FACEBOOK: (login) last step redirect to 9x9 player:" + redirectPath);
         return "redirect:" + redirectPath;
     }
+    
+    /**
+     * Post the FBPost object to facebook
+     * 
+     * @param fbPost FBPost object
+     */
+     @RequestMapping("postToFacebook")
+     public @ResponseBody void postToFacebook(@RequestBody FBPost fbPost, HttpServletRequest req) {
+         try {
+             log.info("server name: " + req.getServerName());
+             fbPost.setLink(fbPost.getLink().replaceFirst("localhost", req.getServerName()));
+             log.info(fbPost.toString());
+             FacebookLib.postToFacebook(fbPost);
+         } catch (IOException e) {
+             NnLogUtil.logException(e);
+         }
+     }
+     
 }
