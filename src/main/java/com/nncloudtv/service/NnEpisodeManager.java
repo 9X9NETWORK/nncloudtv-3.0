@@ -12,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.nncloudtv.dao.NnEpisodeDao;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
@@ -205,9 +206,9 @@ public class NnEpisodeManager {
     }
     
     // hook, auto share to facebook
-    private void autoShare(NnEpisode episode) {
+    public void autoShare(NnEpisode episode) {
         
-        FBPost fbPost = new FBPost(episode.getName(), episode.getIntro(), episode.getImageUrl());
+        FBPost fbPost = new FBPost(NnStringUtil.revertHtml(episode.getName()), NnStringUtil.revertHtml(episode.getIntro()), episode.getImageUrl());
         String url = "http://" + MsoConfigManager.getServerDomain() + "/#!ch=" + episode.getChannelId() + "!ep=e" + episode.getId();
         fbPost.setLink(url);
         log.info("share link: " + url);

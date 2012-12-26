@@ -1254,11 +1254,15 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
+        boolean autoShare = false;
         // isPublic
         String isPublicStr = req.getParameter("isPublic");
         if (isPublicStr != null) {
             Boolean isPublic = Boolean.valueOf(isPublicStr);
             if (isPublic != null) {
+                if (episode.isPublic() == false && isPublic == true) {
+                    autoShare = true;
+                }
                 episode.setPublic(isPublic);
             }
         }
@@ -1288,6 +1292,9 @@ public class ApiContent extends ApiGeneric {
         }
         
         episode = episodeMngr.save(episode, rerun);
+        if (autoShare == true) {
+            episodeMngr.autoShare(episode);
+        }
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
