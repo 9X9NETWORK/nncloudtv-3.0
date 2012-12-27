@@ -99,7 +99,7 @@ for r in rows:
    url = "http://localhost:8080/wd/channelCache?channel=" + str(cid)
    urllib2.urlopen(url).read()
    
-   resultPage = GetPage("http://localhost/api/episodes/" + str(eid) + "/scheduledAutosharing/facebook")
+   resultPage = GetPage("http://localhost:8080/api/episodes/" + str(eid) + "/scheduledAutosharing/facebook")
    autoshareCurl.setopt(autoshareCurl.URL, resultPage.url)
    autoshareCurl.setopt(autoshareCurl.WRITEFUNCTION, resultPage.read_page)
    autoshareCurl.perform()
