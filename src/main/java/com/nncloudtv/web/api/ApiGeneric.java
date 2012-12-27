@@ -26,20 +26,44 @@ public class ApiGeneric {
 	public static final String API_DOC_URL = "http://goo.gl/H7Jzl"; // API design document url
 	public static final String BLACK_HOLE = "Black Hole!";
 	
-	public void unauthorized(HttpServletResponse resp) {
-		try {
-			resp.sendError(401);
-		} catch (IOException e) {
-			internalError(resp, e);
-		}
-	}
-	
-	public void forbidden(HttpServletResponse resp) {
+	public void unauthorized(HttpServletResponse resp, String message) {
         try {
-            resp.sendError(403);
+            resp.reset();
+            resp.setContentType(PLAIN_TEXT_UTF8);
+            resp.setHeader(API_DOC, API_DOC_URL);
+            if (message != null) {
+                log.warning(message);
+                resp.getWriter().println(message);
+            }
+            resp.sendError(401);
+            resp.flushBuffer();
         } catch (IOException e) {
             internalError(resp, e);
         }
+	}
+	
+	public void unauthorized(HttpServletResponse resp) {
+	    unauthorized(resp, null);
+	}
+	
+	public void forbidden(HttpServletResponse resp, String message) {
+        try {
+            resp.reset();
+            resp.setContentType(PLAIN_TEXT_UTF8);
+            resp.setHeader(API_DOC, API_DOC_URL);
+            if (message != null) {
+                log.warning(message);
+                resp.getWriter().println(message);
+            }
+            resp.sendError(403);
+            resp.flushBuffer();
+        } catch (IOException e) {
+            internalError(resp, e);
+        }
+    }
+	
+	public void forbidden(HttpServletResponse resp) {
+	    forbidden(resp, null);
     }
 	
 	public void notFound(HttpServletResponse resp, String message) {
