@@ -335,11 +335,12 @@ public class FacebookLib {
         OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
         writer.write(post);
         writer.close();
-        
+        /*
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String line = reader.readLine();
         reader.close();
         log.info(line);
+        */
     }
     
     public static void postToTwitter(FBPost fbPost) throws IOException, TwitterException {
