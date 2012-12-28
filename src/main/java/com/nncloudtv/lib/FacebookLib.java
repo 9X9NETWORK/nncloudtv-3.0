@@ -325,16 +325,18 @@ public class FacebookLib {
         }
         log.info(post);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
+        //log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        //log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
         log.info("------------ready for post to facebook------------");
-        log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
         
         OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
         writer.write(post);
         writer.close();
+        
+        //log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
         /*
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String line = reader.readLine();
