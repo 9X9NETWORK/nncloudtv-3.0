@@ -328,7 +328,7 @@ public class FacebookLib {
         //log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        //connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         //log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
         log.info("------------ready for post to facebook------------");
         
@@ -337,12 +337,12 @@ public class FacebookLib {
         writer.close();
         
         //log.info("------------the encoding handle by now is : "+connection.getContentEncoding()+" ------------");
-        /*
+        
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String line = reader.readLine();
         reader.close();
         log.info(line);
-        */
+        
     }
     
     public static void postToTwitter(FBPost fbPost) throws IOException, TwitterException {
