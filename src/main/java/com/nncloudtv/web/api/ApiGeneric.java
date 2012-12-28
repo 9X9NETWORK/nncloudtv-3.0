@@ -35,7 +35,7 @@ public class ApiGeneric {
                 log.warning(message);
                 resp.getWriter().println(message);
             }
-            resp.sendError(401);
+            resp.setStatus(401);
             resp.flushBuffer();
         } catch (IOException e) {
             internalError(resp, e);
@@ -55,7 +55,7 @@ public class ApiGeneric {
                 log.warning(message);
                 resp.getWriter().println(message);
             }
-            resp.sendError(403);
+            resp.setStatus(403);
             resp.flushBuffer();
         } catch (IOException e) {
             internalError(resp, e);
