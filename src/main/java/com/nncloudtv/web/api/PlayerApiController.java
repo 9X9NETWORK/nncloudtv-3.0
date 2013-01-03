@@ -242,7 +242,20 @@ public class PlayerApiController {
         }
         return output;
     }    
-    
+
+    /**
+     * Pass every param passing from Facebook in its original format
+     * 
+     * @param id facebook id
+     * @param name name
+     * @param username facebook username
+     * @param birthday birthday
+     * @param email user email
+     * @param locale locale
+     * @param token access token
+     * @param expire expiration date
+     * @return 
+     */
     @RequestMapping(value="fbSignup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String fbSignup(HttpServletRequest req, HttpServletResponse resp) {
         FacebookMe me = new FacebookMe();
@@ -478,6 +491,9 @@ public class PlayerApiController {
 //        return "redirect:" + path;
     }
 
+    /**
+     * To be ignored 
+     */
     @RequestMapping(value="pdrServer", produces = "text/plain; charset=utf-8")
     public @ResponseBody String pdrServer(
             @RequestParam(value="user", required=false) String userToken,
@@ -1690,6 +1706,8 @@ public class PlayerApiController {
      * Search channel name and description, curator name and description
      * 
      * @param search search text
+     * @param start start index
+     * @param count number of records returned. Returns 9 if not specified.
      * @return matched channels and curators
      *         <p> 
      *         For version before 3.2, search returns a list of channel info. Please reference channelLineup. 
@@ -2257,7 +2275,7 @@ public class PlayerApiController {
     }
  
     /**
-     * Get list of episodes based on stack. Work in progress.
+     * Get list of episodes based on channel stack. Used by Android device.
      *  
      * @param stack leagle value includes "recommend", "hot", "mayLike", "featured", "trending"
      * @param lang
@@ -2289,6 +2307,17 @@ public class PlayerApiController {
         return output;
     }
  
+    /**
+     * Used by Android device. Things to list on the front page
+     * 
+     * @param time hour, 0-23
+     * @param stack reserved
+     * @param user user token
+     * @return <p>Two sections, First is things to disply, see the following. 
+     *            Second is the list of episodes, please reference VirtualChannel.
+     *         <p>Things to display: name, type(*1), stack name, default open(1) or closed(0), icon   
+     *         <p>*1: 0 stack, 1 subscription, 2 account, 3 channel, 4 directory, 5 search  
+     */
     @RequestMapping(value="frontpage", produces = "text/plain; charset=utf-8")
     public @ResponseBody String frontpage(                      
             @RequestParam(value="time", required=false) String time,
