@@ -22,6 +22,9 @@ First time setup procedures
 ================================
 Detail for each step can be found in the following sections.
 
+- zh_TW.UTF-8 locale support
+locale-gen --lang zh_TW.UTF-8
+
 - Download JDK 1.6.0, MySql 5.5.10, RabbitMQ 1.8, Maven 3.0.3 
 Details can be found in the following sections
   
