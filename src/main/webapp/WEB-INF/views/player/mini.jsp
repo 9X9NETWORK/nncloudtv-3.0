@@ -27,15 +27,15 @@
 <script type="text/javascript" charset="utf-8" src="${root}/javascripts/jquery.ellipsis.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
 
-<!--
+
 <c:if test="${js == \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mini20.js"></script>
 </c:if>
 <c:if test="${js != \"\"}">
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
 </c:if>
--->
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mini20.js"></script>
+
+<!--script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mini20.js"></script-->
 
 <!-- Quantcast Tag -->
 <script type="text/javascript">
