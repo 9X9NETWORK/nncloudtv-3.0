@@ -240,12 +240,14 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         try {
             String sql = 
                 "select * from nnchannel " +
-                 "where lower(sourceUrl) = lower('" + url + "') ";
+                 "where lower(sourceUrl) = lower(?)";
+
             log.info("Sql=" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            
             q.setClass(NnChannel.class);
             @SuppressWarnings("unchecked")
-            List<NnChannel> channels = (List<NnChannel>) q.execute();                                
+            List<NnChannel> channels = (List<NnChannel>) q.execute(url);                                
             if (channels.size() > 0) {
                 channel = pm.detachCopy(channels.get(0));
             }
