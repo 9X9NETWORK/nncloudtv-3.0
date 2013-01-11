@@ -1732,6 +1732,10 @@ public class PlayerApiService {
         if (programId == null && ytVideoId == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
+        if (ytVideoId != null && ytVideoId.length() < 11) {
+            log.info("invalid youtube id:" + ytVideoId);
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }
         
         try {
             NnProgramManager programMngr = new NnProgramManager();
@@ -1749,6 +1753,9 @@ public class PlayerApiService {
             }
             if (ytVideoId != null) {
                 List<NnProgram> programs = programMngr.findByYtVideoId(ytVideoId);
+                if (programs.size() == 0) {
+                    return this.assembleMsgs(NnStatusCode.PROGRAM_INVALID, null);
+                }
                 for (NnProgram p : programs) {
                     log.info("mark program:" + p.getId() + "(" + ytVideoId + ") status:" + status + " by " + userToken);
                     p.setStatus(Short.parseShort(status));
