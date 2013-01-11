@@ -201,6 +201,11 @@ public class NnProgramManager {
         return program;
     }
 
+    public List<NnProgram> findByYtVideoId(String videoId) {
+        List<NnProgram> programs = dao.findByYtVideoId(videoId);
+        return programs;
+    }
+    
     public List<NnProgram> findByChannelId(long channelId) {
         return dao.findByChannel(channelId);
     }

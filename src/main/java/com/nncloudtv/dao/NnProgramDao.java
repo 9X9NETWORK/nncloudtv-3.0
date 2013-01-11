@@ -76,6 +76,28 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         return detached;
     }
 
+    public List<NnProgram> findByYtVideoId(String videoId) {
+        if (videoId == null) {return null;}
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<NnProgram> programs = new ArrayList<NnProgram>();
+        try {
+            String sql = 
+                "select * from nnprogram " +
+                 "where lower(fileUrl) like lower('%" + videoId + "%')";
+
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            
+            q.setClass(NnProgram.class);
+            @SuppressWarnings("unchecked")
+            List<NnProgram> results = (List<NnProgram>) q.execute();                                
+            programs = (List<NnProgram>) pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        }
+        return programs;                
+    }
+    
     //IMPORTANT: applies to 9x9 channel only. otherwise ordering could be wrong
     public List<NnProgram> findByChannelAndSeq(long channelId, String seq) {
         

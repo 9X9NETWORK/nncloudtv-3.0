@@ -1755,18 +1755,20 @@ public class PlayerApiController {
     @RequestMapping(value="programRemove", produces = "text/plain; charset=utf-8")
     public @ResponseBody String programRemove(
             @RequestParam(value="program", required=false) String programId,
+            @RequestParam(value="youtube", required=false) String ytVideoId,
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="bird", required=false) String secret,
+            @RequestParam(value="status", required=false) String status,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
         log.info("bad program:" + programId + ";reported by user:" + userToken);
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
-            int status = this.prepService(req, true);
-            if (status != NnStatusCode.SUCCESS)
+            int systemStatus = this.prepService(req, true);
+            if (systemStatus != NnStatusCode.SUCCESS)
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
-            output = playerApiService.programRemove(programId, userToken, secret);
+            output = playerApiService.programRemove(programId, ytVideoId, userToken, secret, status);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

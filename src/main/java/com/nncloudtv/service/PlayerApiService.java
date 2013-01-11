@@ -1725,19 +1725,36 @@ public class PlayerApiService {
         
     }
     
-    public String programRemove(String programId, String userToken, String secret) {
-        if (programId == null || userToken == null) {
+    public String programRemove(String programId, String ytVideoId, String userToken, String secret, String status) {
+        if (userToken == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
+        if (programId == null && ytVideoId == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        
         try {
             NnProgramManager programMngr = new NnProgramManager();
-            NnProgram program = programMngr.findById(Long.parseLong(programId));
-            if (secret != null && secret.equals("chicken")) {
-                program.setStatus(NnProgram.STATUS_ERROR);
-            } else {
-                program.setStatus(NnProgram.STATUS_NEEDS_REVIEWED);
-            }            
-            programMngr.save(program);
+            if (programId != null) {
+                NnProgram program = programMngr.findById(Long.parseLong(programId));
+                if (program != null) {
+                    if (secret != null && secret.equals("chicken")) {
+                        program.setStatus(NnProgram.STATUS_ERROR);
+                    } else {
+                        program.setStatus(NnProgram.STATUS_NEEDS_REVIEWED);
+                    }            
+                    programMngr.save(program);
+                    programMngr.resetCache(program.getChannelId());
+                }
+            }
+            if (ytVideoId != null) {
+                List<NnProgram> programs = programMngr.findByYtVideoId(ytVideoId);
+                for (NnProgram p : programs) {
+                    log.info("mark program:" + p.getId() + "(" + ytVideoId + ") status:" + status + " by " + userToken);
+                    p.setStatus(Short.parseShort(status));
+                    programMngr.save(p);
+                }
+            }
         } catch (NumberFormatException e) {
             log.info("pass invalid program id:" + programId);
         } catch (NullPointerException e) {
