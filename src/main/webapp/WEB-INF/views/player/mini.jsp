@@ -152,7 +152,7 @@ soundManager.onready(function()
     <div id="sg-header">
       <img src="${root}/images/logo_cts.png" id="sg-logo">
       <p id="device"><span>Device:</span><span id="device-name">Not connected</span></p>
-      <p id="sg-title">華視雲端頻道網</p>
+      <p id="sg-title">華視雲端電視網</p>
       <img src="${root}/images/icon_store.png" id="btn-store">
       <img src="${root}/images/icon_help.png" id="btn-help">
       <img src="${root}/images/icon_pc.png" id="btn-pc">
@@ -239,7 +239,7 @@ soundManager.onready(function()
   <div id="store-hint"><p><img src="${root}/images/btn_ok.png" class="icon-btn-ok"><span>to add this channel.</span></p><p><img src="${root}/images/btn_9x9.png" class="icon-btn-9x9"><span>or<img src="${root}/images/btn_m.png" class="icon-btn-m">to Guide.</span></p><p><img src="${root}/images/arrow_left.png" class="icon-btn-left"><img src="${root}/images/arrow_right.png" class="icon-btn-right"><span>to flip set.</span></p><p><img src="${root}/images/arrow_up.png" class="icon-btn-up"><img src="${root}/images/arrow_down.png" class="icon-btn-down"><span>to flip channels in the current set.</span></p></div>
   <div id="store-holder"> 
     <div id="store-header">
-      <img src="${root}/images/logo.png" id="store-logo">
+      <img src="${root}/images/logo_cts.png" id="store-logo">
       <p id="store-title"><span>Channel Store</span></p>
     </div>
     <img src="${root}/images/arrow_up.png" id="ch-up">
