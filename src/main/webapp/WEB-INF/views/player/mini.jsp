@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9miniV21"/>
+<c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9miniV21a"/>
 
 <title>9x9.tv/tv</title>
 
@@ -35,7 +35,7 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
 </c:if>
 -->
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mini20.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/mini20-for-v31.js"></script>
 
 <!-- Quantcast Tag -->
 <script type="text/javascript">
@@ -150,8 +150,9 @@ soundManager.onready(function()
 <div id="sg-layer">
   <div id="sg-holder">
     <div id="sg-header">
-      <img src="${root}/images/logo.png" id="sg-logo">
+      <img src="${root}/images/logo_cts.png" id="sg-logo">
       <p id="device"><span>Device:</span><span id="device-name">Not connected</span></p>
+      <p id="sg-title">華視雲端頻道網</p>
       <img src="${root}/images/icon_store.png" id="btn-store">
       <img src="${root}/images/icon_help.png" id="btn-help">
       <img src="${root}/images/icon_pc.png" id="btn-pc">
