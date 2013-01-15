@@ -64,48 +64,61 @@ public class YouTubeLib {
 		                    "comedy", "gaming", "sports", "education",
 		                    "shows", 
 		                    "store", "channels", "contests_main"};		
-		HashSet<String> dic = new HashSet<String>();
-		for (int i=0; i<invalid.length; i++) {
-			dic.add(invalid[i]);
-		}
-		String url = null;
-		String reg = "^(http|https)://?(www.)?youtube.com/(user/|profile\\?user=)?(\\w+)";		
-		Pattern pattern = Pattern.compile(reg);
-		Matcher m = pattern.matcher(urlStr);
-		while (m.find()) {
-			if (dic.contains(m.group(4))) {return null;}
-			url = "http://www.youtube.com/user/" + m.group(4);
-		}
-		reg = "^(http|https)://?(www.)?youtube.com/(user/|profile\\?user=)?(.+)(#(p/c|g/c|grid/user)/(\\w+))";
-		pattern = Pattern.compile(reg);
-		m = pattern.matcher(urlStr);
-		while (m.find()) {
-			url = "http://www.youtube.com/view_play_list?p=" + m.group(7);
-		}
-		
-		reg = "^(http|https)://?(www.)?youtube.com/view_play_list\\?p=(\\w+)";
-		pattern = Pattern.compile(reg);
-		m = pattern.matcher(urlStr);		
-		while (m.find()) {
-			url = "http://www.youtube.com/view_play_list?p=" + m.group(3);
-		}
-		
-		reg = "^(http|https)://?(www.)?youtube.com/(.+)?(p|list)=(PL)?(\\w+)";
-		pattern = Pattern.compile(reg);
-		m = pattern.matcher(urlStr);
-		while (m.find()) {
-			url = "http://www.youtube.com/view_play_list?p=" + m.group(6);
-		}
-		
-		if (url != null) { 
-			url = url.toLowerCase();
-			if (url.equals("http://www.youtube.com/user/watch")) {
-				url = null;
-			}
-		}
-		//log.info("original url:" + urlStr + ";result=" + url);		
-		//if (!youTubeCheck(result)) {return null;} //till the function is fixed		
-		return url;		
+        HashSet<String> dic = new HashSet<String>();
+        for (int i=0; i<invalid.length; i++) {
+            dic.add(invalid[i]);
+        }
+        //youtube channel
+        String url = null;
+        String reg = "^(http|https)://?(www.)?youtube.com/(user/|profile\\?user=)?(\\w+)";        
+        Pattern pattern = Pattern.compile(reg);
+        Matcher m = pattern.matcher(urlStr);
+        while (m.find()) {
+            if (dic.contains(m.group(4))) {return null;}
+            url = "http://www.youtube.com/user/" + m.group(4);
+        }
+        //youtube playlist
+        reg = "^(http|https)://?(www.)?youtube.com/(user/|profile\\?user=)?(.+)(#(p/c|g/c|grid/user)/(\\w+))";
+        pattern = Pattern.compile(reg);
+        m = pattern.matcher(urlStr);
+        while (m.find()) {
+            url = "http://www.youtube.com/view_play_list?p=" + m.group(7);
+        }
+        reg = "^(http|https)://?(www.)?youtube.com/view_play_list\\?p=(\\w+)";
+        pattern = Pattern.compile(reg);
+        m = pattern.matcher(urlStr);        
+        while (m.find()) {
+            //log.info("match:view_play_list\\?p=(\\w+)");
+            url = "http://www.youtube.com/view_play_list?p=" + m.group(3);
+        }        
+        //http://www.youtube.com/playlist?list=PLJ2QT-PhqTiI-BWE0Efr4rhbfVO-Qg_4q
+        reg = "^(http|https)://?(www.)?youtube.com/(.+)?(p|list)=(PL)?([\\w|_|-]+)";
+        pattern = Pattern.compile(reg);
+        m = pattern.matcher(urlStr);
+        while (m.find()) {
+            //log.info("match:(p|list)=(PL)?(\\w+)");
+            url = "http://www.youtube.com/view_play_list?p=" + m.group(6);
+        }
+
+        // http://www.youtube.com/playlist?list=03D59E2ECDDA66DF
+        // http://www.youtube.com/playlist?list=PL03D59E2ECDDA66DF               
+        reg = "^(http|https)://?(www.)?youtube.com/playlist?list=(PL)?(\\w+)";
+        pattern = Pattern.compile(reg);
+        m = pattern.matcher(urlStr);
+        while (m.find()) {
+            //log.info("match playlist?list=(PL)?(\\w+)");
+            url = "http://www.youtube.com/view_play_list?p=" + m.group(5);
+        }
+
+        if (url != null) { 
+            //url = url.toLowerCase();
+            if (url.equals("http://www.youtube.com/user/watch")) {
+                url = null;
+            }
+        }
+        log.info("original url:" + urlStr + ";result=" + url);        
+        //if (!youTubeCheck(result)) {return null;} //till the function is fixed        
+        return url;        
 	}
 
 	 public static class YouTubeUrl extends GenericUrl {
