@@ -182,7 +182,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
             String sql = "select * " +
                           " from nnchannel " + 
             		     " where poolType >= " + type + 
-                           " and (lang = '" + lang + " 'or lang = 'other')" + 
+                           " and (sphere = '" + lang + " 'or sphere = 'other')" + 
                            " order by rand()";
             if (limit > 0) 
                 sql += " limit " + limit;
