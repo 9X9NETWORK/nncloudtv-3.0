@@ -131,6 +131,21 @@ public class NnChannelManager {
         return channel;
     }
 
+    //check existence is your responsibility (for now)
+    //passing a good url is your responsibility (for now) 
+    public NnChannel createYoutubeChannel(String url) {
+        NnChannel channel = new NnChannel(url);
+        channel.setStatus(NnChannel.STATUS_PROCESSING);
+        channel.setContentType(NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL);
+        channel.setPublic(false);
+        channel.setLang(LangTable.LANG_EN);        
+        Date now = new Date();
+        channel.setCreateDate(now);
+        channel.setUpdateDate(now);  
+        this.save(channel);
+        return channel;
+    }
+    
     /*
     public String processCache(NnChannel c) {
         String cacheKey = NnChannelManager.getCacheKey(c.getId());

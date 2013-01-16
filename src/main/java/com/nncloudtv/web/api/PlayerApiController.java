@@ -2342,4 +2342,59 @@ public class PlayerApiController {
         }
         return output;        
     }
+
+    @RequestMapping(value="bulkSubscribe", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String bulkSubscribe(                      
+            @RequestParam(value="channelNames", required=false) String ytUsers,
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.bulkSubscribe(userToken, ytUsers);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;        
+    }
+    
+    @RequestMapping(value="virtualChannelAdd", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String virtualChannelAdd(                      
+            @RequestParam(value="user", required=false) String user,
+            @RequestParam(value="channel", required=false) String channel,
+            @RequestParam(value="ytUsername", required=false) String ytUserName,
+            @RequestParam(value="video", required=false) String ytVideoId,
+            @RequestParam(value="name", required=false) String name,
+            @RequestParam(value="desc", required=false) String intro,
+            @RequestParam(value="thumbnail", required=false) String imageUrl,
+            @RequestParam(value="duration", required=false) String duration,
+            @RequestParam(value="timestamp", required=false) String updateDate,
+            @RequestParam(value="queue", required = false) String queue,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            boolean isQueued = Boolean.parseBoolean(queue);
+            if (queue == null) isQueued = true;                
+            output = playerApiService.virtualChannelAdd(channel, ytUserName, ytVideoId, name, intro, imageUrl, duration, updateDate, isQueued, req);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;        
+    }
+    
 }

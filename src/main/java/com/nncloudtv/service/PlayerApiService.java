@@ -1,5 +1,8 @@
 package com.nncloudtv.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
 import com.nncloudtv.model.Category;
@@ -2304,4 +2308,102 @@ public class PlayerApiService {
             return this.assembleSections(data);
         }
     }
+
+    public String virtualChannelAdd(String channel, String ytUserName, String video, 
+                                    String name, String intro, String imageUrl, 
+                                    String duration, String updateDate, 
+                                    boolean isQueued, HttpServletRequest req) {
+        if (channel == null || ytUserName == null || video == null ||
+            name == null || intro == null || imageUrl == null ||
+            duration == null || updateDate == null)
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null); 
+        if (isQueued) {        
+            String queryStr = req.getQueryString();        
+            if (queryStr != null && !queryStr.equals("null"))
+                queryStr = "?" + queryStr + "&queue=false";
+            else 
+                queryStr = "";
+            String msg = "/playerAPI/virtualChannelAdd" + queryStr;
+            log.info("queue msg:" + msg);
+            QueueFactory.add(msg, null);
+            return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+        }
+        
+        YtProgramDao dao = new YtProgramDao();
+        String[] videos = video.split(",");
+        String[] chs = channel.split(",");
+        String[] usernames = ytUserName.split(",");
+        String[] imageUrls = imageUrl.split(",");
+        String[] names = name.split(",");
+        String[] intros = intro.split(",");
+        String[] durations = duration.split(",");
+        String[] updateDates = updateDate.split(",");
+        int standard = videos.length;
+        if (standard != chs.length || standard != usernames.length || standard != imageUrls.length ||
+            standard != names.length || standard != intros.length || standard != durations.length || 
+            standard != updateDates.length) {
+            log.info("status:" + NnStatusCode.INPUT_BAD);
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }
+        Date now = new Date();
+        
+        List<YtProgram> ytprograms = new ArrayList<YtProgram>();
+        for (int i=0; i<videos.length; i++) {
+            YtProgram program = dao.findByVideo(videos[i]);
+            if (program == null) {
+                long chId = Long.parseLong(chs[i]);
+                long epoch = Long.parseLong(updateDates[i]);
+                Date myDate = new Date (epoch*1000);
+                YtProgram ytprogram = new YtProgram(chId, usernames[i], videos[i], 
+                                                    names[i], durations[i], imageUrls[i], 
+                                                    intros[i], now, myDate);
+                ytprograms.add(ytprogram);
+            }                
+        }         
+        log.info("new ytprograms size:" + ytprograms.size());
+        int existedSize = videos.length - ytprograms.size();
+        log.info("existed ytprograms size:" + existedSize);
+        dao.saveAll(ytprograms);
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+    }
+    
+    public String bulkSubscribe(String userToken, String ytUsers) {
+        //input
+        if (userToken == null || ytUsers == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        //user
+        NnUser user = userMngr.findByToken(userToken);
+        if (user == null) 
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+        //channels
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        String[] ytUser = ytUsers.split(",");        
+        for (String yt : ytUser) {
+            yt = "http://www.youtube.com/user/" + yt;
+            NnChannel existed = chMngr.findBySourceUrl(yt);
+            if (existed == null) {
+                NnChannel c = chMngr.createYoutubeChannel(yt);
+                if (c != null) channels.add(c);
+            } else {
+                channels.add(existed);
+            }            
+        }
+        String channelInfo = chMngr.composeReducedChannelLineup(channels);        
+        //subscribe
+        NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
+        List<NnUserSubscribe> list = subMngr.findAllByUser(user);
+        Map<Long, NnUserSubscribe> map = new HashMap<Long, NnUserSubscribe>();        
+        for (NnUserSubscribe s : list) {
+            map.put(s.getChannelId(), s);
+        }
+        for (NnChannel c : channels) {
+            if (!map.containsKey(c.getId())) {         
+                log.info("user automate subscribe:" + user.getToken() + ";" + c.getId());
+                subMngr.subscribeChannel(user, c.getId(), (short)0, MsoIpg.TYPE_GENERAL);
+            }
+        }
+        
+        return this.assembleMsgs(NnStatusCode.SUCCESS, new String[] {channelInfo});        
+    }    
 }

@@ -56,7 +56,21 @@ public class YtProgram implements Serializable {
     private Date updateDate;
     
     public YtProgram() {}
-
+    public YtProgram(long channelId, String ytUserName, String ytVideoId, 
+                     String name, String duration, String imageUrl, 
+                     String intro, Date crawlDate, Date updateDate) {
+        this.channelId = channelId;
+        this.ytUserName = ytUserName;
+        this.ytVideoId = ytVideoId;
+        this.name = name;
+        this.duration = duration;
+        this.imageUrl = imageUrl;
+        this.intro = intro;
+        this.crawlDate = crawlDate;
+        this.updateDate = updateDate;
+    }
+    
+    
     public long getId() {
         return id;
     }

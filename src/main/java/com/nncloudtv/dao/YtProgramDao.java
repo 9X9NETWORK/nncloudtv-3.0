@@ -17,8 +17,8 @@ public class YtProgramDao extends GenericDao<YtProgram> {
         
     public YtProgramDao() {
         super(YtProgram.class);
-    }
-    
+    }    
+
     public List<YtProgram> findByChannels(List<NnChannel> channels) {
         List<YtProgram> detached = new ArrayList<YtProgram>();
         String ids = "";
@@ -44,6 +44,24 @@ public class YtProgramDao extends GenericDao<YtProgram> {
             pm.close();
         } 
         return detached;        
+    }
+
+    public YtProgram findByVideo(String video) { 
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        YtProgram detached = null; 
+        try {
+            Query q = pm.newQuery(YtProgram.class);
+            q.setFilter("ytVideoId == videoParam");
+            q.declareParameters("String videoParam");
+            @SuppressWarnings("unchecked")
+            List<YtProgram> programs = (List<YtProgram>) q.execute(video);
+            if (programs.size() > 0) {
+                detached = pm.detachCopy(programs.get(0));
+            }            
+        } finally {
+            pm.close();
+        }
+        return detached;
     }
     
 }
