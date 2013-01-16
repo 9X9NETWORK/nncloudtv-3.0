@@ -98,8 +98,10 @@ public class QueueFactory {
             String msg = root.concat(url);
             
             obj[0] = msg;
-            obj[1] = QueueFactory.METHOD_POST;
-            obj[2] = QueueFactory.CONTENTTYPE_JSON;
+            if (json == null) {
+                obj[1] = QueueFactory.METHOD_GET;
+                obj[2] = QueueFactory.CONTENTTYPE_TEXT;
+            }
             obj[3] = json; 
             
             channel.basicPublish( "", QueueFactory.QUEUE_NNCLOUDTV, 
