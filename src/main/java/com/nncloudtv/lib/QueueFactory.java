@@ -40,7 +40,6 @@ public class QueueFactory {
       return bytes;
     }
     
-    //TODO merged
     public static void add(String url, String method, String contentType, Object data) {
         ConnectionFactory factory = new ConnectionFactory();
         try {
@@ -101,6 +100,9 @@ public class QueueFactory {
             if (json == null) {
                 obj[1] = QueueFactory.METHOD_GET;
                 obj[2] = QueueFactory.CONTENTTYPE_TEXT;
+            } else {
+                obj[1] = QueueFactory.METHOD_POST;
+                obj[1] = QueueFactory.CONTENTTYPE_JSON;
             }
             obj[3] = json; 
             
