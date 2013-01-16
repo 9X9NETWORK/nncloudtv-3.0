@@ -2369,26 +2369,26 @@ public class PlayerApiController {
     public @ResponseBody String virtualChannelAdd(                      
             @RequestParam(value="user", required=false) String user,
             @RequestParam(value="channel", required=false) String channel,
-            @RequestParam(value="ytUsername", required=false) String ytUserName,
-            @RequestParam(value="video", required=false) String ytVideoId,
-            @RequestParam(value="name", required=false) String name,
-            @RequestParam(value="desc", required=false) String intro,
-            @RequestParam(value="thumbnail", required=false) String imageUrl,
-            @RequestParam(value="duration", required=false) String duration,
-            @RequestParam(value="timestamp", required=false) String updateDate,
-            @RequestParam(value="queue", required = false) String queue,
+            @RequestParam(value="payload", required=false) String payload,            
+            @RequestParam(value="queued", required = false) String queued,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
-            HttpServletResponse resp) {
+            HttpServletResponse resp) {        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             int status = this.prepService(req, true);
             if (status != NnStatusCode.SUCCESS) {
                 playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            boolean isQueued = Boolean.parseBoolean(queue);
-            if (queue == null) isQueued = true;                
-            output = playerApiService.virtualChannelAdd(channel, ytUserName, ytVideoId, name, intro, imageUrl, duration, updateDate, isQueued, req);    
+            boolean isQueued = Boolean.parseBoolean(queued);
+            if (queued == null) isQueued = true;
+            log.info("in queue?" + isQueued);  
+
+            user = req.getParameter("user");
+            channel = req.getParameter("channel");
+            payload = req.getParameter("payload");
+            
+            output = playerApiService.virtualChannelAdd(user, channel, payload, isQueued, req);    
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

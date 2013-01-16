@@ -1,6 +1,7 @@
 package com.nncloudtv.lib;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -126,6 +127,29 @@ public class NnNetUtil {
         return null;
     }
    
+    public static void urlPost(String urlStr, String params) {
+        URL url;
+        try {
+            url = new URL(urlStr);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("charset", "utf-8");
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(urlStr.getBytes().length));
+            DataOutputStream writer = new DataOutputStream(connection.getOutputStream ());            
+            writer.writeBytes(params);
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {                
+                log.info("response not ok!" + connection.getResponseCode());
+            }            
+            writer.flush();
+            writer.close();
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }        
+    }
+    
     public static void urlPostWithJson(String urlStr, Object obj) {
         log.info("post to " + urlStr);
         URL url;

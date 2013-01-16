@@ -1,8 +1,5 @@
 package com.nncloudtv.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -101,6 +98,7 @@ public class PlayerApiService {
         if (e.getClass().equals(NumberFormatException.class)) {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
         } else if (e.getClass().equals(CommunicationsException.class)) {
+            log.info("return db error");
             return this.assembleMsgs(NnStatusCode.DATABASE_ERROR, null);
         } 
 
@@ -2309,61 +2307,79 @@ public class PlayerApiService {
         }
     }
 
-    public String virtualChannelAdd(String channel, String ytUserName, String video, 
-                                    String name, String intro, String imageUrl, 
-                                    String duration, String updateDate, 
-                                    boolean isQueued, HttpServletRequest req) {
-        if (channel == null || ytUserName == null || video == null ||
-            name == null || intro == null || imageUrl == null ||
-            duration == null || updateDate == null)
-            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null); 
+    public String virtualChannelAdd(String user, String channel, String payload, 
+                                    boolean isQueued, HttpServletRequest req) {        
+        if (user == null || payload == null || channel == null) {
+            log.info("data is missing");
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+
         if (isQueued) {        
-            String queryStr = req.getQueryString();        
-            if (queryStr != null && !queryStr.equals("null"))
-                queryStr = "?" + queryStr + "&queue=false";
-            else 
-                queryStr = "";
-            String msg = "/playerAPI/virtualChannelAdd" + queryStr;
-            log.info("queue msg:" + msg);
-            QueueFactory.add(msg, null);
+            log.info("virtual channel from user:" + user + " throwing to queue" );
+            String url = "/playerAPI/virtualChannelAdd?queued=false";
+            String data = "channel=" + channel + "&payload=" + payload + ";&user=" + user;             
+            QueueFactory.add(url, QueueFactory.METHOD_POST, QueueFactory.CONTENTTYPE_TEXT, data);
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         }
-        
-        YtProgramDao dao = new YtProgramDao();
-        String[] videos = video.split(",");
-        String[] chs = channel.split(",");
-        String[] usernames = ytUserName.split(",");
-        String[] imageUrls = imageUrl.split(",");
-        String[] names = name.split(",");
-        String[] intros = intro.split(",");
-        String[] durations = duration.split(",");
-        String[] updateDates = updateDate.split(",");
-        int standard = videos.length;
-        if (standard != chs.length || standard != usernames.length || standard != imageUrls.length ||
-            standard != names.length || standard != intros.length || standard != durations.length || 
-            standard != updateDates.length) {
-            log.info("status:" + NnStatusCode.INPUT_BAD);
-            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
-        }
-        Date now = new Date();
-        
-        List<YtProgram> ytprograms = new ArrayList<YtProgram>();
-        for (int i=0; i<videos.length; i++) {
-            YtProgram program = dao.findByVideo(videos[i]);
-            if (program == null) {
-                long chId = Long.parseLong(chs[i]);
-                long epoch = Long.parseLong(updateDates[i]);
-                Date myDate = new Date (epoch*1000);
-                YtProgram ytprogram = new YtProgram(chId, usernames[i], videos[i], 
-                                                    names[i], durations[i], imageUrls[i], 
-                                                    intros[i], now, myDate);
-                ytprograms.add(ytprogram);
-            }                
-        }         
-        log.info("new ytprograms size:" + ytprograms.size());
-        int existedSize = videos.length - ytprograms.size();
-        log.info("existed ytprograms size:" + existedSize);
+        log.info("--- process virtual channels ---");
+        YtProgramDao dao = new YtProgramDao();        
+        String[] lines = payload.split("\n");
+        log.info("lines:" + lines.length);
+        List<YtProgram> ytprograms = new ArrayList<YtProgram>();        
+        for (String line : lines) {
+            String[] tabs = line.split("\t");
+            log.info("columns:" + tabs.length);
+            if (tabs.length >= 9) {
+                try {
+                    String chstr = tabs[0];
+                    String ytUserName = tabs[1];
+                    String crawlD = tabs[2];
+                    String ytVideoId = tabs[3];
+                    String name = tabs[4];
+                    String updateD = tabs[5];
+                    String duration = tabs[6];
+                    String imageUrl = tabs[7];
+                    String intro = tabs[8];
+                    YtProgram program = dao.findByVideo(ytVideoId);
+                    if (program == null) {
+                       long chId = Long.parseLong(chstr);
+                       Date updateDate = null;
+                       long epoch = 0;
+                       if (updateD != null) {
+                          epoch = Long.parseLong(updateD);
+                          updateDate= new Date (epoch*1000);
+                       }
+                       Date crawlDate = null;
+                       if (crawlD != null) {
+                          epoch = Long.parseLong(crawlD);
+                          crawlDate = new Date (epoch*1000);
+                       }
+                       YtProgram ytprogram = new YtProgram(chId, ytUserName, ytVideoId, 
+                                                           name, duration, imageUrl, 
+                                                           intro, crawlDate, updateDate);
+                       log.info("ytprogram:" + chId + ";" + ytUserName + ";" + ytVideoId + ";" +
+                                ";" + name + ";" + duration + ";" + imageUrl + ";" + intro + ";" + 
+                                crawlDate + ";" + updateDate);
+                       ytprograms.add(ytprogram);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }        
         dao.saveAll(ytprograms);
+        log.info("new ytprograms size:" + ytprograms.size());
+        int existedSize = lines.length - ytprograms.size();
+        log.info("existed ytprograms size:" + existedSize);
+        NnChannel c = chMngr.findById(Long.parseLong(channel));
+        if (c != null) {
+            if (c.getStatus() == NnChannel.STATUS_PROCESSING) {
+                log.info("change channel status from processing to success:" + c.getId());
+                c.setStatus(NnChannel.STATUS_SUCCESS);
+                chMngr.save(c);
+            }
+        }
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
