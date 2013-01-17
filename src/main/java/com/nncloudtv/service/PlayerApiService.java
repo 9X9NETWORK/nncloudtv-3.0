@@ -257,8 +257,10 @@ public class PlayerApiService {
             }
         }
         //Convert email "tdell9x9@gmail.com" to "tdell9x9-AT-gmail.com@9x9.tv",
+        //This logic is weak, make something else in the future
         short type = NnUser.TYPE_USER;
-        if (email.contains("-AT-") && email.contains("@9x9.tv")) {
+        if ((email.contains("-AT-") || email.contains("-at-"))
+                && email.contains("@9x9.tv")) {
             type = NnUser.TYPE_YOUTUBE_CONNECT;
         }        
         NnUser user = new NnUser(email, password, name, type, mso.getId());
