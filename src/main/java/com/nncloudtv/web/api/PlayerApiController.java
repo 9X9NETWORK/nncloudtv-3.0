@@ -2396,5 +2396,27 @@ public class PlayerApiController {
         }
         return output;        
     }
+ 
+    //used by android only, no cookie is set
+    @RequestMapping(value="obtainAccount", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String obtainAccount(HttpServletRequest req, HttpServletResponse resp) {
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String name = req.getParameter("name");
+                
+        log.info("signup: email=" + email + ";name=" + name); 
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS)
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);        
+            output = playerApiService.obtainAccount(email, password, name, req, resp);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }    
     
 }

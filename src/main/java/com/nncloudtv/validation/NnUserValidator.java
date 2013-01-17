@@ -29,6 +29,15 @@ public class NnUserValidator {
         log.info("profile success");
         return NnStatusCode.SUCCESS;
     }
+
+    public static int validateInput(String email, String password, String name, HttpServletRequest req) {
+        if (!BasicValidator.validateRequired(new String[] {email, password, name} ))
+            return NnStatusCode.INPUT_MISSING;        
+        if (!BasicValidator.validateEmail(email))
+            return NnStatusCode.INPUT_BAD;
+        
+        return NnStatusCode.SUCCESS;
+    }
     
     public static int validateProfile(NnUser user) {
         System.out.println("gender:" + user.getGender());
@@ -59,7 +68,7 @@ public class NnUserValidator {
             return NnStatusCode.INPUT_MISSING;
         int limit = 6;
         if (password.length() < limit) {
-            return NnStatusCode.INPUT_MISSING;
+            return NnStatusCode.INPUT_BAD;
         }
         return NnStatusCode.SUCCESS;
     }

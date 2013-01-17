@@ -2427,8 +2427,47 @@ public class PlayerApiService {
                 log.info("user automate subscribe:" + user.getToken() + ";" + c.getId());
                 subMngr.subscribeChannel(user, c.getId(), (short)0, MsoIpg.TYPE_GENERAL);
             }
-        }
-        
+        }        
         return this.assembleMsgs(NnStatusCode.SUCCESS, new String[] {channelInfo});        
     }    
+    
+    public String obtainAccount(String email, String password, String name, 
+            HttpServletRequest req, HttpServletResponse resp) {        
+       if (email == null || password == null) {
+           return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+       }
+       //find existed account
+       NnUser user = userMngr.findByEmail(email, req);
+       if (user != null) {
+           log.info("returning youtube connect account");
+           return this.login(email, password, req, resp);           
+       }        
+       //signing up a new one
+       //verify inputs
+       int status = NnUserValidator.validatePassword(password);
+       if (status != NnStatusCode.SUCCESS)
+           return this.assembleMsgs(status, null);
+       boolean success = BasicValidator.validateEmail(email);
+       if (!success)
+           return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+       //create new account
+       log.info("signing up a new youtube connect account");
+       short type = NnUser.TYPE_USER;
+       if ((email.contains("-AT-") || email.contains("-at-"))
+               && email.contains("@9x9.tv")) {
+           type = NnUser.TYPE_YOUTUBE_CONNECT;
+       }        
+       NnUser newUser = new NnUser(email, password, name, type, mso.getId());
+       newUser.setSphere(LangTable.LANG_EN);
+       newUser.setLang(LangTable.LANG_EN);        
+       newUser.setDob(null);        
+       newUser.setTemp(false);
+       status = userMngr.create(newUser, req, (short)0);
+       if (status != NnStatusCode.SUCCESS)
+           return this.assembleMsgs(status, null);
+       String result[] = {this.prepareUserInfo(newUser, null, req)};
+       this.setUserCookie(resp, CookieHelper.USER, newUser.getToken());       
+       return this.assembleMsgs(NnStatusCode.SUCCESS, result);       
+    }
+       
 }
