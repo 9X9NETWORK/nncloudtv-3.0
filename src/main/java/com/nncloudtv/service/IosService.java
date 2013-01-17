@@ -65,6 +65,9 @@ public class IosService {
             String name = c.getPlayerName();
             if (name != null)
                 name = name.replaceAll("\n", " ").replaceAll("\t", " ");
+            else {
+                name = "";
+            }
             String[] split = name.split("\\|");
             name = split.length == 2 ? split[0] : name;            
             String intro = c.getPlayerIntro();        

@@ -98,6 +98,7 @@ public class NnUser implements Serializable {
     public static short TYPE_3X3 = 6;          // Taiwan partner
     public static short TYPE_ENTERPRISE = 7;   // U.S. partner
     public static short TYPE_FAKE_YOUTUBE = 8; //create fake account based on youtube users
+    public static short TYPE_YOUTUBE_CONNECT = 9;
     
     public static String GUEST_EMAIL = "guest@9x9.com";
     public static String GUEST_NAME = "Guest";

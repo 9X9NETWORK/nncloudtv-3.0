@@ -256,7 +256,12 @@ public class PlayerApiService {
                     return this.assembleMsgs(status, null);
             }
         }
-        NnUser user = new NnUser(email, password, name, NnUser.TYPE_USER, mso.getId());
+        //Convert email "tdell9x9@gmail.com" to "tdell9x9-AT-gmail.com@9x9.tv",
+        short type = NnUser.TYPE_USER;
+        if (email.contains("-AT-") && email.contains("@9x9.tv")) {
+            type = NnUser.TYPE_YOUTUBE_CONNECT;
+        }        
+        NnUser user = new NnUser(email, password, name, type, mso.getId());
         user.setSphere(sphere);
         user.setLang(lang);        
         user.setDob(year);        
@@ -710,15 +715,17 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         //sort by seq
         if (channelPos) {
-            TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
-            for (NnChannel c : channels) {
-                channelMap.put(c.getSeq(), c);                
-            }
-            Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
-            channels.clear();      
-            while (it.hasNext()) {
-                Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
-                channels.add((NnChannel)pairs.getValue());
+            if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
+                TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
+                for (NnChannel c : channels) {
+                    channelMap.put(c.getSeq(), c);                
+                }
+                Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
+                channels.clear();      
+                while (it.hasNext()) {
+                    Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
+                    channels.add((NnChannel)pairs.getValue());
+                }
             }
         }
         String channelOutput = "";
