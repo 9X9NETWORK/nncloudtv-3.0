@@ -102,7 +102,7 @@ public class QueueFactory {
                 obj[2] = QueueFactory.CONTENTTYPE_TEXT;
             } else {
                 obj[1] = QueueFactory.METHOD_POST;
-                obj[1] = QueueFactory.CONTENTTYPE_JSON;
+                obj[2] = QueueFactory.CONTENTTYPE_JSON;
             }
             obj[3] = json; 
             
