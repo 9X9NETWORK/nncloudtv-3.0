@@ -2456,7 +2456,9 @@ public class PlayerApiService {
        if ((email.contains("-AT-") || email.contains("-at-"))
                && email.contains("@9x9.tv")) {
            type = NnUser.TYPE_YOUTUBE_CONNECT;
-       }        
+       }
+       if (name == null)
+           name = email;
        NnUser newUser = new NnUser(email, password, name, type, mso.getId());
        newUser.setSphere(LangTable.LANG_EN);
        newUser.setLang(LangTable.LANG_EN);        
