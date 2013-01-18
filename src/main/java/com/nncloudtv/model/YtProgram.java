@@ -64,14 +64,16 @@ public class YtProgram implements Serializable {
         this.channelId = channelId;
         this.ytUserName = ytUserName;
         this.ytVideoId = ytVideoId;
-        if (name != null && name.length() > 255) {
-            name = name.substring(0, 255);           
-        }
+        if (name != null) {
+            int len = (name.length() > 255 ? 255 : name.length()); 
+            name = name.replaceAll("\\s", " ");                
+            name = name.substring(0, len);           
+        }        
         this.name = name;        
         this.duration = duration;
         this.imageUrl = imageUrl;
         if (intro != null) {
-            int len = (intro.length() > 256 ? 256 : intro.length()); 
+            int len = (intro.length() > 255 ? 255 : intro.length()); 
             intro = intro.replaceAll("\\s", " ");                
             intro = intro.substring(0, len);           
         }        

@@ -2352,20 +2352,27 @@ public class PlayerApiService {
                     log.info("updateD:" + updateD + ";crawD:" + crawlD);                    
                     YtProgram program = dao.findByVideo(ytVideoId);
                     if (program == null) {
+                       long nowepoch = System.currentTimeMillis()/1000;
                        long chId = Long.parseLong(chstr);
                        Date updateDate = null;
                        long epoch = 0;
                        if (updateD != null) {
+                           if (updateD.length() > String.valueOf(nowepoch).length()) {
+                               updateD = updateD.substring(0, updateD.length() - 3);
+                               log.info("updateD assuming is in milliseconds, change to:" + updateD);
+                           }                           
                           epoch = Long.parseLong(updateD);
                           updateDate= new Date (epoch*1000);
                        }
                        Date crawlDate = null;
                        if (crawlD != null) {
+                           if (crawlD.length() > String.valueOf(nowepoch).length()) {
+                               crawlD = crawlD.substring(0, crawlD.length() - 3);
+                               log.info("updateD assuming is in milliseconds, change to:" + crawlD);
+                           }
                           epoch = Long.parseLong(crawlD);
                           crawlDate = new Date (epoch*1000);
                        }
-                       updateDate = new Date(); //for testing, needs to be removed
-                       crawlDate = new Date();//for testing, needs to be removed
                        YtProgram ytprogram = new YtProgram(chId, ytUserName, ytVideoId, 
                                                            name, duration, imageUrl, 
                                                            intro, crawlDate, updateDate);
