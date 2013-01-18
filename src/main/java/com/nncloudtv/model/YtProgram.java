@@ -2,6 +2,7 @@ package com.nncloudtv.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -17,6 +18,7 @@ import javax.jdo.annotations.PrimaryKey;
 public class YtProgram implements Serializable {
     
     private static final long serialVersionUID = 3029235937585901713L;
+    protected static final Logger log = Logger.getLogger(YtProgram.class.getName());
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -62,15 +64,22 @@ public class YtProgram implements Serializable {
         this.channelId = channelId;
         this.ytUserName = ytUserName;
         this.ytVideoId = ytVideoId;
-        this.name = name;
+        if (name != null && name.length() > 255) {
+            name = name.substring(0, 255);           
+        }
+        this.name = name;        
         this.duration = duration;
         this.imageUrl = imageUrl;
-        this.intro = intro;
+        if (intro != null) {
+            int len = (intro.length() > 256 ? 256 : intro.length()); 
+            intro = intro.replaceAll("\\s", " ");                
+            intro = intro.substring(0, len);           
+        }        
+        this.intro = intro;        
         this.crawlDate = crawlDate;
         this.updateDate = updateDate;
     }
-    
-    
+        
     public long getId() {
         return id;
     }

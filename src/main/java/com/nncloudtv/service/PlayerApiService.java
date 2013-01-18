@@ -2349,6 +2349,7 @@ public class PlayerApiService {
                     String duration = tabs[6];
                     String imageUrl = tabs[7];
                     String intro = tabs[8];
+                    log.info("updateD:" + updateD + ";crawD:" + crawlD);                    
                     YtProgram program = dao.findByVideo(ytVideoId);
                     if (program == null) {
                        long chId = Long.parseLong(chstr);
@@ -2363,6 +2364,8 @@ public class PlayerApiService {
                           epoch = Long.parseLong(crawlD);
                           crawlDate = new Date (epoch*1000);
                        }
+                       updateDate = new Date(); //for testing, needs to be removed
+                       crawlDate = new Date();//for testing, needs to be removed
                        YtProgram ytprogram = new YtProgram(chId, ytUserName, ytVideoId, 
                                                            name, duration, imageUrl, 
                                                            intro, crawlDate, updateDate);
