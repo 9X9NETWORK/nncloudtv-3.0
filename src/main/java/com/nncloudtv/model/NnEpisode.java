@@ -159,7 +159,8 @@ public class NnEpisode implements Serializable {
 
     public int getCntView() {    
         try {
-            String name = "v_ch" + channelId + "_" + id;        
+            //v_ch10514_e21688
+            String name = "v_ch" + channelId + "e_" + id;        
             String result = (String)CacheFactory.get(name);
             if (result != null) {
                 return Integer.parseInt(result);
