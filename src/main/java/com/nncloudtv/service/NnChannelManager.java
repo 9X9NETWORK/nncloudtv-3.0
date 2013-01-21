@@ -311,6 +311,10 @@ public class NnChannelManager {
         save(favoriteCh);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     
+    public void saveAll(List<NnChannel> channels) {
+        dao.saveAll(channels);
+    }
+    
     public NnChannel save(NnChannel channel) {
         NnChannel original = dao.findById(channel.getId());
         Date now = new Date();

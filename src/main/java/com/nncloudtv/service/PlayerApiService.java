@@ -2481,5 +2481,51 @@ public class PlayerApiService {
        this.setUserCookie(resp, CookieHelper.USER, newUser.getToken());       
        return this.assembleMsgs(NnStatusCode.SUCCESS, result);       
     }
-       
+
+    public String channelUpdate(String user, String payload, 
+                             boolean isQueued, HttpServletRequest req) {        
+        if (user == null || payload == null) {
+           log.info("data is missing");
+           return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+
+        if (isQueued) {        
+           log.info("channel update from user:" + user + " throwing to queue" );
+           String url = "/playerAPI/channelUpdate?queued=false";
+           String data = "payload=" + payload + ";&user=" + user;             
+           QueueFactory.add(url, QueueFactory.METHOD_POST, QueueFactory.CONTENTTYPE_TEXT, data);
+           return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+        }
+        log.info("--- process channels ---");        
+        String[] lines = payload.split("\n");
+        log.info("lines:" + lines.length);
+        List<NnChannel> channels = new ArrayList<NnChannel>();        
+        for (String line : lines) {
+            String[] tabs = line.split("\t");
+            log.info("columns:" + tabs.length);
+            if (tabs.length >= 4) {
+                try {
+                    String id = tabs[0];
+                    String name = tabs[2];
+                    String imageUrl = tabs[3];
+                    log.info("id:" + id + ";name:" + name + ";imageurl:" + imageUrl);
+                    NnChannel channel = chMngr.findById(Long.parseLong(id));
+                    if (channel != null) {
+                        if (name != null) {
+                            int len = (name.length() > 255 ? 255 : name.length()); 
+                            name = name.replaceAll("\\s", " ");                
+                            name = name.substring(0, len);           
+                        }
+                        channel.setName(name);
+                        channel.setImageUrl(imageUrl);
+                        channels.add(channel);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        chMngr.saveAll(channels);
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+     }   
 }

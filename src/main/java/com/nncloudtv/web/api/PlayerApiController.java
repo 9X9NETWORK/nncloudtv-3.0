@@ -2418,5 +2418,39 @@ public class PlayerApiController {
         }
         return output;
     }    
+ 
+    /**
+     * Create a 9x9 channel. To be ignored.
+     * 
+     * @param name name
+     * @param description description
+     * @param image image url
+     * @param temp not specify means false 
+     */    
+    @RequestMapping(value="channelUpdate", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String channelUpdate(
+            @RequestParam(value="user", required=false) String user,
+            @RequestParam(value="queued", required = false) String queued,            
+            @RequestParam(value="payload", required=false) String payload,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS)
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);    
+            boolean isQueued = Boolean.parseBoolean(queued);
+            if (queued == null) isQueued = true;
+            log.info("in queue?" + isQueued);
+            output = playerApiService.channelUpdate(user, payload, isQueued, req);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }
     
 }
