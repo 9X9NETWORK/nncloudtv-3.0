@@ -2525,6 +2525,7 @@ public class PlayerApiService {
                 }
             }
         }
+        log.info("channel updated:" + channels.size());
         chMngr.saveAll(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
      }   
