@@ -457,9 +457,9 @@ public class PlayerApiService {
                     watchedMngr.delete(user, watched);
                 }                                
             } else {
-                log.info("unsubscribe multiple channels");
+                log.info("unsubscribe multiple channels but not supported");
             }
-        }
+        }               
         if (pos != null) {
             NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
             NnUserSubscribeGroup group = groupMngr.findByUserAndSeq(user, Short.parseShort(pos));
@@ -498,7 +498,7 @@ public class PlayerApiService {
         
         short seq = Short.parseShort(gridId);
         if (seq > 72) {
-            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }
 
         NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
@@ -2422,7 +2422,7 @@ public class PlayerApiService {
                 if (c != null) channels.add(c);
             } else {
                 channels.add(existed);
-            }            
+            }                       
         }
         String channelInfo = chMngr.composeReducedChannelLineup(channels);        
         //subscribe
@@ -2433,11 +2433,25 @@ public class PlayerApiService {
             map.put(s.getChannelId(), s);
         }
         for (NnChannel c : channels) {
-            if (!map.containsKey(c.getId())) {         
+            if (!map.containsKey(c.getId())) {
                 log.info("user automate subscribe:" + user.getToken() + ";" + c.getId());
                 subMngr.subscribeChannel(user, c.getId(), (short)0, MsoIpg.TYPE_GENERAL);
             }
+            map.remove(c.getId());
+        }
+        //unsubscribe
+        Iterator<Entry<Long, NnUserSubscribe>> it = map.entrySet().iterator();
+        channels.clear();
+        while (it.hasNext()) {
+            Map.Entry<Long, NnUserSubscribe> pairs = (Map.Entry<Long, NnUserSubscribe>)it.next();
+            NnUserSubscribe s = pairs.getValue(); 
+            NnChannel c = chMngr.findById(s.getChannelId());
+            if (c != null && c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+                log.info("auto unsubscribe channel: " + c.getId());
+                subMngr.unsubscribeChannel(user, s);                
+            }
         }        
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, new String[] {channelInfo});        
     }    
     

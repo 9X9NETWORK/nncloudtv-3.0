@@ -2356,6 +2356,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
+            ytUsers = req.getParameter("channelNames");
             output = playerApiService.bulkSubscribe(userToken, ytUsers);    
         } catch (Exception e) {
             output = playerApiService.handleException(e);
@@ -2444,6 +2445,7 @@ public class PlayerApiController {
             boolean isQueued = Boolean.parseBoolean(queued);
             if (queued == null) isQueued = true;
             log.info("in queue?" + isQueued);
+            payload = req.getParameter("payload");
             output = playerApiService.channelUpdate(user, payload, isQueued, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);

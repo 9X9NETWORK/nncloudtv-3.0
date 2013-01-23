@@ -111,7 +111,7 @@ public class NnUserSubscribeManager {
                 channels.add(c);
             }
         }
-        log.info("finall subs size:" + channels.size());        
+        log.info("final subs size:" + channels.size());        
         return channels;             
     }
 
