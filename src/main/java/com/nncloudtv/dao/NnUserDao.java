@@ -372,15 +372,21 @@ public class NnUserDao extends GenericDao<NnUser> {
         return detached;
     }
 
+    //TODO merge one and two
     public List<NnUser> findFeatured() {
-        PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+        PersistenceManager pm = PMF.getNnUser1().getPersistenceManager(); 
         List<NnUser> detached = new ArrayList<NnUser>(); 
         try {
-            Query q = pm.newQuery(NnUser.class);
-            q.setFilter("featured == featuredParam");
-            q.declareParameters("boolean featuredParam");
+            String sql = "select * " +
+                          " from nnuser " + 
+                         " where featured = true " +  
+                           " order by rand() " + 
+                           " limit 9";
+            log.info("sql:" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnUser.class);
             @SuppressWarnings("unchecked")
-            List<NnUser> users = (List<NnUser>) q.execute(true);
+            List<NnUser> users = (List<NnUser>) q.execute();
             detached = (List<NnUser>)pm.detachCopyAll(users);
         } finally {
             pm.close();
