@@ -1659,9 +1659,11 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
         String forgotPwdToken = userMngr.forgotPwdToken(user);
-        log.info("forgotPwdToken:" + forgotPwdToken + ";token user passes:" + token);
+        log.info("forgotPwdToken:" + forgotPwdToken + ";token user passes:" + token);        
         if (forgotPwdToken.equals(token)) {
-            user.setPassword(password);
+            int status = NnUserValidator.validatePassword(password);
+            if (status != NnStatusCode.SUCCESS)
+                return this.assembleMsgs(status, null);
             userMngr.resetPassword(user);
             userMngr.save(user);
             log.info("reset password success:" + user.getEmail());
