@@ -2415,14 +2415,16 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         String[] ytUser = ytUsers.split(",");        
         for (String yt : ytUser) {
-            yt = "http://www.youtube.com/user/" + yt;
-            NnChannel existed = chMngr.findBySourceUrl(yt);
-            if (existed == null) {
-                NnChannel c = chMngr.createYoutubeChannel(yt);
-                if (c != null) channels.add(c);
-            } else {
-                channels.add(existed);
-            }                       
+            if (yt.trim().length() > 0) {
+                yt = "http://www.youtube.com/user/" + yt;
+                NnChannel existed = chMngr.findBySourceUrl(yt);
+                if (existed == null) {
+                    NnChannel c = chMngr.createYoutubeChannel(yt);
+                    if (c != null) channels.add(c);
+                } else {
+                    channels.add(existed);
+                }
+            }
         }
         String channelInfo = chMngr.composeReducedChannelLineup(channels);        
         //subscribe
@@ -2446,7 +2448,8 @@ public class PlayerApiService {
             Map.Entry<Long, NnUserSubscribe> pairs = (Map.Entry<Long, NnUserSubscribe>)it.next();
             NnUserSubscribe s = pairs.getValue(); 
             NnChannel c = chMngr.findById(s.getChannelId());
-            if (c != null && c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+            if (c != null && (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
+                              c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST)) {
                 log.info("auto unsubscribe channel: " + c.getId());
                 subMngr.unsubscribeChannel(user, s);                
             }
