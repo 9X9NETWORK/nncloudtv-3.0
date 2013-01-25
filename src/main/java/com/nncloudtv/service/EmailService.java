@@ -36,7 +36,7 @@ public class EmailService {
             Address addr = new InternetAddress(email.getReplyToEmail(), email.getSendName()); 
             Address addrs[] = {addr};
             msg.setReplyTo(addrs);
-            msg.setSubject(email.getSubject());
+            msg.setSubject(email.getSubject(), "utf-8");
             if (email.isHtml()) {
                 //msg.setContent("<h1>哈囉</h1>", "text/html; charset=utf-8");
                 msg.setContent(email.getBody(), "text/html; charset=utf-8");                
