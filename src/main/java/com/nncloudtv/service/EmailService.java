@@ -38,8 +38,8 @@ public class EmailService {
             msg.setReplyTo(addrs);
             msg.setSubject(email.getSubject());
             if (email.isHtml()) {
-                //msg.setContent("<h1>Hello</h1>", "text/html");
-                msg.setContent(email.getBody(), "text/html");
+                //msg.setContent("<h1>哈囉</h1>", "text/html; charset=utf-8");
+                msg.setContent(email.getBody(), "text/html; charset=utf-8");                
             } else {
                 msg.setText(email.getBody());
             }

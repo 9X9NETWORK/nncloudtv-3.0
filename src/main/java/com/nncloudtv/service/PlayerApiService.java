@@ -1623,18 +1623,12 @@ public class PlayerApiService {
         if (lang.equals(LangTable.LANG_ZH))
             subject = "忘記密碼";
         String sentense = "<p>To reset the password, click on the link or copy and paste the following link into the address bar of your browser</p>";
-        String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";            
+        String body = sentense + "<p><a href = '" + link  + "'>" + link +  "</a></p>";
         if (content != null) {
             log.info("get email template from admin portal");
-            body = content.getValue();
-            body = body.replace("Hello,<br>", "Hello " + user.getName() + ",<br>");
-            body = body.replace("<a href=\"#\" style=\"color:#777777;font-weight:bold;\">Click here</a> to reset your 9x9.tv password.", 
-                                "<a href=\"" + link + "\" style=\"color:#777777;font-weight:bold;\">Click here</a> to reset your 9x9.tv password.");
-            body = body.replace("<a href=\"#\" style=\"color:#777777;font-weight:bold;\">http://9x9.tv/username/number</a>",
-                                "<a href=\"" + link + "\" style=\"color:#777777;font-weight:bold;\">" + link + "</a>");
-            body = body.replace("<a href=\"#\" style=\"border:0;\"><img src=\"http://s3.amazonaws.com/9x9ui/war/v2/images/resetpwd/btn.png\"", 
-                                "<a href=\"" + link + "\" style=\"border:0;\"><img src=\"http://s3.amazonaws.com/9x9ui/war/v2/images/resetpwd/btn.png\"");
-
+            body = content.getValue(); 
+            body = body.replace("(9x9name)", user.getName());
+            body = body.replaceAll("\\(9x9link\\)", link);
         }
 
         EmailService service = new EmailService();
