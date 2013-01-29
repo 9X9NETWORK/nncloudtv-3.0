@@ -1322,9 +1322,9 @@ public class ApiContent extends ApiGeneric {
         // duration
         String durationStr = req.getParameter("duration");
         if (durationStr != null) {
-            Short duration = null;
+            Integer duration = null;
             try {
-                duration = Short.valueOf(durationStr);
+                duration = Integer.valueOf(durationStr);
             } catch (NumberFormatException e) {
             }
             if ((duration == null) || (duration <= 0)) {
