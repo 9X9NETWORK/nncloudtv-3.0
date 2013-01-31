@@ -19,6 +19,30 @@ public class YtProgramDao extends GenericDao<YtProgram> {
         super(YtProgram.class);
     }    
 
+    public List<YtProgram> findOneLatestByChannelStr(String channelIdStr) {
+        List<YtProgram> detached = new ArrayList<YtProgram>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        try {
+            String sql = "select * " +
+                         "  from ytprogram a " +
+                         "inner join " + 
+                         " (select channelId, max(updateDate) max_date " +
+                         "    from ytprogram " +
+                         "   where channelId in (" + channelIdStr + ") " +
+                         "   group by channelId) b " +
+                         "on a.channelId=b.channelId and a.updateDate = b.max_date";
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(YtProgram.class);
+            @SuppressWarnings("unchecked")
+            List<YtProgram> results = (List<YtProgram>) query.execute();
+            detached = (List<YtProgram>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        } 
+        return detached;                
+    }    
+    
     public List<YtProgram> findByChannels(List<NnChannel> channels) {
         List<YtProgram> detached = new ArrayList<YtProgram>();
         String ids = "";

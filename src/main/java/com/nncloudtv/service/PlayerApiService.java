@@ -2542,5 +2542,37 @@ public class PlayerApiService {
         log.info("channel updated:" + channels.size());
         chMngr.saveAll(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
-     }   
+     }
+    
+    public String latestEpisode(String channel) {
+        //check input
+        if (channel == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        //get channels
+        List<NnChannel> channels = new ArrayList<NnChannel>();        
+        String[] chArr = channel.split(",");
+        if (chArr.length > 0) {
+            List<Long> list = new ArrayList<Long>();
+            for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}                
+            channels.addAll(chMngr.findByIds(list));
+        }
+        String[] result = {""};
+        
+        List<YtProgram> ytprograms = new YtProgramDao().findOneLatestByChannelStr(channel);
+        for (YtProgram p : ytprograms) {
+            String[] ori = {
+                    String.valueOf(p.getChannelId()),
+                    p.getYtVideoId(),
+                    p.getImageUrl(),
+            };
+            String output = NnStringUtil.getDelimitedStr(ori);
+            output = output.replaceAll("null", "");
+            output += "\n";
+            result[0] += output;
+        }
+        String channelInfo = chMngr.composeReducedChannelLineup(channels);
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
+    }
+    
 }

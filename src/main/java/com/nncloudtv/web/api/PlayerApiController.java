@@ -2308,7 +2308,28 @@ public class PlayerApiController {
         }
         return output;
     }
- 
+
+    @RequestMapping(value="latestEpisode", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String latestEpisode(
+            @RequestParam(value="channel", required=false) String channel,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {        
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.latestEpisode(channel);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }
+    
     /**
      * Used by Android device. Things to list on the front page
      * 
