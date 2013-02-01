@@ -2364,6 +2364,28 @@ public class PlayerApiController {
         return output;        
     }
 
+    @RequestMapping(value="bulkIdentifier", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String bulkIdentifier(                      
+            @RequestParam(value="channelNames", required=false) String ytUsers,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            ytUsers = req.getParameter("channelNames");
+            output = playerApiService.bulkIdentifier(ytUsers);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;        
+    }
+    
     @RequestMapping(value="bulkSubscribe", produces = "text/plain; charset=utf-8")
     public @ResponseBody String bulkSubscribe(                      
             @RequestParam(value="channelNames", required=false) String ytUsers,

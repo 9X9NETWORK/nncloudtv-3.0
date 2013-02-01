@@ -2399,6 +2399,30 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
+    public String bulkIdentifier(String ytUsers) {
+        //input
+        if (ytUsers == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }   
+        //channels
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        String[] ytUser = ytUsers.split(",");        
+        for (String yt : ytUser) {
+            if (yt.trim().length() > 0) {
+                yt = "http://www.youtube.com/user/" + yt;
+                NnChannel existed = chMngr.findBySourceUrl(yt);
+                if (existed == null) {
+                    NnChannel c = chMngr.createYoutubeChannel(yt);
+                    if (c != null) channels.add(c);
+                } else {
+                    channels.add(existed);
+                }
+            }
+        }
+        String channelInfo = chMngr.composeReducedChannelLineup(channels);        
+        return this.assembleMsgs(NnStatusCode.SUCCESS, new String[] {channelInfo});
+    }
+    
     public String bulkSubscribe(String userToken, String ytUsers) {
         //input
         if (userToken == null || ytUsers == null) {
@@ -2549,16 +2573,7 @@ public class PlayerApiService {
         if (channel == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
-        //get channels
-        List<NnChannel> channels = new ArrayList<NnChannel>();        
-        String[] chArr = channel.split(",");
-        if (chArr.length > 0) {
-            List<Long> list = new ArrayList<Long>();
-            for (int i=0; i<chArr.length; i++) { list.add(Long.valueOf(chArr[i]));}                
-            channels.addAll(chMngr.findByIds(list));
-        }
-        String[] result = {""};
-        
+        String[] result = {""};        
         List<YtProgram> ytprograms = new YtProgramDao().findOneLatestByChannelStr(channel);
         for (YtProgram p : ytprograms) {
             String[] ori = {
@@ -2571,7 +2586,6 @@ public class PlayerApiService {
             output += "\n";
             result[0] += output;
         }
-        String channelInfo = chMngr.composeReducedChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
