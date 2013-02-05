@@ -146,7 +146,7 @@ public class PlayerApiService {
     }
     
     //Prepare user info, it is used by login, guest register, userTokenVerify
-    public String prepareUserInfo(NnUser user, NnGuest guest, HttpServletRequest req) {
+    public String prepareUserInfo(NnUser user, NnGuest guest, HttpServletRequest req, boolean login) {
         String output = "";
         if (user != null) {
             output += assembleKeyValue("token", user.getToken());
@@ -156,6 +156,10 @@ public class PlayerApiService {
             output += assembleKeyValue("ui-lang", user.getLang());            
             output += assembleKeyValue("userid", String.valueOf(user.getIdStr()));
             output += assembleKeyValue("curator", String.valueOf(user.getProfileUrl()));
+            if (login)
+                output += assembleKeyValue("created", "1");
+            else
+                output += assembleKeyValue("created", "0");
             String fbUser = "0";
             if (user.isFbUser())
                 fbUser = "1";
@@ -216,7 +220,7 @@ public class PlayerApiService {
             userMngr.save(user);
         }        
         
-        String[] result = {this.prepareUserInfo(user, null, req)};        
+        String[] result = {this.prepareUserInfo(user, null, req, false)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -273,7 +277,7 @@ public class PlayerApiService {
             return this.assembleMsgs(status, null);
         
         userMngr.subscibeDefaultChannels(user);                            
-        String[] result = {this.prepareUserInfo(user, null, req)};        
+        String[] result = {this.prepareUserInfo(user, null, req, false)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -333,7 +337,7 @@ public class PlayerApiService {
             userMngr.save(user); //change last login time (ie updateTime)
         }
         String[] result = {""};
-        result[0] = this.prepareUserInfo(user, guest, req);
+        result[0] = this.prepareUserInfo(user, guest, req, true);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
@@ -655,7 +659,7 @@ public class PlayerApiService {
         
         //user info
         if (userInfo)
-            result.add(this.prepareUserInfo(user, null, req));
+            result.add(this.prepareUserInfo(user, null, req, true));
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
         if (curatorIdStr == null && user != null ) {
             List<NnUserSubscribeGroup> groups = groupMngr.findByUser(user);    
@@ -826,7 +830,7 @@ public class PlayerApiService {
         String result[] = {""};
         NnUser user = userMngr.findAuthenticatedUser(email, password, req);
         if (user != null) {
-            result[0] = this.prepareUserInfo(user, null, req);
+            result[0] = this.prepareUserInfo(user, null, req, true);
             userMngr.save(user); //change last login time (ie updateTime)
             this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         } else {
@@ -968,7 +972,7 @@ public class PlayerApiService {
         if (userInfo) {
             if (user == null && userToken != null) 
                 user = userMngr.findByToken(userToken);
-                userInfoStr = this.prepareUserInfo(user, null, req);
+                userInfoStr = this.prepareUserInfo(user, null, req, true);
         }
         if (userInfo) {
             String[] result = {userInfoStr, programInfoStr};
@@ -2489,7 +2493,7 @@ public class PlayerApiService {
        //find existed account
        NnUser user = userMngr.findByEmail(email, req);
        if (user != null) {
-           log.info("returning youtube connect account");
+           log.info("returning youtube connect account"); 
            return this.login(email, password, req, resp);           
        }        
        //signing up a new one
@@ -2517,7 +2521,7 @@ public class PlayerApiService {
        status = userMngr.create(newUser, req, (short)0);
        if (status != NnStatusCode.SUCCESS)
            return this.assembleMsgs(status, null);
-       String result[] = {this.prepareUserInfo(newUser, null, req)};
+       String result[] = {this.prepareUserInfo(newUser, null, req, false)};
        this.setUserCookie(resp, CookieHelper.USER, newUser.getToken());       
        return this.assembleMsgs(NnStatusCode.SUCCESS, result);       
     }
