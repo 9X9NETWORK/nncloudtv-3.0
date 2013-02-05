@@ -501,10 +501,12 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }
 
-        NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
-        if (s != null)
-            return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_POS_OCCUPIED, null);        
-        s = subMngr.findByUserAndChannel(user, cId);        
+        if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
+            NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
+            if (s != null)
+                return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_POS_OCCUPIED, null);
+        }
+        NnUserSubscribe s = subMngr.findByUserAndChannel(user, cId);        
         if (s != null)
             return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_DUPLICATE_CHANNEL, null);        
         s = subMngr.subscribeChannel(user, cId, seq, MsoIpg.TYPE_GENERAL);
