@@ -505,7 +505,8 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }
         log.info("input token:" + userToken + ";user token:" + user.getToken() + ";userId:" + user.getId() + ";user type:" + user.getType());
-        if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {           
+        //if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
+        if (seq != 0) {
             NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
             if (s != null)
                 return this.assembleMsgs(NnStatusCode.SUBSCRIPTION_POS_OCCUPIED, null);
