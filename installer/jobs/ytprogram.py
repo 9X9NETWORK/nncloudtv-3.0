@@ -72,8 +72,8 @@ for line in feed:
        (channelId, ytUserName, ytVideoId, name, intro, imageUrl, duration, updateDate, crawlDate)
      values                                             
        (%s, %s, %s, %s, %s, %s, %s, from_unixtime(%s), from_unixtime(%s))                     
-     ON DUPLICATE KEY UPDATE updateDate = from_unixtime(%s), crawldate = from_unixtime(%s)
-     """, (cid, username, videoid, name, description, thumbnail, duration, timestamp, crawldate, timestamp, crawldate))
+     ON DUPLICATE KEY UPDATE updateDate = from_unixtime(%s), crawldate = from_unixtime(%s), name = %s
+     """, (cid, username, videoid, name, description, thumbnail, duration, timestamp, crawldate, timestamp, crawldate, name))
   i = i+1
 dbcontent.commit()  
 cursor.close ()
