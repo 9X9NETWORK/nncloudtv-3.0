@@ -2384,13 +2384,14 @@ public class PlayerApiService {
                                 ";" + name + ";" + duration + ";" + imageUrl + ";" + intro + ";" + 
                                 crawlDate + ";" + updateDate);
                        ytprograms.add(ytprogram);
+                       dao.save(ytprogram);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
         }        
-        dao.saveAll(ytprograms);
+        //dao.saveAll(ytprograms);
         log.info("new ytprograms size:" + ytprograms.size());
         int existedSize = lines.length - ytprograms.size();
         log.info("existed ytprograms size:" + existedSize);
