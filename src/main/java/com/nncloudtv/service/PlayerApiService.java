@@ -2565,6 +2565,7 @@ public class PlayerApiService {
                         channel.setName(name);
                         channel.setImageUrl(imageUrl);
                         channels.add(channel);
+                        chMngr.save(channel);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -2572,7 +2573,7 @@ public class PlayerApiService {
             }
         }
         log.info("channel updated:" + channels.size());
-        chMngr.saveAll(channels);
+        //chMngr.saveAll(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
      }
     
