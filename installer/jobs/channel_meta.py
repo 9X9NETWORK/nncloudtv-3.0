@@ -23,7 +23,7 @@ dbuser = MySQLdb.connect (host = "localhost",
 pwd = os.path.dirname(os.path.realpath(__file__))                                  
 md5_file = pwd + '/basic.feed.txt.md5'
 md5_url = 'http://channelwatch.9x9.tv/dan/basic.feed.txt.md5'
-f = open(md5_file, 'r')
+f = open(md5_file, 'r')       
 md5 = f.read()
 f.close()
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
@@ -38,7 +38,7 @@ if md5_new == md5:
   print "same\n"
   quit()
 
-print datetime.datetime.now()
+print datetime.datetime.now() 
 print "\n"
 f = open(md5_file, 'w')
 f.write(md5_new)
@@ -62,6 +62,7 @@ for line in feed:
   data = line.split('\t')
   cId = data[0]
   username = data[1]
+  name = data[2]
   userEmail = username + "@9x9.tv"
   thumbnail = data[3]
   url1 = data[4]
@@ -88,11 +89,11 @@ for line in feed:
   #   imageUrl = imageUrl + "|" + url3 
   userCursor = dbuser.cursor()
   userCursor.execute("""                                                    
-    select id 
+    select id                     
       from nncloudtv_nnuser1.nnuser
      where email = %s
      """, (userEmail))
-  count = userCursor.rowcount  
+  count = userCursor.rowcount              
   if count == 0:
      epoch = time.mktime(time.gmtime()) 
      userCursor.execute("""
@@ -103,39 +104,47 @@ for line in feed:
         """, (userEmail, username, thumbnail, epoch, username))
      dbuser.commit()                                     
   userCursor.execute("""
-    select id 
+    select id                  
       from nncloudtv_nnuser1.nnuser
      where email = %s
      """, (userEmail))
   user = userCursor.fetchone()
-  userId = user[0]
+  userId = user[0]                         
   userIdStr = "1-" + str(userId)
-  contentCursor = dbcontent.cursor()  
+  print "user Id str going to use: " + userIdStr
+  contentCursor = dbcontent.cursor()            
 
   contentCursor.execute("""
-     select userIdStr  
+     select userIdStr                             
        from nnchannel 
       where id = %s
       """, cId)      
   user_row = contentCursor.fetchone()
-  if user_row == None:
+  if user_row == None:              
      #oriUserIdStr = contentCursor.fetchone()[0]  
-     #if oriUserIdStr == None:
+     #if oriUserIdStr == None:                   
      print "ch: " + cId + " oriUserId is null, add new user:" + userIdStr 
-     contentCursor.execute("""    
+     contentCursor.execute("""     
         update nnchannel 
            set imageUrl = %s, userIdStr = %s, updateDate = from_unixtime(%s), cntEpisode = %s
          where id = %s                                 
          """, (imageUrl, userIdStr, updateDate, programCnt, cId))
-  else:
-     oriUserIdStr = user_row[0]
-     print "!!! ori user id str !!! " + oriUserIdStr      
-     contentCursor.execute("""    
-        update nnchannel 
-           set imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
-         where id = %s                                 
-         """, (imageUrl, updateDate, programCnt, cId))
-   
+  #else:
+  #   oriUserIdStr = user_row[0]        
+  #   print "!!! ori user id str !!! "
+  #   print oriUserIdStr     
+  #   contentCursor.execute("""    
+  #      update nnchannel 
+  #         set imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
+  #       where id = %s                                 
+  #       """, (imageUrl, updateDate, programCnt, cId))
+
+  contentCursor.execute("""
+     update nnchannel
+        set name= %s, imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
+      where id = %s
+     """, (name, imageUrl, updateDate, programCnt, cId))
+ 
   dbcontent.commit()  
   userCursor.close ()
   contentCursor.close ()
