@@ -150,9 +150,9 @@ soundManager.onready(function()
 <div id="sg-layer">
   <div id="sg-holder">
     <div id="sg-header">
-      <img src="${root}/images/logo_cts.png" id="sg-logo">
+      <img src="${root}/images/daai200.png" id="sg-logo" width="200" height="96">
       <p id="device"><span>Device:</span><span id="device-name">Not connected</span></p>
-      <p id="sg-title">華視雲端電視網</p>
+      <p id="sg-title">大愛電視頻道網</p>
       <img src="${root}/images/icon_store.png" id="btn-store">
       <img src="${root}/images/icon_help.png" id="btn-help">
       <img src="${root}/images/icon_pc.png" id="btn-pc">
