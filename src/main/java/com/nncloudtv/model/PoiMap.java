@@ -21,7 +21,7 @@ public class PoiMap implements Serializable {
     private long poiId;
     
     @Persistent
-    private long eventlId;
+    private long eventId;
         
     @Persistent
     private Date updateDate;
@@ -43,11 +43,11 @@ public class PoiMap implements Serializable {
     }
 
     public long getEventlId() {
-        return eventlId;
+        return eventId;
     }
 
     public void setEventlId(long eventlId) {
-        this.eventlId = eventlId;
+        this.eventId = eventlId;
     }
 
     public Date getUpdateDate() {
