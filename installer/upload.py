@@ -54,9 +54,13 @@ print "--- generate version file ---"
 
 # upload to server
 print "\n"                                             
-server = raw_input('Server (1.devel1 2.alpha 3.stage 4.deploy 5.exit) : ')
-if server != "5":
+server = raw_input('Server (1.devel1 2.alpha 3.stage 4.deploy 5.daai 6.exit) : ')
+if server != "6":
   print "--- " + datetime.now().strftime("%d/%m/%y %H:%M:%S %Z") + "---"
+if server == "5":
+  print "--- uploading to daai server ---"
+  os.system("scp -i ~/keys/dev-west2.pem root.war ubuntu@daai1.9x9.tv:/home/ubuntu/files/war/root.war")
+  os.system("scp -i ~/keys/dev-west2.pem root.war ubuntu@daai2.9x9.tv:/home/ubuntu/files/war/root.war")
 if server == "1":
   print "--- uploading to devel1 server ---"
   if myos == "1":

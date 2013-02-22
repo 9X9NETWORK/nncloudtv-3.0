@@ -1,12 +1,14 @@
 import os, datetime, shutil
 
 #================================================================
-choice = raw_input('Environment (1.devel 2.alpha 3.prod/stage) : ')
+choice = raw_input('Environment (1.devel 2.alpha 3.prod/stage 4.brand prod) : ')
 server="dev"
 if choice == "2":
  server="alpha"
 if choice == "3":                                          
  server="prod"
+if choice == "4":
+ server="brand"
 
 src = server + "//datanucleus_analytics.properties"
 dst = "..//src//main//resources//datanucleus_analytics.properties"
