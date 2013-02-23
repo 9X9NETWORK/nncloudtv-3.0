@@ -63,6 +63,14 @@ for line in feed:
   cId = data[0]
   username = data[1]
   name = data[2]
+
+  chTitle = data[2]
+  chTitle = chTitle.replace("|", ";")
+  lastEpisodeTitle = data[11]
+  lastEpisodeTitle = lastEpisodeTitle.replace("|", ";")
+  lastEpisodeTitle = lastEpisodeTitle.replace("\n", "")
+  finalChName = str(chTitle) + "|" + str(lastEpisodeTitle)
+
   userEmail = username + "@9x9.tv"
   thumbnail = data[3]
   url1 = data[4]
@@ -143,7 +151,7 @@ for line in feed:
      update nnchannel
         set name= %s, imageUrl = %s, updateDate = from_unixtime(%s), cntEpisode = %s
       where id = %s
-     """, (name, imageUrl, updateDate, programCnt, cId))
+     """, (finalChName, imageUrl, updateDate, programCnt, cId))
  
   dbcontent.commit()  
   userCursor.close ()
