@@ -127,6 +127,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                               "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
             if (!all) {
                 sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
+                sql += " and contentType = " + NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL;
                 sql += " and isPublic = true";
             }
             sql += " limit " + start + ", " + limit;
