@@ -463,8 +463,8 @@ public class NnChannelManager {
         return channels;
     }
     
-    public static List<NnChannel> search(String queryStr, boolean all, int start, int limit) {
-        return NnChannelDao.search(queryStr, all, start, limit);
+    public static List<NnChannel> search(String queryStr, String content, boolean all, int start, int limit) {
+        return NnChannelDao.search(queryStr, content, all, start, limit);
     }
     
     public static long searchSize(String queryStr, boolean all) {

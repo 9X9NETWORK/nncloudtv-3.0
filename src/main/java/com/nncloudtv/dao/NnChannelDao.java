@@ -114,7 +114,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     
     //replaced with Apache Lucene
     @SuppressWarnings("unchecked")
-    public static List<NnChannel> search(String queryStr, boolean all, int start, int limit) {
+    public static List<NnChannel> search(String queryStr, String content, boolean all, int start, int limit) {
         log.info("start:" + start + ";end:" + limit);
         if (start == 0) start = 0;            
         if (limit == 0) limit = 9;
@@ -127,7 +127,9 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                               "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
             if (!all) {
                 sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
-                sql += " and contentType = " + NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL;
+                if (content != null && content.equals("youtube")) {
+                    sql += " and contentType = " + NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL;
+                }
                 sql += " and isPublic = true";
             }
             sql += " limit " + start + ", " + limit;

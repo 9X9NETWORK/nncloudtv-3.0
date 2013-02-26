@@ -1676,7 +1676,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String search(String text, String stack, String start, String count, HttpServletRequest req) {                       
+    public String search(String text, String stack, String content, String start, String count, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         if (version < 32) {
@@ -1714,7 +1714,7 @@ public class PlayerApiService {
         startIndex = startIndex - 1;
 
         //public static List<NnChannel> search(String queryStr, boolean total, boolean all, int start, int count) {
-        List<NnChannel> channels = NnChannelManager.search(text, false, startIndex, limit);
+        List<NnChannel> channels = NnChannelManager.search(text, content, false, startIndex, limit);
         String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
@@ -2597,5 +2597,17 @@ public class PlayerApiService {
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
+
+    /*
+    public String solr(String text) {
+        //check input
+        if (text == null) {
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        SolrLib lib = new SolrLib();
+        lib.searchBySolrJ(text);
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);        
+    }
+    */
     
 }
