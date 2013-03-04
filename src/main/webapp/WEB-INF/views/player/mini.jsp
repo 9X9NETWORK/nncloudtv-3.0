@@ -27,8 +27,8 @@
 <script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
 
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open Sans">
-<link rel="stylesheet" href="${root}/stylesheets/fix-by-joe.css" />
-<script src="${root}/javascripts/fix-by-joe.js"></script>
+<link rel="stylesheet" href="${root}/stylesheets/mini20j-1.css" />
+<script src="${root}/javascripts/mini20j-1.js"></script>
 <script type="text/javascript" charset="utf-8" src="${root}/javascripts/mini20j.js"></script>
 
 
