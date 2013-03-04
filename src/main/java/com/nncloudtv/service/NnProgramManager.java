@@ -22,6 +22,8 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.TitleCard;
 
 @Service
@@ -552,7 +554,8 @@ public class NnProgramManager {
     }
     
     //compose nnchannel programs and favorite channels, otherwise use composeProgramInfo
-    public String composeNnProgramInfo(NnChannel channel, List<NnEpisode> episodes, List<NnProgram> programs) {
+    public String composeNnProgramInfo(NnChannel channel, List<NnEpisode> episodes, 
+                                       List<NnProgram> programs) {
         if (episodes.size() == 0 || programs.size() == 0)
             return "";
         String result = "";
@@ -570,6 +573,13 @@ public class NnProgramManager {
             String key = String.valueOf(c.getProgramId() + ";" + c.getType());
             cardMap.put(key, c);
         }
+        
+        //find all the programs, and find its event
+        //episode number;text;link;start time;end time|episode number;link;text;start time;end time
+        //List<Poi> pois = new PoiManager().findByChannel(channel.getId()); //find all the programs        
+        //List<PoiEvent> events = new PoiEventManager().findByChannel(channel.getId());
+        PoiManager poiMngr = new PoiManager();
+        PoiEventManager eventMngr = new PoiEventManager();
         for (NnEpisode e : episodes) {
             List<NnProgram> list = (List<NnProgram>) map.get(e.getId());
             if (list == null)
@@ -584,8 +594,16 @@ public class NnProgramManager {
                 String intro = getNotPipedProgramInfoData(e.getIntro());                        
                 String card = "";
                 String contentType = "";
-                int i=1;
+                int i=1;                
+                String poiStr = "";
                 for (NnProgram p : list) { //sub-episodes
+                    List<Poi> pois = poiMngr.findByProgram(p.getId());
+                    for (Poi poi : pois) {
+                        PoiEvent event = eventMngr.findByPoi(poi.getId());
+                        String poiStrHere = i + ";" + event.getHyperChannelText() + ";" + event.getHyperChannelLink() + ";" + poi.getStartTime() + ";" + poi.getEndTime() + "|";
+                        log.info("poiStrHere:" + poiStrHere);                        
+                        poiStr += poiStrHere;                        
+                    }                    
                     String cardKey1 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_BEGIN); 
                     String cardKey2 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_END);
                     if (p.getSubSeq() != null && p.getSubSeq().length() > 0) {
@@ -629,7 +647,8 @@ public class NnProgramManager {
                 imageUrl = imageUrl.replaceFirst("\\|", "");
                 intro = intro.replaceFirst("\\|", "");
                 */
-                result += composeEpisodeInfoStr(e, name, intro, imageUrl, imageLargeUrl, videoUrl, duration, card, contentType);
+                poiStr = poiStr.replaceAll("\\|$", "");                
+                result += composeEpisodeInfoStr(e, name, intro, imageUrl, imageLargeUrl, videoUrl, duration, card, contentType, poiStr);
             }
         }
         return result;
@@ -652,7 +671,7 @@ public class NnProgramManager {
              String name, String intro, 
              String imageUrl, String imageLargeUrl, String videoUrl, 
              String duration, String card,
-             String contentType) {
+             String contentType, String poiStr) {
         //zero file to play            
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
@@ -671,7 +690,8 @@ public class NnProgramManager {
                         "", //audio file           
                         String.valueOf(e.getUpdateDate().getTime()),
                         "", //comment
-                        card};
+                        card,
+                        poiStr};
                 
         output = output + NnStringUtil.getDelimitedStr(ori);
         output = output.replaceAll("null", "");
