@@ -16,9 +16,10 @@ public class PoiEvent implements Serializable {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
-
+    
     @Persistent
     private short type;
+    public static final short TYPE_HYPERCHANNEL = 1;    
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -66,6 +67,24 @@ public class PoiEvent implements Serializable {
         this.context = context;
     }
 
+    public String getHyperChannelText() {
+        if (context != null) {
+            String[] splits = context.split("\\|");            
+            if (splits.length > 1)
+                return splits[1];
+        }
+        return null;
+    }
+
+    public String getHyperChannelLink() {
+        if (context != null) {
+            String[] splits = context.split("\\|");            
+            if (splits.length > 1)
+                return splits[0];
+        }
+        return null;
+    }
+    
     public Date getCreateDate() {
         return createDate;
     }
