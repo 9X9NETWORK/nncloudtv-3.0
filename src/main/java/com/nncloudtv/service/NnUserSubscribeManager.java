@@ -36,6 +36,10 @@ public class NnUserSubscribeManager {
         return true;
     }
 
+    public short findFirstAvailableSpot(NnUser user) {
+        return subDao.findFirstAvailableSpot(user);
+    }
+    
     public NnUserSubscribe subscribeChannel(NnUser user, long channelId, short seq, short type) {
         NnUserSubscribe s = new NnUserSubscribe(user.getId(), channelId, seq, type);
         Date now = new Date();

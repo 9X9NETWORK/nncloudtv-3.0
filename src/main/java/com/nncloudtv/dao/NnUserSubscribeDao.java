@@ -8,8 +8,10 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserSubscribe;
+import com.nncloudtv.model.Position;
 
 public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
     
@@ -58,6 +60,28 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
         }
     }
     
+    public short findFirstAvailableSpot(NnUser user) {
+        PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+        short seq = 0;
+        try {
+            String sql = 
+                "select * from position where seq not in " +
+                "  (select seq from nnuser_subscribe where userId = ?) limit 1; ";
+
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);            
+            q.setClass(Position.class);
+            @SuppressWarnings("unchecked")
+            List<Position> list = (List<Position>) q.execute(user.getId());                                
+            if (list.size() > 0) {
+                seq = list.get(0).getSeq();
+            }            
+        } finally {
+            pm.close();
+        }
+        return seq;
+    }
+    
     public NnUserSubscribe findByUserAndSeq(NnUser user, short seq) {
         NnUserSubscribe s = null;
         PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
@@ -91,7 +115,7 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
             if (subs.size() > 0) {
                 detached = subs.get(0);
                 detached = pm.detachCopy(detached);
-            }                        
+            }
         } finally {
             pm.close();
         }

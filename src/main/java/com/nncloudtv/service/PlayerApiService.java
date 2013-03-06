@@ -480,13 +480,11 @@ public class PlayerApiService {
         if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
             return this.assembleMsgs((Integer)map.get("s"), null);
         }
-        if (channelId == null && gridId == null) 
+        if (channelId == null) 
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);        
         NnUser user = (NnUser) map.get("u");                
         NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
         //verify channel and grid
-        if (channelId == null)
-            return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);        
         if (channelId.contains("f-")) {
             String profileUrl = channelId.replaceFirst("f-", "");
             NnUser curator = userMngr.findByProfileUrl(profileUrl);
@@ -500,11 +498,19 @@ public class PlayerApiService {
         if (channel == null || channel.getStatus() == NnChannel.STATUS_ERROR)
             return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
         
-        short seq = Short.parseShort(gridId);
+        short seq = 0;
+        if (gridId == null) {
+            seq = subMngr.findFirstAvailableSpot(user);
+            if (seq == 0)
+                return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        } else {
+            seq = Short.parseShort(gridId);
+        }
         if (seq > 72) {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }
-        log.info("input token:" + userToken + ";user token:" + user.getToken() + ";userId:" + user.getId() + ";user type:" + user.getType());
+        log.info("input token:" + userToken + ";user token:" + user.getToken() + 
+                ";userId:" + user.getId() + ";user type:" + user.getType() + ";seq:" + seq);
         //if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
         if (seq != 0) {
             NnUserSubscribe s = subMngr.findByUserAndSeq(user, seq);
@@ -1678,7 +1684,7 @@ public class PlayerApiService {
 
     public String search(String text, String stack, String content, String start, String count, HttpServletRequest req) {                       
         if (text == null || text.length() == 0)
-            return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         if (version < 32) {
             return new IosService().search(text);
         }
