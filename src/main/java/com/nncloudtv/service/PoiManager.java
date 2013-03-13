@@ -150,7 +150,6 @@ public class PoiManager {
             if(responseObj.containsKey(key)) {
                 String temp = (String) responseObj.get(key);
                 temp = NnStringUtil.revertHtml(temp);
-                responseObj.remove(key);
                 responseObj.put(key, temp);
             }
         }

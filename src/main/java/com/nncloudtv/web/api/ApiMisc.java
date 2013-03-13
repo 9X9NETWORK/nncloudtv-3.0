@@ -40,7 +40,6 @@ public class ApiMisc extends ApiGeneric {
 	@RequestMapping(value = "s3/attributes", method = RequestMethod.GET)
 	public @ResponseBody Map<String, String> s3Attributes(HttpServletRequest req, HttpServletResponse resp) {
 		
-		// TODO: verify authentication
 	    NnUser verifiedUser = userIdentify(req);
         if (verifiedUser == null) {
             unauthorized(resp);

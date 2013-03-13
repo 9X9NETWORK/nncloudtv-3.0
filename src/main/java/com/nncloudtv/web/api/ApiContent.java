@@ -961,7 +961,6 @@ public class ApiContent extends ApiGeneric {
         return categories;
     }
     
-    // TODO: paging 
     @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.GET)
     public @ResponseBody
     List<NnEpisode> channelEpisodes(HttpServletResponse resp,
@@ -2306,7 +2305,7 @@ public class ApiContent extends ApiGeneric {
         
         PoiManager poiManager = new PoiManager();
         Poi poi = poiManager.findById(poiId);
-        Poi originPoi = poiManager.findById(poiId);
+        //Poi originPoi = poiManager.findById(poiId);
         if (poi == null) {
             notFound(resp, "POI Not Found");
             return null;
