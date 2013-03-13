@@ -809,6 +809,26 @@ public class ApiUser extends ApiGeneric {
             if (userPref.getValue().equals(fbUserId) == false) {
                 // remove all channels autoshare setting
                 channelPrefMngr.deleteAllChannelsFBbyUser(user);
+            } else {
+                // update page token
+                List<FacebookPage> pages = null;
+                FacebookResponse response = FacebookLib.populatePageList(fbUserId, accessToken);
+                if (response == null) {
+                    log.warning("connect to facebook failed");
+                } else if (response.getData() != null) {
+                    pages = response.getData();
+                    log.info("pages count: " + pages.size());
+                } else if (response.getError() != null) {
+                    FacebookError error = response.getError();
+                    log.warning("error message: " + error.getMessage());
+                    log.warning("error type:" + error.getType());
+                } else {
+                    log.warning("neither no data nor error");
+                }
+                
+                if (pages != null && pages.size() > 0) {
+                    channelPrefMngr.updateAllChannelsFBbyUser(user, pages);
+                }
             }
             userPref.setValue(fbUserId);
         } else {

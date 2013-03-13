@@ -3,6 +3,8 @@ package com.nncloudtv.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import com.nncloudtv.dao.NnChannelPrefDao;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.web.json.facebook.FacebookPage;
 
 @Service
 public class NnChannelPrefManager {
@@ -90,6 +93,38 @@ public class NnChannelPrefManager {
             }
         }
         delete(channelPrefs);
+	}
+	
+	public void updateAllChannelsFBbyUser(NnUser user, List<FacebookPage> pages) {
+	    if (pages == null || pages.size() == 0 || user == null) {
+	        return ;
+	    }
+	    
+	    NnChannelManager channelMngr = new NnChannelManager();
+        List<NnChannel> channels = channelMngr.findByUser(user, 0, true);
+        List<NnChannelPref> channelPrefs = new ArrayList<NnChannelPref>();
+        List<NnChannelPref> temp;
+        for (NnChannel channel : channels) {
+            temp = findByChannelIdAndItem(channel.getId(), NnChannelPref.FB_AUTOSHARE);
+            if (temp != null && temp.size() > 0) {
+                channelPrefs.addAll(temp);
+            }
+        }
+        
+        Map<String, String> pageMap = new TreeMap<String, String>();
+        for (FacebookPage page : pages) {
+            pageMap.put(page.getId(), page.getAccess_token());
+        }
+        
+        String[] parsed;
+        for (NnChannelPref channelPref : channelPrefs) {
+            parsed = parseFacebookAutoshare(channelPref.getValue());
+            if (pageMap.containsKey(parsed[0])) {
+                channelPref.setValue(composeFacebookAutoshare(parsed[0], pageMap.get(parsed[0])));
+            }
+        }
+	    
+        save(channelPrefs);
 	}
 	
 }
