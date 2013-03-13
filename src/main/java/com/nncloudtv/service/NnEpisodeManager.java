@@ -215,7 +215,7 @@ public class NnEpisodeManager {
     public void autoShareToFacebook(NnEpisode episode) {
         
         FBPost fbPost = new FBPost(NnStringUtil.revertHtml(episode.getName()), NnStringUtil.revertHtml(episode.getIntro()), episode.getImageUrl());
-        String url = "http://" + MsoConfigManager.getServerDomain() + "/#!ch=" + episode.getChannelId() + "!ep=e" + episode.getId();
+        String url = NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId());
         fbPost.setLink(url);
         log.info("share link: " + url);
         
