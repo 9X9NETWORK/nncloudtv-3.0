@@ -50,7 +50,7 @@ public class PoiEventManager {
     public static String composeContext(Map<String, Object> context, int eventType) {
         // compose rule
         String result = "";
-        if (eventType == PoiEvent.EVENTTYPE_HYPERCHANNEL) {
+        if (eventType == PoiEvent.TYPE_HYPERCHANNEL) {
             if (context.containsKey("link")) {
                 result += context.get("link");
             }
@@ -89,7 +89,7 @@ public class PoiEventManager {
     
     public Map<String, Object> eventExplainFactory(PoiEvent event) {
         Map<String, Object> output = new TreeMap<String, Object>();
-        if (event.getType() == PoiEvent.EVENTTYPE_HYPERCHANNEL) {
+        if (event.getType() == PoiEvent.TYPE_HYPERCHANNEL) {
             Map<String, Object> context = explainContext_hyperChannel(event.getContext());
             output.putAll(context);
         }

@@ -2147,7 +2147,7 @@ public class ApiContent extends ApiGeneric {
         Poi poi = new Poi();
         PoiEvent poiEvent= new PoiEvent();
         poi.setProgramId(programId);
-        poiEvent.setType(PoiEvent.EVENTTYPE_HYPERCHANNEL);
+        poiEvent.setType(PoiEvent.TYPE_HYPERCHANNEL);
         
         // name
         String name = req.getParameter("name");
@@ -2228,7 +2228,7 @@ public class ApiContent extends ApiGeneric {
         Map<String, Object> eventContext = new TreeMap<String, Object>();
         eventContext.put("button", button);
         eventContext.put("link", link);
-        poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.EVENTTYPE_HYPERCHANNEL));
+        poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.TYPE_HYPERCHANNEL));
         
         
         PoiEventManager poiEventManager = new PoiEventManager();
@@ -2432,7 +2432,7 @@ public class ApiContent extends ApiGeneric {
         Map<String, Object> eventContext = new TreeMap<String, Object>();
         eventContext.put("button", button);
         eventContext.put("link", link);
-        poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.EVENTTYPE_HYPERCHANNEL));
+        poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.TYPE_HYPERCHANNEL));
         
         poi = poiManager.save(poi);
         if (poi == null) {
