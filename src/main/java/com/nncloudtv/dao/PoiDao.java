@@ -48,7 +48,7 @@ public class PoiDao extends GenericDao<Poi> {
             Query query = pm.newQuery(Poi.class);
             query.setFilter("programId == programIdParam");
             query.declareParameters("long programIdParam");
-            query.setOrdering("startTime asc");
+            //query.setOrdering("startTime asc");
             @SuppressWarnings("unchecked")
             List<Poi> pois = (List<Poi>) query.execute(programId);
             results = (List<Poi>) pm.detachCopyAll(pois);

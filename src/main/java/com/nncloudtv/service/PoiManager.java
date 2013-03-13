@@ -1,6 +1,8 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -135,7 +137,11 @@ public class PoiManager {
         if (program == null) {
             return results;
         }
+        
+        // sort
         List<Poi> pois = dao.findByProgram(program.getId());
+        Collections.sort(pois, getPoiStartTimeComparator());
+        
         for (Poi poi : pois) {
             results.add(getEventByPoi(poi)); // TODO: computing issue, try to reduce mysql queries, List<List<PoiEvent>> List<int>
         }
@@ -189,6 +195,18 @@ public class PoiManager {
         } else {
             return true;
         }
+    }
+    
+    // order by StartTime asc
+    public Comparator<Poi> getPoiStartTimeComparator() {
+        
+        class PoiStartTimeComparator implements Comparator<Poi> {
+            public int compare(Poi poi1, Poi poi2) {
+                return (poi1.getStartTimeInt() - poi2.getStartTimeInt());
+            }
+        }
+        
+        return new PoiStartTimeComparator();
     }
 
 }
