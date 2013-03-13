@@ -150,7 +150,7 @@ public class ApiGeneric {
 
         try {
             resp.setContentType(APPLICATION_JSON_UTF8);
-            resp.getWriter().print("OK");
+            resp.getWriter().print("\"OK\"");
             resp.flushBuffer();
         } catch (IOException e) {
             internalError(resp, e);
