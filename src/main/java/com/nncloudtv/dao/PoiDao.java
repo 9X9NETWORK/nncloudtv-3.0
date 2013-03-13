@@ -10,12 +10,12 @@ import javax.jdo.Query;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.Poi;
 
-public class PoiDao extends GenericDao<PoiDao> {
+public class PoiDao extends GenericDao<Poi> {
 
     protected static final Logger log = Logger.getLogger(PoiDao.class.getName());
     
     public PoiDao() {
-        super(PoiDao.class);
+        super(Poi.class);
     }
         
     public List<Poi> findByChannel(long channelId) {

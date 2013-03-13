@@ -90,7 +90,7 @@ public class PoiManager {
     }
     
     public List<Poi> findByProgramId(long programId) {
-        return dao.findByProgramId(programId);
+        return dao.findByProgram(programId);
     }
     
     public List<Poi> findByChannel(long channelId) {
@@ -135,7 +135,7 @@ public class PoiManager {
         if (program == null) {
             return results;
         }
-        List<Poi> pois = dao.findByProgramId(program.getId());
+        List<Poi> pois = dao.findByProgram(program.getId());
         for (Poi poi : pois) {
             results.add(getEventByPoi(poi)); // TODO: computing issue, try to reduce mysql queries, List<List<PoiEvent>> List<int>
         }
@@ -169,7 +169,7 @@ public class PoiManager {
         if (endTime <= program.getStartTimeInt() || endTime > program.getEndTimeInt())
             return true;
         
-        List<Poi> pois = dao.findByProgramId(program.getId());
+        List<Poi> pois = dao.findByProgram(program.getId());
         if (originPoi != null) {
             if (pois.contains(originPoi)) {
                 pois.remove(originPoi);

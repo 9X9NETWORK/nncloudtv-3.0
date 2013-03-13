@@ -9,12 +9,12 @@ import javax.jdo.Query;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.PoiEvent;
 
-public class PoiEventDao extends GenericDao<PoiEventDao> {
+public class PoiEventDao extends GenericDao<PoiEvent> {
 
     protected static final Logger log = Logger.getLogger(PoiEventDao.class.getName());
     
     public PoiEventDao() {
-        super(PoiEventDao.class);
+        super(PoiEvent.class);
     }
 
     public PoiEvent findByPoi(long poiId) {
