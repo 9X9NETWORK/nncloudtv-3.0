@@ -145,4 +145,16 @@ public class ApiGeneric {
         }
 	    return user;
 	}
+	
+    public void okResponse(HttpServletResponse resp) {
+
+        try {
+            resp.setContentType(APPLICATION_JSON_UTF8);
+            resp.getWriter().print("OK");
+            resp.flushBuffer();
+        } catch (IOException e) {
+            internalError(resp, e);
+        }
+
+    }
 }

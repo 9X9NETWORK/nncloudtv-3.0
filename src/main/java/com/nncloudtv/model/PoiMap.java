@@ -42,12 +42,12 @@ public class PoiMap implements Serializable {
         this.poiId = poiId;
     }
 
-    public long getEventlId() {
+    public long getEventId() {
         return eventId;
     }
 
-    public void setEventlId(long eventlId) {
-        this.eventId = eventlId;
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
     public Date getUpdateDate() {

@@ -19,7 +19,7 @@ public class PoiEvent implements Serializable {
     
     @Persistent
     private short type;
-    public static final short TYPE_HYPERCHANNEL = 1;    
+    public static final short TYPE_HYPERCHANNEL = 1;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)

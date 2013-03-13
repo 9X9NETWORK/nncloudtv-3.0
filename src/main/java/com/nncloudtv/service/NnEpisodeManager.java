@@ -164,6 +164,20 @@ public class NnEpisodeManager {
     public void delete(NnEpisode episode) {
     
         new NnProgramManager().resetCache(episode.getChannelId());
+        
+        // delete programs / title cards
+        //TitleCardManager titlecardMngr = new TitleCardManager();
+        NnProgramManager programMngr = new NnProgramManager();
+        //List<TitleCard> titlecards = new ArrayList<TitleCard>();
+        List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
+        /*
+        for (NnProgram program : programs) {
+            titlecards.addAll(titlecardMngr.findByProgramId(program.getId()));
+        }
+        */
+        //titlecardMngr.delete(titlecards);
+        programMngr.delete(programs);
+        
         dao.delete(episode);
     }
     

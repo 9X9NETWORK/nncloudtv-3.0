@@ -40,19 +40,22 @@ public class PoiDao extends GenericDao<PoiDao> {
     }
 
     public List<Poi> findByProgram(long programId) {
-        List<Poi> detached = new ArrayList<Poi>();
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();        
+        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
+        List<Poi> results = new ArrayList<Poi>();
         try {
             Query query = pm.newQuery(Poi.class);
-            query.setFilter("programId == " + programId);
-            query.setOrdering("startTime");
+            query.setFilter("programId == programIdParam");
+            query.declareParameters("long programIdParam");
+            query.setOrdering("startTime asc");
             @SuppressWarnings("unchecked")
-            List<Poi> results = (List<Poi>) query.execute(programId);
-            detached = (List<Poi>)pm.detachCopyAll(results);
+            List<Poi> pois = (List<Poi>) query.execute(programId);
+            results = (List<Poi>) pm.detachCopyAll(pois);
         } finally {
             pm.close();
         }
-        return detached;
+        return results;
     }
     
 }

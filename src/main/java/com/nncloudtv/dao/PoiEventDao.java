@@ -41,3 +41,4 @@ public class PoiEventDao extends GenericDao<PoiEventDao> {
     }
     
 }
+

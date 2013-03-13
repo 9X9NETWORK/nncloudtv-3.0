@@ -91,7 +91,8 @@ public class ApiMisc extends ApiGeneric {
 		CookieHelper.deleteCookie(resp, CookieHelper.USER);
 		CookieHelper.deleteCookie(resp, CookieHelper.GUEST);
 		
-		return "OK";
+		okResponse(resp);
+        return null;
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
@@ -327,7 +328,8 @@ public class ApiMisc extends ApiGeneric {
             return null;
         }
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
 
 }

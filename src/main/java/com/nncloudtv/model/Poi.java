@@ -85,6 +85,24 @@ public class Poi implements Serializable {
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
+    
+    public int getStartTimeInt() {
+        
+        if (startTime == null) {
+            return 0;
+        }
+        
+        int startTimeInt = 0;
+        try {
+            startTimeInt = Integer.valueOf(startTime);
+        } catch (NumberFormatException e) {
+        }
+        return startTimeInt;
+    }
+    
+    public void setStartTime(int startTime) {
+        this.startTime = String.format("%d", startTime);
+    }
 
     public String getEndTime() {
         return endTime;
@@ -92,6 +110,24 @@ public class Poi implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+    
+    public int getEndTimeInt() {
+        
+        if (endTime == null) {
+            return 0;
+        }
+        
+        int endTimeInt = 0;
+        try {
+            endTimeInt = Integer.valueOf(endTime);
+        } catch (NumberFormatException e) {
+        }
+        return endTimeInt;
+    }
+    
+    public void setEndTime(int endTime) {
+        this.endTime = String.format("%d", endTime);
     }
 
     public String getTag() {

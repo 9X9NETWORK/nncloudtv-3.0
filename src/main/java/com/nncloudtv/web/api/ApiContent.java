@@ -30,6 +30,8 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
+import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.MsoConfigManager;
@@ -40,6 +42,8 @@ import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.service.PoiEventManager;
+import com.nncloudtv.service.PoiManager;
 import com.nncloudtv.service.TitleCardManager;
 
 @Controller
@@ -84,7 +88,8 @@ public class ApiContent extends ApiGeneric {
         
         prefMngr.delete(prefMngr.findByChannelIdAndItem(channelId, NnChannelPref.FB_AUTOSHARE));
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.POST)
@@ -158,7 +163,8 @@ public class ApiContent extends ApiGeneric {
         
         channelPrefMngr.save(prefList);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.GET)
@@ -240,7 +246,8 @@ public class ApiContent extends ApiGeneric {
         episodeMngr.autoShareToFacebook(episode);
         //log.info("====================episode ID called : " + episodeId + "====================");
         
-        return "OK";
+        okResponse(resp);
+        return null;
         //return "episode ID called : " + episodeId;
     }
     
@@ -371,6 +378,12 @@ public class ApiContent extends ApiGeneric {
             program.setEndTime(endTime);
         }
         
+        // poi collision
+        if (programMngr.isPoiCollision(program, program.getStartTimeInt(), program.getEndTimeInt())) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
         // update duration = endTime - startTime
         if ((program.getEndTimeInt() - program.getStartTimeInt()) > 0) {
             program.setDuration((short)(program.getEndTimeInt() - program.getStartTimeInt()));
@@ -423,13 +436,16 @@ public class ApiContent extends ApiGeneric {
         }
         
         // delete title cards
+        /*
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(programId);
         titleCardMngr.delete(titleCards);
+        */
         
         programMngr.delete(program);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     // delete programs in one episode
@@ -449,7 +465,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         NnProgramManager programMngr = new NnProgramManager();
-        TitleCardManager titlecardMngr = new TitleCardManager();
+        //TitleCardManager titlecardMngr = new TitleCardManager();
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         NnEpisode episode = episodeMngr.findById(episodeId);
@@ -485,7 +501,7 @@ public class ApiContent extends ApiGeneric {
         
         String[] programIdStrList = programIdsStr.split(",");
         List<NnProgram> programDeleteList = new ArrayList<NnProgram>();
-        List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
+        //List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
         
         for (String programIdStr : programIdStrList) {
             
@@ -502,20 +518,23 @@ public class ApiContent extends ApiGeneric {
                 if (program != null && episodeProgramIdList.indexOf(program.getId()) > -1) {
                     
                     programDeleteList.add(program);
+                    /*
                     List<TitleCard> titlecards = titlecardMngr.findByProgramId(programId);
                     if (titlecards.size() > 0) {
                         titlecardDeleteList.addAll(titlecards);
                     }
+                    */
                 }
             }
         }
         log.info("program delete count = " + programDeleteList.size());
-        log.info("titlecard delete count = " + titlecardDeleteList.size());
+        //log.info("titlecard delete count = " + titlecardDeleteList.size());
         
-        titlecardMngr.delete(titlecardDeleteList);
+        //titlecardMngr.delete(titlecardDeleteList);
         programMngr.delete(programDeleteList);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "episodes/{episodeId}/programs", method = RequestMethod.POST)
@@ -1050,7 +1069,8 @@ public class ApiContent extends ApiGeneric {
         String episodeIdsStr = req.getParameter("episodes");
         if (episodeIdsStr == null) {
             episodeMngr.reorderChannelEpisodes(channelId);
-            return "OK";
+            okResponse(resp);
+            return null;
         }
         String[] episodeIdStrList = episodeIdsStr.split(",");
         
@@ -1096,7 +1116,8 @@ public class ApiContent extends ApiGeneric {
         episodeMngr.save(orderedEpisodes);
         channelMngr.save(channel); // update channel updateDate
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.DELETE)
@@ -1142,6 +1163,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         // delete programs / title cards
+        /*
         TitleCardManager titlecardMngr = new TitleCardManager();
         NnProgramManager programMngr = new NnProgramManager();
         List<TitleCard> titlecards = new ArrayList<TitleCard>();
@@ -1151,6 +1173,7 @@ public class ApiContent extends ApiGeneric {
         }
         titlecardMngr.delete(titlecards);
         programMngr.delete(programs);
+        */
         
         // delete episode
         episodeMngr.delete(episode);
@@ -1161,7 +1184,8 @@ public class ApiContent extends ApiGeneric {
             channelMngr.save(channel);
         }
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.GET)
@@ -1578,7 +1602,8 @@ public class ApiContent extends ApiGeneric {
             adMngr.delete(nnad);
         }
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "episodes/{episodeId}/shopping_info", method = RequestMethod.POST)
@@ -1930,7 +1955,8 @@ public class ApiContent extends ApiGeneric {
         
         titleCardMngr.delete(titleCard);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "my_uploads/{id}", method = RequestMethod.GET)
@@ -2048,6 +2074,427 @@ public class ApiContent extends ApiGeneric {
         
         libMngr.delete(lib);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
+    
+    @RequestMapping(value = { "programs/{programId}/pois" }, method = RequestMethod.GET)
+    public @ResponseBody
+    List<Map<String, Object>> programPoisGet(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("programId") String programIdStr) {        
+        
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(programId);
+        if (program == null) {
+            notFound(resp, "Pogram Not Found");
+            return null;
+        }
+        
+        PoiManager poiManager = new PoiManager();
+        List<Map<String, Object>> results = poiManager.getEventsByProgram(program);
+        for (Map<String, Object> result : results) {
+            result = PoiManager.revertHtml(result);
+        }
+        
+        return results;
+    }
+    
+    @RequestMapping(value = { "programs/{programId}/pois" }, method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, Object> programPoiCreate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("programId") String programIdStr) {        
+        
+        Long programId = null;
+        try {
+            programId = Long.valueOf(programIdStr);
+        } catch (NumberFormatException e) {
+        }
+        
+        if (programId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(programId);
+        if (program == null) {
+            notFound(resp, "Pogram Not Found");
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
+        Poi poi = new Poi();
+        PoiEvent poiEvent= new PoiEvent();
+        poi.setProgramId(programId);
+        poiEvent.setType(PoiEvent.EVENTTYPE_HYPERCHANNEL);
+        
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        poi.setName(name);
+        
+        // intro
+        String intro = req.getParameter("intro");
+        if (intro != null) {
+            intro = NnStringUtil.htmlSafeAndTruncated(intro);
+            poi.setIntro(intro);
+        }
+        
+        // startTime & endTime
+        Integer startTime = null;
+        Integer endTime = null;
+        String startTimeStr = req.getParameter("startTime");
+        String endTimeStr = req.getParameter("endTime");
+        if (startTimeStr == null || endTimeStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        } else {
+            try {
+                startTime = Integer.valueOf(startTimeStr);
+                endTime = Integer.valueOf(endTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((startTime == null) || (startTime < 0) || (endTime == null) || (endTime < 0) || (endTime - startTime <= 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        // collision issue
+        PoiManager poiManager = new PoiManager();
+        if (poiManager.isPoiCollision(null, program, startTime, endTime)) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        poi.setStartTime(startTime);
+        poi.setEndTime(endTimeStr);
+        
+        // tag
+        String tag = req.getParameter("tag");
+        if (tag != null) {
+            poi.setTag(tag);
+        }
+        
+        // message
+        String message = req.getParameter("message");
+        if (message == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        message = NnStringUtil.htmlSafeAndTruncated(message);
+        poiEvent.setMessage(message);
+        
+        // button
+        String button = req.getParameter("button");
+        if (button == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        button = NnStringUtil.htmlSafeAndTruncated(button);
+        
+        // link
+        String link = req.getParameter("link");
+        if (link == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        Map<String, Object> eventContext = new TreeMap<String, Object>();
+        eventContext.put("button", button);
+        eventContext.put("link", link);
+        poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.EVENTTYPE_HYPERCHANNEL));
+        
+        
+        PoiEventManager poiEventManager = new PoiEventManager();
+        poi = poiManager.create(poi);
+        if (poi == null) {
+            internalError(resp);
+            return null;
+        }
+        poiEvent = poiEventManager.create(poiEvent);
+        if (poiEvent == null) {
+            // TODO roll back
+            internalError(resp);
+            return null;
+        }
+        if (poiManager.hookEvent(poi.getId(), poiEvent.getId())) {
+            Map<String, Object> result = poiManager.getEventByPoi(poi);
+            result = PoiManager.revertHtml(result);
+            return result;
+        } else {
+            // TODO roll back
+            internalError(resp);
+            return null;
+        }
+    }
+    
+    @RequestMapping(value = { "pois/{poiId}" }, method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, Object> poiGet(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("poiId") String poiIdStr) {
+        
+        Long poiId = null;
+        try {
+            poiId = Long.valueOf(poiIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        PoiManager poiManager = new PoiManager();
+        Poi poi = poiManager.findById(poiId);
+        if (poi == null) {
+            notFound(resp, "POI Not Found");
+            return null;
+        }
+        
+        Map<String, Object> result = poiManager.getEventByPoi(poi);
+        result = PoiManager.revertHtml(result);
+        
+        return result;
+    }
+    
+    @RequestMapping(value = { "pois/{poiId}" }, method = RequestMethod.PUT)
+    public @ResponseBody
+    Map<String, Object> poiUpdate(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("poiId") String poiIdStr) {
+        
+        Long poiId = null;
+        try {
+            poiId = Long.valueOf(poiIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        
+        PoiManager poiManager = new PoiManager();
+        Poi poi = poiManager.findById(poiId);
+        Poi originPoi = poiManager.findById(poiId);
+        if (poi == null) {
+            notFound(resp, "POI Not Found");
+            return null;
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(poi.getProgramId());
+        if (program == null) {
+            notFound(resp, "Pogram Not Found");
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
+        PoiEvent poiEvent;
+        PoiEventManager poiEventMngr = new  PoiEventManager();
+        List<PoiEvent> poiEvents = poiEventMngr.findByPoiId(poi.getId());
+        if (poiEvents.size() == 0) {
+            notFound(resp, "PoiEvent Not Found");
+            return null;
+        } else {
+            poiEvent = poiEvents.get(0);
+        }
+        
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null) {
+            name = NnStringUtil.htmlSafeAndTruncated(name);
+            poi.setName(name);
+        }
+        
+        // intro
+        String intro = req.getParameter("intro");
+        if (intro != null) {
+            intro = NnStringUtil.htmlSafeAndTruncated(intro);
+            poi.setIntro(intro);
+        }
+        
+        // startTime
+        Integer startTime = null;
+        String startTimeStr = req.getParameter("startTime");
+        if (startTimeStr != null) {
+            try {
+                startTime = Integer.valueOf(startTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((startTime == null) || (startTime < 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            // origin setting
+            startTime = poi.getStartTimeInt();
+        }
+        
+        // endTime
+        Integer endTime = null;
+        String endTimeStr = req.getParameter("endTime");
+        if (endTimeStr != null) {
+            try {
+                endTime = Integer.valueOf(endTimeStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((endTime == null) || (endTime < 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            // origin setting
+            endTime = poi.getEndTimeInt();
+        }
+        
+        if(endTime - startTime <= 0) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        // collision issue
+        if (poiManager.isPoiCollision(originPoi, program, startTime, endTime)) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        poi.setStartTime(startTime);
+        poi.setEndTime(endTime);
+        
+        // tag
+        String tag = req.getParameter("tag");
+        if (tag != null) {
+            poi.setTag(tag);
+        }
+        
+        // message
+        String message = req.getParameter("message");
+        if (message != null) {
+            message = NnStringUtil.htmlSafeAndTruncated(message);
+            poiEvent.setMessage(message);
+        }
+        
+        Map<String, Object> originalContext = poiEventMngr.eventExplainFactory(poiEvent);
+        
+        // button
+        String button = req.getParameter("button");
+        if (button != null) {
+            button = NnStringUtil.htmlSafeAndTruncated(button);
+        } else {
+            button = (String) originalContext.get("button");
+        }
+        
+        // link
+        String link = req.getParameter("link");
+        if (link != null) {
+            
+        } else {
+            link = (String) originalContext.get("link");
+        }
+        
+        Map<String, Object> eventContext = new TreeMap<String, Object>();
+        eventContext.put("button", button);
+        eventContext.put("link", link);
+        poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.EVENTTYPE_HYPERCHANNEL));
+        
+        poi = poiManager.save(poi);
+        if (poi == null) {
+            internalError(resp);
+            return null;
+        }
+        poiEvent = poiEventMngr.save(poiEvent);
+        if (poiEvent == null) {
+            // TODO roll back
+            internalError(resp);
+            return null;
+        }
+        
+        Map<String, Object> result = poiManager.getEventByPoi(poi);
+        result = PoiManager.revertHtml(result);
+        
+        return result;
+    }
+    
+    @RequestMapping(value = { "pois/{poiId}" }, method = RequestMethod.DELETE)
+    public @ResponseBody
+    String poiDelete(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("poiId") String poiIdStr) {
+        
+        Long poiId = null;
+        try {
+            poiId = Long.valueOf(poiIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnUser verifiedUser = userIdentify(req);
+        if (verifiedUser == null) {
+            unauthorized(resp);
+            return null;
+        }
+        
+        PoiManager poiManager = new PoiManager();
+        Poi poi = poiManager.findById(poiId);
+        if (poi == null) {
+            notFound(resp, "POI Not Found");
+            return null;
+        }
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        NnProgram program = programMngr.findById(poi.getProgramId());
+        if (program == null) {
+            notFound(resp, "Pogram Not Found");
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if ((channel == null) || (verifiedUser.getId() != channel.getUserId())) {
+            forbidden(resp);
+            return null;
+        }
+        
+        poiManager.delete(poi);
+        
+        okResponse(resp);
+        return null;
+    }
+    
 }

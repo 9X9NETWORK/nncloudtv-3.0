@@ -404,7 +404,8 @@ public class ApiUser extends ApiGeneric {
         
         libMngr.save(lib);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.GET)
@@ -549,7 +550,8 @@ public class ApiUser extends ApiGeneric {
         
         channelMngr.saveOrderedChannels(orderedChannels);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "users/{userId}/channels", method = RequestMethod.POST)
@@ -747,7 +749,8 @@ public class ApiUser extends ApiGeneric {
         channel.setPublic(false);
         channelMngr.save(channel);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "users/{userId}/sns_auth/facebook", method = RequestMethod.POST)
@@ -822,7 +825,8 @@ public class ApiUser extends ApiGeneric {
         }
         prefMngr.save(user, userPref);
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "users/{userId}/sns_auth/facebook", method = RequestMethod.DELETE)
@@ -875,7 +879,8 @@ public class ApiUser extends ApiGeneric {
             prefMngr.delete(user, userPref);
         }
         
-        return "OK";
+        okResponse(resp);
+        return null;
     }
     
     @RequestMapping(value = "users/{userId}/sns_auth/facebook", method = RequestMethod.GET)

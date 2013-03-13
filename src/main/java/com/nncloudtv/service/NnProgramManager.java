@@ -124,16 +124,49 @@ public class NnProgramManager {
     }
     
     public void delete(NnProgram program) {
+        
+        if (program == null) {
+            return;
+        }
+        
+        // delete titleCards, pois
+        TitleCardManager titleCardMngr = new TitleCardManager();
+        List<TitleCard> titleCards = titleCardMngr.findByProgramId(program.getId());
+        titleCardMngr.delete(titleCards);
+        PoiManager poiMngr = new PoiManager();
+        List<Poi> pois = poiMngr.findByProgramId(program.getId());
+        poiMngr.delete(pois);
+        
         long cId = program.getChannelId();
         dao.delete(program);
         resetCache(cId);
     }
     
     public void delete(List<NnProgram> programs) {
-    
+        
         if (programs == null || programs.size() == 0) {
             return;
         }
+        
+        // delete titleCards, pois
+        TitleCardManager titlecardMngr = new TitleCardManager();
+        List<TitleCard> titlecards;
+        List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
+        PoiManager poiMngr = new PoiManager();
+        List<Poi> pois;
+        List<Poi> poiDeleteList = new ArrayList<Poi>();
+        for (NnProgram program : programs) {
+            titlecards = titlecardMngr.findByProgramId(program.getId());
+            pois = poiMngr.findByProgramId(program.getId());
+            if (titlecards.size() > 0) {
+                titlecardDeleteList.addAll(titlecards);
+            }
+            if (pois.size() > 0) {
+                poiDeleteList.addAll(pois);
+            }
+        }
+        titlecardMngr.delete(titlecardDeleteList);
+        poiMngr.delete(poiDeleteList);
         
         List<Long> channelIds = new ArrayList<Long>();
         
@@ -736,5 +769,15 @@ public class NnProgramManager {
         output = output + "\n";
         return output;
     }        
+    
+    public boolean isPoiCollision(NnProgram program, int startTime, int endTime) {
+        List<Poi> pois = new PoiManager().findByProgramId(program.getId());
+        for (Poi poi : pois) {
+            if (startTime > poi.getStartTimeInt() || endTime < poi.getEndTimeInt()) {
+                return true;
+            }
+        }
+        return false;
+    }
     
 }
