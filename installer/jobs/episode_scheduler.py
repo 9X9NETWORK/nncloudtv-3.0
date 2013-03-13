@@ -96,7 +96,7 @@ for r in rows:
        where id = %s                                    
       """, (cid))             
    dbcontent.commit()                         
-   url = "http://localhost:8080/wd/channelCache?channel=" + str(cid)
+   url = "http://localhost:8080/wd/programCache?channel=" + str(cid)
    urllib2.urlopen(url).read()
    
    resultPage = GetPage("http://localhost:8080/api/episodes/" + str(eid) + "/scheduledAutosharing/facebook")
