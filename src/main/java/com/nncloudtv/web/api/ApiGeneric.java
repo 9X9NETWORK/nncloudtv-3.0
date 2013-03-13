@@ -157,4 +157,17 @@ public class ApiGeneric {
         }
 
     }
+    
+	public void nullResponse(HttpServletResponse resp) {
+        
+        try {
+            resp.setContentType(APPLICATION_JSON_UTF8);
+            resp.getWriter().print("null");
+            resp.flushBuffer();
+        } catch (IOException e) {
+            internalError(resp, e);
+        }
+        
+    }
+	
 }

@@ -123,6 +123,11 @@ public class ApiMisc extends ApiGeneric {
 			badRequest(resp, MISSING_PARAMETER);
 		}
 		
+		if (user == null) {
+		    nullResponse(resp);
+		    return null;
+		}
+		
 		return userMngr.purify(user);
 	}
 	

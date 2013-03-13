@@ -975,7 +975,7 @@ public class ApiUser extends ApiGeneric {
             }
             
         } else {
-            resp.setContentType(APPLICATION_JSON_UTF8);
+            nullResponse(resp);
             return null;
         }
         
