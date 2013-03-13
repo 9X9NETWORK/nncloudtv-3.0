@@ -2187,12 +2187,14 @@ public class ApiContent extends ApiGeneric {
         }
         // collision issue
         PoiManager poiManager = new PoiManager();
+        /*
         if (poiManager.isPoiCollision(null, program, startTime, endTime)) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
+        */
         poi.setStartTime(startTime);
-        poi.setEndTime(endTimeStr);
+        poi.setEndTime(endTime);
         
         // tag
         String tag = req.getParameter("tag");
@@ -2388,10 +2390,12 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         // collision issue
+        /*
         if (poiManager.isPoiCollision(originPoi, program, startTime, endTime)) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
+        */
         poi.setStartTime(startTime);
         poi.setEndTime(endTime);
         
