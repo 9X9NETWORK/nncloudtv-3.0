@@ -1,6 +1,5 @@
 package com.nncloudtv.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +9,12 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.PoiEventDao;
-import com.nncloudtv.dao.PoiMapDao;
 import com.nncloudtv.model.PoiEvent;
-import com.nncloudtv.model.PoiMap;
 
 @Service
 public class PoiEventManager {
     
     private PoiEventDao dao = new PoiEventDao();
-    private PoiMapDao poiMapDao = new PoiMapDao();
     
     protected static final Logger log = Logger.getLogger(PoiEventManager.class
             .getName());
@@ -98,7 +94,8 @@ public class PoiEventManager {
         return output;
     }
     
-    public List<PoiEvent> findByPoiId(long poiId) {
+    public List<PoiEvent> findPoiEventsByPoiId(long poiId) {
+        /*
         List<Long> eventIds = new ArrayList<Long>();
         List<PoiEvent> poiEvents = new ArrayList<PoiEvent>();
         List<PoiMap> poiMaps = poiMapDao.findByPoiId(poiId);
@@ -110,6 +107,8 @@ public class PoiEventManager {
         }
         poiEvents = dao.findAllByIds(eventIds);
         return poiEvents;
+        */
+        return dao.findPoiEventsByPoi(poiId);
     }
     
     public PoiEvent findByPoi(long poiId) {

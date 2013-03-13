@@ -108,7 +108,7 @@ public class PoiManager {
         }
         
         // event part
-        List<PoiEvent> poiEvents = poiEventMngr.findByPoiId(poi.getId());
+        List<PoiEvent> poiEvents = poiEventMngr.findPoiEventsByPoiId(poi.getId());
         if (poiEvents.size() == 0) {
             // dynamic assign event by rules
             

@@ -1,5 +1,6 @@
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,6 +39,29 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
             pm.close();
         } 
         return detached;                            
+    }
+    
+    public List<PoiEvent> findPoiEventsByPoi(long poiId) {
+        List<PoiEvent> results = new ArrayList<PoiEvent>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        try {
+            String sql = "select * " +
+                    "  from poi_event " +
+                    " where id in (select eventId " +
+                                   " from poi_map " +
+                                   " where poiId = " + poiId + ")";
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(PoiEvent.class);
+            @SuppressWarnings("unchecked")
+            List<PoiEvent> poiEvents = (List<PoiEvent>) query.execute();
+            
+            results = (List<PoiEvent>) pm.detachCopyAll(poiEvents);
+            
+        } finally {
+            pm.close();
+        } 
+        return results;                            
     }
     
 }

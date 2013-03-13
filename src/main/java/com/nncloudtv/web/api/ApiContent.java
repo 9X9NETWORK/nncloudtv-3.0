@@ -2327,7 +2327,7 @@ public class ApiContent extends ApiGeneric {
         
         PoiEvent poiEvent;
         PoiEventManager poiEventMngr = new  PoiEventManager();
-        List<PoiEvent> poiEvents = poiEventMngr.findByPoiId(poi.getId());
+        List<PoiEvent> poiEvents = poiEventMngr.findPoiEventsByPoiId(poi.getId());
         if (poiEvents.size() == 0) {
             notFound(resp, "PoiEvent Not Found");
             return null;
