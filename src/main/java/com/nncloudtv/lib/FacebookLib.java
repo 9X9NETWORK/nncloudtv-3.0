@@ -81,7 +81,7 @@ public class FacebookLib {
     
     public String getProfilePic(String username) {
         try {
-            URL url = new URL(" http://graph.facebook.com/" + username + "/picture");
+            URL url = new URL("http://graph.facebook.com/" + username + "/picture");
             log.info("FACEBOOK:(profile pic)-query:" + url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
