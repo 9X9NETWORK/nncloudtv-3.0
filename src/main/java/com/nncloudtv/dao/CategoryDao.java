@@ -64,16 +64,26 @@ public class CategoryDao extends GenericDao<Category> {
         return detached;
     }
     
-    public List<Category> findPlayerCategories(String lang) {
+    public List<Category> findPlayerCategories(String lang, long msoId) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<Category> detached = new ArrayList<Category>();
         try {
+            /*
             Query query = pm.newQuery(Category.class);
-            query.setFilter("lang == langParam");
-            query.declareParameters("String langParam");
+            query.setFilter("lang == langParam && msoId == msoIdParam");
+            query.declareParameters("String langParam, long msoId");
             query.setOrdering("seq");
             @SuppressWarnings("unchecked")
-            List<Category> results = (List<Category>) query.execute(lang);            
+            List<Category> results = (List<Category>) query.execute(lang, msoId);            
+            detached = (List<Category>)pm.detachCopyAll(results);
+            */
+            
+            String sql = "select * from category where lang = '" + lang + "' and msoId = " + msoId;
+            log.info("sql:" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(Category.class);
+            @SuppressWarnings("unchecked")
+            List<Category> results = (List<Category>) q.execute();            
             detached = (List<Category>)pm.detachCopyAll(results);
         } finally {
             pm.close();

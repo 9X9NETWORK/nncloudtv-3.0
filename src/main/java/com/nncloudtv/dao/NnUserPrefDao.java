@@ -45,10 +45,10 @@ public class NnUserPrefDao extends GenericDao<NnUserPref> {
         PersistenceManager pm = this.getPersistenceManager(user);
         try {
             Query query = pm.newQuery(NnUserPref.class);
-            query.setFilter("userId == userIdParam");
-            query.declareParameters("long userIdParam");        
+            query.setFilter("userId == userIdParam && msoId == msoIdParam");
+            query.declareParameters("long userIdParam, long msoIdParam");        
             @SuppressWarnings("unchecked")
-            List<NnUserPref> results = (List<NnUserPref>) query.execute(user.getId());
+            List<NnUserPref> results = (List<NnUserPref>) query.execute(user.getId(), user.getMsoId());
             pref = (List<NnUserPref>) pm.detachCopyAll(results);
         } catch (JDOObjectNotFoundException e) {
         } finally {
@@ -62,10 +62,10 @@ public class NnUserPrefDao extends GenericDao<NnUserPref> {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
         try {
             Query query = pm.newQuery(NnUserPref.class);
-            query.setFilter("userId == userIdParam && item == itemParam");
-            query.declareParameters("long userIdParam, String itemParam");
+            query.setFilter("userId == userIdParam && item == itemParam && msoId == msoIdParam");
+            query.declareParameters("long userIdParam, String itemParam, long msoIdParam");
             @SuppressWarnings("unchecked")
-            List<NnUserPref> results = (List<NnUserPref>) query.execute(user.getId(), item);
+            List<NnUserPref> results = (List<NnUserPref>) query.execute(user.getId(), item, user.getMsoId() );
             if (results.size() > 0) {        
                 pref = (NnUserPref) pm.detachCopy(results.get(0));
             }
@@ -76,14 +76,10 @@ public class NnUserPrefDao extends GenericDao<NnUserPref> {
         return pref;
     }
 
-    public void delete(NnUser user, NnUserPref pref) {
+    public void delete(NnUser user, NnUserPref pref) {        
+        if (pref == null) return;                    
         
-        if (pref == null) {
-            return;
-        }
-        
-        PersistenceManager pm = this.getPersistenceManager(user);
-        
+        PersistenceManager pm = this.getPersistenceManager(user);        
         try {
             pm.deletePersistent(pref);
         } finally {

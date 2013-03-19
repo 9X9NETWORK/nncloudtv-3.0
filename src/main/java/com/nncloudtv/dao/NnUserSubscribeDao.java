@@ -61,18 +61,18 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
     }
     
     public short findFirstAvailableSpot(NnUser user) {
-        PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
+        PersistenceManager pm = PMF.getNnUser1().getPersistenceManager(); //!problem
         short seq = 0;
         try {
             String sql = 
                 "select * from position where seq not in " +
-                "  (select seq from nnuser_subscribe where userId = ?) limit 1; ";
+                "  (select seq from nnuser_subscribe where userId = ? and msoId = ?) limit 1; ";
 
             log.info("Sql=" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);            
             q.setClass(Position.class);
             @SuppressWarnings("unchecked")
-            List<Position> list = (List<Position>) q.execute(user.getId());                                
+            List<Position> list = (List<Position>) q.execute(user.getId(), user.getMsoId());                                
             if (list.size() > 0) {
                 seq = list.get(0).getSeq();
             }            
@@ -87,11 +87,11 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
         PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
         try {
             Query q = pm.newQuery(NnUserSubscribe.class);
-            q.setFilter("userId == userIdParam && seq == seqParam");
-            q.declareParameters("long userIdParam, short seqParam");
+            q.setFilter("userId == userIdParam && seq == seqParam && msoId == msoIdParam");
+            q.declareParameters("long userIdParam, short seqParam, Long msoIdParam");
             q.setOrdering("seq asc");
             @SuppressWarnings("unchecked")
-            List<NnUserSubscribe> subs = (List<NnUserSubscribe>)q.execute(user.getId(), seq);
+            List<NnUserSubscribe> subs = (List<NnUserSubscribe>)q.execute(user.getId(), seq, user.getMsoId());
             if (subs.size() > 0) {
                 s = subs.get(0);
                 s = pm.detachCopy(s);
@@ -102,11 +102,12 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
         return s;
     }     
     
+    /*
     public NnUserSubscribe findChannelSubscription(NnUser user, long channelId, short seq) {
         PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
         NnUserSubscribe detached = null;
         try {
-            Query q = pm.newQuery(NnUserSubscribe.class);
+            Query q = pm.newQuery(NnUserSubscribe.class);            
             q.setFilter("userId == userIdParam && channelId == channelIdParam && seq == seqParam");
             q.declareParameters("long userIdParam, long channelIdParam, short seqParam");
             q.setOrdering("seq asc");
@@ -121,17 +122,18 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
         }
         return detached;
     }
+    */
 
     public NnUserSubscribe findByUserAndChannel(NnUser user, long channelId) {
         PersistenceManager pm = NnUserDao.getPersistenceManager(user.getShard(), user.getToken());
         NnUserSubscribe s = null;
         try {
             Query q = pm.newQuery(NnUserSubscribe.class);
-            q.setFilter("userId == userIdParam && channelId== channelIdParam");
+            q.setFilter("userId == userIdParam && channelId== channelIdParam && msoId == msoIdParam");
             q.setOrdering("seq asc");
-            q.declareParameters("long userIdParam, long channelIdParam");
+            q.declareParameters("long userIdParam, long channelIdParam, Long msoIdParam");
             @SuppressWarnings("unchecked")
-            List<NnUserSubscribe> subs = (List<NnUserSubscribe>)q.execute(user.getId(), channelId);
+            List<NnUserSubscribe> subs = (List<NnUserSubscribe>)q.execute(user.getId(), channelId, user.getMsoId());
             if (subs.size() > 0) {
                 s = subs.get(0);
                 s = pm.detachCopy(s);
@@ -147,11 +149,11 @@ public class NnUserSubscribeDao extends GenericDao<NnUserSubscribe>{
         List<NnUserSubscribe> detached = new ArrayList<NnUserSubscribe>();
         try {
             Query q = pm.newQuery(NnUserSubscribe.class);
-            q.setFilter("userId == userIdParam");
-            q.declareParameters("long userIdParam");
+            q.setFilter("userId == userIdParam && msoId == msoIdParam");
+            q.declareParameters("long userIdParam, Long msoIdParam");
             q.setOrdering("seq asc");
             @SuppressWarnings("unchecked")
-            List<NnUserSubscribe> subscriptions = (List<NnUserSubscribe>)q.execute(user.getId());
+            List<NnUserSubscribe> subscriptions = (List<NnUserSubscribe>)q.execute(user.getId(), user.getMsoId());
             detached = (List<NnUserSubscribe>)pm.detachCopyAll(subscriptions);
         } finally {
             pm.close();
