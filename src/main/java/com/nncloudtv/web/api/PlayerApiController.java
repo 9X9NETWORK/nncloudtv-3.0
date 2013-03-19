@@ -413,11 +413,17 @@ public class PlayerApiController {
             HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
-            this.prepService(req, true);
             boolean flatten = Boolean.parseBoolean(isFlatten);
             if (playerApiService.getVersion() < 32) {
-                return new IosService().category(category, lang, flatten); 
+                String msoName = req.getParameter("mso");
+                MsoManager msoMngr = new MsoManager();
+                Mso brand = msoMngr.findByName(msoName);
+                if (brand == null) {
+                   brand = msoMngr.findNNMso();
+                }                
+                return new IosService().category(category, lang, flatten, brand ); 
             }
+            this.prepService(req, true);
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
