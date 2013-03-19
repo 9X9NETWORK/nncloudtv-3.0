@@ -93,7 +93,7 @@ public class AdminMsoController {
         mso.setLogoUrl(logoUrl);
         msoMngr.save(mso);
         
-        NnUser user = new NnUser(contactEmail, password, name, userType, mso.getId());
+        NnUser user = new NnUser(contactEmail, password, userType, mso.getId());
         userMngr.create(user, req, NnUser.SHARD_DEFAULT);
                 
         return "OK";

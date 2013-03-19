@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 
 public class ApiGeneric {
@@ -135,11 +137,13 @@ public class ApiGeneric {
 	public NnUser userIdentify(HttpServletRequest req) {
 	    
 	    String token = CookieHelper.getCookie(req, "user");
+	    String mso = req.getParameter("mso");
 	    if (token == null) {
             return null;
         }
 	    NnUserManager userMngr = new NnUserManager();
-	    NnUser user = userMngr.findByToken(token);
+	    Mso brand = new MsoManager().findOneByName(mso);
+	    NnUser user = userMngr.findByToken(token, brand.getId());
         if (user == null) {
             return null;
         }

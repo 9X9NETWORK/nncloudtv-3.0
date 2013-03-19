@@ -26,8 +26,10 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoConfigManager;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.web.json.facebook.FBPost;
 
@@ -100,21 +102,20 @@ public class ApiMisc extends ApiGeneric {
 		String token = req.getParameter("token");
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
+		String mso = req.getParameter("mso");
 		
 		NnUserManager userMngr = new NnUserManager();
 		NnUser user = null;
-		
-		if (token != null) {
-			
-			log.info("token = " + token);
-			
-			user = userMngr.findByToken(token);
+		Mso brand = new MsoManager().findOneByName(mso);
+		if (token != null) {			
+			log.info("token = " + token);			
+			user = userMngr.findByToken(token, brand.getId());
 			
 		} else if (email != null && password != null) {
 			
 			log.info("email = " + email + ", password = xxxxxx");
 			
-			user = userMngr.findAuthenticatedUser(email, password, req);
+			user = userMngr.findAuthenticatedUser(email, password, brand.getId(), req);
 			if (user != null) {
 				CookieHelper.setCookie(resp, CookieHelper.USER, user.getToken());
 			}

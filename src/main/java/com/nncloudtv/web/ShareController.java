@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nncloudtv.dao.NnUserDao;
 import com.nncloudtv.dao.NnUserSubscribeDao;
 import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.lib.NnLogUtil;
@@ -78,8 +77,8 @@ public class ShareController {
         if (invite == null) {
             model = model.addAttribute("invite", "null");
         } else {
-            NnUser user = new NnUserDao().findById(invite.getUserId(), invite.getShard());
-            model = model.addAttribute("userName", user.getName());
+            NnUser user = new NnUserManager().findById(invite.getUserId(), 1, invite.getShard());
+            model = model.addAttribute("userName", user.getProfile().getName());
             model = model.addAttribute("token", token);
         }
         return "flipr/invite";
@@ -106,15 +105,17 @@ public class ShareController {
                 NnUserManager userMngr = new NnUserManager();
                 NnUserSubscribeDao subDao = new NnUserSubscribeDao();
                 NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-                NnUser user = userMngr.findByEmail(invite.getInviteeEmail(), req);
+                NnUser user = userMngr.findByEmail(invite.getInviteeEmail(), 1, req);
                 NnChannelManager channelMngr = new NnChannelManager();
                 NnChannel c = channelMngr.findById(invite.getChannelId());
                 if (user == null) {
                     model = model.addAttribute("exist", "n");
                     Mso mso = new MsoManager().findNNMso();
-                    user = new NnUser(invite.getInviteeEmail(), "123456", invite.getInviteeName(), NnUser.TYPE_USER, mso.getId());
+                    user = new NnUser(invite.getInviteeEmail(), "123456", NnUser.TYPE_USER, mso.getId());
+                    /*
                     user.setSphere("en");
-                    user.setLang("en");        
+                    user.setLang("en");
+                    */        
                     user.setTemp(false);
                     userMngr.create(user, req, (short)0);
                     c.setSeq((short)1);

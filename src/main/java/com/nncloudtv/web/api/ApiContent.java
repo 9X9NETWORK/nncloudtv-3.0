@@ -849,8 +849,7 @@ public class ApiContent extends ApiGeneric {
                 
                 catMngr.save(new CategoryMap(categoryId, channelId));
                 
-                if (channel.getSphere() != null && channel.getSphere().equalsIgnoreCase(LangTable.OTHER)) {
-                    
+                if (channel.getSphere() != null && channel.getSphere().equalsIgnoreCase(LangTable.OTHER)) {                    
                     Category twin = catMngr.findTwin(category);
                     if (twin != null) {
                         catMngr.save(new CategoryMap(twin.getId(), channelId));

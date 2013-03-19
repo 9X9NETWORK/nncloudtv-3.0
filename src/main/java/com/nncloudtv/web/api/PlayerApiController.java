@@ -64,17 +64,25 @@ import com.nncloudtv.web.json.facebook.FacebookMe;
  * <blockquote>
  * Brand information: brandInfo
  * <p>
- * Account related: guestRegister, signup, login, userTokenVerify, signout
+ * Account related: guestRegister, signup, login, userTokenVerify, signout, fbLogin, fbSignup, 
+ *                  setUserProfile, getUserProfile, setUesrPref
  * <p>
- * Category listing: categoryBrowse
+ * <p>
+ * Category listing: categoryBrowse, categoryInfo, tagInfo, setInfo
+ * <p>
+ * Curator: curator
  * <p>
  * Channel and program listing: channelLineup, programInfo
  * <p>
- * IPG action: moveChannel, channelSubmit, subscribe, unsubscribe
+ * IPG action: moveChannel, channelSubmit, subscribe, unsubscribe, setSetInfo
  * <p>
- * IPG snapshot: saveIpg, loadIpg
+ * YouTube connect: obtainAccount, bulkSubscribe 
+ * <p>
+ * YouTube info update: virtualChannelAdd, channelUpdate 
  * <p>
  * Data collection: pdr, programRemove
+ * <p>
+ * System message: staticContent 
  * </blockquote>
  * <p>
  * <b>9x9 Player API always returns a string:</b>
@@ -137,7 +145,7 @@ public class PlayerApiController {
         this.playerApiService= playerApiService;
     }    
     
-    private int prepService(HttpServletRequest req, boolean log) {        
+    private int prepService(HttpServletRequest req, boolean tolog) {        
         /*
         String userAgent = req.getHeader("user-agent");
         if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
@@ -145,12 +153,17 @@ public class PlayerApiController {
             log.info("from iOS");
         }
         */
-        if (log) 
+        String msoName = req.getParameter("mso");
+        if (tolog) 
             NnNetUtil.logUrl(req);
         HttpSession session = req.getSession();
         session.setMaxInactiveInterval(60);
         MsoManager msoMngr = new MsoManager();
-        Mso mso = msoMngr.findNNMso();
+        Mso mso = msoMngr.findByName(msoName);
+        if (mso == null) {
+           mso = msoMngr.findNNMso();
+        }
+        log.info("mso entrance:" + mso.getId());
         Locale locale = Locale.ENGLISH;
         playerApiService.setLocale(locale);
         playerApiService.setMso(mso);
@@ -215,6 +228,7 @@ public class PlayerApiController {
     public @ResponseBody String signup(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        String mso = req.getParameter("mso");
         String name = req.getParameter("name");
         String userToken = req.getParameter("user");
         String captcha = req.getParameter("captcha");
@@ -280,7 +294,7 @@ public class PlayerApiController {
             NnLogUtil.logThrowable(t);
         }
         return output;
-            
+
      }
     
     /**
@@ -374,7 +388,6 @@ public class PlayerApiController {
     }
 
     /**   
-     * This API is used for version before 3.2.
      * For directory query. Returns list of categories.   
      * 
      * @param lang en or zh 
@@ -391,6 +404,7 @@ public class PlayerApiController {
     @RequestMapping(value="category", produces = "text/plain; charset=utf-8")
     public @ResponseBody String category(
             @RequestParam(value="category", required=false) String category,
+            @RequestParam(value="mso", required=false) String mso,            
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="flatten", required=false) String isFlatten,
             @RequestParam(value="v", required=false) String v,
@@ -552,7 +566,13 @@ public class PlayerApiController {
             HttpServletRequest req,
             HttpServletResponse resp) {
         log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);        
-        return new IosService().setInfo(id, beautifulUrl);        
+        String msoName = req.getParameter("mso");
+        MsoManager msoMngr = new MsoManager();
+        Mso mso = msoMngr.findByName(msoName);
+        if (mso == null) {
+           mso = msoMngr.findNNMso();
+        }
+        return new IosService().setInfo(id, beautifulUrl, mso);        
     }
 
     /** 
@@ -574,6 +594,7 @@ public class PlayerApiController {
     @RequestMapping(value="tagInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String tagInfo(
             @RequestParam(value="name", required=false) String name,
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="start", required=false) String start,
             @RequestParam(value="count", required=false) String count,            
             @RequestParam(value="rx", required = false) String rx,
@@ -615,6 +636,7 @@ public class PlayerApiController {
     @RequestMapping(value="categoryInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String categoryInfo(
             @RequestParam(value="category", required=false) String id,
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="start", required=false) String start,
             @RequestParam(value="count", required=false) String count,
             @RequestParam(value="sort", required=false) String sort,
@@ -729,6 +751,7 @@ public class PlayerApiController {
     @RequestMapping(value="channelStack", produces = "text/plain; charset=utf-8")
     public @ResponseBody String channelStack(
             @RequestParam(value="stack", required=false) String stack,
+            @RequestParam(value="mso", required=false) String mso,            
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="channel", required=false) String channel,
@@ -1012,6 +1035,7 @@ public class PlayerApiController {
     public @ResponseBody String login(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        String mso = req.getParameter("mso");
         String rx = req.getParameter("rx");
         log.info("login: email=" + email + ";rx=" + rx);        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
@@ -2391,6 +2415,7 @@ public class PlayerApiController {
     public @ResponseBody String bulkSubscribe(                      
             @RequestParam(value="channelNames", required=false) String ytUsers,
             @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -2413,7 +2438,7 @@ public class PlayerApiController {
     
     @RequestMapping(value="virtualChannelAdd", produces = "text/plain; charset=utf-8")
     public @ResponseBody String virtualChannelAdd(                      
-            @RequestParam(value="user", required=false) String user,
+            @RequestParam(value="user", required=false) String user,            
             @RequestParam(value="channel", required=false) String channel,
             @RequestParam(value="payload", required=false) String payload,            
             @RequestParam(value="queued", required = false) String queued,
@@ -2449,6 +2474,7 @@ public class PlayerApiController {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String name = req.getParameter("name");
+        String mso = req.getParameter("mso");
                 
         log.info("signup: email=" + email + ";name=" + name); 
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);

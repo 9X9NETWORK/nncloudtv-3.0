@@ -212,8 +212,8 @@ public class AdminChannelController {
                 }
             }
             if (qualified) {
-                cell.add(channel.getId());
                 cell.add(channel.getName());
+                cell.add(channel.getId());
                 cell.add(channel.getSourceUrl());
                 cell.add(channel.getStatus());
                 cell.add(channel.getContentType());

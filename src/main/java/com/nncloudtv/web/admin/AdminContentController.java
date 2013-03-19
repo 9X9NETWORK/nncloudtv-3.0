@@ -18,7 +18,9 @@ import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnContent;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnContentManager;
 
 
@@ -62,9 +64,15 @@ public class AdminContentController {
         String key = req.getParameter("key");
         String lang = req.getParameter("lang");
         String text = req.getParameter("text");
-        NnContent content = contentMngr.findByItemAndLang(key, lang);
+        String mso = req.getParameter("mso");
+        MsoManager msoMngr = new MsoManager();
+        Mso brand = msoMngr.findByName(mso);
+        if (mso == null) {
+           brand = msoMngr.findNNMso();
+        }
+        NnContent content = contentMngr.findByItemAndLang(key, lang, brand.getId());
         if (content == null) {
-            content = new NnContent(key, text, lang);
+            content = new NnContent(key, text, lang, brand.getId());
         }
         if (lang == null)
             lang = LangTable.LANG_EN;
