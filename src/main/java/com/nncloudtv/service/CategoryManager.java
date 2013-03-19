@@ -70,7 +70,7 @@ public class CategoryManager {
         List<CategoryMap> map = dao.findMap(id);
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnChannelManager chMngr = new NnChannelManager();        
-        for (CategoryMap m : map) {            
+        for (CategoryMap m : map) {
             NnChannel c = chMngr.findById(m.getChannelId());
             if (c != null) {
                 if ((!player) || (player && c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS)) {
@@ -163,8 +163,8 @@ public class CategoryManager {
         return new CategorySeqComparator();
     }
     
-    public List<Category> findPlayerCategories(String lang) {
-        return dao.findPlayerCategories(lang);
+    public List<Category> findPlayerCategories(String lang, long msoId) {
+        return dao.findPlayerCategories(lang, msoId);
     }
 
     public List<Category> findPublicCategories(boolean isPublic) {

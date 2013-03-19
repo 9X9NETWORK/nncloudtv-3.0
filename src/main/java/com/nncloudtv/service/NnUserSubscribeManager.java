@@ -28,7 +28,7 @@ public class NnUserSubscribeManager {
     //make sure your channel has seq and type set
     //@@@ counter work throw to queue
     public boolean subscribeChannel(NnUser user, NnChannel channel) {
-        NnUserSubscribe s = new NnUserSubscribe(user.getId(), channel.getId(), channel.getSeq(), channel.getType());
+        NnUserSubscribe s = new NnUserSubscribe(user.getId(), channel.getId(), channel.getSeq(), channel.getType(), user.getMsoId());
         Date now = new Date();
         s.setCreateDate(now);
         s.setUpdateDate(now);
@@ -41,7 +41,7 @@ public class NnUserSubscribeManager {
     }
     
     public NnUserSubscribe subscribeChannel(NnUser user, long channelId, short seq, short type) {
-        NnUserSubscribe s = new NnUserSubscribe(user.getId(), channelId, seq, type);
+        NnUserSubscribe s = new NnUserSubscribe(user.getId(), channelId, seq, type, user.getMsoId());
         Date now = new Date();
         s.setCreateDate(now);
         s.setUpdateDate(now);
@@ -66,7 +66,7 @@ public class NnUserSubscribeManager {
         for (NnChannel c : channels) {
             NnUserSubscribe existed = subDao.findByUserAndChannel(user, c.getId());
             if (existed == null) {
-                NnUserSubscribe sub = new NnUserSubscribe(user.getId(), c.getId(), c.getSeq(), c.getType());
+                NnUserSubscribe sub = new NnUserSubscribe(user.getId(), c.getId(), c.getSeq(), c.getType(), user.getMsoId());
                 Date now = new Date();
                 sub.setCreateDate(now);
                 sub.setUpdateDate(now);
@@ -76,10 +76,12 @@ public class NnUserSubscribeManager {
         return true;
     }
 
+    /*
     public NnUserSubscribe findChannelSubscription(NnUser user, long channelId, short seq) {
         NnUserSubscribe s = subDao.findChannelSubscription(user, channelId, seq);
         return s;
     }
+    */
     
     public NnUserSubscribe findByUserAndChannel(NnUser user, long channelId) {
         NnUserSubscribe s = subDao.findByUserAndChannel(user, channelId);
@@ -132,7 +134,7 @@ public class NnUserSubscribeManager {
         NnUserSubscribe occupied = this.findByUserAndSeq(user, seq);
         if (occupied != null)
             return false;
-        NnUserSubscribe s = new NnUserSubscribe(user.getId(), channelId, seq, MsoIpg.TYPE_GENERAL);
+        NnUserSubscribe s = new NnUserSubscribe(user.getId(), channelId, seq, MsoIpg.TYPE_GENERAL, user.getMsoId());
         Date now = new Date();
         s.setCreateDate(now);
         s.setUpdateDate(now);

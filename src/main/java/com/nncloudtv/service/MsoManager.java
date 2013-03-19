@@ -18,6 +18,15 @@ public class MsoManager {
     protected static final Logger log = Logger.getLogger(MsoManager.class.getName());
     
     private MsoDao msoDao = new MsoDao();    
+
+    public Mso findOneByName(String name) {
+        if (name == null)
+            return this.findNNMso(); //most of the situation
+        Mso mso = this.findByName(name);
+        if (mso == null)
+            return this.findNNMso(); 
+        return mso;
+    }
     
     public int addMsoVisitCounter(boolean readOnly) {        
         String counterName = "9x9" + "BrandInfo";
@@ -111,7 +120,7 @@ public class MsoManager {
         Mso mso = msoDao.findByName(name);
         return mso;
     }
-            
+    
     public Mso findById(long id) {
         return msoDao.findById(id);
     }

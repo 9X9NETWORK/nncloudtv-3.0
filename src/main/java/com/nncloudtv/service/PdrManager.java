@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import com.nncloudtv.dao.PdrDao;
 import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.Pdr;
 
 public class PdrManager {

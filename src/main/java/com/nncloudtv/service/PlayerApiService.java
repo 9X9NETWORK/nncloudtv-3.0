@@ -53,6 +53,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserPref;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.NnUserReport;
 import com.nncloudtv.model.NnUserShare;
 import com.nncloudtv.model.NnUserSubscribe;
@@ -150,12 +151,14 @@ public class PlayerApiService {
         String output = "";
         if (user != null) {
             output += assembleKeyValue("token", user.getToken());
-            output += assembleKeyValue("name", user.getName());
-            output += assembleKeyValue("lastLogin", String.valueOf(user.getUpdateDate().getTime()));
-            output += assembleKeyValue("sphere", user.getSphere());
-            output += assembleKeyValue("ui-lang", user.getLang());            
             output += assembleKeyValue("userid", String.valueOf(user.getIdStr()));
-            output += assembleKeyValue("curator", String.valueOf(user.getProfileUrl()));
+            NnUserProfile profile = user.getProfile();
+            output += assembleKeyValue("name", profile.getName());
+            output += assembleKeyValue("lastLogin", String.valueOf(profile.getUpdateDate().getTime()));
+            output += assembleKeyValue("sphere", profile.getSphere());
+            output += assembleKeyValue("ui-lang", profile.getLang());            
+            output += assembleKeyValue("curator", String.valueOf(profile.getProfileUrl()));
+            
             if (login)
                 output += assembleKeyValue("created", "1");
             else
@@ -165,7 +168,7 @@ public class PlayerApiService {
                 fbUser = "1";
             output += assembleKeyValue("fbUser", fbUser);
             NnUserPrefManager prefMngr = new NnUserPrefManager();
-            List<NnUserPref> list = prefMngr.findByUser(user);        
+            List<NnUserPref> list = prefMngr.findByUser(user);
             for (NnUserPref pref : list) {
                 output += PlayerApiService.assembleKeyValue(pref.getItem(), pref.getValue());
             }            
@@ -174,7 +177,7 @@ public class PlayerApiService {
             output += assembleKeyValue("name", NnUser.GUEST_NAME);
             output += assembleKeyValue("lastLogin", "");            
             String sphere = NnUserManager.findLocaleByHttpRequest(req);
-            output += assembleKeyValue("sphere", sphere); //TODO should depend on ip
+            output += assembleKeyValue("sphere", sphere);
         }
             
         return output;
@@ -190,7 +193,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         if (version >= 32)
             return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null); 
-        return new IosService().listRecommended(lang);        
+        return new IosService().listRecommended(lang, mso.getId());
     }
     
     public String fbDeviceSignup(FacebookMe me, String expire, HttpServletRequest req, HttpServletResponse resp) {
@@ -202,13 +205,14 @@ public class PlayerApiService {
         if (expires != null && expires.length() > 0)
             expire = Long.parseLong(expires); //TODO pass to FacebookMe
         
-        NnUser user = userMngr.findByEmail(me.getId(), req);
+        NnUser user = userMngr.findByEmail(me.getId(), mso.getId(), req);        
         log.info("find user in db from fbId:" + me.getId());
         if (user == null) {
             log.info("FACEBOOK: signup with fb account:" + me.getEmail() + "(" + me.getId() + ")");
-            user = new NnUser(me.getEmail(), me.getName(), me.getId(), me.getAccessToken());
+            user = new NnUser(me.getEmail(), me.getId(), me.getAccessToken()); 
             user.setExpires(new Date().getTime() + expire);
             user.setTemp(false);
+            user.setMsoId(mso.getId());
             user = userMngr.setFbProfile(user, me);
             int status = userMngr.create(user, req, (short)0);
             if (status != NnStatusCode.SUCCESS)
@@ -267,16 +271,15 @@ public class PlayerApiService {
                 && email.contains("@9x9.tv")) {
             type = NnUser.TYPE_YOUTUBE_CONNECT;
         }        
-        NnUser user = new NnUser(email, password, name, type, mso.getId());
-        user.setSphere(sphere);
-        user.setLang(lang);        
-        user.setDob(year);        
+        NnUser user = new NnUser(email, password, type, mso.getId());
         user.setTemp(isTemp);
+        NnUserProfile profile = new NnUserProfile(mso.getId(), name, sphere, lang, year);
+        user.setProfile(profile);
         status = userMngr.create(user, req, (short)0);
         if (status != NnStatusCode.SUCCESS)
             return this.assembleMsgs(status, null);
-        
-        userMngr.subscibeDefaultChannels(user);                            
+
+        //userMngr.subscibeDefaultChannels(user);
         String[] result = {this.prepareUserInfo(user, null, req, false)};        
         this.setUserCookie(resp, CookieHelper.USER, user.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
@@ -312,7 +315,7 @@ public class PlayerApiService {
         if (token == null) {return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);}
         
         NnGuestManager guestMngr = new NnGuestManager();
-        NnUser user = userMngr.findByToken(token);
+        NnUser user = userMngr.findByToken(token, mso.getId());
         NnGuest guest = guestMngr.findByToken(token);
         if (user == null && guest == null) {
             CookieHelper.deleteCookie(resp, CookieHelper.USER);
@@ -352,7 +355,7 @@ public class PlayerApiService {
         CategoryManager catMngr = new CategoryManager();
         
         result[0] = "id" + "\t" + id + "\n";        
-        List<Category> categories = catMngr.findPlayerCategories(lang);        
+        List<Category> categories = catMngr.findPlayerCategories(lang, mso.getId());        
         for (Category c : categories) {
             String name =  c.getName();
             int cnt = c.getChannelCnt();
@@ -439,7 +442,7 @@ public class PlayerApiService {
         if (channelId == null && pos == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         //verify user
-        NnUser user = new NnUserManager().findByToken(userToken);
+        NnUser user = new NnUserManager().findByToken(userToken, mso.getId());
         if (user == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         //unsubscribe
@@ -449,17 +452,22 @@ public class PlayerApiService {
             if (chArr.length == 1) {
                 log.info("unsubscribe single channel");
                 NnUserSubscribe s = null;
+                s = subMngr.findByUserAndChannel(user, Long.parseLong(channelId));
+                /*
                 if (grid == null) {
                     s = subMngr.findByUserAndChannel(user, Long.parseLong(channelId));
                 } else {
                     s = subMngr.findChannelSubscription(user, Long.parseLong(channelId), Short.parseShort(grid));
                 }
+                */                
                 subMngr.unsubscribeChannel(user, s);                
+                /*
                 NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
                 NnUserWatched watched = watchedMngr.findByUserTokenAndChannel(user.getToken(), Long.parseLong(channelId));
                 if (watched != null) {
                     watchedMngr.delete(user, watched);
-                }                                
+                } 
+                */                               
             } else {
                 log.info("unsubscribe multiple channels but not supported");
             }
@@ -576,30 +584,25 @@ public class PlayerApiService {
         result[2] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
+     
     
     public String channelStack(String stack, String lang, String userToken, String channel, boolean isReduced) {
         if (stack == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-
+        
+        String stackName = TagManager.assembleStackName(stack, lang, mso.getName());
+        log.info("stackName:" + stackName);
         lang = this.checkLang(lang);
         List<String> result = new ArrayList<String>();
         String[] cond = stack.split(",");
         for (String s : cond) {
-            List<NnChannel> chs = new ArrayList<NnChannel>(); 
-            if (s.equals(Tag.FEATURED)) {
-                chs = chMngr.findBillboard(Tag.FEATURED, lang);
-            }
-            if (s.equals(Tag.HOT)) {
-                chs = chMngr.findBillboard(Tag.HOT, lang);               
-            }
-            if (s.equals("trending")) {
-                chs = chMngr.findBillboard(Tag.TRENDING, lang);               
-            }
+            List<NnChannel> chs = new ArrayList<NnChannel>();
+            chs = chMngr.findBillboard(stackName, lang);
             if (s.equals(Tag.RECOMMEND)) {
-                chs = new RecommendService().findRecommend(userToken, lang);
+                chs = new RecommendService().findRecommend(userToken, mso.getId(), lang);
             }
             if (s.equals("mayLike")) {
-                chs = new RecommendService().findMayLike(userToken, channel, lang);                
+                chs = new RecommendService().findMayLike(userToken, mso.getId(), channel, lang);                
             }
             String output = "";
             if (isReduced) {
@@ -653,7 +656,7 @@ public class PlayerApiService {
             if (subscriptions != null) {
                 user = userMngr.findByProfileUrl(subscriptions);
             } else {
-                user = userMngr.findByToken(userToken);
+                user = userMngr.findByToken(userToken, mso.getId());
             }
             if (user == null) {
                 NnGuest guest = new NnGuestManager().findByToken(userToken);
@@ -691,8 +694,10 @@ public class PlayerApiService {
         boolean channelPos = true;
         if (channelIds == null && curatorIdStr == null) {
             //find subscribed channels 
-            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();            
+            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
             channels = subMngr.findSubscribedChannels(user);
+            List<NnChannel> defaultChannels = chMngr.findMsoDefaultChannels(user.getMsoId(), false);
+            channels.addAll(defaultChannels);
             log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
         } else if (curatorIdStr != null) {
             channelPos = false;
@@ -779,7 +784,7 @@ public class PlayerApiService {
         }
         url = url.trim();
         //verify user
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) 
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         if (user.getEmail().equals(NnUser.GUEST_EMAIL))
@@ -829,13 +834,14 @@ public class PlayerApiService {
     }
     
     //TODO if use if fb user, redirect to facebook
-    public String login(String email, String password, HttpServletRequest req, HttpServletResponse resp) {        
+    public String login(String email, String password, HttpServletRequest req, HttpServletResponse resp) {
+        log.info("login player api service:" + mso.getId());
         log.info("login: email=" + email + ";password=" + password);
         if (!BasicValidator.validateRequired(new String[] {email, password}))
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);;        
 
         String result[] = {""};
-        NnUser user = userMngr.findAuthenticatedUser(email, password, req);
+        NnUser user = userMngr.findAuthenticatedUser(email, password, mso.getId(), req);
         if (user != null) {
             result[0] = this.prepareUserInfo(user, null, req, true);
             userMngr.save(user); //change last login time (ie updateTime)
@@ -932,7 +938,7 @@ public class PlayerApiService {
     
         String programInfoStr = "";
         if (channelIds.equals("*")) {
-            user = userMngr.findByToken(userToken);
+            user = userMngr.findByToken(userToken, mso.getId());
             if (user == null) {
                 NnGuest guest = new NnGuestManager().findByToken(userToken);
                 if (guest == null)
@@ -978,7 +984,7 @@ public class PlayerApiService {
         String userInfoStr = "";
         if (userInfo) {
             if (user == null && userToken != null) 
-                user = userMngr.findByToken(userToken);
+                user = userMngr.findByToken(userToken, mso.getId());
                 userInfoStr = this.prepareUserInfo(user, null, req, true);
         }
         if (userInfo) {
@@ -1010,7 +1016,7 @@ public class PlayerApiService {
             Integer.parseInt(grid2) < 0 || Integer.parseInt(grid2) > 81) {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }        
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) 
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         
@@ -1030,7 +1036,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
         }
 
-        NnUser user = new NnUserManager().findByToken(userToken);
+        NnUser user = new NnUserManager().findByToken(userToken, mso.getId());
         if (user == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);    
         
@@ -1051,7 +1057,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
-    private String checkLang(String lang) {
+    public String checkLang(String lang) {
         if (lang == null || lang.length() == 0)
             return LangTable.LANG_EN;
         if (lang != null && !lang.equals(LangTable.LANG_EN) && !lang.equals(LangTable.LANG_ZH))
@@ -1061,7 +1067,7 @@ public class PlayerApiService {
     
     public String staticContent(String key, String lang) {
         NnContentManager contentMngr = new NnContentManager();
-        NnContent content = contentMngr.findByItemAndLang(key, lang);        
+        NnContent content = contentMngr.findByItemAndLang(key, lang, mso.getId());        
         if (content == null)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         lang = this.checkLang(lang);
@@ -1110,7 +1116,7 @@ public class PlayerApiService {
         }        
         String[] result = {""};
         for (NnUser u : users) {
-            result[0] += u.getToken() + "\t" + u.getName() + "\t" + u.getUserEmail() + "\n";
+            result[0] += u.getToken() + "\t" + u.getProfile().getName() + "\t" + u.getUserEmail() + "\n";
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1164,7 +1170,7 @@ public class PlayerApiService {
             return map;
         }
         //verify user
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) {
             map.put("s", NnStatusCode.USER_INVALID);
             return map;
@@ -1265,8 +1271,9 @@ public class PlayerApiService {
             String toEmail = "feedback@9x9.tv";
             String toName = "feedback";
             String subject = "User send a report";
-            String body = "user ui-lang:" + user.getLang() + "\n";
-            body += "user region:" + user.getSphere() + "\n\n";
+            NnUserProfile profile = user.getProfile();
+            String body = "user ui-lang:" + profile.getLang() + "\n";                
+            body += "user region:" + profile.getSphere() + "\n\n";
             body += content;
             try {
                 body = URLDecoder.decode(body, "utf-8");
@@ -1279,7 +1286,7 @@ public class PlayerApiService {
             log.info("subject:" + subject);
             log.info("content:" + body);
             NnEmail mail = new NnEmail(toEmail, toName, 
-                                       user.getUserEmail(), user.getName(), 
+                                       user.getUserEmail(), profile.getName(), 
                                        user.getUserEmail(), subject, body);
             service.sendEmail(mail, "userfeedback@9x9.tv", "userfeedback");
         }
@@ -1292,11 +1299,14 @@ public class PlayerApiService {
             items == null || values == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         //verify user
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) 
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         if (user.getUserEmail().equals(NnUser.GUEST_EMAIL))
-            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);        
+            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
+        NnUserProfileManager profileMngr = new NnUserProfileManager();
+        NnUserProfile profile = profileMngr.findByUser(user);
+        if (profile == null) profile = new NnUserProfile(user.getId(), mso.getId());
         String[] key = items.split(",");
         String[] value = values.split(",");
         String password = "";
@@ -1335,14 +1345,14 @@ public class PlayerApiService {
             if (key[i].equals("name")) {
                 if (theValue.equals(NnUser.GUEST_NAME))
                     return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
-                user.setName(theValue);
+                profile.setName(theValue);
             }
             if (key[i].equals("image"))
-                user.setImageUrl(theValue);
+                profile.setImageUrl(theValue);
             if (key[i].equals("year"))
-                user.setDob(theValue);
+                profile.setDob(theValue);
             if (key[i].equals("description"))
-                user.setIntro(theValue);
+                profile.setIntro(theValue);
             if (key[i].equals("password"))
                 password = theValue;                
             if (key[i].equals("oldPassword"))
@@ -1350,14 +1360,14 @@ public class PlayerApiService {
             if (key[i].equals("sphere")) {
                 if ((theValue == null) || (this.checkLang(theValue) == null))
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
-                user.setSphere(theValue);
+                profile.setSphere(theValue);
             }
             if (key[i].equals("gender"))
-                user.setGender(Short.parseShort(theValue));                        
+                profile.setGender(Short.parseShort(theValue));                        
             if (key[i].equals("ui-lang")) {
                 if ((theValue == null) || (this.checkLang(theValue) == null))
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
-                user.setLang(theValue);
+                profile.setLang(theValue);
             }
         }        
         int status = NnUserValidator.validateProfile(user);
@@ -1366,7 +1376,7 @@ public class PlayerApiService {
             return this.assembleMsgs(status, null);
         }
         if (password.length() > 0 && oldPassword.length() > 0) {
-            NnUser authenticated = userMngr.findAuthenticatedUser(user.getEmail(), oldPassword, req);
+            NnUser authenticated = userMngr.findAuthenticatedUser(user.getEmail(), oldPassword, mso.getId(), req);
             if (authenticated == null)
                 return this.assembleMsgs(NnStatusCode.USER_LOGIN_FAILED, null);
             status = NnUserValidator.validatePassword(password);
@@ -1375,9 +1385,9 @@ public class PlayerApiService {
             user.setPassword(password);
             user.setSalt(AuthLib.generateSalt());
             user.setCryptedPassword(AuthLib.encryptPassword(user.getPassword(), user.getSalt()));            
+            userMngr.save(user);
         }
-        
-        userMngr.save(user);
+        profileMngr.save(user, profile);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
@@ -1386,21 +1396,22 @@ public class PlayerApiService {
         if (userToken == null || userToken.length() == 0 || userToken.equals("undefined"))
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         //verify user
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) 
-            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+            return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         String[] result = {""};     
-        result[0] += assembleKeyValue("name", user.getName());
+        NnUserProfile profile = user.getProfile();
+        result[0] += assembleKeyValue("name", profile.getName());
         result[0] += assembleKeyValue("email", user.getUserEmail());
-        result[0] += assembleKeyValue("description", user.getIntro());
-        result[0] += assembleKeyValue("image", user.getImageUrl());
+        result[0] += assembleKeyValue("description", profile.getIntro());
+        result[0] += assembleKeyValue("image", profile.getImageUrl());
         String gender = "";
-        if (user.getGender() != 2)
-            gender = String.valueOf(user.getGender());
+        if (profile.getGender() != 2)
+            gender = String.valueOf(profile.getGender());
         result[0] += assembleKeyValue("gender", gender);
-        result[0] += assembleKeyValue("year", String.valueOf(user.getDob()));
-        result[0] += assembleKeyValue("sphere", user.getSphere());
-        result[0] += assembleKeyValue("ui-lang", user.getLang());
+        result[0] += assembleKeyValue("year", String.valueOf(profile.getDob()));
+        result[0] += assembleKeyValue("sphere", profile.getSphere());
+        result[0] += assembleKeyValue("ui-lang", profile.getLang());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
@@ -1424,7 +1435,7 @@ public class PlayerApiService {
             guestMngr.delete(guest);
         }
         EmailService service = new EmailService();
-        NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getUserEmail(), subject, content);        
+        NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE, user.getProfile().getName(), user.getUserEmail(), subject, content);        
         service.sendEmail(mail, null, null);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
@@ -1436,7 +1447,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }        
         //verify user
-        NnUser user = userMngr.findByToken(token);
+        NnUser user = userMngr.findByToken(token, mso.getId());
         if (user == null) 
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         //get preference
@@ -1502,7 +1513,7 @@ public class PlayerApiService {
         if (!Pattern.matches("^\\d*$", channelId))
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
         
-        NnUser user = userMngr.findByToken(userToken);                
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) 
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
 
@@ -1602,7 +1613,7 @@ public class PlayerApiService {
         if (!Pattern.matches("^\\d*$", grid) ||
             Integer.parseInt(grid) < 0 || Integer.parseInt(grid) > 81)
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null); 
         
@@ -1616,7 +1627,7 @@ public class PlayerApiService {
     }
 
     public String forgotpwd(String email, HttpServletRequest req) {
-        NnUser user = userMngr.findByEmail(email, req);
+        NnUser user = userMngr.findByEmail(email, mso.getId(), req);
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
@@ -1628,10 +1639,11 @@ public class PlayerApiService {
         log.info("link:" + link);
         
         NnContentManager contentMngr = new NnContentManager();
-        String lang = user.getLang();
+        NnUserProfile profile = user.getProfile();
+        String lang = profile.getLang();
         lang = this.checkLang(lang);
         log.info("user language:" + lang);
-        NnContent content = contentMngr.findByItemAndLang("resetpwd", lang);        
+        NnContent content = contentMngr.findByItemAndLang("resetpwd", lang, mso.getId());        
         String subject = "Forgotten Password";
         if (lang.equals(LangTable.LANG_ZH))
             subject = "忘記密碼";
@@ -1640,13 +1652,13 @@ public class PlayerApiService {
         if (content != null) {
             log.info("get email template from admin portal");
             body = content.getValue(); 
-            body = body.replace("(9x9name)", user.getName());
+            body = body.replace("(9x9name)", profile.getName());
             body = body.replaceAll("\\(9x9link\\)", link);
         }
 
         EmailService service = new EmailService();
         NnEmail mail = new NnEmail(
-                email, user.getName(), 
+                email, profile.getName(), 
                 NnEmail.SEND_EMAIL_NOREPLY, "noreply", NnEmail.SEND_EMAIL_NOREPLY,                                     
                 subject, body);
         
@@ -1661,7 +1673,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
 
-        NnUser user = userMngr.findByEmail(email, req);
+        NnUser user = userMngr.findByEmail(email, mso.getId(), req);
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
@@ -1796,7 +1808,7 @@ public class PlayerApiService {
         if (token == null || token.length() == 0 || name == null || name.length() == 0 ||  imageUrl == null || imageUrl.length() == 0) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
-        NnUser user = new NnUserManager().findByToken(token);
+        NnUser user = new NnUserManager().findByToken(token, mso.getId());
         if (user == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         NnChannel channel = new NnChannel(name, intro, imageUrl);
@@ -1971,7 +1983,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         String[] result = {""};                
 
-        NnUser u = userMngr.findByToken(userToken);
+        NnUser u = userMngr.findByToken(userToken, mso.getId());
         if (u == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);        
         long pid = 0;
@@ -2016,7 +2028,7 @@ public class PlayerApiService {
         List<NnUser> users = userMngr.search(email, name, null);
         String[] result = {""};
         for (NnUser u : users) {
-            result[0] += u.getUserEmail() + "\t" + u.getName() + "\n";
+            result[0] += u.getUserEmail() + "\t" + u.getProfile().getName() + "\n";
         }        
         return this.assembleMsgs(NnStatusCode.SUCCESS, result); 
     }
@@ -2025,7 +2037,7 @@ public class PlayerApiService {
         if (token == null || toEmail == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         NnUserManager userMngr = new NnUserManager();
-        NnUser user = userMngr.findByToken(token);
+        NnUser user = userMngr.findByToken(token, mso.getId());
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
         }
@@ -2042,14 +2054,15 @@ public class PlayerApiService {
         }
         String inviteToken = UserInvite.generateToken();        
         invite = new UserInvite(user.getShard(), user.getId(), 
-                                           inviteToken, c.getId(), toEmail, toName);
+                                inviteToken, c.getId(), toEmail, toName);
         
         invite = new UserInviteDao().save(invite);
-        String content = UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req); 
+        NnUserProfile profile = user.getProfile();
+        String content = UserInvite.getInviteContent(user, invite.getInviteToken(), toName, profile.getName(), req); 
         NnEmail mail = new NnEmail(toEmail, toName, NnEmail.SEND_EMAIL_SHARE,                                   
-                                   user.getName(), user.getUserEmail(), UserInvite.getInviteSubject(), 
+                                   profile.getName(), user.getUserEmail(), UserInvite.getInviteSubject(), 
                                    content);
-        log.info("email content:" + UserInvite.getInviteContent(user, invite.getInviteToken(), toName, user.getName(), req));
+        log.info("email content:" + UserInvite.getInviteContent(user, invite.getInviteToken(), toName, profile.getName(), req));
         service.sendEmail(mail, null, null);
         String[] result = {invite.getInviteToken()};
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
@@ -2067,11 +2080,11 @@ public class PlayerApiService {
         if (userToken == null || email == null || channel == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
-        NnUser invitee = userMngr.findByEmail(email, req);
+        NnUser invitee = userMngr.findByEmail(email, mso.getId(), req);
         if (invitee == null) {
             log.info("invitee does not exist:" + email);
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
@@ -2091,8 +2104,9 @@ public class PlayerApiService {
 
     @SuppressWarnings({ "rawtypes" })
     public String notifySubscriber(String userToken, String channel, HttpServletRequest req) {
-        NnUser user = userMngr.findByToken(userToken);            
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) {
+            
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
         NnChannelManager chMngr = new NnChannelManager();
@@ -2133,7 +2147,8 @@ public class PlayerApiService {
             log.info("send to " + u.getUserEmail());
             log.info("subject:" + subject);
             log.info("content:" + content);
-            NnEmail mail = new NnEmail(u.getUserEmail(), u.getName(), NnEmail.SEND_EMAIL_SHARE, user.getName(), user.getUserEmail(), subject, content);        
+            NnUserProfile profile = user.getProfile();
+            NnEmail mail = new NnEmail(u.getUserEmail(), profile.getName(), NnEmail.SEND_EMAIL_SHARE, profile.getName(), user.getUserEmail(), subject, content);        
             new EmailService().sendEmail(mail, null, null);                        
         }         
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
@@ -2151,11 +2166,11 @@ public class PlayerApiService {
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             users.add(user);
         } else {
-            users = userMngr.findFeatured();
+            users = userMngr.findFeatured(mso.getId());
         }
         NnUser user = null;
         if (userToken != null) {
-            user = userMngr.findByToken(userToken);            
+            user = userMngr.findByToken(userToken, mso.getId());            
         }
         
         String[] result = {"", ""};
@@ -2184,7 +2199,7 @@ public class PlayerApiService {
         NnUser user = null;
         boolean chPos = false;
         if (userToken != null) {
-            user = userMngr.findByToken(userToken);
+            user = userMngr.findByToken(userToken, mso.getId());
             if (user == null) {
                 NnGuest guest = new NnGuestManager().findByToken(userToken);
                 if (guest == null)
@@ -2202,7 +2217,7 @@ public class PlayerApiService {
             String[] cond = stack.split(",");
             for (String s : cond) {
                 if (s.equals(Tag.RECOMMEND)) {
-                    channels.addAll(new RecommendService().findRecommend(userToken, lang));
+                    channels.addAll(new RecommendService().findRecommend(userToken, mso.getId(), lang));
                 } else if (s.equals("mayLike")) {                
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
                 } else {
@@ -2443,7 +2458,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
         //user
-        NnUser user = userMngr.findByToken(userToken);
+        NnUser user = userMngr.findByToken(userToken, mso.getId());
         if (user == null) 
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         //channels
@@ -2499,7 +2514,7 @@ public class PlayerApiService {
            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
        }
        //find existed account
-       NnUser user = userMngr.findByEmail(email, req);
+       NnUser user = userMngr.findByEmail(email, mso.getId(), req);
        if (user != null) {
            log.info("returning youtube connect account"); 
            return this.login(email, password, req, resp);           
@@ -2521,10 +2536,9 @@ public class PlayerApiService {
        }
        if (name == null)
            name = email;
-       NnUser newUser = new NnUser(email, password, name, type, mso.getId());
-       newUser.setSphere(LangTable.LANG_EN);
-       newUser.setLang(LangTable.LANG_EN);        
-       newUser.setDob(null);        
+       NnUser newUser = new NnUser(email, password, type, mso.getId());
+       NnUserProfile profile = new NnUserProfile(mso.getId(), name, LangTable.LANG_EN, LangTable.LANG_EN, null);
+       newUser.setProfile(profile);
        newUser.setTemp(false);
        status = userMngr.create(newUser, req, (short)0);
        if (status != NnStatusCode.SUCCESS)

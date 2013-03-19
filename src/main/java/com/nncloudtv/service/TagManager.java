@@ -89,4 +89,8 @@ public class TagManager {
     public TagMap findByTagAndChannel(long tagId, long channelId) {
         return dao.findMapByTagAndChannel(tagId, channelId);
     }
+    
+    public static String assembleStackName(String name, String lang, String msoName) {
+        return name + "(" + msoName + lang + ")"; 
+    }
 }
