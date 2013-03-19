@@ -22,6 +22,9 @@ public class NnUserSubscribe implements Serializable {
 
     @Persistent
     private long userId;
+
+    @Persistent
+    private long msoId;
     
     @Persistent
     private long channelId;
@@ -38,11 +41,12 @@ public class NnUserSubscribe implements Serializable {
     @Persistent
     private Date updateDate;
     
-    public NnUserSubscribe(long userId, long channelId, short seq, short type) {
+    public NnUserSubscribe(long userId, long channelId, short seq, short type, long msoId) {
         this.userId = userId;
         this.channelId= channelId;
         this.seq = seq;
         this.type = type;
+        this.msoId = msoId;
     }    
 
     public long getId() {
@@ -100,4 +104,13 @@ public class NnUserSubscribe implements Serializable {
     public void setType(short type) {
         this.type = type;
     }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
+    }
+
 }
