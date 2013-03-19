@@ -1,0 +1,763 @@
+update nnuser set profileURl='MusicDay' where id=5035;
+update nnuser set profileURl='TVHS' where id=2909;
+
+
+alter table title_card modify message varchar(2000);
+create table nnchannel_backup select * from nnchannel;
+apt-get install python-gdata
+
+update nnchannel set status=3
+ where createDate > '2012_10_05 00:00:00' 
+   and contentType = 6
+   and id not in (select channelId from tag_map where tagId < 5)
+   and userIdStr not in ('1-1835', '1-2267','1-2417','1-2500','1-2533','1-2954','1-5033','1-5035')
+
+---------------------------------------------------------------------   
+   
+select id, name, createDate, userIdStr from nnchannel 
+ where createDate > '2012_10_05 00:00:00' 
+   and contentType = 6
+   and id not in (select channelId from tag_map where tagId < 5)
+   and userIdStr not in ('1-1835', '1-2267','1-2417','1-2500','1-2533','1-2954','1-5033','1-5035')
+   
+- test youtube "channel" not playlist's 9x9 account
+- get episode count for both channel and playlist
+- batch program to get duration
+- build procedures
+
+
+create table nnuser_backup select * from nnuser;
+update nnuser set email=(@temp:=email), email=fbId, fbId=@temp where fbId is not null;
+create index nnguest_token on nnguest (token);
+
+
+
+delete from counter_shard where counterName like ('ch%');
+
+
+
+create index pdr_session on pdr (session);
+
+
+create index nnprogram_episodeId on nnprogram (episodeId);
+create index nnepisode_channelId on nnepisode(channelId);
+
+create index title_card_channelId on title_card(channelId);
+create index title_card_programId on title_card(programId);
+
+create index nnchannel_poolType on nnchannel(poolType);
+
+
+create index pdr_ip on pdr (ip);
+create index pdr_user_token on pdr (userToken);
+create index pdr_device_token on pdr (deviceToken);
+
+
+ALTER TABLE `nnepisode` CHANGE `publishDate` `publishDate` TIMESTAMP NULL
+alter table counter add UNIQUE KEY `counterName` (`counterName`);
+
+
+alter table nnepisode add column scheduleDate datetime;
+update nnepisode set scheduleDate = now();
+alter table nnepisode add column seq int(11) default 0;
+
+ALTER TABLE `title_card` CHANGE `playerSyntax` `playerSyntax` VARCHAR( 500 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL 
+
+insert into tag_map(id, tagId, channelId, updateDate) values(29, 4,8571,now());
+insert into tag_map(id, tagId, channelId, updateDate) values(36, 4,8816,now());
+insert into tag_map(id, tagId, channelId, updateDate) values(31, 4,8487,now());
+
+
+
+
+================================================================
+production
+================================================================
+turn on read only mode
+
+================================================================
+mysql slave
+================================================================
+-------------------------
+mysql new master
+-------------------------
+mkdir nndb
+checkout a nncloudtv
+
+-------------------------
+mysql slave
+-------------------------
+cd /var/db_backup/
+mv 20121004-nncloudtv_content.sql.bz2 content.sql.bz2
+mv 20121004-nncloudtv_nnuser1.sql.bz2 nnuser1.sql.bz2
+                                                                                      
+sudo scp -i ~/keys/dev-west2.pem content.sql.bz2 ubuntu@dev4.9x9.tv:/home/ubuntu/files/nndb/content.sql.bz2
+sudo scp -i ~/keys/dev-west2.pem nnuser1.sql.bz2 ubuntu@dev4.9x9.tv:/home/ubuntu/files/nndb/nnuser1.sql.bz2
+sudo scp -i ~/keys/prod-west2.pem content.sql.bz2 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/content.sql.bz2
+sudo scp -i ~/keys/prod-west2.pem nnuser1.sql.bz2 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/nnuser1.sql.bz2
+sudo scp -i ~/keys/prod-west2.pem recommend.sql ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/recommend.sql    
+sudo scp -i ~/keys/prod-west2.pem faq.sql ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/faq.sql
+
+
+sudo scp -i ~/keys/prod-west2.pem 2726 ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/2726
+
+mysqldump --user=root nncloudtv_content nncontent > faq.sql
+mysql -u -p nncloudtv_content < faq.sql
+
+
+mysqldump -u root -p nncloudtv_content mso > mso.sql
+sudo scp -i ~/keys/dev-west2.pem mso.sql ubuntu@dev1.9x9.tv:/home/ubuntu/files/nndb/mso.sql
+cat mso.sql | mysql nncloudtv_content -h localhost -u root -p
+
+sudo scp -i ~/keys/prod-west2.pem mso.sql ubuntu@ec2-54-245-100-224.us-west-2.compute.amazonaws.com:/home/ubuntu/files/nndb/mso.sql
+
+-------------------------
+mysql new master
+-------------------------
+bunzip2 content.sql.bz2
+bunzip2 nnuser1.sql.bz2
+
+=================================================a===============
+schema changes
+================================================================
+create database nncloudtv_nnuser1 character set = utf8;
+create database nncloudtv_nnuser2 character set = utf8;
+create database nncloudtv_analytics character set = utf8;
+create database recommend character set = utf8;
+create database nncloudtv_content character set = utf8;
+
+cat content.sql | mysql nncloudtv_content -h localhost -u root -p
+cat nnuser1.sql | mysql nncloudtv_nnuser1 -h localhost -u root -p
+cat recommend.sql | mysql recommend -h localhost -u root -p
+
+cat 2726 | mysql nncloudtv_nnuser1 -h localhost -u root -p
+
+-------------------------
+use nncloudtv_content;
+select count(*) from nnchannel;
+select count(*) from mso;
+
+use nncloudtv_nnuser1;
+select count(*) from nnuser;
+
+-------------------------
+use nncloudtv_content;
+drop table category;
+CREATE TABLE `category` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channelCnt` int(11) NOT NULL DEFAULT '0',
+  `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `isPublic` bit(1) NOT NULL,
+  `lang` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `seq` smallint(6) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `updateDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tag` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnepisode` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `imageUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `intro` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `channelId` bigint(20) DEFAULT '0',
+  `adId` bigint(20) DEFAULT '0',
+  `publishDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `isPublic` bit(1) DEFAULT b'0',
+  `duration` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8; 
+
+CREATE TABLE `title_card` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `color` varchar(20) DEFAULT NULL,
+  `align` varchar(20) DEFAULT NULL,
+  `effect` varchar(20) DEFAULT NULL,
+  `bgColor` varchar(20) DEFAULT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `duration` varchar(255) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `bgImage` varchar(255) DEFAULT NULL,
+  `playerSyntax` varchar(500) NOT NULL,
+  `size` varchar(20) DEFAULT NULL,
+  `style` varchar(20) DEFAULT NULL,
+  `type` smallint(6) DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  `programId` bigint(20) DEFAULT NULL,
+  `weight` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8; 
+
+CREATE TABLE `tag` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tag_map` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tagId` bigint(20) NOT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tagMap` (`tagId`,`channelId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `category_map` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `categoryId` bigint(20) NOT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),              
+  UNIQUE KEY `categoryMap` (`categoryId`,`channelId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8; 
+
+CREATE TABLE `nnad` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `merchantEmail` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table nncontent modify value text null;
+
+-------------------------
+use nncloudtv_content;
+drop table nnuser;   
+drop table nnuser_pref;
+drop table nnuser_report;
+drop table nnuser_share;
+drop table nnuser_subscribe;
+drop table nnuser_subscribe_group;
+drop table pdr;
+drop table mso_backup; 
+drop table nnchannel_backup;
+drop table nnset_autosharing;
+drop table nnset_to_nnchannel;          
+drop table nnset_to_nnchannel_backup;
+drop table nnuser_channel_sorting;
+drop table nnuser_watched;
+drop table nnguest;
+drop table nnchannel_autosharing;
+drop table category_backup;
+drop table sns_auth;
+drop table cnt_subscribe;
+
+-----------------------------------------------------
+use nncloudtv_nnuser1;
+drop table pdr;
+drop table sns_auth;
+drop table mso;
+drop table nnchannel;                                   
+drop table nnprogram;
+drop table nnuser_backup;
+drop table nnuser_channel_sorting_backup;   
+drop table nnuser_pref_backup;
+drop table nnuser_subscribe_backup;
+drop table captcha;                            
+drop table category;
+drop table category_to_nnset;     
+drop table cnt_subscribe;
+drop table content_ownership;
+drop table counter;
+drop table mso_ipg;
+drop table mso_config;
+drop table nnchannel_autosharing;
+drop table nncontent;
+drop table nnset;
+drop table nnset_autosharing;
+drop table nnset_to_nnchannel;
+drop table counter_shard;
+drop table nnuser_report;
+drop table nndevice;
+-----------------------------------------------------    
+use nncloudtv_analytics;
+CREATE TABLE `pdr` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createDate` datetime DEFAULT NULL,
+  `detail` text CHARACTER SET utf8 COLLATE utf8_bin,
+  `deviceId` bigint(20) NOT NULL,
+  `deviceToken` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `info` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `session` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
+  `userToken` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5211 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser_report` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `deviceId` bigint(20) NOT NULL,
+  `deviceToken` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `session` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
+  `userToken` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `cnt_subscribe` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channelId` bigint(20) NOT NULL,
+  `cnt` int(11) NOT NULL,
+  `setId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8;
+
+drop table mso;
+drop table mso_config;
+drop table mso_ipg;
+drop table nnchannel;
+drop table nnset;
+drop table nnset_to_nnchannel;
+drop table nnuser_pref;
+drop table nncontent;
+drop table captcha;
+drop table category;
+drop table category_to_nnset;
+drop table content_ownership;
+drop table nnchannel_autosharing;
+drop table nndevice;
+drop table counter;
+drop table nnguest;
+drop table nnprogram;
+drop table nnset_autosharing;
+drop table nnuser;
+drop table nnuser_channel_sorting;
+drop table nnuser_share;
+drop table nnuser_subscribe;
+drop table nnuser_subscribe_group;
+drop table nnuser_watched;
+drop table sns_auth;
+
+-----------------------------------------------------
+use nncloudtv_nnuser1;
+alter table nnuser add column cntSubscribe int(11) default 0;
+alter table nnuser add column cntChannel int(11) default 0;
+alter table nnuser add column cntFollower int(11) default 0;
+alter table nnuser add column profileUrl varchar(255);
+alter table nnuser add column expires bigint(20) default 0;
+alter table nnuser add column fbId varchar(255);           
+alter table nnuser add column featured bit(1) default false;
+                                                      
+alter table nnuser modify gender smallint(6) null;
+alter table nnuser modify isTemp bit(1) null;
+alter table nnuser modify msoId smallint(6) null;
+alter table nnuser modify type smallint(6) null;
+alter table nnuser alter gender set default 0;
+alter table nnuser alter isTemp set default false;
+alter table nnuser alter msoId set default 1;
+alter table nnuser alter type set default 4;
+alter table nnuser change createDate createDate TIMESTAMP default CURRENT_TIMESTAMP;
+alter table nnuser alter featured set default false;
+//alter table nnuser_subscribe drop key nnuser_subscribe_user_id;
+
+update nnuser set cntSubscribe = 0;
+update nnuser set cntFollower = 0;
+update nnuser set cntChannel = 0;
+
+update nnuser set profileUrl = (select round(rand() * 10000000000)) where profileUrl is null;
+alter table nnuser add UNIQUE KEY `userProfileUrl` (`profileUrl`);
+(update nnuser set profileUrl = (select round(rand() * 10000000000)) where id=482;)
+
+delete from nnuser_subscribe where seq=0;
+create index nnuser1_subscribe_seq on nnuser_subscribe (seq);
+delete s1
+  from nnuser_subscribe s1, nnuser_subscribe s2
+ where s1.id < s2.id                                    
+   and s1.userId = s2.userId
+   and s1.seq = s2.seq;
+alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);   
+-----------------------------------------
+
+delete from nnuser where id = 2535;
+delete from nnuser_subscribe where userId = 2535;
+delete from nnuser_channel_sorting where userId = 2535;
+delete from nnuser_pref where userId = 2535;
+delete from nnuser_share where userId = 2535;
+delete from nnuser_subscribe where userId = 2535;
+delete from nnuser_subscribe_group where userId = 2535;
+delete from nnuser_watched where userId = 2535;
+
+delete from nnuser where id = 2507;
+delete from nnuser_subscribe where userId = 2507;
+delete from nnuser_channel_sorting where userId = 2507;
+delete from nnuser_pref where userId = 2507;
+delete from nnuser_share where userId = 2507;
+delete from nnuser_subscribe where userId = 2507;
+delete from nnuser_subscribe_group where userId = 2507;
+delete from nnuser_watched where userId = 2507;
+
+delete from nnuser where id = 37;
+delete from nnuser_subscribe where userId = 37;
+delete from nnuser_channel_sorting where userId = 37;
+delete from nnuser_pref where userId = 37;
+delete from nnuser_share where userId = 37;
+delete from nnuser_subscribe where userId = 37;
+delete from nnuser_subscribe_group where userId = 37;
+delete from nnuser_watched where userId = 37;
+
+delete from nnuser where id = 2229;
+delete from nnuser_subscribe where userId = 2229;
+delete from nnuser_channel_sorting where userId = 2229;
+delete from nnuser_pref where userId = 2229;
+delete from nnuser_share where userId = 2229;
+delete from nnuser_subscribe where userId = 2229;
+delete from nnuser_subscribe_group where userId = 2229;
+delete from nnuser_watched where userId = 2229;
+
+delete from nnuser where id = 2230;
+delete from nnuser_subscribe where userId = 2230;
+delete from nnuser_channel_sorting where userId = 2230;
+delete from nnuser_pref where userId = 2230;
+delete from nnuser_share where userId = 2230;
+delete from nnuser_subscribe where userId = 2230;
+delete from nnuser_subscribe_group where userId = 2230;
+delete from nnuser_watched where userId = 2230;
+
+delete from nnuser where id = 2244;
+delete from nnuser_subscribe where userId = 2244;
+delete from nnuser_channel_sorting where userId = 2244;
+delete from nnuser_pref where userId = 2244;
+delete from nnuser_share where userId = 2244;
+delete from nnuser_subscribe where userId = 2244;
+delete from nnuser_subscribe_group where userId = 2244;
+delete from nnuser_watched where userId = 2244;
+
+delete from nnuser where id = 2238;
+delete from nnuser_subscribe where userId = 2238;
+delete from nnuser_channel_sorting where userId = 2238;
+delete from nnuser_pref where userId = 2238;
+delete from nnuser_share where userId = 2238;
+delete from nnuser_subscribe where userId = 2238;
+delete from nnuser_subscribe_group where userId = 2238;
+delete from nnuser_watched where userId = 2238;
+
+delete from nnuser where id = 1454;
+delete from nnuser_subscribe where userId = 1454;
+delete from nnuser_channel_sorting where userId = 1454;
+delete from nnuser_pref where userId = 1454;
+delete from nnuser_share where userId = 1454;
+delete from nnuser_subscribe where userId = 1454;
+delete from nnuser_subscribe_group where userId = 1454;
+delete from nnuser_watched where userId = 1454;
+
+
+select id from nnuser where email = 'sandy19910937@gmail.com';
+select count(*) from nnuser_subscribe where userId=2226;
+
+alter table nnuser add UNIQUE KEY `userEmail` (`email`);
+
+use nncloudtv_content; 
+alter table nnchannel add column poolType smallint(6)  default 0;
+alter table nnchannel add column sphere varchar(5) default 'en';
+alter table nnchannel drop column errorReason;
+alter table nnchannel add column cntSubscribe int(11) not null default 0;
+alter table nnchannel add column cntEpisode int(11) not null default 0;
+update nnchannel set cntEpisode = programCnt;
+alter table nnchannel drop column programCnt;
+alter table nnchannel add column userIdStr varchar(25);
+alter table nnchannel add column note varchar(10);
+alter table nnchannel add subscribersIdStr varchar(255);
+update nnchannel set sphere = lang;
+update nnchannel set lang='zh', sphere='zh' where contentType=6;
+update nnchannel set lang='zh', sphere='zh' where contentType=8;
+update nnchannel set lang='zh', sphere='zh' where contentType=9;
+update nnchannel set lang='en', sphere='en' where lang is null;
+update nnchannel set status=1 where id in ( 130 ,3392 ,3816 ,4976 ,6761 ,6765 ,7216 ,7365 ,7571 ,7601 ,7625 ,7698);
+update nnchannel set sphere = 'other' where sphere='world';
+
+alter table nnprogram drop column type;
+alter table nnprogram add column publishDate datetime;
+alter table nnprogram add column startTime varchar(255) default '0';
+alter table nnprogram add column endTime varchar(255) default '0';
+alter table nnprogram add column episodeId bigint(20) not null default 0;
+alter table nnprogram alter duration set default '0';
+update nnprogram set publishDate = updateDate;
+update nnprogram set episodeId=0;
+//update nnprogram set startTime = '0' where startTime is null;
+//update nnprogram set endTime = '0' where endTime is null;
+update nnprogram set duration = '0' where duration is null;
+
+alter table counter_shard alter count set default 0;
+alter table counter_shard alter shardNumber set default 0; 
+update nnchannel set tag = null where tag = "";
+update nnchannel set tag = null where tag like "Enter tags%";
+update nnchannel set tag = lower(tag);
+
+update nnchannel set transcodingUpdateDate = null where contentType=3;
+update nnchannel set transcodingUpdateDate = null where contentType=4;
+
+update nnchannel set tag = replace(tag, '"', "") where contentType=6 and tag is not null;
+update nnchannel set tag = replace(tag, '”', "") where contentType=6 and tag is not null;
+update nnchannel set tag = replace(tag, '“', "") where contentType=6 and tag is not null;
+update nnchannel set tag = replace(tag, '，', ",") where contentType=6 and tag is not null;
+
+update nnchannel set tag = '流言,謠言,自然科學,終結答案' where id=3278;
+update nnchannel set tag = 'online games, blade&soal, archeage, guild wars 2' where id=4498;
+update nnchannel set tag = 'cnblue,鄭容和' where id=6956;
+update nnchannel set tag = '教育影片,educational videos, 心中的小星星,深夜加油站遇見蘇格拉底,舉起金剛,蒙娜麗莎的微笑,心靈捕手,馬拉松小子,阿甘正傳' where id=6941;
+update nnchannel set tag = '劉在石,金鐘國,宋智孝,gary,李光洙,haha' where id=6965;
+update nnchannel set tag = '小朋友報新聞,從兒童的角度看世界' where id=7141;
+update nnchannel set tag = '嘻哈,電音,搖滾,爵士,歌劇' where id=7347;
+update nnchannel set tag = '新聞媒體,報社,新聞,報紙,電視新聞,網路新聞,數位匯流,五媒合一' where id=7714;
+update nnchannel set tag = '站起來,冒險,激勵,希望,不設限,激勵影片,感人影片' where id=7928;
+update nnchannel set tag = '音樂,遊戲' where id=8255;
+update nnchannel set tag = 'groovewar,indei,film,doccumentry' where id=6925;
+update nnchannel set tag = '心中的小星星,深夜加油站遇見蘇格拉底' where id=6932;
+update nnchannel set tag = '心痛,心情' where id=6050;
+update nnchannel set tag = '安静,心情' where id=6059;
+update nnchannel set tag = '幸福,心情' where id=6084;
+update nnchannel set tag = '忧郁,心情' where id=6085;
+update nnchannel set tag = '期待,心情' where id=6174;
+update nnchannel set tag = '开心,心情' where id=6175;
+update nnchannel set tag = 'radio, npr' where id=6403;
+update nnchannel set tag = '小朋友報新聞,從兒童的角度看世界' where id=7141;
+
+update nnprogram set seq='00000001', subSeq='00000001' where channelId in (select id from nnchannel where contentType=6) and seq = "" and subSeq="";
+update nnprogram set seq='00000001', subSeq='00000001' where channelId in (select id from nnchannel where contentType=6) and seq is null and subSeq is null;
+
+delete from mso_config where id in (2,4);
+
+use nncloudtv_analytics;
+alter table nnuser_report add column type varchar(255);
+
+---------------------------------------------
+use nncloudtv_nnuser1;
+create index nnuser1_profile_url on nnuser (profileUrl);
+create index nnuser1_token on nnuser (token);
+
+use nncloudtv_content;
+create index category_name on category (name);
+create index nnchannel_userIdStr on nnchannel (userIdStr);
+
+create index tagMap_channelId on tag_map (channelId);
+create index categoryMap_channelId on category_map (channelId);
+
+---------------------------------------------
+use nncloudtv_nnuser2;
+CREATE TABLE `nnguest` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `captchaId` bigint(20) DEFAULT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `expiredAt` datetime DEFAULT NULL,
+  `guessTimes` int(11) NOT NULL,
+  `shard` smallint(6) DEFAULT NULL,
+  `token` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `type` smallint(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `cryptedPassword` mediumblob,
+  `dob` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `facebookToken` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `gender` smallint(6) DEFAULT '0',
+  `imageUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `intro` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `isTemp` bit(1) DEFAULT b'0',
+  `lang` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `msoId` smallint(6) DEFAULT '1',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `salt` mediumblob,
+  `sphere` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `type` smallint(6) DEFAULT '4',
+  `updateDate` datetime DEFAULT NULL,
+  `token` varchar(255) DEFAULT NULL,
+  `shard` smallint(6) DEFAULT NULL,
+  `cntSubscribe` int(11) DEFAULT '0',
+  `cntChannel` int(11) DEFAULT '0',
+  `cntFollower` int(11) DEFAULT '0',
+  `profileUrl` varchar(255) DEFAULT NULL,
+  `expires` bigint(20) DEFAULT '0',
+  `fbId` varchar(255) DEFAULT NULL,
+  `featured` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userEmail` (`email`),
+  KEY `nnuser1_profile_url` (`profileUrl`),
+  KEY `nnuser1_token` (`token`)
+) ENGINE=InnoDB AUTO_INCREMENT=6775 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser_channel_sorting` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `channelId` bigint(20) NOT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `sort` smallint(6) NOT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ CREATE TABLE `nnuser_pref` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createDate` datetime DEFAULT NULL,
+  `item` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
+  `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nnuser_pref_user_id` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser_share` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channelId` bigint(20) NOT NULL,
+  `programId` bigint(20) NOT NULL,
+  `programIdStr` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `setId` bigint(20) NOT NULL,
+  `userId` bigint(20) NOT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nnuser_share_channel_id` (`channelId`),
+  KEY `nnuser_share_user_id` (`userId`),
+  KEY `nnuser_share_program_id` (`programId`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser_subscribe_group` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createDate` datetime DEFAULT NULL,
+  `imageUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `seq` smallint(6) NOT NULL,
+  `status` int(11) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `userId` bigint(20) NOT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser_watched` (
+  `channelId` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createDate` datetime DEFAULT NULL,
+  `program` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `userToken` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `updateDate` datetime DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nnuser_watched_channel_id` (`channelId`),
+  KEY `nnuser_watched_user_id` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nnuser_subscribe` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channelId` bigint(20) NOT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `seq` smallint(6) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `userId` bigint(20) NOT NULL,               
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userSubscribe` (`userId`,`seq`),
+  KEY `nnuser_subscribe_channel_id` (`channelId`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+---------------------------------------------
+cd ~/files/nncloudtv/installer/migration/
+
+python category.py
+python content.py
+python content_zh.py
+cd ../jobs
+python category_tag.py
+python channel_meta.py
+python category_cntChannel.py
+cd ../migration
+python billboard.py
+python trending.py
+//DANGER python subscribe.py
+cd ../jobs
+python hot.py
+cd ../migration
+curator.py
+curator_nn.py
+episode.py
+jobs/channel_cntProgram.py
+#- delete from mso where id > 2; 
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+use nncloudtv_nnuser1;
+alter table nnuser alter cntSubscribe set default 0;
+alter table nnuser alter cntChannel set default 0;
+alter table nnuser alter cntFollower set default 0;
+alter table nnuser alter expires set default 0;
+
+- category.py
+- content.py
+- channel_meta.py            
+- billboard
+- jobs/category_tag.py
+- user
+
+-----------------------------------------   
+//drop table nnuser_subscribe;
+//create nnuser_subscribe table
+//alter table nnuser_subscribe drop index userSubscribe;
+//alter table nnuser_subscribe add UNIQUE KEY `userSubscribe` (`userId`,`seq`);
+
+create index tag_map on nnuser_subscribe (seq);
+
+-----------------------------------------
+drop table nnuser_subscribe;
+create index nnuser1_subscribe_seq on nnuser_subscribe (seq);
+create index nnuser1_user_id on nnuser_subscribe (userId);
+CREATE TABLE `nnuser_subscribe` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channelId` bigint(20) NOT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `seq` smallint(6) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `userId` bigint(20) NOT NULL,               
+  `updateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nnuser_subscribe_channel_id` (`channelId`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+insert into nnuser_subscribe select * from nnuser_subscribe2;
+//insert into nnuser_subscribe select * from nnuser_subscribe_backup;
+//insert into nnuser_subscribe2 select * from nnuser_subscribe_backup where userId=2501;
+
+create nnuser_subscribe select * from nnuser_subscribe2;
+
+create nnuser_subscribe_backup select * from nnuser_subscribe;
+
+
+
+select count(*) from nnuser_subscribe where userId=2185;
+select count(*) from nnuser_subscribe where userId=2202;
+
+delete from nnuser where id = 2202;
+delete from nnuser_subscribe where userId = 2202;
+delete from nnuser_channel_sorting where userId = 2202;
+delete from nnuser_pref where userId = 2202;
+delete from nnuser_share where userId = 2202;
+delete from nnuser_subscribe where userId = 2202;
+delete from nnuser_subscribe_group where userId = 2202;
+delete from nnuser_watched where userId = 2202;
+
+
+ alter table nnuser add UNIQUE KEY `userEmail` (`email`);
+
+ 
+ SELECT 
+    EMAIL, COUNT(1)
+FROM
+    nnuser
+GROUP BY EMAIL
+HAVING COUNT(1) > 1

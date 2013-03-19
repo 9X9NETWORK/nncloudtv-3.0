@@ -1,0 +1,9 @@
+=============================================================================================================
+Usage
+=============================================================================================================
+When the system is down,
+
+1. create a root folder under /usr/share/jetty/webapps
+2. place index.jsp under the root folder
+3. remove root.war
+4. restart the server 

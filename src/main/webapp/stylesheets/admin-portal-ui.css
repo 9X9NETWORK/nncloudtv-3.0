@@ -1,0 +1,58 @@
+label {
+  font-weight: bold;
+}
+body {
+  background: #000;
+  font-size: 12px;
+}
+div#header {
+  width: 100%;
+  height: 70px;
+  text-align: left;
+  background: #000;
+  overflow: hidden;
+}
+#logo {
+  margin: 1px 0 0px 15px;
+  height: 90%;
+  float: left;
+}
+#footer {
+  height: 25px;
+  font-size: 12px;
+  line-height: 25px;
+  text-align: left;
+  color: #ccc;
+} 
+#copyright {
+  float: left;
+}
+#btn-signout {
+  margin: 7px 25px 0 0;
+  padding: 0 37px 0 0;
+  height: 30px;
+  font-size: 14px;
+  line-height: 30px;
+  color: #999;
+  text-decoration: none;
+  background: url(/images/btn_terminate.png) right 0 no-repeat;
+  float: right;
+}
+#btn-signout:hover {
+  color: #ff0000;
+  background-position: right -100px;
+}
+#btn-account {
+  margin: 7px 15px 0 0;
+  padding: 0 15px 0 0;
+  height: 30px;
+  font-size: 14px;
+  line-height: 30px;
+  color: #999;
+  text-decoration: none;
+  background:  url(/images/grafix_searchDivider.png) right center no-repeat;
+  float: right;
+}
+#btn-account:hover {
+ color: #3eb9ff;
+}

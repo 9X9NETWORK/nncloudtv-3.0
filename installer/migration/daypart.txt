@@ -1,0 +1,23 @@
+CNN	http://www.youtube.com/user/CNN				
+ABC News	http://www.youtube.com/user/ABCNews				
+The Wall Street Journal	http://www.youtube.com/user/WSJDigitalNetwork				
+Al Jazeera Global	http://www.youtube.com/user/AlJazeeraEnglish				
+Reuters	http://www.youtube.com/user/ReutersVideo				
+Associated Press	http://www.youtube.com/user/AssociatedPress				
+Euronews	http://www.youtube.com/user/Euronews				
+PressTV	http://www.youtube.com/user/PressTVGlobalNews				
+RT Global	http://www.youtube.com/user/RussiaToday				
+RT America	http://www.youtube.com/user/RTAmerica				
+ITN News	http://www.youtube.com/user/itnnews				
+Bloomberg TV	http://www.youtube.com/user/Bloomberg				
+CNET	http://www.youtube.com/user/CNETTV				
+Reuters TV	http://www.youtube.com/user/ReutersTV				
+The Young Turks	http://www.youtube.com/user/TheYoungTurks				
+The Huffington Post	http://www.youtube.com/user/HuffingtonPost				
+Washington Post	http://www.youtube.com/user/WashingtonPost				
+Slate News	http://www.youtube.com/user/slatester				
+PBS News Hour	http://www.youtube.com/user/PBSNewsHour				
+CBS News	http://www.youtube.com/user/CBSNewsOnline				
+Clevver Music	http://www.youtube.com/user/ClevverMusic				
+The Warner Sound	http://www.youtube.com/user/TheWarnerSound				
+The View	http://www.youtube.com/user/ABCTheView/				
