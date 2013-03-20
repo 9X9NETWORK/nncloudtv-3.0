@@ -428,8 +428,13 @@ public class NnUser implements Serializable {
         return false;
     }
 
-    public NnUserProfile getProfile() {        
+    public NnUserProfile getProfile() {
+        /*
         if (profile == null || profile.getId() == 0) {
+            this.profile = new NnUserProfile(this.getId(), this.getMsoId());            
+        }
+        */
+        if (profile == null) {
             this.profile = new NnUserProfile(this.getId(), this.getMsoId());            
         }
         return profile;
