@@ -48,23 +48,27 @@ public class MsoManager {
             mso.setCreateDate(now);
         mso.setUpdateDate(now);
         msoDao.save(mso);
+        /*
         if (mso.getType() == Mso.TYPE_NN)
             this.processCache();
+            */
         return mso;
     }
-    
+    /*
     public void processCache() {
         this.getBrandInfoCache(true);
     }
+    */
     
     public Mso findNNMso() {
         List<Mso> list = this.findByType(Mso.TYPE_NN);
         return list.get(0);
     }
     
-    public String[] getBrandInfoCache(boolean cacheReset) {
-        String cacheKey = "brandInfo";
+    public String[] getBrandInfoCache(boolean cacheReset, Mso mso) {
         String[] result = {""};
+        /*
+        String cacheKey = "brandInfo";
         try {
             String[] cached = (String[]) CacheFactory.get(cacheKey);
             if (cached != null) {
@@ -74,11 +78,12 @@ public class MsoManager {
         } catch (Exception e) {
             log.info("memcache error");
         }
+        */
         log.info("brand info not from cache");
-        Mso mso = this.findNNMso();
+        //Mso mso = this.findNNMso();
         if (mso == null) {return null; }
         MsoConfigManager configMngr = new MsoConfigManager();
-        
+System.out.println("mso name;" + mso.getId());        
         //general setting
         result[0] += PlayerApiService.assembleKeyValue("key", String.valueOf(mso.getId()));
         result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
@@ -105,9 +110,12 @@ public class MsoManager {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.UPGRADE_MSG, c.getValue());
             }            
         }
+        
+        /*
         if (CacheFactory.isRunning) { 
             CacheFactory.set(cacheKey, result);
-        }        
+        } 
+        */       
         return result;        
     }
             

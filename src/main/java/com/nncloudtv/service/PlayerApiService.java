@@ -380,7 +380,8 @@ public class PlayerApiService {
     }
      
     public String brandInfo(HttpServletRequest req) {
-        String[] result = msoMngr.getBrandInfoCache(false);
+        //String[] result = msoMngr.getBrandInfoCache(false);
+        String[] result = msoMngr.getBrandInfoCache(false, mso);
         boolean readOnly = MsoConfigManager.isInReadonlyMode(false);
         //locale
         String locale = this.findLocaleByHttpRequest(req);
