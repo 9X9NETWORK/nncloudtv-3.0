@@ -696,6 +696,7 @@ public class PlayerApiService {
             //find subscribed channels 
             NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
             channels = subMngr.findSubscribedChannels(user);
+            //default channels goes after channels, to make sure it overwrites original ones
             List<NnChannel> defaultChannels = chMngr.findMsoDefaultChannels(user.getMsoId(), false);
             channels.addAll(defaultChannels);
             log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
@@ -719,7 +720,7 @@ public class PlayerApiService {
                 }
             }
         } else {
-            //find specific channels            
+            //find specific channels
             channelPos = false;
             String[] chArr = channelIds.split(",");
             if (chArr.length > 1) {
