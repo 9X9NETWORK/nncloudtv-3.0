@@ -27,11 +27,12 @@ public class TagManager {
             List<TagMap> map = dao.findMapByTag(tag.getId());
             for (TagMap m : map) {
                 NnChannel c = chMngr.findById(m.getChannelId());
-                if (c != null)
+                if (c != null) {
                     if (!player)
                         channels.add(c);
                     if (player && c.isPublic() && c.getStatus() == NnChannel.STATUS_SUCCESS)
                         channels.add(c);
+                }
             }
         }        
         return channels;
