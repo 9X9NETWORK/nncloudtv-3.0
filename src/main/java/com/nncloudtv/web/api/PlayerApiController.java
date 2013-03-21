@@ -272,8 +272,11 @@ public class PlayerApiController {
      */
     @RequestMapping(value="fbSignup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String fbSignup(HttpServletRequest req, HttpServletResponse resp) {
-        FacebookMe me = new FacebookMe();
-        
+        String msoString = req.getParameter("mso");
+        if (msoString == null) {
+            msoString = "9x9"; 
+        }
+        FacebookMe me = new FacebookMe();        
         me.setId(req.getParameter("id"));
         me.setName(req.getParameter("name"));
         me.setUsername(req.getParameter("username"));
@@ -287,7 +290,7 @@ public class PlayerApiController {
         
         try {
             this.prepService(req, true);
-            output = playerApiService.fbDeviceSignup(me, expire, req, resp);
+            output = playerApiService.fbDeviceSignup(me, expire, msoString, req, resp);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -2264,8 +2267,11 @@ public class PlayerApiController {
      */
     @RequestMapping(value="fbLogin")
     public String fbLogin(HttpServletRequest req,
-            @RequestParam(value="subCh", required=false) String subCh) {            
-        String url = FacebookLib.getDialogOAuthPath(subCh);        
+            @RequestParam(value="subCh", required=false) String subCh,            
+            @RequestParam(value="mso", required=false) String mso) {
+        if (mso == null) 
+            mso = "9x9"; 
+        String url = FacebookLib.getDialogOAuthPath(subCh, mso);        
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;

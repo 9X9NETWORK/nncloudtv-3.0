@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
@@ -196,28 +197,35 @@ public class PlayerApiService {
         return new IosService().listRecommended(lang, mso.getId());
     }
     
-    public String fbDeviceSignup(FacebookMe me, String expire, HttpServletRequest req, HttpServletResponse resp) {
-        return this.fbSignup(me, expire, req, resp);
+    public String fbDeviceSignup(FacebookMe me, String expire, String msoString, HttpServletRequest req, HttpServletResponse resp) {
+        return this.fbSignup(me, expire, msoString, req, resp);
     }
     
-    private String fbSignup(FacebookMe me, String expires, HttpServletRequest req, HttpServletResponse resp) {
+    private String fbSignup(FacebookMe me, String expires, String msoString, HttpServletRequest req, HttpServletResponse resp) {
         long expire = 0;
         if (expires != null && expires.length() > 0)
             expire = Long.parseLong(expires); //TODO pass to FacebookMe
         
-        NnUser user = userMngr.findByEmail(me.getId(), mso.getId(), req);        
+        Mso brand = msoMngr.findByName(msoString);
+        if (brand == null) {
+           brand = msoMngr.findNNMso();
+        }
+        
+        NnUser user = userMngr.findByEmail(me.getId(), brand.getId(), req);        
         log.info("find user in db from fbId:" + me.getId());
         if (user == null) {
             log.info("FACEBOOK: signup with fb account:" + me.getEmail() + "(" + me.getId() + ")");
-            user = new NnUser(me.getEmail(), me.getId(), me.getAccessToken()); 
+            user = new NnUser(me.getEmail(), me.getId(), me.getAccessToken());
+            NnUserProfile profile = new NnUserProfile(brand.getId(), me.getName(), null, null, null);
+            user.setProfile(profile);            
             user.setExpires(new Date().getTime() + expire);
             user.setTemp(false);
-            user.setMsoId(mso.getId());
+            user.setMsoId(brand.getId());
             user = userMngr.setFbProfile(user, me);
             int status = userMngr.create(user, req, (short)0);
             if (status != NnStatusCode.SUCCESS)
                 return this.assembleMsgs(status, null);            
-            userMngr.subscibeDefaultChannels(user);
+            //userMngr.subscibeDefaultChannels(user);
         } else {
             user = userMngr.setFbProfile(user, me);            
             log.info("FACEBOOK: original FB user login with fbId - " + user.getEmail() + ";email:" + user.getFbId());
@@ -230,9 +238,10 @@ public class PlayerApiService {
     }
         
     //TODO move to usermanager
-    public String fbWebSignup(String accessToken, String expires, HttpServletRequest req, HttpServletResponse resp) {
+    public String fbWebSignup(String accessToken, String expires, String msoString, HttpServletRequest req, HttpServletResponse resp) {
+        log.info("msoString:" + msoString);
         FacebookMe me = new FacebookLib().getFbMe(accessToken);
-        return this.fbSignup(me, expires, req, resp);
+        return this.fbSignup(me, expires, msoString, req, resp);
     }
     
     public String signup(String email, String password, String name, String token,
