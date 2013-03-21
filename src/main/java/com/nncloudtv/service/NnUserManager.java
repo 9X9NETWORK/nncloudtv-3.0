@@ -422,9 +422,10 @@ public class NnUserManager {
     }
     
     //specify email or name is used in flipr, otherwise use generic to match email/name/intro
-    public List<NnUser> search(String email, String name, String generic) {
-        List<NnUser> users = dao.search(email, name, generic);
+    public List<NnUser> search(String email, String name, String generic, long msoId) {
+        List<NnUser> users = dao.search(email, name, generic, msoId);
         for (NnUser user : users ) {
+            user.setMsoId(msoId);
             user = this.setUserProfile(user);            
         }
         return users;

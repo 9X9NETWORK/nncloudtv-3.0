@@ -590,21 +590,22 @@ public class PlayerApiService {
     public String channelStack(String stack, String lang, String userToken, String channel, boolean isReduced) {
         if (stack == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
-        
-        String stackName = TagManager.assembleStackName(stack, lang, mso.getName());
-        log.info("stackName:" + stackName);
-        lang = this.checkLang(lang);
+        lang = this.checkLang(lang);        
         List<String> result = new ArrayList<String>();
         String[] cond = stack.split(",");
         for (String s : cond) {
+            String stackName = TagManager.assembleStackName(s, lang, mso.getName());
+            log.info("stackName:" + stackName);
             List<NnChannel> chs = new ArrayList<NnChannel>();
             chs = chMngr.findBillboard(stackName, lang);
             if (s.equals(Tag.RECOMMEND)) {
                 chs = new RecommendService().findRecommend(userToken, mso.getId(), lang);
-            }
-            if (s.equals("mayLike")) {
+            } else if (s.equals("mayLike")) {            
                 chs = new RecommendService().findMayLike(userToken, mso.getId(), channel, lang);                
+            } else {
+                chs = chMngr.findBillboard(stackName, lang);
             }
+            
             String output = "";
             if (isReduced) {
                 output = chMngr.composeReducedChannelLineup(chs);
@@ -1738,7 +1739,7 @@ public class PlayerApiService {
         String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
         result[2] = chMngr.composeChannelLineup(channels);
         //matched curators
-        List<NnUser> users = userMngr.search(null, null, text);
+        List<NnUser> users = userMngr.search(null, null, text, mso.getId());
         int endIndex = (users.size() > 9) ? 9: users.size();
         users = users.subList(0, endIndex);
         result[1] += userMngr.composeCuratorInfo(users, true, false, req);
@@ -2027,7 +2028,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
         NnUserManager userMngr = new NnUserManager();
-        List<NnUser> users = userMngr.search(email, name, null);
+        List<NnUser> users = userMngr.search(email, name, null, mso.getId());
         String[] result = {""};
         for (NnUser u : users) {
             result[0] += u.getUserEmail() + "\t" + u.getProfile().getName() + "\n";

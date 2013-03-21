@@ -596,14 +596,16 @@ public class NnChannelManager {
         RecommendService service = new RecommendService();
         if (name == null)
             return channels;
-        if (name.equals(Tag.TRENDING)) {            
+        if (name.contains(Tag.TRENDING)) {            
             TagManager tagMngr = new TagManager();        
             //name += "(9x9" + lang + ")";
             log.info("find channelsByTag, tag:" + name);
             channels = tagMngr.findChannelsByTag(name, true);
-        } else if (name.equals(Tag.FEATURED)) {
+        } else if (name.contains(Tag.FEATURED)) {
+            log.info("find featured channels, billboard pool search");
             channels = service.findBillboardPool(9, lang);
-        } else if (name.equals(Tag.HOT)) {
+        } else if (name.contains(Tag.HOT)) {
+            log.info("find hot channels, billboard pool search");
             channels = service.findBillboardPool(9, lang);
             /*
             TagManager tagMngr = new TagManager();        
