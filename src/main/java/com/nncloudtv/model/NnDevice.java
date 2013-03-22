@@ -23,6 +23,9 @@ public class NnDevice {
     
     @Persistent
     private long userId; //if a device has associated user account, not always
+
+    @Persistent
+    private long msoId;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -91,6 +94,14 @@ public class NnDevice {
 
     public void setShard(short shard) {
         this.shard = shard;
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
     }
     
 }

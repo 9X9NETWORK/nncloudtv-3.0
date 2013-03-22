@@ -1169,8 +1169,7 @@ public class PlayerApiController {
         try {
             int status = this.prepService(req, true);
             if (status != NnStatusCode.SUCCESS) {
-                return 
-                        playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
             output = playerApiService.deviceRegister(userToken, type, req, resp);
         } catch (Exception e) {

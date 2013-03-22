@@ -1,5 +1,5 @@
 package com.nncloudtv.service;
-
+ 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
@@ -137,7 +136,11 @@ public class PlayerApiService {
         if (raw != null && raw.length > 0) {
             result = result + separatorStr;
             for (String s : raw) {
-                s = s.replaceAll("null", "");
+                if (s == null) {
+                    System.out.println("not possible here ba???");
+                } else {
+                    s = s.replaceAll("null", "");
+                }
                 result += s + separatorStr;
             }
         }
@@ -1102,7 +1105,7 @@ public class PlayerApiService {
         NnDeviceManager deviceMngr = new NnDeviceManager();
         deviceMngr.setReq(req); //!!!
         NnDevice device = deviceMngr.create(null, user, type);        
-        String[] result = {device.getToken()};
+        String[] result = {device.getToken()};        
         this.setUserCookie(resp, CookieHelper.DEVICE, device.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1116,11 +1119,11 @@ public class PlayerApiService {
         if (devices.size() == 0)
             return this.assembleMsgs(NnStatusCode.DEVICE_INVALID, null);
         List<NnUser> users = new ArrayList<NnUser>(); 
-        log.info("<<<<<<<<<<< device size>>>>>>>" + devices.size());
+        log.info("device size" + devices.size());
         for (NnDevice d : devices) {
             if (d.getUserId() != 0) {
                 NnUser user = userMngr.findById(d.getUserId(), (short)1);
-                if (user != null)
+                if (user != null && user.getMsoId() == mso.getId())
                     users.add(user);
                 else
                     log.info("bad data in device:" + d.getToken() + ";userId:" + d.getUserId());
