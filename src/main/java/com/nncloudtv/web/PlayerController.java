@@ -106,7 +106,7 @@ public class PlayerController {
         PlayerService service = new PlayerService();
         if (name != null) {
             if (name.matches("[a-zA-Z].+")) {
-                NnUser user = new NnUserManager().findByProfileUrl(name);
+                NnUser user = new NnUserManager().findByProfileUrl(name, 1);
                 if (user != null) {
                     log.info("user enter from curator brand url:" + name);
                     name = "#!" + user.getProfile().getProfileUrl();

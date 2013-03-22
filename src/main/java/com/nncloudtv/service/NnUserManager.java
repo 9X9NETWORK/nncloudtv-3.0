@@ -441,10 +441,10 @@ public class NnUserManager {
         return users;
     }
     
-    public NnUser findByProfileUrl(String profileUrl) {
+    public NnUser findByProfileUrl(String profileUrl, long msoId) {
         NnUser user = dao.findByProfileUrl(profileUrl);
         if (user != null)
-            //user.setMsoId(msoId);
+            user.setMsoId(msoId);
             user = this.setUserProfile(user);
         return user;
     }

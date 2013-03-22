@@ -508,7 +508,7 @@ public class PlayerApiService {
         //verify channel and grid
         if (channelId.contains("f-")) {
             String profileUrl = channelId.replaceFirst("f-", "");
-            NnUser curator = userMngr.findByProfileUrl(profileUrl);
+            NnUser curator = userMngr.findByProfileUrl(profileUrl, mso.getId());
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.CHANNEL_ERROR, null);
             NnChannel favoriteCh = chMngr.createFavorite(curator);
@@ -631,7 +631,7 @@ public class PlayerApiService {
     }
 
     public String subscriberLineup(String userToken, String curatorIdStr) {
-        NnUser curator = userMngr.findByProfileUrl(curatorIdStr);
+        NnUser curator = userMngr.findByProfileUrl(curatorIdStr, mso.getId());
         if (curator == null)
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         List<NnChannel> channels = new ArrayList<NnChannel>();
@@ -668,7 +668,7 @@ public class PlayerApiService {
         NnUser user = null;
         if (userToken != null || subscriptions != null) {
             if (subscriptions != null) {
-                user = userMngr.findByProfileUrl(subscriptions);
+                user = userMngr.findByProfileUrl(subscriptions, mso.getId());
             } else {
                 user = userMngr.findByToken(userToken, mso.getId());
             }
@@ -716,7 +716,7 @@ public class PlayerApiService {
             log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
         } else if (curatorIdStr != null) {
             channelPos = false;
-            NnUser curator = userMngr.findByProfileUrl(curatorIdStr);
+            NnUser curator = userMngr.findByProfileUrl(curatorIdStr, mso.getId());
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             List<NnChannel> curatorChannels = new ArrayList<NnChannel>();
@@ -2176,7 +2176,7 @@ public class PlayerApiService {
         
         List<NnUser> users = new ArrayList<NnUser>();
         if (profile != null) {
-            NnUser user = userMngr.findByProfileUrl(profile);
+            NnUser user = userMngr.findByProfileUrl(profile, mso.getId());
             if (user == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             users.add(user);
