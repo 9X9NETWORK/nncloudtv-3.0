@@ -392,7 +392,7 @@ public class NnUserManager {
             user.setMsoId(msoId);
             user = this.setUserProfile(user);
         }
-        user.setMsoId(msoId);
+        //user.setMsoId(msoId);
         return user;
     }
     

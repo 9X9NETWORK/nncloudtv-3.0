@@ -38,6 +38,7 @@ public class NnUserPref implements Serializable {
     
     public NnUserPref(NnUser user, String item, String value) {
         this.userId = user.getId();
+        this.msoId = user.getMsoId();
         this.item = item;
         this.value = value;
     }

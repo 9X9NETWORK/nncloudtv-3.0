@@ -144,9 +144,9 @@ public class ApiGeneric {
 	    NnUserManager userMngr = new NnUserManager();
 	    Mso brand = new MsoManager().findOneByName(mso);
 	    NnUser user = userMngr.findByToken(token, brand.getId());
-        if (user == null) {
-            return null;
-        }
+        //if (user == null) {
+        //    return null;
+        //}
 	    return user;
 	}
 	
