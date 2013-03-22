@@ -297,9 +297,11 @@ public class NnUserDao extends GenericDao<NnUser> {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();        
         try {
             for (int i=0;i<2;i++) {
-                String sql = "select * " +
-                               "from nnuser " +
-                             " where lower(profileUrl) = '" + profileUrl + "'";
+                String sql = "select * from nnuser " +
+                		     " where id in (" +
+                		         " select userId " +
+                                   "from nnuser_profile " +
+                                 " where lower(profileUrl) = '" + profileUrl + "')";
                 log.info("sql:" + sql);
                 Query query = pm.newQuery("javax.jdo.query.SQL", sql);
                 query.setClass(NnUser.class);
