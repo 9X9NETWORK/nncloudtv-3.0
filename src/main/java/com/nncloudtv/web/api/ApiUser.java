@@ -50,6 +50,9 @@ public class ApiUser extends ApiGeneric {
 
     protected static Logger log = Logger.getLogger(ApiUser.class.getName());    
     
+    /** 
+     * this port is closed for security issue
+     * @Deprecated */
     //@RequestMapping(value = "users/{userId}", method = RequestMethod.GET)
     public @ResponseBody
     NnUser userInfo(HttpServletRequest req, HttpServletResponse resp,
@@ -95,7 +98,8 @@ public class ApiUser extends ApiGeneric {
     
     @RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
     public @ResponseBody
-    NnUser userInfoUpdate(HttpServletRequest req, HttpServletResponse resp,
+    Map<String, Object> userInfoUpdate(HttpServletRequest req, HttpServletResponse resp,
+            @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr, @RequestParam(required = false) Short shard) {
         
         Long userId = null;
@@ -113,8 +117,8 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnUserManager userMngr = new NnUserManager();
-        
-        NnUser user = userMngr.findById(userId, shard);
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUser user = userMngr.findById(userId, brand.getId(), shard);
         if (user == null) {
             notFound(resp, "User Not Found");
             return null;
@@ -160,7 +164,7 @@ public class ApiUser extends ApiGeneric {
         
         user = userMngr.save(user);
         
-        return userMngr.purify(user);
+        return userResponse(user);
     }
     
     @RequestMapping(value = "users/{userId}/my_favorites", method = RequestMethod.GET)

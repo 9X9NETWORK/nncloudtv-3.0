@@ -225,9 +225,13 @@ public class NnUserManager {
         user.setEmail(user.getEmail().toLowerCase());
         user.setUpdateDate(new Date());
         NnUserProfile profile = user.getProfile();
-        profileMngr.save(user, profile);
+        profile = profileMngr.save(user, profile);
         resetChannelCache(user);
-        return dao.save(user);
+        long msoId = user.getMsoId();
+        user = dao.save(user);
+        user.setMsoId(msoId);
+        user.setProfile(profile);
+        return user;
     }
 
     public void resetChannelCache(NnUser user) {
@@ -402,7 +406,7 @@ public class NnUserManager {
             user.setMsoId(msoId);
             user = this.setUserProfile(user);
         }
-        return dao.findById(id, shard);
+        return user;
     }
     
     public List<NnUser> list(int page, int limit, String sidx, String sord) {

@@ -97,7 +97,7 @@ public class ApiMisc extends ApiGeneric {
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public @ResponseBody NnUser login(HttpServletRequest req, HttpServletResponse resp) {
+	public Map<String, Object> login(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String token = req.getParameter("token");
 		String email = req.getParameter("email");
@@ -129,7 +129,7 @@ public class ApiMisc extends ApiGeneric {
 		    return null;
 		}
 		
-		return userMngr.purify(user);
+		return userResponse(user);
 	}
 	
 	@RequestMapping("echo")
