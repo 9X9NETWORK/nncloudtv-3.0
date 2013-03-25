@@ -97,7 +97,7 @@ public class ApiMisc extends ApiGeneric {
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public Map<String, Object> login(HttpServletRequest req, HttpServletResponse resp) {
+	public @ResponseBody Map<String, Object> login(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String token = req.getParameter("token");
 		String email = req.getParameter("email");
