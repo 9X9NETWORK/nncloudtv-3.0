@@ -256,8 +256,8 @@ public class NnUserManager {
     }    
 
     private NnUser setUserProfile(NnUser user) {
-        log.info("user mso id:" + user.getMsoId());
         if (user != null) {
+            log.info("user mso id:" + user.getMsoId());
             NnUserProfile profile = new NnUserProfileManager().findByUser(user);
             if (profile == null)
                 profile = new NnUserProfile(user.getId(), user.getMsoId());

@@ -58,47 +58,32 @@ public class IosService {
         lang = api.checkLang(lang);    
         if (lang == null)
             return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);                     
+        /*
         if (id == null)
             id = "0";
+            */
         
         String[] result = {"", "", ""};
         CategoryManager catMngr = new CategoryManager();
-        NnSetManager setMngr = new NnSetManager();
         
         //if it's a set, find channel info
         result[0] = "id" + "\t" + id + "\n";
-        if (id.startsWith("s")) {
-            long csId = Long.parseLong(id.substring(1, id.length()));
-            NnSet set = setMngr.findById(csId);
-            if (set != null) {
+        //if (id.startsWith("s")) {
+        if (id != null) {
+            long catId = Long.parseLong(id);
+            Category cat = catMngr.findById(catId);
+            if (cat != null) {
                 result[0] += "piwik" + "\t" + "" + "\n";
             }
-            List<NnChannel> channels = setMngr.findChannels(set, mso);
+            List<NnChannel> channels = catMngr.findChannels(catId, true);
             for (NnChannel c : channels) {
                 c.setSorting(NnChannelManager.getDefaultSorting(c));
             }
             result[2] = this.composeChannelLineup(channels);
             return api.assembleMsgs(NnStatusCode.SUCCESS, result);
         }        
-        List<Category> categories = catMngr.findPlayerCategories(lang, mso.getId());
-        
-        //if it's the end of category leaf, find set info 
-        //assuming it's v31 version, v32 doesn't have such situation since currently
-        /*
-        if (categories.size() == 0) {
-            List<NnSet> sets = catMngr.findPlayerSetsByCategory(Long.parseLong(id));            
-            for (NnSet s : sets) {
-                String name =  s.getName();
-                int cnt = s.getCntChannel();
-                String[] str = {"s" + String.valueOf(s.getId()), 
-                                name, 
-                                String.valueOf(cnt), "ch"};             
-                result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
-            }
-            return api.assembleMsgs(NnStatusCode.SUCCESS, result);         
-        }
-        */
-        
+
+        List<Category> categories = catMngr.findPlayerCategories(lang, mso.getId());                
         //if it's just categories, find categories
         for (Category c : categories) { 
             String name =  c.getName();
@@ -111,52 +96,6 @@ public class IosService {
             result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
         }
         return api.assembleMsgs(NnStatusCode.SUCCESS, result);
-        //since we have no set under category
-        /*
-        if (id.equals("0") && flatten) {
-            List<String> flattenResult = new ArrayList<String>();
-            flattenResult.add(result[0]);
-            flattenResult.add(result[1]);
-            for (Category c : categories) {                
-                if (c.getName().equals("All") || c.getName().equals("頻道總覽")) { //shortcut
-                    //List<NnSet> list = catMngr.findPlayerSetsByCategory(c.getId());
-                    List<NnSet> list = catMngr.findPlayerSetsByCategory(c.getId());
-                    int setCnt = 0;
-                    String s = "";
-                    for (NnSet set : list) {
-                        String name =  set.getName();
-                        int cnt = set.getCntChannel();
-                        String[] str = {"s" + String.valueOf(set.getId()), name, String.valueOf(cnt), "ch"};             
-                        s += NnStringUtil.getDelimitedStr(str) + "\n";
-                        setCnt++;
-                    }
-                    if (s.length() > 0)
-                        flattenResult.add(s);
-                }
-            }
-            String size[] = new String[flattenResult.size()];
-            return api.assembleMsgs(NnStatusCode.SUCCESS, flattenResult.toArray(size));
-        } else {
-            return api.assembleMsgs(NnStatusCode.SUCCESS, result);         
-        }
-        */
-        /*
-        log.info("category request from != v32");
-        String filename = "category_en";
-        if (lang != null && lang.equals(LangTable.LANG_ZH)) {
-            filename = "category_zh";
-        }
-        if (id != null) {
-            filename = "category_" + id;
-            if (id.contains("s"))
-                filename = id;
-        }
-        String url = urlRoot + filename;
-        String result = NnNetUtil.urlGet(url);
-        if (result == null)
-            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
-        return result;
-        */
     }
     
     public String setInfo(String id, String name, Mso mso) {
