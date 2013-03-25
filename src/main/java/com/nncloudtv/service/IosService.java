@@ -58,18 +58,15 @@ public class IosService {
         lang = api.checkLang(lang);    
         if (lang == null)
             return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);                     
-        /*
         if (id == null)
             id = "0";
-            */
         
         String[] result = {"", "", ""};
         CategoryManager catMngr = new CategoryManager();
         
         //if it's a set, find channel info
         result[0] = "id" + "\t" + id + "\n";
-        //if (id.startsWith("s")) {
-        if (id != null) {
+        if (!id.equals("0")) {
             long catId = Long.parseLong(id);
             Category cat = catMngr.findById(catId);
             if (cat != null) {
