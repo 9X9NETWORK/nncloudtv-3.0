@@ -366,6 +366,15 @@ public class NnUserManager {
         return user;
     }
     
+    /** retrieve userId only, use this function to reduce query to userProfile. */
+    public Long findUserIdByToken(String token) {
+        NnUser user = dao.findByToken(token);
+        if (user != null) {
+            return user.getId();
+        }
+        return null;
+    }
+    
     //expect format shard-userId. example 1-1
     //if "-" is not present, assuming it's shard 1    
     public NnUser findByIdStr(String id, long msoId) {
@@ -523,12 +532,14 @@ public class NnUserManager {
         if (user == null) {
             return null;
         }
-        
         user.setSalt(null);
         user.setCryptedPassword(null);
+        
         NnUserProfile profile = user.getProfile();
-        profile.setName(NnStringUtil.revertHtml(profile.getName()));
-        profile.setIntro(NnStringUtil.revertHtml(profile.getIntro()));
+        if (profile != null) {
+            profile.setName(NnStringUtil.revertHtml(profile.getName()));
+            profile.setIntro(NnStringUtil.revertHtml(profile.getIntro()));
+        }
         
         return user;
     }

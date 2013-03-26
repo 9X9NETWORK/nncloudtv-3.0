@@ -84,11 +84,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -124,11 +124,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -194,11 +194,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -277,11 +277,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -364,11 +364,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -444,11 +444,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -498,11 +498,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -594,11 +594,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -749,11 +749,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -797,11 +797,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -895,11 +895,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
@@ -950,11 +950,11 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUser.getId() != user.getId()) {
+        } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
             return null;
         }
