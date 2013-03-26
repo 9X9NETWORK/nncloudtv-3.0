@@ -406,9 +406,9 @@ public class PlayerApiController {
      */
     @RequestMapping(value="category", produces = "text/plain; charset=utf-8")
     public @ResponseBody String category(
+            @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="category", required=false) String category,
             @RequestParam(value="mso", required=false) String mso,            
-            @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="flatten", required=false) String isFlatten,
             @RequestParam(value="v", required=false) String v,
             @RequestParam(value="rx", required = false) String rx,
@@ -416,8 +416,10 @@ public class PlayerApiController {
             HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
+            this.prepService(req, true);            
             boolean flatten = Boolean.parseBoolean(isFlatten);
             if (playerApiService.getVersion() < 32) {
+                log.info("category:" + category);
                 String msoName = req.getParameter("mso");
                 MsoManager msoMngr = new MsoManager();
                 Mso brand = msoMngr.findByName(msoName);
@@ -426,7 +428,6 @@ public class PlayerApiController {
                 }                
                 return new IosService().category(category, lang, flatten, brand ); 
             }
-            this.prepService(req, true);
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
             output = playerApiService.handleException(e);

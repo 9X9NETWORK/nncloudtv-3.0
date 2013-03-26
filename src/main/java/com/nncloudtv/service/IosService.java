@@ -5,9 +5,11 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Category;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
@@ -18,9 +20,21 @@ import com.nncloudtv.web.api.NnStatusCode;
 public class IosService {
     
     protected static final Logger log = Logger.getLogger(IosService.class.getName());
-    //private static final String urlRoot = "http://s3.amazonaws.com/9x9ui/war/v2/ios/";
+    private static final String urlRoot = "http://s3.amazonaws.com/9x9ui/war/v2/ios/";
     
     public String listRecommended(String lang, long msoId) {
+        if (msoId == 1) {
+            log.info("use file mode");
+            String filename = "listRecommended_en";
+            if (lang != null && lang.equals(LangTable.LANG_ZH)) {
+                filename = "listRecommended_zh";
+            }
+            String url = urlRoot + filename;
+            String result = NnNetUtil.urlGet(url);
+            if (result == null)
+                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
+            return result;
+        }
         PlayerApiService api = new PlayerApiService();
         lang = api.checkLang(lang);    
         if (lang == null)
@@ -38,35 +52,38 @@ public class IosService {
             };
             result[0] += NnStringUtil.getDelimitedStr(obj) + "\n";          
         }
-        return api.assembleMsgs(NnStatusCode.SUCCESS, result);     
-
-        /*
-    	String filename = "listRecommended_en";
-        if (lang != null && lang.equals(LangTable.LANG_ZH)) {
-            filename = "listRecommended_zh";
-        }
-        String url = urlRoot + filename;
-        String result = NnNetUtil.urlGet(url);
-        if (result == null)
-            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
-        return result;
-    	*/
+        return api.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
     public String category(String id, String lang, boolean flatten, Mso mso) {
+        if (mso.getId() == 1) {
+            String filename = "category_en";
+            if (lang != null && lang.equals(LangTable.LANG_ZH)) {
+                filename = "category_zh";
+            }
+            if (id != null) {
+                filename = "category_" + id;
+                if (id.contains("s"))
+                    filename = id;
+            }
+            String url = urlRoot + filename;
+            String result = NnNetUtil.urlGet(url);
+            if (result == null)
+                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);            
+        }
         PlayerApiService api = new PlayerApiService();
         lang = api.checkLang(lang);    
-        if (lang == null)
-            return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);                     
-        if (id == null)
+        if (lang == null) {
+            return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }
+        if (id == null) {
             id = "0";
-        
+        }        
         String[] result = {"", "", ""};
-        CategoryManager catMngr = new CategoryManager();
-        
+        CategoryManager catMngr = new CategoryManager();        
         //if it's a set, find channel info
         result[0] = "id" + "\t" + id + "\n";
-        if (!id.equals("0")) {
+        if (!id.equals("0")) {            
             long catId = Long.parseLong(id);
             Category cat = catMngr.findById(catId);
             if (cat != null) {
@@ -100,8 +117,18 @@ public class IosService {
         if (id == null && name == null) {
             return api.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
-        if (mso == null)
+        if (mso == null) {
             return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }
+        
+        if (mso.getId() == 1) {
+            String filename = id;
+            String url = urlRoot + "s" + filename;
+            String result = NnNetUtil.urlGet(url);
+            if (result == null)
+                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);        
+            return result;            
+        }
         if (id != null && id.startsWith("s")) id = id.replace("s", "");
         NnSetManager setMngr = new NnSetManager();
         NnSet set = null;
@@ -131,16 +158,7 @@ public class IosService {
                 c.setSorting(NnChannelManager.getDefaultSorting(c));
         }   
         result[2] = this.composeChannelLineup(channels);
-        return api.assembleMsgs(NnStatusCode.SUCCESS, result);
-        
-        /*
-        String filename = id;
-        String url = urlRoot + "s" + filename;
-        String result = NnNetUtil.urlGet(url);
-        if (result == null)
-            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);        
-        return result;
-        */
+        return api.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
     public String composeChannelLineup(List<NnChannel> channels) {
