@@ -43,8 +43,11 @@ public class NnDeviceManager {
         if (user != null) {
             device.setUserId(user.getId());
             device.setShard(user.getShard()); //for future reference
+            device.setMsoId(user.getMsoId());            
+        } else {
+            //!!! problem
+            device.setMsoId(1);
         }
-        device.setMsoId(user.getMsoId());
         device.setType(type);
         Date now = new Date();
         if (device.getCreateDate() == null)

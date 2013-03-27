@@ -157,10 +157,23 @@ public class PlayerApiService {
             output += assembleKeyValue("token", user.getToken());
             output += assembleKeyValue("userid", String.valueOf(user.getIdStr()));
             NnUserProfile profile = user.getProfile();
-            output += assembleKeyValue("name", profile.getName());
+            String name = profile.getName();
+            if (name == null) {
+                name = user.getEmail();
+            }
+            output += assembleKeyValue("name", name);
             output += assembleKeyValue("lastLogin", String.valueOf(profile.getUpdateDate().getTime()));
-            output += assembleKeyValue("sphere", profile.getSphere());
-            output += assembleKeyValue("ui-lang", profile.getLang());            
+            //sphere
+            String sphere = profile.getSphere(); 
+            if (profile.getSphere() == null)
+                sphere = NnUserManager.findLocaleByHttpRequest(req);
+            output += assembleKeyValue("sphere", sphere);
+            //ui-lang
+            String lang = profile.getLang();
+            if (profile.getLang() == null)
+                lang = sphere;
+            output += assembleKeyValue("ui-lang", lang);
+            //others
             output += assembleKeyValue("curator", String.valueOf(profile.getProfileUrl()));
             
             if (login)
