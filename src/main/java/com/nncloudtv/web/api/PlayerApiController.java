@@ -159,9 +159,10 @@ public class PlayerApiController {
         HttpSession session = req.getSession();
         session.setMaxInactiveInterval(60);
         MsoManager msoMngr = new MsoManager();
-        Mso mso = msoMngr.findByName(msoName);
+        Mso mso = msoMngr.getByNameFromCache(msoName);
         if (mso == null) {
-           mso = msoMngr.findNNMso();
+            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);;
+           //mso = msoMngr.findNNMso();
         }
         log.info("mso entrance:" + mso.getId());
         Locale locale = Locale.ENGLISH;
@@ -228,6 +229,7 @@ public class PlayerApiController {
     public @ResponseBody String signup(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        @SuppressWarnings("unused")
         String mso = req.getParameter("mso");
         String name = req.getParameter("name");
         String userToken = req.getParameter("user");
@@ -1045,6 +1047,7 @@ public class PlayerApiController {
     public @ResponseBody String login(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        @SuppressWarnings("unused")
         String mso = req.getParameter("mso");
         String rx = req.getParameter("rx");
         log.info("login: email=" + email + ";rx=" + rx);        
@@ -2486,6 +2489,7 @@ public class PlayerApiController {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String name = req.getParameter("name");
+        @SuppressWarnings("unused")
         String mso = req.getParameter("mso");
                 
         log.info("signup: email=" + email + ";name=" + name); 

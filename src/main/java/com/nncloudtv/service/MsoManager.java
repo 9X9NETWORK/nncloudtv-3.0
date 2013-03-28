@@ -65,10 +65,10 @@ public class MsoManager {
         return list.get(0);
     }
     
-    public String[] getBrandInfoCache(boolean cacheReset, Mso mso) {
+    public String[] getBrandInfoCache(Mso mso) {
+        if (mso == null) {return null; }
         String[] result = {""};
-        /*
-        String cacheKey = "brandInfo";
+        String cacheKey = "brandInfo(" + mso.getName() + ")";
         try {
             String[] cached = (String[]) CacheFactory.get(cacheKey);
             if (cached != null) {
@@ -78,12 +78,10 @@ public class MsoManager {
         } catch (Exception e) {
             log.info("memcache error");
         }
-        */
+        
         log.info("brand info not from cache");
-        //Mso mso = this.findNNMso();
-        if (mso == null) {return null; }
         MsoConfigManager configMngr = new MsoConfigManager();
-System.out.println("mso name;" + mso.getId());        
+        
         //general setting
         result[0] += PlayerApiService.assembleKeyValue("key", String.valueOf(mso.getId()));
         result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
@@ -111,11 +109,9 @@ System.out.println("mso name;" + mso.getId());
             }            
         }
         
-        /*
         if (CacheFactory.isRunning) { 
             CacheFactory.set(cacheKey, result);
         } 
-        */       
         return result;        
     }
             
@@ -126,6 +122,26 @@ System.out.println("mso name;" + mso.getId());
     public Mso findByName(String name) {
         if (name == null) {return null;}
         Mso mso = msoDao.findByName(name);
+        return mso;
+    }
+
+    public Mso getByNameFromCache(String name) {
+        if (name == null) {return null;}
+        String cacheKey = "mso(" + name + ")";
+        try {
+            Mso cached = (Mso) CacheFactory.get(cacheKey);
+            if (cached != null) {
+                log.info("get mso object from cache:" + cached.getId());
+                return cached;
+            }
+        } catch (Exception e) {
+            log.info("memcache error");
+        }        
+        log.info("NOT get mso object from cache:" + name);
+        Mso mso = msoDao.findByName(name);
+        if (CacheFactory.isRunning) { 
+            CacheFactory.set(cacheKey, mso);
+        }         
         return mso;
     }
     
