@@ -446,7 +446,7 @@ public class NnUserManager {
     }
     
     public List<NnUser> findFeatured(long msoId) {
-        List<NnUser> users = dao.findFeatured();
+        List<NnUser> users = dao.findFeatured(msoId);
         for (NnUser user : users ) {
             user.setMsoId(msoId);
             user = this.setUserProfile(user);            

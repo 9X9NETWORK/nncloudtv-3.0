@@ -46,26 +46,6 @@ public class NnUser implements Serializable {
     @NotPersistent
     private NnUserProfile profile;
     
-    //xxx    
-//    @Persistent
-//    @Column(jdbcType="VARCHAR", length=255)
-//    private String name;    
-    
-    //xxx    
-//    @Persistent
-//    private String dob; //for now it's year
-    
-    //xxx    
-//    @Persistent
-//    @Column(jdbcType="VARCHAR", length=255)
-//    private String intro;
-         
-    //xxx    
-//    @Persistent
-//    @Column(jdbcType="VARCHAR", length=255)
-//    private String imageUrl;
-//    public static String IMAGE_URL_DEFAULT = "https://s3.amazonaws.com/9x9ui/war/v2/images/profile_default101.png";
-
     @NotPersistent
     private String password;
     
@@ -74,26 +54,7 @@ public class NnUser implements Serializable {
 
     @Persistent
     private byte[] salt;
-    
-    //xxx    
-//    @Persistent
-//    @Column(jdbcType="VARCHAR", length=5)
-//    private String sphere; //content region, used with LangTable
-
-    //xxx    
-//    @Persistent
-//    @Column(jdbcType="VARCHAR", length=5)
-//    private String lang; //ui language, used with LangTable
-
-    //xxx    
-//    @Persistent
-//    @Column(jdbcType="VARCHAR", length=255)
-//    private String profileUrl; //curator url
-    
-    //xxx    
-//    @Persistent
-//    private short gender; //0 (f) or 1(m) or 2(not specified)
-    
+        
     @Persistent
     private Date createDate;
     
@@ -125,34 +86,17 @@ public class NnUser implements Serializable {
 
     @Persistent
     private long expires;
-    
-    //xxx
-//    @Persistent
-//    private boolean featured; 
-    
+        
     //used for testing without changing the program logic
     //isTemp set to true means it can be wiped out
     @Persistent
     private boolean isTemp; 
-
-    //xxx
-//    @Persistent
-//    private int cntSubscribe; //the number of channels the user subscribes
-    
-    //xxx    
-//    @Persistent
-//    private int cntChannel; //the number of channels the user creates
-    
-    //xxx    
-//    @Persistent
-//    private int cntFollower; //the number of users who subscribe to this user's channels  
     
     public NnUser(String email, String password, short type) {
         this.email = email;
         this.salt = AuthLib.generateSalt();
         this.cryptedPassword= AuthLib.encryptPassword(password, this.getSalt());
         this.profile = new NnUserProfile();
-//        this.name = name;
         this.type = type;
         this.profile = new NnUserProfile();
     }
