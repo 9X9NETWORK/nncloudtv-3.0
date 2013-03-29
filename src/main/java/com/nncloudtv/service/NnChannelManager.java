@@ -623,11 +623,11 @@ public class NnChannelManager {
         return channels;
     }
 
-    public List<NnChannel> findStack(String name, String lang) {
+    public List<NnChannel> findStack(String name) {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (name == null)
             return channels;
-        name += "(9x9" + lang + ")";
+        //name += "(9x9" + lang + ")";
         log.info("find stack, tag:" + name);
         channels = dao.findChannelsByTag(name);
         Collections.sort(channels, this.getChannelComparator("updateDate"));

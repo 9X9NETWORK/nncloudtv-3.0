@@ -2248,7 +2248,10 @@ public class PlayerApiService {
                 } else if (s.equals("mayLike")) {                
                     return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
                 } else {
-                    channels.addAll(chMngr.findStack(s, lang));
+                    String name = TagManager.assembleStackName(s, lang, mso.getName());
+                    //chs = chMngr.findBillboard(stackName, lang);
+                    //channels.addAll(chMngr.findBillboard(name, lang));
+                    channels.addAll(chMngr.findStack(name));
                 }
             }
         } else if (channel != null) {
@@ -2314,7 +2317,7 @@ public class PlayerApiService {
     public String frontpage(String time, String stack, String user) {
         DashboardDao dao = new DashboardDao();
         short baseTime = Short.valueOf(time);
-        List<Dashboard> baseList = dao.findFrontpage(baseTime);
+        List<Dashboard> baseList = dao.findFrontpage(baseTime, mso.getId());
         //section 1: items
         log.info("board size:" + baseList.size());
         List<String> data = new ArrayList<String>();
