@@ -153,6 +153,9 @@ public class PlayerApiController {
             log.info("from iOS");
         }
         */
+        String userAgent = req.getHeader("user-agent");
+        log.info("user agent:" + userAgent);
+        
         String msoName = req.getParameter("mso");
         if (tolog) 
             NnNetUtil.logUrl(req);
@@ -229,7 +232,6 @@ public class PlayerApiController {
     public @ResponseBody String signup(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        @SuppressWarnings("unused")
         String mso = req.getParameter("mso");
         String name = req.getParameter("name");
         String userToken = req.getParameter("user");
@@ -241,7 +243,7 @@ public class PlayerApiController {
         String rx = req.getParameter("rx");
         boolean isTemp = Boolean.parseBoolean(req.getParameter("temp"));
                 
-        log.info("signup: email=" + email + ";name=" + name + 
+        log.info("signup: email=" + email + ";name=" + name + ";mso:" + mso + 
                  ";userToken=" + userToken + ";sphere=" + sphere + 
                  ";year=" + year + ";ui-lang=" + lang + 
                  ";rx=" + rx);
