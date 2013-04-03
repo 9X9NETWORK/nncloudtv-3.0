@@ -297,11 +297,12 @@ public class NnUserDao extends GenericDao<NnUser> {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();        
         try {
             for (int i=0;i<2;i++) {
-                String sql = "select * from nnuser " +
-                		     " where id in (" +
+                String sql = "select * from nnuser n " +
+                		     " where exists (" +
                 		         " select userId " +
-                                   "from nnuser_profile " +
-                                 " where lower(profileUrl) = '" + profileUrl + "')";
+                                   "from nnuser_profile p " +
+                                 " where p.userId = n.id " +
+                                   " and lower(profileUrl) = '" + profileUrl + "')";                
                 log.info("sql:" + sql);
                 Query query = pm.newQuery("javax.jdo.query.SQL", sql);
                 query.setClass(NnUser.class);
@@ -387,14 +388,14 @@ public class NnUserDao extends GenericDao<NnUser> {
         List<NnUser> detached = new ArrayList<NnUser>(); 
         try {
             String sql = "select * " +
-                          " from nnuser " + 
-                         " where id in " +
-                           " (select userId from nnuser_profile " +
-                               " where msoId = " + msoId +
-                                 " and featured = true " +
+                          " from nnuser n " + 
+                         " where exists " +
+                           " (select userId from nnuser_profile p " +
+                               " where p.userId = n.id " + 
+                                 " and p.msoId = " + msoId +
+                                 " and p.featured = true " +
                                " order by rand())" + 
-                                       " limit 9";
-                        
+                                       " limit 9";                                    
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnUser.class);
