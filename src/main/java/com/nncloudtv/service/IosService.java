@@ -29,11 +29,13 @@ public class IosService {
             if (lang != null && lang.equals(LangTable.LANG_ZH)) {
                 filename = "listRecommended_zh";
             }
-            String url = urlRoot + filename;
-            String result = NnNetUtil.urlGet(url);
-            if (result == null)
-                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
-            return result;
+            if (!filename.equals("listRecommended_zh")) {
+                String url = urlRoot + filename;
+                String result = NnNetUtil.urlGet(url);
+                if (result == null)
+                    return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
+                return result;                
+            }            
         }
         PlayerApiService api = new PlayerApiService();
         lang = api.checkLang(lang);    
@@ -121,13 +123,17 @@ public class IosService {
             return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         }
         
-        if (mso.getId() == 1) {
-            String filename = id;
-            String url = urlRoot + "s" + filename;
-            String result = NnNetUtil.urlGet(url);
-            if (result == null)
-                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);        
-            return result;            
+        if (mso.getId() == 1) {                        
+            if (id != null && id.startsWith("s")) id = id.replace("s", "");
+            long setId = Long.parseLong(id);
+            if (setId < 5000) {                
+                String filename = id;
+                String url = urlRoot + "s" + filename;
+                String result = NnNetUtil.urlGet(url);
+                if (result == null)
+                    return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);        
+                return result;
+            }
         }
         if (id != null && id.startsWith("s")) id = id.replace("s", "");
         NnSetManager setMngr = new NnSetManager();
