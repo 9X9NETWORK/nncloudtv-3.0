@@ -1250,11 +1250,15 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     
-    public String userReport(String userToken, String deviceToken, String session, String type, String item, String comment) {
+    public String userReport(String userToken, String deviceToken, 
+            String session, String type, String item, String comment,
+            HttpServletRequest req) {
         if (comment == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        /*
         if (userToken == null && deviceToken == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+            */
         if (comment.length() > 500)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         
@@ -1273,9 +1277,10 @@ public class PlayerApiService {
             if (devices.size() > 0)
                 device = devices.get(0);
         }
-        if (device == null && user == null)
-            return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
-
+        if (device == null && user == null) {
+            user = userMngr.findByEmail(NnUser.ANONYMOUS_EMAIL, 1, req);
+            //return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
+        }
         String content = "";
         if (item != null) {
             String[] key = item.split(",");
