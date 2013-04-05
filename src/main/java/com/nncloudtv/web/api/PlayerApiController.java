@@ -1339,7 +1339,7 @@ public class PlayerApiController {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
             if (value != null)
                 comment = value;
-            output = playerApiService.userReport(user, device, session, type, item, comment);
+            output = playerApiService.userReport(user, device, session, type, item, comment, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
