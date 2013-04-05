@@ -75,8 +75,10 @@ public class NnUser implements Serializable {
     //example, aaa9x9@gmail.com" to "aaa9x9-AT-gmail.com@9x9.tv
     public static short TYPE_YOUTUBE_CONNECT = 9; 
     
-    public static String GUEST_EMAIL = "guest@9x9.com";
+    public static String GUEST_EMAIL = "guest@9x9.com";    
     public static String GUEST_NAME = "Guest";
+    public static String ANONYMOUS_EMAIL = "anonymous@9x9.com";
+    public static String ANONYMOUS_NAME = "Anonymous";
     
     //used to store facebook account email
     //to get "facebook id", use getUserFbId()
