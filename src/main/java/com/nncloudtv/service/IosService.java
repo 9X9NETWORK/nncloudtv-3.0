@@ -68,10 +68,13 @@ public class IosService {
                 if (id.contains("s"))
                     filename = id;
             }
+            log.info("file mode:" + filename);
             String url = urlRoot + filename;
-            String result = NnNetUtil.urlGet(url);
+            String result = NnNetUtil.urlGet(url);            
             if (result == null)
-                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);            
+                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
+            else
+                return result;
         }
         PlayerApiService api = new PlayerApiService();
         lang = api.checkLang(lang);    
