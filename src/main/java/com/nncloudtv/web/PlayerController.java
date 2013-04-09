@@ -51,12 +51,17 @@ public class PlayerController {
     @RequestMapping("tv")
     public String tv(@RequestParam(value="mso",required=false) String mso, 
             HttpServletRequest req, HttpServletResponse resp, Model model,
+            @RequestParam(value="_escaped_fragment_", required=false) String escaped,
             @RequestParam(value="jsp",required=false) String jsp,
-            @RequestParam(value="js",required=false) String js) {
+            @RequestParam(value="js",required=false) String js) {        
         try {
             PlayerService service = new PlayerService();
             model = service.prepareBrand(model, mso, resp);
-            model = service.preparePlayer(model, js, jsp, req);            
+            model = service.preparePlayer(model, js, jsp, req);
+            if (escaped != null) {
+                model = service.prepareCrawled(model, escaped);
+                return "player/crawled";
+            }            
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
             }
