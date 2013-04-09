@@ -2,6 +2,8 @@ package com.nncloudtv.web.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
+import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 
 public class ApiGeneric {
@@ -132,18 +137,16 @@ public class ApiGeneric {
 		}
 	}
 	
-	public NnUser userIdentify(HttpServletRequest req) {
+	/** used for identify the client who is, return userId if exist. */
+	public Long userIdentify(HttpServletRequest req) {
 	    
 	    String token = CookieHelper.getCookie(req, "user");
 	    if (token == null) {
             return null;
         }
 	    NnUserManager userMngr = new NnUserManager();
-	    NnUser user = userMngr.findByToken(token);
-        if (user == null) {
-            return null;
-        }
-	    return user;
+	    Long userId = userMngr.findUserIdByToken(token);
+	    return userId;
 	}
 	
     public void okResponse(HttpServletResponse resp) {
@@ -169,5 +172,29 @@ public class ApiGeneric {
         }
         
     }
+	
+	/** adapt response for user change to user+userProfile */
+	public Map<String, Object> userResponse(NnUser user) {
+	    Map<String, Object> result = new TreeMap<String, Object>();
+	    
+	    result.put("id", user.getId());
+	    result.put("createDate", user.getCreateDate());
+	    result.put("updateDate", user.getUpdateDate());
+	    result.put("userEmail", user.getUserEmail());
+	    result.put("fbUser", user.isFbUser());
+	    result.put("name", NnStringUtil.revertHtml(user.getProfile().getName()));
+	    result.put("intro", NnStringUtil.revertHtml(user.getProfile().getIntro()));
+	    result.put("imageUrl", user.getProfile().getImageUrl());
+	    result.put("lang", user.getProfile().getLang());
+	    result.put("profileUrl", user.getProfile().getProfileUrl());
+	    result.put("shard", user.getShard());
+	    result.put("sphere", user.getProfile().getSphere());
+	    result.put("type", user.getType());
+	    result.put("cntSubscribe", user.getProfile().getCntSubscribe());
+	    result.put("cntChannel", user.getProfile().getCntChannel());
+	    result.put("cntFollower", user.getProfile().getCntFollower());
+	    
+	    return result;
+	}
 	
 }

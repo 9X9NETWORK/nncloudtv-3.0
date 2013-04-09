@@ -26,6 +26,7 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnGuest;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.web.api.NnStatusCode;
 import com.nncloudtv.web.json.facebook.FacebookMe;
 
@@ -35,12 +36,16 @@ public class NnUserManager {
     protected static final Logger log = Logger.getLogger(NnUserManager.class.getName());
         
     private NnUserDao dao = new NnUserDao();
+    private NnUserProfileManager profileMngr = new NnUserProfileManager();
+    public static short MSO_DEFAULT = 1; 
     
     //@@@IMPORTANT email duplication is your responsibility
     public int create(NnUser user, HttpServletRequest req, short shard) {
-        if (this.findByEmail(user.getEmail(), req) != null) //!!!!! shard or req flexible
+        if (this.findByEmail(user.getEmail(), user.getMsoId(), req) != null) //!!!!! shard or req flexible
             return NnStatusCode.USER_EMAIL_TAKEN;
-        user.setName(user.getName().replaceAll("\\s", " "));
+        NnUserProfile profile = user.getProfile();
+        if (profile.getName() != null)            
+            profile.setName(profile.getName().replaceAll("\\s", " "));
         user.setEmail(user.getEmail().toLowerCase());
         if (shard == 0)
             shard= NnUserManager.getShardByLocale(req);
@@ -50,11 +55,12 @@ public class NnUserManager {
         Date now = new Date();
         user.setCreateDate(now);
         user.setUpdateDate(now);
-        if (user.getProfileUrl() == null) {
-            user.setProfileUrl(this.generateProfile(user.getName()));            
-        }            
-            
+        if (profile.getProfileUrl() == null) {
+            profile.setProfileUrl(this.generateProfile(user.getProfile().getName()));            
+        }                        
         dao.save(user);
+        profile.setUserId(user.getId());
+        profileMngr.save(user, profile);
         resetChannelCache(user);        
         return NnStatusCode.SUCCESS;
     }
@@ -76,15 +82,18 @@ public class NnUserManager {
         name = name.replaceAll("\\s", "");
         String email = name + "@9x9.tv";
         log.info("fake youtube email:" + email);
-        NnUser user = this.findByEmail(email, req);
+        NnUser user = this.findByEmail(email, 1, req);
         if (user != null)
             return user;
-        user = new NnUser(email, "9x9x9x", name, NnUser.TYPE_FAKE_YOUTUBE);        
+        user = new NnUser(email, "9x9x9x", NnUser.TYPE_FAKE_YOUTUBE);
         user.setShard((short)1);
         user.setMsoId(1);
-        user.setProfileUrl(name);
-        user.setImageUrl(imageUrl);
+        NnUserProfile profile = user.getProfile();
         user = this.save(user);
+        profile.setProfileUrl(name);
+        profile.setImageUrl(imageUrl);
+        profile.setUserId(user.getId());
+        profileMngr.save(user, user.getProfile());
         log.info("fake youtube user created:" + email);
         return user;
     }
@@ -92,16 +101,17 @@ public class NnUserManager {
     public NnUser setFbProfile(NnUser user, FacebookMe me) {
         if (user == null || me == null)
             return null;
+        NnUserProfile profile = user.getProfile();
         if (me.getId() != null) {
             String imageUrl = "http://graph.facebook.com/" + me.getId() + "/picture?width=180&height=180";
-            user.setImageUrl(imageUrl);
+            profile.setImageUrl(imageUrl);
         }
         user.setEmail(me.getId());
         user.setFbId(me.getEmail());
-        user.setName(me.getName());
-        user.setGender(me.getGender());
-        user.setSphere(me.getLocale());
-        user.setDob(me.getBirthday());
+        profile.setName(me.getName());
+        profile.setGender(me.getGender());
+        profile.setSphere(me.getLocale());
+        profile.setDob(me.getBirthday());
         user.setToken(me.getAccessToken());
         return user;
     }
@@ -199,7 +209,7 @@ public class NnUserManager {
     
     public NnUser createGuest(Mso mso, HttpServletRequest req) {
         String password = String.valueOf(("token" + Math.random() + new Date().getTime()).hashCode());
-        NnUser guest = new NnUser(NnUser.GUEST_EMAIL, password, NnUser.GUEST_NAME, NnUser.TYPE_USER);
+        NnUser guest = new NnUser(NnUser.GUEST_EMAIL, password, NnUser.TYPE_USER);
         this.create(guest, req, (short)0);
         return guest;
     }
@@ -214,8 +224,14 @@ public class NnUserManager {
         }
         user.setEmail(user.getEmail().toLowerCase());
         user.setUpdateDate(new Date());
+        NnUserProfile profile = user.getProfile();
+        profile = profileMngr.save(user, profile);
         resetChannelCache(user);
-        return dao.save(user);
+        long msoId = user.getMsoId();
+        user = dao.save(user);
+        user.setMsoId(msoId);
+        user.setProfile(profile);
+        return user;
     }
 
     public void resetChannelCache(NnUser user) {
@@ -238,21 +254,44 @@ public class NnUserManager {
         result = shard + "-" + result;
         return result;
     }    
+
+    private NnUser setUserProfile(NnUser user) {
+        if (user != null) {
+            log.info("user mso id:" + user.getMsoId());
+            NnUserProfile profile = new NnUserProfileManager().findByUser(user);
+            if (profile == null)
+                profile = new NnUserProfile(user.getId(), user.getMsoId());
+            user.setProfile(profile);
+        }
+        return user;
+    }
     
     //TODO able to assign shard
     //find by email means find by unique id
-    public NnUser findByEmail(String email, HttpServletRequest req) {
+    public NnUser findByEmail(String email, long msoId, HttpServletRequest req) {
         short shard= NnUserManager.getShardByLocale(req);
         log.info("find by email:" + email.toLowerCase());
-        return dao.findByEmail(email.toLowerCase(), shard);
-    }
+        NnUser user = dao.findByEmail(email.toLowerCase(), shard);
+        if (user != null) {
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);
+        }
+        return user;
+    }        
     
-    public NnUser findAuthenticatedUser(String email, String password, HttpServletRequest req) {
+    public NnUser findAuthenticatedUser(String email, String password, long msoId, HttpServletRequest req) {
         short shard= NnUserManager.getShardByLocale(req); 
-        return dao.findAuthenticatedUser(email.toLowerCase(), password, shard);
+        NnUser user = dao.findAuthenticatedUser(email.toLowerCase(), password, shard);
+        if (user != null) {
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);
+        }
+        return user;
     }
-    
+
     public NnUser findAuthenticatedMsoUser(String email, String password, long msoId) {
+        NnUser user = dao.findAuthenticatedMsoUser(email.toLowerCase(), password, msoId);
+        user.setMsoId(msoId);
         return dao.findAuthenticatedMsoUser(email.toLowerCase(), password, msoId);
     }
     
@@ -318,13 +357,27 @@ public class NnUserManager {
         log.info("user " +  user.getId() + "(" + user.getToken() + ") subscribe " + channels.size() + " channels (mso:" + user.getMsoId() + ")");
     }
     
-    public NnUser findByToken(String token) {
-        return dao.findByToken(token);
+    public NnUser findByToken(String token, long msoId) {
+        NnUser user = dao.findByToken(token);
+        if (user != null) {
+            user.setMsoId(msoId);
+            this.setUserProfile(user);
+        }
+        return user;
+    }
+    
+    /** retrieve userId only, use this function to reduce query to userProfile. */
+    public Long findUserIdByToken(String token) {
+        NnUser user = dao.findByToken(token);
+        if (user != null) {
+            return user.getId();
+        }
+        return null;
     }
     
     //expect format shard-userId. example 1-1
     //if "-" is not present, assuming it's shard 1    
-    public NnUser findByIdStr(String id) {
+    public NnUser findByIdStr(String id, long msoId) {
         if (id == null)
             return null;
         String[] splits = id.split("-");
@@ -337,21 +390,32 @@ public class NnUserManager {
         } else {
             uid = Long.parseLong(id);
         }
-        return this.findById(uid, shard);
+        return this.findById(uid, msoId, shard);
     }
     
     //TODO add shard search
-    public NnUser findByFbId(String fbId) {
+    public NnUser findByFbId(String fbId, long msoId) {
         return dao.findByFbId(fbId);
     }
     
     // find user by ID without providing shard number
-    public NnUser findById(long id) {
-        return dao.findById(id);
+    public NnUser findById(long id, long msoId) {
+        NnUser user = dao.findById(id);
+        if (user != null) {
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);
+        }
+        //user.setMsoId(msoId);
+        return user;
     }
     
-    public NnUser findById(long id, short shard) {
-        return dao.findById(id, shard);
+    public NnUser findById(long id, long msoId, short shard) {
+        NnUser user = dao.findById(id, shard);
+        if (user != null) {
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);
+        }
+        return user;
     }
     
     public List<NnUser> list(int page, int limit, String sidx, String sord) {
@@ -371,16 +435,31 @@ public class NnUserManager {
     }
     
     //specify email or name is used in flipr, otherwise use generic to match email/name/intro
-    public List<NnUser> search(String email, String name, String generic) {
-        return dao.search(email, name, generic);
+    public List<NnUser> search(String email, String name, String generic, long msoId) {
+        List<NnUser> users = dao.search(email, name, generic, msoId);
+        for (NnUser user : users ) {
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);            
+        }
+        return users;
+        
     }
     
-    public List<NnUser> findFeatured() {
-        return dao.findFeatured();
+    public List<NnUser> findFeatured(long msoId) {
+        List<NnUser> users = dao.findFeatured(msoId);
+        for (NnUser user : users ) {
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);            
+        }
+        return users;
     }
     
-    public NnUser findByProfileUrl(String profileUrl) {
-        return dao.findByProfileUrl(profileUrl);
+    public NnUser findByProfileUrl(String profileUrl, long msoId) {
+        NnUser user = dao.findByProfileUrl(profileUrl);
+        if (user != null)
+            user.setMsoId(msoId);
+            user = this.setUserProfile(user);
+        return user;
     }
 
     public String composeCuratorInfo(List<NnUser> users, boolean chCntLimit, boolean isAllChannel, HttpServletRequest req) {
@@ -419,18 +498,20 @@ public class NnUserManager {
     public String composeCuratorInfoStr(NnUser user, String channelId, HttpServletRequest req) {
         //#!curator=xxxxxxxx
         String profileUrl = "";
-        if (user.getProfileUrl() != null) {
-            profileUrl = NnNetUtil.getUrlRoot(req) + "/#!curator=" + user.getProfileUrl();
+        NnUserProfile profile = user.getProfile();
+        if (profile.getProfileUrl() != null) {
+            profileUrl = NnNetUtil.getUrlRoot(req) + "/#!curator=" + profile.getProfileUrl();
         }
+        
         String[] info = {
-                user.getBrandUrl(),                
-                user.getName(),
-                user.getIntro(),
-                user.getImageUrl(),
+                profile.getBrandUrl(),                
+                profile.getName(),
+                profile.getIntro(),
+                profile.getImageUrl(),
                 profileUrl,
-                String.valueOf(user.getCntChannel()),
-                String.valueOf(user.getCntSubscribe()),
-                String.valueOf(user.getCntFollower()),              
+                String.valueOf(profile.getCntChannel()),
+                String.valueOf(profile.getCntSubscribe()),
+                String.valueOf(profile.getCntFollower()),              
                 channelId,
                };
         String output = NnStringUtil.getDelimitedStr(info);
@@ -451,12 +532,14 @@ public class NnUserManager {
         if (user == null) {
             return null;
         }
-        
         user.setSalt(null);
         user.setCryptedPassword(null);
         
-        user.setName(NnStringUtil.revertHtml(user.getName()));
-        user.setIntro(NnStringUtil.revertHtml(user.getIntro()));
+        NnUserProfile profile = user.getProfile();
+        if (profile != null) {
+            profile.setName(NnStringUtil.revertHtml(profile.getName()));
+            profile.setIntro(NnStringUtil.revertHtml(profile.getIntro()));
+        }
         
         return user;
     }

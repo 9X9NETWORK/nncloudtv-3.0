@@ -17,7 +17,7 @@ public class NnContentManager {
     private NnContentDao nnContentDao = new NnContentDao();
     
     public NnContent create(NnContent content) {
-        NnContent existed = this.findByItemAndLang(content.getItem(), content.getLang());
+        NnContent existed = this.findByItemAndLang(content.getItem(), content.getLang(), content.getMsoId());
         if (existed != null) {
             content.setValue(content.getValue());
             this.save(existed);
@@ -34,8 +34,8 @@ public class NnContentManager {
         return content;
     }
 
-    public NnContent findByItemAndLang(String item, String lang) {        
-        return nnContentDao.findByItemAndLang(item, lang);
+    public NnContent findByItemAndLang(String item, String lang, long msoId) {        
+        return nnContentDao.findByItemAndLang(item, lang, msoId);
     }
 
     public NnContent findById(long id) {

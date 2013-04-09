@@ -121,8 +121,8 @@ public class UserInvite {
     public static String getInviteContent(NnUser user, String token, String toName, String fromName, HttpServletRequest req) {
         String content = "Hello " + toName + "\n\n";
         String urlRoot = NnNetUtil.getUrlRoot(req);
-        content += user.getName() + " invited to watch his/her channel.\n";
-        content += "Click link " + urlRoot + "/share/invite/" + token + " to join " + user.getName();
+        content += "User name invited to watch his/her channel.\n";
+        content += "Click link " + urlRoot + "/share/invite/" + token + " to join him/she";
         return content;
     }
     

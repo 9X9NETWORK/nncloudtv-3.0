@@ -16,15 +16,15 @@ public class NnContentDao extends GenericDao<NnContent> {
         super(NnContent.class);
     }
     
-    public NnContent findByItemAndLang(String item, String lang) {
+    public NnContent findByItemAndLang(String item, String lang, long msoId) {
         NnContent content = null;
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
             Query query = pm.newQuery(NnContent.class);
-            query.setFilter("item == itemParam && lang == langParam");
-            query.declareParameters("String itemParam, String langParam");
+            query.setFilter("item == itemParam && lang == langParam && msoId == msoIdParam");
+            query.declareParameters("String itemParam, String langParam, long msoIdParam");
             @SuppressWarnings("unchecked")
-            List<NnContent> results = (List<NnContent>) query.execute(item, lang);
+            List<NnContent> results = (List<NnContent>) query.execute(item, lang, msoId);
             if (results.size() > 0) {        
                 content = (NnContent) pm.detachCopy(results.get(0));
             }

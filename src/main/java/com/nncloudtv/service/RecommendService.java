@@ -26,7 +26,7 @@ public class RecommendService {
      * for GUESTs and FRESHMAN USERs, SHALLOW RECOMMENDATION,
      * but for USERs, DEEP RECOMMENDATIONS
      */
-    public List<NnChannel> findMayLike(String userToken, String channel, String lang) {      
+    public List<NnChannel> findMayLike(String userToken, long msoId, String channel, String lang) {      
         List<NnChannel> channels = new ArrayList<NnChannel>();
         long cid = 0;
         if (channel != null)
@@ -38,7 +38,7 @@ public class RecommendService {
             log.info("maylike: guest user find from shallow");
             channels = this.findShallowChannels(cid);
         } else {
-            NnUser user = new NnUserManager().findByToken(userToken);
+            NnUser user = new NnUserManager().findByToken(userToken, msoId);
             if (user != null) {
                 System.out.println("what the user u find:" + user.getId());
                 channels = this.findDeepChannels(user);
@@ -65,18 +65,18 @@ public class RecommendService {
      * if GUEST or FRESHMAN USER, channels selected from the BILLBOARD POOL; 
      * if USER, channels selected from the FDM POOL; 
      */
-    public List<NnChannel> findRecommend(String userToken, String lang) {
+    public List<NnChannel> findRecommend(String userToken, long msoId, String lang) {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (userToken == null || NnUserManager.isGuestByToken(userToken)) {
             log.info("recommend: guest user find from billboard");
             channels = this.findBillboardPool(9, lang);
         } else {
-            NnUser user = new NnUserManager().findByToken(userToken);
+            NnUser user = new NnUserManager().findByToken(userToken, msoId);
             if (user != null) {
                 Deep deep = deepDao.findByUser(user.getShard(), user.getId());
                 if (deep != null) {
                     log.info("recommend: user get recommendation from fdm pool " + userToken);
-                    channels = this.findFdm(user.getSphere(), 9);
+                    channels = this.findFdm(user.getProfile().getSphere(), 9);
                 } else {
                     log.info("recommend: freshman user get recommendation from billboard pool " + userToken);
                     channels = this.findBillboardPool(9, lang);

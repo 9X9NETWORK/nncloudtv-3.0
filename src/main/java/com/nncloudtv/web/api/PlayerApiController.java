@@ -64,17 +64,25 @@ import com.nncloudtv.web.json.facebook.FacebookMe;
  * <blockquote>
  * Brand information: brandInfo
  * <p>
- * Account related: guestRegister, signup, login, userTokenVerify, signout
+ * Account related: guestRegister, signup, login, userTokenVerify, signout, fbLogin, fbSignup, 
+ *                  setUserProfile, getUserProfile, setUesrPref
  * <p>
- * Category listing: categoryBrowse
+ * <p>
+ * Category listing: categoryBrowse, categoryInfo, tagInfo, setInfo
+ * <p>
+ * Curator: curator
  * <p>
  * Channel and program listing: channelLineup, programInfo
  * <p>
- * IPG action: moveChannel, channelSubmit, subscribe, unsubscribe
+ * IPG action: moveChannel, channelSubmit, subscribe, unsubscribe, setSetInfo
  * <p>
- * IPG snapshot: saveIpg, loadIpg
+ * YouTube connect: obtainAccount, bulkSubscribe 
+ * <p>
+ * YouTube info update: virtualChannelAdd, channelUpdate 
  * <p>
  * Data collection: pdr, programRemove
+ * <p>
+ * System message: staticContent 
  * </blockquote>
  * <p>
  * <b>9x9 Player API always returns a string:</b>
@@ -137,7 +145,7 @@ public class PlayerApiController {
         this.playerApiService= playerApiService;
     }    
     
-    private int prepService(HttpServletRequest req, boolean log) {        
+    private int prepService(HttpServletRequest req, boolean tolog) {        
         /*
         String userAgent = req.getHeader("user-agent");
         if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
@@ -145,12 +153,21 @@ public class PlayerApiController {
             log.info("from iOS");
         }
         */
-        if (log) 
+        String userAgent = req.getHeader("user-agent");
+        log.info("user agent:" + userAgent);
+        
+        String msoName = req.getParameter("mso");
+        if (tolog) 
             NnNetUtil.logUrl(req);
         HttpSession session = req.getSession();
         session.setMaxInactiveInterval(60);
         MsoManager msoMngr = new MsoManager();
-        Mso mso = msoMngr.findNNMso();
+        Mso mso = msoMngr.getByNameFromCache(msoName);
+        if (mso == null) {
+            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);;
+           //mso = msoMngr.findNNMso();
+        }
+        log.info("mso entrance:" + mso.getId());
         Locale locale = Locale.ENGLISH;
         playerApiService.setLocale(locale);
         playerApiService.setMso(mso);
@@ -215,6 +232,7 @@ public class PlayerApiController {
     public @ResponseBody String signup(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        String mso = req.getParameter("mso");
         String name = req.getParameter("name");
         String userToken = req.getParameter("user");
         String captcha = req.getParameter("captcha");
@@ -225,7 +243,7 @@ public class PlayerApiController {
         String rx = req.getParameter("rx");
         boolean isTemp = Boolean.parseBoolean(req.getParameter("temp"));
                 
-        log.info("signup: email=" + email + ";name=" + name + 
+        log.info("signup: email=" + email + ";name=" + name + ";mso:" + mso + 
                  ";userToken=" + userToken + ";sphere=" + sphere + 
                  ";year=" + year + ";ui-lang=" + lang + 
                  ";rx=" + rx);
@@ -258,8 +276,11 @@ public class PlayerApiController {
      */
     @RequestMapping(value="fbSignup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String fbSignup(HttpServletRequest req, HttpServletResponse resp) {
-        FacebookMe me = new FacebookMe();
-        
+        String msoString = req.getParameter("mso");
+        if (msoString == null) {
+            msoString = "9x9"; 
+        }
+        FacebookMe me = new FacebookMe();        
         me.setId(req.getParameter("id"));
         me.setName(req.getParameter("name"));
         me.setUsername(req.getParameter("username"));
@@ -273,14 +294,14 @@ public class PlayerApiController {
         
         try {
             this.prepService(req, true);
-            output = playerApiService.fbDeviceSignup(me, expire, req, resp);
+            output = playerApiService.fbDeviceSignup(me, expire, msoString, req, resp);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);
         }
         return output;
-            
+
      }
     
     /**
@@ -374,7 +395,6 @@ public class PlayerApiController {
     }
 
     /**   
-     * This API is used for version before 3.2.
      * For directory query. Returns list of categories.   
      * 
      * @param lang en or zh 
@@ -390,8 +410,9 @@ public class PlayerApiController {
      */
     @RequestMapping(value="category", produces = "text/plain; charset=utf-8")
     public @ResponseBody String category(
-            @RequestParam(value="category", required=false) String category,
             @RequestParam(value="lang", required=false) String lang,
+            @RequestParam(value="category", required=false) String category,
+            @RequestParam(value="mso", required=false) String mso,            
             @RequestParam(value="flatten", required=false) String isFlatten,
             @RequestParam(value="v", required=false) String v,
             @RequestParam(value="rx", required = false) String rx,
@@ -399,10 +420,17 @@ public class PlayerApiController {
             HttpServletResponse resp) {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
-            this.prepService(req, true);
+            this.prepService(req, true);            
             boolean flatten = Boolean.parseBoolean(isFlatten);
             if (playerApiService.getVersion() < 32) {
-                return new IosService().category(category, lang, flatten); 
+                log.info("category:" + category);
+                String msoName = req.getParameter("mso");
+                MsoManager msoMngr = new MsoManager();
+                Mso brand = msoMngr.findByName(msoName);
+                if (brand == null) {
+                   brand = msoMngr.findNNMso();
+                }                
+                return new IosService().category(category, lang, flatten, brand ); 
             }
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
@@ -552,7 +580,13 @@ public class PlayerApiController {
             HttpServletRequest req,
             HttpServletResponse resp) {
         log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);        
-        return new IosService().setInfo(id, beautifulUrl);        
+        String msoName = req.getParameter("mso");
+        MsoManager msoMngr = new MsoManager();
+        Mso mso = msoMngr.findByName(msoName);
+        if (mso == null) {
+           mso = msoMngr.findNNMso();
+        }
+        return new IosService().setInfo(id, beautifulUrl, mso);        
     }
 
     /** 
@@ -574,6 +608,7 @@ public class PlayerApiController {
     @RequestMapping(value="tagInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String tagInfo(
             @RequestParam(value="name", required=false) String name,
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="start", required=false) String start,
             @RequestParam(value="count", required=false) String count,            
             @RequestParam(value="rx", required = false) String rx,
@@ -615,6 +650,7 @@ public class PlayerApiController {
     @RequestMapping(value="categoryInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String categoryInfo(
             @RequestParam(value="category", required=false) String id,
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="start", required=false) String start,
             @RequestParam(value="count", required=false) String count,
             @RequestParam(value="sort", required=false) String sort,
@@ -729,6 +765,7 @@ public class PlayerApiController {
     @RequestMapping(value="channelStack", produces = "text/plain; charset=utf-8")
     public @ResponseBody String channelStack(
             @RequestParam(value="stack", required=false) String stack,
+            @RequestParam(value="mso", required=false) String mso,            
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="channel", required=false) String channel,
@@ -1012,6 +1049,8 @@ public class PlayerApiController {
     public @ResponseBody String login(HttpServletRequest req, HttpServletResponse resp) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        @SuppressWarnings("unused")
+        String mso = req.getParameter("mso");
         String rx = req.getParameter("rx");
         log.info("login: email=" + email + ";rx=" + rx);        
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
@@ -1136,8 +1175,7 @@ public class PlayerApiController {
         try {
             int status = this.prepService(req, true);
             if (status != NnStatusCode.SUCCESS) {
-                return 
-                        playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
             output = playerApiService.deviceRegister(userToken, type, req, resp);
         } catch (Exception e) {
@@ -1301,7 +1339,7 @@ public class PlayerApiController {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);
             if (value != null)
                 comment = value;
-            output = playerApiService.userReport(user, device, session, type, item, comment);
+            output = playerApiService.userReport(user, device, session, type, item, comment, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
@@ -2234,8 +2272,11 @@ public class PlayerApiController {
      */
     @RequestMapping(value="fbLogin")
     public String fbLogin(HttpServletRequest req,
-            @RequestParam(value="subCh", required=false) String subCh) {            
-        String url = FacebookLib.getDialogOAuthPath(subCh);        
+            @RequestParam(value="subCh", required=false) String subCh,            
+            @RequestParam(value="mso", required=false) String mso) {
+        if (mso == null) 
+            mso = "9x9"; 
+        String url = FacebookLib.getDialogOAuthPath(subCh, mso);        
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;
@@ -2391,6 +2432,7 @@ public class PlayerApiController {
     public @ResponseBody String bulkSubscribe(                      
             @RequestParam(value="channelNames", required=false) String ytUsers,
             @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -2413,7 +2455,7 @@ public class PlayerApiController {
     
     @RequestMapping(value="virtualChannelAdd", produces = "text/plain; charset=utf-8")
     public @ResponseBody String virtualChannelAdd(                      
-            @RequestParam(value="user", required=false) String user,
+            @RequestParam(value="user", required=false) String user,            
             @RequestParam(value="channel", required=false) String channel,
             @RequestParam(value="payload", required=false) String payload,            
             @RequestParam(value="queued", required = false) String queued,
@@ -2449,6 +2491,8 @@ public class PlayerApiController {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String name = req.getParameter("name");
+        @SuppressWarnings("unused")
+        String mso = req.getParameter("mso");
                 
         log.info("signup: email=" + email + ";name=" + name); 
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);

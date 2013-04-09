@@ -149,7 +149,7 @@ public class WatchDogController {
             @RequestParam(value="channel", required=false) long chId ) {
         NnProgramManager mngr = new NnProgramManager();
         mngr.resetCache(chId);
-        return "OK";                
+        return "OK";
     }
 
     @RequestMapping(value="channelCache", produces = "text/plain; charset=utf-8")

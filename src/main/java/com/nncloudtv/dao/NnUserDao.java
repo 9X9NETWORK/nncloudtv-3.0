@@ -22,24 +22,31 @@ public class NnUserDao extends GenericDao<NnUser> {
     public NnUserDao() {
         super(NnUser.class);
     }
-    
+
+    //generic = true is for regular search
+    //generic = false means for experimental ios feature
     @SuppressWarnings("unchecked")
-    public List<NnUser> search(String email, String name, String generic) {
+    public List<NnUser> search(String email, String name, String generic, long msoId) {
         List<NnUser> detached = new ArrayList<NnUser>();        
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
         try {
             String sql = "";
+            //select id from nnuser where id in (select userId from nnuser_profile where name like ('%a%'));
             if (generic != null) {
                 sql = "select * from nnuser " + 
-                       "where lower(name) like lower(\"%" + generic + "%\") " +  
-                       "   or lower(intro) like lower(\"%" + generic + "%\")";                              
+                       "where id in (select userId from nnuser_profile " +
+                                    " where msoId = " + msoId +  
+                                    "   and (lower(name) like lower(\"%" + generic + "%\") " +  
+                                    "   or lower(intro) like lower(\"%" + generic + "%\")))";                              
             } else {
                sql = "select * from nnuser " + "where ";                      
                if (email != null) {
                    sql += " email = '" + email + "'";
+               }
+               /*
                } else if (name != null) { 
                    sql += " lower(name) like lower('%" + name + "%')";
-               }
+               */
             }
             log.info("Sql=" + sql);        
             pm = PMF.getNnUser1().getPersistenceManager();
@@ -290,9 +297,12 @@ public class NnUserDao extends GenericDao<NnUser> {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();        
         try {
             for (int i=0;i<2;i++) {
-                String sql = "select * " +
-                               "from nnuser " +
-                             " where lower(profileUrl) = '" + profileUrl + "'";
+                String sql = "select * from nnuser n " +
+                		     " where exists (" +
+                		         " select userId " +
+                                   "from nnuser_profile p " +
+                                 " where p.userId = n.id " +
+                                   " and lower(profileUrl) = '" + profileUrl + "')";                
                 log.info("sql:" + sql);
                 Query query = pm.newQuery("javax.jdo.query.SQL", sql);
                 query.setClass(NnUser.class);
@@ -373,15 +383,19 @@ public class NnUserDao extends GenericDao<NnUser> {
     }
 
     //TODO merge one and two
-    public List<NnUser> findFeatured() {
+    public List<NnUser> findFeatured(long msoId) {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager(); 
         List<NnUser> detached = new ArrayList<NnUser>(); 
         try {
             String sql = "select * " +
-                          " from nnuser " + 
-                         " where featured = true " +  
-                           " order by rand() " + 
-                           " limit 9";
+                          " from nnuser n " + 
+                         " where exists " +
+                           " (select userId from nnuser_profile p " +
+                               " where p.userId = n.id " + 
+                                 " and p.msoId = " + msoId +
+                                 " and p.featured = true " +
+                               " order by rand())" + 
+                                       " limit 9";                                    
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnUser.class);

@@ -9,6 +9,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+//creative
 @PersistenceCapable(table="poi_event", detachable="true")
 public class PoiEvent implements Serializable {
     private static final long serialVersionUID = -1261189136283925861L;

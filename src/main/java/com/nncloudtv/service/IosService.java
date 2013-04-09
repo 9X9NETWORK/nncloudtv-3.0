@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.Category;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.model.NnSet;
 import com.nncloudtv.web.api.NnStatusCode;
 
 @Service
@@ -19,44 +22,152 @@ public class IosService {
     protected static final Logger log = Logger.getLogger(IosService.class.getName());
     private static final String urlRoot = "http://s3.amazonaws.com/9x9ui/war/v2/ios/";
     
-    public String listRecommended(String lang) {
-    	String filename = "listRecommended_en";
-        if (lang != null && lang.equals(LangTable.LANG_ZH)) {
-            filename = "listRecommended_zh";
+    public String listRecommended(String lang, long msoId) {
+        if (msoId == 1) {
+            log.info("use file mode");
+            String filename = "listRecommended_en";
+            if (lang != null && lang.equals(LangTable.LANG_ZH)) {
+                filename = "listRecommended_zh";
+            }
+            if (!filename.equals("listRecommended_zh")) {
+                String url = urlRoot + filename;
+                String result = NnNetUtil.urlGet(url);
+                if (result == null)
+                    return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
+                return result;                
+            }            
         }
-        String url = urlRoot + filename;
-        String result = NnNetUtil.urlGet(url);
-        if (result == null)
-            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
-        return result;
-    	
+        PlayerApiService api = new PlayerApiService();
+        lang = api.checkLang(lang);    
+        if (lang == null)
+            return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);             
+        NnSetManager setMngr = new NnSetManager();
+        List<NnSet> sets = setMngr.findFeatured(lang, msoId);
+        String[] result = {""};
+        for (NnSet set : sets) {
+            String[] obj = {
+                String.valueOf(set.getId()),
+                set.getName(),
+                "",
+                set.getImageUrl(),
+                String.valueOf(set.getCntChannel()),
+            };
+            result[0] += NnStringUtil.getDelimitedStr(obj) + "\n";          
+        }
+        return api.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
-    public String category(String id, String lang, boolean flatten) {
-        log.info("category request from != v32");
-        String filename = "category_en";
-        if (lang != null && lang.equals(LangTable.LANG_ZH)) {
-            filename = "category_zh";
+    public String category(String id, String lang, boolean flatten, Mso mso) {
+        if (mso.getId() == 1) {
+            String filename = "category_en";
+            if (lang != null && lang.equals(LangTable.LANG_ZH)) {
+                filename = "category_zh";
+            }
+            if (id != null) {
+                filename = "category_" + id;
+                if (id.contains("s"))
+                    filename = id;
+            }
+            log.info("file mode:" + filename);
+            String url = urlRoot + filename;
+            String result = NnNetUtil.urlGet(url);            
+            if (result == null)
+                return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
+            else
+                return result;
         }
+        PlayerApiService api = new PlayerApiService();
+        lang = api.checkLang(lang);    
+        if (lang == null) {
+            return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }
+        if (id == null) {
+            id = "0";
+        }        
+        String[] result = {"", "", ""};
+        CategoryManager catMngr = new CategoryManager();        
+        //if it's a set, find channel info
+        result[0] = "id" + "\t" + id + "\n";
+        if (!id.equals("0")) {            
+            long catId = Long.parseLong(id);
+            Category cat = catMngr.findById(catId);
+            if (cat != null) {
+                result[0] += "piwik" + "\t" + "" + "\n";
+            }
+            List<NnChannel> channels = catMngr.findChannels(catId, true);
+            for (NnChannel c : channels) {
+                c.setSorting(NnChannelManager.getDefaultSorting(c));
+            }
+            result[2] = this.composeChannelLineup(channels);
+            return api.assembleMsgs(NnStatusCode.SUCCESS, result);
+        }        
+
+        List<Category> categories = catMngr.findPlayerCategories(lang, mso.getId());                
+        //if it's just categories, find categories
+        for (Category c : categories) { 
+            String name =  c.getName();
+            int cnt = c.getChannelCnt();
+            String subItemHint = "ch"; //what's under this level
+            String[] str = {String.valueOf(c.getId()), 
+                            name, 
+                            String.valueOf(cnt), 
+                            subItemHint};               
+            result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
+        }
+        return api.assembleMsgs(NnStatusCode.SUCCESS, result);
+    }
+    
+    public String setInfo(String id, String name, Mso mso) {
+        PlayerApiService api = new PlayerApiService();
+        if (id == null && name == null) {
+            return api.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        if (mso == null) {
+            return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }
+        
+        if (mso.getId() == 1) {                        
+            if (id != null && id.startsWith("s")) id = id.replace("s", "");
+            long setId = Long.parseLong(id);
+            if (setId < 5000) {                
+                String filename = id;
+                String url = urlRoot + "s" + filename;
+                String result = NnNetUtil.urlGet(url);
+                if (result == null)
+                    return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);        
+                return result;
+            }
+        }
+        if (id != null && id.startsWith("s")) id = id.replace("s", "");
+        NnSetManager setMngr = new NnSetManager();
+        NnSet set = null;
         if (id != null) {
-            filename = "category_" + id;
-            if (id.contains("s"))
-                filename = id;
+            set = setMngr.findById(Long.parseLong(id));
+        } else {
+            set = setMngr.findByName(name, mso.getId());
         }
-        String url = urlRoot + filename;
-        String result = NnNetUtil.urlGet(url);
-        if (result == null)
-            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);
-        return result;
-    }
-    
-    public String setInfo(String id, String beautifulUrl) {
-        String filename = id;
-        String url = urlRoot + "s" + filename;
-        String result = NnNetUtil.urlGet(url);
-        if (result == null)
-            return new PlayerApiService().assembleMsgs(NnStatusCode.INPUT_BAD, null);        
-        return result;
+        if (set == null)
+            return api.assembleMsgs(NnStatusCode.SET_INVALID, null);            
+        
+        List<NnChannel> channels = setMngr.findChannels(set, mso);
+        String result[] = {"", "", ""};
+
+        //mso info
+        result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
+        result[0] += PlayerApiService.assembleKeyValue("imageUrl", mso.getLogoUrl()); 
+        result[0] += PlayerApiService.assembleKeyValue("intro", mso.getIntro());            
+        //set info
+        result[1] += PlayerApiService.assembleKeyValue("id", String.valueOf(set.getId()));
+        result[1] += PlayerApiService.assembleKeyValue("name", set.getName());
+        result[1] += PlayerApiService.assembleKeyValue("imageUrl", set.getImageUrl());
+        result[1] += PlayerApiService.assembleKeyValue("piwik", "");
+        //channel info
+        for (NnChannel c : channels) {
+            if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic())
+                c.setSorting(NnChannelManager.getDefaultSorting(c));
+        }   
+        result[2] = this.composeChannelLineup(channels);
+        return api.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
     public String composeChannelLineup(List<NnChannel> channels) {

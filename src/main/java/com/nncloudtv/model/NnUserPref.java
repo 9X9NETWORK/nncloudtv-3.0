@@ -24,6 +24,9 @@ public class NnUserPref implements Serializable {
     private long userId;
 
     @Persistent
+    private long msoId;
+    
+    @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String item;
     public static final String FB_USER_ID = "fb-user-id";
@@ -35,6 +38,7 @@ public class NnUserPref implements Serializable {
     
     public NnUserPref(NnUser user, String item, String value) {
         this.userId = user.getId();
+        this.msoId = user.getMsoId();
         this.item = item;
         this.value = value;
     }
@@ -91,5 +95,14 @@ public class NnUserPref implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
-    }    
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
+    }
+        
 }

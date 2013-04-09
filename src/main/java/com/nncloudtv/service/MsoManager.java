@@ -18,6 +18,15 @@ public class MsoManager {
     protected static final Logger log = Logger.getLogger(MsoManager.class.getName());
     
     private MsoDao msoDao = new MsoDao();    
+
+    public Mso findOneByName(String name) {
+        if (name == null)
+            return this.findNNMso(); //most of the situation
+        Mso mso = this.findByName(name);
+        if (mso == null)
+            return this.findNNMso(); 
+        return mso;
+    }
     
     public int addMsoVisitCounter(boolean readOnly) {        
         String counterName = "9x9" + "BrandInfo";
@@ -39,23 +48,27 @@ public class MsoManager {
             mso.setCreateDate(now);
         mso.setUpdateDate(now);
         msoDao.save(mso);
+        /*
         if (mso.getType() == Mso.TYPE_NN)
             this.processCache();
+            */
         return mso;
     }
-    
+    /*
     public void processCache() {
         this.getBrandInfoCache(true);
     }
+    */
     
     public Mso findNNMso() {
         List<Mso> list = this.findByType(Mso.TYPE_NN);
         return list.get(0);
     }
     
-    public String[] getBrandInfoCache(boolean cacheReset) {
-        String cacheKey = "brandInfo";
+    public String[] getBrandInfoCache(Mso mso) {
+        if (mso == null) {return null; }
         String[] result = {""};
+        String cacheKey = "brandInfo(" + mso.getName() + ")";
         try {
             String[] cached = (String[]) CacheFactory.get(cacheKey);
             if (cached != null) {
@@ -65,9 +78,8 @@ public class MsoManager {
         } catch (Exception e) {
             log.info("memcache error");
         }
+        
         log.info("brand info not from cache");
-        Mso mso = this.findNNMso();
-        if (mso == null) {return null; }
         MsoConfigManager configMngr = new MsoConfigManager();
         
         //general setting
@@ -96,9 +108,10 @@ public class MsoManager {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.UPGRADE_MSG, c.getValue());
             }            
         }
+        
         if (CacheFactory.isRunning) { 
             CacheFactory.set(cacheKey, result);
-        }        
+        } 
         return result;        
     }
             
@@ -111,7 +124,27 @@ public class MsoManager {
         Mso mso = msoDao.findByName(name);
         return mso;
     }
-            
+
+    public Mso getByNameFromCache(String name) {
+        if (name == null) {return null;}
+        String cacheKey = "mso(" + name + ")";
+        try {
+            Mso cached = (Mso) CacheFactory.get(cacheKey);
+            if (cached != null) {
+                log.info("get mso object from cache:" + cached.getId());
+                return cached;
+            }
+        } catch (Exception e) {
+            log.info("memcache error");
+        }        
+        log.info("NOT get mso object from cache:" + name);
+        Mso mso = msoDao.findByName(name);
+        if (CacheFactory.isRunning) { 
+            CacheFactory.set(cacheKey, mso);
+        }         
+        return mso;
+    }
+    
     public Mso findById(long id) {
         return msoDao.findById(id);
     }

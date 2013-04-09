@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.api.client.util.ArrayMap;
@@ -26,8 +27,10 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoConfigManager;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.web.json.facebook.FBPost;
 
@@ -40,8 +43,8 @@ public class ApiMisc extends ApiGeneric {
 	@RequestMapping(value = "s3/attributes", method = RequestMethod.GET)
 	public @ResponseBody Map<String, String> s3Attributes(HttpServletRequest req, HttpServletResponse resp) {
 		
-	    NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+	    Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
         }
@@ -95,26 +98,25 @@ public class ApiMisc extends ApiGeneric {
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public @ResponseBody NnUser login(HttpServletRequest req, HttpServletResponse resp) {
+	public @ResponseBody Map<String, Object> login(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String token = req.getParameter("token");
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
+		String mso = req.getParameter("mso");
 		
 		NnUserManager userMngr = new NnUserManager();
 		NnUser user = null;
-		
-		if (token != null) {
-			
-			log.info("token = " + token);
-			
-			user = userMngr.findByToken(token);
+		Mso brand = new MsoManager().findOneByName(mso);
+		if (token != null) {			
+			log.info("token = " + token);			
+			user = userMngr.findByToken(token, brand.getId());
 			
 		} else if (email != null && password != null) {
 			
 			log.info("email = " + email + ", password = xxxxxx");
 			
-			user = userMngr.findAuthenticatedUser(email, password, req);
+			user = userMngr.findAuthenticatedUser(email, password, brand.getId(), req);
 			if (user != null) {
 				CookieHelper.setCookie(resp, CookieHelper.USER, user.getToken());
 			}
@@ -128,7 +130,7 @@ public class ApiMisc extends ApiGeneric {
 		    return null;
 		}
 		
-		return userMngr.purify(user);
+		return userResponse(user);
 	}
 	
 	@RequestMapping("echo")
@@ -253,11 +255,20 @@ public class ApiMisc extends ApiGeneric {
     }
 	
     @RequestMapping(value = "sns/facebook", method = RequestMethod.POST)
-    public @ResponseBody String postToFacebook(HttpServletRequest req, HttpServletResponse resp) {
+    public @ResponseBody String postToFacebook(HttpServletRequest req, HttpServletResponse resp,
+            @RequestParam(required = false) String mso) {
         
-        NnUser verifiedUser = userIdentify(req);
-        if (verifiedUser == null) {
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
             unauthorized(resp);
+            return null;
+        }
+        
+        NnUserManager userMngr = new NnUserManager();
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUser user = userMngr.findById(verifiedUserId, brand.getId());
+        if (user == null) {
+            notFound(resp, "User Not Found");
             return null;
         }
         
@@ -300,8 +311,8 @@ public class ApiMisc extends ApiGeneric {
         }
         
         // facebookId
-        if (verifiedUser.isFbUser()) {
-            fbPost.setFacebookId(verifiedUser.getEmail());
+        if (user.isFbUser()) {
+            fbPost.setFacebookId(user.getEmail());
         } else {
             String facebookId = req.getParameter("facebookId");
             if (facebookId != null){
@@ -310,8 +321,8 @@ public class ApiMisc extends ApiGeneric {
         }
          
         // accessToken
-        if (verifiedUser.isFbUser()) {
-            fbPost.setAccessToken(verifiedUser.getToken());
+        if (user.isFbUser()) {
+            fbPost.setAccessToken(user.getToken());
         } else {
             String accessToken = req.getParameter("accessToken");
             if (accessToken != null){

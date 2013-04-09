@@ -18,16 +18,16 @@ public class NnDeviceDao extends GenericDao<NnDevice> {
     public NnDeviceDao() {
         super(NnDevice.class);
     }
-    
+        
     public List<NnDevice> findByUser(NnUser user) {
         List<NnDevice> detached = new ArrayList<NnDevice>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
             Query q = pm.newQuery(NnDevice.class);
-            q.setFilter("userId == userIdParam");
-            q.declareParameters("long userIdParam");
+            q.setFilter("userId == userIdParam && msoId == msoIdParam");
+            q.declareParameters("long userIdParam, Long msoIdParam");
             @SuppressWarnings("unchecked")
-            List<NnDevice> results = (List<NnDevice>)q.execute(user.getId());
+            List<NnDevice> results = (List<NnDevice>)q.execute(user.getId(), user.getMsoId());
             detached = (List<NnDevice>)pm.detachCopyAll(results); 
         } finally {
             pm.close();
@@ -57,9 +57,9 @@ public class NnDeviceDao extends GenericDao<NnDevice> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
             Query query = pm.newQuery(NnDevice.class);
-            query.setFilter("token == tokenParam && userId == userIdParam");
-            query.declareParameters("String tokenParam, long userIdParam");        
-            List<NnDevice> results = (List<NnDevice>) query.execute(token, user.getId());
+            query.setFilter("token == tokenParam && userId == userIdParam && msoId == msoIdParam");
+            query.declareParameters("String tokenParam, long userIdParam, Long msoIdParam");        
+            List<NnDevice> results = (List<NnDevice>) query.execute(token, user.getId(), user.getMsoId());
             if (results.size() > 0) {
                 device = results.get(0);
             }

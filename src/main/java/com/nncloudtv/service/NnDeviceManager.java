@@ -31,25 +31,29 @@ public class NnDeviceManager {
     public NnDevice create(NnDevice device, NnUser user, String type) {
         if (device != null && user != null) {
             NnDevice existed = this.findByTokenAndUser(device.getToken(), user); 
-            if (existed != null)
+            if (existed != null) {
+                log.info("found existed:" + device.getToken() + ";user:" + user.getToken());
                 return existed;
-        }
-        
+            }
+        }        
         if (device == null)
             device = new NnDevice();
-        if (device.getToken() == null && user == null)
-            device.setToken(NnUserManager.generateToken(NnUserManager.getShardByLocale(req)));        
+        if (device.getToken() == null)
+            device.setToken(NnUserManager.generateToken(NnUserManager.getShardByLocale(req)));
         if (user != null) {
             device.setUserId(user.getId());
             device.setShard(user.getShard()); //for future reference
-        }                
-        
+            device.setMsoId(user.getMsoId());            
+        } else {
+            //!!! problem
+            device.setMsoId(1);
+        }
         device.setType(type);
         Date now = new Date();
         if (device.getCreateDate() == null)
             device.setCreateDate(now);
-        device.setUpdateDate(now);
-        deviceDao.save(device);        
+        device.setUpdateDate(now);       
+        device = deviceDao.save(device);
         return device;
     }
     
@@ -82,6 +86,7 @@ public class NnDeviceManager {
         }
         existed = this.findByTokenAndUser(token, user);
         if (existed != null) {
+            log.info("found existed device and user: device token: " + token + ";user id:" + user.getId());
             return existed;
         }        
         NnDevice device = new NnDevice();

@@ -226,13 +226,13 @@ public class NnEpisodeManager {
         }
         
         NnUserManager userMngr = new NnUserManager();
-        NnUser user = userMngr.findById(channel.getUserId());
+        NnUser user = userMngr.findById(channel.getUserId(), 1);
         if (user == null) {
             return ;
         }
         
         MessageSource messageSource = new ClassPathXmlApplicationContext("locale.xml");
-        if (user.getLang().equals("zh")) {
+        if (user.getProfile().getLang().equals("zh")) {
             //fbPost.setCaption("Published an episode on 9x9.tv");
             fbPost.setCaption(messageSource.getMessage("cms.autosharing.episode_added", null, Locale.TRADITIONAL_CHINESE));
         } else {

@@ -20,6 +20,9 @@ public class Category implements Serializable {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
+
+    @Persistent
+    private long msoId;
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=5)
@@ -120,6 +123,14 @@ public class Category implements Serializable {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
     }
     
 }

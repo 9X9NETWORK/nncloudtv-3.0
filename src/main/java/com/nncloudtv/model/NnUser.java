@@ -33,7 +33,8 @@ public class NnUser implements Serializable {
     public static short SHARD_DEFAULT = 1;
     public static short SHARD_CHINESE = 2;
         
-    @Persistent
+    //xxx
+    @NotPersistent
     private long msoId; //which mso a user belongs to
     
     //unique key, can be a facebook id
@@ -41,23 +42,10 @@ public class NnUser implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String email; 
-    
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String name;    
-    
-    @Persistent
-    private String dob; //for now it's year
-    
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String intro;
-            
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String imageUrl;
-    public static String IMAGE_URL_DEFAULT = "https://s3.amazonaws.com/9x9ui/war/v2/images/profile_default101.png";
 
+    @NotPersistent
+    private NnUserProfile profile;
+    
     @NotPersistent
     private String password;
     
@@ -66,22 +54,7 @@ public class NnUser implements Serializable {
 
     @Persistent
     private byte[] salt;
-    
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=5)
-    private String sphere; //content region, used with LangTable
-
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=5)
-    private String lang; //ui language, used with LangTable
-
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String profileUrl; //curator url
-    
-    @Persistent
-    private short gender; //0 (f) or 1(m) or 2(not specified)
-    
+        
     @Persistent
     private Date createDate;
     
@@ -102,8 +75,10 @@ public class NnUser implements Serializable {
     //example, aaa9x9@gmail.com" to "aaa9x9-AT-gmail.com@9x9.tv
     public static short TYPE_YOUTUBE_CONNECT = 9; 
     
-    public static String GUEST_EMAIL = "guest@9x9.com";
+    public static String GUEST_EMAIL = "guest@9x9.com";    
     public static String GUEST_NAME = "Guest";
+    public static String ANONYMOUS_EMAIL = "anonymous@9x9.com";
+    public static String ANONYMOUS_NAME = "Anonymous";
     
     //used to store facebook account email
     //to get "facebook id", use getUserFbId()
@@ -113,47 +88,36 @@ public class NnUser implements Serializable {
 
     @Persistent
     private long expires;
-    
-    @Persistent
-    private boolean featured; 
-    
+        
     //used for testing without changing the program logic
     //isTemp set to true means it can be wiped out
     @Persistent
     private boolean isTemp; 
-
-    @Persistent
-    private int cntSubscribe; //the number of channels the user subscribes
     
-    @Persistent
-    private int cntChannel; //the number of channels the user creates
-    
-    @Persistent
-    private int cntFollower; //the number of users who subscribe to this user's channels  
-    
-    public NnUser(String email, String password, String name, short type) {
+    public NnUser(String email, String password, short type) {
         this.email = email;
         this.salt = AuthLib.generateSalt();
         this.cryptedPassword= AuthLib.encryptPassword(password, this.getSalt());
-        this.name = name;
+        this.profile = new NnUserProfile();
         this.type = type;
+        this.profile = new NnUserProfile();
     }
 
     //for facebook
-    public NnUser(String email, String name, String fbId, String fbToken) {
+    public NnUser(String email, String fbId, String fbToken) {
         this.email = fbId;
-        this.name = name;
         this.fbId = email;
         this.token = fbToken;
+        this.profile = new NnUserProfile();
     }
     
-    public NnUser(String email, String password, String name, short type, long msoId) {
+    public NnUser(String email, String password, short type, long msoId) {
         this.email = email;
         this.salt = AuthLib.generateSalt();
         this.cryptedPassword= AuthLib.encryptPassword(password, this.getSalt());
-        this.name = name;
         this.type = type;
         this.msoId = msoId;
+        this.profile = new NnUserProfile();
     }        
     
     public long getId() {
@@ -183,13 +147,13 @@ public class NnUser implements Serializable {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public Date getCreateDate() {
         return createDate;
@@ -239,23 +203,23 @@ public class NnUser implements Serializable {
         this.salt = salt;
     }
 
-    public String getIntro() {
-        return intro;
-    }
+//    public String getIntro() {
+//        return intro;
+//    }
+//
+//    public void setIntro(String intro) {
+//        this.intro = intro;
+//    }
 
-    public void setIntro(String intro) {
-        this.intro = intro;
-    }
-
-    public String getImageUrl() {
-        if (imageUrl == null)
-            return NnUser.IMAGE_URL_DEFAULT;
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+//    public String getImageUrl() {
+//        if (imageUrl == null)
+//            return NnUser.IMAGE_URL_DEFAULT;
+//        return imageUrl;
+//    }
+//
+//    public void setImageUrl(String imageUrl) {
+//        this.imageUrl = imageUrl;
+//    }
 
     public long getMsoId() {
         return msoId;
@@ -289,65 +253,65 @@ public class NnUser implements Serializable {
         this.shard = shard;
     }
 
-    public String getDob() {
-        return dob;
-    }
+//    public String getDob() {
+//        return dob;
+//    }
+//
+//    public void setDob(String dob) {
+//        this.dob = dob;
+//    }
+//
+//    public String getSphere() {
+//        return sphere;
+//    }
 
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
+//    public void setSphere(String sphere) {
+//        if (sphere != null && sphere.contains("_"))
+//            sphere = sphere.substring(0, 2);
+//        this.sphere = sphere;
+//    }
 
-    public String getSphere() {
-        return sphere;
-    }
+//    public short getGender() {
+//        return gender;
+//    }
+//
+//    public void setGender(short gender) {
+//        this.gender = gender;
+//    }
 
-    public void setSphere(String sphere) {
-        if (sphere != null && sphere.contains("_"))
-            sphere = sphere.substring(0, 2);
-        this.sphere = sphere;
-    }
+//    public void setGender(String gender) {
+//        if (gender == null || gender.length() == 0)
+//            this.gender = 2;
+//        else if (gender.startsWith("f"))
+//            this.gender = 0;
+//        else
+//            this.gender = 1;
+//    }
+//    
+//    public String getLang() {
+//        return lang;
+//    }
 
-    public short getGender() {
-        return gender;
-    }
+//    public void setLang(String lang) {
+//        if (lang != null & lang.length() > 2)
+//            lang = lang.substring(0, 2);
+//        this.lang = lang;
+//    }
+//
+//    public String getProfileUrl() {
+//        return profileUrl;
+//    }
 
-    public void setGender(short gender) {
-        this.gender = gender;
-    }
-
-    public void setGender(String gender) {
-        if (gender == null || gender.length() == 0)
-            this.gender = 2;
-        else if (gender.startsWith("f"))
-            this.gender = 0;
-        else
-            this.gender = 1;
-    }
-    
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        if (lang != null & lang.length() > 2)
-            lang = lang.substring(0, 2);
-        this.lang = lang;
-    }
-
-    public String getProfileUrl() {
-        return profileUrl;
-    }
-
-    public String getBrandUrl() {
-        if (profileUrl != null && profileUrl.matches("[a-zA-Z].+")) {
-            return "~" + profileUrl;
-        }
-        return profileUrl;
-    }
-    
-    public void setProfileUrl(String profileUrl) {
-        this.profileUrl = profileUrl;
-    }
+//    public String getBrandUrl() {
+//        if (profileUrl != null && profileUrl.matches("[a-zA-Z].+")) {
+//            return "~" + profileUrl;
+//        }
+//        return profileUrl;
+//    }
+//    
+//    public void setProfileUrl(String profileUrl) {
+//        this.profileUrl = profileUrl;
+//    }
 
     public boolean isTemp() {
         return isTemp;
@@ -356,38 +320,38 @@ public class NnUser implements Serializable {
     public void setTemp(boolean isTemp) {
         this.isTemp = isTemp;
     }
+//
+//    public boolean isFeatured() {
+//        return featured;
+//    }
+//
+//    public void setFeatured(boolean featured) {
+//        this.featured = featured;
+//    }
+//
+//    public int getCntSubscribe() {
+//        return cntSubscribe;
+//    }
+//
+//    public void setCntSubscribe(int cntSubscribe) {
+//        this.cntSubscribe = cntSubscribe;
+//    }
 
-    public boolean isFeatured() {
-        return featured;
-    }
+//    public int getCntChannel() {
+//        return cntChannel;
+//    }
 
-    public void setFeatured(boolean featured) {
-        this.featured = featured;
-    }
+//    public void setCntChannel(int cntChannel) {
+//        this.cntChannel = cntChannel;
+//    }
 
-    public int getCntSubscribe() {
-        return cntSubscribe;
-    }
+//    public int getCntFollower() {
+//        return cntFollower;
+//    }
 
-    public void setCntSubscribe(int cntSubscribe) {
-        this.cntSubscribe = cntSubscribe;
-    }
-
-    public int getCntChannel() {
-        return cntChannel;
-    }
-
-    public void setCntChannel(int cntChannel) {
-        this.cntChannel = cntChannel;
-    }
-
-    public int getCntFollower() {
-        return cntFollower;
-    }
-
-    public void setCntFollower(int cntFollower) {
-        this.cntFollower = cntFollower;
-    }
+//    public void setCntFollower(int cntFollower) {
+//        this.cntFollower = cntFollower;
+//    }
 
     public String getFbId() {
         return fbId;
@@ -408,5 +372,22 @@ public class NnUser implements Serializable {
         if (fbId != null)
             return true;
         return false;
-    }    
+    }
+
+    public NnUserProfile getProfile() {
+        /*
+        if (profile == null || profile.getId() == 0) {
+            this.profile = new NnUserProfile(this.getId(), this.getMsoId());            
+        }
+        */
+        if (profile == null) {
+            this.profile = new NnUserProfile(this.getId(), this.getMsoId());            
+        }
+        return profile;
+    }
+
+    public void setProfile(NnUserProfile profile) {
+        this.profile = profile;
+    }
+
 }

@@ -31,6 +31,7 @@ import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.TagMap;
@@ -206,7 +207,7 @@ public class NnChannelManager {
         Iterator<Entry<Long, String>> it = map.entrySet().iterator();      
         while (it.hasNext()) {
             Map.Entry<Long, String> pairs = (Map.Entry<Long, String>)it.next();
-            if (pairs.getKey() > 5) { //TODO tag id < 5 is special tags, but better give it special attribute, won't live long this way 
+            if (pairs.getValue() != null && !pairs.getValue().contains("(")) {
                 log.info("remove tag_map: key:" + pairs.getKey());
                 tagMngr.deleteChannel(pairs.getKey(), c.getId());
             }
@@ -233,12 +234,13 @@ public class NnChannelManager {
     public NnChannel createFavorite(NnUser user) {
         NnChannel favoriteCh = dao.findFavorite(user.getIdStr());
         if (favoriteCh == null) {
-            favoriteCh = new NnChannel(user.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
+            NnUserProfile profile = user.getProfile();
+            favoriteCh = new NnChannel(profile.getName() + "'s Favorite", "", ""); //TODO, maybe assemble the name to avoid name change
             favoriteCh.setUserIdStr(user.getIdStr());
             favoriteCh.setContentType(NnChannel.CONTENTTYPE_FAVORITE);
             favoriteCh.setPublic(true);            
             favoriteCh.setStatus(NnChannel.STATUS_SUCCESS);            
-            favoriteCh.setSphere(user.getSphere());
+            favoriteCh.setSphere(profile.getSphere());
             favoriteCh = dao.save(favoriteCh);                        
         }
         return favoriteCh;
@@ -594,14 +596,16 @@ public class NnChannelManager {
         RecommendService service = new RecommendService();
         if (name == null)
             return channels;
-        if (name.equals(Tag.TRENDING)) {            
+        if (name.contains(Tag.TRENDING)) {            
             TagManager tagMngr = new TagManager();        
-            name += "(9x9" + lang + ")";
-            log.info("find billboard, tag:" + name);
+            //name += "(9x9" + lang + ")";
+            log.info("find channelsByTag, tag:" + name);
             channels = tagMngr.findChannelsByTag(name, true);
-        } else if (name.equals(Tag.FEATURED)) {
+        } else if (name.contains(Tag.FEATURED)) {
+            log.info("find featured channels, billboard pool search");
             channels = service.findBillboardPool(9, lang);
-        } else if (name.equals(Tag.HOT)) {
+        } else if (name.contains(Tag.HOT)) {
+            log.info("find hot channels, billboard pool search");
             channels = service.findBillboardPool(9, lang);
             /*
             TagManager tagMngr = new TagManager();        
@@ -611,19 +615,19 @@ public class NnChannelManager {
             */            
         } else {
             TagManager tagMngr = new TagManager();        
-            name += "(9x9" + lang + ")";
-            log.info("find billboard, tag:" + name);
+            //name += "(9x9" + lang + ")";
+            log.info("find channelsByTag, tag:" + name);
             channels = tagMngr.findChannelsByTag(name, true);            
         }
         Collections.sort(channels, this.getChannelComparator("updateDate"));
         return channels;
     }
 
-    public List<NnChannel> findStack(String name, String lang) {
+    public List<NnChannel> findStack(String name) {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (name == null)
             return channels;
-        name += "(9x9" + lang + ")";
+        //name += "(9x9" + lang + ")";
         log.info("find stack, tag:" + name);
         channels = dao.findChannelsByTag(name);
         Collections.sort(channels, this.getChannelComparator("updateDate"));
@@ -732,11 +736,12 @@ public class NnChannelManager {
         }
         if (needToFake) {
             log.info("need to fake");
-            String name = user.getName() + "'s favorite";
-            NnChannel c = new NnChannel(name, user.getImageUrl(), "");
+            NnUserProfile profile = user.getProfile();
+            String name = profile.getName() + "'s favorite";
+            NnChannel c = new NnChannel(name, profile.getImageUrl(), "");
             c.setContentType(NnChannel.CONTENTTYPE_FAKE_FAVORITE);
             c.setUserIdStr(user.getIdStr());
-            c.setNote(c.getFakeId(user.getProfileUrl())); //shortcut, maybe not very appropriate
+            c.setNote(c.getFakeId(profile.getProfileUrl())); //shortcut, maybe not very appropriate
             c.setStatus(NnChannel.STATUS_SUCCESS);
             c.setPublic(true);
             c.setSeq((short)(channels.size()+1));
@@ -889,16 +894,17 @@ public class NnChannelManager {
 
         //curator info
         NnUserManager userMngr = new NnUserManager();
-        NnUser u = userMngr.findByIdStr(c.getUserIdStr());
+        NnUser u = userMngr.findByIdStr(c.getUserIdStr(), 1);
         String userName = "";
         String userIntro = "";
         String userImageUrl = "";
         String curatorProfile = "";
         if (u != null) {
-            userName = u.getName();
-            userIntro = u.getIntro();
-            userImageUrl = u.getImageUrl();
-            curatorProfile = u.getBrandUrl();
+            NnUserProfile profile = u.getProfile();
+            userName = profile.getName();
+            userIntro = profile.getIntro();
+            userImageUrl = profile.getImageUrl();
+            curatorProfile = profile.getBrandUrl();
             if (c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
                 log.info("change favorite channel name and thumbnail");
                 name = userName + "'s Favorite";
@@ -914,10 +920,10 @@ public class NnChannelManager {
             subscribersIdStr != null) {
             String[] list = subscribersIdStr.split(";");
             for (String l : list ) {
-                NnUser sub = userMngr.findByIdStr(l);
+                NnUser sub = userMngr.findByIdStr(l, 1);
                 if (sub != null) {
-                    subscriberProfile += "|" + sub.getProfileUrl();
-                    subscriberImage += "|" + sub.getImageUrl();                    
+                    subscriberProfile += "|" + sub.getProfile().getProfileUrl();
+                    subscriberImage += "|" + sub.getProfile().getImageUrl();                    
                 }
             }
             if (subscriberProfile.length() > 0) {
@@ -1086,7 +1092,7 @@ public class NnChannelManager {
         }
         
         NnUserManager userMngr = new NnUserManager();
-        NnUser user = userMngr.findById(channel.getUserId());
+        NnUser user = userMngr.findById(channel.getUserId(), 1);
         if(user == null) {
             return false;
         }

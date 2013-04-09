@@ -93,7 +93,7 @@ public class AdminNnUserController {
     public ResponseEntity<String> resetPassword(
             @RequestParam(value="email")String email, 
             @RequestParam(value="password")String password, HttpServletRequest req, HttpServletResponse resp) {
-        NnUser user = nnUserMngr.findByEmail(email, req);
+        NnUser user = nnUserMngr.findByEmail(email, 1, req);
         if (user == null)
             return NnNetUtil.textReturn("user does not exist");
         user.setPassword(password);
@@ -149,16 +149,12 @@ public class AdminNnUserController {
             Map<String, Object> map = new HashMap<String, Object>();
             List<Object> cell = new ArrayList<Object>();
             
-            cell.add(user.getImageUrl());
             cell.add(user.getMsoId());
             cell.add(user.getId());
-            cell.add(user.getName());
             cell.add(user.getEmail());
             cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.getUpdateDate()));
             cell.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.getCreateDate()));
             cell.add(user.getType());
-            cell.add(user.getDob());
-            cell.add(user.getIntro());
             
             map.put("id", user.getId());
             map.put("cell", cell);

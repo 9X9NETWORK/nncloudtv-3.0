@@ -26,6 +26,9 @@ public class Deep implements Serializable{
     private long userId;
 
     @Persistent
+    private long msoId;
+    
+    @Persistent
     private short shard;
 
     //channel ids, separated by comma
@@ -89,5 +92,13 @@ public class Deep implements Serializable{
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
     }
 }

@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserReport;
 import com.nncloudtv.model.Pdr;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnDeviceManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserReportManager;
@@ -38,12 +40,17 @@ public class PdrController {
      */
     @RequestMapping("listDevice")
     public ResponseEntity<String> listDevice(
-            @RequestParam(required=false) String user) {
+            @RequestParam(required=false) String user,
+            @RequestParam(required=false) String mso) {
         NnUserManager userMngr = new NnUserManager();
         NnDeviceManager deviceMngr = new NnDeviceManager();
         PlayerApiService pservice = new PlayerApiService();
-        
-        NnUser u = userMngr.findByToken(user);
+        MsoManager msoMngr = new MsoManager();
+        Mso brand = msoMngr.findByName(mso);
+        if (brand == null) {
+            msoMngr.findNNMso();
+        }
+        NnUser u = userMngr.findByToken(user, brand.getId());
         if (u == null)
             return NnNetUtil.textReturn(pservice.assembleMsgs(NnStatusCode.USER_INVALID, null));
         List<NnDevice> devices = deviceMngr.findByUser(u);
@@ -74,6 +81,7 @@ public class PdrController {
             @RequestParam(required=false) String user,
             @RequestParam(required=false) String session,
             @RequestParam(required=false) String ip,
+            @RequestParam(required=false) String mso,
             @RequestParam(required=false) String since) {
         PdrManager pdrMngr = new PdrManager();
         NnUserManager userMngr = new NnUserManager();
@@ -81,9 +89,14 @@ public class PdrController {
         PlayerApiService pservice = new PlayerApiService();
         NnUser u = null;
         List<NnDevice> ds = new ArrayList<NnDevice>();
+        MsoManager msoMngr = new MsoManager();
+        Mso brand = msoMngr.findByName(mso);
+        if (brand == null) {
+            msoMngr.findNNMso();
+        }
         NnDevice d = null;
         if (user != null) {
-            u = userMngr.findByToken(user);
+            u = userMngr.findByToken(user, brand.getId());
             if (u == null)
                 return NnNetUtil.textReturn(pservice.assembleMsgs(NnStatusCode.USER_INVALID, null)); 
         }
@@ -127,6 +140,7 @@ public class PdrController {
     @RequestMapping("listReport")
     public ResponseEntity<String> listReport(
             @RequestParam(required=false) String user,                                          
+            @RequestParam(required=false) String mso,                                          
             @RequestParam(required=false) String since) {                
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         List<NnUserReport> list = new ArrayList<NnUserReport>();
@@ -156,9 +170,14 @@ public class PdrController {
         String output = "";
         String email = "guest";
         NnUserManager mngr = new NnUserManager();
+        MsoManager msoMngr = new MsoManager();
+        Mso brand = msoMngr.findByName(mso);
+        if (brand == null) {
+            msoMngr.findNNMso();
+        }
         String nbsp = "&nbsp;&nbsp;&nbsp;";
         for (NnUserReport r : list) {
-            NnUser found = mngr.findByToken(r.getUserToken());
+            NnUser found = mngr.findByToken(r.getUserToken(), brand.getId());
             if (found != null)
                 email = found.getEmail();
             output += "<p>" +

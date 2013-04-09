@@ -29,6 +29,7 @@ public class FacebookController {
             HttpServletRequest req,
             HttpServletResponse resp,
             @RequestParam(value="subChannel", required=false) String subChannel,            
+            @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="stage", required=false) String stage,
             @RequestParam(value="code", required=false) String code,
             @RequestParam(value="error", required=false) String error,
@@ -37,7 +38,7 @@ public class FacebookController {
             @RequestParam(value="accessToken", required=false) String accessToken,
             @RequestParam(value="expirse", required=false) String expires                    
             ) throws IOException {
-        log.info("FACEBOOK: (login) - back from facebook page(subchannel):" + subChannel);
+        log.info("FACEBOOK: (login) - back from facebook page(mso):" + mso);
         NnNetUtil.logUrl(req);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: (login) - our cookie:" + userCookie);                                                      
@@ -45,11 +46,11 @@ public class FacebookController {
                             ";errorDescription:" + errorDescription + 
                             ";accessToken:" + accessToken + ";stage:" + stage);
         if (code != null && accessToken == null) {
-            String[] data = new FacebookLib().getOAuthAccessToken(code);
+            String[] data = new FacebookLib().getOAuthAccessToken(code, mso);
             log.info("FACEBOOK: (login) back from access token request");
             if (data[0] != null) {               
                 log.info("FACEBOOK: (login) going to use data from facebook");
-                new PlayerApiService().fbWebSignup(data[0], data[1], req, resp);
+                new PlayerApiService().fbWebSignup(data[0], data[1], mso, req, resp);
                 log.info("FACEBOOK: (login) have used data from facebook to create a 9x9 account");
             }                         
         }

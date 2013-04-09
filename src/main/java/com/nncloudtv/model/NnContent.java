@@ -20,6 +20,9 @@ public class NnContent {
     private long id;
 
     @Persistent
+    private long msoId;
+    
+    @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String item;
     
@@ -38,10 +41,11 @@ public class NnContent {
     private Date updateDate;
 
     public NnContent() {}
-    public NnContent(String item, String value, String lang) {
+    public NnContent(String item, String value, String lang, long msoId) {
         this.item = item;
         this.value = value;
         this.lang = lang;
+        this.msoId = msoId;
     }    
 
     public long getId() {
@@ -84,6 +88,14 @@ public class NnContent {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+    
+    public long getMsoId() {
+        return msoId;
+    }
+    
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
     }
     
 }

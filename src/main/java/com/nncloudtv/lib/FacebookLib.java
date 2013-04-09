@@ -81,7 +81,7 @@ public class FacebookLib {
     
     public String getProfilePic(String username) {
         try {
-            URL url = new URL(" http://graph.facebook.com/" + username + "/picture");
+            URL url = new URL("http://graph.facebook.com/" + username + "/picture");
             log.info("FACEBOOK:(profile pic)-query:" + url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -140,15 +140,17 @@ public class FacebookLib {
         return me;
     }
     
-    public String[] getOAuthAccessToken(String code){
+    public String[] getOAuthAccessToken(String code, String msoString){
         String urlBase = "https://graph.facebook.com/oauth/access_token";
         String data[] = {null, null}; //token, expires
         try {
             URL url = new URL(urlBase);
+            String modifiedRedirectUri = redirectUri + "?mso=" + msoString;
             String params = "client_id=" + clientId +             
                             "&code=" + code + 
                             "&client_secret=" + secret +
-                            "&redirect_uri=" + redirectUri;
+                            "&redirect_uri=" + modifiedRedirectUri;
+                            //"&redirect_uri=" + redirectUri;
             log.info("FACEBOOK: (oauth) params:" + params);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -232,18 +234,21 @@ public class FacebookLib {
         return data;
     }
     
-    public static String getDialogOAuthPath(String subChannel) {        
+    public static String getDialogOAuthPath(String subChannel, String msoString) {        
         // add "publish_actions" to scope to enable FacebookLib.postToFacebook()
         String scope = "user_likes,user_location,user_interests,email,user_birthday";
         String state = FacebookLib.generateState();
         String urlBase = "http://www.facebook.com/dialog/oauth?";
-        String modifiedRedirectUri = subChannel == null ? redirectUri : redirectUri + "?subChannel=" + subChannel;
+        String modifiedRedirectUri = redirectUri + "?mso=" + msoString;
+        //log.info("redirect uri:" + modifiedRedirectUri);
+        //modifiedRedirectUri = subChannel == null ? redirectUri : redirectUri + "&subChannel=" + subChannel;
         String url = urlBase +
                      "client_id=" + clientId +
                      "&redirect_uri=" + modifiedRedirectUri +
                      //"&redirect_uri=" + redirectUri +
                      "&scope=" + scope +
                      "&state=" + state;
+        log.info("url:" + url);
         return url;
     }
 

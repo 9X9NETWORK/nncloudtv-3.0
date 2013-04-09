@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.web.api.NnStatusCode;
 
@@ -21,7 +22,7 @@ public class NnUserValidator {
             return NnStatusCode.INPUT_BAD;
         
         //verify user
-        NnUser user = new NnUserManager().findByEmail(email, req);
+        NnUser user = new NnUserManager().findByEmail(email, 1, req);
         if (user != null) {
             log.info("user email taken:" + user.getEmail() + ";user token=" + user.getToken());
             return NnStatusCode.USER_EMAIL_TAKEN;
@@ -40,19 +41,20 @@ public class NnUserValidator {
     }
     
     public static int validateProfile(NnUser user) {
-        System.out.println("gender:" + user.getGender());
-        if (user.getGender() > 2 || user.getGender() < 0) {
-            log.info("gender error:" + user.getGender() + ";" + user.getEmail());
+        NnUserProfile profile = user.getProfile();      
+        System.out.println("gender:" + profile.getGender());
+        if (profile.getGender() > 2 || profile.getGender() < 0) {
+            log.info("gender error:" + profile.getGender() + ";" + profile.getUserId());
             return NnStatusCode.INPUT_BAD;
         }
-        String dob = user.getDob();
+        String dob = profile.getDob();
         if (dob != null) {
             if (!Pattern.matches("[\\d\\\\/\\\\]*", dob)) {
                 log.info("dob error:" + dob + ";" + user.getEmail());
                 return NnStatusCode.INPUT_BAD;
             }
         }
-        String sphere = user.getSphere();
+        String sphere = profile.getSphere();
         if (sphere != null && sphere.length() > 0) {
             if (sphere.equals(LangTable.LANG_EN) && sphere.equals(LangTable.LANG_ZH)) {
                 log.info("sphere error:" + sphere + ";" + user.getEmail());

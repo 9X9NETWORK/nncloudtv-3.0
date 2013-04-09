@@ -22,6 +22,9 @@ public class Dashboard implements Serializable {
     private Long id;
 
     @Persistent
+    private long msoId;
+    
+    @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String name;
 
@@ -137,6 +140,14 @@ public class Dashboard implements Serializable {
 
     public void setAttr(short attr) {
         this.attr = attr;
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
     }
     
 }
