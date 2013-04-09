@@ -1,8 +1,8 @@
 package com.nncloudtv.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -21,7 +21,9 @@ public class SysTag implements Serializable {
 
     @Persistent
     private short type;
-
+    public static final short TYPE_CATEGORY = 1;
+    public static final short TYPE_SET = 2;
+    
     @Persistent
     private short seq;
     
@@ -29,9 +31,14 @@ public class SysTag implements Serializable {
     private int cntChannel;
 
     @Persistent
-    @Column(jdbcType="VARCHAR", length=500)
-    private String popularTag; //sequence shown in the directory
-
+    private boolean featured;
+    
+    @Persistent 
+    private Date createDate;
+        
+    @Persistent
+    private Date updateDate;
+    
     public long getId() {
         return id;
     }
@@ -72,12 +79,28 @@ public class SysTag implements Serializable {
         this.cntChannel = cntChannel;
     }
 
-    public String getPopularTag() {
-        return popularTag;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setPopularTag(String popularTag) {
-        this.popularTag = popularTag;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
     
 }

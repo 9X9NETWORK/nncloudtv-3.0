@@ -1,6 +1,7 @@
 package com.nncloudtv.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -32,6 +33,13 @@ public class SysTagDisplay implements Serializable {
     @Column(jdbcType="VARCHAR", length=255)
     private String imageUrl;
 
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=500)
+    private String popularTag; //sequence shown in the directory
+            
+    @Persistent
+    private Date updateDate;
+    
     public long getId() {
         return id;
     }
@@ -70,6 +78,22 @@ public class SysTagDisplay implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getPopularTag() {
+        return popularTag;
+    }
+
+    public void setPopularTag(String popularTag) {
+        this.popularTag = popularTag;
     } 
     
 }

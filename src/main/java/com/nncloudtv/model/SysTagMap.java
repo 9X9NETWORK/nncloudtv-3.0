@@ -1,6 +1,7 @@
 package com.nncloudtv.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -23,9 +24,6 @@ public class SysTagMap implements Serializable {
     private long channelId;
     
     @Persistent
-    private int cntChannel;
-
-    @Persistent
     private short seq;
     
     @Persistent
@@ -38,6 +36,12 @@ public class SysTagMap implements Serializable {
     @Column(jdbcType="VARCHAR", length=255)    
     private String attr;
 
+    @Persistent 
+    private Date createDate;
+        
+    @Persistent
+    private Date updateDate;
+    
     public long getId() {
         return id;
     }
@@ -60,14 +64,6 @@ public class SysTagMap implements Serializable {
 
     public void setChannelId(long channelId) {
         this.channelId = channelId;
-    }
-
-    public int getCntChannel() {
-        return cntChannel;
-    }
-
-    public void setCntChannel(int cntChannel) {
-        this.cntChannel = cntChannel;
     }
 
     public short getSeq() {
@@ -100,6 +96,22 @@ public class SysTagMap implements Serializable {
 
     public void setAttr(String attr) {
         this.attr = attr;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     } 
     
 }
