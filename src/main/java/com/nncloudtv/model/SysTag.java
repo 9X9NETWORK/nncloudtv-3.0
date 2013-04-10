@@ -28,9 +28,6 @@ public class SysTag implements Serializable {
     private short seq;
     
     @Persistent
-    private int cntChannel;
-
-    @Persistent
     private boolean featured;
     
     @Persistent 
@@ -69,14 +66,6 @@ public class SysTag implements Serializable {
 
     public void setSeq(short seq) {
         this.seq = seq;
-    }
-
-    public int getCntChannel() {
-        return cntChannel;
-    }
-
-    public void setCntChannel(int cntChannel) {
-        this.cntChannel = cntChannel;
     }
 
     public Date getCreateDate() {

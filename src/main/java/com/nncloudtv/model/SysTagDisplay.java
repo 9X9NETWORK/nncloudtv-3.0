@@ -36,7 +36,10 @@ public class SysTagDisplay implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=500)
     private String popularTag; //sequence shown in the directory
-            
+
+    @Persistent
+    private int cntChannel;
+    
     @Persistent
     private Date updateDate;
     
@@ -94,6 +97,14 @@ public class SysTagDisplay implements Serializable {
 
     public void setPopularTag(String popularTag) {
         this.popularTag = popularTag;
+    }
+
+    public int getCntChannel() {
+        return cntChannel;
+    }
+
+    public void setCntChannel(int cntChannel) {
+        this.cntChannel = cntChannel;
     } 
     
 }
