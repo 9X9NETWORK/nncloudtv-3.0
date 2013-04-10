@@ -16,12 +16,11 @@ public class StoreListingManager {
     
     protected static final Logger log = Logger.getLogger(StoreListingManager.class.getName());
     
-    private StoreListingDao dao;
+    private StoreListingDao dao = new StoreListingDao();
     private NnChannelManager channelMngr;
     
     @Autowired
-    public StoreListingManager(StoreListingDao dao, NnChannelManager channelMngr) {
-        this.dao = dao;
+    public StoreListingManager(NnChannelManager channelMngr) {
         this.channelMngr = channelMngr;
     }
     
