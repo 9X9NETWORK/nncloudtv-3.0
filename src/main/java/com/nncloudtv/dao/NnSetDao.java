@@ -19,8 +19,7 @@ public class NnSetDao extends GenericDao<NnSet> {
         super(NnSet.class);
     }
     
-    public List<NnSet> findFeatured(String lang, long msoId) {
-System.out.println("the latest version????");        
+    public List<NnSet> findFeatured(String lang, long msoId) {        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnSet> detached = new ArrayList<NnSet>(); 
         try {
