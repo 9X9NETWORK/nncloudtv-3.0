@@ -1,7 +1,21 @@
-<!DOCTYPE HTML>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><!DOCTYPE html>
 <html lang="en-US">
 <head>
 	<meta charset="UTF-8">
+    <!-- Google+ Sharing meta data -->
+    <meta itemprop="name" content="${fbName}">
+    <meta itemprop="description" content="${fbDescription}">
+    <meta itemprop="image" content="${fbImg}"><!-- Google+ requires thumbnail size at least 125px -->
+    
+    <!-- FB Sharing meta data -->
+    <meta name="title" content="${fbName}" />
+    <meta name="description" content="${fbDescription}" />
+    
+    <link rel="image_src" href="${fbImg}" />
+    
+    <meta property="og:title" content="${fbName}"/>
+    <meta property="og:image" content="${fbImg}"/>
+    <meta property="og:description" content="${fbDescription}"/>	
 	<title>9x9 Playback</title>
 	<script src="http://9x9ui.s3.amazonaws.com/scripts/swfobject.js" type="text/javascript" charset="utf-8"></script>
 	<!-- <script src="http://code.jquery.com/jquery-1.8.8.min.js"></script> -->
