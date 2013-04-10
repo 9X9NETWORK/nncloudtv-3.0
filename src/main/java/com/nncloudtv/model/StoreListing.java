@@ -1,6 +1,7 @@
 package com.nncloudtv.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -21,6 +22,9 @@ public class StoreListing implements Serializable {
     
     @Persistent
     private long msoId;
+    
+    @Persistent
+    private Date updateDate;
 
     public long getId() {
         return id;
@@ -44,6 +48,14 @@ public class StoreListing implements Serializable {
 
     public void setMsoId(long msoId) {
         this.msoId = msoId;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
     
 }

@@ -20,6 +20,7 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.StoreListingManager;
 
 @Controller
 @RequestMapping("api")
@@ -29,11 +30,13 @@ public class ApiPcs extends ApiGeneric {
     
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
+    private StoreListingManager storeListingMngr;
     
     @Autowired
-    public ApiPcs(MsoManager msoMngr, NnChannelManager channelMngr) {
+    public ApiPcs(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
+        this.storeListingMngr = storeListingMngr;
     }
     
     @RequestMapping(value = "msos/{msoId}/sets", method = RequestMethod.GET)
@@ -290,8 +293,9 @@ public class ApiPcs extends ApiGeneric {
         } catch (NumberFormatException e) {
         }
         
-        List<NnChannel> results = new ArrayList<NnChannel>();
-        if (channelIdsStr != null) { // find by filter
+        List<NnChannel> results = null;
+        if (channelIdsStr != null) { // find by channelIdList
+            
             String[] channelIdStrList = channelIdsStr.split(",");
             List<Long> channelIdList = new ArrayList<Long>();
             Long channelId = null;
@@ -306,12 +310,16 @@ public class ApiPcs extends ApiGeneric {
                     channelIdList.add(channelId);
                 }
             }
-            // use channelIdList to do something
+            results = storeListingMngr.findByChannelIdsAndMsoId(channelIdList, msoId);
             
         } else if ((page > 0) && (rows > 0)) { // find by paging
-            
-        } else { // find all
-            
+            results = storeListingMngr.findByPaging(page, rows, msoId);
+        } else { // default 50 items
+            results = storeListingMngr.findByPaging(1, 50, msoId);
+        }
+        
+        if (results == null) {
+            return new ArrayList<NnChannel>();
         }
         
         return results;
