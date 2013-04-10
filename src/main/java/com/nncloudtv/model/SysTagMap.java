@@ -33,7 +33,7 @@ public class SysTagMap implements Serializable {
     private short timeEnd;
 
     @Persistent
-    @Column(jdbcType="VARCHAR", length=255)    
+    @Column(jdbcType="VARCHAR", length=10)    
     private String attr;
 
     @Persistent 
