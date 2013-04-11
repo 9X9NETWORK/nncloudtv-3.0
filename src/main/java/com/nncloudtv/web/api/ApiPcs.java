@@ -366,7 +366,8 @@ public class ApiPcs extends ApiGeneric {
                 channelIdList.add(channelId);
             }
         }
-        // use channelIdList to do something
+        
+        storeListingMngr.addChannelsToStore(channelIdList, mso.getId());
         
         okResponse(resp);
         return null;
@@ -413,7 +414,8 @@ public class ApiPcs extends ApiGeneric {
                 channelIdList.add(channelId);
             }
         }
-        // use channelIdList to do something
+        
+        storeListingMngr.removeChannelsFromStore(channelIdList, mso.getId());
         
         okResponse(resp);
         return null;

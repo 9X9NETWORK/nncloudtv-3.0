@@ -25,6 +25,11 @@ public class StoreListing implements Serializable {
     
     @Persistent
     private Date updateDate;
+    
+    public StoreListing(long channelId, long msoId) {
+        this.channelId = channelId;
+        this.msoId = msoId;
+    }
 
     public long getId() {
         return id;
