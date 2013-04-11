@@ -99,14 +99,18 @@ public class ApiMisc extends ApiGeneric {
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public @ResponseBody NnUser loginCheck(HttpServletRequest req, HttpServletResponse resp) {
+	    
+	    String mso = req.getParameter("mso");
 		
-		NnUserManager userMngr = new NnUserManager();
-	    NnUser user = userIdentify(req);
-		
-		if (user == null) {
+		Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
 		    nullResponse(resp);
 		    return null;
 		}
+        
+        NnUserManager userMngr = new NnUserManager();
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUser user = userMngr.findById(verifiedUserId, brand.getId(), (short) 0);
 		
 		return userMngr.purify(user);
 	}
