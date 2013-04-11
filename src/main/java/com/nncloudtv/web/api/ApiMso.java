@@ -24,16 +24,16 @@ import com.nncloudtv.service.StoreListingManager;
 
 @Controller
 @RequestMapping("api")
-public class ApiPcs extends ApiGeneric {
+public class ApiMso extends ApiGeneric {
     
-    protected static Logger log = Logger.getLogger(ApiPcs.class.getName());
+    protected static Logger log = Logger.getLogger(ApiMso.class.getName());
     
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
     private StoreListingManager storeListingMngr;
     
     @Autowired
-    public ApiPcs(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr) {
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
