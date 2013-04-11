@@ -106,10 +106,19 @@ for line in feed:
      epoch = time.mktime(time.gmtime()) 
      userCursor.execute("""
         insert into nncloudtv_nnuser1.nnuser
-          (email, msoId, name, imageUrl, token, shard, type, createDate, updateDate, gender, isTemp, profileUrl)
+          (email, token, shard, type, createDate, updateDate, isTemp)
         values
-          (%s, 1, %s, %s, %s, 1, 8, now(), now(), 0, false, %s)              
-        """, (userEmail, username, thumbnail, epoch, username))
+          (%s,%s, 1, 8, now(), now(), false)              
+        """, (userEmail, epoch ))
+     uid = userCursor.lastrowid
+     print "----- uid:" + str(uid)
+     userCursor.execute("""
+        insert into nncloudtv_nnuser1.nnuser_profile
+          (msoId, userId, name, imageUrl, createDate, updateDate, gender, profileUrl)
+        values
+          (1, %s, %s, %s, now(), now(), 0, %s)
+        """, (uid, username, thumbnail, username))
+
      dbuser.commit()                                     
   userCursor.execute("""
     select id                  
