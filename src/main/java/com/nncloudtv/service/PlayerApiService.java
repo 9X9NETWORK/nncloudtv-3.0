@@ -50,6 +50,7 @@ import com.nncloudtv.model.NnEmail;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnGuest;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.model.NnSet;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserPref;
@@ -59,6 +60,7 @@ import com.nncloudtv.model.NnUserShare;
 import com.nncloudtv.model.NnUserSubscribe;
 import com.nncloudtv.model.NnUserSubscribeGroup;
 import com.nncloudtv.model.NnUserWatched;
+import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.UserInvite;
 import com.nncloudtv.model.YtProgram;
@@ -208,9 +210,26 @@ public class PlayerApiService {
         lang = this.checkLang(lang);    
         if (lang == null)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        /*
         if (version >= 32)
-            return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null); 
+            return NnStatusMsg.assembleMsg(NnStatusCode.API_DEPRECATED, null);
         return new IosService().listRecommended(lang, mso.getId());
+        */
+        //NnSetManager setMngr = new NnSetManager();
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        List<SysTagDisplay> sets = displayMngr.findRecommendedSets(lang, mso.getId());
+        String[] result = {""};
+        for (SysTagDisplay set : sets) {
+            String[] obj = {
+                String.valueOf(set.getId()),
+                set.getName(),
+                "",
+                set.getImageUrl(),
+                String.valueOf(set.getCntChannel()),
+            };
+            result[0] += NnStringUtil.getDelimitedStr(obj) + "\n";          
+        }
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
     public String fbDeviceSignup(FacebookMe me, String expire, String msoString, HttpServletRequest req, HttpServletResponse resp) {
@@ -377,17 +396,14 @@ public class PlayerApiService {
             id = "0";
         
         String[] result = {"", "", ""};
-        CategoryManager catMngr = new CategoryManager();
-        
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         result[0] = "id" + "\t" + id + "\n";        
-        List<Category> categories = catMngr.findPlayerCategories(lang, mso.getId());        
-        for (Category c : categories) {
-            String name =  c.getName();
-            int cnt = c.getChannelCnt();
+        List<SysTagDisplay> categories = displayMngr.findPlayerCategories(lang, mso.getId());
+        for (SysTagDisplay c : categories) {
             String subItemHint = "ch"; //what's under this level
             String[] str = {String.valueOf(c.getId()), 
-                            name, 
-                            String.valueOf(cnt), 
+                            c.getName(), 
+                            String.valueOf(c.getCntChannel()), 
                             subItemHint};                
             result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
         }
@@ -564,9 +580,9 @@ public class PlayerApiService {
         if (id == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
-        CategoryManager catMngr = new CategoryManager();
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         long cid = Long.parseLong(id);
-        Category cat = catMngr.findById(cid);
+        SysTagDisplay cat = displayMngr.findById(cid);
         if (cat == null)
             return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
         List<NnChannel> channels = new ArrayList<NnChannel>();
@@ -574,38 +590,40 @@ public class PlayerApiService {
             start = "1";
         if (count == null)
             count = "200";
-        int startIndex = Integer.parseInt(start);
         int limit = Integer.valueOf(count);
         if (limit > 200)
             limit = 200;
+        /*
+        int startIndex = Integer.parseInt(start);
         int page = 0;
         if (limit != 0) {
             page = (int) (startIndex / limit) + 1;
-        }        
+        }
+        */
+        TagManager tagMngr = new TagManager();
         if (tagStr != null) {
-            channels = catMngr.findChannelsByTag(cid, true, tagStr); //TODO removed            
+            channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
-            channels = catMngr.listChannels(page, limit, cat.getId());
+            channels = displayMngr.findChannelsById(cat.getId());
         }
         String result[] = {"", "", ""};
         //category info        
         result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
         result[0] += assembleKeyValue("name", cat.getName());
         result[0] += assembleKeyValue("start", start);
-        String total = String.valueOf(catMngr.findChannelSize(cat.getId()));
+        String total = String.valueOf(cat.getCntChannel());
         if (count.equals("0"))
             count = total;
         result[0] += assembleKeyValue("count", count);
         result[0] += assembleKeyValue("total", total);        
         //category tag
-        String tags = cat.getTag();
+        String tags = cat.getPopularTag();
         if (tags != null) {
             String[] tag = tags.split(",");
             for (String t : tag) {
                 result[1] += t + "\n";
             }
         }
-        //result[2] += chMngr.composeChannelLineupCache(channels);
         result[2] += chMngr.composeChannelLineup(channels);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -2653,6 +2671,48 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
 
+    public String setInfo(String id, String name, Mso mso) {
+        PlayerApiService api = new PlayerApiService();
+        if (id == null && name == null) {
+            return api.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        if (mso == null) {
+            return api.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        }        
+        if (id != null && id.startsWith("s")) id = id.replace("s", "");
+        
+        //NnSetManager setMngr = new NnSetManager();
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        SysTagDisplay set = null;
+        if (id != null) {
+            set = displayMngr.findById(Long.parseLong(id));
+        } else {
+            set = displayMngr.findByName(name, mso.getId());
+        }
+        if (set == null)
+            return api.assembleMsgs(NnStatusCode.SET_INVALID, null);            
+        
+        List<NnChannel> channels = displayMngr.findChannelsById(set.getId());
+        String result[] = {"", "", ""};
+
+        //mso info
+        result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
+        result[0] += PlayerApiService.assembleKeyValue("imageUrl", mso.getLogoUrl()); 
+        result[0] += PlayerApiService.assembleKeyValue("intro", mso.getIntro());            
+        //set info
+        result[1] += PlayerApiService.assembleKeyValue("id", String.valueOf(set.getId()));
+        result[1] += PlayerApiService.assembleKeyValue("name", set.getName());
+        result[1] += PlayerApiService.assembleKeyValue("imageUrl", set.getImageUrl());
+        result[1] += PlayerApiService.assembleKeyValue("piwik", "");
+        //channel info
+        for (NnChannel c : channels) {
+            if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic())
+                c.setSorting(NnChannelManager.getDefaultSorting(c));
+        }
+        result[2] = chMngr.composeChannelLineup(channels);
+        return api.assembleMsgs(NnStatusCode.SUCCESS, result);        
+    }
+    
     /*
     public String solr(String text) {
         //check input
@@ -2664,5 +2724,5 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);        
     }
     */
-    
+        
 }
