@@ -68,7 +68,7 @@ import com.nncloudtv.web.json.facebook.FacebookMe;
  *                  setUserProfile, getUserProfile, setUesrPref
  * <p>
  * <p>
- * Category listing: categoryBrowse, categoryInfo, tagInfo, setInfo
+ * Category listing: categoryInfo, tagInfo, setInfo
  * <p>
  * Curator: curator
  * <p>
@@ -395,7 +395,8 @@ public class PlayerApiController {
     }
 
     /**   
-     * For directory query. Returns list of categories.   
+     * For directory query. Returns list of categories.
+     * To get furthur info, use categoryInfo   
      * 
      * @param lang en or zh 
      * @return <p>Block one, the requested category info. Always one for now. Block two, list of categories.
