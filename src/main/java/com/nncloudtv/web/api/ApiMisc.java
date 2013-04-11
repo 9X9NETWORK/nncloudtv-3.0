@@ -98,7 +98,7 @@ public class ApiMisc extends ApiGeneric {
 	}
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public @ResponseBody NnUser loginCheck(HttpServletRequest req, HttpServletResponse resp) {
+	public @ResponseBody Map<String, Object> loginCheck(HttpServletRequest req, HttpServletResponse resp) {
 	    
 	    String mso = req.getParameter("mso");
 		
@@ -112,7 +112,7 @@ public class ApiMisc extends ApiGeneric {
         Mso brand = new MsoManager().findOneByName(mso);
         NnUser user = userMngr.findById(verifiedUserId, brand.getId(), (short) 0);
 		
-		return userMngr.purify(user);
+		return userResponse(user);
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
