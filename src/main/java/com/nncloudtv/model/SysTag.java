@@ -23,6 +23,8 @@ public class SysTag implements Serializable {
     private short type;
     public static final short TYPE_CATEGORY = 1;
     public static final short TYPE_SET = 2;
+    public static final short TYPE_DAYPARTING = 3;
+    public static final short TYPE_STATIC = 4;
     
     @Persistent
     private short seq;
