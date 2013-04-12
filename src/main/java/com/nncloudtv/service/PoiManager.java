@@ -15,7 +15,7 @@ import com.nncloudtv.dao.PoiDao;
 import com.nncloudtv.dao.PoiMapDao;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiMap;
 
@@ -27,7 +27,7 @@ public class PoiManager {
     private PoiMapDao poiMapDao = new PoiMapDao();
     private PoiEventManager poiEventMngr = new  PoiEventManager();
     
-    public Poi create(Poi poi) {
+    public PoiPoint create(PoiPoint poi) {
         Date now = new Date();
         poi.setCreateDate(now);
         poi.setUpdateDate(now);
@@ -35,14 +35,14 @@ public class PoiManager {
         return poi;
     }
     
-    public Poi save(Poi poi) {
+    public PoiPoint save(PoiPoint poi) {
         Date now = new Date();
         poi.setUpdateDate(now);
         poi = dao.save(poi);
         return poi;
     }
     
-    public void delete(Poi poi) {
+    public void delete(PoiPoint poi) {
         if (poi == null) {
             return ;
         }
@@ -56,11 +56,11 @@ public class PoiManager {
         dao.delete(poi);
     }
     
-    public void delete(List<Poi> pois) {
+    public void delete(List<PoiPoint> pois) {
         List<PoiMap> poiMaps = new ArrayList<PoiMap>();
         List<PoiMap> temps;
         List<Long> eventIds = new ArrayList<Long>();
-        for (Poi poi : pois) {
+        for (PoiPoint poi : pois) {
             temps = poiMapDao.findByPoiId(poi.getId()); //TODO: computing issue, try to reduce mysql queries
             for (PoiMap temp : temps) {
                 eventIds.add(temp.getEventId());
@@ -87,23 +87,23 @@ public class PoiManager {
         }
     }
     
-    public Poi findById(long id) {
+    public PoiPoint findById(long id) {
         return dao.findById(id);
     }
     
-    public List<Poi> findByProgramId(long programId) {
+    public List<PoiPoint> findByProgramId(long programId) {
         return dao.findByProgram(programId);
     }
     
-    public List<Poi> findByChannel(long channelId) {
+    public List<PoiPoint> findByChannel(long channelId) {
         return dao.findByChannel(channelId);
     }
     
-    public List<Poi> findByProgram(long programId) {
+    public List<PoiPoint> findByProgram(long programId) {
         return dao.findByProgram(programId);
     }
     
-    public Map<String, Object> getEventByPoi(Poi poi) {
+    public Map<String, Object> getEventByPoi(PoiPoint poi) {
         Map<String, Object> result = new TreeMap<String, Object>();
         if (poi == null) {
             return result;
@@ -139,10 +139,10 @@ public class PoiManager {
         }
         
         // sort
-        List<Poi> pois = dao.findByProgram(program.getId());
+        List<PoiPoint> pois = dao.findByProgram(program.getId());
         Collections.sort(pois, getPoiStartTimeComparator());
         
-        for (Poi poi : pois) {
+        for (PoiPoint poi : pois) {
             results.add(getEventByPoi(poi)); // TODO: computing issue, try to reduce mysql queries, List<List<PoiEvent>> List<int>
         }
         return results;
@@ -163,7 +163,7 @@ public class PoiManager {
         return responseObj;
     }
     
-    public boolean isPoiCollision(Poi originPoi, NnProgram program, int startTime, int endTime) {
+    public boolean isPoiCollision(PoiPoint originPoi, NnProgram program, int startTime, int endTime) {
         if (program == null) {
             return true;
         }
@@ -175,14 +175,14 @@ public class PoiManager {
         if (endTime <= program.getStartTimeInt() || endTime > program.getEndTimeInt())
             return true;
         
-        List<Poi> pois = dao.findByProgram(program.getId());
+        List<PoiPoint> pois = dao.findByProgram(program.getId());
         if (originPoi != null) {
             if (pois.contains(originPoi)) {
                 pois.remove(originPoi);
             }
         }
         int duration = program.getDurationInt();
-        for (Poi poi : pois) {
+        for (PoiPoint poi : pois) {
             if (startTime >= poi.getStartTimeInt() && startTime < poi.getEndTimeInt()) {
                 return true;
             }
@@ -198,10 +198,10 @@ public class PoiManager {
     }
     
     // order by StartTime asc
-    public Comparator<Poi> getPoiStartTimeComparator() {
+    public Comparator<PoiPoint> getPoiStartTimeComparator() {
         
-        class PoiStartTimeComparator implements Comparator<Poi> {
-            public int compare(Poi poi1, Poi poi2) {
+        class PoiStartTimeComparator implements Comparator<PoiPoint> {
+            public int compare(PoiPoint poi1, PoiPoint poi2) {
                 return (poi1.getStartTimeInt() - poi2.getStartTimeInt());
             }
         }
