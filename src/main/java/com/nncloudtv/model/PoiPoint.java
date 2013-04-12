@@ -10,7 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 //ad units
-@PersistenceCapable(table="poi", detachable="true")
+@PersistenceCapable(table="poi_point", detachable="true")
 public class PoiPoint implements Serializable {
     private static final long serialVersionUID = 7003434361311530790L;
 
