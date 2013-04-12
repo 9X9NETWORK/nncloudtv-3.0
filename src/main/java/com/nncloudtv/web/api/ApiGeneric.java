@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
-import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.service.MsoManager;
+import com.nncloudtv.model.SysTag;
+import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.service.NnUserManager;
 
 public class ApiGeneric {
@@ -196,5 +196,20 @@ public class ApiGeneric {
 	    
 	    return result;
 	}
+	
+	/** compose set response **/
+	public Map<String, Object> setResponse(SysTag set, SysTagDisplay setMeta) {
+        Map<String, Object> result = new TreeMap<String, Object>();
+        
+        result.put("id", set.getId());
+        result.put("msoId", set.getMsoId());
+        result.put("channelCnt", setMeta.getCntChannel());
+        result.put("lang", setMeta.getLang());
+        result.put("seq", set.getSeq());
+        result.put("tag", setMeta.getPopularTag());
+        result.put("name", NnStringUtil.revertHtml(setMeta.getName()));
+        
+        return result;
+    }
 	
 }

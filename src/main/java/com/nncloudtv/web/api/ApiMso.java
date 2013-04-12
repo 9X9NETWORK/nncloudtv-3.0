@@ -16,11 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.SysTag;
+import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.StoreListingManager;
+import com.nncloudtv.service.SysTagDisplayManager;
+import com.nncloudtv.service.SysTagManager;
 
 @Controller
 @RequestMapping("api")
@@ -31,12 +37,17 @@ public class ApiMso extends ApiGeneric {
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
     private StoreListingManager storeListingMngr;
+    private SysTagManager sysTagMngr;
+    private SysTagDisplayManager sysTagDisplayMngr;
     
     @Autowired
-    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr) {
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr,
+            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
+        this.sysTagMngr = sysTagMngr;
+        this.sysTagDisplayMngr = sysTagDisplayMngr;
     }
     
     @RequestMapping(value = "msos/{msoId}/sets", method = RequestMethod.GET)
@@ -89,9 +100,57 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        // name
+        String name = req.getParameter("name");
+        if (name == null || name.isEmpty()) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
         
-        return result;
+        // lang, default : en
+        String lang = req.getParameter("lang");
+        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
+            // valid
+        } else {
+            lang = LangTable.LANG_EN;
+        }
+        
+        // seq, default : 1
+        Short seq = 1;
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            try {
+                seq = Short.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+            }
+            if (seq == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
+        // tag
+        String tag = req.getParameter("tag");
+        
+        SysTag newSet = new SysTag();
+        newSet.setType(SysTag.TYPE_SET);
+        newSet.setMsoId(msoId);
+        newSet.setSeq(seq);
+        
+        SysTagDisplay newSetMeta = new SysTagDisplay();
+        newSetMeta.setCntChannel(0);
+        newSetMeta.setLang(lang);
+        newSetMeta.setName(name);
+        if (tag != null) {
+            newSetMeta.setPopularTag(tag);
+        }
+        
+        newSet = sysTagMngr.save(newSet);
+        newSetMeta.setSystagId(newSet.getId());
+        newSetMeta = sysTagDisplayMngr.save(newSetMeta);
+        
+        return setResponse(newSet, newSetMeta);
     }
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.GET)
