@@ -5,25 +5,25 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.dao.PoiDao;
 import com.nncloudtv.dao.PoiMapDao;
+import com.nncloudtv.dao.PoiPointDao;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiMap;
+import com.nncloudtv.model.PoiPoint;
 
 @Service
 public class PoiPointManager {
     protected static final Logger log = Logger.getLogger(PoiPointManager.class.getName());
     
-    private PoiDao dao = new PoiDao();
+    private PoiPointDao dao = new PoiPointDao();
     private PoiMapDao poiMapDao = new PoiMapDao();
     private PoiEventManager poiEventMngr = new  PoiEventManager();
     

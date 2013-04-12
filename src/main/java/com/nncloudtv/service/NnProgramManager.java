@@ -22,7 +22,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.TitleCard;
 
@@ -133,9 +133,9 @@ public class NnProgramManager {
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(program.getId());
         titleCardMngr.delete(titleCards);
-        PoiManager poiMngr = new PoiManager();
-        List<Poi> pois = poiMngr.findByProgramId(program.getId());
-        poiMngr.delete(pois);
+        PoiPointManager poiPointMngr = new PoiPointManager();
+        List<PoiPoint> pois = poiPointMngr.findByProgramId(program.getId());
+        poiPointMngr.delete(pois);
         
         long cId = program.getChannelId();
         dao.delete(program);
@@ -152,12 +152,12 @@ public class NnProgramManager {
         TitleCardManager titlecardMngr = new TitleCardManager();
         List<TitleCard> titlecards;
         List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
-        PoiManager poiMngr = new PoiManager();
-        List<Poi> pois;
-        List<Poi> poiDeleteList = new ArrayList<Poi>();
+        PoiPointManager poiPointMngr = new PoiPointManager();
+        List<PoiPoint> pois;
+        List<PoiPoint> poiDeleteList = new ArrayList<PoiPoint>();
         for (NnProgram program : programs) {
             titlecards = titlecardMngr.findByProgramId(program.getId());
-            pois = poiMngr.findByProgramId(program.getId());
+            pois = poiPointMngr.findByProgramId(program.getId());
             if (titlecards.size() > 0) {
                 titlecardDeleteList.addAll(titlecards);
             }
@@ -166,7 +166,7 @@ public class NnProgramManager {
             }
         }
         titlecardMngr.delete(titlecardDeleteList);
-        poiMngr.delete(poiDeleteList);
+        poiPointMngr.delete(poiDeleteList);
         
         List<Long> channelIds = new ArrayList<Long>();
         
@@ -609,9 +609,9 @@ public class NnProgramManager {
         
         //find all the programs, and find its event
         //episode number;text;link;start time;end time|episode number;link;text;start time;end time
-        //List<Poi> pois = new PoiManager().findByChannel(channel.getId()); //find all the programs        
+        //List<Poi> pois = new PoiPointManager().findByChannel(channel.getId()); //find all the programs        
         //List<PoiEvent> events = new PoiEventManager().findByChannel(channel.getId());
-        PoiManager poiMngr = new PoiManager();
+        PoiPointManager poiPointMngr = new PoiPointManager();
         PoiEventManager eventMngr = new PoiEventManager();
         for (NnEpisode e : episodes) {
             List<NnProgram> list = (List<NnProgram>) map.get(e.getId());
@@ -630,8 +630,8 @@ public class NnProgramManager {
                 int i=1;                
                 String poiStr = "";
                 for (NnProgram p : list) { //sub-episodes
-                    List<Poi> pois = poiMngr.findByProgram(p.getId());
-                    for (Poi poi : pois) {
+                    List<PoiPoint> pois = poiPointMngr.findByProgram(p.getId());
+                    for (PoiPoint poi : pois) {
                         PoiEvent event = eventMngr.findByPoi(poi.getId());
                         String poiStrHere = i + ";" + event.getHyperChannelText() + ";" + event.getHyperChannelLink() + ";" + poi.getStartTime() + ";" + poi.getEndTime() + "|";
                         log.info("poiStrHere:" + poiStrHere);                        
@@ -771,8 +771,8 @@ public class NnProgramManager {
     }        
     
     public boolean isPoiCollision(NnProgram program, int startTime, int endTime) {
-        List<Poi> pois = new PoiManager().findByProgramId(program.getId());
-        for (Poi poi : pois) {
+        List<PoiPoint> pois = new PoiPointManager().findByProgramId(program.getId());
+        for (PoiPoint poi : pois) {
             if (startTime > poi.getStartTimeInt() || endTime < poi.getEndTimeInt()) {
                 return true;
             }

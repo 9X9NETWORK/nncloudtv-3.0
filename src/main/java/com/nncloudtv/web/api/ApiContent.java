@@ -32,7 +32,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
-import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
@@ -47,7 +47,7 @@ import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.service.PoiEventManager;
-import com.nncloudtv.service.PoiManager;
+import com.nncloudtv.service.PoiPointManager;
 import com.nncloudtv.service.TitleCardManager;
 
 @Controller
@@ -2112,10 +2112,10 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        PoiManager poiManager = new PoiManager();
-        List<Map<String, Object>> results = poiManager.getEventsByProgram(program);
+        PoiPointManager poiPointManager = new PoiPointManager();
+        List<Map<String, Object>> results = poiPointManager.getEventsByProgram(program);
         for (Map<String, Object> result : results) {
-            result = PoiManager.revertHtml(result);
+            result = PoiPointManager.revertHtml(result);
         }
         
         return results;
@@ -2156,7 +2156,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        Poi poi = new Poi();
+        PoiPoint poi = new PoiPoint();
         PoiEvent poiEvent= new PoiEvent();
         poi.setProgramId(programId);
         poiEvent.setType(PoiEvent.TYPE_HYPERCHANNEL);
@@ -2197,9 +2197,9 @@ public class ApiContent extends ApiGeneric {
             }
         }
         // collision issue
-        PoiManager poiManager = new PoiManager();
+        PoiPointManager poiPointManager = new PoiPointManager();
         /*
-        if (poiManager.isPoiCollision(null, program, startTime, endTime)) {
+        if (poiPointManager.isPoiCollision(null, program, startTime, endTime)) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
@@ -2244,7 +2244,7 @@ public class ApiContent extends ApiGeneric {
         
         
         PoiEventManager poiEventManager = new PoiEventManager();
-        poi = poiManager.create(poi);
+        poi = poiPointManager.create(poi);
         if (poi == null) {
             internalError(resp);
             return null;
@@ -2255,9 +2255,9 @@ public class ApiContent extends ApiGeneric {
             internalError(resp);
             return null;
         }
-        if (poiManager.hookEvent(poi.getId(), poiEvent.getId())) {
-            Map<String, Object> result = poiManager.getEventByPoi(poi);
-            result = PoiManager.revertHtml(result);
+        if (poiPointManager.hookEvent(poi.getId(), poiEvent.getId())) {
+            Map<String, Object> result = poiPointManager.getEventByPoi(poi);
+            result = PoiPointManager.revertHtml(result);
             return result;
         } else {
             // TODO roll back
@@ -2281,15 +2281,15 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        PoiManager poiManager = new PoiManager();
-        Poi poi = poiManager.findById(poiId);
+        PoiPointManager poiPointManager = new PoiPointManager();
+        PoiPoint poi = poiPointManager.findById(poiId);
         if (poi == null) {
             notFound(resp, "POI Not Found");
             return null;
         }
         
-        Map<String, Object> result = poiManager.getEventByPoi(poi);
-        result = PoiManager.revertHtml(result);
+        Map<String, Object> result = poiPointManager.getEventByPoi(poi);
+        result = PoiPointManager.revertHtml(result);
         
         return result;
     }
@@ -2315,9 +2315,9 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        PoiManager poiManager = new PoiManager();
-        Poi poi = poiManager.findById(poiId);
-        //Poi originPoi = poiManager.findById(poiId);
+        PoiPointManager poiPointManager = new PoiPointManager();
+        PoiPoint poi = poiPointManager.findById(poiId);
+        //Poi originPoi = poiPointManager.findById(poiId);
         if (poi == null) {
             notFound(resp, "POI Not Found");
             return null;
@@ -2402,7 +2402,7 @@ public class ApiContent extends ApiGeneric {
         }
         // collision issue
         /*
-        if (poiManager.isPoiCollision(originPoi, program, startTime, endTime)) {
+        if (poiPointManager.isPoiCollision(originPoi, program, startTime, endTime)) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
@@ -2446,7 +2446,7 @@ public class ApiContent extends ApiGeneric {
         eventContext.put("link", link);
         poiEvent.setContext(PoiEventManager.composeContext(eventContext, PoiEvent.TYPE_HYPERCHANNEL));
         
-        poi = poiManager.save(poi);
+        poi = poiPointManager.save(poi);
         if (poi == null) {
             internalError(resp);
             return null;
@@ -2458,8 +2458,8 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = poiManager.getEventByPoi(poi);
-        result = PoiManager.revertHtml(result);
+        Map<String, Object> result = poiPointManager.getEventByPoi(poi);
+        result = PoiPointManager.revertHtml(result);
         
         return result;
     }
@@ -2485,8 +2485,8 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        PoiManager poiManager = new PoiManager();
-        Poi poi = poiManager.findById(poiId);
+        PoiPointManager poiPointManager = new PoiPointManager();
+        PoiPoint poi = poiPointManager.findById(poiId);
         if (poi == null) {
             notFound(resp, "POI Not Found");
             return null;
@@ -2506,7 +2506,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        poiManager.delete(poi);
+        poiPointManager.delete(poi);
         
         okResponse(resp);
         return null;
