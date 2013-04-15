@@ -3,7 +3,6 @@ package com.nncloudtv.web.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +26,7 @@ import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.StoreListingManager;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
+import com.nncloudtv.service.TagManager;
 
 @Controller
 @RequestMapping("api")
@@ -143,7 +143,11 @@ public class ApiMso extends ApiGeneric {
         }
         
         // tag TODO see NnChannelManager .processTagText .processChannelTag
-        String tag = req.getParameter("tag");
+        String tagText = req.getParameter("tag");
+        String tag = null;
+        if (tagText != null) {
+            tag = TagManager.processTagText(tagText);
+        }
         
         SysTag newSet = new SysTag();
         newSet.setType(SysTag.TYPE_SET);
@@ -154,7 +158,7 @@ public class ApiMso extends ApiGeneric {
         newSetMeta.setCntChannel(0);
         newSetMeta.setLang(lang);
         newSetMeta.setName(name);
-        if (tag != null) {
+        if (tagText != null) {
             newSetMeta.setPopularTag(tag);
         }
         
@@ -250,8 +254,10 @@ public class ApiMso extends ApiGeneric {
         }
         
         // tag TODO see NnChannelManager .processTagText .processChannelTag
-        String tag = req.getParameter("tag");
-        if (tag != null) {
+        String tagText = req.getParameter("tag");
+        String tag = null;
+        if (tagText != null) {
+            tag = TagManager.processTagText(tagText);
             setMeta.setPopularTag(tag);
         }
         
@@ -259,7 +265,7 @@ public class ApiMso extends ApiGeneric {
             set = sysTagMngr.save(set);
         }
         
-        if (name != null || lang != null || tag != null) {
+        if (name != null || lang != null || tagText != null) {
             setMeta = sysTagDisplayMngr.save(setMeta);
         }
         

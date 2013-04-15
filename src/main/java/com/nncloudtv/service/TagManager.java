@@ -94,4 +94,18 @@ public class TagManager {
     public static String assembleStackName(String name, String lang, String msoName) {
         return name + "(" + msoName + lang + ")"; 
     }
+    
+    public static String processTagText(String tagText) {
+        String result = "";
+        String[] multiples = tagText.split(",");
+        for (String m : multiples) {
+            String tag = TagManager.getValidTag(m);
+            if (tag != null && tag.length() > 0 && tag.length() < 20)
+                result += "," + tag;
+        }
+        result = result.replaceFirst(",", "");
+        if (result.length() == 0)
+            return null;
+        return result;
+    }
 }
