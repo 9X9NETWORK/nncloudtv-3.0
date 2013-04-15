@@ -129,13 +129,12 @@ public class NnProgramManager {
             return;
         }
         
-        // delete titleCards, pois
+        // delete titleCards
         TitleCardManager titleCardMngr = new TitleCardManager();
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(program.getId());
         titleCardMngr.delete(titleCards);
-        PoiPointManager poiPointMngr = new PoiPointManager();
-        List<PoiPoint> pois = poiPointMngr.findByProgramId(program.getId());
-        poiPointMngr.delete(pois);
+        
+        // TODO delete poiPoints at program level
         
         long cId = program.getChannelId();
         dao.delete(program);
@@ -148,25 +147,17 @@ public class NnProgramManager {
             return;
         }
         
-        // delete titleCards, pois
+        // delete titleCards, TODO delete poiPoints at program level
         TitleCardManager titlecardMngr = new TitleCardManager();
         List<TitleCard> titlecards;
         List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
-        PoiPointManager poiPointMngr = new PoiPointManager();
-        List<PoiPoint> pois;
-        List<PoiPoint> poiDeleteList = new ArrayList<PoiPoint>();
         for (NnProgram program : programs) {
             titlecards = titlecardMngr.findByProgramId(program.getId());
-            pois = poiPointMngr.findByProgramId(program.getId());
             if (titlecards.size() > 0) {
                 titlecardDeleteList.addAll(titlecards);
             }
-            if (pois.size() > 0) {
-                poiDeleteList.addAll(pois);
-            }
         }
         titlecardMngr.delete(titlecardDeleteList);
-        poiPointMngr.delete(poiDeleteList);
         
         List<Long> channelIds = new ArrayList<Long>();
         
@@ -770,6 +761,8 @@ public class NnProgramManager {
         return output;
     }        
     
+    // TODO change to isPoiPointCollision
+    /*
     public boolean isPoiCollision(NnProgram program, int startTime, int endTime) {
         List<PoiPoint> pois = new PoiPointManager().findByProgramId(program.getId());
         for (PoiPoint poi : pois) {
@@ -779,5 +772,5 @@ public class NnProgramManager {
         }
         return false;
     }
-    
+    */
 }

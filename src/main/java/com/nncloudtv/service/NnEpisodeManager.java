@@ -165,18 +165,12 @@ public class NnEpisodeManager {
     
         new NnProgramManager().resetCache(episode.getChannelId());
         
-        // delete programs / title cards
-        //TitleCardManager titlecardMngr = new TitleCardManager();
+        // delete programs
         NnProgramManager programMngr = new NnProgramManager();
-        //List<TitleCard> titlecards = new ArrayList<TitleCard>();
         List<NnProgram> programs = programMngr.findByEpisodeId(episode.getId());
-        /*
-        for (NnProgram program : programs) {
-            titlecards.addAll(titlecardMngr.findByProgramId(program.getId()));
-        }
-        */
-        //titlecardMngr.delete(titlecards);
         programMngr.delete(programs);
+        
+        // TODO delete poiPoints at episode level
         
         dao.delete(episode);
     }

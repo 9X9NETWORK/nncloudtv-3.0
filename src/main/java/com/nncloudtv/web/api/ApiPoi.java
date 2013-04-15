@@ -14,11 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserManager;
 
@@ -41,6 +44,7 @@ public class ApiPoi extends ApiGeneric {
     public @ResponseBody
     List<Map<String, Object>> userCampaigns(HttpServletRequest req,
             HttpServletResponse resp,
+            @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr) {
         
         Long userId = null;
@@ -53,7 +57,8 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        NnUser user = userMngr.findById(userId);
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUser user = userMngr.findById(userId, brand.getId());
         if (user == null) {
             notFound(resp, "User Not Found");
             return null;
@@ -71,6 +76,7 @@ public class ApiPoi extends ApiGeneric {
     public @ResponseBody
     Map<String, Object> userCampaignCreate(HttpServletRequest req,
             HttpServletResponse resp,
+            @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr) {
         
         Long userId = null;
@@ -83,7 +89,8 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        NnUser user = userMngr.findById(userId);
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUser user = userMngr.findById(userId, brand.getId());
         if (user == null) {
             notFound(resp, "User Not Found");
             return null;
