@@ -25,11 +25,11 @@ public class SysTagDao extends GenericDao<SysTag> {
         
         try {
             String sql = " select * from systag where msoId = " + msoId +
-                      " and type = " + SysTag.TYPE_SET;
+                           " and type = " + SysTag.TYPE_SET +
+                           " order by seq asc";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(SysTag.class);
-            q.setOrdering("seq asc");
             @SuppressWarnings("unchecked")
             List<SysTag> results = (List<SysTag>) q.execute();            
             detached = (List<SysTag>) pm.detachCopyAll(results);
