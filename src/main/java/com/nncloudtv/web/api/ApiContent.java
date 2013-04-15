@@ -726,6 +726,47 @@ public class ApiContent extends ApiGeneric {
         return program;
     }
     
+    @RequestMapping(value = "channels", method = RequestMethod.GET)
+    public @ResponseBody
+    List<NnChannel> channelsSearch(HttpServletRequest req,
+            HttpServletResponse resp,
+            @RequestParam(required = false) String mso,
+            @RequestParam(value = "userId", required = false) String userIdStr) {
+    
+        List<NnChannel> results = null;
+        
+        Long userId = null;
+        try {
+            userId = Long.valueOf(userIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (userId == null) {
+            notFound(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUserManager userMngr = new NnUserManager();
+        NnUser user = userMngr.findById(userId, brand.getId());
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        results = channelMngr.findByUser(user, 0, false);
+        
+        for (NnChannel channel : results) {
+            
+            channel.setName(NnStringUtil.revertHtml(channel.getName()));
+            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        }
+        
+        Collections.sort(results, channelMngr.getChannelComparator("seq"));
+        
+        return results;
+    }
+    
     @RequestMapping(value = "channels/{channelId}", method = RequestMethod.GET)
     public @ResponseBody
     NnChannel channel(HttpServletRequest req, HttpServletResponse resp,
