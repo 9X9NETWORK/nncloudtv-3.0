@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.NnProgramManager;
@@ -88,6 +89,30 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        // startDate
+        String startDateStr = req.getParameter("startDate");
+        if (startDateStr != null && startDateStr.length() > 0) {
+            
+        } else {
+            
+        }
+        
+        // endDate
+        String endDateStr = req.getParameter("endDate");
+        if (endDateStr != null && endDateStr.length() > 0) {
+            
+        } else {
+            
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -98,6 +123,16 @@ public class ApiPoi extends ApiGeneric {
     Map<String, Object> campaign(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
+        
+        Long poiCampaignId = null;
+        try {
+            poiCampaignId = Long.valueOf(poiCampaignIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiCampaignId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
         
         Map<String, Object> result = new TreeMap<String, Object>();
         
@@ -110,6 +145,34 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
+        Long poiCampaignId = null;
+        try {
+            poiCampaignId = Long.valueOf(poiCampaignIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiCampaignId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null) {
+            name = NnStringUtil.htmlSafeAndTruncated(name);
+        }
+        
+        // startDate
+        String startDateStr = req.getParameter("startDate");
+        if (startDateStr != null && startDateStr.length() > 0) {
+            
+        }
+        
+        // endDate
+        String endDateStr = req.getParameter("endDate");
+        if (endDateStr != null && endDateStr.length() > 0) {
+            
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -121,6 +184,16 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
+        Long poiCampaignId = null;
+        try {
+            poiCampaignId = Long.valueOf(poiCampaignIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiCampaignId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
         okResponse(resp);
         return null;
     }
@@ -130,6 +203,36 @@ public class ApiPoi extends ApiGeneric {
     List<Map<String, Object>> campaignPois(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
+        
+        Long poiCampaignId = null;
+        try {
+            poiCampaignId = Long.valueOf(poiCampaignIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiCampaignId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // poiPointId
+        Long poiPointId = null;
+        String poiPointIdStr = req.getParameter("poiPointId");
+        if (poiPointIdStr != null) {
+            try {
+                poiPointId = Long.valueOf(poiPointIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (poiPointId == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
+        if (poiPointId != null) {
+            // find pois with campaign and point
+        } else {
+            // find pois with campaign
+        }
         
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         Map<String, Object> result = new TreeMap<String, Object>();
@@ -145,6 +248,75 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
+        Long poiCampaignId = null;
+        try {
+            poiCampaignId = Long.valueOf(poiCampaignIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiCampaignId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // poiPointId
+        Long poiPointId = null;
+        String poiPointIdStr = req.getParameter("poiPointId");
+        if (poiPointIdStr != null) {
+            try {
+                poiPointId = Long.valueOf(poiPointIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (poiPointId == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        // poiPointId
+        Long poiEventId = null;
+        String poiEventIdStr = req.getParameter("poiEventId");
+        if (poiEventIdStr != null) {
+            try {
+                poiEventId = Long.valueOf(poiEventIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (poiEventId == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        // create the poi
+        
+        // startDate
+        String startDateStr = req.getParameter("startDate");
+        if (startDateStr != null && startDateStr.length() > 0) {
+            
+        }
+        
+        // endDate
+        String endDateStr = req.getParameter("endDate");
+        if (endDateStr != null && endDateStr.length() > 0) {
+            
+        }
+        
+        // hoursOfWeek
+        String hoursOfWeek = req.getParameter("hoursOfWeek");
+        if (hoursOfWeek != null) {
+            if (hoursOfWeek.matches("[01]{168}")) {
+                // valid hoursOfWeek format
+            } else {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -155,6 +327,16 @@ public class ApiPoi extends ApiGeneric {
     Map<String, Object> poi(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiId") String poiIdStr) {
+        
+        Long poiId = null;
+        try {
+            poiId = Long.valueOf(poiIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
         
         Map<String, Object> result = new TreeMap<String, Object>();
         
@@ -167,6 +349,39 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiId") String poiIdStr) {
         
+        Long poiId = null;
+        try {
+            poiId = Long.valueOf(poiIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // startDate
+        String startDateStr = req.getParameter("startDate");
+        if (startDateStr != null && startDateStr.length() > 0) {
+            
+        }
+        
+        // endDate
+        String endDateStr = req.getParameter("endDate");
+        if (endDateStr != null && endDateStr.length() > 0) {
+            
+        }
+        
+        // hoursOfWeek
+        String hoursOfWeek = req.getParameter("hoursOfWeek");
+        if (hoursOfWeek != null) {
+            if (hoursOfWeek.matches("[01]{168}")) {
+                // valid hoursOfWeek format
+            } else {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -177,6 +392,16 @@ public class ApiPoi extends ApiGeneric {
     String poiDelete(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiId") String poiIdStr) {
+        
+        Long poiId = null;
+        try {
+            poiId = Long.valueOf(poiIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
         
         okResponse(resp);
         return null;
@@ -234,6 +459,53 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        // targetId
+        Long targetId = programId;
+        
+        // targetType
+        Short targetType = 0;
+        
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        // offsetStart & offsetEnd
+        Integer offsetStart = null;
+        Integer offsetEnd = null;
+        String offsetStartStr = req.getParameter("offsetStart");
+        String offsetEndStr = req.getParameter("offsetEnd");
+        if (offsetStartStr == null || offsetEndStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        } else {
+            try {
+                offsetStart = Integer.valueOf(offsetStartStr);
+                offsetEnd = Integer.valueOf(offsetEndStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((offsetStart == null) || (offsetStart < 0) || (offsetEnd == null) || (offsetEnd <= 0) || (offsetEnd - offsetStart <= 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
+        // tags
+        String tags = req.getParameter("tags");
+        if (tags != null) {
+            
+        }
+        
+        // activate
+        Boolean activate;
+        String activateStr = req.getParameter("activate");
+        if (activateStr != null) {
+            activate = Boolean.valueOf(activateStr);
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -244,6 +516,16 @@ public class ApiPoi extends ApiGeneric {
     Map<String, Object> point(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiPointId") String poiPointIdStr) {
+        
+        Long poiPointId = null;
+        try {
+            poiPointId = Long.valueOf(poiPointIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiPointId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
         
         Map<String, Object> result = new TreeMap<String, Object>();
         
@@ -256,6 +538,72 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiPointId") String poiPointIdStr) {
         
+        Long poiPointId = null;
+        try {
+            poiPointId = Long.valueOf(poiPointIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiPointId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null) {
+            name = NnStringUtil.htmlSafeAndTruncated(name);
+        }
+        
+        // offsetStart
+        Integer offsetStart = null;
+        String offsetStartStr = req.getParameter("offsetStart");
+        if (offsetStartStr != null) {
+            try {
+                offsetStart = Integer.valueOf(offsetStartStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((offsetStart == null) || (offsetStart < 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            // origin setting
+        }
+        
+        // offsetEnd
+        Integer offsetEnd = null;
+        String offsetEndStr = req.getParameter("offsetEnd");
+        if (offsetEndStr != null) {
+            try {
+                offsetEnd = Integer.valueOf(offsetEndStr);
+            } catch (NumberFormatException e) {
+            }
+            if ((offsetEnd == null) || (offsetEnd <= 0)) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            // origin setting
+        }
+        
+        if (offsetEnd - offsetStart <= 0) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        // tags
+        String tags = req.getParameter("tags");
+        if (tags != null) {
+            
+        }
+        
+        // activate
+        Boolean activate;
+        String activateStr = req.getParameter("activate");
+        if (activateStr != null) {
+            activate = Boolean.valueOf(activateStr);
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -267,6 +615,16 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiPointId") String poiPointIdStr) {
         
+        Long poiPointId = null;
+        try {
+            poiPointId = Long.valueOf(poiPointIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiPointId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
         okResponse(resp);
         return null;
     }
@@ -275,6 +633,48 @@ public class ApiPoi extends ApiGeneric {
     public @ResponseBody
     Map<String, Object> eventCreate(HttpServletRequest req,
             HttpServletResponse resp) {
+        
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        // type TODO : need range check ?
+        Short type = null;
+        String typeStr = req.getParameter("type");
+        if (typeStr != null) {
+            try {
+                type = Short.valueOf(typeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (type == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        // context
+        String context = req.getParameter("context");
+        if (context == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        // notificationMsg
+        String notificationMsg = req.getParameter("notificationMsg");
+        
+        // notificationSchedule
+        String notificationSchedule = req.getParameter("notificationSchedule");
+        
+        if (type == 3) {
+            // set notificationMsg and notificationSchedule
+        }
         
         Map<String, Object> result = new TreeMap<String, Object>();
         
@@ -287,6 +687,16 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiEventId") String poiEventIdStr) {
         
+        Long poiEventId = null;
+        try {
+            poiEventId = Long.valueOf(poiEventIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiEventId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -298,6 +708,54 @@ public class ApiPoi extends ApiGeneric {
             HttpServletResponse resp,
             @PathVariable("poiEventId") String poiEventIdStr) {
         
+        Long poiEventId = null;
+        try {
+            poiEventId = Long.valueOf(poiEventIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiEventId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null) {
+            name = NnStringUtil.htmlSafeAndTruncated(name);
+        }
+        
+        // type TODO : need range check ?
+        Short type = null;
+        String typeStr = req.getParameter("type");
+        if (typeStr != null) {
+            try {
+                type = Short.valueOf(typeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (type == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            // origin setting
+        }
+        
+        // context
+        String context = req.getParameter("context");
+        if (context != null) {
+            
+        }
+        
+        // notificationMsg
+        String notificationMsg = req.getParameter("notificationMsg");
+        
+        // notificationSchedule
+        String notificationSchedule = req.getParameter("notificationSchedule");
+        
+        if (type == 3) {
+            // set notificationMsg and notificationSchedule
+        }
+        
         Map<String, Object> result = new TreeMap<String, Object>();
         
         return result;
@@ -308,6 +766,16 @@ public class ApiPoi extends ApiGeneric {
     String eventDelete(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiEventId") String poiEventIdStr) {
+        
+        Long poiEventId = null;
+        try {
+            poiEventId = Long.valueOf(poiEventIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (poiEventId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
         
         okResponse(resp);
         return null;
