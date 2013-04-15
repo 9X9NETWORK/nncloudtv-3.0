@@ -32,8 +32,6 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
-import com.nncloudtv.model.PoiPoint;
-import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.MsoConfigManager;
@@ -46,8 +44,6 @@ import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
-import com.nncloudtv.service.PoiEventManager;
-import com.nncloudtv.service.PoiPointManager;
 import com.nncloudtv.service.TitleCardManager;
 
 @Controller

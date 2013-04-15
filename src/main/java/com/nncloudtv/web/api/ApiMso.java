@@ -72,9 +72,21 @@ public class ApiMso extends ApiGeneric {
         }
         
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
-        Map<String, Object> result = new TreeMap<String, Object>();
+        Map<String, Object> result = null;
         
-        results.add(result);
+        List<SysTag> sets = sysTagMngr.findSetsByMsoId(mso.getId());
+        if (sets == null || sets.size() == 0) {
+            return results;
+        }
+        
+        SysTagDisplay setMeta = null;
+        for (SysTag set : sets) {
+            setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+            if (setMeta != null) {
+                result = setResponse(set, setMeta);
+                results.add(result);
+            }
+        }
         
         return results;
     }
@@ -130,7 +142,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        // tag
+        // tag TODO see NnChannelManager .processTagText .processChannelTag
         String tag = req.getParameter("tag");
         
         SysTag newSet = new SysTag();
@@ -168,9 +180,19 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
         
-        return result;
+        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+        if (setMeta == null) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        return setResponse(set, setMeta);
     }
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.PUT)
@@ -188,9 +210,60 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
         
-        return result;
+        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+        if (setMeta == null) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        // name
+        String name = req.getParameter("name");
+        if (name != null) {
+            setMeta.setName(NnStringUtil.htmlSafeAndTruncated(name));
+        }
+        
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
+            setMeta.setLang(lang);
+        }
+        
+        // seq
+        Short seq = null;
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            try {
+                seq = Short.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+            }
+            if (seq == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            set.setSeq(seq);
+        }
+        
+        // tag TODO see NnChannelManager .processTagText .processChannelTag
+        String tag = req.getParameter("tag");
+        if (tag != null) {
+            setMeta.setPopularTag(tag);
+        }
+        
+        if (seqStr != null) {
+            set = sysTagMngr.save(set);
+        }
+        
+        if (name != null || lang != null || tag != null) {
+            setMeta = sysTagDisplayMngr.save(setMeta);
+        }
+        
+        return setResponse(set, setMeta);
     }
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.DELETE)
@@ -207,6 +280,24 @@ public class ApiMso extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+        if (setMeta == null) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        // delete channels in set, SysTagMap
+        // delete setMeta, SysTagDisplay
+        sysTagDisplayMngr.delete(setMeta);
+        // delete set, SysTag
+        sysTagMngr.delete(set);
         
         okResponse(resp);
         return null;

@@ -130,4 +130,21 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         return detached;
     }
     
+    public SysTagDisplay findBySysTagId(long sysTagId) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        SysTagDisplay detached = null;
+        try {
+            Query query = pm.newQuery(SysTagDisplay.class);
+            query.setFilter("systagId == " + sysTagId);
+            @SuppressWarnings("unchecked")
+            List<SysTagDisplay> results = (List<SysTagDisplay>) query.execute();            
+            if (results.size() > 0) {
+                detached = pm.detachCopy(results.get(0));
+            }
+        } finally {
+            pm.close();
+        }
+        return detached;
+    }
+    
 }

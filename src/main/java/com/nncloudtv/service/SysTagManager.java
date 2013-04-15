@@ -1,6 +1,8 @@
 package com.nncloudtv.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -32,4 +34,31 @@ public class SysTagManager {
         return sysTag;
     }
     
+    public void delete(SysTag sysTag) {
+        if (sysTag == null) {
+            return ;
+        }
+        dao.delete(sysTag);
+    }
+    
+    public SysTag findById(Long id) {
+        if(id == null) {
+            return null;
+        }
+        return dao.findById(id);
+    }
+    
+    public List<SysTag> findSetsByMsoId(Long msoId) {
+        
+        if (msoId == null) {
+            return new ArrayList<SysTag>();
+        }
+        
+        List<SysTag> results = dao.findSetsByMsoId(msoId);
+        if (results == null) {
+            return new ArrayList<SysTag>();
+        }
+        
+        return results;
+    }
 }

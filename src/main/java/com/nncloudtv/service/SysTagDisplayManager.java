@@ -28,6 +28,13 @@ public class SysTagDisplayManager {
     public SysTagDisplay findById(long id) {
         return dao.findById(id);
     }
+    
+    public SysTagDisplay findBySysTagId(Long sysTagId) {
+        if (sysTagId == null) {
+            return null;
+        }
+        return dao.findBySysTagId(sysTagId);
+    }
 
     public SysTagDisplay findByName(String name, long msoId) {
         return dao.findByName(name);
@@ -50,6 +57,13 @@ public class SysTagDisplayManager {
         sysTagDisplay = dao.save(sysTagDisplay);
         
         return sysTagDisplay;
+    }
+    
+    public void delete(SysTagDisplay sysTagDisplay) {
+        if (sysTagDisplay == null) {
+            return ;
+        }
+        dao.delete(sysTagDisplay);
     }
 
 }
