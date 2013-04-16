@@ -24,7 +24,7 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         SysTagMap detached = null;
         
         try {
-            String sql = " select * from systagmap where sysTagId = " + sysTagId +
+            String sql = " select * from systag_map where sysTagId = " + sysTagId +
                            " and channelId = " + channelId;
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
@@ -47,7 +47,7 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         List<SysTagMap> detached = new ArrayList<SysTagMap>();
         
         try {
-            String sql = " select * from systagmap where sysTagId = " + sysTagId +
+            String sql = " select * from systag_map where sysTagId = " + sysTagId +
                            " order by seq asc";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
