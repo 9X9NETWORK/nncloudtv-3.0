@@ -21,11 +21,13 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
+import com.nncloudtv.model.SysTagMap;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.StoreListingManager;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
+import com.nncloudtv.service.SysTagMapManager;
 import com.nncloudtv.service.TagManager;
 
 @Controller
@@ -39,15 +41,17 @@ public class ApiMso extends ApiGeneric {
     private StoreListingManager storeListingMngr;
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
+    private SysTagMapManager sysTagMapManager;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr,
-            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr) {
+            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapManager) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
+        this.sysTagMapManager = sysTagMapManager;
     }
     
     @RequestMapping(value = "msos/{msoId}/sets", method = RequestMethod.GET)
@@ -185,7 +189,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         SysTag set = sysTagMngr.findById(setId);
-        if (set == null) {
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
             return null;
         }
@@ -215,7 +219,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         SysTag set = sysTagMngr.findById(setId);
-        if (set == null) {
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
             return null;
         }
@@ -288,7 +292,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         SysTag set = sysTagMngr.findById(setId);
-        if (set == null) {
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
             return null;
         }
@@ -300,6 +304,10 @@ public class ApiMso extends ApiGeneric {
         }
         
         // delete channels in set, SysTagMap
+        List<SysTagMap>  sysTagMaps = sysTagMapManager.findSysTagMaps(set.getId());
+        if (sysTagMaps != null && sysTagMaps.size() > 0) {
+            sysTagMapManager.deleteAll(sysTagMaps);
+        }
         // delete setMeta, SysTagDisplay
         sysTagDisplayMngr.delete(setMeta);
         // delete set, SysTag
@@ -324,6 +332,12 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
         List<NnChannel> results = new ArrayList<NnChannel>();
         
         return results;
@@ -344,6 +358,13 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        // channelId
         Long channelId = null;
         String channelIdStr = req.getParameter("channelId");
         if (channelIdStr != null) {
@@ -366,6 +387,61 @@ public class ApiMso extends ApiGeneric {
             badRequest(resp, "Channel Not Found");
             return null;
         }
+        
+        // create if not exist
+        SysTagMap sysTagMap = sysTagMapManager.findSysTagMap(set.getId(), channel.getId());
+        if (sysTagMap == null) {
+            sysTagMap = new SysTagMap();
+            sysTagMap.setSysTagId(set.getId());
+            sysTagMap.setChannelId(channel.getId());
+            sysTagMap.setSeq((short) 0);
+        }
+        
+        // timeStart
+        String timeStartStr = req.getParameter("timeStart");
+        Short timeStart = null;
+        if (timeStartStr != null) {
+            try {
+                timeStart = Short.valueOf(timeStartStr);
+            } catch (NumberFormatException e) {
+            }
+            if (timeStart == null || timeStart < 0 || timeStart > 23) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
+        // timeEnd
+        String timeEndStr = req.getParameter("timeEnd");
+        Short timeEnd = null;
+        if (timeEndStr != null) {
+            try {
+                timeEnd = Short.valueOf(timeEndStr);
+            } catch (NumberFormatException e) {
+            }
+            if (timeEnd == null || timeEnd < 0 || timeEnd > 23) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
+        if (timeStartStr == null && timeEndStr == null) {
+            timeStart = 0;
+            timeEnd = 0;
+        } else if (timeStartStr != null && timeEndStr != null) {
+            if (timeStart == timeEnd) {
+                timeStart = 0;
+                timeEnd = 0;
+            }
+        } else { // they should be pair
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        sysTagMap.setTimeStart(timeStart);
+        sysTagMap.setTimeEnd(timeEnd);
+        
+        sysTagMapManager.save(sysTagMap);
         
         okResponse(resp);
         return null;
@@ -386,6 +462,12 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
         Long channelId = null;
         String channelIdStr = req.getParameter("channelId");
         if (channelIdStr != null) {
@@ -402,11 +484,20 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        /* NOTE : if channel not exist, this API should still work
         NnChannel channel = null;
         channel = channelMngr.findById(channelId);
         if (channel == null) {
             badRequest(resp, "Channel Not Found");
             return null;
+        }
+        */
+        
+        SysTagMap sysTagMap = sysTagMapManager.findSysTagMap(set.getId(), channelId);
+        if (sysTagMap == null) {
+            // do nothing
+        } else {
+            sysTagMapManager.delete(sysTagMap);
         }
         
         okResponse(resp);

@@ -61,4 +61,10 @@ public class SysTagManager {
         
         return results;
     }
+    
+    /** call when Mso is going to delete **/
+    public void deleteByMsoId(Long msoId) {
+        // delete sysTags, sysTagDisplays, sysTagMaps
+    }
+    
 }
