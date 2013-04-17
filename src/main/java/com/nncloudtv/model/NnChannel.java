@@ -186,6 +186,12 @@ public class NnChannel implements Serializable {
     
     @NotPersistent    
     private long categoryId;
+    
+    @NotPersistent
+    private short timeStart;
+    
+    @NotPersistent
+    private short timeEnd;
 
     protected static final Logger log = Logger.getLogger(NnChannel.class.getName());    
 
@@ -597,5 +603,21 @@ public class NnChannel implements Serializable {
 
     public void setCntVisit(int cntVisit) {
         this.cntVisit = cntVisit;
+    }
+
+    public short getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(short timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public short getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(short timeEnd) {
+        this.timeEnd = timeEnd;
     }    
 }

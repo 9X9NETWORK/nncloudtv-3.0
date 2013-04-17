@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,29 @@ public class SysTagMapManager {
         return result;
     }
     
-    private void reorderSysTagChannels(Long sysTagId) {
+    public List<SysTagMap> saveAll(List<SysTagMap> sysTagMaps) {
+        
+        if (sysTagMaps == null || sysTagMaps.size() == 0) {
+            return new ArrayList<SysTagMap>();
+        }
+        
+        Date now = new Date();
+        for (SysTagMap item : sysTagMaps) {
+            if (item.getCreateDate() == null) {
+                item.setCreateDate(now);
+            }
+            item.setUpdateDate(now);
+        }
+        
+        List<SysTagMap> results = dao.saveAll(sysTagMaps);
+        if (results == null) {
+            return new ArrayList<SysTagMap>();
+        }
+        
+        return results;
+    }
+    
+    public void reorderSysTagChannels(Long sysTagId) {
         
         if (sysTagId == null) {
             return ;
@@ -120,7 +144,39 @@ public class SysTagMapManager {
     
     public List<NnChannel> findChannelsBySysTagId(Long sysTagId) {
         
+        if (sysTagId == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        List<SysTagMap> sysTagMaps = findSysTagMaps(sysTagId);
+        if (sysTagMaps == null || sysTagMaps.size() == 0) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        List<Long> channelIdList = new ArrayList<Long>();
+        for (SysTagMap item : sysTagMaps) {
+            channelIdList.add(item.getChannelId());
+        }
+        List<NnChannel> channels = channelMngr.findByIds(channelIdList);
+        if (channels == null || channels.size() == 0) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        Map<Long, NnChannel> channelMap = new TreeMap<Long, NnChannel>();
+        for (NnChannel channel : channels) {
+            channelMap.put(channel.getId(), channel);
+        }
         List<NnChannel> results = new ArrayList<NnChannel>();
+        NnChannel result = null;
+        for (SysTagMap item : sysTagMaps) {
+            result = channelMap.get(item.getChannelId());
+            if (result != null) {
+                result.setTimeStart(item.getTimeStart());
+                result.setTimeEnd(item.getTimeEnd());
+                result.setSeq(item.getSeq());
+                results.add(result);
+            }
+        }
         
         return results;
     }

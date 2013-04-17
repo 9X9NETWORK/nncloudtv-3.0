@@ -41,17 +41,17 @@ public class ApiMso extends ApiGeneric {
     private StoreListingManager storeListingMngr;
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
-    private SysTagMapManager sysTagMapManager;
+    private SysTagMapManager sysTagMapMngr;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr,
-            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapManager) {
+            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
-        this.sysTagMapManager = sysTagMapManager;
+        this.sysTagMapMngr = sysTagMapMngr;
     }
     
     @RequestMapping(value = "msos/{msoId}/sets", method = RequestMethod.GET)
@@ -304,9 +304,9 @@ public class ApiMso extends ApiGeneric {
         }
         
         // delete channels in set, SysTagMap
-        List<SysTagMap>  sysTagMaps = sysTagMapManager.findSysTagMaps(set.getId());
+        List<SysTagMap>  sysTagMaps = sysTagMapMngr.findSysTagMaps(set.getId());
         if (sysTagMaps != null && sysTagMaps.size() > 0) {
-            sysTagMapManager.deleteAll(sysTagMaps);
+            sysTagMapMngr.deleteAll(sysTagMaps);
         }
         // delete setMeta, SysTagDisplay
         sysTagDisplayMngr.delete(setMeta);
@@ -338,7 +338,10 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<NnChannel> results = new ArrayList<NnChannel>();
+        List<NnChannel> results = sysTagMapMngr.findChannelsBySysTagId(set.getId());
+        if (results == null) {
+            return new ArrayList<NnChannel>();
+        }
         
         return results;
     }
@@ -389,7 +392,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         // create if not exist
-        SysTagMap sysTagMap = sysTagMapManager.findSysTagMap(set.getId(), channel.getId());
+        SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channel.getId());
         if (sysTagMap == null) {
             sysTagMap = new SysTagMap();
             sysTagMap.setSysTagId(set.getId());
@@ -441,7 +444,7 @@ public class ApiMso extends ApiGeneric {
         //sysTagMap.setTimeStart(timeStart);
         //sysTagMap.setTimeEnd(timeEnd);
         
-        sysTagMapManager.save(sysTagMap);
+        sysTagMapMngr.save(sysTagMap);
         
         okResponse(resp);
         return null;
@@ -493,12 +496,85 @@ public class ApiMso extends ApiGeneric {
         }
         */
         
-        SysTagMap sysTagMap = sysTagMapManager.findSysTagMap(set.getId(), channelId);
+        SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channelId);
         if (sysTagMap == null) {
             // do nothing
         } else {
-            sysTagMapManager.delete(sysTagMap);
+            sysTagMapMngr.delete(sysTagMap);
         }
+        
+        okResponse(resp);
+        return null;
+    }
+    
+    @RequestMapping(value = "sets/{setId}/channels/sorting", method = RequestMethod.PUT)
+    public @ResponseBody
+    String setChannelsSorting(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
+        
+        Long setId = null;
+        try {
+            setId = Long.valueOf(setIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (setId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        String channelIdsStr = req.getParameter("channels");
+        if (channelIdsStr == null) {
+            sysTagMapMngr.reorderSysTagChannels(set.getId());
+            okResponse(resp);
+            return null;
+        }
+        String[] channelIdStrList = channelIdsStr.split(",");
+        
+        List<SysTagMap> setChannels = sysTagMapMngr.findSysTagMaps(set.getId()); // it must same as setChannels's result
+        List<Long> channelIdList = new ArrayList<Long>();
+        List<Long> checkedChannelIdList = new ArrayList<Long>();
+        for (SysTagMap item : setChannels) {
+            channelIdList.add(item.getChannelId());
+            checkedChannelIdList.add(item.getChannelId());
+        }
+        
+        int index;
+        Long channelId = null;
+        List<SysTagMap> orderedSetChannels = new ArrayList<SysTagMap>();
+        for (String channelIdStr : channelIdStrList) {
+            
+            channelId = null;
+            try {
+                channelId = Long.valueOf(channelIdStr);
+            } catch(Exception e) {
+            }
+            if (channelId != null) {
+                index = channelIdList.indexOf(channelId);
+                if (index > -1) {
+                    orderedSetChannels.add(setChannels.get(index));
+                    checkedChannelIdList.remove(channelId);
+                }
+            }
+        }
+        // parameter should contain all channelId
+        if (checkedChannelIdList.size() != 0) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        int counter = 1;
+        for (SysTagMap item : orderedSetChannels) {
+            item.setSeq((short) counter);
+            counter++;
+        }
+        
+        sysTagMapMngr.saveAll(orderedSetChannels);
         
         okResponse(resp);
         return null;
