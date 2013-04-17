@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PMF;
-import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 
@@ -22,23 +20,63 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         super(SysTagDisplay.class);
     }    
 
-    public SysTagDisplay findDisplayById(long id) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();        
-        SysTagDisplay display = null;
+    public List<SysTagDisplay> findDayparting(short baseTime, long msoId) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<SysTagDisplay> detached = new ArrayList<SysTagDisplay>();
         try {
-            display = pm.getObjectById(SysTagDisplay.class, id);
-            display = pm.detachCopy(display);
-        } catch (JDOObjectNotFoundException e) {
+            /*
+            select * 
+              from systag_display a1   
+            inner join 
+            (select d.*  
+               from systag s, systag_display d  
+              where s.msoId = 1 
+                and type = 3 
+                and s.id = d.systagId  
+                and (((s.timeStart != 0 or s.timeEnd != 0) and s.timeEnd > 3 and s.timeStart <= 3) or (s.timeStart = 0 and s.timeEnd = 0))  
+               order by s.seq) a2 
+            on a1.id=a2.id
+            */
+            String sql = " select * from systag_display a1 " +
+                         "  inner join " +
+                         "(select d.* " + 
+                           " from systag s, systag_display d " +
+                         " where s.msoId = " + msoId + 
+                           " and type = " + SysTag.TYPE_DAYPARTING + 
+                           " and s.id = d.systagId " +                           
+                           " and (((s.timeStart != 0 or s.timeEnd != 0) and s.timeEnd > " + baseTime + " and s.timeStart <= " + baseTime + ")" +
+                                 " or (s.timeStart = 0 and s.timeEnd = 0)) " + 
+                         " order by s.seq) a2" +
+                         " on a1.id=a2.id";
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(SysTagDisplay.class);
+            @SuppressWarnings("unchecked")
+            List<SysTagDisplay> results = (List<SysTagDisplay>) q.execute();
+            detached = (List<SysTagDisplay>)pm.detachCopyAll(results);
         } finally {
-            pm.close();            
+            pm.close();
         }
-        return display;        
-    }    
-        
+        return detached;                
+    }
+            
     public List<SysTagDisplay> findRecommendedSets(String lang, long msoId) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<SysTagDisplay> detached = new ArrayList<SysTagDisplay>();
         try {
+            /*
+            select * 
+              from systag_display a1  
+            inner join 
+            (select d.*  
+               from systag s, systag_display d  
+              where s.msoId = 1 
+                and s.type = 2 
+                and s.id = d.systagId 
+                and featured = true  
+                and d.lang='en') a2 
+            on a1.id=a2.id
+            */
             String sql = " select * from systag_display a1 " +
                          " inner join " +
                          "(select d.* " + 
@@ -86,32 +124,6 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         return detached;        
     }    
 
-    public List<NnChannel> findChannelsById(long id) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<NnChannel> detached = new ArrayList<NnChannel>();
-        try {
-            String sql = "select * from nnchannel a1 " +
-                         " inner join " + 
-                       " (select c.* " + 
-                          " from systag_display d, systag_map m, nnchannel c " +
-                         " where d.id = " + id + 
-                         " and d.systagId = m.systagId " +                           
-                           " and c.id = m.channelId " +
-                           " and c.status = " + NnChannel.STATUS_SUCCESS +
-                           " and c.isPublic = true) a2" +
-                           " on a1.id=a2.id";
-            log.info("sql:" + sql);
-            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-            q.setClass(NnChannel.class);
-            @SuppressWarnings("unchecked")
-            List<NnChannel> results = (List<NnChannel>) q.execute();            
-            detached = (List<NnChannel>)pm.detachCopyAll(results);
-        } finally {
-            pm.close();
-        }
-        return detached;                
-    }
-
     //will need mso in the future to avoid name conflicts
     public SysTagDisplay findByName(String name) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
@@ -146,5 +158,4 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         }
         return detached;
     }
-    
 }

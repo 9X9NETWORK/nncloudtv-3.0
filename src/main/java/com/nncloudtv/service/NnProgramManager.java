@@ -16,15 +16,17 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnProgramDao;
 import com.nncloudtv.dao.TitleCardDao;
+import com.nncloudtv.dao.YtProgramDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.PoiEvent;
+import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.TitleCard;
+import com.nncloudtv.model.YtProgram;
 
 @Service
 public class NnProgramManager {
@@ -182,6 +184,33 @@ public class NnProgramManager {
     
     public NnProgram findByChannelAndFileUrl(long channelId, String fileUrl) {
         return dao.findByChannelAndFileUrl(channelId, fileUrl);
+    }
+    
+    public String findLatestProgramInfoByChannels(List<NnChannel> channels) {
+        log.info("!!!!!! enter find latest!!!!");
+        YtProgramDao ytDao = new YtProgramDao();
+        String output = "";
+        for (NnChannel c : channels) {
+            if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
+                c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+                YtProgram yt = ytDao.findLatestByChannel(c.getId());
+                List<YtProgram> programs = new ArrayList<YtProgram>();
+                if (yt != null) {
+                    programs.add(yt);
+                    log.info("find latest yt program:" + yt.getId());
+                    output += this.composeYtProgramInfo(c, programs);
+                }
+            }
+            if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
+                List<NnEpisode> episodes = new NnEpisodeManager().findPlayerLatestEpisodes(c.getId());                
+                if (episodes.size() > 0) {
+                    log.info("find latest episode id:" + episodes.get(0).getId());
+                    List<NnProgram> programs = this.findByEpisodeId(episodes.get(0).getId());
+                    output += this.composeNnProgramInfo(c, episodes, programs);                
+                }
+            }
+        }        
+        return output;
     }
     
     public static String getCntViewCacheName(long channelId, String programId) {
@@ -526,7 +555,18 @@ public class NnProgramManager {
         }
         return output;
     }
-
+    
+    public String composeYtProgramInfo(NnChannel c, List<YtProgram> programs) {
+        if (programs.size() == 0)
+            return "";        
+        String result = "";
+        if (c == null) return null;
+        for (YtProgram p : programs) {
+            result += this.composeYtProgramInfoStr(p);
+        }
+        return result;
+    }
+    
     //compose programInfo for non 9x9 and non favorite channel
     public String composeProgramInfo(NnChannel c, List<NnProgram> programs) {
         if (programs.size() == 0)
@@ -754,6 +794,33 @@ public class NnProgramManager {
                         p.getAudioFileUrl(), //audio file            
                         String.valueOf(p.getUpdateDate().getTime()),
                         p.getComment(),
+                        ""}; //card
+        output = output + NnStringUtil.getDelimitedStr(ori);
+        output = output.replaceAll("null", "");
+        output = output + "\n";
+        return output;
+    }        
+
+    public String composeYtProgramInfoStr(YtProgram p) {
+        String output = "";
+        
+        String url1 = "";
+        if (p.getYtVideoId() != null)
+            url1 = "http://www.youtube.com/watch?v=" + p.getYtVideoId();
+        String[] ori = {String.valueOf(p.getChannelId()), 
+                        String.valueOf(p.getId()), 
+                        p.getPlayerName(), 
+                        p.getPlayerIntro(),
+                        String.valueOf(NnProgram.CONTENTTYPE_YOUTUBE), 
+                        p.getDuration(),
+                        p.getImageUrl(),
+                        "",
+                        url1, //video url
+                        "", //file type 2 
+                        "", //file type 3
+                        "", //audio file            
+                        String.valueOf(p.getUpdateDate().getTime()),
+                        "", //comment
                         ""}; //card
         output = output + NnStringUtil.getDelimitedStr(ori);
         output = output.replaceAll("null", "");

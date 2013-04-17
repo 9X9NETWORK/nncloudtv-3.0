@@ -184,6 +184,10 @@ public class NnEpisodeManager {
     public List<NnEpisode> findPlayerEpisodes(long channelId) {
         return dao.findPlayerEpisode(channelId);
     }
+
+    public List<NnEpisode> findPlayerLatestEpisodes(long channelId) {
+        return dao.findPlayerLatestEpisode(channelId);
+    }
     
     public int calculateEpisodeDuration(NnEpisode episode) {
     

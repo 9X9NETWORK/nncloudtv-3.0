@@ -122,9 +122,10 @@ public class PoiPointManager {
         
         // POI part
         result.put("id", poi.getId());
-        result.put("programId", poi.getProgramId());
+        result.put("programId", poi.getTargetId());
         result.put("name", poi.getName());
-        result.put("intro", poi.getIntro());
+        //result.put("intro", poi.getIntro());
+        result.put("intro", null);
         result.put("startTime", poi.getStartTimeInt());
         result.put("endTime", poi.getEndTimeInt());
         result.put("tag", poi.getTag());

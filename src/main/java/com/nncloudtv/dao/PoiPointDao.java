@@ -23,7 +23,7 @@ public class PoiPointDao extends GenericDao<PoiPoint> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
             String sql = "select * " +
-                           "from poi " +
+                           "from poi_point " +
                          " where programId in (select id from Poi where channelId=" + channelId + ")" +
                          " order by startTime" ; 
                         

@@ -1,13 +1,18 @@
 package com.nncloudtv.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-public class PoiCompaign {
+@PersistenceCapable(table="poi_comppaign", detachable = "true")
+public class PoiCompaign implements Serializable {
+
+    private static final long serialVersionUID = 6927686145119450135L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

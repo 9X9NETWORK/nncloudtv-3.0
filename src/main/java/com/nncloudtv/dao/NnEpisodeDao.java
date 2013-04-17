@@ -76,5 +76,25 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
         }
         return detached;
     }    
+
+    public List<NnEpisode> findPlayerLatestEpisode(long channelId) {
+        List<NnEpisode> detached = new ArrayList<NnEpisode>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();        
+        try {
+            Query query = pm.newQuery(NnEpisode.class);
+            query.setFilter("channelId == channelIdParam && isPublic == isPublicParam");
+            query.declareParameters("long channelIdParam, boolean isPublicParam");
+            query.setRange(0, 1);
+            query.setOrdering("seq desc");
+            @SuppressWarnings("unchecked")
+            List<NnEpisode> episodes = (List<NnEpisode>)query.execute(channelId, true);
+            if (episodes.size() > 0) {
+                detached = (List<NnEpisode>) pm.detachCopyAll(episodes);
+            }
+        } finally {
+            pm.close();
+        }
+        return detached;
+    }    
     
 }

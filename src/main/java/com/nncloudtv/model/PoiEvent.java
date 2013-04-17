@@ -13,22 +13,40 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(table="poi_event", detachable="true")
 public class PoiEvent implements Serializable {
     private static final long serialVersionUID = -1261189136283925861L;
-
+        
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
+
+    @Persistent
+    private long userId; //will be replaced by profileId
+    
+    @Persistent
+    private long msoId; //will be replaced by profileId
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String name;
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String notifyMsg;
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String notifyScheduler; //timestamp list, separate by comma    
     
     @Persistent
     private short type;
     public static final short TYPE_HYPERCHANNEL = 1;
-    
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String message;
-    
+
     @Persistent
     @Column(jdbcType="VARCHAR", length=2000)
     private String context;
+    
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String message; //response message   
 
     @Persistent
     private Date createDate;
@@ -100,6 +118,46 @@ public class PoiEvent implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNotifyMsg() {
+        return notifyMsg;
+    }
+
+    public void setNotifyMsg(String notifyMsg) {
+        this.notifyMsg = notifyMsg;
+    }
+
+    public String getNotifyScheduler() {
+        return notifyScheduler;
+    }
+
+    public void setNotifyScheduler(String notifyScheduler) {
+        this.notifyScheduler = notifyScheduler;
     }
     
 }

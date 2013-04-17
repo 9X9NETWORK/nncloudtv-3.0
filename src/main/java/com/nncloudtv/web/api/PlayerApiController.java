@@ -576,11 +576,23 @@ public class PlayerApiController {
     public @ResponseBody String setInfo(
             @RequestParam(value="set", required=false) String id,
             @RequestParam(value="v", required=false) String v,
-            @RequestParam(value="landing", required=false) String beautifulUrl,
+            @RequestParam(value="landing", required=false) String name,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
-        log.info("setInfo: id =" + id + ";landing=" + beautifulUrl);        
+        log.info("setInfo: id =" + id + ";landing=" + name);
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            this.prepService(req, true);
+            output = playerApiService.setInfo(id, name);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;      
+ 
+        /*
         String msoName = req.getParameter("mso");
         MsoManager msoMngr = new MsoManager();
         Mso mso = msoMngr.findByName(msoName);
@@ -588,6 +600,7 @@ public class PlayerApiController {
            mso = msoMngr.findNNMso();
         }
         return new IosService().setInfo(id, beautifulUrl, mso);        
+        */
     }
 
     /** 
@@ -2407,6 +2420,29 @@ public class PlayerApiController {
         return output;        
     }
 
+    @RequestMapping(value="portal", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String portal(                      
+            @RequestParam(value="lang", required=false) String lang,
+            @RequestParam(value="time", required=false) String time,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.portal(lang, time);    
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;        
+    }
+    
+    
     @RequestMapping(value="bulkIdentifier", produces = "text/plain; charset=utf-8")
     public @ResponseBody String bulkIdentifier(                      
             @RequestParam(value="channelNames", required=false) String ytUsers,

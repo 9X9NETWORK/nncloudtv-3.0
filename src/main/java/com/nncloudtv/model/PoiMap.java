@@ -8,6 +8,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+//to be removed
 @PersistenceCapable(table="poi_map", detachable = "true")
 public class PoiMap implements Serializable {
 

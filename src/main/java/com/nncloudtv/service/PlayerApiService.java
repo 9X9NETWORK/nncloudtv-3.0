@@ -138,9 +138,7 @@ public class PlayerApiService {
         if (raw != null && raw.length > 0) {
             result = result + separatorStr;
             for (String s : raw) {
-                if (s == null) {
-                    System.out.println("not possible here ba???");
-                } else {
+                if (s != null) {
                     s = s.replaceAll("null", "");
                 }
                 result += s + separatorStr;
@@ -601,10 +599,11 @@ public class PlayerApiService {
         }
         */
         TagManager tagMngr = new TagManager();
+        SysTagManager systagMngr = new SysTagManager();
         if (tagStr != null) {
             channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
-            channels = displayMngr.findChannelsById(cat.getId());
+            channels = systagMngr.findPlayerChannelsById(cat.getId());
         }
         String result[] = {"", "", ""};
         //category info        
@@ -2023,6 +2022,9 @@ public class PlayerApiService {
     private String assembleSections(List<String> data) {
         String output = "";
         for (String d : data) {
+            if (d != null) {
+               d = d.replaceAll("null", "");
+            }            
             output += d + "----\n";
         }
         return output;                
@@ -2335,6 +2337,46 @@ public class PlayerApiService {
         }
         return adjust;
         
+    }
+    
+    public String portal(String lang, String time) {
+        String result[] = {"", "", ""};        
+        lang = this.checkLang(lang);    
+        if (lang == null)
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        
+        //1: list of sets, including dayparting 
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        SysTagManager systagMngr = new SysTagManager();
+        List<SysTagDisplay> sets = displayMngr.findRecommendedSets(lang, mso.getId());
+        short baseTime = Short.valueOf(time);
+        List<SysTagDisplay> dayparting = displayMngr.findDayparting(baseTime, mso.getId());
+        sets.addAll(dayparting);
+        String setStr = "";
+        for (SysTagDisplay set : sets) {
+            String[] obj = {
+                String.valueOf(set.getId()),
+                set.getName(),
+                "", //description
+                set.getImageUrl(),
+                String.valueOf(set.getCntChannel()),
+            };
+            setStr += NnStringUtil.getDelimitedStr(obj) + "\n";          
+        }        
+        result[0] = setStr;
+        //2: list of channel's channelInfo of the first set
+        String channelStr = "";
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        if (sets.size() > 0) {
+            channels.addAll(systagMngr.findPlayerChannelsById(sets.get(0).getSystagId()));
+            channelStr = chMngr.composeReducedChannelLineup(channels);
+        }
+        result[1] = channelStr;
+        //3. list of the latest episode of each channel of the first set
+        NnProgramManager programMngr = new NnProgramManager();
+        String programStr = programMngr.findLatestProgramInfoByChannels(channels);
+        result[2] = programStr;
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
     public String frontpage(String time, String stack, String user) {
@@ -2671,7 +2713,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
 
-    public String setInfo(String id, String name, Mso mso) {
+    public String setInfo(String id, String name) {
         PlayerApiService api = new PlayerApiService();
         if (id == null && name == null) {
             return api.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
@@ -2683,6 +2725,7 @@ public class PlayerApiService {
         
         //NnSetManager setMngr = new NnSetManager();
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        SysTagManager systagMngr = new SysTagManager();
         SysTagDisplay set = null;
         if (id != null) {
             set = displayMngr.findById(Long.parseLong(id));
@@ -2692,7 +2735,7 @@ public class PlayerApiService {
         if (set == null)
             return api.assembleMsgs(NnStatusCode.SET_INVALID, null);            
         
-        List<NnChannel> channels = displayMngr.findChannelsById(set.getId());
+        List<NnChannel> channels = systagMngr.findPlayerChannelsById(set.getSystagId());
         String result[] = {"", "", ""};
 
         //mso info
@@ -2703,7 +2746,6 @@ public class PlayerApiService {
         result[1] += PlayerApiService.assembleKeyValue("id", String.valueOf(set.getId()));
         result[1] += PlayerApiService.assembleKeyValue("name", set.getName());
         result[1] += PlayerApiService.assembleKeyValue("imageUrl", set.getImageUrl());
-        result[1] += PlayerApiService.assembleKeyValue("piwik", "");
         //channel info
         for (NnChannel c : channels) {
             if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic())

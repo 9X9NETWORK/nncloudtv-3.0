@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDao;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
 
 @Service
@@ -16,6 +17,10 @@ public class SysTagManager {
     protected static final Logger log = Logger.getLogger(SysTagManager.class.getName());
     
     private SysTagDao dao = new SysTagDao();
+
+    public SysTag findById(long id) {
+        return dao.findById(id);
+    }
     
     public SysTag save(SysTag sysTag) {
         
@@ -65,6 +70,12 @@ public class SysTagManager {
     /** call when Mso is going to delete **/
     public void deleteByMsoId(Long msoId) {
         // delete sysTags, sysTagDisplays, sysTagMaps
+    }
+
+    //player channels means status=true and isPublic=true    
+    public List<NnChannel> findPlayerChannelsById(long id) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id);
+        return channels;
     }
     
 }

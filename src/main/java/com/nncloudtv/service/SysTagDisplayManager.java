@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDisplayDao;
-import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTagDisplay;
 
 @Service
@@ -22,9 +21,17 @@ public class SysTagDisplayManager {
     }
 
     public List<SysTagDisplay> findRecommendedSets(String lang, long msoId) {
-        return dao.findRecommendedSets(lang, msoId);
+        List<SysTagDisplay> sets = dao.findRecommendedSets(lang, msoId);
+        log.info("recommended size:" + sets.size());        
+        return sets;
     }
-    
+
+    public List<SysTagDisplay> findDayparting(short baseTime, long msoId) {
+        List<SysTagDisplay> sets = dao.findDayparting(baseTime, msoId);
+        log.info("dayparting size:" + sets.size());
+        return sets;
+    } 
+        
     public SysTagDisplay findById(long id) {
         return dao.findById(id);
     }
@@ -39,12 +46,7 @@ public class SysTagDisplayManager {
     public SysTagDisplay findByName(String name, long msoId) {
         return dao.findByName(name);
     }
-    
-    public List<NnChannel> findChannelsById(long displayId) {
-        List<NnChannel> channels = dao.findChannelsById(displayId);
-        return channels;
-    }
-    
+        
     public SysTagDisplay save(SysTagDisplay sysTagDisplay) {
         
         if (sysTagDisplay == null) {

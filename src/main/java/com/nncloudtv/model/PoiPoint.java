@@ -13,21 +13,25 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(table="poi_point", detachable="true")
 public class PoiPoint implements Serializable {
     private static final long serialVersionUID = 7003434361311530790L;
-
+    
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
     
     @Persistent
-    private long programId;
+    private short type;
+    public static final short TYPE_SYS = 1;    
+    public static final short TYPE_MSO = 2;
+    public static final short TYPE_CHANNEL = 3;
+    public static final short TYPE_EPISODE = 4;
+    public static final short TYPE_SUBEPISODE = 5;
 
+    @Persistent
+    private long targetId;
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String name;
-
-    @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String intro;
 
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
@@ -36,11 +40,14 @@ public class PoiPoint implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String endTime;
-
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=500)
     private String tag;
 
+    @Persistent
+    private boolean active;
+    
     @Persistent
     private Date createDate;
         
@@ -55,14 +62,6 @@ public class PoiPoint implements Serializable {
         this.id = id;
     }
 
-    public long getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(long programId) {
-        this.programId = programId;
-    }
-
     public String getName() {
         return name;
     }
@@ -71,13 +70,13 @@ public class PoiPoint implements Serializable {
         this.name = name;
     }
 
-    public String getIntro() {
-        return intro;
-    }
-
-    public void setIntro(String intro) {
-        this.intro = intro;
-    }
+//    public String getIntro() {
+//        return intro;
+//    }
+//
+//    public void setIntro(String intro) {
+//        this.intro = intro;
+//    }
 
     public String getStartTime() {
         return startTime;
@@ -153,6 +152,30 @@ public class PoiPoint implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
+    }
+
+    public long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(long targetId) {
+        this.targetId = targetId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
 }

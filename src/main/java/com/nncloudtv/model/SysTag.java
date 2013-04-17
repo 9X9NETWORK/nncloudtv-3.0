@@ -3,6 +3,7 @@ package com.nncloudtv.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -30,7 +31,23 @@ public class SysTag implements Serializable {
     private short seq;
     
     @Persistent
-    private boolean featured;
+    private boolean featured; //for set
+
+    @Persistent
+    private short timeStart; //for dayparting
+
+    @Persistent
+    private short timeEnd; //for dayparting
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=10)    
+    private String attr;
+    public static final short ATTR_APP_STACK = 0;
+    public static final short ATTR_APP_SUBSCRIPTION = 1;
+    public static final short ATTR_APP_ACCOUNT = 2;
+    public static final short ATTR_APP_CHANNEL = 3;
+    public static final short ATTR_APP_DIR = 4;
+    public static final short ATTR_APP_SEARCH = 5;
     
     @Persistent 
     private Date createDate;
@@ -92,6 +109,30 @@ public class SysTag implements Serializable {
 
     public void setFeatured(boolean featured) {
         this.featured = featured;
+    }
+
+    public short getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(short timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public short getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(short timeEnd) {
+        this.timeEnd = timeEnd;
+    }
+
+    public String getAttr() {
+        return attr;
+    }
+
+    public void setAttr(String attr) {
+        this.attr = attr;
     }
     
 }
