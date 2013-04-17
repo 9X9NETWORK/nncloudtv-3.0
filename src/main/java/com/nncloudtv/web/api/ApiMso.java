@@ -438,8 +438,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        sysTagMap.setTimeStart(timeStart);
-        sysTagMap.setTimeEnd(timeEnd);
+        //sysTagMap.setTimeStart(timeStart);
+        //sysTagMap.setTimeEnd(timeEnd);
         
         sysTagMapManager.save(sysTagMap);
         
