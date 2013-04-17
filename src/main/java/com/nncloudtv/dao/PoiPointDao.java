@@ -24,7 +24,7 @@ public class PoiPointDao extends GenericDao<PoiPoint> {
         try {
             String sql = "select * " +
                            "from poi_point " +
-                         " where programId in (select id from Poi where channelId=" + channelId + ")" +
+                         " where targetId in (select id from poi_point where channelId=" + channelId + ")" +
                          " order by startTime" ; 
                         
             log.info("sql:" + sql);
@@ -46,8 +46,8 @@ public class PoiPointDao extends GenericDao<PoiPoint> {
         List<PoiPoint> results = new ArrayList<PoiPoint>();
         try {
             Query query = pm.newQuery(PoiPoint.class);
-            query.setFilter("programId == programIdParam");
-            query.declareParameters("long programIdParam");
+            query.setFilter("targetId == targetIdParam");
+            query.declareParameters("long targetIdParam");
             //query.setOrdering("startTime asc");
             @SuppressWarnings("unchecked")
             List<PoiPoint> pois = (List<PoiPoint>) query.execute(programId);
