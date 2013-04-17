@@ -171,8 +171,8 @@ public class SysTagMapManager {
         for (SysTagMap item : sysTagMaps) {
             result = channelMap.get(item.getChannelId());
             if (result != null) {
-                result.setTimeStart(item.getTimeStart());
-                result.setTimeEnd(item.getTimeEnd());
+                //result.setTimeStart(item.getTimeStart());
+                //result.setTimeEnd(item.getTimeEnd());
                 result.setSeq(item.getSeq());
                 results.add(result);
             }
