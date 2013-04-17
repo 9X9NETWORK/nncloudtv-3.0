@@ -54,7 +54,7 @@ public class ApiMso extends ApiGeneric {
         this.sysTagMapMngr = sysTagMapMngr;
     }
     
-    @RequestMapping(value = "msos/{msoId}/sets", method = RequestMethod.GET)
+    @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.GET)
     public @ResponseBody
     List<Map<String, Object>> msoSets(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
@@ -95,7 +95,7 @@ public class ApiMso extends ApiGeneric {
         return results;
     }
     
-    @RequestMapping(value = "msos/{msoId}/sets", method = RequestMethod.POST)
+    @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, Object> msoSetCreate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
@@ -580,7 +580,7 @@ public class ApiMso extends ApiGeneric {
         return null;
     }
     
-    @RequestMapping(value = "msos/{msoId}/store", method = RequestMethod.GET)
+    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.GET)
     public @ResponseBody
     List<NnChannel> storeChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
@@ -648,7 +648,7 @@ public class ApiMso extends ApiGeneric {
         return results;
     }
     
-    @RequestMapping(value = "msos/{msoId}/store", method = RequestMethod.POST)
+    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.POST)
     public @ResponseBody
     String storeChannelAdd(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
@@ -696,7 +696,7 @@ public class ApiMso extends ApiGeneric {
         return null;
     }
     
-    @RequestMapping(value = "msos/{msoId}/store", method = RequestMethod.DELETE)
+    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.DELETE)
     public @ResponseBody
     String storeChannelRemove(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
@@ -742,6 +742,80 @@ public class ApiMso extends ApiGeneric {
         
         okResponse(resp);
         return null;
+    }
+    
+    @RequestMapping(value = "mso/{msoId}", method = RequestMethod.GET)
+    public @ResponseBody
+    Mso mso(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
+        
+        Long msoId = null;
+        try {
+            msoId = Long.valueOf(msoIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (msoId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        Mso result = mso;
+        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
+        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
+        
+        return result;
+    }
+    
+    @RequestMapping(value = "mso/{msoId}", method = RequestMethod.PUT)
+    public @ResponseBody
+    Mso msoUpdate(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
+        
+        Long msoId = null;
+        try {
+            msoId = Long.valueOf(msoIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (msoId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        // title
+        String title = req.getParameter("title");
+        if (title != null) {
+            title = NnStringUtil.htmlSafeAndTruncated(title);
+            mso.setTitle(title);
+        }
+        
+        // logoUrl
+        String logoUrl = req.getParameter("logoUrl");
+        if (logoUrl != null) {
+            mso.setLogoUrl(logoUrl);
+        }
+        
+        Mso result = null;
+        if (title != null || logoUrl != null) {
+            result = msoMngr.save(mso);
+        } else {
+            result = mso;
+        }
+        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
+        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
+        
+        return result;
     }
 
 }
