@@ -11,12 +11,12 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.dao.PoiMapDao;
+import com.nncloudtv.dao.PoiDao;
 import com.nncloudtv.dao.PoiPointDao;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.PoiEvent;
-import com.nncloudtv.model.PoiMap;
+import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiPoint;
 
 @Service
@@ -24,7 +24,7 @@ public class PoiPointManager {
     protected static final Logger log = Logger.getLogger(PoiPointManager.class.getName());
     
     private PoiPointDao dao = new PoiPointDao();
-    private PoiMapDao poiMapDao = new PoiMapDao();
+    private PoiDao poiDao = new PoiDao();
     private PoiEventManager poiEventMngr = new  PoiEventManager();
     
     public PoiPoint create(PoiPoint poi) {
@@ -46,41 +46,41 @@ public class PoiPointManager {
         if (poi == null) {
             return ;
         }
-        List<PoiMap> poiMaps = poiMapDao.findByPoiId(poi.getId());
+        List<Poi> pois = poiDao.findByPointId(poi.getId());
         List<Long> eventIds = new ArrayList<Long>();
-        for (PoiMap poiMap : poiMaps) {
-            eventIds.add(poiMap.getEventId());
+        for (Poi p : pois) {
+            eventIds.add(p.getEventId());
         }
         poiEventMngr.deleteByIds(eventIds);
-        poiMapDao.deleteAll(poiMaps);
+        poiDao.deleteAll(pois);
         dao.delete(poi);
     }
     
     public void delete(List<PoiPoint> pois) {
-        List<PoiMap> poiMaps = new ArrayList<PoiMap>();
-        List<PoiMap> temps;
+        List<Poi> poiMaps = new ArrayList<Poi>();
+        List<Poi> temps;
         List<Long> eventIds = new ArrayList<Long>();
         for (PoiPoint poi : pois) {
-            temps = poiMapDao.findByPoiId(poi.getId()); //TODO: computing issue, try to reduce mysql queries
-            for (PoiMap temp : temps) {
+            temps = poiDao.findByPointId(poi.getId()); //TODO: computing issue, try to reduce mysql queries
+            for (Poi temp : temps) {
                 eventIds.add(temp.getEventId());
             }
             poiMaps.addAll(temps);
         }
         poiEventMngr.deleteByIds(eventIds);
-        poiMapDao.deleteAll(poiMaps);
+        poiDao.deleteAll(poiMaps);
         dao.deleteAll(pois);
     }
     
-    public boolean hookEvent(long poiId, long eventId) {
-        PoiMap poiMap = new PoiMap();
+    public boolean hookEvent(long pointId, long eventId) {
+        Poi poi = new Poi();
         Date now = new Date();
-        poiMap.setPoiId(poiId);
-        poiMap.setEventId(eventId);
-        poiMap.setUpdateDate(now);
-        poiMap = poiMapDao.save(poiMap);
+        poi.setPointId(pointId);
+        poi.setEventId(eventId);
+        poi.setUpdateDate(now);
+        poi = poiDao.save(poi);
         
-        if (poiMap != null) {
+        if (poi != null) {
             return true;
         } else {
             return false;
