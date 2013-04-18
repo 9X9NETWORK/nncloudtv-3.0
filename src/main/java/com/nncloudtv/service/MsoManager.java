@@ -40,9 +40,13 @@ public class MsoManager {
     
     // only 9x9 mso will be stored in cache
     public Mso save(Mso mso) {
-        if (this.findByName(mso.getName()) != null) { 
+        
+        // avoid save mso which name is duplicate with other, except itself
+        Mso origin = this.findByName(mso.getName());
+        if (origin != null && origin.getId() != mso.getId()) { 
             return null;
         }
+        
         Date now = new Date();        
         if (mso.getCreateDate() == null)
             mso.setCreateDate(now);
