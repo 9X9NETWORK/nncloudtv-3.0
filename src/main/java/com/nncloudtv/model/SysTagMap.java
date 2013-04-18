@@ -32,6 +32,9 @@ public class SysTagMap implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=10)    
     private String attr;
+
+    @Persistent
+    private boolean alwaysOnTop;
     
     @Persistent
     private short seq;
@@ -112,6 +115,14 @@ public class SysTagMap implements Serializable {
 
     public void setAttr(String attr) {
         this.attr = attr;
+    }
+
+    public boolean isAlwaysOnTop() {
+        return alwaysOnTop;
+    }
+
+    public void setAlwaysOnTop(boolean alwaysOnTop) {
+        this.alwaysOnTop = alwaysOnTop;
     } 
     
 }

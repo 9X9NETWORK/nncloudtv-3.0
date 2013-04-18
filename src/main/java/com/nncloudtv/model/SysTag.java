@@ -26,6 +26,11 @@ public class SysTag implements Serializable {
     public static final short TYPE_SET = 2;
     public static final short TYPE_DAYPARTING = 3;
     public static final short TYPE_STATIC = 4;
+
+    @Persistent
+    private short sorting;
+    public static final short SORT_SEQ = 1; //default
+    public static final short SORT_DATE = 2;
     
     @Persistent
     private short seq;
@@ -133,6 +138,14 @@ public class SysTag implements Serializable {
 
     public void setAttr(String attr) {
         this.attr = attr;
+    }
+
+    public short getSorting() {
+        return sorting;
+    }
+
+    public void setSorting(short sorting) {
+        this.sorting = sorting;
     }
     
 }

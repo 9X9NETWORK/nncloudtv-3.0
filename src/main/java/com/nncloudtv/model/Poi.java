@@ -3,47 +3,39 @@ package com.nncloudtv.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-/**
- * Created by advertiser.
- * Group a list of Poi entries together.
- */ 
-@PersistenceCapable(table="poi_comppaign", detachable = "true")
-public class PoiCompaign implements Serializable {
-
-    private static final long serialVersionUID = 6927686145119450135L;
+@PersistenceCapable(table="poi", detachable = "true")
+public class Poi implements Serializable {
+    private static final long serialVersionUID = 6052050995813073585L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long id;
-
-    @Persistent
-    private long userId; //will change to profileId 
-
-    @Persistent
-    private long msoId; //will change to profileId
     
     @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String name;
-    
+    private long campaignId;
+
+    @Persistent
+    private long eventId;
+
+    @Persistent
+    private long pointId;
+
     @Persistent
     private Date startDate;
-
+        
     @Persistent
     private Date endDate;
 
     @Persistent
-    private Date createDate;
+    private String hoursOfWeek;
     
     @Persistent
     private Date updateDate;
-
 
     public long getId() {
         return id;
@@ -53,28 +45,28 @@ public class PoiCompaign implements Serializable {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getCampaignId() {
+        return campaignId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setCampaignId(long campaignId) {
+        this.campaignId = campaignId;
     }
 
-    public long getMsoId() {
-        return msoId;
+    public long getEventId() {
+        return eventId;
     }
 
-    public void setMsoId(long msoId) {
-        this.msoId = msoId;
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
-    public String getName() {
-        return name;
+    public long getPointId() {
+        return pointId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPointId(long pointId) {
+        this.pointId = pointId;
     }
 
     public Date getStartDate() {
@@ -93,12 +85,12 @@ public class PoiCompaign implements Serializable {
         this.endDate = endDate;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getHoursOfWeek() {
+        return hoursOfWeek;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setHoursOfWeek(String hoursOfWeek) {
+        this.hoursOfWeek = hoursOfWeek;
     }
 
     public Date getUpdateDate() {
@@ -107,6 +99,6 @@ public class PoiCompaign implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
-    }
-    
+    }    
+     
 }

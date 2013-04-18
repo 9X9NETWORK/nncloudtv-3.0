@@ -9,7 +9,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-//creative
+/** 
+ * It's created by advertiser.
+ * PoiEvent describe the appearance, and actions. 
+ * After associating with PoiPoint by Poi, then the PoiEvent is ready to be shown 
+ */
 @PersistenceCapable(table="poi_event", detachable="true")
 public class PoiEvent implements Serializable {
     private static final long serialVersionUID = -1261189136283925861L;
@@ -40,9 +44,18 @@ public class PoiEvent implements Serializable {
     private short type;
     public static final short TYPE_HYPERCHANNEL = 1;
 
+    //json format, example
+    /**
+     * {
+     *message: "更多壹傳媒內幕,盡在'媒體停看聽'",
+     *button: [
+     *          {text: "了解更多", actionUrl: "http://www.9x9.tv/view?ch=1380&ep=6789"}
+     *        ]
+     *} 
+     */
     @Persistent
     @Column(jdbcType="VARCHAR", length=2000)
-    private String context;
+    private String context;    
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
