@@ -857,10 +857,11 @@ public class NnChannelManager {
         String name = c.getPlayerName() == null ? "" : c.getPlayerName();
         String[] split = name.split("\\|");
         name = split.length == 2 ? split[0] : name;
-        String lastEpisodeTitle = split.length == 2 ? split[1] : "";
+        //String lastEpisodeTitle = split.length == 2 ? split[1] : "";
         
         //image url, favorite channel image will be overwritten later
         String imageUrl = c.getPlayerPrefImageUrl();
+        /*
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED ||
@@ -891,8 +892,9 @@ public class NnChannelManager {
                 }
             }
         }
-
+        */
         //curator info
+        /*
         NnUserManager userMngr = new NnUserManager();
         NnUser u = userMngr.findByIdStr(c.getUserIdStr(), 1);
         String userName = "";
@@ -911,8 +913,9 @@ public class NnChannelManager {
                 imageUrl = userImageUrl;
             }
         }
-
+        */
         //3 subscribers info
+        /*
         String subscribersIdStr = c.getSubscribersIdStr();
         String subscriberProfile = "";
         String subscriberImage = "";
@@ -933,7 +936,7 @@ public class NnChannelManager {
                 subscriberImage = subscriberImage.replaceFirst("\\|", "");
             }
         }
-
+        /*
         /*
         String id = Long.toString(c.getId());
         if (c.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
@@ -961,13 +964,13 @@ public class NnChannelManager {
                         String.valueOf(c.getCntSubscribe()), //cnt subscribe, replace
                         String.valueOf(c.getCntView()),
                         c.getTag(),
-                        curatorProfile, //curator id
-                        userName,
-                        userIntro,
-                        userImageUrl,
-                        subscriberProfile, //used to be subscriber profile urls, will be removed
-                        subscriberImage, //used to be subscriber image urls
-                        lastEpisodeTitle,
+                        "", //ciratorProfile, curator id
+                        "", //userName
+                        "", //userIntro
+                        "", //userImageUrl
+                        "", //subscriberProfile, used to be subscriber profile urls, will be removed
+                        "", //subscriberImage, used to be subscriber image urls
+                        "", //lastEpisodeTitle
                        };
         String output = NnStringUtil.getDelimitedStr(ori);
         output = output.replaceAll("null", "");

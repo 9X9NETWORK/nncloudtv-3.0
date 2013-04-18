@@ -2369,7 +2369,8 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (sets.size() > 0) {
             channels.addAll(systagMngr.findPlayerChannelsById(sets.get(0).getSystagId()));
-            channelStr = chMngr.composeReducedChannelLineup(channels);
+            channelStr = chMngr.composeChannelLineup(channels);
+            //channelStr = chMngr.composeReducedChannelLineup(channels);
         }
         result[1] = channelStr;
         //3. list of the latest episode of each channel of the first set
