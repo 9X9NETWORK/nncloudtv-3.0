@@ -31,26 +31,26 @@ public class StoreListingManager {
     }
     
     /** return channels that have channelIds whom are in the mso store */
-    public List<NnChannel> findByChannelIdsAndMsoId(List<Long> channelIds, Long msoId) {
+    public List<Long> findByChannelIdsAndMsoId(List<Long> channelIds, Long msoId) {
         
         if (channelIds == null || channelIds.size() == 0 || msoId == null) {
-            return new ArrayList<NnChannel>();
+            return new ArrayList<Long>();
         }
         
-        List<NnChannel> storeMso = findByMsoId(msoId);
-        if (storeMso == null || storeMso.size() == 0) {
-            return new ArrayList<NnChannel>();
+        List<Long> storeMsoIds = findByMsoId(msoId);
+        if (storeMsoIds == null || storeMsoIds.size() == 0) {
+            return new ArrayList<Long>();
         }
         
-        Map<Long, NnChannel> storeMsoMap = new TreeMap<Long, NnChannel>();
-        for (NnChannel channel : storeMso) {
-            storeMsoMap.put(channel.getId(), channel);
+        Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
+        for (Long channelId : storeMsoIds) {
+            storeMsoMap.put(channelId, channelId);
         }
         
-        List<NnChannel> results = new ArrayList<NnChannel>();
+        List<Long> results = new ArrayList<Long>();
         for (Long channelId : channelIds) {
             if (storeMsoMap.containsKey(channelId)) {
-                results.add(storeMsoMap.get(channelId));
+                results.add(channelId);
             }
         }
         
@@ -192,39 +192,42 @@ public class StoreListingManager {
     }
     
     /** mso store = 9x9 store - blackList */
-    public List<NnChannel> findByMsoId(Long msoId) {
+    public List<Long> findByMsoId(Long msoId) {
         
         if (msoId == null) {
-            return new ArrayList<NnChannel>();
+            return new ArrayList<Long>();
         }
         List<StoreListing> blackList = dao.findByMsoId(msoId);
         
         List<NnChannel> store9x9 = sysTagMngr.findPlayerChannelsById(1); // input the sysTagId to find the whole 9x9 store's channels
-        if (store9x9 == null || store9x9.size() == 0) {
-            return new ArrayList<NnChannel>();
-        }
-        if (blackList == null || blackList.size() == 0){
-            return store9x9;
+        Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
+        List<Long> store9x9Ids = new ArrayList<Long>();
+        for (NnChannel channel : store9x9) {
+            storeMsoMap.put(channel.getId(), channel.getId());
+            store9x9Ids.add(channel.getId());
         }
         
-        Map<Long, NnChannel> storeMsoMap = new TreeMap<Long, NnChannel>();
-        for (NnChannel channel : store9x9) {
-            storeMsoMap.put(channel.getId(), channel);
+        if (store9x9 == null || store9x9.size() == 0) {
+            return new ArrayList<Long>();
         }
+        if (blackList == null || blackList.size() == 0){
+            return store9x9Ids;
+        }
+        
         for (StoreListing item : blackList) {
             if (storeMsoMap.containsKey(item.getChannelId())) {
                 storeMsoMap.remove(item.getChannelId());
             }
         }
         
-        Collection<NnChannel> storeMso = storeMsoMap.values();
+        Collection<Long> storeMso = storeMsoMap.values();
         if (storeMso.size() == 0) {
-            return new ArrayList<NnChannel>();
+            return new ArrayList<Long>();
         }
-        NnChannel[] channels = storeMso.toArray(new NnChannel[storeMso.size()]);
-        List<NnChannel> results = new ArrayList<NnChannel>();
-        for (NnChannel channel : channels) {
-            results.add(channel);
+        Long[] channelIds = storeMso.toArray(new Long[storeMso.size()]);
+        List<Long> results = new ArrayList<Long>();
+        for (Long channelId : channelIds) {
+            results.add(channelId);
         }
         
         return results;

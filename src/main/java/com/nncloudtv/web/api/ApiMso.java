@@ -619,7 +619,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.GET)
     public @ResponseBody
-    List<NnChannel> storeChannels(HttpServletRequest req,
+    List<Long> storeChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
         Long msoId = null;
@@ -655,7 +655,7 @@ public class ApiMso extends ApiGeneric {
         }
         */
         
-        List<NnChannel> results = null;
+        List<Long> results = null;
         if (channelIdsStr != null) { // find by channelIdList
             
             String[] channelIdStrList = channelIdsStr.split(",");
@@ -679,7 +679,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         if (results == null) {
-            return new ArrayList<NnChannel>();
+            return new ArrayList<Long>();
         }
         
         return results;
