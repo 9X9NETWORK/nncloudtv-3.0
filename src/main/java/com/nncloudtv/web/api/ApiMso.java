@@ -425,6 +425,10 @@ public class ApiMso extends ApiGeneric {
         SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channel.getId());
         if (sysTagMap == null) {
             sysTagMap = new SysTagMap(set.getId(), channel.getId());
+            sysTagMap.setSeq((short) 0);
+            sysTagMap.setTimeStart((short) 0);
+            sysTagMap.setTimeEnd((short) 0);
+            sysTagMap.setAlwaysOnTop(false);
         }
         
         // timeStart

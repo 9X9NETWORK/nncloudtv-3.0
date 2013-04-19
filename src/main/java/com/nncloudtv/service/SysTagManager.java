@@ -22,6 +22,7 @@ public class SysTagManager {
     protected static final Logger log = Logger.getLogger(SysTagManager.class.getName());
     
     private SysTagDao dao = new SysTagDao();
+    private SysTagMapDao mapDao = new SysTagMapDao();
 
     public SysTag findById(long id) {
         return dao.findById(id);
@@ -84,8 +85,6 @@ public class SysTagManager {
     }
 
     public void setupChannelCategory(Long categoryId, Long channelId) {
-
-        SysTagMapDao mapDao = new SysTagMapDao();
         
         List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId);
         mapDao.deleteAll(tagMaps);
@@ -116,9 +115,7 @@ public class SysTagManager {
     }
 
     public List<SysTag> findCategoriesByChannelId(long channelId) {
-    
-        SysTagDao tagDao = new SysTagDao();
-        return tagDao.findCategoriesByChannelId(channelId);
+        return dao.findCategoriesByChannelId(channelId);
     }
     
     public boolean isValidSortingType(Short sortingType) {
