@@ -81,11 +81,6 @@ public class SysTagDao extends GenericDao<SysTag> {
     
     public List<SysTag> findCategoriesByChannelId(long channelId) {
     
-        String sql = " select * from systag as tag" +
-                     "               inner join systag_map as map on tag.id = map.systagId " +
-                     " where map.channelId = " + channelId +
-                     "       and tag.type = 1";
-        
-        return sql(sql);
+        return sql("select * from systag where type = 1 and id in (select sysTagId from systag_map where channelId = " + channelId + ")");
     }
 }

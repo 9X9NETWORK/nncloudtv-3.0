@@ -115,6 +115,7 @@ public class SysTagManager {
     }
 
     public List<SysTag> findCategoriesByChannelId(long channelId) {
+    
         return dao.findCategoriesByChannelId(channelId);
     }
     
