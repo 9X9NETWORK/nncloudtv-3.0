@@ -211,5 +211,24 @@ public class GenericDao<T> {
         }
         return results;
     }
-
+    
+    public List<T> sql(String sql) {
+        
+        List<T> detached = new ArrayList<T>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
+        try {
+            log.info("sql: " + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(daoClass);
+            @SuppressWarnings("unchecked")
+            List<T> results = (List<T>) query.execute();
+            detached = (List<T>) pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        }
+        
+        return detached;
+    }
+    
 }

@@ -10,7 +10,6 @@ import javax.jdo.Query;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
-import com.nncloudtv.model.SysTagMap;
 
 public class SysTagDao extends GenericDao<SysTag> {
 
@@ -82,24 +81,11 @@ public class SysTagDao extends GenericDao<SysTag> {
     
     public List<SysTag> findCategoriesByChannelId(long channelId) {
     
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<SysTag> detached = new ArrayList<SysTag>();
+        String sql = " select * from systag as tag" +
+                     "               inner join systag_map as map on tag.id = map.systagId " +
+                     " where map.channelId = " + channelId +
+                     "       and tag.type = 1";
         
-        try {
-            String sql = " select * from systag as tag" +
-                         "               inner join systag_map as map on tag.id = map.systagId " +
-                         " where map.channelId = " + channelId +
-                         "       and tag.type = 1";
-            log.info("sql:" + sql);
-            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-            q.setClass(SysTagMap.class);
-            @SuppressWarnings("unchecked")
-            List<SysTag> results = (List<SysTag>) q.execute();            
-            detached = (List<SysTag>) pm.detachCopyAll(results);
-        } finally {
-            pm.close();
-        }
-        
-        return detached;
+        return sql(sql);
     }
 }

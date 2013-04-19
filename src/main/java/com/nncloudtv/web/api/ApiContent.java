@@ -981,12 +981,13 @@ public class ApiContent extends ApiGeneric {
         }
         
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
-        SysTagDisplay tagDisplay = displayMngr.findBySysTagId(categoryId);
+        SysTagDisplay tagDisplay = displayMngr.findBySysTagIdAndLang(categoryId, lang);
         
-        if (tagDisplay == null || tagDisplay.getPopularTag().length() == 0) {
+        String tagStr = tagDisplay.getPopularTag();
+        if (tagDisplay == null || tagStr == null || tagStr.length() == 0) {
             return new String[0];
         }
-        return tagDisplay.getPopularTag().split(",");
+        return tagStr.split(",");
     }
     
     @RequestMapping(value = "categories", method = RequestMethod.GET)

@@ -37,6 +37,13 @@ public class SysTagDisplayManager {
         return dao.findById(id);
     }
     
+    public SysTagDisplay findBySysTagIdAndLang(Long sysTagId, String lang) {
+        if (sysTagId == null) {
+            return null;
+        }
+        return dao.findBySysTagIdAndLang(sysTagId, lang);
+    }
+    
     public SysTagDisplay findBySysTagId(Long sysTagId) {
         if (sysTagId == null) {
             return null;
