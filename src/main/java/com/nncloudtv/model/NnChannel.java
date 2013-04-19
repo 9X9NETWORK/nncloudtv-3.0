@@ -192,6 +192,9 @@ public class NnChannel implements Serializable {
     
     @NotPersistent
     private short timeEnd;
+    
+    @NotPersistent
+    private boolean alwaysOnTop;
 
     protected static final Logger log = Logger.getLogger(NnChannel.class.getName());    
 
@@ -619,5 +622,13 @@ public class NnChannel implements Serializable {
 
     public void setTimeEnd(short timeEnd) {
         this.timeEnd = timeEnd;
+    }
+
+    public boolean isAlwaysOnTop() {
+        return alwaysOnTop;
+    }
+
+    public void setAlwaysOnTop(boolean alwaysOnTop) {
+        this.alwaysOnTop = alwaysOnTop;
     }    
 }

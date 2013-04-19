@@ -174,6 +174,8 @@ public class SysTagMapManager {
                 //result.setTimeStart(item.getTimeStart());
                 //result.setTimeEnd(item.getTimeEnd());
                 result.setSeq(item.getSeq());
+                // TODO set alwaysOnTop
+                result.setAlwaysOnTop(false);
                 results.add(result);
             }
         }

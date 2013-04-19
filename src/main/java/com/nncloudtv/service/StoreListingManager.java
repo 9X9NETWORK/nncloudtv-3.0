@@ -1,8 +1,11 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +21,40 @@ public class StoreListingManager {
     protected static final Logger log = Logger.getLogger(StoreListingManager.class.getName());
     
     private StoreListingDao dao = new StoreListingDao();
+    private SysTagManager sysTagMngr;
     private NnChannelManager channelMngr;
     
     @Autowired
-    public StoreListingManager(NnChannelManager channelMngr) {
+    public StoreListingManager(SysTagManager sysTagMngr, NnChannelManager channelMngr) {
+        this.sysTagMngr = sysTagMngr;
         this.channelMngr = channelMngr;
     }
     
+    /** return channels that have channelIds whom are in the mso store */
     public List<NnChannel> findByChannelIdsAndMsoId(List<Long> channelIds, Long msoId) {
         
         if (channelIds == null || channelIds.size() == 0 || msoId == null) {
             return new ArrayList<NnChannel>();
         }
         
+        List<NnChannel> storeMso = findByMsoId(msoId);
+        if (storeMso == null || storeMso.size() == 0) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        Map<Long, NnChannel> storeMsoMap = new TreeMap<Long, NnChannel>();
+        for (NnChannel channel : storeMso) {
+            storeMsoMap.put(channel.getId(), channel);
+        }
+        
+        List<NnChannel> results = new ArrayList<NnChannel>();
+        for (Long channelId : channelIds) {
+            if (storeMsoMap.containsKey(channelId)) {
+                results.add(storeMsoMap.get(channelId));
+            }
+        }
+        
+        /*
         List<StoreListing> storeListing = dao.findByChannelIdsAndMsoId(channelIds, msoId);
         if ((storeListing == null) || (storeListing.size() == 0)) {
             return new ArrayList<NnChannel>();
@@ -44,6 +68,7 @@ public class StoreListingManager {
         if (results == null) {
             return new ArrayList<NnChannel>();
         }
+        */
         
         return results;
     }
@@ -164,6 +189,45 @@ public class StoreListingManager {
     /** call when Mso is going to delete **/
     public void deleteByMsoId(Long msoId) {
         
+    }
+    
+    /** mso store = 9x9 store - blackList */
+    public List<NnChannel> findByMsoId(Long msoId) {
+        
+        if (msoId == null) {
+            return new ArrayList<NnChannel>();
+        }
+        List<StoreListing> blackList = dao.findByMsoId(msoId);
+        
+        List<NnChannel> store9x9 = sysTagMngr.findPlayerChannelsById(1); // input the sysTagId to find the whole 9x9 store's channels
+        if (store9x9 == null || store9x9.size() == 0) {
+            return new ArrayList<NnChannel>();
+        }
+        if (blackList == null || blackList.size() == 0){
+            return store9x9;
+        }
+        
+        Map<Long, NnChannel> storeMsoMap = new TreeMap<Long, NnChannel>();
+        for (NnChannel channel : store9x9) {
+            storeMsoMap.put(channel.getId(), channel);
+        }
+        for (StoreListing item : blackList) {
+            if (storeMsoMap.containsKey(item.getChannelId())) {
+                storeMsoMap.remove(item.getChannelId());
+            }
+        }
+        
+        Collection<NnChannel> storeMso = storeMsoMap.values();
+        if (storeMso.size() == 0) {
+            return new ArrayList<NnChannel>();
+        }
+        NnChannel[] channels = storeMso.toArray(new NnChannel[storeMso.size()]);
+        List<NnChannel> results = new ArrayList<NnChannel>();
+        for (NnChannel channel : channels) {
+            results.add(channel);
+        }
+        
+        return results;
     }
 
 }

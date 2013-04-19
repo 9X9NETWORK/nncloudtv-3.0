@@ -153,10 +153,25 @@ public class ApiMso extends ApiGeneric {
             tag = TagManager.processTagText(tagText);
         }
         
+        // sortingType, default : 0, channels sort by seq 
+        Short sortingType = 0;
+        String sortingTypeStr = req.getParameter("sortingType");
+        if (sortingTypeStr != null) {
+            try {
+                sortingType = Short.valueOf(sortingTypeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (sortingType == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        }
+        
         SysTag newSet = new SysTag();
         newSet.setType(SysTag.TYPE_SET);
         newSet.setMsoId(msoId);
         newSet.setSeq(seq);
+        // TODO : set sortingType
         
         SysTagDisplay newSetMeta = new SysTagDisplay();
         newSetMeta.setCntChannel(0);
@@ -265,7 +280,22 @@ public class ApiMso extends ApiGeneric {
             setMeta.setPopularTag(tag);
         }
         
-        if (seqStr != null) {
+        // sortingType, default : 0, channels sort by seq 
+        Short sortingType = 0;
+        String sortingTypeStr = req.getParameter("sortingType");
+        if (sortingTypeStr != null) {
+            try {
+                sortingType = Short.valueOf(sortingTypeStr);
+            } catch (NumberFormatException e) {
+            }
+            if (sortingType == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            // TODO : set sortingType
+        }
+        
+        if (seqStr != null || sortingTypeStr != null) {
             set = sysTagMngr.save(set);
         }
         
@@ -398,6 +428,7 @@ public class ApiMso extends ApiGeneric {
             sysTagMap.setSysTagId(set.getId());
             sysTagMap.setChannelId(channel.getId());
             sysTagMap.setSeq((short) 0);
+            // TODO set default alwaysOnTop
         }
         
         // timeStart
@@ -443,6 +474,13 @@ public class ApiMso extends ApiGeneric {
         
         //sysTagMap.setTimeStart(timeStart);
         //sysTagMap.setTimeEnd(timeEnd);
+        
+        // alwaysOnTop
+        String alwaysOnTopStr = req.getParameter("alwaysOnTop");
+        if (alwaysOnTopStr != null) {
+            Boolean alwaysOnTop = Boolean.valueOf(alwaysOnTopStr);
+            // TODO set alwaysOnTop
+        }
         
         sysTagMapMngr.save(sysTagMap);
         
@@ -605,6 +643,7 @@ public class ApiMso extends ApiGeneric {
         String channelIdsStr = req.getParameter("channels");
         
         // paging
+        /*
         long page = 0, rows = 0;
         try {
             String pageStr = req.getParameter("page");
@@ -615,6 +654,7 @@ public class ApiMso extends ApiGeneric {
             }
         } catch (NumberFormatException e) {
         }
+        */
         
         List<NnChannel> results = null;
         if (channelIdsStr != null) { // find by channelIdList
@@ -635,10 +675,8 @@ public class ApiMso extends ApiGeneric {
             }
             results = storeListingMngr.findByChannelIdsAndMsoId(channelIdList, msoId);
             
-        } else if ((page > 0) && (rows > 0)) { // find by paging
-            results = storeListingMngr.findByPaging(page, rows, msoId);
-        } else { // default 50 items
-            results = storeListingMngr.findByPaging(1, 50, msoId);
+        } else {
+            results = storeListingMngr.findByMsoId(msoId);
         }
         
         if (results == null) {
