@@ -84,7 +84,7 @@ public class SysTagManager {
     }
 
     public void setupChannelCategory(Long categoryId, Long channelId) {
-    
+
         SysTagMapDao mapDao = new SysTagMapDao();
         
         List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId);
@@ -120,4 +120,20 @@ public class SysTagManager {
         SysTagDao tagDao = new SysTagDao();
         return tagDao.findCategoriesByChannelId(channelId);
     }
+    
+    public boolean isValidSortingType(Short sortingType) {
+        
+        if (sortingType == null) {
+            return false;
+        }
+        if (sortingType == SysTag.SORT_SEQ) {
+            return true;
+        }
+        if (sortingType == SysTag.SORT_DATE) {
+            return true;
+        }
+        
+        return false;
+    }
+    
 }

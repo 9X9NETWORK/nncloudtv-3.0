@@ -153,15 +153,15 @@ public class ApiMso extends ApiGeneric {
             tag = TagManager.processTagText(tagText);
         }
         
-        // sortingType, default : 0, channels sort by seq 
-        Short sortingType = 0;
+        // sortingType, default : 1, channels sort by seq 
+        Short sortingType = 1;
         String sortingTypeStr = req.getParameter("sortingType");
         if (sortingTypeStr != null) {
             try {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
             }
-            if (sortingType == null) {
+            if (sortingType == null || sysTagMngr.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -171,7 +171,7 @@ public class ApiMso extends ApiGeneric {
         newSet.setType(SysTag.TYPE_SET);
         newSet.setMsoId(msoId);
         newSet.setSeq(seq);
-        // TODO : set sortingType
+        newSet.setSorting(sortingType);
         
         SysTagDisplay newSetMeta = new SysTagDisplay();
         newSetMeta.setCntChannel(0);
@@ -280,19 +280,19 @@ public class ApiMso extends ApiGeneric {
             setMeta.setPopularTag(tag);
         }
         
-        // sortingType, default : 0, channels sort by seq 
-        Short sortingType = 0;
+        // sortingType
+        Short sortingType = null;
         String sortingTypeStr = req.getParameter("sortingType");
         if (sortingTypeStr != null) {
             try {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
             }
-            if (sortingType == null) {
+            if (sortingType == null || sysTagMngr.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-            // TODO : set sortingType
+            set.setSorting(sortingType);
         }
         
         if (seqStr != null || sortingTypeStr != null) {
@@ -425,7 +425,6 @@ public class ApiMso extends ApiGeneric {
         SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channel.getId());
         if (sysTagMap == null) {
             sysTagMap = new SysTagMap(set.getId(), channel.getId());
-            // TODO set default alwaysOnTop
         }
         
         // timeStart
@@ -457,26 +456,25 @@ public class ApiMso extends ApiGeneric {
         }
         
         if (timeStartStr == null && timeEndStr == null) {
-            timeStart = 0;
-            timeEnd = 0;
+            // as origin setting
         } else if (timeStartStr != null && timeEndStr != null) {
             if (timeStart == timeEnd) {
-                timeStart = 0;
-                timeEnd = 0;
+                sysTagMap.setTimeStart((short) 0);
+                sysTagMap.setTimeEnd((short) 0);
+            } else {
+                sysTagMap.setTimeStart(timeStart);
+                sysTagMap.setTimeEnd(timeEnd);
             }
         } else { // they should be pair
             badRequest(resp, MISSING_PARAMETER);
             return null;
         }
         
-        //sysTagMap.setTimeStart(timeStart);
-        //sysTagMap.setTimeEnd(timeEnd);
-        
         // alwaysOnTop
         String alwaysOnTopStr = req.getParameter("alwaysOnTop");
         if (alwaysOnTopStr != null) {
             Boolean alwaysOnTop = Boolean.valueOf(alwaysOnTopStr);
-            // TODO set alwaysOnTop
+            sysTagMap.setAlwaysOnTop(alwaysOnTop);
         }
         
         sysTagMapMngr.save(sysTagMap);
@@ -683,9 +681,9 @@ public class ApiMso extends ApiGeneric {
         return results;
     }
     
-    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.POST)
+    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.DELETE)
     public @ResponseBody
-    String storeChannelAdd(HttpServletRequest req,
+    String storeChannelRemove(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
         Long msoId = null;
@@ -731,9 +729,9 @@ public class ApiMso extends ApiGeneric {
         return null;
     }
     
-    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.DELETE)
+    @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.POST)
     public @ResponseBody
-    String storeChannelRemove(HttpServletRequest req,
+    String storeChannelAdd(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
         Long msoId = null;
