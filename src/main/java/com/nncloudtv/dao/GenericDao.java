@@ -75,7 +75,7 @@ public class GenericDao<T> {
     }
     
     public void deleteAll(List<T> list) {
-        if (list == null) return;
+        if (list == null || list.isEmpty()) return;
         
         PersistenceManager pm = PMF.get(list.getClass()).getPersistenceManager();
         Transaction tx = pm.currentTransaction();

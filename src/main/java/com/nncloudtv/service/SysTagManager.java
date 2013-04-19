@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -8,8 +9,12 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDao;
+import com.nncloudtv.dao.SysTagMapDao;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
+import com.nncloudtv.model.SysTagMap;
+import com.nncloudtv.web.json.cms.Category;
 
 @Service
 public class SysTagManager {
@@ -77,5 +82,42 @@ public class SysTagManager {
         List<NnChannel> channels = dao.findPlayerChannelsById(id);
         return channels;
     }
+
+    public void setupChannelCategory(Long categoryId, Long channelId) {
     
+        SysTagMapDao mapDao = new SysTagMapDao();
+        
+        List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId);
+        mapDao.deleteAll(tagMaps);
+        mapDao.save(new SysTagMap(categoryId, channelId));
+    }
+    
+    public Comparator<Category> getCategoryComparator(String field) {
+        
+        class CategorySeqComparator implements Comparator<Category> {
+            public int compare(Category category1, Category category2) {
+                int seq1 = category1.getSeq();
+                if (category1.getLang() != null
+                        && category1.getLang().equalsIgnoreCase(
+                                LangTable.LANG_EN)) {
+                    seq1 -= 100;
+                }
+                int seq2 = category2.getSeq();
+                if (category2.getLang() != null
+                        && category2.getLang().equalsIgnoreCase(
+                                LangTable.LANG_EN)) {
+                    seq2 -= 100;
+                }
+                return (seq1 - seq2);
+            }
+        }
+        
+        return new CategorySeqComparator();
+    }
+
+    public List<SysTag> findCategoriesByChannelId(long channelId) {
+    
+        SysTagDao tagDao = new SysTagDao();
+        return tagDao.findCategoriesByChannelId(channelId);
+    }
 }

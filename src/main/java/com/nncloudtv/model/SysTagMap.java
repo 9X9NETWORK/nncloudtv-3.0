@@ -45,6 +45,13 @@ public class SysTagMap implements Serializable {
     @Persistent
     private Date updateDate;
     
+    public SysTagMap(long sysTagId, long channelId) {
+    
+        this.sysTagId = sysTagId;
+        this.channelId = channelId;
+        this.seq = 0;
+    }
+
     public long getId() {
         return id;
     }

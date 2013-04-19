@@ -15,15 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.dao.CategoryMapDao;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
@@ -33,6 +30,7 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.NnUserWatched;
+import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.TagMap;
 import com.nncloudtv.web.api.NnStatusCode;
@@ -43,7 +41,6 @@ public class NnChannelManager {
     protected static final Logger log = Logger.getLogger(NnChannelManager.class.getName());
     
     private NnChannelDao dao = new NnChannelDao();
-    private CategoryMapDao catMapDao = new CategoryMapDao();
     
     public NnChannel create(String sourceUrl, String name, String lang, HttpServletRequest req) {
         if (sourceUrl == null) 
@@ -313,10 +310,6 @@ public class NnChannelManager {
         save(favoriteCh);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     
-    public void saveAll(List<NnChannel> channels) {
-        dao.saveAll(channels);
-    }
-    
     public NnChannel save(NnChannel channel) {
         NnChannel original = dao.findById(channel.getId());
         Date now = new Date();
@@ -351,90 +344,9 @@ public class NnChannelManager {
         return channel;
     }
     
-    public List<NnChannel> saveOrderedChannels(List<NnChannel> channels) {
+    public List<NnChannel> saveAll(List<NnChannel> channels) {
         resetCache(channels);
         return dao.saveAll(channels);
-    }
-    
-    public void saveChannelToCategory (long channelId, long categoryId, long oldCategoryId) {        
-        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
-        if (oldCategoryId == 0) { // newly created
-            int i;
-            for (i=0; i<categoryMaps.size(); i++) {
-                if (categoryMaps.get(i).getCategoryId() == categoryId) {
-                    // the database already has one, do nothing.
-                    break;
-                }
-            }
-            if (i == categoryMaps.size()) {
-                CategoryMap catMap = new CategoryMap(categoryId, channelId);
-                catMapDao.save(catMap); // not found in database, newly created.
-            }
-        } else { // modify origin one
-            int i;
-            for (i=0; i<categoryMaps.size(); i++) {
-                if (categoryMaps.get(i).getCategoryId() == oldCategoryId) {
-                    categoryMaps.get(i).setCategoryId(categoryId);
-                    categoryMaps.get(i).setUpdateDate(new Date());
-                    catMapDao.save(categoryMaps.get(i));
-                    break;
-                }
-            }
-            if (i == categoryMaps.size()) {
-                // not found in database, do nothing.
-            }
-        }
-        
-    }
-    
-    public void saveChannelToCategoryWithSphereJudgement (long channelId, String sphere, long categoryId) {
-        
-        CategoryManager catMngr = new CategoryManager();
-        Category category = catMngr.findById(categoryId);
-        if (category == null) {
-            return ;
-        }
-        
-        /*
-         * always set categoryId that the user pick up, despite if sphere not match category's lang.
-         */
-        if (sphere.equals(LangTable.OTHER)) { // pick up opposite lang's category
-            Category category_opposite = null;                
-            if (category.getLang().equals(LangTable.LANG_EN)) {
-                category_opposite = catMngr.findByLangAndSeq(LangTable.LANG_ZH, category.getSeq());
-                if (category_opposite != null) {
-                    saveChannelToCategory(channelId, category_opposite.getId(), 0);
-                }
-            }
-            if (category.getLang().equals(LangTable.LANG_ZH)) {
-                category_opposite = catMngr.findByLangAndSeq(LangTable.LANG_EN, category.getSeq());
-                if (category_opposite != null) {
-                    saveChannelToCategory(channelId, category_opposite.getId(), 0);
-                }
-            }
-        }
-        
-        saveChannelToCategory(channelId, categoryId, 0);
-    }
-    
-    public void saveChannelToCategoryWithSphereJudgement (long channelId, String sphere, String oldSphere, long CategoryId, long oldCategoryId) {
-        
-        if (CategoryId == oldCategoryId) {
-            return ;
-        }
-        
-        if (oldSphere.equals(sphere)) {
-            if (sphere.equals(LangTable.OTHER)) { // other -> other
-                //TODO the opposite category need change with sync ?
-                saveChannelToCategory(channelId, CategoryId, oldCategoryId);
-            } else { // zh -> zh, en -> en
-                saveChannelToCategory(channelId, CategoryId, oldCategoryId);
-            }
-        } else { // other -> zh, other -> en, en -> zh, en -> other, zh -> en, zh -> other
-            //TODO need more judgement
-            saveChannelToCategory(channelId, CategoryId, oldCategoryId);
-        }
-        
     }
     
     public void processChannelRelatedCounter(NnChannel[] channels) {
@@ -534,26 +446,15 @@ public class NnChannelManager {
             return null;
         }
         
-        CategoryManager catMngr = new CategoryManager();
-        List<Category> categories = catMngr.findByChannelId(id);
-        
-        if (categories.size() > 0) {
-            channel.setCategoryId(categories.get(0).getId());
+        SysTagManager tagMngr = new SysTagManager();
+        List<SysTag> sysTags = tagMngr.findCategoriesByChannelId(id);
+        if (sysTags.size() > 0) {
+            channel.setCategoryId(sysTags.get(0).getId());
         }
         
         return channel;
     }
     
-    public List<Category> findCategoriesByChannelId(Long channelId) {
-        CategoryManager catMngr = new CategoryManager();
-        List<CategoryMap> categoryMaps = catMapDao.findByChannelId(channelId);
-        List<Category> categories = new ArrayList<Category>();
-        for (int i=0; i<categoryMaps.size(); i++) {
-            categories.add(catMngr.findById(categoryMaps.get(i).getCategoryId()));
-        }
-        return categories;
-    }
-
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        
         //find msoIpg
         MsoIpgManager msoIpgMngr = new MsoIpgManager();
@@ -1120,7 +1021,7 @@ public class NnChannelManager {
             channels.get(i).setSeq((short)(i + 1));
         }
         
-        saveOrderedChannels(channels);
+        saveAll(channels);
     }
     
     public void renewChannelUpdateDate(long channelId) {

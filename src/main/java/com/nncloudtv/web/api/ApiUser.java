@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryMap;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
@@ -30,7 +28,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
-import com.nncloudtv.service.CategoryManager;
+import com.nncloudtv.model.SysTag;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
@@ -39,6 +37,7 @@ import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.web.json.cms.UserFavorite;
 import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.facebook.FacebookPage;
@@ -562,7 +561,7 @@ public class ApiUser extends ApiGeneric {
             counter++;
         }
         
-        channelMngr.saveOrderedChannels(orderedChannels);
+        channelMngr.saveAll(orderedChannels);
         
         okResponse(resp);
         return null;
@@ -682,22 +681,16 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
-            CategoryManager catMngr = new CategoryManager();
-            Category category = catMngr.findById(categoryId);
+            SysTagManager tagMngr = new SysTagManager();
+            SysTag category = tagMngr.findById(categoryId);
             if (category == null) {
                 badRequest(resp, "Category Not Found");
                 return null;
             }
             
             // category mapping
-            catMngr.save(new CategoryMap(categoryId, channelId));
-            if (sphere != null && sphere.equalsIgnoreCase(LangTable.OTHER)) {
-                
-                Category twin = catMngr.findTwin(category);
-                if (twin != null) {
-                    catMngr.save(new CategoryMap(twin.getId(), channelId));
-                }
-            }
+            tagMngr.setupChannelCategory(categoryId, channelId);
+            
             channel.setCategoryId(categoryId);
         }
         

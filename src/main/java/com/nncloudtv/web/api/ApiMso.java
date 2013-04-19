@@ -424,10 +424,7 @@ public class ApiMso extends ApiGeneric {
         // create if not exist
         SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channel.getId());
         if (sysTagMap == null) {
-            sysTagMap = new SysTagMap();
-            sysTagMap.setSysTagId(set.getId());
-            sysTagMap.setChannelId(channel.getId());
-            sysTagMap.setSeq((short) 0);
+            sysTagMap = new SysTagMap(set.getId(), channel.getId());
             // TODO set default alwaysOnTop
         }
         

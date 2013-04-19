@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDisplayDao;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTagDisplay;
 
 @Service
@@ -66,6 +67,10 @@ public class SysTagDisplayManager {
             return ;
         }
         dao.delete(sysTagDisplay);
+    }
+
+    public void addChannelCounter(NnChannel channel) {
+        
     }
 
 }

@@ -66,8 +66,8 @@ public class NnProgramManager {
 
         //if the channel's original programCount is zero, its count will not be in the category, adding it now.
         if (count == 1) {
-            CategoryManager categoryMngr = new CategoryManager();
-            categoryMngr.addChannelCounter(channel);
+            SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+            displayMngr.addChannelCounter(channel);
         }
         this.autoShare(program);
     } 

@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.Category;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnSet;
+import com.nncloudtv.model.SysTag;
+import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.web.api.NnStatusCode;
 
 @Service
@@ -85,28 +86,29 @@ public class IosService {
             id = "0";
         }        
         String[] result = {"", "", ""};
-        CategoryManager catMngr = new CategoryManager();        
+        SysTagManager tagMngr = new SysTagManager();        
         //if it's a set, find channel info
         result[0] = "id" + "\t" + id + "\n";
         if (!id.equals("0")) {            
-            long catId = Long.parseLong(id);
-            Category cat = catMngr.findById(catId);
-            if (cat != null) {
+            long tagId = Long.parseLong(id);
+            SysTag tag = tagMngr.findById(tagId);
+            if (tag != null) {
                 result[0] += "piwik" + "\t" + "" + "\n";
             }
-            List<NnChannel> channels = catMngr.findChannels(catId, true);
+            List<NnChannel> channels = tagMngr.findPlayerChannelsById(tagId);
             for (NnChannel c : channels) {
                 c.setSorting(NnChannelManager.getDefaultSorting(c));
             }
             result[2] = this.composeChannelLineup(channels);
             return api.assembleMsgs(NnStatusCode.SUCCESS, result);
         }        
-
-        List<Category> categories = catMngr.findPlayerCategories(lang, mso.getId());                
+        
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        List<SysTagDisplay> categories = displayMngr.findPlayerCategories(lang, mso.getId());
         //if it's just categories, find categories
-        for (Category c : categories) { 
+        for (SysTagDisplay c : categories) { 
             String name =  c.getName();
-            int cnt = c.getChannelCnt();
+            int cnt = c.getCntChannel();
             String subItemHint = "ch"; //what's under this level
             String[] str = {String.valueOf(c.getId()), 
                             name, 

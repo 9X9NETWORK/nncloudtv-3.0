@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
-import com.nncloudtv.model.Category;
-import com.nncloudtv.model.CategoryMap;
-import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnAd;
 import com.nncloudtv.model.NnChannel;
@@ -32,8 +29,9 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
+import com.nncloudtv.model.SysTag;
+import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.TitleCard;
-import com.nncloudtv.service.CategoryManager;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnAdManager;
@@ -44,7 +42,10 @@ import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.service.SysTagDisplayManager;
+import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.TitleCardManager;
+import com.nncloudtv.web.json.cms.Category;
 
 @Controller
 @RequestMapping("api")
@@ -731,38 +732,46 @@ public class ApiContent extends ApiGeneric {
     List<NnChannel> channelsSearch(HttpServletRequest req,
             HttpServletResponse resp,
             @RequestParam(required = false) String mso,
-            @RequestParam(value = "userId", required = false) String userIdStr) {
+            @RequestParam(required = false, value = "categoryId") String categoryIdStr,
+            @RequestParam(required = false, value = "userId") String userIdStr) {
     
-        List<NnChannel> results = null;
+        List<NnChannel> results = new ArrayList<NnChannel>();
         
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (userId == null) {
-            notFound(resp, INVALID_PARAMETER);
-            return null;
-        }
-        
-        Mso brand = new MsoManager().findOneByName(mso);
-        NnUserManager userMngr = new NnUserManager();
-        NnUser user = userMngr.findById(userId, brand.getId());
-        if (user == null) {
-            notFound(resp, "User Not Found");
-            return null;
-        }
-        
-        NnChannelManager channelMngr = new NnChannelManager();
-        results = channelMngr.findByUser(user, 0, false);
-        
-        for (NnChannel channel : results) {
+        if (userIdStr != null) {
             
-            channel.setName(NnStringUtil.revertHtml(channel.getName()));
-            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+            Long userId = null;
+            try {
+                userId = Long.valueOf(userIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (userId == null) {
+                notFound(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            Mso brand = new MsoManager().findOneByName(mso);
+            NnUserManager userMngr = new NnUserManager();
+            NnUser user = userMngr.findById(userId, brand.getId());
+            if (user == null) {
+                notFound(resp, "User Not Found");
+                return null;
+            }
+            
+            NnChannelManager channelMngr = new NnChannelManager();
+            results = channelMngr.findByUser(user, 0, false);
+            
+            for (NnChannel channel : results) {
+                
+                channel.setName(NnStringUtil.revertHtml(channel.getName()));
+                channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+            }
+            
+            Collections.sort(results, channelMngr.getChannelComparator("seq"));
+        } else if (categoryIdStr != null) {
+            
+        } else {
+            
         }
-        
-        Collections.sort(results, channelMngr.getChannelComparator("seq"));
         
         return results;
     }
@@ -885,8 +894,8 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             
-            CategoryManager catMngr = new CategoryManager();
-            Category category = catMngr.findById(categoryId);
+            SysTagManager tagMngr = new SysTagManager();
+            SysTag category = tagMngr.findById(categoryId);
             if (category == null) {
                 badRequest(resp, "Category Not Found");
                 return null;
@@ -895,18 +904,7 @@ public class ApiContent extends ApiGeneric {
             // category mapping
             if (categoryId != channel.getCategoryId()) {
                 
-                List<CategoryMap> cats = catMngr.findMapByChannelId(channelId);
-                
-                catMngr.delete(cats);
-                
-                catMngr.save(new CategoryMap(categoryId, channelId));
-                
-                if (channel.getSphere() != null && channel.getSphere().equalsIgnoreCase(LangTable.OTHER)) {                    
-                    Category twin = catMngr.findTwin(category);
-                    if (twin != null) {
-                        catMngr.save(new CategoryMap(twin.getId(), channelId));
-                    }
-                }
+                tagMngr.setupChannelCategory(categoryId, channelId);
                 
                 channel.setCategoryId(categoryId);
             }
@@ -959,6 +957,10 @@ public class ApiContent extends ApiGeneric {
             badRequest(resp, MISSING_PARAMETER);
             return null;
         }
+        String lang = req.getParameter("lang");
+        if (lang == null) {
+            lang = NnUserManager.findLocaleByHttpRequest(req);
+        }
         
         Long categoryId = null;
         try {
@@ -970,19 +972,21 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        CategoryManager catMngr = new CategoryManager();
-        Category category = catMngr.findById(categoryId);
-        if (category == null) {
+        SysTagManager tagMngr = new SysTagManager();
+        SysTag sysTag = tagMngr.findById(categoryId);
+        if (sysTag == null) {
             
             badRequest(resp, "Category Not Found");
             return null;
         }
         
-        String result = category.getTag();
-        if (result == null || result.length() == 0) {
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        SysTagDisplay tagDisplay = displayMngr.findBySysTagId(categoryId);
+        
+        if (tagDisplay == null || tagDisplay.getPopularTag().length() == 0) {
             return new String[0];
         }
-        return result.split(",");
+        return tagDisplay.getPopularTag().split(",");
     }
     
     @RequestMapping(value = "categories", method = RequestMethod.GET)
@@ -990,24 +994,32 @@ public class ApiContent extends ApiGeneric {
     List<Category> categories(HttpServletRequest req, HttpServletResponse resp) {
         
         String lang = req.getParameter("lang");
-        CategoryManager catMngr = new CategoryManager();
-        List<Category> categories;
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        SysTagManager tagMngr = new SysTagManager();
+        MsoManager msoMngr = new MsoManager();
+        List<Category> categories = new ArrayList<Category>();
         
-        if (lang != null) {
-            categories = catMngr.findByLang(lang);
-        } else {
-            categories = catMngr.findAll();
+        if (lang == null) {
+            lang = NnUserManager.findLocaleByHttpRequest(req);
         }
         
-        List<Category> temp = new ArrayList<Category>();
-        temp.addAll(categories);
-        for (Category category : temp) {
-            if (category.isPublic() == false) {
-                categories.remove(category);
-            }
+        List<SysTagDisplay> tagDisplayList = displayMngr.findPlayerCategories(lang, msoMngr.findNNMso().getId());
+        
+        for (SysTagDisplay tagDisplay : tagDisplayList) {
+            
+            SysTag sysTag = tagMngr.findById(tagDisplay.getSystagId());
+            
+            Category category = new Category();
+            category.setId(sysTag.getId());
+            category.setLang(tagDisplay.getLang());
+            category.setMsoId(sysTag.getMsoId());
+            category.setName(tagDisplay.getName());
+            category.setSeq(sysTag.getSeq());
+            
+            categories.add(category);
         }
         
-        Collections.sort(categories, catMngr.getCategorySeqComparator());
+        Collections.sort(categories, tagMngr.getCategoryComparator("seq"));
         
         return categories;
     }

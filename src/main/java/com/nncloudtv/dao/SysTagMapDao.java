@@ -41,6 +41,29 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         return detached;
     }
     
+    public List<SysTagMap> findCategoryMapsByChannelId(long channelId) {
+        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<SysTagMap> detached = null;
+        
+        try {
+            String sql = " select * from systag_map as map " +
+                         "        inner join systag as tag " +
+                         "        on tag.id = map.systagId " +
+                         " where tag.type = 1 and map.channelId = " + channelId;
+            log.info("sql:" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(SysTagMap.class);
+            @SuppressWarnings("unchecked")
+            List<SysTagMap> results = (List<SysTagMap>) q.execute();
+            detached = (List<SysTagMap>) pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        }
+        
+        return detached;
+    }
+    
     public List<SysTagMap> findSysTagMaps(long sysTagId) {
         
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
