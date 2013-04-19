@@ -208,6 +208,7 @@ public class ApiGeneric {
         result.put("seq", set.getSeq());
         result.put("tag", setMeta.getPopularTag());
         result.put("name", NnStringUtil.revertHtml(setMeta.getName()));
+        result.put("sortingType", set.getSorting());
         
         return result;
     }

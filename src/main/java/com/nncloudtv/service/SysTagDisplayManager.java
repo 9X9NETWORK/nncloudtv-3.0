@@ -44,6 +44,7 @@ public class SysTagDisplayManager {
         return dao.findBySysTagIdAndLang(sysTagId, lang);
     }
     
+    /** if multiple display, only pick one, for now using in Set */
     public SysTagDisplay findBySysTagId(Long sysTagId) {
         if (sysTagId == null) {
             return null;
