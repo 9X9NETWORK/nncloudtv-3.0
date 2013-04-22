@@ -39,7 +39,7 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
             */
             String sql = " select * from systag_display a1 " +
                          "  inner join " +
-                         "(select d.* " + 
+                         "(select d.id " + 
                            " from systag s, systag_display d " +
                          " where s.msoId = " + msoId + 
                            " and type = " + SysTag.TYPE_DAYPARTING + 
@@ -79,7 +79,7 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
             */
             String sql = " select * from systag_display a1 " +
                          " inner join " +
-                         "(select d.* " + 
+                         "(select d.id " + 
                           " from systag s, systag_display d " +
                          " where s.msoId = " + msoId + "" +
                            " and s.type = " + SysTag.TYPE_SET + 
@@ -105,7 +105,7 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         try {
             String sql = " select * from systag_display a1 " +
                          " inner join " +
-                         "(select d.* " + 
+                         "(select d.id " + 
                           " from systag s, systag_display d " +
                          " where s.msoId = " + msoId + "" +
                            " and s.type = " + SysTag.TYPE_CATEGORY + 
