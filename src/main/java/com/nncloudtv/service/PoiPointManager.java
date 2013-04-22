@@ -56,20 +56,20 @@ public class PoiPointManager {
         dao.delete(poi);
     }
     
-    public void delete(List<PoiPoint> pois) {
-        List<Poi> poiMaps = new ArrayList<Poi>();
+    public void delete(List<PoiPoint> points) {
+        List<Poi> pois = new ArrayList<Poi>();
         List<Poi> temps;
         List<Long> eventIds = new ArrayList<Long>();
-        for (PoiPoint poi : pois) {
-            temps = poiDao.findByPointId(poi.getId()); //TODO: computing issue, try to reduce mysql queries
+        for (PoiPoint point : points) {
+            temps = poiDao.findByPointId(point.getId()); //TODO: computing issue, try to reduce mysql queries
             for (Poi temp : temps) {
                 eventIds.add(temp.getEventId());
             }
-            poiMaps.addAll(temps);
+            pois.addAll(temps);
         }
         poiEventMngr.deleteByIds(eventIds);
-        poiDao.deleteAll(poiMaps);
-        dao.deleteAll(pois);
+        poiDao.deleteAll(pois);
+        dao.deleteAll(points);
     }
     
     public boolean hookEvent(long pointId, long eventId) {
@@ -97,6 +97,14 @@ public class PoiPointManager {
     
     public List<PoiPoint> findByChannel(long channelId) {
         return dao.findByChannel(channelId);
+    }
+
+    public List<PoiPoint> findCurrentByChannel(long channelId) {
+        return dao.findCurrentByChannel(channelId);
+    }
+    
+    public List<PoiPoint> findCurrentByProgram(long programId) {
+        return dao.findCurrentByProgram(programId);
     }
     
     public List<PoiPoint> findByProgram(long programId) {
