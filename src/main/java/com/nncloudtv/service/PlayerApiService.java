@@ -672,7 +672,7 @@ public class PlayerApiService {
         userMngr.composeSubscriberInfoStr(channels);
         return "";
     }
-    
+
     //TODO rewrite
     public String channelLineup(String userToken,
                                 String curatorIdStr,
@@ -682,8 +682,7 @@ public class PlayerApiService {
                                 boolean setInfo, 
                                 boolean isRequired,
                                 boolean isReduced,
-                                HttpServletRequest req) {                                 
-
+                                HttpServletRequest req) {
         //verify input
         if (((userToken == null && userInfo == true) || 
             (userToken == null && channelIds == null) || 
@@ -2342,12 +2341,14 @@ public class PlayerApiService {
         lang = this.checkLang(lang);    
         if (lang == null)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        short baseTime = Short.valueOf(time);
+        if (baseTime > 23 || baseTime < 0)
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
         
         //1: list of sets, including dayparting 
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         SysTagManager systagMngr = new SysTagManager();
-        List<SysTagDisplay> sets = displayMngr.findRecommendedSets(lang, mso.getId());
-        short baseTime = Short.valueOf(time);
+        List<SysTagDisplay> sets = displayMngr.findRecommendedSets(lang, mso.getId());        
         List<SysTagDisplay> dayparting = displayMngr.findDayparting(baseTime, mso.getId());
         sets.addAll(dayparting);
         String setStr = "";
