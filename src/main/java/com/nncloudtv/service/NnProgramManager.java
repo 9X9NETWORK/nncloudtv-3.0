@@ -1,5 +1,7 @@
 package com.nncloudtv.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -642,7 +644,7 @@ public class NnProgramManager {
         //episode number;text;link;start time;end time|episode number;link;text;start time;end time
         //List<Poi> pois = new PoiPointManager().findByChannel(channel.getId()); //find all the programs        
         //List<PoiEvent> events = new PoiEventManager().findByChannel(channel.getId());
-        PoiPointManager poiPointMngr = new PoiPointManager();
+        PoiPointManager pointMngr = new PoiPointManager();
         PoiEventManager eventMngr = new PoiEventManager();
         for (NnEpisode e : episodes) {
             List<NnProgram> list = (List<NnProgram>) map.get(e.getId());
@@ -655,19 +657,41 @@ public class NnProgramManager {
                 String name = getNotPipedProgramInfoData(e.getName());
                 String imageUrl = e.getImageUrl();
                 String imageLargeUrl = e.getImageUrl();
-                String intro = getNotPipedProgramInfoData(e.getIntro());                        
+                String intro = getNotPipedProgramInfoData(e.getIntro());
                 String card = "";
                 String contentType = "";
                 int i=1;                
                 String poiStr = "";
                 for (NnProgram p : list) { //sub-episodes
-                    List<PoiPoint> pois = poiPointMngr.findByProgram(p.getId());
-                    for (PoiPoint poi : pois) {
-                        PoiEvent event = eventMngr.findByPoi(poi.getId());
-                        String poiStrHere = i + ";" + event.getHyperChannelText() + ";" + event.getHyperChannelLink() + ";" + poi.getStartTime() + ";" + poi.getEndTime() + "|";
-                        log.info("poiStrHere:" + poiStrHere);                        
-                        poiStr += poiStrHere;                        
-                    }                    
+                    List<PoiPoint> points = pointMngr.findCurrentByProgram(p.getId());
+                    log.info("points size:" + points.size());                    
+                    List<PoiEvent> events = new ArrayList<PoiEvent>();
+                    for (PoiPoint point : points) {
+                        PoiEvent event = eventMngr.findByPoint(point.getId());
+                        events.add(event);
+                    }
+                    if (points.size() != events.size()) {
+                        log.info("Bad!!! should not continue.");
+                        points.clear();
+                    }
+                    for (int j=0; j<points.size(); j++) {
+                        PoiPoint point = points.get(j);
+                        PoiEvent event = events.get(j);
+                        String context = "";
+                        try {
+                            context = URLEncoder.encode(event.getContext(), "utf-8");
+                        } catch (UnsupportedEncodingException exception) {
+                            exception.printStackTrace();
+                        }
+                        poiStr += point.getStartTime() + "|" + point.getEndTime() + "|" + context;
+                        log.info("poi output:" + poiStr);
+                    }
+//                    for (PoiPoint point : points) {
+//                        PoiEvent event = eventMngr.findByPoint(point.getId());
+//                        String poiStrHere = i + ";" + event.getHyperChannelText() + ";" + event.getHyperChannelLink() + ";" + poi.getStartTime() + ";" + poi.getEndTime() + "|";
+//                        log.info("poiStrHere:" + poiStrHere);                        
+//                        poiStr += poiStrHere;                        
+//                    }                    
                     String cardKey1 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_BEGIN); 
                     String cardKey2 = String.valueOf(p.getId() + ";" + TitleCard.TYPE_END);
                     if (p.getSubSeq() != null && p.getSubSeq().length() > 0) {

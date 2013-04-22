@@ -1,5 +1,7 @@
 package com.nncloudtv.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +32,8 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.NnUserWatched;
+import com.nncloudtv.model.PoiEvent;
+import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.TagMap;
@@ -735,12 +739,39 @@ public class NnChannelManager {
         
     public String composeChannelLineup(List<NnChannel> channels) {
         String output = "";
+        PoiEventManager eventMngr = new PoiEventManager();
+        PoiPointManager pointMngr = new PoiPointManager();        
         for (NnChannel c : channels) {
-            output += this.composeChannelLineupStr(c) + "\n";
+            List<PoiPoint> points = pointMngr.findCurrentByChannel(c.getId());
+            List<PoiEvent> events = new ArrayList<PoiEvent>();
+            for (PoiPoint p : points) {
+                PoiEvent event = eventMngr.findByPoint(p.getId());
+                events.add(event);
+            }
+            if (points.size() != events.size()) {
+                log.info("Bad!!! should not continue.");
+                points.clear();
+            }
+            //format: start time|endTime|context;start
+            String poiOutput = "";
+            for (int i=0; i<points.size(); i++) {
+                PoiPoint point = points.get(i);
+                PoiEvent event = events.get(i);
+                String context = "";
+                try {
+                    context = URLEncoder.encode(event.getContext(), "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                poiOutput += point.getStartTime() + "|" + point.getEndTime() + "|" + context;
+                log.info("poi output:" + poiOutput);
+            }
+            output += this.composeChannelLineupStr(c) + "\t" + poiOutput + "\n";            
         }
-        return output;        
+        
+        return output;
     }    
-    
+        
     public String composeChannelLineupStr(NnChannel c) {
         String result = null;
         try {
