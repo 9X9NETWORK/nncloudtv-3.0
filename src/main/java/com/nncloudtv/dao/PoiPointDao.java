@@ -57,5 +57,99 @@ public class PoiPointDao extends GenericDao<PoiPoint> {
         }
         return results;
     }
+
+    //current: poi_point is active and poi is within date range
+    public List<PoiPoint> findCurrentByChannel(long channelId) {
+        List<PoiPoint> detached = new ArrayList<PoiPoint>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        /*
+        select * 
+          from poi_point a1  
+        inner join  
+       (select distinct pp.id
+        from poi_point pp, poi poi, poi_event e 
+       where pp.active = true
+         and pp.targetId = 1 
+         and poi.eventId = e.id
+         and poi.pointId = pp.id
+         and pp.type = 3 
+         and poi.pointId = pp.id   
+         and now() > poi.startDate 
+         and now() < poi.endDate) a2
+            on a1.id=a2.id         
+        */
+        try {
+            String sql = "select * " + 
+                          " from poi_point a1 " +   
+                         " inner join " +  
+                        "(select distinct pp.id " +
+                          " from poi_point pp, poi poi, poi_event e " + 
+                         " where pp.active = true " +
+                           " and pp.targetId = " + channelId +
+                           " and poi.eventId = e.id " +
+                           " and poi.pointId = pp.id " +
+                           " and pp.type = " + PoiPoint.TYPE_CHANNEL +
+                           " and poi.pointId = pp.id" +   
+                           " and now() > poi.startDate " +
+                           " and now() < poi.endDate) a2" +
+                             " on a1.id=a2.id";
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(PoiPoint.class);
+            @SuppressWarnings("unchecked")
+            List<PoiPoint> results = (List<PoiPoint>) query.execute();            
+            detached = (List<PoiPoint>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        } 
+        return detached;                            
+    }
+    
+    //current: poi_point is active and poi is within date range
+    public List<PoiPoint> findCurrentByProgram(long programId) {
+        List<PoiPoint> detached = new ArrayList<PoiPoint>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        /*
+        select * 
+          from poi_point a1  
+        inner join  
+       (select distinct pp.id
+        from poi_point pp, poi poi, poi_event e 
+       where pp.active = true
+         and pp.targetId = 1 
+         and poi.eventId = e.id
+         and poi.pointId = pp.id
+         and pp.type = 5 
+         and poi.pointId = pp.id   
+         and now() > poi.startDate 
+         and now() < poi.endDate) a2
+            on a1.id=a2.id         
+        */
+        try {
+            String sql = "select * " + 
+                          " from poi_point a1 " +   
+                         " inner join " +  
+                        "(select distinct pp.id " +
+                          " from poi_point pp, poi poi, poi_event e " + 
+                         " where pp.active = true " +
+                           " and pp.targetId = " + programId +
+                           " and poi.eventId = e.id " +
+                           " and poi.pointId = pp.id " +
+                           " and pp.type = " + PoiPoint.TYPE_SUBEPISODE +
+                           " and poi.pointId = pp.id" +   
+                           " and now() > poi.startDate " +
+                           " and now() < poi.endDate) a2" +
+                             " on a1.id=a2.id";
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(PoiPoint.class);
+            @SuppressWarnings("unchecked")
+            List<PoiPoint> results = (List<PoiPoint>) query.execute();            
+            detached = (List<PoiPoint>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        } 
+        return detached;                            
+    }
     
 }
