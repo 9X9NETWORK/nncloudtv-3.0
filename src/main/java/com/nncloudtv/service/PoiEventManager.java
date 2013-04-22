@@ -111,8 +111,8 @@ public class PoiEventManager {
         return dao.findPoiEventsByPoi(poiId);
     }
     
-    public PoiEvent findByPoi(long poiId) {
-        return dao.findByPoi(poiId);
+    public PoiEvent findByPoint(long poiId) {
+        return dao.findByPoint(poiId);
     }
-
+    
 }
