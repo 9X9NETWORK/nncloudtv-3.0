@@ -37,13 +37,13 @@ public class StoreListingManager {
             return new ArrayList<Long>();
         }
         
-        List<Long> storeMsoIds = findByMsoId(msoId);
-        if (storeMsoIds == null || storeMsoIds.size() == 0) {
+        List<Long> storeMso = findByMsoId(msoId, (long) 1); // sysTagId = 1, 9x9's category : All
+        if (storeMso == null || storeMso.size() == 0) {
             return new ArrayList<Long>();
         }
         
         Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
-        for (Long channelId : storeMsoIds) {
+        for (Long channelId : storeMso) {
             storeMsoMap.put(channelId, channelId);
         }
         
@@ -191,15 +191,16 @@ public class StoreListingManager {
         
     }
     
-    /** mso store = 9x9 store - blackList */
-    public List<Long> findByMsoId(Long msoId) {
+    /** mso store = 9x9 store - blackList, use categoryId to find partial store */
+    public List<Long> findByMsoId(Long msoId, Long categoryId) {
         
-        if (msoId == null) {
+        if (msoId == null || categoryId == null) {
             return new ArrayList<Long>();
         }
         List<StoreListing> blackList = dao.findByMsoId(msoId);
         
-        List<NnChannel> store9x9 = sysTagMngr.findPlayerChannelsById(1); // input the sysTagId to find the whole 9x9 store's channels
+        // this categoryId = sysTagId, it should belong to 9x9, the 9x9's category
+        List<NnChannel> store9x9 = sysTagMngr.findPlayerChannelsById(categoryId);
         Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
         List<Long> store9x9Ids = new ArrayList<Long>();
         for (NnChannel channel : store9x9) {

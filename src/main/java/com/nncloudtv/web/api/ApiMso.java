@@ -638,6 +638,23 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        // categoryId, default : 1, category : All
+        Long categoryId = null;
+        String categoryIdStr = req.getParameter("categoryId");
+        if (categoryIdStr != null) {
+            try {
+                categoryId = Long.valueOf(categoryIdStr);
+            } catch (NumberFormatException e) {
+            }
+            if (categoryId == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            categoryId = (long) 1;
+        }
+        // TODO : check if categoryId belongs 9x9 categories
+        
         // channels
         String channelIdsStr = req.getParameter("channels");
         
@@ -675,7 +692,7 @@ public class ApiMso extends ApiGeneric {
             results = storeListingMngr.findByChannelIdsAndMsoId(channelIdList, msoId);
             
         } else {
-            results = storeListingMngr.findByMsoId(msoId);
+            results = storeListingMngr.findByMsoId(msoId, categoryId);
         }
         
         if (results == null) {
