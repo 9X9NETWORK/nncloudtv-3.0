@@ -59,7 +59,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             */            
             String sql = "select * from nnchannel a1 " +
                          " inner join " + 
-                       " (select distinct c.* " + 
+                       " (select distinct c.id " + 
                           " from systag_display d, systag_map m, nnchannel c " +
                          " where d.systagId = " + id + 
                            " and d.systagId = m.systagId " +                           
