@@ -76,9 +76,49 @@ public class SysTagDisplayManager {
         }
         dao.delete(sysTagDisplay);
     }
-
+    
     public void addChannelCounter(NnChannel channel) {
         
+    }
+
+    /** used by SET */
+    public void plusCntChannel(Long sysTagId, int num) {
+        
+        if (sysTagId == null || num < 1) {
+            return ;
+        }
+        
+        SysTagDisplay sysTagDisplay = findBySysTagId(sysTagId);
+        if (sysTagDisplay == null) {
+            return ;
+        }
+        
+        int updateCntChannel = sysTagDisplay.getCntChannel() + num;
+        sysTagDisplay.setCntChannel(updateCntChannel);
+        
+        dao.save(sysTagDisplay);
+    }
+    
+    /** used by SET */
+    public void minusCntChannel(Long sysTagId, int num) {
+        
+        if (sysTagId == null || num < 1) {
+            return ;
+        }
+        
+        SysTagDisplay sysTagDisplay = findBySysTagId(sysTagId);
+        if (sysTagDisplay == null) {
+            return ;
+        }
+        
+        int updateCntChannel = sysTagDisplay.getCntChannel() - num;
+        if (updateCntChannel < 0) {
+            sysTagDisplay.setCntChannel(0);
+        } else {
+            sysTagDisplay.setCntChannel(updateCntChannel);
+        }
+        
+        dao.save(sysTagDisplay);
     }
 
 }
