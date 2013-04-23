@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagMapDao;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTagMap;
 
@@ -142,6 +143,7 @@ public class SysTagMapManager {
         return sysTagMaps;
     }
     
+    /** used by set, the sql will be big n with list's length, to form the moreImgUrl in channel */
     public List<NnChannel> findChannelsBySysTagId(Long sysTagId) {
         
         if (sysTagId == null) {
@@ -177,6 +179,13 @@ public class SysTagMapManager {
                 result.setAlwaysOnTop(item.isAlwaysOnTop());
                 results.add(result);
             }
+        }
+        
+        for (NnChannel channel : results) {
+            channelMngr.populateMoreImageUrl(channel); // TODO : the sql will be big n with list's length
+            
+            channel.setName(NnStringUtil.revertHtml(channel.getName()));
+            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
         }
         
         return results;
