@@ -13,8 +13,8 @@ import javax.jdo.annotations.PrimaryKey;
  * Created by advertiser.
  * Group a list of Poi entries together.
  */ 
-@PersistenceCapable(table="poi_comppaign", detachable = "true")
-public class PoiCompaign implements Serializable {
+@PersistenceCapable(table="poi_campaign", detachable = "true")
+public class PoiCampaign implements Serializable {
 
     private static final long serialVersionUID = 6927686145119450135L;
 

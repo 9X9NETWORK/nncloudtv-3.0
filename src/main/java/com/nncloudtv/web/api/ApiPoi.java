@@ -1,6 +1,7 @@
 package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,9 +22,12 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiCampaign;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.service.PoiCampaignManager;
 
 @Controller
 @RequestMapping("api")
@@ -33,16 +37,18 @@ public class ApiPoi extends ApiGeneric {
     
     NnUserManager userMngr;
     NnProgramManager programMngr;
+    PoiCampaignManager campaignMngr;
     
     @Autowired
-    public ApiPoi(NnUserManager userMngr, NnProgramManager programMngr) {
+    public ApiPoi(NnUserManager userMngr, NnProgramManager programMngr, PoiCampaignManager campaignMngr) {
         this.userMngr = userMngr;
         this.programMngr = programMngr;
+        this.campaignMngr = campaignMngr;
     }
     
     @RequestMapping(value = "users/{userId}/poi_campaigns", method = RequestMethod.GET)
     public @ResponseBody
-    List<Map<String, Object>> userCampaigns(HttpServletRequest req,
+    List<PoiCampaign> userCampaigns(HttpServletRequest req,
             HttpServletResponse resp,
             @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr) {
@@ -64,17 +70,17 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
-        Map<String, Object> result = new TreeMap<String, Object>();
-        
-        results.add(result);
+        List<PoiCampaign> results = campaignMngr.findByUserId(user.getId());
+        if (results == null) {
+            return new ArrayList<PoiCampaign>();
+        }
         
         return results;
     }
     
     @RequestMapping(value = "users/{userId}/poi_campaigns", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, Object> userCampaignCreate(HttpServletRequest req,
+    PoiCampaign userCampaignCreate(HttpServletRequest req,
             HttpServletResponse resp,
             @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr) {
@@ -104,25 +110,51 @@ public class ApiPoi extends ApiGeneric {
         }
         name = NnStringUtil.htmlSafeAndTruncated(name);
         
+        PoiCampaign newCampaign = new PoiCampaign();
+        newCampaign.setMsoId(user.getMsoId());
+        newCampaign.setUserId(user.getId());
+        newCampaign.setName(name);
+        
         // startDate
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null && startDateStr.length() > 0) {
+            Long startDateLong = null;
+            try {
+                startDateLong = Long.valueOf(startDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             
+            newCampaign.setStartDate(new Date(startDateLong));
         } else {
-            
+            newCampaign.setStartDate(null);
         }
         
         // endDate
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null && endDateStr.length() > 0) {
+            Long endDateLong = null;
+            try {
+                endDateLong = Long.valueOf(endDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             
+            newCampaign.setEndDate(new Date(endDateLong));
         } else {
-            
+            newCampaign.setEndDate(null);
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        PoiCampaign savedCampaign = campaignMngr.save(newCampaign);
+        savedCampaign.setName(NnStringUtil.revertHtml(savedCampaign.getName()));
         
-        return result;
+        return savedCampaign;
     }
     
     @RequestMapping(value = "poi_campaigns/{poiCampaignId}", method = RequestMethod.GET)
@@ -207,7 +239,7 @@ public class ApiPoi extends ApiGeneric {
     
     @RequestMapping(value = "poi_campaigns/{poiCampaignId}/pois", method = RequestMethod.GET)
     public @ResponseBody
-    List<Map<String, Object>> campaignPois(HttpServletRequest req,
+    List<Poi> campaignPois(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
@@ -218,6 +250,12 @@ public class ApiPoi extends ApiGeneric {
         }
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        PoiCampaign campaign = campaignMngr.findCompaignById(poiCampaignId);
+        if (campaign == null) {
+            notFound(resp, "Campaign Not Found");
             return null;
         }
         
@@ -235,17 +273,18 @@ public class ApiPoi extends ApiGeneric {
             }
         }
         
+        List<Poi> results = null;
         if (poiPointId != null) {
             // find pois with campaign and point
+            results = campaignMngr.findPoisByPointId(poiPointId);
         } else {
             // find pois with campaign
+            results = campaignMngr.findPoisByCampaignId(campaign.getId());
         }
         
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
-        Map<String, Object> result = new TreeMap<String, Object>();
-        
-        results.add(result);
-        
+        if (results == null) {
+            return new ArrayList<Poi>();
+        }
         return results;
     }
     
