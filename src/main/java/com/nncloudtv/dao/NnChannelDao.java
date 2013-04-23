@@ -8,6 +8,7 @@ import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnChannel;
 
@@ -118,13 +119,13 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         log.info("start:" + start + ";end:" + limit);
         if (start == 0) start = 0;            
         if (limit == 0) limit = 9;
-                    
+        
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
             String sql = "select * from nnchannel " + 
-                          "where (lower(name) like lower(\"%" + queryStr + "%\")" +
-                              "|| lower(intro) like lower(\"%" + queryStr + "%\"))";
+                          "where (lower(name) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + ")" +
+                              "|| lower(intro) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + "))";
             if (!all) {
                 sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
                 if (content != null && content.equals("youtube")) {

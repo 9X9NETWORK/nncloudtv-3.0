@@ -1,6 +1,7 @@
 package com.nncloudtv.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -169,7 +170,7 @@ public class GenericDao<T> {
         return results;
     }
     
-    public List<T> findAllByIds(List<Long> ids) {        
+    public List<T> findAllByIds(Collection<Long> ids) {        
         List<T> results = new ArrayList<T>();        
         for (Long id : ids) {
             T dao = null;
@@ -212,14 +213,18 @@ public class GenericDao<T> {
         return results;
     }
     
-    public List<T> sql(String sql) {
+    public List<T> sql(String queryStr) {
+        
+        return sql(queryStr, PMF.getContent().getPersistenceManager());
+    }
+    
+    public List<T> sql(String queryStr, PersistenceManager pm) {
         
         List<T> detached = new ArrayList<T>();
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
         
         try {
-            log.info("sql: " + sql);
-            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            log.info("sql: " + queryStr);
+            Query query = pm.newQuery("javax.jdo.query.SQL", queryStr);
             query.setClass(daoClass);
             @SuppressWarnings("unchecked")
             List<T> results = (List<T>) query.execute();

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -616,9 +617,9 @@ public class NnChannelManager {
 
     //find channels created by the user, aka curator
     //player true returns only good and public channels
-    public List<NnChannel> findByUser(NnUser user, int limit, boolean isPlayer) {
+    public List<NnChannel> findByUser(NnUser user, int limit, boolean isAll) {
         String userIdStr = user.getShard() + "-" + user.getId();
-        List<NnChannel> channels = dao.findByUser(userIdStr, limit, isPlayer);
+        List<NnChannel> channels = dao.findByUser(userIdStr, limit, isAll);
         if (limit == 0) {
             return channels;
         } else {             
@@ -1060,6 +1061,11 @@ public class NnChannelManager {
         NnChannel channel = dao.findById(channelId);
         channel.setUpdateDate(now);
         dao.save(channel);
+    }
+    
+    public List<NnChannel> findAllByIds(Set<Long> channelIdSet) {
+    
+        return dao.findAllByIds(channelIdSet);
     }
     
 }

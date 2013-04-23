@@ -96,7 +96,10 @@ public class NnStringUtil {
     
     public static String escapedQuote(String str) {
         
-        return "'" + str.replaceAll("'", "''") + "'";
+        return "'" + str.replaceAll("'", "''")
+                         .replaceAll("\"", "\\\"")
+                         .replaceAll("\\?", "")
+                         .replaceAll("\\\\", "\\\\\\\\") + "'";
     }
     
     public static String bytesToHex(byte[] src){

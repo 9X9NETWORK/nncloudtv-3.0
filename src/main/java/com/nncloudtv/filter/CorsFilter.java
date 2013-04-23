@@ -2,8 +2,6 @@ package com.nncloudtv.filter;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

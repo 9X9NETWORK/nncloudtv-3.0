@@ -2,7 +2,6 @@ package com.nncloudtv.model;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -264,5 +263,5 @@ public class NnUserProfile implements Serializable {
         }
         return profileUrl;
     }
-        
+
 }

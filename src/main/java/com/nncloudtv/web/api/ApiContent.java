@@ -3,8 +3,10 @@ package com.nncloudtv.web.api;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
@@ -29,6 +31,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.TitleCard;
@@ -42,6 +45,7 @@ import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.TitleCardManager;
@@ -732,10 +736,14 @@ public class ApiContent extends ApiGeneric {
     List<NnChannel> channelsSearch(HttpServletRequest req,
             HttpServletResponse resp,
             @RequestParam(required = false) String mso,
-            @RequestParam(required = false, value = "categoryId") String categoryIdStr,
+            @RequestParam(required = false, value = "channels") String channelIdList,
+            @RequestParam(required = false, value = "keyword") String keyword,
             @RequestParam(required = false, value = "userId") String userIdStr) {
     
         List<NnChannel> results = new ArrayList<NnChannel>();
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnUserManager userMngr = new NnUserManager();
+        NnUserProfileManager profileMngr = new NnUserProfileManager();
         
         if (userIdStr != null) {
             
@@ -750,14 +758,12 @@ public class ApiContent extends ApiGeneric {
             }
             
             Mso brand = new MsoManager().findOneByName(mso);
-            NnUserManager userMngr = new NnUserManager();
             NnUser user = userMngr.findById(userId, brand.getId());
             if (user == null) {
                 notFound(resp, "User Not Found");
                 return null;
             }
             
-            NnChannelManager channelMngr = new NnChannelManager();
             results = channelMngr.findByUser(user, 0, false);
             
             for (NnChannel channel : results) {
@@ -767,10 +773,59 @@ public class ApiContent extends ApiGeneric {
             }
             
             Collections.sort(results, channelMngr.getChannelComparator("seq"));
-        } else if (categoryIdStr != null) {
             
-        } else {
+        } else if (channelIdList != null) {
             
+            for (String channelIdStr : channelIdList.split(",")) {
+                
+                Long channelId = null;
+                try {
+                    channelId = Long.valueOf(channelIdStr);
+                } catch (NumberFormatException e) {
+                }
+                if (channelId == null) {
+                    continue;
+                }
+                NnChannel channel = channelMngr.findById(channelId);
+                if (channel == null) {
+                    log.info("channel not found: " + channelId);
+                    continue;
+                }
+                channelMngr.populateMoreImageUrl(channel);
+                results.add(channel);
+            }
+        } else if (keyword != null) {
+            
+            log.info("keyword: " + keyword);
+            Set<Long> channelIdSet = new HashSet<Long>();
+            
+            List<NnChannel> channels = NnChannelManager.search(keyword, null, false, 0, 150);
+            log.info("found channels = " + channels.size());
+            for (NnChannel channel : channels) {
+                channelIdSet.add(channel.getId());
+            }
+            
+            Set<NnUserProfile> profiles = profileMngr.search(keyword, 0, 30);
+            Set<Long> userIdSet = new HashSet<Long>();
+            log.info("found profiles = " + profiles.size());
+            for (NnUserProfile profile : profiles) {
+                userIdSet.add(profile.getUserId());
+            }
+            List<NnUser> users = userMngr.findAllByIds(userIdSet);
+            
+            for (NnUser user : users) {
+                List<NnChannel> userChannels = channelMngr.findByUser(user, 30, false);
+                for (NnChannel channel : userChannels) {
+                    channelIdSet.add(channel.getId());
+                }
+            }
+            
+            log.info("total channels = " + channelIdSet.size());
+            results = channelMngr.findAllByIds(channelIdSet);
+            for (NnChannel channel : results) {
+                channelMngr.populateMoreImageUrl(channel);
+            }
+            Collections.sort(results, channelMngr.getChannelComparator("updateDate"));
         }
         
         return results;

@@ -1,11 +1,17 @@
 package com.nncloudtv.dao;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
+import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserProfile;
 
@@ -53,5 +59,21 @@ public class NnUserProfileDao extends GenericDao<NnUserProfile> {
         }
         return profile;
     }
+
+    public Set<NnUserProfile> search(String keyword, int start,
+            int limit) {
     
+        Set<NnUserProfile> results = new HashSet<NnUserProfile>();
+        
+        keyword = StringEscapeUtils.escapeSql(keyword);
+        String query = "select * from nnuser_profile where lower(name) like lower(" + NnStringUtil.escapedQuote("%" + keyword + "%") + ")";
+        query += " order by updateDate desc";
+        query += " limit " + start + ", " + limit;
+        
+        results.addAll(sql(query, PMF.getNnUser1().getPersistenceManager()));
+        results.addAll(sql(query, PMF.getNnUser2().getPersistenceManager()));
+        
+        return results;
+    }
+        
 }

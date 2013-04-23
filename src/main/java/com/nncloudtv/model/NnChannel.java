@@ -463,7 +463,7 @@ public class NnChannel implements Serializable {
 
     public int getCntView() {      
         try {
-            String name = "v_ch" + id;        
+            String name = "u_ch" + id;        
             String result = (String)CacheFactory.get(name);
             if (result != null) {
                 return Integer.parseInt(result);

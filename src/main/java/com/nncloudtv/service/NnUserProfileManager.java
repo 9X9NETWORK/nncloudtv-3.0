@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.nncloudtv.dao.NnUserProfileDao;
@@ -24,4 +25,9 @@ public class NnUserProfileManager {
         return dao.save(user, profile);
     }
     
+    public Set<NnUserProfile> search(String keyword, int start, int limit) {
+        
+        return dao.search(keyword, start, limit);
+        
+    }
 }

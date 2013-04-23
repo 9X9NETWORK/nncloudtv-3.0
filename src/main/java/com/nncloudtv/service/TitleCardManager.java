@@ -1,7 +1,5 @@
 package com.nncloudtv.service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,41 +71,6 @@ public class TitleCardManager {
     
     public TitleCard findById(long id) {
         return dao.findById(id);
-    }
-
-    //@not used
-    private String generatePlayerSyntax(TitleCard card) {
-        if (card == null) return null;
-        if (card.getMessage() == null) 
-            return null;
-        String syntax = "";
-        String encoding = "UTF-8";
-        System.out.println("!!! enter new version !!!");
-        try {
-            String breakEncoding = URLEncoder.encode("\n", encoding);
-            String msg = "";
-            if (card.getMessage() != null)
-                msg = URLEncoder.encode(card.getMessage(), encoding);
-            syntax += "message: " + msg + breakEncoding;
-            System.out.println("!!! msg:" + msg);
-            if (card.getType() == TitleCard.TYPE_BEGIN)
-                syntax += "type: begin" + breakEncoding;
-            else
-                syntax += "type: end" + breakEncoding;
-            if (card.getDuration() != null)
-                syntax += "duration: " + card.getDuration() + breakEncoding;
-            if (card.getStyle() != null)
-                syntax += "style: " + card.getStyle() + breakEncoding;
-            if (card.getColor() != null)
-                syntax += "color: " + card.getColor() + breakEncoding;
-            if (card.getBgColor() != null)
-                syntax += "bgcolor: " + card.getColor() + breakEncoding;
-            log.info("syntax:" + syntax);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return syntax;
     }
     
     public TitleCard findByProgramIdAndType(long programId, short type) {
