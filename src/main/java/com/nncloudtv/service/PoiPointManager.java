@@ -1,21 +1,16 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.PoiDao;
 import com.nncloudtv.dao.PoiPointDao;
-import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnProgram;
-import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiPoint;
 
@@ -23,37 +18,47 @@ import com.nncloudtv.model.PoiPoint;
 public class PoiPointManager {
     protected static final Logger log = Logger.getLogger(PoiPointManager.class.getName());
     
-    private PoiPointDao dao = new PoiPointDao();
+    private PoiPointDao pointDao = new PoiPointDao();
     private PoiDao poiDao = new PoiDao();
     private PoiEventManager poiEventMngr = new  PoiEventManager();
     
-    public PoiPoint create(PoiPoint poi) {
+    public PoiPoint create(PoiPoint point) {
         Date now = new Date();
-        poi.setCreateDate(now);
-        poi.setUpdateDate(now);
-        poi = dao.save(poi);
-        return poi;
+        point.setCreateDate(now);
+        point.setUpdateDate(now);
+        point = pointDao.save(point);
+        return point;
     }
     
-    public PoiPoint save(PoiPoint poi) {
+    public PoiPoint save(PoiPoint point) {
         Date now = new Date();
-        poi.setUpdateDate(now);
-        poi = dao.save(poi);
-        return poi;
+        point.setUpdateDate(now);
+        point = pointDao.save(point);
+        return point;
     }
     
-    public void delete(PoiPoint poi) {
-        if (poi == null) {
+    public void delete(PoiPoint point) {
+        
+        if (point == null) {
             return ;
         }
-        List<Poi> pois = poiDao.findByPointId(poi.getId());
+        
+        List<Poi> pois = poiDao.findByPointId(point.getId());
         List<Long> eventIds = new ArrayList<Long>();
-        for (Poi p : pois) {
-            eventIds.add(p.getEventId());
+        if (pois != null) {
+            for (Poi p : pois) {
+                eventIds.add(p.getEventId());
+            }
         }
-        poiEventMngr.deleteByIds(eventIds);
-        poiDao.deleteAll(pois);
-        dao.delete(poi);
+        
+        // TODO : rewrite when AD's cms is ready
+        if (eventIds.size() > 0) {
+            poiEventMngr.deleteByIds(eventIds);
+        }
+        if (pois != null && pois.size() > 0) {
+            poiDao.deleteAll(pois);
+        }
+        pointDao.delete(point);
     }
     
     public void delete(List<PoiPoint> points) {
@@ -61,17 +66,20 @@ public class PoiPointManager {
         List<Poi> temps;
         List<Long> eventIds = new ArrayList<Long>();
         for (PoiPoint point : points) {
-            temps = poiDao.findByPointId(point.getId()); //TODO: computing issue, try to reduce mysql queries
+            temps = poiDao.findByPointId(point.getId()); // TODO: computing issue, try to reduce mysql queries
             for (Poi temp : temps) {
                 eventIds.add(temp.getEventId());
             }
             pois.addAll(temps);
         }
+        
+        // TODO : rewrite when AD's cms is ready
         poiEventMngr.deleteByIds(eventIds);
         poiDao.deleteAll(pois);
-        dao.deleteAll(points);
+        pointDao.deleteAll(points);
     }
     
+    /*
     public boolean hookEvent(long pointId, long eventId) {
         Poi poi = new Poi();
         Date now = new Date();
@@ -86,31 +94,29 @@ public class PoiPointManager {
             return false;
         }
     }
+    */
     
     public PoiPoint findById(long id) {
-        return dao.findById(id);
-    }
-    
-    public List<PoiPoint> findByProgramId(long programId) {
-        return dao.findByProgram(programId);
+        return pointDao.findById(id);
     }
     
     public List<PoiPoint> findByChannel(long channelId) {
-        return dao.findByChannel(channelId);
+        return pointDao.findByChannel(channelId);
     }
 
     public List<PoiPoint> findCurrentByChannel(long channelId) {
-        return dao.findCurrentByChannel(channelId);
+        return pointDao.findCurrentByChannel(channelId);
     }
     
     public List<PoiPoint> findCurrentByProgram(long programId) {
-        return dao.findCurrentByProgram(programId);
+        return pointDao.findCurrentByProgram(programId);
     }
     
     public List<PoiPoint> findByProgram(long programId) {
-        return dao.findByProgram(programId);
+        return pointDao.findByProgram(programId);
     }
     
+    /*
     public Map<String, Object> getEventByPoi(PoiPoint poi) {
         Map<String, Object> result = new TreeMap<String, Object>();
         if (poi == null) {
@@ -140,7 +146,9 @@ public class PoiPointManager {
         
         return result;
     }
+    */
     
+    /*
     public List<Map<String, Object>> getEventsByProgram(NnProgram program) {
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         if (program == null) {
@@ -148,7 +156,7 @@ public class PoiPointManager {
         }
         
         // sort
-        List<PoiPoint> pois = dao.findByProgram(program.getId());
+        List<PoiPoint> pois = pointDao.findByProgram(program.getId());
         Collections.sort(pois, getPoiStartTimeComparator());
         
         for (PoiPoint poi : pois) {
@@ -156,8 +164,10 @@ public class PoiPointManager {
         }
         return results;
     }
+    */
     
     // list which need revertHtml, should avoid collision issue
+    /*
     public static Map<String, Object> revertHtml(Map<String, Object> responseObj) {
         String[] keys = {"name", "intro", "message", "button"}; 
         
@@ -171,32 +181,36 @@ public class PoiPointManager {
         
         return responseObj;
     }
+    */
     
-    public boolean isPoiCollision(PoiPoint originPoi, NnProgram program, int startTime, int endTime) {
+    public boolean isPointCollision(PoiPoint originPoint, NnProgram program, int startTime, int endTime) {
         if (program == null) {
             return true;
         }
         if (startTime < 0 || endTime < 1 || endTime <= startTime) {
             return true;
         }
-        if (startTime < program.getStartTimeInt() || startTime >= program.getEndTimeInt())
+        if (startTime < program.getStartTimeInt() || startTime >= program.getEndTimeInt()) {
             return true;
+        }
         if (endTime <= program.getStartTimeInt() || endTime > program.getEndTimeInt())
+        {
             return true;
+        }
         
-        List<PoiPoint> pois = dao.findByProgram(program.getId());
-        if (originPoi != null) {
-            if (pois.contains(originPoi)) {
-                pois.remove(originPoi);
+        List<PoiPoint> points = pointDao.findByProgram(program.getId());
+        if (originPoint != null) {
+            if (points.contains(originPoint)) {
+                points.remove(originPoint);
             }
         }
         int duration = program.getDurationInt();
-        for (PoiPoint poi : pois) {
-            if (startTime >= poi.getStartTimeInt() && startTime < poi.getEndTimeInt()) {
+        for (PoiPoint point : points) {
+            if (startTime >= point.getStartTimeInt() && startTime < point.getEndTimeInt()) {
                 return true;
             }
-            if ((poi.getStartTimeInt() - startTime) > 0 && (poi.getStartTimeInt() - startTime) < duration) {
-                duration = poi.getStartTimeInt() - startTime;
+            if ((point.getStartTimeInt() - startTime) > 0 && (point.getStartTimeInt() - startTime) < duration) {
+                duration = point.getStartTimeInt() - startTime;
             }
         }
         if (endTime <= startTime + duration) {
@@ -207,15 +221,15 @@ public class PoiPointManager {
     }
     
     // order by StartTime asc
-    public Comparator<PoiPoint> getPoiStartTimeComparator() {
+    public Comparator<PoiPoint> getPointStartTimeComparator() {
         
-        class PoiStartTimeComparator implements Comparator<PoiPoint> {
-            public int compare(PoiPoint poi1, PoiPoint poi2) {
-                return (poi1.getStartTimeInt() - poi2.getStartTimeInt());
+        class PointStartTimeComparator implements Comparator<PoiPoint> {
+            public int compare(PoiPoint point1, PoiPoint point2) {
+                return (point1.getStartTimeInt() - point2.getStartTimeInt());
             }
         }
         
-        return new PoiStartTimeComparator();
+        return new PointStartTimeComparator();
     }
 
 }

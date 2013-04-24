@@ -20,14 +20,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiCampaign;
+import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.service.MsoManager;
+import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PoiCampaignManager;
+import com.nncloudtv.service.PoiPointManager;
+import com.nncloudtv.service.TagManager;
 
 @Controller
 @RequestMapping("api")
@@ -38,12 +43,17 @@ public class ApiPoi extends ApiGeneric {
     NnUserManager userMngr;
     NnProgramManager programMngr;
     PoiCampaignManager campaignMngr;
+    PoiPointManager pointMngr;
+    NnChannelManager channelMngr;
     
     @Autowired
-    public ApiPoi(NnUserManager userMngr, NnProgramManager programMngr, PoiCampaignManager campaignMngr) {
+    public ApiPoi(NnUserManager userMngr, NnProgramManager programMngr, PoiCampaignManager campaignMngr,
+                    PoiPointManager pointMngr, NnChannelManager channelMngr) {
         this.userMngr = userMngr;
         this.programMngr = programMngr;
         this.campaignMngr = campaignMngr;
+        this.pointMngr = pointMngr;
+        this.channelMngr = channelMngr;
     }
     
     @RequestMapping(value = "users/{userId}/poi_campaigns", method = RequestMethod.GET)
@@ -73,6 +83,10 @@ public class ApiPoi extends ApiGeneric {
         List<PoiCampaign> results = campaignMngr.findByUserId(user.getId());
         if (results == null) {
             return new ArrayList<PoiCampaign>();
+        }
+        
+        for (PoiCampaign result : results) {
+            result.setName(NnStringUtil.revertHtml(result.getName()));
         }
         
         return results;
@@ -253,7 +267,7 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        PoiCampaign campaign = campaignMngr.findCompaignById(poiCampaignId);
+        PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
         if (campaign == null) {
             notFound(resp, "Campaign Not Found");
             return null;
@@ -275,7 +289,7 @@ public class ApiPoi extends ApiGeneric {
         
         List<Poi> results = null;
         if (poiPointId != null) {
-            // find pois with campaign and point
+            // find pois with point
             results = campaignMngr.findPoisByPointId(poiPointId);
         } else {
             // find pois with campaign
@@ -285,12 +299,13 @@ public class ApiPoi extends ApiGeneric {
         if (results == null) {
             return new ArrayList<Poi>();
         }
+        
         return results;
     }
     
     @RequestMapping(value = "poi_campaigns/{poiCampaignId}/pois", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, Object> campaignPoiCreate(HttpServletRequest req,
+    Poi campaignPoiCreate(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
@@ -301,6 +316,12 @@ public class ApiPoi extends ApiGeneric {
         }
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
+        if (campaign == null) {
+            notFound(resp, "Campaign Not Found");
             return null;
         }
         
@@ -321,7 +342,7 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        // poiPointId
+        // poiEventId
         Long poiEventId = null;
         String poiEventIdStr = req.getParameter("poiEventId");
         if (poiEventIdStr != null) {
@@ -339,17 +360,45 @@ public class ApiPoi extends ApiGeneric {
         }
         
         // create the poi
+        Poi newPoi = new Poi();
+        newPoi.setCampaignId(campaign.getId());
+        newPoi.setPointId(poiPointId);
+        newPoi.setEventId(poiEventId);
         
         // startDate
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null && startDateStr.length() > 0) {
+            Long startDateLong = null;
+            try {
+                startDateLong = Long.valueOf(startDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             
+            newPoi.setStartDate(new Date(startDateLong));
+        } else {
+            newPoi.setStartDate(null);
         }
         
         // endDate
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null && endDateStr.length() > 0) {
+            Long endDateLong = null;
+            try {
+                endDateLong = Long.valueOf(endDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             
+            newPoi.setEndDate(new Date(endDateLong));
+        } else {
+            newPoi.setEndDate(null);
         }
         
         // hoursOfWeek
@@ -361,9 +410,18 @@ public class ApiPoi extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
+            
+            newPoi.setHoursOfWeek(hoursOfWeek);
+        } else {
+            hoursOfWeek = "";
+            for (int i = 1; i<= 7; i++) { // maybe type 111... in the code, will execute faster
+                hoursOfWeek.concat("111111111111111111111111");
+            }
+            
+            newPoi.setHoursOfWeek(hoursOfWeek);
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        Poi result = campaignMngr.save(newPoi);
         
         return result;
     }
@@ -455,7 +513,7 @@ public class ApiPoi extends ApiGeneric {
     
     @RequestMapping(value = "programs/{programId}/poi_points", method = RequestMethod.GET)
     public @ResponseBody
-    List<Map<String, Object>> programPoints(HttpServletRequest req,
+    List<PoiPoint> programPoints(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("programId") String programIdStr) {
         
@@ -475,17 +533,21 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
-        Map<String, Object> result = new TreeMap<String, Object>();
+        List<PoiPoint> results = pointMngr.findByProgram(program.getId());
+        if (results == null) {
+            return new ArrayList<PoiPoint>();
+        }
         
-        results.add(result);
+        for (PoiPoint result : results) {
+            result.setName(NnStringUtil.revertHtml(result.getName()));
+        }
         
         return results;
     }
     
     @RequestMapping(value = "programs/{programId}/poi_points", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, Object> programPointCreate(HttpServletRequest req,
+    PoiPoint programPointCreate(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("programId") String programIdStr) {
         
@@ -506,10 +568,10 @@ public class ApiPoi extends ApiGeneric {
         }
         
         // targetId
-        Long targetId = programId;
+        Long targetId = program.getId();
         
         // targetType
-        Short targetType = 0;
+        Short targetType = PoiPoint.TYPE_SUBEPISODE;
         
         // name
         String name = req.getParameter("name");
@@ -538,28 +600,40 @@ public class ApiPoi extends ApiGeneric {
                 return null;
             }
         }
+        // collision check
+        
+        PoiPoint newPoint = new PoiPoint();
+        newPoint.setTargetId(targetId);
+        newPoint.setType(targetType);
+        newPoint.setName(name);
+        newPoint.setStartTime(offsetStart);
+        newPoint.setEndTime(offsetEnd);
         
         // tags
-        String tags = req.getParameter("tags");
-        if (tags != null) {
-            
+        String tagText = req.getParameter("tags");
+        String tag = null;
+        if (tagText != null) {
+            tag = TagManager.processTagText(tagText);
         }
+        newPoint.setTag(tag);
         
-        // activate
-        Boolean activate;
+        // activate, default : true
+        Boolean activate = true;
         String activateStr = req.getParameter("activate");
         if (activateStr != null) {
             activate = Boolean.valueOf(activateStr);
         }
+        newPoint.setActive(activate);
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        PoiPoint result = pointMngr.create(newPoint);
+        result.setName(NnStringUtil.revertHtml(result.getName()));
         
         return result;
     }
     
     @RequestMapping(value = "poi_points/{poiPointId}", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> point(HttpServletRequest req,
+    PoiPoint point(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiPointId") String poiPointIdStr) {
         
@@ -573,14 +647,20 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        PoiPoint result = pointMngr.findById(poiPointId);
+        if (result == null) {
+            notFound(resp, "PoiPoint Not Found");
+            return null;
+        }
+        
+        result.setName(NnStringUtil.revertHtml(result.getName()));
         
         return result;
     }
     
     @RequestMapping(value = "poi_points/{poiPointId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Map<String, Object> pointUpdate(HttpServletRequest req,
+    PoiPoint pointUpdate(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiPointId") String poiPointIdStr) {
         
@@ -591,6 +671,12 @@ public class ApiPoi extends ApiGeneric {
         }
         if (poiPointId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        PoiPoint point = pointMngr.findById(poiPointId);
+        if (point == null) {
+            notFound(resp, "PoiPoint Not Found");
             return null;
         }
         
@@ -598,6 +684,7 @@ public class ApiPoi extends ApiGeneric {
         String name = req.getParameter("name");
         if (name != null) {
             name = NnStringUtil.htmlSafeAndTruncated(name);
+            point.setName(name);
         }
         
         // offsetStart
@@ -614,6 +701,7 @@ public class ApiPoi extends ApiGeneric {
             }
         } else {
             // origin setting
+            offsetStart = point.getStartTimeInt();
         }
         
         // offsetEnd
@@ -630,17 +718,23 @@ public class ApiPoi extends ApiGeneric {
             }
         } else {
             // origin setting
+            offsetEnd = point.getEndTimeInt();
         }
         
         if (offsetEnd - offsetStart <= 0) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
+        // collision check
+        point.setStartTime(offsetStart);
+        point.setEndTime(offsetEnd);
         
         // tags
-        String tags = req.getParameter("tags");
-        if (tags != null) {
-            
+        String tagText = req.getParameter("tags");
+        String tag = null;
+        if (tagText != null) {
+            tag = TagManager.processTagText(tagText);
+            point.setTag(tag);
         }
         
         // activate
@@ -648,9 +742,11 @@ public class ApiPoi extends ApiGeneric {
         String activateStr = req.getParameter("activate");
         if (activateStr != null) {
             activate = Boolean.valueOf(activateStr);
+            point.setActive(activate);
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        PoiPoint result = pointMngr.save(point);
+        result.setName(NnStringUtil.revertHtml(result.getName()));
         
         return result;
     }
@@ -670,6 +766,14 @@ public class ApiPoi extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
+        PoiPoint point = pointMngr.findById(poiPointId);
+        if (point == null) {
+            notFound(resp, "PoiPoint Not Found");
+            return null;
+        }
+        
+        pointMngr.delete(point);
         
         okResponse(resp);
         return null;
@@ -825,6 +929,40 @@ public class ApiPoi extends ApiGeneric {
         
         okResponse(resp);
         return null;
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/poi_points", method = RequestMethod.GET)
+    public @ResponseBody
+    List<PoiPoint> channelPoints(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        List<PoiPoint> results = pointMngr.findByChannel(channel.getId());
+        if (results == null) {
+            return new ArrayList<PoiPoint>();
+        }
+        
+        for (PoiPoint result : results) {
+            result.setName(NnStringUtil.revertHtml(result.getName()));
+        }
+        
+        return results;
     }
     
 }

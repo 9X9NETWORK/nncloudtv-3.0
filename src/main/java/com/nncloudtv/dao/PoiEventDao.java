@@ -18,7 +18,7 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
         super(PoiEvent.class);
     }
 
-    public PoiEvent findByPoint(long poiId) {
+    public PoiEvent findByPoint(long pointId) {
         PoiEvent detached = null;
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
@@ -26,7 +26,7 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
                          "  from poi_event " +
                          " where id in (select eventId " +
                                         " from poi " +
-                                        " where pointId = " + poiId + ")";
+                                        " where pointId = " + pointId + ")";
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
             query.setClass(PoiEvent.class);

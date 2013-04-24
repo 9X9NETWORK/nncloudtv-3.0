@@ -172,7 +172,7 @@ public class GenericDao<T> {
     
     public List<T> findAllByIds(Collection<Long> ids) {        
         List<T> results = new ArrayList<T>();        
-        for (Long id : ids) {
+        for (Long id : ids) { // TODO : the sql query in the for loop is bad
             T dao = null;
             dao = this.findById(id);
             if (dao != null) {

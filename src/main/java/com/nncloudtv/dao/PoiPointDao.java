@@ -17,44 +17,52 @@ public class PoiPointDao extends GenericDao<PoiPoint> {
     public PoiPointDao() {
         super(PoiPoint.class);
     }
-        
+    
     public List<PoiPoint> findByChannel(long channelId) {
+        
         List<PoiPoint> detached = new ArrayList<PoiPoint>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
         try {
-            String sql = "select * " +
-                           "from poi_point " +
-                         " where targetId in (select id from poi_point where channelId=" + channelId + ")" +
-                         " order by startTime" ; 
+            String sql = "select * from poi_point where targetId = " + channelId +
+                           " and type = " + PoiPoint.TYPE_CHANNEL;
                         
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
             query.setClass(PoiPoint.class);
             @SuppressWarnings("unchecked")
             List<PoiPoint> results = (List<PoiPoint>) query.execute();
-            detached = (List<PoiPoint>)pm.detachCopyAll(results);
-        } finally {
-            pm.close();
-        } 
-        return detached;        
-    }
-
-    public List<PoiPoint> findByProgram(long programId) {
-        
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        
-        List<PoiPoint> results = new ArrayList<PoiPoint>();
-        try {
-            Query query = pm.newQuery(PoiPoint.class);
-            query.setFilter("targetId == targetIdParam");
-            query.declareParameters("long targetIdParam");
-            //query.setOrdering("startTime asc");
-            @SuppressWarnings("unchecked")
-            List<PoiPoint> pois = (List<PoiPoint>) query.execute(programId);
-            results = (List<PoiPoint>) pm.detachCopyAll(pois);
+            if (results != null && results.size() > 0) {
+                detached = (List<PoiPoint>)pm.detachCopyAll(results);
+            }
         } finally {
             pm.close();
         }
+        
+        return detached;        
+    }
+    
+    public List<PoiPoint> findByProgram(long programId) {
+        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<PoiPoint> results = new ArrayList<PoiPoint>();
+        
+        try {
+            String sql = "select * from poi_point where targetId = " + programId +
+                           " and type = " + PoiPoint.TYPE_SUBEPISODE +
+                           " order by startTime";
+            log.info("sql:" + sql);
+            Query query = pm.newQuery("javax.jdo.query.SQL", sql);
+            query.setClass(PoiPoint.class);
+            @SuppressWarnings("unchecked")
+            List<PoiPoint> points = (List<PoiPoint>) query.execute();
+            if (points != null && points.size() > 0) {
+                results = (List<PoiPoint>) pm.detachCopyAll(points);
+            }
+        } finally {
+            pm.close();
+        }
+        
         return results;
     }
 

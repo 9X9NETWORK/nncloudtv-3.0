@@ -51,13 +51,32 @@ public class PoiCampaignManager {
         return result;
     }
     
+    public Poi save(Poi poi) {
+        
+        if (poi == null) {
+            return null;
+        }
+        
+        Date now = new Date();
+        poi.setUpdateDate(now);
+        
+        Poi result = poiDao.save(poi);
+        
+        return result;
+    }
+    
     public List<Poi> findPoisByCampaignId(Long campaignId) {
         
         if (campaignId == null) {
             return new ArrayList<Poi>();
         }
         
-        return new ArrayList<Poi>();
+        List<Poi> results = poiDao.findByCompaignId(campaignId);
+        if (results == null) {
+            return new ArrayList<Poi>();
+        }
+        
+        return results;
     }
     
     /** temporary function for spring-1 */
@@ -75,7 +94,7 @@ public class PoiCampaignManager {
         return results;
     }
     
-    public PoiCampaign findCompaignById(Long compaignId) {
+    public PoiCampaign findCampaignById(Long compaignId) {
         if (compaignId == null) {
             return null;
         }

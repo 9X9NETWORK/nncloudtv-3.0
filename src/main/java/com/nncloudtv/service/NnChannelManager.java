@@ -1063,6 +1063,7 @@ public class NnChannelManager {
         dao.save(channel);
     }
     
+    /** recommend deprecated, where findByIds exist */
     public List<NnChannel> findAllByIds(Set<Long> channelIdSet) {
     
         return dao.findAllByIds(channelIdSet);

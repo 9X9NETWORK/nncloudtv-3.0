@@ -39,7 +39,7 @@ public class PoiEventManager {
     }
     
     public void deleteByIds(List<Long> eventIds) {
-        List<PoiEvent> poiEvents = dao.findAllByIds(eventIds);
+        List<PoiEvent> poiEvents = dao.findAllByIds(eventIds); // when List too long, TODO : will need rewrite
         dao.deleteAll(poiEvents);
     }
     
@@ -111,8 +111,8 @@ public class PoiEventManager {
         return dao.findPoiEventsByPoi(poiId);
     }
     
-    public PoiEvent findByPoint(long poiId) {
-        return dao.findByPoint(poiId);
+    public PoiEvent findByPoint(long pointId) {
+        return dao.findByPoint(pointId);
     }
     
 }
