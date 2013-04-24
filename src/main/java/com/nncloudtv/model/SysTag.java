@@ -25,8 +25,10 @@ public class SysTag implements Serializable {
     public static final short TYPE_CATEGORY = 1;
     public static final short TYPE_SET = 2;
     public static final short TYPE_DAYPARTING = 3;
-    public static final short TYPE_STATIC = 4;
-
+    public static final short TYPE_PREVIOUS = 4;    
+    public static final short TYPE_SUBSCRIPTION = 5;
+    public static final short TYPE_ACCOUNT = 6;
+    
     @Persistent
     private short sorting;
     public static final short SORT_SEQ = 1; //default
