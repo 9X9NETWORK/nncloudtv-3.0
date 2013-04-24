@@ -38,25 +38,30 @@ public class SysTagDao extends GenericDao<SysTag> {
         
         return detached;
     }
-
+    
     //player channels means status=true and isPublic=true
-    public List<NnChannel> findPlayerChannelsById(long id) {
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limit) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
             /*
             select * 
               from nnchannel a1  
-            inner join 
-            (select distinct c.*  
+            inner join ( 
+             select distinct c.id  
                from systag_display d, systag_map m, nnchannel c  
               where d.systagId = 56 
                 and d.systagId = m.systagId 
-                and c.id = m.channelId  
-                and c.status = 0 
-                and c.isPublic = true) a2 
-            on a1.id=a2.id
+                and c.id = m.channelId
+                and c.isPublic = true  
+                and c.status = 0                
+                and (c.lang = 'en' or c.lang = 'other')
+                order by c.updateDate desc                
+              ) a2on a1.id=a2.id
             */            
+            String str = "order by c.updateDate desc";
+            if (limit)
+                str = "order by rand() limit 9";
             String sql = "select * from nnchannel a1 " +
                          " inner join " + 
                        " (select distinct c.id " + 
@@ -64,9 +69,11 @@ public class SysTagDao extends GenericDao<SysTag> {
                          " where d.systagId = " + id + 
                            " and d.systagId = m.systagId " +                           
                            " and c.id = m.channelId " +
+                           " and c.isPublic = true" + 
                            " and c.status = " + NnChannel.STATUS_SUCCESS +
-                           " and c.isPublic = true) a2" +
-                           " on a1.id=a2.id";
+                           " and (c.lang = '" + lang + "' or c.lang = 'other')" +
+                           str +
+                           ") a2 on a1.id=a2.id";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(NnChannel.class);

@@ -20,7 +20,7 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         super(SysTagDisplay.class);
     }    
 
-    public List<SysTagDisplay> findDayparting(short baseTime, long msoId) {
+    public List<SysTagDisplay> findFrontpage(long msoId, short type, String lang) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<SysTagDisplay> detached = new ArrayList<SysTagDisplay>();
         try {
@@ -28,10 +28,51 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
             select * 
               from systag_display a1   
             inner join 
-            (select d.*  
+            (select d.id  
+               from systag s, systag_display d  
+              where s.msoId = 1 
+                and s.type = 4 
+                and d.lang = 'zh'
+                and s.id = d.systagId
+               order by s.seq) a2 
+            on a1.id=a2.id
+            */
+            String sql = " select * from systag_display a1 " +
+                         "  inner join " +
+                         "(select d.id " + 
+                           " from systag s, systag_display d " +
+                         " where s.msoId = " + msoId + 
+                           " and s.type = " + type +
+                           " and d.lang = '" + lang + "'" +
+                           " and s.id = d.systagId " +                           
+                         " order by s.seq) a2" +
+                         " on a1.id=a2.id";
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(SysTagDisplay.class);
+            @SuppressWarnings("unchecked")
+            List<SysTagDisplay> results = (List<SysTagDisplay>) q.execute();
+            detached = (List<SysTagDisplay>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        }
+        return detached;                
+        
+    }
+    
+    public List<SysTagDisplay> findDayparting(short baseTime, String lang, long msoId) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<SysTagDisplay> detached = new ArrayList<SysTagDisplay>();
+        try {
+            /*
+            select * 
+              from systag_display a1   
+            inner join 
+            (select d.id  
                from systag s, systag_display d  
               where s.msoId = 1 
                 and type = 3 
+                and lang = 'en'
                 and s.id = d.systagId  
                 and (((s.timeStart != 0 or s.timeEnd != 0) and s.timeEnd > 3 and s.timeStart <= 3) or (s.timeStart = 0 and s.timeEnd = 0))  
                order by s.seq) a2 
@@ -42,7 +83,8 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
                          "(select d.id " + 
                            " from systag s, systag_display d " +
                          " where s.msoId = " + msoId + 
-                           " and type = " + SysTag.TYPE_DAYPARTING + 
+                           " and type = " + SysTag.TYPE_DAYPARTING +
+                           " and lang = '" + lang + "'" +
                            " and s.id = d.systagId " +                           
                            " and (((s.timeStart != 0 or s.timeEnd != 0) and s.timeEnd > " + baseTime + " and s.timeStart <= " + baseTime + ")" +
                                  " or (s.timeStart = 0 and s.timeEnd = 0)) " + 
