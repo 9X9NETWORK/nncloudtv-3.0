@@ -95,7 +95,7 @@ public class IosService {
             if (tag != null) {
                 result[0] += "piwik" + "\t" + "" + "\n";
             }
-            List<NnChannel> channels = tagMngr.findPlayerChannelsById(tagId);
+            List<NnChannel> channels = tagMngr.findPlayerChannelsById(tagId, lang);
             for (NnChannel c : channels) {
                 c.setSorting(NnChannelManager.getDefaultSorting(c));
             }
