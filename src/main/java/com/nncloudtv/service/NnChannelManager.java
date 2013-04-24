@@ -753,8 +753,8 @@ public class NnChannelManager {
                 log.info("Bad!!! should not continue.");
                 points.clear();
             }
-            //format: start time|endTime|context;start
-            String poiOutput = "";
+            //format: start time;endTime;type;context|
+            String poiStr = "";
             for (int i=0; i<points.size(); i++) {
                 PoiPoint point = points.get(i);
                 PoiEvent event = events.get(i);
@@ -764,10 +764,12 @@ public class NnChannelManager {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                poiOutput += point.getStartTime() + "|" + point.getEndTime() + "|" + context;
-                log.info("poi output:" + poiOutput);
+                String poiStrHere = point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
+                log.info("poi output:" + poiStrHere);
+                poiStr += poiStrHere;
+                log.info("poi output:" + poiStr);
             }
-            output += this.composeChannelLineupStr(c) + "\t" + poiOutput + "\n";            
+            output += this.composeChannelLineupStr(c) + "\t" + poiStr + "\n";            
         }
         
         return output;

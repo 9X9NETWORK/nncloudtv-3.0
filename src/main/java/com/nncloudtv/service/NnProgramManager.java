@@ -189,7 +189,6 @@ public class NnProgramManager {
     }
     
     public String findLatestProgramInfoByChannels(List<NnChannel> channels) {
-        log.info("!!!!!! enter find latest!!!!");
         YtProgramDao ytDao = new YtProgramDao();
         String output = "";
         for (NnChannel c : channels) {
@@ -683,8 +682,9 @@ public class NnProgramManager {
                         } catch (UnsupportedEncodingException exception) {
                             exception.printStackTrace();
                         }
-                        poiStr += point.getStartTime() + "|" + point.getEndTime() + "|" + context;
-                        log.info("poi output:" + poiStr);
+                        String poiStrHere = i + ";" + point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
+                        log.info("poi output:" + poiStrHere);
+                        poiStr += poiStrHere;
                     }
 //                    for (PoiPoint point : points) {
 //                        PoiEvent event = eventMngr.findByPoint(point.getId());
