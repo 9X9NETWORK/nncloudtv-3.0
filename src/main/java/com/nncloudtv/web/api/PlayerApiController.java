@@ -831,7 +831,7 @@ public class PlayerApiController {
      *         4.  channel description, <br/> 
      *         5.  channel image url, separeted by |, max 3, version before 3.2 will have one image url without |<br/>
      *         6.  program count, <br/> 
-     *         7.  channel type(integer, see note), <br/><br/> 
+     *         7.  channel type(integer, see note), <br/> 
      *         8.  channel status(integer, see note), <br/>
      *         9.  contentType(integer, see note), <br/> 
      *         10. youtube id (for player youtube query), <br/>
