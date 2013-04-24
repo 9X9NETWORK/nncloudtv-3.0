@@ -27,12 +27,18 @@ public class SysTagDisplayManager {
         return sets;
     }
 
-    public List<SysTagDisplay> findDayparting(short baseTime, long msoId) {
-        List<SysTagDisplay> sets = dao.findDayparting(baseTime, msoId);
+    public List<SysTagDisplay> findDayparting(short baseTime, String lang, long msoId) {
+        List<SysTagDisplay> sets = dao.findDayparting(baseTime, lang, msoId);
         log.info("dayparting size:" + sets.size());
         return sets;
     } 
-        
+
+    public List<SysTagDisplay> findFrontpage(long msoId, short type, String lang) {
+        List<SysTagDisplay> sets = dao.findFrontpage(msoId, type, lang);
+        log.info("dayparting size:" + sets.size());
+        return sets;
+    } 
+    
     public SysTagDisplay findById(long id) {
         return dao.findById(id);
     }

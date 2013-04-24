@@ -79,11 +79,33 @@ public class SysTagManager {
     }
 
     //player channels means status=true and isPublic=true    
-    public List<NnChannel> findPlayerChannelsById(long id) {
-        List<NnChannel> channels = dao.findPlayerChannelsById(id);
+    public List<NnChannel> findPlayerChannelsById(long id, String lang) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false);
         return channels;
     }
 
+    public List<NnChannel> findLimitPlayerChannelsById(long id, String lang) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, true);
+        return channels;
+    }
+    
+    public short convertDashboardType(long systagId) {
+        SysTag tag = this.findById(systagId);
+        if (tag == null)
+            return 99;
+        if (tag.getType() == SysTag.TYPE_DAYPARTING)
+            return 0;
+        if (tag.getType() == SysTag.TYPE_ACCOUNT)
+            return 2;
+        if (tag.getType() == SysTag.TYPE_SUBSCRIPTION)
+            return 1;
+        return 0;
+            
+    }
+    public static final short TYPE_SUBSCRIPTION = 1;
+    public static final short TYPE_ACCOUNT = 2;
+    public static final short TYPE_CHANNEL = 3;
+    
     public void setupChannelCategory(Long categoryId, Long channelId) {
         
         List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId);
