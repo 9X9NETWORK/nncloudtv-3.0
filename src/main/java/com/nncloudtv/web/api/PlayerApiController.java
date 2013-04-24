@@ -825,35 +825,35 @@ public class PlayerApiController {
      *         position, set id, set name, set image url, set type
      *         <p>  
      *         Channel info has following fields: <br/>
-     *         grid position, <br/> 
-     *         channel id, <br/>
-     *         channel name, <br/> 
-     *         channel description, <br/> 
-     *         channel image url, separeted by |, max 3, version before 3.2 will have one image url without |<br/>
-     *         program count, <br/> 
-     *         channel type(integer, see note), <br/> 
-     *         channel status(integer, see note), <br/>
-     *         contentType(integer, see note), <br/> 
-     *         youtube id (for player youtube query), <br/>
-     *         channel/episodes last update time (see note) <br/>
-     *         channel sorting (see note), <br/> 
-     *         piwik id, <br/> 
-     *         last watched episode <br/>
-     *         youtube real channel name <br/>
-     *         subscription count. it is the last field of the version before 3.2.<br/>
-     *         view count <br/>
-     *         tags, separated by comma. example "run,marathon" <br/>         
-     *         curator id <br/>
-     *         curator name <br/>
-     *         curator description <br/>
-     *         curator imageUrl <br/>
-     *         subscriber ids, separated by "|" <br/>
-     *         subscriber images, separated by "|" <br/>
-     *         last episode title<br/>
+     *         grid position, <br/><br/> 
+     *         channel id, <br/><br/>
+     *         channel name, <br/><br/>
+     *         channel description, <br/><br/> 
+     *         channel image url, separeted by |, max 3, version before 3.2 will have one image url without |<br/><br/>
+     *         program count, <br/><br/> 
+     *         channel type(integer, see note), <br/><br/> 
+     *         channel status(integer, see note), <br/><br/>
+     *         contentType(integer, see note), <br/><br/> 
+     *         youtube id (for player youtube query), <br/><br/>
+     *         channel/episodes last update time (see note) <br/><br/>
+     *         channel sorting (see note), <br/><br/> 
+     *         piwik id, <br/><br/> 
+     *         last watched episode <br/><br/>
+     *         youtube real channel name <br/><br/>
+     *         subscription count. it is the last field of the version before 3.2.<br/><br/>
+     *         view count <br/><br/>
+     *         tags, separated by comma. example "run,marathon" <br/><br/>         
+     *         curator id <br/><br/>
+     *         curator name <br/><br/>
+     *         curator description <br/><br/>
+     *         curator imageUrl <br/><br/>
+     *         subscriber ids, separated by "|" <br/><br/>
+     *         subscriber images, separated by "|" <br/><br/>
+     *         last episode title<br/><br/>
      *         poi information, each poi is separated by "|". 
      *         Each poi unit has start time, end time, poi type, urlencode json poi context; they are separated by ";".
      *         Poi currently there's only one type hyper link. This info is also included in the poi context.
-     *         A poi unit looks like this: 3;5;1;%7B%0Amessage%3A+%22%E6%9B%B4%E5%A4%9A%E5%A3%B9%E5%82%B3%E5%AA%92%E5%85%A7%E5%B9%95%2C%E7%9B%A1%E5%9C%A8%E5%AA%92%E9%AB%94%E5%81%9C%E7%9C%8B%E8%81%BD%22%2C%0Abutton%3A+%5B%0A%7Btext%3A+%22%E4%BA%86%E8%A7%A3%E6%9B%B4%E5%A4%9A%22%2C+actionUrl%3A+%22http%3A%2F%2Fwww.9x9.tv%2Fview%3Fch%3D1380%26ep%3D6789%5D%22%7D%0A++++++++%5D%0A%7D| 
+     *         A poi unit looks like this: 3;5;1;%7B%0Amessage%3A+%22%E6%9B%B4%E5%A4%9A%E5%A3%B9%E5%82%B3%E5%AA%92%E5%85%A7%E5%B9%95%2C%E7%9B%A1%E5%9C%A8%E5%AA%92%E9%AB%94%E5%81%9C%E7%9C%8B%E8%81%BD%22%2C%0Abutton%3A+%5B%0A%7Btext%3A+%22%E4%BA%86%E8%A7%A3%E6%9B%B4%E5%A4%9A%22%2C+actionUrl%3A+%22http%3A%2F%2Fwww.9x9.tv%2Fview%3Fch%3D1380%26ep%3D6789%5D%22%7D%0A++++++++%5D%0A%7D|<br/><br/> 
      *         </blockquote>                  
      *         <p>
      *         set type: TYPE_USER = 1; TYPE_READONLY = 2;
@@ -956,29 +956,29 @@ public class PlayerApiController {
      * @param  limit the count of records
      * @return <p>Programs info. Each program is separate by \n.</p>
      *          <p>Program info has: <br/>
-     *            channelId <br/>
-     *            programId <br/>
-     *            program name, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode name and follows by each sub-episode's name. <br/>
-     *            description(max length=256), version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode description and follows by each sub-episode's description.<br/>
-     *            programType, version after 3.2 has "|" to separate between sub-episodes, expect the first field to be empty since it has no umbrella program type.<br/>
-     *            duration, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode duration and follows by each sub-episode's duration.<br/>
-     *            programThumbnailUrl, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode image and follows by each sub-episode's image.<br/>
-     *            programLargeThumbnailUrl, version after 3.2 has "|" to separate between sub-episodes, rule same as programThumbnailUrl<br/>
+     *            channelId <br/><br/>
+     *            programId <br/><br/>
+     *            program name, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode name and follows by each sub-episode's name. <br/><br/>
+     *            description(max length=256), version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode description and follows by each sub-episode's description.<br/><br/>
+     *            programType, version after 3.2 has "|" to separate between sub-episodes, expect the first field to be empty since it has no umbrella program type.<br/><br/>
+     *            duration, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode duration and follows by each sub-episode's duration.<br/><br/>
+     *            programThumbnailUrl, version after 3.2 has "|" to separate between sub-episodes, it starts from the umbrella episode image and follows by each sub-episode's image.<br/><br/>
+     *            programLargeThumbnailUrl, version after 3.2 has "|" to separate between sub-episodes, rule same as programThumbnailUrl<br/><br/>
      *            url1(mpeg4/slideshow), version after 3.2 has "|" to separate between videos. 
      *            Each unit starts with a video url, separated by ";" is the start time (unit is seconds), 
      *            after the next ";" is the end play time of the video. Expect the first field to be empty since there is no umbrella video url.
-     *            Example: |http://www.youtube.com/watch?v=TDpqS6GS_OQ;50;345|http://www.youtube.com/watch?v=JcmKq9kmP5U;0;380<br/> 
-     *            url2(webm), reserved<br/> 
-     *            url3(flv more likely), reserved<br/>
-     *            url4(audio), reserved<br/> 
-     *            publish date timestamp, version before 3.2 stops here<br/>
-     *            reserved<br/>
-     *            title card <br/>
+     *            Example: |http://www.youtube.com/watch?v=TDpqS6GS_OQ;50;345|http://www.youtube.com/watch?v=JcmKq9kmP5U;0;380<br/><br/> 
+     *            url2(webm), reserved<br/><br/> 
+     *            url3(flv more likely), reserved<br/><br/>
+     *            url4(audio), reserved<br/><br/> 
+     *            publish date timestamp, version before 3.2 stops here<br/><br/>
+     *            reserved<br/><br/>
+     *            title card <br/><br/>
      *            poi information, each poi is separated by "|". 
      *            Each poi unit starts with a number, to indicate what sub-episode it is in; follows start time; end time; poi type; urlencode json context. 
      *            The information within the poi unit is separated by ";".
      *            Currently there's only one poi type which is hyper link. This info is also included in the context.
-     *            <br/>
+     *            <br/><br/>
      */        
     @RequestMapping(value="programInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String programInfo(
