@@ -849,7 +849,11 @@ public class PlayerApiController {
      *         curator imageUrl <br/>
      *         subscriber ids, separated by "|" <br/>
      *         subscriber images, separated by "|" <br/>
-     *         last episode title
+     *         last episode title<br/>
+     *         poi information, each poi is separated by "|". 
+     *         Each poi unit has start time, end time, poi type, urlencode json poi context. They are separated by ";".
+     *         Currently there's only one type hyper link. This info is also included in the context json data.
+     *         A poi unit looks like this: 3;5;1;%7B%0Amessage%3A+%22%E6%9B%B4%E5%A4%9A%E5%A3%B9%E5%82%B3%E5%AA%92%E5%85%A7%E5%B9%95%2C%E7%9B%A1%E5%9C%A8%E5%AA%92%E9%AB%94%E5%81%9C%E7%9C%8B%E8%81%BD%22%2C%0Abutton%3A+%5B%0A%7Btext%3A+%22%E4%BA%86%E8%A7%A3%E6%9B%B4%E5%A4%9A%22%2C+actionUrl%3A+%22http%3A%2F%2Fwww.9x9.tv%2Fview%3Fch%3D1380%26ep%3D6789%5D%22%7D%0A++++++++%5D%0A%7D| 
      *         </blockquote>                  
      *         <p>
      *         set type: TYPE_USER = 1; TYPE_READONLY = 2;
@@ -970,7 +974,11 @@ public class PlayerApiController {
      *            publish date timestamp, version before 3.2 stops here<br/>
      *            reserved<br/>
      *            title card <br/>
-     */
+     *            poi information, each poi is separated by "|". 
+     *            Each poi unit starts with a number number, to indicate what sub-episode it is in; follows start time; end time; poi type; urlencode json poi context. They are separated by ";".
+     *            Currently there's only one type hyper link. This info is also included in the context json data.
+     *            <br/>
+     */        
     @RequestMapping(value="programInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String programInfo(
             @RequestParam(value="v", required=false) String v,
@@ -2420,6 +2428,15 @@ public class PlayerApiController {
         return output;        
     }
 
+    /**
+     * Streaming portal API. It returns list of sets; channel list of the first set; first episode of every channel in the first set.
+     * 
+     * @param time hour, 0-23, required
+     * @param lang en or zh. default is en
+     * @return <p>Three sections, First is sets. Format please reference listRecommended. <br/> 
+     *            Second is the list of channels of the first set from the first section. Format please reference chanenlLineup. <br/>
+     *            Third is the first episode of every channel from the second section. Format please reference programInfo.
+     */    
     @RequestMapping(value="portal", produces = "text/plain; charset=utf-8")
     public @ResponseBody String portal(                      
             @RequestParam(value="lang", required=false) String lang,
