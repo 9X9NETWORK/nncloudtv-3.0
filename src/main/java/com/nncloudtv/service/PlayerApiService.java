@@ -2402,6 +2402,7 @@ public class PlayerApiService {
     public String frontpage(String time, String stack, String user) {
         short baseTime = Short.valueOf(time);
         String lang = LangTable.LANG_EN;
+        lang = mso.getLang();
         //section 1: items
         List<String> data = new ArrayList<String>();
         String[] itemOutput = {""};
