@@ -83,6 +83,21 @@ public class SysTagManager {
         List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false);
         return channels;
     }
+    
+    //twin whit findPlayerChannelsById but lang independent
+    public List<NnChannel> findStoreChannelsById(Long sysTagId) {
+        
+        if (sysTagId == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        List<NnChannel> channels = dao.findStoreChannelsById(sysTagId);
+        if (channels == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        return channels;
+    }
 
     public List<NnChannel> findLimitPlayerChannelsById(long id, String lang) {
         List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, true);

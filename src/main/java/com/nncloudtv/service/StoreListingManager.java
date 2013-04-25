@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.StoreListingDao;
-import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.StoreListing;
 
@@ -201,7 +200,11 @@ public class StoreListingManager {
         List<StoreListing> blackList = dao.findByMsoId(msoId);
         
         // this categoryId = sysTagId, it should belong to 9x9, the 9x9's category
-        List<NnChannel> store9x9 = sysTagMngr.findPlayerChannelsById(categoryId, LangTable.LANG_ZH);
+        List<NnChannel> store9x9 = sysTagMngr.findStoreChannelsById(categoryId);
+        if (store9x9 == null || store9x9.size() == 0) {
+            return new ArrayList<Long>();
+        }
+        
         Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
         List<Long> store9x9Ids = new ArrayList<Long>();
         for (NnChannel channel : store9x9) {
@@ -209,9 +212,6 @@ public class StoreListingManager {
             store9x9Ids.add(channel.getId());
         }
         
-        if (store9x9 == null || store9x9.size() == 0) {
-            return new ArrayList<Long>();
-        }
         if (blackList == null || blackList.size() == 0){
             return store9x9Ids;
         }
@@ -222,7 +222,7 @@ public class StoreListingManager {
             }
         }
         
-        Collection<Long> storeMso = storeMsoMap.values();
+        Collection<Long> storeMso = storeMsoMap.values(); // TODO : channels may loose order by updateDate
         if (storeMso.size() == 0) {
             return new ArrayList<Long>();
         }
