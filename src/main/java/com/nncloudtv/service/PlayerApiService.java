@@ -2424,7 +2424,7 @@ public class PlayerApiService {
         List<SysTagDisplay> account = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_ACCOUNT, lang);
         
         sets.addAll(account);   
-        for (int i=0; i<dayparting.size(); i++) {            
+        for (int i=0; i<sets.size(); i++) {            
             SysTagDisplay d = sets.get(i);
             int opened = 0;
             if (i == 0) opened = 1; 
