@@ -35,7 +35,7 @@ public class SysTagDisplayManager {
 
     public List<SysTagDisplay> findFrontpage(long msoId, short type, String lang) {
         List<SysTagDisplay> sets = dao.findFrontpage(msoId, type, lang);
-        log.info("dayparting size:" + sets.size());
+        log.info("frontpage size:" + sets.size());
         return sets;
     } 
     
