@@ -1,8 +1,12 @@
 package com.nncloudtv.web.api;
 
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -2294,12 +2298,20 @@ public class PlayerApiController {
      * Link of facebook login
      */
     @RequestMapping(value="fbLogin")
-    public String fbLogin(HttpServletRequest req,
-            @RequestParam(value="subCh", required=false) String subCh,            
+    public String fbLogin(HttpServletRequest req,            
             @RequestParam(value="mso", required=false) String mso) {
         if (mso == null) 
             mso = "9x9"; 
-        String url = FacebookLib.getDialogOAuthPath(subCh, mso);        
+        String uri = "";
+        try {
+            uri= new URI(req.getHeader("referer")).getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        log.info("uri:" + uri);
+        uri = uri.replaceAll("\\/", "_");
+        log.info("rewrite uri:" + uri);
+        String url = FacebookLib.getDialogOAuthPath(uri);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;
