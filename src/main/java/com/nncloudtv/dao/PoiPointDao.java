@@ -50,7 +50,7 @@ public class PoiPointDao extends GenericDao<PoiPoint> {
         try {
             String sql = "select * from poi_point where targetId = " + programId +
                            " and type = " + PoiPoint.TYPE_SUBEPISODE +
-                           " order by startTime";
+                           " order by startTime desc";
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
             query.setClass(PoiPoint.class);

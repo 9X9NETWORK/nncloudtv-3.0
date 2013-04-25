@@ -42,7 +42,11 @@ public class PoiEvent implements Serializable {
     
     @Persistent
     private short type;
-    public static final short TYPE_HYPERCHANNEL = 1;
+    public static final short TYPE_UNDEFINED = 0;
+    public static final short TYPE_HYPERLINK = 1;
+    public static final short TYPE_INSTANTNOTIFICATION = 2;
+    public static final short TYPE_SCHEDULEDNOTIFICATION = 3;
+    public static final short TYPE_POLL = 4;
 
     //json format, example
     /**

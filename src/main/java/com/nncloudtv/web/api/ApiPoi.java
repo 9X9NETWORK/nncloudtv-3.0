@@ -25,12 +25,14 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiCampaign;
+import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PoiCampaignManager;
+import com.nncloudtv.service.PoiEventManager;
 import com.nncloudtv.service.PoiPointManager;
 import com.nncloudtv.service.TagManager;
 
@@ -45,15 +47,17 @@ public class ApiPoi extends ApiGeneric {
     PoiCampaignManager campaignMngr;
     PoiPointManager pointMngr;
     NnChannelManager channelMngr;
+    PoiEventManager eventMngr;
     
     @Autowired
     public ApiPoi(NnUserManager userMngr, NnProgramManager programMngr, PoiCampaignManager campaignMngr,
-                    PoiPointManager pointMngr, NnChannelManager channelMngr) {
+                    PoiPointManager pointMngr, NnChannelManager channelMngr, PoiEventManager eventMngr) {
         this.userMngr = userMngr;
         this.programMngr = programMngr;
         this.campaignMngr = campaignMngr;
         this.pointMngr = pointMngr;
         this.channelMngr = channelMngr;
+        this.eventMngr = eventMngr;
     }
     
     @RequestMapping(value = "users/{userId}/poi_campaigns", method = RequestMethod.GET)
@@ -781,7 +785,7 @@ public class ApiPoi extends ApiGeneric {
     
     @RequestMapping(value = "poi_events", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, Object> eventCreate(HttpServletRequest req,
+    PoiEvent eventCreate(HttpServletRequest req,
             HttpServletResponse resp) {
         
         // name
@@ -792,7 +796,7 @@ public class ApiPoi extends ApiGeneric {
         }
         name = NnStringUtil.htmlSafeAndTruncated(name);
         
-        // type TODO : need range check ?
+        // type
         Short type = null;
         String typeStr = req.getParameter("type");
         if (typeStr != null) {
@@ -801,6 +805,10 @@ public class ApiPoi extends ApiGeneric {
             } catch (NumberFormatException e) {
             }
             if (type == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            if (eventMngr.isValidEventType(type) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -816,24 +824,61 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        // notificationMsg
-        String notificationMsg = req.getParameter("notificationMsg");
+        PoiEvent newEvent = new PoiEvent();
+        newEvent.setName(name);
+        newEvent.setType(type);
+        newEvent.setContext(context);
         
-        // notificationSchedule
-        String notificationSchedule = req.getParameter("notificationSchedule");
-        
-        if (type == 3) {
-            // set notificationMsg and notificationSchedule
+        // notifyMsg
+        if (newEvent.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION ||
+             newEvent.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            String notifyMsg = req.getParameter("notifyMsg");
+            if (notifyMsg == null) {
+                badRequest(resp, MISSING_PARAMETER);
+                return null;
+            }
+            notifyMsg = NnStringUtil.htmlSafeAndTruncated(notifyMsg);
+            newEvent.setNotifyMsg(notifyMsg);
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        // notifyScheduler
+        if (newEvent.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            String notifyScheduler = req.getParameter("notifyScheduler");
+            if (notifyScheduler == null) {
+                badRequest(resp, MISSING_PARAMETER);
+                return null;
+            }
+            String[] timestampList = notifyScheduler.split(",");
+            Long timestamp = null;
+            for (String timestampStr : timestampList) {
+                
+                timestamp = null;
+                try {
+                    timestamp = Long.valueOf(timestampStr);
+                } catch(Exception e) {
+                }
+                if (timestamp == null) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+            }
+            newEvent.setNotifyScheduler(notifyScheduler);
+        }
+        
+        PoiEvent result = eventMngr.create(newEvent);
+        
+        result.setName(NnStringUtil.revertHtml(result.getName()));
+        if (result.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION ||
+                result.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            result.setNotifyMsg(NnStringUtil.revertHtml(result.getNotifyMsg()));
+        }
         
         return result;
     }
     
     @RequestMapping(value = "poi_events/{poiEventId}", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> event(HttpServletRequest req,
+    PoiEvent event(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiEventId") String poiEventIdStr) {
         
@@ -847,14 +892,24 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        PoiEvent result = eventMngr.findById(poiEventId);
+        if (result == null) {
+            notFound(resp, "PoiEvent Not Found");
+            return null;
+        }
+        
+        result.setName(NnStringUtil.revertHtml(result.getName()));
+        if (result.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION ||
+                result.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            result.setNotifyMsg(NnStringUtil.revertHtml(result.getNotifyMsg()));
+        }
         
         return result;
     }
     
     @RequestMapping(value = "poi_events/{poiEventId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Map<String, Object> eventUpdate(HttpServletRequest req,
+    PoiEvent eventUpdate(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiEventId") String poiEventIdStr) {
         
@@ -865,6 +920,12 @@ public class ApiPoi extends ApiGeneric {
         }
         if (poiEventId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        PoiEvent event = eventMngr.findById(poiEventId);
+        if (event == null) {
+            notFound(resp, "PoiEvent Not Found");
             return null;
         }
         
@@ -872,9 +933,12 @@ public class ApiPoi extends ApiGeneric {
         String name = req.getParameter("name");
         if (name != null) {
             name = NnStringUtil.htmlSafeAndTruncated(name);
+            event.setName(name);
         }
         
-        // type TODO : need range check ?
+        Boolean shouldContainNotifyMsg = false;
+        Boolean shouldContainNotifyScheduler = false;
+        // type
         Short type = null;
         String typeStr = req.getParameter("type");
         if (typeStr != null) {
@@ -886,27 +950,81 @@ public class ApiPoi extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-        } else {
-            // origin setting
+            if (eventMngr.isValidEventType(type) == false) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            Short originType = event.getType();
+            if (originType == PoiEvent.TYPE_UNDEFINED || originType == PoiEvent.TYPE_HYPERLINK ||
+                 originType == PoiEvent.TYPE_POLL) {
+                if (type == PoiEvent.TYPE_INSTANTNOTIFICATION || type == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+                    shouldContainNotifyMsg = true;
+                }
+            }
+            if (originType == PoiEvent.TYPE_UNDEFINED || originType == PoiEvent.TYPE_HYPERLINK ||
+                    originType == PoiEvent.TYPE_POLL || originType == PoiEvent.TYPE_INSTANTNOTIFICATION) {
+                   if (type == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+                       shouldContainNotifyScheduler = true;
+                   }
+            }
+            
+            event.setType(type);
         }
         
         // context
         String context = req.getParameter("context");
         if (context != null) {
-            
+            event.setContext(context);
         }
         
-        // notificationMsg
-        String notificationMsg = req.getParameter("notificationMsg");
-        
-        // notificationSchedule
-        String notificationSchedule = req.getParameter("notificationSchedule");
-        
-        if (type == 3) {
-            // set notificationMsg and notificationSchedule
+        // notifyMsg
+        if (event.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION ||
+             event.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            String notifyMsg = req.getParameter("notifyMsg");
+            if (shouldContainNotifyMsg == true && notifyMsg == null) {
+                badRequest(resp, MISSING_PARAMETER);
+                return null;
+            }
+            if (notifyMsg != null) {
+                notifyMsg = NnStringUtil.htmlSafeAndTruncated(notifyMsg);
+                event.setNotifyMsg(notifyMsg);
+            }
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        // notifyScheduler
+        if (event.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            String notifyScheduler = req.getParameter("notifyScheduler");
+            if (shouldContainNotifyScheduler == true && notifyScheduler == null) {
+                badRequest(resp, MISSING_PARAMETER);
+                return null;
+            }
+            if (notifyScheduler != null) {
+                String[] timestampList = notifyScheduler.split(",");
+                Long timestamp = null;
+                for (String timestampStr : timestampList) {
+                    
+                    timestamp = null;
+                    try {
+                        timestamp = Long.valueOf(timestampStr);
+                    } catch(Exception e) {
+                    }
+                    if (timestamp == null) {
+                        badRequest(resp, INVALID_PARAMETER);
+                        return null;
+                    }
+                }
+                event.setNotifyScheduler(notifyScheduler);
+            }
+        }
+        
+        PoiEvent result = eventMngr.save(event);
+        
+        result.setName(NnStringUtil.revertHtml(result.getName()));
+        if (result.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION ||
+                result.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            result.setNotifyMsg(NnStringUtil.revertHtml(result.getNotifyMsg()));
+        }
         
         return result;
     }
@@ -963,6 +1081,73 @@ public class ApiPoi extends ApiGeneric {
         }
         
         return results;
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/poi_points", method = RequestMethod.POST)
+    public @ResponseBody
+    PoiPoint channelPointCreate(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        // targetId
+        Long targetId = channel.getId();
+        
+        // targetType
+        Short targetType = PoiPoint.TYPE_CHANNEL;
+        
+        // name
+        String name = req.getParameter("name");
+        if (name == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        name = NnStringUtil.htmlSafeAndTruncated(name);
+        
+        // collision check
+        
+        PoiPoint newPoint = new PoiPoint();
+        newPoint.setTargetId(targetId);
+        newPoint.setType(targetType);
+        newPoint.setName(name);
+        newPoint.setStartTime(0);
+        newPoint.setEndTime(0);
+        
+        // tag
+        String tagText = req.getParameter("tag");
+        String tag = null;
+        if (tagText != null) {
+            tag = TagManager.processTagText(tagText);
+        }
+        newPoint.setTag(tag);
+        
+        // active, default : true
+        Boolean active = true;
+        String activeStr = req.getParameter("active");
+        if (activeStr != null) {
+            active = Boolean.valueOf(activeStr);
+        }
+        newPoint.setActive(active);
+        
+        PoiPoint result = pointMngr.create(newPoint);
+        result.setName(NnStringUtil.revertHtml(result.getName()));
+        
+        return result;
     }
     
 }

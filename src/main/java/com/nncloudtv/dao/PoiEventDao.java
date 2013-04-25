@@ -1,6 +1,5 @@
 package com.nncloudtv.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -41,6 +40,7 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
         return detached;                            
     }
     
+    /*
     public List<PoiEvent> findPoiEventsByPoi(long poiId) {
         List<PoiEvent> results = new ArrayList<PoiEvent>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
@@ -63,6 +63,7 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
         } 
         return results;                            
     }
+    */
     
 }
 

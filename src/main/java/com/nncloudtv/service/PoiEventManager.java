@@ -46,7 +46,7 @@ public class PoiEventManager {
     public static String composeContext(Map<String, Object> context, int eventType) {
         // compose rule
         String result = "";
-        if (eventType == PoiEvent.TYPE_HYPERCHANNEL) {
+        if (eventType == PoiEvent.TYPE_HYPERLINK) {
             if (context.containsKey("link")) {
                 result += context.get("link");
             }
@@ -85,7 +85,7 @@ public class PoiEventManager {
     
     public Map<String, Object> eventExplainFactory(PoiEvent event) {
         Map<String, Object> output = new TreeMap<String, Object>();
-        if (event.getType() == PoiEvent.TYPE_HYPERCHANNEL) {
+        if (event.getType() == PoiEvent.TYPE_HYPERLINK) {
             Map<String, Object> context = explainContext_hyperChannel(event.getContext());
             output.putAll(context);
         }
@@ -94,25 +94,48 @@ public class PoiEventManager {
         return output;
     }
     
+    /*
     public List<PoiEvent> findPoiEventsByPoiId(long poiId) {
-        /*
-        List<Long> eventIds = new ArrayList<Long>();
-        List<PoiEvent> poiEvents = new ArrayList<PoiEvent>();
-        List<PoiMap> poiMaps = poiMapDao.findByPoiId(poiId);
-        if (poiMaps.size() == 0) {
-            return poiEvents;
-        }
-        for (PoiMap poiMap : poiMaps) {
-            eventIds.add(poiMap.getEventId());
-        }
-        poiEvents = dao.findAllByIds(eventIds);
-        return poiEvents;
-        */
         return dao.findPoiEventsByPoi(poiId);
     }
+    */
     
     public PoiEvent findByPoint(long pointId) {
         return dao.findByPoint(pointId);
+    }
+    
+    public PoiEvent findById(Long eventId) {
+        
+        if (eventId == null) {
+            return null;
+        }
+        
+        PoiEvent result = dao.findById(eventId);
+        return result;
+    }
+    
+    public boolean isValidEventType(Short eventType) {
+        
+        if (eventType == null) {
+            return false;
+        }
+        if (eventType == PoiEvent.TYPE_UNDEFINED) {
+            return true;
+        }
+        if (eventType == PoiEvent.TYPE_HYPERLINK) {
+            return true;
+        }
+        if (eventType == PoiEvent.TYPE_INSTANTNOTIFICATION) {
+            return true;
+        }
+        if (eventType == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            return true;
+        }
+        if (eventType == PoiEvent.TYPE_POLL) {
+            return true;
+        }
+        
+        return false;
     }
     
 }
