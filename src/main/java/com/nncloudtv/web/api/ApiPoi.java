@@ -325,15 +325,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        // poiPointId
-        Long poiPointId = null;
-        String poiPointIdStr = req.getParameter("poiPointId");
-        if (poiPointIdStr != null) {
+        // pointId
+        Long pointId = null;
+        String pointIdStr = req.getParameter("pointId");
+        if (pointIdStr != null) {
             try {
-                poiPointId = Long.valueOf(poiPointIdStr);
+                pointId = Long.valueOf(pointIdStr);
             } catch (NumberFormatException e) {
             }
-            if (poiPointId == null) {
+            if (pointId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -342,15 +342,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        // poiEventId
-        Long poiEventId = null;
-        String poiEventIdStr = req.getParameter("poiEventId");
-        if (poiEventIdStr != null) {
+        // eventId
+        Long eventId = null;
+        String eventIdStr = req.getParameter("eventId");
+        if (eventIdStr != null) {
             try {
-                poiEventId = Long.valueOf(poiEventIdStr);
+                eventId = Long.valueOf(eventIdStr);
             } catch (NumberFormatException e) {
             }
-            if (poiEventId == null) {
+            if (eventId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -362,8 +362,8 @@ public class ApiPoi extends ApiGeneric {
         // create the poi
         Poi newPoi = new Poi();
         newPoi.setCampaignId(campaign.getId());
-        newPoi.setPointId(poiPointId);
-        newPoi.setEventId(poiEventId);
+        newPoi.setPointId(pointId);
+        newPoi.setEventId(eventId);
         
         // startDate
         String startDateStr = req.getParameter("startDate");
@@ -581,21 +581,21 @@ public class ApiPoi extends ApiGeneric {
         }
         name = NnStringUtil.htmlSafeAndTruncated(name);
         
-        // offsetStart & offsetEnd
-        Integer offsetStart = null;
-        Integer offsetEnd = null;
-        String offsetStartStr = req.getParameter("offsetStart");
-        String offsetEndStr = req.getParameter("offsetEnd");
-        if (offsetStartStr == null || offsetEndStr == null) {
+        // startTime & endTime
+        Integer startTime = null;
+        Integer endTime = null;
+        String startTimeStr = req.getParameter("startTime");
+        String endTimeStr = req.getParameter("endTime");
+        if (startTimeStr == null || endTimeStr == null) {
             badRequest(resp, MISSING_PARAMETER);
             return null;
         } else {
             try {
-                offsetStart = Integer.valueOf(offsetStartStr);
-                offsetEnd = Integer.valueOf(offsetEndStr);
+                startTime = Integer.valueOf(startTimeStr);
+                endTime = Integer.valueOf(endTimeStr);
             } catch (NumberFormatException e) {
             }
-            if ((offsetStart == null) || (offsetStart < 0) || (offsetEnd == null) || (offsetEnd <= 0) || (offsetEnd - offsetStart <= 0)) {
+            if ((startTime == null) || (startTime < 0) || (endTime == null) || (endTime <= 0) || (endTime - startTime <= 0)) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -606,24 +606,24 @@ public class ApiPoi extends ApiGeneric {
         newPoint.setTargetId(targetId);
         newPoint.setType(targetType);
         newPoint.setName(name);
-        newPoint.setStartTime(offsetStart);
-        newPoint.setEndTime(offsetEnd);
+        newPoint.setStartTime(startTime);
+        newPoint.setEndTime(endTime);
         
-        // tags
-        String tagText = req.getParameter("tags");
+        // tag
+        String tagText = req.getParameter("tag");
         String tag = null;
         if (tagText != null) {
             tag = TagManager.processTagText(tagText);
         }
         newPoint.setTag(tag);
         
-        // activate, default : true
-        Boolean activate = true;
-        String activateStr = req.getParameter("activate");
-        if (activateStr != null) {
-            activate = Boolean.valueOf(activateStr);
+        // active, default : true
+        Boolean active = true;
+        String activeStr = req.getParameter("active");
+        if (activeStr != null) {
+            active = Boolean.valueOf(activeStr);
         }
-        newPoint.setActive(activate);
+        newPoint.setActive(active);
         
         PoiPoint result = pointMngr.create(newPoint);
         result.setName(NnStringUtil.revertHtml(result.getName()));
@@ -687,62 +687,62 @@ public class ApiPoi extends ApiGeneric {
             point.setName(name);
         }
         
-        // offsetStart
-        Integer offsetStart = null;
-        String offsetStartStr = req.getParameter("offsetStart");
-        if (offsetStartStr != null) {
+        // startTime
+        Integer startTime = null;
+        String startTimeStr = req.getParameter("startTime");
+        if (startTimeStr != null) {
             try {
-                offsetStart = Integer.valueOf(offsetStartStr);
+                startTime = Integer.valueOf(startTimeStr);
             } catch (NumberFormatException e) {
             }
-            if ((offsetStart == null) || (offsetStart < 0)) {
+            if ((startTime == null) || (startTime < 0)) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
         } else {
             // origin setting
-            offsetStart = point.getStartTimeInt();
+            startTime = point.getStartTimeInt();
         }
         
-        // offsetEnd
-        Integer offsetEnd = null;
-        String offsetEndStr = req.getParameter("offsetEnd");
-        if (offsetEndStr != null) {
+        // endTime
+        Integer endTime = null;
+        String endTimeStr = req.getParameter("endTime");
+        if (endTimeStr != null) {
             try {
-                offsetEnd = Integer.valueOf(offsetEndStr);
+                endTime = Integer.valueOf(endTimeStr);
             } catch (NumberFormatException e) {
             }
-            if ((offsetEnd == null) || (offsetEnd <= 0)) {
+            if ((endTime == null) || (endTime <= 0)) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
         } else {
             // origin setting
-            offsetEnd = point.getEndTimeInt();
+            endTime = point.getEndTimeInt();
         }
         
-        if (offsetEnd - offsetStart <= 0) {
+        if (endTime - startTime <= 0) {
             badRequest(resp, INVALID_PARAMETER);
             return null;
         }
         // collision check
-        point.setStartTime(offsetStart);
-        point.setEndTime(offsetEnd);
+        point.setStartTime(startTime);
+        point.setEndTime(endTime);
         
-        // tags
-        String tagText = req.getParameter("tags");
+        // tag
+        String tagText = req.getParameter("tag");
         String tag = null;
         if (tagText != null) {
             tag = TagManager.processTagText(tagText);
             point.setTag(tag);
         }
         
-        // activate
-        Boolean activate;
-        String activateStr = req.getParameter("activate");
-        if (activateStr != null) {
-            activate = Boolean.valueOf(activateStr);
-            point.setActive(activate);
+        // active
+        Boolean active;
+        String activeStr = req.getParameter("active");
+        if (activeStr != null) {
+            active = Boolean.valueOf(activeStr);
+            point.setActive(active);
         }
         
         PoiPoint result = pointMngr.save(point);
