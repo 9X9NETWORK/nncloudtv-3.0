@@ -23,12 +23,12 @@ import com.nncloudtv.web.json.facebook.FBPost;
 @RequestMapping("fb")
 public class FacebookController {
     protected static final Logger log = Logger.getLogger(FacebookController.class.getName());
-    
+
     @RequestMapping("login")    
     public String login(
             HttpServletRequest req,
-            HttpServletResponse resp,
-            @RequestParam(value="subChannel", required=false) String subChannel,            
+            HttpServletResponse resp,            
+            @RequestParam(value="uri", required=false) String uri,
             @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="stage", required=false) String stage,
             @RequestParam(value="code", required=false) String code,
@@ -38,7 +38,7 @@ public class FacebookController {
             @RequestParam(value="accessToken", required=false) String accessToken,
             @RequestParam(value="expirse", required=false) String expires                    
             ) throws IOException {
-        log.info("FACEBOOK: (login) - back from facebook page(mso):" + mso);
+        log.info("FACEBOOK: (login) - back from facebook page(uri):" + uri);
         NnNetUtil.logUrl(req);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: (login) - our cookie:" + userCookie);                                                      
@@ -46,7 +46,7 @@ public class FacebookController {
                             ";errorDescription:" + errorDescription + 
                             ";accessToken:" + accessToken + ";stage:" + stage);
         if (code != null && accessToken == null) {
-            String[] data = new FacebookLib().getOAuthAccessToken(code, mso);
+            String[] data = new FacebookLib().getOAuthAccessToken(code, uri);
             log.info("FACEBOOK: (login) back from access token request");
             if (data[0] != null) {               
                 log.info("FACEBOOK: (login) going to use data from facebook");
@@ -55,8 +55,9 @@ public class FacebookController {
             }                         
         }
         String redirectPath = "/";
-        if (subChannel != null)
-            redirectPath = "#!subCh=" + subChannel;
+        if (uri != null) {            
+            redirectPath = uri.replaceAll("_", "/");
+        }
         log.info("FACEBOOK: (login) last step redirect to 9x9 player:" + redirectPath);
         return "redirect:" + redirectPath;
     }
