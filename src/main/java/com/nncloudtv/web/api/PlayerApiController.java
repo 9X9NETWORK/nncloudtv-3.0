@@ -2,6 +2,8 @@ package com.nncloudtv.web.api;
 
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -2272,11 +2274,19 @@ public class PlayerApiController {
      */
     @RequestMapping(value="fbLogin")
     public String fbLogin(HttpServletRequest req,
-            @RequestParam(value="subCh", required=false) String subCh,            
             @RequestParam(value="mso", required=false) String mso) {
         if (mso == null) 
-            mso = "9x9"; 
-        String url = FacebookLib.getDialogOAuthPath(subCh, mso);        
+            mso = "9x9";
+        String uri = "";
+        try {
+            uri= new URI(req.getHeader("referer")).getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        log.info("uri:" + uri);
+        uri = uri.replaceAll("\\/", "_");
+        log.info("rewrite uri:" + uri);        
+        String url = FacebookLib.getDialogOAuthPath(uri);        
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;

@@ -140,12 +140,14 @@ public class FacebookLib {
         return me;
     }
     
-    public String[] getOAuthAccessToken(String code, String msoString){
+    public String[] getOAuthAccessToken(String code, String uri){
         String urlBase = "https://graph.facebook.com/oauth/access_token";
         String data[] = {null, null}; //token, expires
+        log.info("pass back is?:" + uri);
         try {
             URL url = new URL(urlBase);
-            String modifiedRedirectUri = redirectUri + "?mso=" + msoString;
+            log.info("uri using for token:" + uri);
+            String modifiedRedirectUri = redirectUri + "?uri=" + uri;
             String params = "client_id=" + clientId +             
                             "&code=" + code + 
                             "&client_secret=" + secret +
@@ -234,18 +236,15 @@ public class FacebookLib {
         return data;
     }
     
-    public static String getDialogOAuthPath(String subChannel, String msoString) {        
+    public static String getDialogOAuthPath(String uri) {        
         // add "publish_actions" to scope to enable FacebookLib.postToFacebook()
         String scope = "user_likes,user_location,user_interests,email,user_birthday";
         String state = FacebookLib.generateState();
         String urlBase = "http://www.facebook.com/dialog/oauth?";
-        String modifiedRedirectUri = redirectUri + "?mso=" + msoString;
-        //log.info("redirect uri:" + modifiedRedirectUri);
-        //modifiedRedirectUri = subChannel == null ? redirectUri : redirectUri + "&subChannel=" + subChannel;
+        String modifiedRedirectUri = redirectUri + "?uri=" + uri;
         String url = urlBase +
                      "client_id=" + clientId +
                      "&redirect_uri=" + modifiedRedirectUri +
-                     //"&redirect_uri=" + redirectUri +
                      "&scope=" + scope +
                      "&state=" + state;
         log.info("url:" + url);
