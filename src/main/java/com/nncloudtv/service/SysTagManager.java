@@ -117,9 +117,6 @@ public class SysTagManager {
         return 0;
             
     }
-    public static final short TYPE_SUBSCRIPTION = 1;
-    public static final short TYPE_ACCOUNT = 2;
-    public static final short TYPE_CHANNEL = 3;
     
     public void setupChannelCategory(Long categoryId, Long channelId) {
         
