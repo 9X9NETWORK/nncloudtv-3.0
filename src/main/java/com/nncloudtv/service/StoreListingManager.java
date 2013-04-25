@@ -205,34 +205,23 @@ public class StoreListingManager {
             return new ArrayList<Long>();
         }
         
-        Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
-        List<Long> store9x9Ids = new ArrayList<Long>();
-        for (NnChannel channel : store9x9) {
-            storeMsoMap.put(channel.getId(), channel.getId());
-            store9x9Ids.add(channel.getId());
-        }
-        
-        if (blackList == null || blackList.size() == 0){
-            return store9x9Ids;
-        }
-        
-        for (StoreListing item : blackList) {
-            if (storeMsoMap.containsKey(item.getChannelId())) {
-                storeMsoMap.remove(item.getChannelId());
+        Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
+        if (blackList != null && blackList.size() > 0) {
+            for (StoreListing item : blackList) {
+                blackListMap.put(item.getChannelId(), item.getChannelId());
             }
         }
         
-        Collection<Long> storeMso = storeMsoMap.values(); // TODO : channels may loose order by updateDate
-        if (storeMso.size() == 0) {
-            return new ArrayList<Long>();
-        }
-        Long[] channelIds = storeMso.toArray(new Long[storeMso.size()]);
-        List<Long> results = new ArrayList<Long>();
-        for (Long channelId : channelIds) {
-            results.add(channelId);
+        List<Long> storeMsoIds = new ArrayList<Long>();
+        for (NnChannel channel : store9x9) {
+            if (blackListMap.containsKey(channel.getId())) {
+                // skip
+            } else {
+                storeMsoIds.add(channel.getId());
+            }
         }
         
-        return results;
+        return storeMsoIds;
     }
 
 }
