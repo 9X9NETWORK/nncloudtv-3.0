@@ -346,6 +346,12 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        PoiPoint point = pointMngr.findById(pointId);
+        if (point == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
         // eventId
         Long eventId = null;
         String eventIdStr = req.getParameter("eventId");
@@ -363,11 +369,17 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        PoiEvent event = eventMngr.findById(eventId);
+        if (event == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
         // create the poi
         Poi newPoi = new Poi();
         newPoi.setCampaignId(campaign.getId());
-        newPoi.setPointId(pointId);
-        newPoi.setEventId(eventId);
+        newPoi.setPointId(point.getId());
+        newPoi.setEventId(event.getId());
         
         // startDate
         String startDateStr = req.getParameter("startDate");
@@ -419,7 +431,7 @@ public class ApiPoi extends ApiGeneric {
         } else {
             hoursOfWeek = "";
             for (int i = 1; i<= 7; i++) { // maybe type 111... in the code, will execute faster
-                hoursOfWeek.concat("111111111111111111111111");
+                hoursOfWeek = hoursOfWeek.concat("111111111111111111111111");
             }
             
             newPoi.setHoursOfWeek(hoursOfWeek);
