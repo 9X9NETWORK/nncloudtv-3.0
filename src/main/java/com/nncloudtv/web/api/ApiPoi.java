@@ -783,10 +783,29 @@ public class ApiPoi extends ApiGeneric {
         return null;
     }
     
-    @RequestMapping(value = "poi_events", method = RequestMethod.POST)
+    @RequestMapping(value = "users/{userId}/poi_events", method = RequestMethod.POST)
     public @ResponseBody
     PoiEvent eventCreate(HttpServletRequest req,
-            HttpServletResponse resp) {
+            HttpServletResponse resp,
+            @RequestParam(required = false) String mso,
+            @PathVariable("userId") String userIdStr) {
+        
+        Long userId = null;
+        try {
+            userId = Long.valueOf(userIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (userId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        Mso brand = new MsoManager().findOneByName(mso);
+        NnUser user = userMngr.findById(userId, brand.getId());
+        if (user == null) {
+            notFound(resp, "User Not Found");
+            return null;
+        }
         
         // name
         String name = req.getParameter("name");
@@ -825,6 +844,8 @@ public class ApiPoi extends ApiGeneric {
         }
         
         PoiEvent newEvent = new PoiEvent();
+        newEvent.setUserId(user.getId());
+        newEvent.setMsoId(user.getMsoId());
         newEvent.setName(name);
         newEvent.setType(type);
         newEvent.setContext(context);
