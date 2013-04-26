@@ -691,47 +691,51 @@ public class ApiPoi extends ApiGeneric {
             point.setName(name);
         }
         
-        // startTime
-        Integer startTime = null;
-        String startTimeStr = req.getParameter("startTime");
-        if (startTimeStr != null) {
-            try {
-                startTime = Integer.valueOf(startTimeStr);
-            } catch (NumberFormatException e) {
+        if (point.getType() == PoiPoint.TYPE_SUBEPISODE) {
+            
+            // startTime
+            Integer startTime = null;
+            String startTimeStr = req.getParameter("startTime");
+            if (startTimeStr != null) {
+                try {
+                    startTime = Integer.valueOf(startTimeStr);
+                } catch (NumberFormatException e) {
+                }
+                if ((startTime == null) || (startTime < 0)) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+            } else {
+                // origin setting
+                startTime = point.getStartTimeInt();
             }
-            if ((startTime == null) || (startTime < 0)) {
+            
+            // endTime
+            Integer endTime = null;
+            String endTimeStr = req.getParameter("endTime");
+            if (endTimeStr != null) {
+                try {
+                    endTime = Integer.valueOf(endTimeStr);
+                } catch (NumberFormatException e) {
+                }
+                if ((endTime == null) || (endTime <= 0)) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    return null;
+                }
+            } else {
+                // origin setting
+                endTime = point.getEndTimeInt();
+            }
+        
+            if (endTime - startTime <= 0) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-        } else {
-            // origin setting
-            startTime = point.getStartTimeInt();
+            // collision check
+            point.setStartTime(startTime);
+            point.setEndTime(endTime);
+            
         }
-        
-        // endTime
-        Integer endTime = null;
-        String endTimeStr = req.getParameter("endTime");
-        if (endTimeStr != null) {
-            try {
-                endTime = Integer.valueOf(endTimeStr);
-            } catch (NumberFormatException e) {
-            }
-            if ((endTime == null) || (endTime <= 0)) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-        } else {
-            // origin setting
-            endTime = point.getEndTimeInt();
-        }
-        
-        if (endTime - startTime <= 0) {
-            badRequest(resp, INVALID_PARAMETER);
-            return null;
-        }
-        // collision check
-        point.setStartTime(startTime);
-        point.setEndTime(endTime);
         
         // tag
         String tagText = req.getParameter("tag");
