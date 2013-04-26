@@ -34,6 +34,13 @@ public class PoiEventManager {
         return poiEvent;
     }
     
+    public void delete(PoiEvent poiEvent) {
+        if (poiEvent == null) {
+            return ;
+        }
+        dao.delete(poiEvent);
+    }
+    
     public void delete(List<PoiEvent> poiEvents) {
         dao.deleteAll(poiEvents);
     }

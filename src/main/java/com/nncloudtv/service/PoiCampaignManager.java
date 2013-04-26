@@ -100,5 +100,19 @@ public class PoiCampaignManager {
         }
         return poiCampaignDao.findById(compaignId);
     }
+    
+    public Poi findPoiById(Long poiId) {
+        if (poiId == null) {
+            return null;
+        }
+        return poiDao.findById(poiId);
+    }
+    
+    public void delete(Poi poi) {
+        if (poi == null) {
+            return ;
+        }
+        poiDao.delete(poi);
+    }
 
 }

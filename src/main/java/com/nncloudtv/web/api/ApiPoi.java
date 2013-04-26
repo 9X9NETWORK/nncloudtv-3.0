@@ -444,7 +444,7 @@ public class ApiPoi extends ApiGeneric {
     
     @RequestMapping(value = "pois/{poiId}", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> poi(HttpServletRequest req,
+    Poi poi(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiId") String poiIdStr) {
         
@@ -458,14 +458,18 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        Poi result = campaignMngr.findPoiById(poiId);
+        if (result == null) {
+            notFound(resp, "Poi Not Found");
+            return null;
+        }
         
         return result;
     }
     
     @RequestMapping(value = "pois/{poiId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Map<String, Object> poiUpdate(HttpServletRequest req,
+    Poi poiUpdate(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiId") String poiIdStr) {
         
@@ -479,16 +483,42 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Poi poi = campaignMngr.findPoiById(poiId);
+        if (poi == null) {
+            notFound(resp, "Poi Not Found");
+            return null;
+        }
+        
         // startDate
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null && startDateStr.length() > 0) {
+            Long startDateLong = null;
+            try {
+                startDateLong = Long.valueOf(startDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             
+            poi.setStartDate(new Date(startDateLong));
         }
         
         // endDate
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null && endDateStr.length() > 0) {
+            Long endDateLong = null;
+            try {
+                endDateLong = Long.valueOf(endDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
             
+            poi.setEndDate(new Date(endDateLong));
         }
         
         // hoursOfWeek
@@ -496,13 +526,14 @@ public class ApiPoi extends ApiGeneric {
         if (hoursOfWeek != null) {
             if (hoursOfWeek.matches("[01]{168}")) {
                 // valid hoursOfWeek format
+                poi.setHoursOfWeek(hoursOfWeek);
             } else {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        Poi result = campaignMngr.save(poi);
         
         return result;
     }
@@ -522,6 +553,14 @@ public class ApiPoi extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
+        Poi poi = campaignMngr.findPoiById(poiId);
+        if (poi == null) {
+            notFound(resp, "Poi Not Found");
+            return null;
+        }
+        
+        campaignMngr.delete(poi);
         
         okResponse(resp);
         return null;
@@ -1081,6 +1120,14 @@ public class ApiPoi extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
+        PoiEvent event = eventMngr.findById(poiEventId);
+        if (event == null) {
+            notFound(resp, "PoiEvent Not Found");
+            return null;
+        }
+        
+        eventMngr.delete(event);
         
         okResponse(resp);
         return null;
