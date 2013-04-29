@@ -138,7 +138,12 @@ public class NnProgramManager {
         List<TitleCard> titleCards = titleCardMngr.findByProgramId(program.getId());
         titleCardMngr.delete(titleCards);
         
-        // TODO delete poiPoints at program level
+        // delete poiPoints at program level
+        PoiPointManager pointMngr = new PoiPointManager();
+        List<PoiPoint> points = pointMngr.findByProgram(program.getId());
+        if (points != null && points.size() > 0) {
+            pointMngr.delete(points);
+        }
         
         long cId = program.getChannelId();
         dao.delete(program);
@@ -151,17 +156,29 @@ public class NnProgramManager {
             return;
         }
         
-        // delete titleCards, TODO delete poiPoints at program level
+        // delete titleCards, delete poiPoints at program level
         TitleCardManager titlecardMngr = new TitleCardManager();
-        List<TitleCard> titlecards;
+        List<TitleCard> titlecards = null;
         List<TitleCard> titlecardDeleteList = new ArrayList<TitleCard>();
-        for (NnProgram program : programs) {
+        PoiPointManager pointMngr = new PoiPointManager();
+        List<PoiPoint> points = null;
+        List<PoiPoint> pointDeleteList = new ArrayList<PoiPoint>();
+        for (NnProgram program : programs) { // TODO : sql in loop is bad
+            titlecards = null;
+            points = null;
+            
             titlecards = titlecardMngr.findByProgramId(program.getId());
-            if (titlecards.size() > 0) {
+            if (titlecards != null && titlecards.size() > 0) {
                 titlecardDeleteList.addAll(titlecards);
+            }
+            
+            points = pointMngr.findByProgram(program.getId());
+            if (points != null && points.size() > 0) {
+                pointDeleteList.addAll(points);
             }
         }
         titlecardMngr.delete(titlecardDeleteList);
+        pointMngr.delete(pointDeleteList);
         
         List<Long> channelIds = new ArrayList<Long>();
         
