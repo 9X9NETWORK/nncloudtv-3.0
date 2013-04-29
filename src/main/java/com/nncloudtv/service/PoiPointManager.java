@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.PoiDao;
 import com.nncloudtv.dao.PoiPointDao;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiPoint;
@@ -20,7 +21,9 @@ public class PoiPointManager {
     
     private PoiPointDao pointDao = new PoiPointDao();
     private PoiDao poiDao = new PoiDao();
-    private PoiEventManager poiEventMngr = new  PoiEventManager();
+    private PoiEventManager poiEventMngr = new PoiEventManager();
+    private NnProgramManager programMngr = new NnProgramManager();
+    private NnChannelManager channelMngr = new NnChannelManager();
     
     public PoiPoint create(PoiPoint point) {
         Date now = new Date();
@@ -230,6 +233,36 @@ public class PoiPointManager {
         }
         
         return new PointStartTimeComparator();
+    }
+    
+    /** return owner's userId */
+    public Long findOwner(PoiPoint point) {
+        
+        if (point == null) {
+            return null;
+        }
+        
+        if (point.getType() == PoiPoint.TYPE_SUBEPISODE) {
+            
+            NnProgram program = programMngr.findById(point.getTargetId());
+            if (program == null) {
+                return null;
+            }
+            NnChannel channel = channelMngr.findById(program.getChannelId());
+            if (channel == null) {
+                return null;
+            }
+            return channel.getUserId();
+        } else if (point.getType() == PoiPoint.TYPE_CHANNEL) {
+            
+            NnChannel channel = channelMngr.findById(point.getTargetId());
+            if (channel == null) {
+                return null;
+            }
+            return channel.getUserId();
+        } else { // other type not used now
+            return null;
+        }
     }
 
 }

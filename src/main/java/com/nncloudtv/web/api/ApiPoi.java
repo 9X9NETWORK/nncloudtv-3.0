@@ -82,6 +82,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != user.getId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         List<PoiCampaign> results = campaignMngr.findByUserId(user.getId());
         if (results == null) {
             return new ArrayList<PoiCampaign>();
@@ -115,6 +124,15 @@ public class ApiPoi extends ApiGeneric {
         NnUser user = userMngr.findById(userId, brand.getId());
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -204,6 +222,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != result.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         result.setName(NnStringUtil.revertHtml(result.getName()));
         
         return result;
@@ -228,6 +255,15 @@ public class ApiPoi extends ApiGeneric {
         PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
         if (campaign == null) {
             notFound(resp, "Campaign Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -311,6 +347,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         campaignMngr.delete(campaign);
         
         okResponse(resp);
@@ -336,6 +381,15 @@ public class ApiPoi extends ApiGeneric {
         PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
         if (campaign == null) {
             notFound(resp, "Campaign Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -388,6 +442,15 @@ public class ApiPoi extends ApiGeneric {
         PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
         if (campaign == null) {
             notFound(resp, "Campaign Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -526,6 +589,20 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        PoiCampaign campaign = campaignMngr.findCampaignById(result.getCampaignId());
+        if (campaign == null) {
+            // ownership crashed
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         return result;
     }
     
@@ -548,6 +625,20 @@ public class ApiPoi extends ApiGeneric {
         Poi poi = campaignMngr.findPoiById(poiId);
         if (poi == null) {
             notFound(resp, "Poi Not Found");
+            return null;
+        }
+        
+        PoiCampaign campaign = campaignMngr.findCampaignById(poi.getCampaignId());
+        if (campaign == null) {
+            // ownership crashed
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -622,6 +713,20 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        PoiCampaign campaign = campaignMngr.findCampaignById(poi.getCampaignId());
+        if (campaign == null) {
+            // ownership crashed
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != campaign.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         campaignMngr.delete(poi);
         
         okResponse(resp);
@@ -681,6 +786,22 @@ public class ApiPoi extends ApiGeneric {
         NnProgram program = programMngr.findById(programId);
         if (program == null) {
             notFound(resp, "Program Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        NnChannel channel = channelMngr.findById(program.getChannelId());
+        if (channel == null) {
+            // ownership crashed, it is orphan object
+            forbidden(resp);
+            return null;
+        }
+        if (verifiedUserId != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -797,6 +918,20 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long ownerUserId = pointMngr.findOwner(point);
+        if (ownerUserId == null) { // no one can access orphan object
+            forbidden(resp);
+            return null;
+        }
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != ownerUserId) {
+            forbidden(resp);
+            return null;
+        }
+        
         // name
         String name = req.getParameter("name");
         if (name != null) {
@@ -894,6 +1029,20 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long ownerUserId = pointMngr.findOwner(point);
+        if (ownerUserId == null) { // no one can access orphan object
+            forbidden(resp);
+            return null;
+        }
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != ownerUserId) {
+            forbidden(resp);
+            return null;
+        }
+        
         pointMngr.delete(point);
         
         okResponse(resp);
@@ -921,6 +1070,15 @@ public class ApiPoi extends ApiGeneric {
         NnUser user = userMngr.findById(userId, brand.getId());
         if (user == null) {
             notFound(resp, "User Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != user.getId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -1036,6 +1194,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != result.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         result.setName(NnStringUtil.revertHtml(result.getName()));
         if (result.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION ||
                 result.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
@@ -1064,6 +1231,15 @@ public class ApiPoi extends ApiGeneric {
         PoiEvent event = eventMngr.findById(poiEventId);
         if (event == null) {
             notFound(resp, "PoiEvent Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != event.getUserId()) {
+            forbidden(resp);
             return null;
         }
         
@@ -1189,6 +1365,15 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != event.getUserId()) {
+            forbidden(resp);
+            return null;
+        }
+        
         eventMngr.delete(event);
         
         okResponse(resp);
@@ -1248,6 +1433,15 @@ public class ApiPoi extends ApiGeneric {
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        } else if (verifiedUserId != channel.getUserId()) {
+            forbidden(resp);
             return null;
         }
         

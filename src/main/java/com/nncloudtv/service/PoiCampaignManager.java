@@ -116,9 +116,17 @@ public class PoiCampaignManager {
     }
     
     public void delete(PoiCampaign campaign) {
+        
         if (campaign == null) {
             return ;
         }
+        
+        // delete pois
+        List<Poi> pois = findPoisByCampaignId(campaign.getId());
+        if (pois != null && pois.size() > 0) {
+            poiDao.deleteAll(pois);
+        }
+        
         poiCampaignDao.delete(campaign);
     }
 
