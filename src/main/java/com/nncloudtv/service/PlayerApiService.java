@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
-import com.nncloudtv.dao.DashboardDao;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.dao.YtProgramDao;
@@ -37,7 +36,6 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
-import com.nncloudtv.model.Dashboard;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -1148,7 +1146,25 @@ public class PlayerApiService {
         this.setUserCookie(resp, CookieHelper.DEVICE, device.getToken());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
-      
+
+    public String endpointRegister(String userToken, String type, HttpServletRequest req, HttpServletResponse resp) {
+        NnUser user = null;
+        if (userToken != null) {
+            @SuppressWarnings({ "rawtypes"})
+            HashMap map = this.checkUser(userToken, false);
+            if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
+                return this.assembleMsgs((Integer)map.get("s"), null);
+            }
+            user = (NnUser) map.get("u");
+        }
+        NnDeviceManager deviceMngr = new NnDeviceManager();
+        deviceMngr.setReq(req); //!!!
+        NnDevice device = deviceMngr.create(null, user, type);        
+        String[] result = {device.getToken()};        
+        this.setUserCookie(resp, CookieHelper.DEVICE, device.getToken());
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+    }
+    
     public String deviceTokenVerify(String token, HttpServletRequest req) {
         if (token == null)
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
@@ -2369,8 +2385,10 @@ public class PlayerApiService {
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         SysTagManager systagMngr = new SysTagManager();
         List<SysTagDisplay> sets = displayMngr.findRecommendedSets(lang, mso.getId());        
-        List<SysTagDisplay> dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
+        List<SysTagDisplay> dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());        
         sets.addAll(dayparting);
+        List<SysTagDisplay> previously = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_PREVIOUS, lang);        
+        sets.addAll(previously);
         String setStr = "";
         for (SysTagDisplay set : sets) {
             String[] obj = {
