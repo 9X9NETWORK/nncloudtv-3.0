@@ -292,19 +292,11 @@ public class IosService {
                 imageLargeUrl = imageLargeUrl.replaceAll(regexPod, pod);
             }
                     
-            //intro
-            String intro = p.getIntro();            
-            if (intro != null) {
-                int introLenth = (intro.length() > 256 ? 256 : intro.length()); 
-                intro = intro.replaceAll("\\s", " ");                
-                intro = intro.substring(0, introLenth);
-            }
-            
             //the rest
             String[] ori = {String.valueOf(p.getChannelId()), 
                             String.valueOf(p.getId()), 
-                            p.getName(), 
-                            intro,
+                            p.getPlayerName(), 
+                            p.getPlayerIntro(),
                             String.valueOf(p.getContentType()), 
                             p.getDuration(),
                             imageUrl,
