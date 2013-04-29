@@ -3,8 +3,6 @@ package com.nncloudtv.web.api;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -134,9 +132,10 @@ public class ApiPoi extends ApiGeneric {
         newCampaign.setName(name);
         
         // startDate
+        Long startDateLong = null;
         String startDateStr = req.getParameter("startDate");
-        if (startDateStr != null && startDateStr.length() > 0) {
-            Long startDateLong = null;
+        if (startDateStr != null) {
+            
             try {
                 startDateLong = Long.valueOf(startDateStr);
             } catch (NumberFormatException e) {
@@ -145,16 +144,13 @@ public class ApiPoi extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-            
-            newCampaign.setStartDate(new Date(startDateLong));
-        } else {
-            newCampaign.setStartDate(null);
         }
         
         // endDate
+        Long endDateLong = null;
         String endDateStr = req.getParameter("endDate");
-        if (endDateStr != null && endDateStr.length() > 0) {
-            Long endDateLong = null;
+        if (endDateStr != null) {
+            
             try {
                 endDateLong = Long.valueOf(endDateStr);
             } catch (NumberFormatException e) {
@@ -163,10 +159,21 @@ public class ApiPoi extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
-            
+        }
+        
+        if (startDateStr != null && endDateStr != null) {
+            if (endDateLong < startDateLong) { 
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            newCampaign.setStartDate(new Date(startDateLong));
             newCampaign.setEndDate(new Date(endDateLong));
-        } else {
+        } else if (startDateStr == null && endDateStr == null) {
+            newCampaign.setStartDate(null);
             newCampaign.setEndDate(null);
+        } else { // should be pair
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
         }
         
         PoiCampaign savedCampaign = campaignMngr.save(newCampaign);
@@ -177,7 +184,7 @@ public class ApiPoi extends ApiGeneric {
     
     @RequestMapping(value = "poi_campaigns/{poiCampaignId}", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> campaign(HttpServletRequest req,
+    PoiCampaign campaign(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
@@ -191,14 +198,20 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        PoiCampaign result = campaignMngr.findCampaignById(poiCampaignId);
+        if (result == null) {
+            notFound(resp, "Campaign Not Found");
+            return null;
+        }
+        
+        result.setName(NnStringUtil.revertHtml(result.getName()));
         
         return result;
     }
     
     @RequestMapping(value = "poi_campaigns/{poiCampaignId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Map<String, Object> campaignUpdate(HttpServletRequest req,
+    PoiCampaign campaignUpdate(HttpServletRequest req,
             HttpServletResponse resp,
             @PathVariable("poiCampaignId") String poiCampaignIdStr) {
         
@@ -209,6 +222,12 @@ public class ApiPoi extends ApiGeneric {
         }
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            return null;
+        }
+        
+        PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
+        if (campaign == null) {
+            notFound(resp, "Campaign Not Found");
             return null;
         }
         
@@ -216,23 +235,58 @@ public class ApiPoi extends ApiGeneric {
         String name = req.getParameter("name");
         if (name != null) {
             name = NnStringUtil.htmlSafeAndTruncated(name);
+            campaign.setName(name);
         }
         
         // startDate
+        Long startDateLong = null;
         String startDateStr = req.getParameter("startDate");
-        if (startDateStr != null && startDateStr.length() > 0) {
+        if (startDateStr != null) {
             
+            try {
+                startDateLong = Long.valueOf(startDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (startDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
         }
         
         // endDate
+        Long endDateLong = null;
         String endDateStr = req.getParameter("endDate");
-        if (endDateStr != null && endDateStr.length() > 0) {
+        if (endDateStr != null) {
             
+            try {
+                endDateLong = Long.valueOf(endDateStr);
+            } catch (NumberFormatException e) {
+            }
+            if (endDateLong == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
         }
         
-        Map<String, Object> result = new TreeMap<String, Object>();
+        if (startDateStr != null && endDateStr != null) {
+            if (endDateLong < startDateLong) { 
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            campaign.setStartDate(new Date(startDateLong));
+            campaign.setEndDate(new Date(endDateLong));
+        } else if (startDateStr == null && endDateStr == null) {
+            // skip
+        } else { // should be pair
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
         
-        return result;
+        PoiCampaign savedCampaign = campaignMngr.save(campaign);
+        
+        savedCampaign.setName(NnStringUtil.revertHtml(savedCampaign.getName()));
+        
+        return savedCampaign;
     }
     
     @RequestMapping(value = "poi_campaigns/{poiCampaignId}", method = RequestMethod.DELETE)
@@ -250,6 +304,14 @@ public class ApiPoi extends ApiGeneric {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
+        
+        PoiCampaign campaign = campaignMngr.findCampaignById(poiCampaignId);
+        if (campaign == null) {
+            notFound(resp, "Campaign Not Found");
+            return null;
+        }
+        
+        campaignMngr.delete(campaign);
         
         okResponse(resp);
         return null;

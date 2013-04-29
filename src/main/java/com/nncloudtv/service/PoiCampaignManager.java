@@ -94,11 +94,11 @@ public class PoiCampaignManager {
         return results;
     }
     
-    public PoiCampaign findCampaignById(Long compaignId) {
-        if (compaignId == null) {
+    public PoiCampaign findCampaignById(Long campaignId) {
+        if (campaignId == null) {
             return null;
         }
-        return poiCampaignDao.findById(compaignId);
+        return poiCampaignDao.findById(campaignId);
     }
     
     public Poi findPoiById(Long poiId) {
@@ -113,6 +113,13 @@ public class PoiCampaignManager {
             return ;
         }
         poiDao.delete(poi);
+    }
+    
+    public void delete(PoiCampaign campaign) {
+        if (campaign == null) {
+            return ;
+        }
+        poiCampaignDao.delete(campaign);
     }
 
 }
