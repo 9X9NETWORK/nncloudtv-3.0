@@ -505,9 +505,9 @@ public class NnChannel implements Serializable {
             return 0;
         String[] splits = userId.split("-");
         if (splits.length > 1)
-            return Short.parseShort(splits[1]);
+            return Long.parseLong(splits[1]);
         else
-            return Short.parseShort(userId);        
+            return Long.parseLong(userId);        
     }
     
     public String getUserIdStr() {
