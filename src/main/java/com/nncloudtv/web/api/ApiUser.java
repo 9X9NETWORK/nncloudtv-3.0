@@ -38,6 +38,7 @@ import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.service.SysTagManager;
+import com.nncloudtv.web.json.cms.User;
 import com.nncloudtv.web.json.cms.UserFavorite;
 import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.facebook.FacebookPage;
@@ -97,7 +98,7 @@ public class ApiUser extends ApiGeneric {
     
     @RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Map<String, Object> userInfoUpdate(HttpServletRequest req, HttpServletResponse resp,
+    User userInfoUpdate(HttpServletRequest req, HttpServletResponse resp,
             @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr, @RequestParam(required = false) Short shard) {
         

@@ -2,8 +2,6 @@ package com.nncloudtv.web.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +15,7 @@ import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.web.json.cms.Set;
+import com.nncloudtv.web.json.cms.User;
 
 public class ApiGeneric {
 	
@@ -175,27 +174,44 @@ public class ApiGeneric {
     }
 	
 	/** adapt response for user change to user+userProfile */
-	public Map<String, Object> userResponse(NnUser user) {
-	    Map<String, Object> result = new TreeMap<String, Object>();
+	public User userResponse(NnUser user) {
+	    //Map<String, Object> result = new TreeMap<String, Object>();
+	    User userResp = new User();
 	    
-	    result.put("id", user.getId());
-	    result.put("createDate", user.getCreateDate());
-	    result.put("updateDate", user.getUpdateDate());
-	    result.put("userEmail", user.getUserEmail());
-	    result.put("fbUser", user.isFbUser());
-	    result.put("name", NnStringUtil.revertHtml(user.getProfile().getName()));
-	    result.put("intro", NnStringUtil.revertHtml(user.getProfile().getIntro()));
-	    result.put("imageUrl", user.getProfile().getImageUrl());
-	    result.put("lang", user.getProfile().getLang());
-	    result.put("profileUrl", user.getProfile().getProfileUrl());
-	    result.put("shard", user.getShard());
-	    result.put("sphere", user.getProfile().getSphere());
-	    result.put("type", user.getType());
-	    result.put("cntSubscribe", user.getProfile().getCntSubscribe());
-	    result.put("cntChannel", user.getProfile().getCntChannel());
-	    result.put("cntFollower", user.getProfile().getCntFollower());
+	    //result.put("id", user.getId());
+	    userResp.setId(user.getId());
+	    //result.put("createDate", user.getCreateDate());
+	    userResp.setCreateDate(user.getCreateDate());
+	    //result.put("updateDate", user.getUpdateDate());
+	    userResp.setUpdateDate(user.getUpdateDate());
+	    //result.put("userEmail", user.getUserEmail());
+	    userResp.setUserEmail(user.getUserEmail());
+	    //result.put("fbUser", user.isFbUser());
+	    userResp.setFbUser(user.isFbUser());
+	    //result.put("name", NnStringUtil.revertHtml(user.getProfile().getName()));
+	    userResp.setName(NnStringUtil.revertHtml(user.getProfile().getName()));
+	    //result.put("intro", NnStringUtil.revertHtml(user.getProfile().getIntro()));
+	    userResp.setIntro(NnStringUtil.revertHtml(user.getProfile().getIntro()));
+	    //result.put("imageUrl", user.getProfile().getImageUrl());
+	    userResp.setImageUrl(user.getProfile().getImageUrl());
+	    //result.put("lang", user.getProfile().getLang());
+	    userResp.setLang(user.getProfile().getLang());
+	    //result.put("profileUrl", user.getProfile().getProfileUrl());
+	    userResp.setProfileUrl(user.getProfile().getProfileUrl());
+	    //result.put("shard", user.getShard());
+	    userResp.setShard(user.getShard());
+	    //result.put("sphere", user.getProfile().getSphere());
+	    userResp.setSphere(user.getProfile().getSphere());
+	    //result.put("type", user.getType());
+	    userResp.setType(user.getType());
+	    //result.put("cntSubscribe", user.getProfile().getCntSubscribe());
+	    userResp.setCntSubscribe(user.getProfile().getCntSubscribe());
+	    //result.put("cntChannel", user.getProfile().getCntChannel());
+	    userResp.setCntChannel(user.getProfile().getCntChannel());
+	    //result.put("cntFollower", user.getProfile().getCntFollower());
+	    userResp.setCntFollower(user.getProfile().getCntFollower());
 	    
-	    return result;
+	    return userResp;
 	}
 	
 	/** compose set response **/

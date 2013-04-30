@@ -32,6 +32,7 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.web.json.cms.User;
 import com.nncloudtv.web.json.facebook.FBPost;
 
 @Controller
@@ -98,7 +99,7 @@ public class ApiMisc extends ApiGeneric {
 	}
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> loginCheck(HttpServletRequest req, HttpServletResponse resp) {
+	public @ResponseBody User loginCheck(HttpServletRequest req, HttpServletResponse resp) {
 	    
 	    String mso = req.getParameter("mso");
 		
@@ -116,7 +117,7 @@ public class ApiMisc extends ApiGeneric {
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> login(HttpServletRequest req, HttpServletResponse resp) {
+	public @ResponseBody User login(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String token = req.getParameter("token");
 		String email = req.getParameter("email");
