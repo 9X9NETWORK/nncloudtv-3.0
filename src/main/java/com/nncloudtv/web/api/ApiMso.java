@@ -2,7 +2,6 @@ package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,7 @@ import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.SysTagMapManager;
 import com.nncloudtv.service.TagManager;
+import com.nncloudtv.web.json.cms.Set;
 
 @Controller
 @RequestMapping("api")
@@ -56,7 +56,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.GET)
     public @ResponseBody
-    List<Map<String, Object>> msoSets(HttpServletRequest req,
+    List<Set> msoSets(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
         Long msoId = null;
@@ -75,8 +75,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
-        Map<String, Object> result = null;
+        List<Set> results = new ArrayList<Set>();
+        Set result = null;
         
         List<SysTag> sets = sysTagMngr.findSetsByMsoId(mso.getId());
         if (sets == null || sets.size() == 0) {
@@ -97,7 +97,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, Object> msoSetCreate(HttpServletRequest req,
+    Set msoSetCreate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
         Long msoId = null;
@@ -190,7 +190,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> set(HttpServletRequest req,
+    Set set(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
         Long setId = null;
@@ -220,7 +220,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Map<String, Object> setUpdate(HttpServletRequest req,
+    Set setUpdate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
         Long setId = null;

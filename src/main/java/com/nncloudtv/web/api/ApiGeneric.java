@@ -16,6 +16,7 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.web.json.cms.Set;
 
 public class ApiGeneric {
 	
@@ -198,19 +199,29 @@ public class ApiGeneric {
 	}
 	
 	/** compose set response **/
-	public Map<String, Object> setResponse(SysTag set, SysTagDisplay setMeta) {
-        Map<String, Object> result = new TreeMap<String, Object>();
+	public Set setResponse(SysTag set, SysTagDisplay setMeta) {
+        //Map<String, Object> result = new TreeMap<String, Object>();
+        Set setResp = new Set();
         
-        result.put("id", set.getId());
-        result.put("msoId", set.getMsoId());
-        result.put("channelCnt", setMeta.getCntChannel());
-        result.put("lang", setMeta.getLang());
-        result.put("seq", set.getSeq());
-        result.put("tag", setMeta.getPopularTag());
-        result.put("name", NnStringUtil.revertHtml(setMeta.getName()));
-        result.put("sortingType", set.getSorting());
+        //result.put("id", set.getId());
+        setResp.setId(set.getId());
+        //result.put("msoId", set.getMsoId());
+        setResp.setMsoId(set.getMsoId());
+        //result.put("channelCnt", setMeta.getCntChannel());
+        setResp.setChannelCnt(setMeta.getCntChannel());
+        //result.put("lang", setMeta.getLang());
+        setResp.setLang(setMeta.getLang());
+        //result.put("seq", set.getSeq());
+        setResp.setSeq(set.getSeq());
+        //result.put("tag", setMeta.getPopularTag());
+        setResp.setTag(setMeta.getPopularTag());
+        //result.put("name", NnStringUtil.revertHtml(setMeta.getName()));
+        setResp.setName(NnStringUtil.revertHtml(setMeta.getName()));
+        //result.put("sortingType", set.getSorting());
+        setResp.setSortingType(set.getSorting());
         
-        return result;
+        //return result;
+        return setResp;
     }
 	
 }
