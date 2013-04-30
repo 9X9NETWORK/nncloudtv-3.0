@@ -1478,6 +1478,21 @@ public class ApiContent extends ApiGeneric {
             episode.setDuration(episodeMngr.calculateEpisodeDuration(episode));
         }
         
+        // seq
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            Integer seq = null;
+            try {
+                seq = Integer.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+            }
+            if (seq == null || seq < 1) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            episode.setSeq(seq);
+        }
+        
         episode = episodeMngr.save(episode, rerun);
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
@@ -1618,13 +1633,30 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
-        // seq
-        episode.setSeq(0);
+        // seq, default : at first position, trigger reorder 
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            Integer seq = null;
+            try {
+                seq = Integer.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+            }
+            if (seq == null || seq < 1) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            episode.setSeq(seq);
+        } else {
+            episode.setSeq(0);
+        }
+        
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         
         episode = episodeMngr.save(episode);
-        episodeMngr.reorderChannelEpisodes(channelId);
+        if (episode.getSeq() == 0) { // use special value to trigger reorder
+            episodeMngr.reorderChannelEpisodes(channelId);
+        }
         
         episode.setName(NnStringUtil.revertHtml(episode.getName()));
         episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
