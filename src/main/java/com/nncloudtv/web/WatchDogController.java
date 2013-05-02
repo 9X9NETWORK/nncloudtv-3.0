@@ -1,11 +1,21 @@
 package com.nncloudtv.web;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +86,7 @@ public class WatchDogController {
                     if (i == 12) output += "last update time:";
                     if (i == 13) output += "comment:";
                     if (i == 14) output += "title card:";
+                    if (i == 15) output += "poi:";
                     if (data[i] != null && (i == 2 || i == 3 || i == 6 || i == 8 || i == 11)) {
                         String sub[] = data[i].split("\\|");
                         output += "\n";
@@ -88,7 +99,14 @@ public class WatchDogController {
                             output += "\n" + URLDecoder.decode(data[i], "utf-8") + "--\n";
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
-                        }                
+                        }
+                    } else if (data[i] != null && i == 15) {
+                        String sub[] = data[i].split("\\|");
+                        output += "\n";
+                        for (int j=0; j < sub.length; j++) {
+                            int index = j+1;
+                            output += "(" + index + ")" + sub[j] + "\n";
+                        }
                     } else {   
                         output += data[i] + "\n";
                     }
@@ -107,7 +125,9 @@ public class WatchDogController {
         NnChannel c = mngr.findById(Long.parseLong(channel));
         if (c == null)
             return "channel does not exist";
-        String result = mngr.composeChannelLineupStr(c);
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        channels.add(c);
+        String result = mngr.composeChannelLineup(channels);
         if (result == null) {
             return "error, can't be null";
         }
@@ -139,7 +159,33 @@ public class WatchDogController {
             if (i == 22)  output += "subscriber profile urls:";
             if (i == 23)  output += "subscriber thumbnail urls:";
             if (i == 24)  output += "last episode title:";
-            output += data[i] + "\n";            
+            if (i == 25)  output += "poi:";
+            if (data[i] != null && (i == 25)) {
+                String sub[] = data[i].split("\\|");
+                output += "\n";
+                for (int j=0; j < sub.length; j++) {
+                    String json[] = sub[j].split(";");
+                    if (json.length == 4) {
+                        output += "(" + j + ")";
+                        try {
+                            String jsonstr = URLDecoder.decode(json[3], "utf-8");
+                            ObjectMapper mapper = new ObjectMapper();
+                            JsonFactory factory = mapper.getJsonFactory(); 
+                            JsonParser jp = factory.createJsonParser(jsonstr);
+                            output += "\n" + URLDecoder.decode(json[3], "utf-8") + "\n--\n";
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (JsonParseException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+ 
+                    }
+                }
+            } else {
+                output += data[i] + "\n";
+            }
         }        
         return output;        
     }
