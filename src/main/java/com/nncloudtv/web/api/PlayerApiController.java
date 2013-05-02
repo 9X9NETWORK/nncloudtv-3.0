@@ -572,8 +572,10 @@ public class PlayerApiController {
      *         name    Daai3x3<br/>
      *         imageUrl    null<br/>
      *         --<br/>
-     *         1    396    channel1    channel1 http://podcast.daaitv.org/Daai_TV_Podcast/da_ai_dian_shi/da_ai_dian_shi_files/shapeimage_3.png    3    0    0    2<br/>    
-     *         2    399    channel2    channel2 http://podcast.daaitv.org/Daai_TV_Podcast/jing_si_yu/jing_si_yu_files/shapeimage_4.png    3    0    0    2    <br/>
+     *         1    396    channel1    channel1 http://podcast.daaitv.org/Daai_TV_Podcast/da_ai_dian_shi/da_ai_dian_shi_files/shapeimage_3.png    3    0    0    2...<br/>    
+     *         2    399    channel2    channel2 http://podcast.daaitv.org/Daai_TV_Podcast/jing_si_yu/jing_si_yu_files/shapeimage_4.png    3    0    0    2    ...<br/>
+     *         --<br/>
+     *         11274    50265348    Melissa Cunningham's New To ZOO topless teaser! The%20latest%20girl%20to%20feature%20in%20a%20sexy%20naked%20shoot%20in%20ZOO%27s%20New%20To%20ZOO%20section%20is%20the%2030G%20babe%20Melissa%20Cunningham.%20Check%20out%20her%20sexy%20teaser%20video%20for%20the%20shoo...  1   50  http://i.ytimg.com/vi/ss0ELKuua2I/mqdefault.jpg     .....<br/>       
      */
     @RequestMapping(value="setInfo", produces = "text/plain; charset=utf-8")
     public @ResponseBody String setInfo(
