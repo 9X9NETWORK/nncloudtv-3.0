@@ -63,8 +63,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -104,8 +102,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -133,17 +129,17 @@ public class ApiMso extends ApiGeneric {
         }
         
         // seq, default : 1
-        Short seq = 1;
+        Short seq = null;
         String seqStr = req.getParameter("seq");
         if (seqStr != null) {
             try {
                 seq = Short.valueOf(seqStr);
             } catch (NumberFormatException e) {
-            }
-            if (seq == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
+        } else {
+            seq = 1;
         }
         
         // tag TODO see NnChannelManager .processTagText .processChannelTag
@@ -154,17 +150,21 @@ public class ApiMso extends ApiGeneric {
         }
         
         // sortingType, default : 1, channels sort by seq 
-        Short sortingType = 1;
+        Short sortingType = null;
         String sortingTypeStr = req.getParameter("sortingType");
         if (sortingTypeStr != null) {
             try {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
-            }
-            if (sortingType == null || sysTagMngr.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
+            if (sysTagMngr.isValidSortingType(sortingType) == false) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+        } else {
+            sortingType = 1;
         }
         
         SysTag newSet = new SysTag();
@@ -197,8 +197,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -227,8 +225,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -264,8 +260,6 @@ public class ApiMso extends ApiGeneric {
             try {
                 seq = Short.valueOf(seqStr);
             } catch (NumberFormatException e) {
-            }
-            if (seq == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -287,8 +281,10 @@ public class ApiMso extends ApiGeneric {
             try {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
             }
-            if (sortingType == null || sysTagMngr.isValidSortingType(sortingType) == false) {
+            if (sysTagMngr.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -315,8 +311,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -356,8 +350,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -385,8 +377,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -404,8 +394,6 @@ public class ApiMso extends ApiGeneric {
             try {
                 channelId = Long.valueOf(channelIdStr);
             } catch (NumberFormatException e) {
-            }
-            if (channelId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -441,8 +429,10 @@ public class ApiMso extends ApiGeneric {
             try {
                 timeStart = Short.valueOf(timeStartStr);
             } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
             }
-            if (timeStart == null || timeStart < 0 || timeStart > 23) {
+            if (timeStart < 0 || timeStart > 23) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -455,8 +445,10 @@ public class ApiMso extends ApiGeneric {
             try {
                 timeEnd = Short.valueOf(timeEndStr);
             } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
             }
-            if (timeEnd == null || timeEnd < 0 || timeEnd > 23) {
+            if (timeEnd < 0 || timeEnd > 23) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -502,8 +494,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -520,8 +510,6 @@ public class ApiMso extends ApiGeneric {
             try {
                 channelId = Long.valueOf(channelIdStr);
             } catch (NumberFormatException e) {
-            }
-            if (channelId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -560,8 +548,6 @@ public class ApiMso extends ApiGeneric {
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -633,8 +619,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -652,8 +636,6 @@ public class ApiMso extends ApiGeneric {
             try {
                 categoryId = Long.valueOf(categoryIdStr);
             } catch (NumberFormatException e) {
-            }
-            if (categoryId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
@@ -718,8 +700,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -766,8 +746,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -814,8 +792,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
@@ -842,8 +818,6 @@ public class ApiMso extends ApiGeneric {
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
-        }
-        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             return null;
         }
