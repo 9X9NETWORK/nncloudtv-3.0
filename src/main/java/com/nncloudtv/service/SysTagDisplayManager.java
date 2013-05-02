@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDisplayDao;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 
 @Service
@@ -27,16 +28,33 @@ public class SysTagDisplayManager {
         return sets;
     }
 
-    public List<SysTagDisplay> findDayparting(short baseTime, String lang, long msoId) {
+    public SysTagDisplay findDayparting(short baseTime, String lang, long msoId) {
         List<SysTagDisplay> sets = dao.findDayparting(baseTime, lang, msoId);
-        log.info("dayparting size:" + sets.size());
-        return sets;
+        if (sets.size() > 0)
+            return sets.get(0);            
+        return null;
     } 
 
-    public List<SysTagDisplay> findFrontpage(long msoId, short type, String lang) {
+    public SysTagDisplay findFrontpage(long msoId, short type, String lang) {
         List<SysTagDisplay> sets = dao.findFrontpage(msoId, type, lang);
-        log.info("frontpage size:" + sets.size());
-        return sets;
+        if (sets.size() > 0)
+            return sets.get(0);            
+        return null;
+    } 
+
+    public SysTagDisplay findPrevious(long msoId, String lang, SysTagDisplay dayparting) {
+        List<SysTagDisplay> display = dao.findFrontpage(msoId, SysTag.TYPE_PREVIOUS, lang);
+        if (display.size() > 0) {
+            SysTag systag = new SysTagManager().findById(dayparting.getSystagId());
+            if (systag != null ) { 
+                long systagId = Long.parseLong(systag.getAttr());
+                display.get(0).setSystagId(systagId);
+                log.info("previous systag id set:" + systagId);
+            }
+            log.info("previous systag id:" + display.get(0).getSystagId());
+            return display.get(0);
+        }
+        return null;
     } 
     
     public SysTagDisplay findById(long id) {
