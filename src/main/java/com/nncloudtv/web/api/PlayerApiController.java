@@ -1,12 +1,10 @@
 package com.nncloudtv.web.api;
 
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -562,6 +560,7 @@ public class PlayerApiController {
      *         second block: brand info, returns in key and value pair. <br/>                     
      *         third block: set info, returns in key and value pair <br/>
      *         4th block: channel details. reference "channelLineup". <br/>
+     *         5th block: first episode of every channel from the 4th block. reference "programInfo". <br/>
      *         <p>
      *         Example: <br/>
      *         0    success<br/>
@@ -1212,7 +1211,7 @@ public class PlayerApiController {
         }
         return output;
     }
-
+    
     /**
      * Used for version before 3.2.
      * List recommendation sets.
@@ -2612,6 +2611,32 @@ public class PlayerApiController {
         return output;
     }
  
+    //API: http://www.9x9.tv/deviceRegister?userId={}&msoId={}&deviceToken={}&NotificationVendor={gcm|apns|sms}
+    //API: http://www.9x9.tv/deviceUnRegister?userId={}&msoId={}&deviceToken={}&NotificationVendor={gcm|apns|sms}    
+    @RequestMapping(value="endpointRegister", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String endpointRegister(
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="mso", required=false) String mso,
+            @RequestParam(value="device", required=false) String device,
+            @RequestParam(value="vendor", required=false) String vendor,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.endpointRegister(userToken, device, vendor);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }
+    
     /*
     @RequestMapping(value="solr", produces = "text/plain; charset=utf-8")
     public @ResponseBody String solr(
