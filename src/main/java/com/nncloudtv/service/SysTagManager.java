@@ -168,4 +168,21 @@ public class SysTagManager {
         return false;
     }
     
+    public boolean is9x9category(Long categoryId) {
+        
+        if (categoryId == null) {
+            return false;
+        }
+        
+        SysTag category = findById(categoryId);
+        if (category == null) {
+            return false;
+        }
+        if (category.getMsoId() == 1 && category.getType() == SysTag.TYPE_CATEGORY) { // TODO msoId = 1 is hard coded
+            return true;
+        }
+        
+        return false;
+    }
+    
 }

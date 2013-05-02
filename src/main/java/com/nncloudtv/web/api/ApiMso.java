@@ -639,10 +639,13 @@ public class ApiMso extends ApiGeneric {
                 badRequest(resp, INVALID_PARAMETER);
                 return null;
             }
+            if (sysTagMngr.is9x9category(categoryId) == false) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
         } else {
-            categoryId = (long) 1;
+            categoryId = (long) 1; // TODO categoryId = 1 is hard coded
         }
-        // TODO : check if categoryId belongs 9x9 categories
         
         // channels
         String channelIdsStr = req.getParameter("channels");
