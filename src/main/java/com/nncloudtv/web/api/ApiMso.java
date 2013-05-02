@@ -360,7 +360,13 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<NnChannel> results = sysTagMapMngr.findChannelsBySysTagId(set.getId());
+        List<NnChannel> results = null;
+        if (set.getSorting() == SysTag.SORT_SEQ) {
+            results = sysTagMapMngr.findChannelsBySysTagIdOrderBySeq(set.getId());
+        }
+        if (set.getSorting() == SysTag.SORT_DATE) {
+            results = sysTagMapMngr.findChannelsBySysTagIdOrderByUpdateTime(set.getId());
+        }
         if (results == null) {
             return new ArrayList<NnChannel>();
         }

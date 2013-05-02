@@ -144,7 +144,7 @@ public class SysTagMapManager {
     }
     
     /** used by set, the sql will be big n with list's length, to form the moreImgUrl in channel */
-    public List<NnChannel> findChannelsBySysTagId(Long sysTagId) {
+    public List<NnChannel> findChannelsBySysTagIdOrderBySeq(Long sysTagId) {
         
         if (sysTagId == null) {
             return new ArrayList<NnChannel>();
@@ -187,6 +187,36 @@ public class SysTagMapManager {
             channel.setName(NnStringUtil.revertHtml(channel.getName()));
             channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
         }
+        
+        return results;
+    }
+    
+    /** Use findChannelsBySysTagIdOrderBySeq results but order by update time, additional, channel will set on top if needed */
+    public List<NnChannel> findChannelsBySysTagIdOrderByUpdateTime(Long sysTagId) {
+        
+        if (sysTagId == null) {
+            return new ArrayList<NnChannel>();
+        }
+        List<NnChannel> channels = findChannelsBySysTagIdOrderBySeq(sysTagId);
+        if (channels == null) {
+            return new ArrayList<NnChannel>();
+        }
+        if (channels.size() < 2) {
+            return channels;
+        }
+        
+        List<NnChannel> results = new ArrayList<NnChannel>();
+        List<NnChannel> orderedChannels = new ArrayList<NnChannel>();
+        for (NnChannel channel : channels) {
+            if (channel.isAlwaysOnTop() == true) {
+                results.add(channel);
+            } else {
+                orderedChannels.add(channel);
+            }
+        }
+        
+        Collections.sort(orderedChannels, channelMngr.getChannelComparator("default"));
+        results.addAll(orderedChannels);
         
         return results;
     }
