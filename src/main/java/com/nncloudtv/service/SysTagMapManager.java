@@ -143,7 +143,7 @@ public class SysTagMapManager {
         return sysTagMaps;
     }
     
-    /** used by set, the sql will be big n with list's length, to form the moreImgUrl in channel */
+    /** Used by Set, the channels in the Set with additional column composed from sysTagMap */
     public List<NnChannel> findChannelsBySysTagIdOrderBySeq(Long sysTagId) {
         
         if (sysTagId == null) {
@@ -191,7 +191,8 @@ public class SysTagMapManager {
         return results;
     }
     
-    /** Use findChannelsBySysTagIdOrderBySeq results but order by update time, additional, channel will set on top if needed */
+    /**     Rewrite from findChannelsBySysTagIdOrderBySeq method, the channels order by update time,
+     *  additional, channel will set on top if needed */
     public List<NnChannel> findChannelsBySysTagIdOrderByUpdateTime(Long sysTagId) {
         
         if (sysTagId == null) {

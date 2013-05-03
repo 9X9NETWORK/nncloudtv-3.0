@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.SysTagDao;
 import com.nncloudtv.dao.SysTagMapDao;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagMap;
@@ -23,6 +24,7 @@ public class SysTagManager {
     
     private SysTagDao dao = new SysTagDao();
     private SysTagMapDao mapDao = new SysTagMapDao();
+    private MsoManager msoMngr = new MsoManager();
 
     public SysTag findById(long id) {
         return dao.findById(id);
@@ -178,7 +180,8 @@ public class SysTagManager {
         if (category == null) {
             return false;
         }
-        if (category.getMsoId() == 1 && category.getType() == SysTag.TYPE_CATEGORY) { // TODO msoId = 1 is hard coded
+        Mso mso9x9 = msoMngr.findNNMso();
+        if (category.getMsoId() == mso9x9.getId() && category.getType() == SysTag.TYPE_CATEGORY) {
             return true;
         }
         
