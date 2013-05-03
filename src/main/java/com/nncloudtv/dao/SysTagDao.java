@@ -40,7 +40,7 @@ public class SysTagDao extends GenericDao<SysTag> {
     }
     
     //player channels means status=true and isPublic=true
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limit) {
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limitRows, int page, int limit) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
@@ -56,12 +56,17 @@ public class SysTagDao extends GenericDao<SysTag> {
                 and c.isPublic = true  
                 and c.status = 0                
                 and (c.lang = 'en' or c.lang = 'other')
-                order by c.updateDate desc                
-              ) a2on a1.id=a2.id
+                order by c.updateDate desc
+                limit 3, 5                
+              ) a2 on a1.id=a2.id
             */            
             String str = "order by c.updateDate desc";
-            if (limit)
+            if (limitRows)
                 str = "order by rand() limit 9";
+            if (limit > 0 && page > 0) {
+                int start = (page-1) * limit;                
+                str += " limit " + start + ", " + limit;
+            }
             String sql = "select * from nnchannel a1 " +
                          " inner join " + 
                        " (select distinct c.id " + 
