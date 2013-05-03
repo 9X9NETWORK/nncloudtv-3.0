@@ -463,7 +463,7 @@ public class NnUserManager {
         return user;
     }
 
-    public String composeCuratorInfo(List<NnUser> users, boolean chCntLimit, boolean isAllChannel, HttpServletRequest req) {
+    public String composeCuratorInfo(List<NnUser> users, boolean chCntLimit, boolean isAllChannel, HttpServletRequest req, int version) {
         log.info("looking for all channels of a curator?" + isAllChannel);
         String result = "";
         NnChannelManager chMngr = new NnChannelManager();
@@ -484,7 +484,7 @@ public class NnUserManager {
         }
         result += "--\n";
         System.out.println("curator channel:" + curatorChannels.size());
-        result += chMngr.composeChannelLineup(curatorChannels);
+        result += chMngr.composeChannelLineup(curatorChannels, version);
         return result;
     }
     

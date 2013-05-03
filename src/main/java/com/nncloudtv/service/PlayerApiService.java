@@ -588,19 +588,17 @@ public class PlayerApiService {
         int limit = Integer.valueOf(count);
         if (limit > 200)
             limit = 200;
-        /*
         int startIndex = Integer.parseInt(start);
         int page = 0;
         if (limit != 0) {
             page = (int) (startIndex / limit) + 1;
         }
-        */
         TagManager tagMngr = new TagManager();
         SysTagManager systagMngr = new SysTagManager();
         if (tagStr != null) {
             channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
-            channels = systagMngr.findPlayerChannelsById(cat.getId(), cat.getLang());
+            channels = systagMngr.findPlayerChannelsById(cat.getId(), cat.getLang(), page, limit);
         }
         String result[] = {"", "", ""};
         //category info        
@@ -620,7 +618,7 @@ public class PlayerApiService {
                 result[1] += t + "\n";
             }
         }
-        result[2] += chMngr.composeChannelLineup(channels);
+        result[2] += chMngr.composeChannelLineup(channels, version);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
      
@@ -660,7 +658,7 @@ public class PlayerApiService {
             if (isReduced) {
                 output = chMngr.composeReducedChannelLineup(chs);
             } else {
-                output = chMngr.composeChannelLineup(chs);
+                output = chMngr.composeChannelLineup(chs, version);
             }
             result.add(output);
         }
@@ -810,7 +808,7 @@ public class PlayerApiService {
                 channelOutput += chMngr.composeReducedChannelLineup(channels);
             } else {
                 log.info("output v32 string");
-                channelOutput += chMngr.composeChannelLineup(channels);
+                channelOutput += chMngr.composeChannelLineup(channels, version);
             }
         }
         if (channelPos && channelOutput != null) {
@@ -961,7 +959,7 @@ public class PlayerApiService {
         int total = channels.size();
         channels = channels.subList(startIndex, startIndex + Integer.parseInt(count));
         log.info("startIndex:" + startIndex + ";endIndex:" + endIndex);
-        result[1] += chMngr.composeChannelLineup(channels);
+        result[1] += chMngr.composeChannelLineup(channels, version);
         
         result[0] += assembleKeyValue("id", String.valueOf(tag.getId()));
         result[0] += assembleKeyValue("name", tag.getName());
@@ -1625,7 +1623,7 @@ public class PlayerApiService {
         }
         NnChannel channel = chMngr.findById(share.getChannelId());        
         if (channel != null) {
-            result[1] = chMngr.composeChannelLineupStr(channel) + "\n";
+            result[1] = chMngr.composeChannelLineupStr(channel, version) + "\n";
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1675,7 +1673,7 @@ public class PlayerApiService {
             i++;
         }
         if (channelInfo) {
-            chMngr.composeChannelLineup(channels);
+            chMngr.composeChannelLineup(channels, version);
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
@@ -1809,18 +1807,18 @@ public class PlayerApiService {
         //public static List<NnChannel> search(String queryStr, boolean total, boolean all, int start, int count) {
         List<NnChannel> channels = NnChannelManager.search(text, content, false, startIndex, limit);
         String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
-        result[2] = chMngr.composeChannelLineup(channels);
+        result[2] = chMngr.composeChannelLineup(channels, version);
         //matched curators
         List<NnUser> users = userMngr.search(null, null, text, mso.getId());
         int endIndex = (users.size() > 9) ? 9: users.size();
         users = users.subList(0, endIndex);
-        result[1] += userMngr.composeCuratorInfo(users, true, false, req);
+        result[1] += userMngr.composeCuratorInfo(users, true, false, req, version);
         
         //if none matched, return suggestion channels
         List<NnChannel> suggestion = new ArrayList<NnChannel>();
         if (channels.size() == 0 && users.size() == 0) {
             suggestion = chMngr.findBillboard(Tag.TRENDING, LangTable.LANG_EN);
-            result[3] = chMngr.composeChannelLineup(suggestion);
+            result[3] = chMngr.composeChannelLineup(suggestion, version);
         }
         
         long channelSize = NnChannelManager.searchSize(text, false);
@@ -1892,7 +1890,7 @@ public class PlayerApiService {
         channel.setContentType(NnChannel.CONTENTTYPE_MIXED); // a channel type in podcast does not allow user to add program in it, so change to mixed type
         channel.setTemp(isTemp);
         chMngr.save(channel);
-        String[] result = {chMngr.composeChannelLineupStr(channel)};        
+        String[] result = {chMngr.composeChannelLineupStr(channel, version)};        
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
@@ -2261,9 +2259,9 @@ public class PlayerApiService {
         }
          
         if (stack != null)
-            result[0] = userMngr.composeCuratorInfo(users, true, isAllChannel, req);
+            result[0] = userMngr.composeCuratorInfo(users, true, isAllChannel, req, version);
         else
-            result[0] = userMngr.composeCuratorInfo(users, false, isAllChannel, req);
+            result[0] = userMngr.composeCuratorInfo(users, false, isAllChannel, req, version);
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
         
@@ -2320,7 +2318,7 @@ public class PlayerApiService {
                         SysTagDisplay display = displayMngr.findById(Long.parseLong(stack)); 
                         systagId = display.getSystagId();
                     }                    
-                    channels.addAll(systagMngr.findLimitPlayerChannelsById(systagId, lang));
+                    channels.addAll(systagMngr.findPlayerChannelsById(systagId, lang, true));
                 }
             }
         } else if (channel != null) {
@@ -2422,7 +2420,7 @@ public class PlayerApiService {
         }       
         result[0] = setStr;
         //2. channels
-        String channelStr = chMngr.composeChannelLineup(channels);        
+        String channelStr = chMngr.composeChannelLineup(channels, version);        
         result[1] = channelStr;
         //3. programs
         String programStr = programMngr.findLatestProgramInfoByChannels(channels);
@@ -2815,7 +2813,7 @@ public class PlayerApiService {
             if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic())
                 c.setSorting(NnChannelManager.getDefaultSorting(c));
         }
-        result[2] = chMngr.composeChannelLineup(channels);
+        result[2] = chMngr.composeChannelLineup(channels, version);
         //program info
         NnProgramManager programMngr = new NnProgramManager();
         String programStr = programMngr.findLatestProgramInfoByChannels(channels);
