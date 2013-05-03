@@ -295,9 +295,11 @@ public class ApiMso extends ApiGeneric {
             set = sysTagMngr.save(set);
         }
         
-        if (name != null || lang != null || tagText != null) {
-            setMeta = sysTagDisplayMngr.save(setMeta);
-        }
+        // cntChannel
+        List<SysTagMap> channels = sysTagMapMngr.findSysTagMaps(set.getId());
+        setMeta.setCntChannel(channels.size());
+        
+        setMeta = sysTagDisplayMngr.save(setMeta);
         
         return setResponse(set, setMeta);
     }
@@ -417,15 +419,12 @@ public class ApiMso extends ApiGeneric {
         
         // create if not exist
         SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channel.getId());
-        boolean updateChannelCnt = false;
         if (sysTagMap == null) {
             sysTagMap = new SysTagMap(set.getId(), channel.getId());
             sysTagMap.setSeq((short) 0);
             sysTagMap.setTimeStart((short) 0);
             sysTagMap.setTimeEnd((short) 0);
             sysTagMap.setAlwaysOnTop(false);
-            
-            updateChannelCnt = true;
         }
         
         // timeStart
@@ -483,9 +482,6 @@ public class ApiMso extends ApiGeneric {
         }
         
         sysTagMapMngr.save(sysTagMap);
-        if (updateChannelCnt == true) {
-            sysTagDisplayMngr.plusCntChannel(set.getId(), 1);
-        }
         
         okResponse(resp);
         return null;
@@ -538,7 +534,6 @@ public class ApiMso extends ApiGeneric {
             // do nothing
         } else {
             sysTagMapMngr.delete(sysTagMap);
-            sysTagDisplayMngr.minusCntChannel(set.getId(), 1);
         }
         
         okResponse(resp);
