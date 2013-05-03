@@ -301,6 +301,8 @@ public class ApiMso extends ApiGeneric {
         
         setMeta = sysTagDisplayMngr.save(setMeta);
         
+        sysTagMapMngr.reorderSysTagChannels(set.getId());
+        
         return setResponse(set, setMeta);
     }
     
