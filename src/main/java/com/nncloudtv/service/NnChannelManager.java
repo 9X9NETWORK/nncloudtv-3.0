@@ -738,53 +738,27 @@ public class NnChannelManager {
         return output;
     }
         
-    public String composeChannelLineup(List<NnChannel> channels) {
+    public String composeChannelLineup(List<NnChannel> channels, int version) {
         String output = "";
-        PoiEventManager eventMngr = new PoiEventManager();
-        PoiPointManager pointMngr = new PoiPointManager();        
         for (NnChannel c : channels) {
-            List<PoiPoint> points = pointMngr.findCurrentByChannel(c.getId());
-            List<PoiEvent> events = new ArrayList<PoiEvent>();
-            for (PoiPoint p : points) {
-                PoiEvent event = eventMngr.findByPoint(p.getId());
-                events.add(event);
-            }
-            if (points.size() != events.size()) {
-                log.info("Bad!!! should not continue.");
-                points.clear();
-            }
-            //format: start time;endTime;type;context|
-            String poiStr = "";
-            for (int i=0; i<points.size(); i++) {
-                PoiPoint point = points.get(i);
-                PoiEvent event = events.get(i);
-                String context = "";
-                try {
-                    context = URLEncoder.encode(event.getContext(), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                String poiStrHere = point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
-                log.info("poi output:" + poiStrHere);
-                poiStr += poiStrHere;
-                log.info("poi output:" + poiStr);
-            }
-            output += this.composeChannelLineupStr(c) + "\t" + poiStr + "\n";            
+            output += this.composeChannelLineupStr(c, version) + "\n";
         }
-        
         return output;
     }    
         
-    public String composeChannelLineupStr(NnChannel c) {
+    public String composeChannelLineupStr(NnChannel c, int version) {
         String result = null;
-        try {
-            result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));            
-        } catch (Exception e) {
-            log.info("memcache error");
-        }
-        if (result != null && c.getId() != 0) { //id = 0 means fake channel, it is dynamic
-            log.info("get channel lineup from cache");
-            return result;
+        log.info("version number: " + version);
+        if (version > 32) {
+            try {
+                result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));            
+            } catch (Exception e) {
+                log.info("memcache error");
+            }
+            if (result != null && c.getId() != 0) { //id = 0 means fake channel, it is dynamic
+                log.info("get channel lineup from cache");
+                return result;
+            }
         }
         log.info("channel lineup NOT from cache:" + c.getId());
         //name and last episode title
@@ -881,6 +855,66 @@ public class NnChannelManager {
         short contentType = c.getContentType();
         if (contentType == NnChannel.CONTENTTYPE_FAKE_FAVORITE)
             contentType = NnChannel.CONTENTTYPE_FAVORITE;
+        //poi
+        String poiStr = "";
+        if (version > 32) {
+            PoiEventManager eventMngr = new PoiEventManager();
+            PoiPointManager pointMngr = new PoiPointManager();        
+            List<PoiPoint> points = pointMngr.findCurrentByChannel(c.getId());
+            List<PoiEvent> events = new ArrayList<PoiEvent>();
+            for (PoiPoint p : points) {
+                PoiEvent event = eventMngr.findByPoint(p.getId());
+                events.add(event);
+            }
+            if (points.size() != events.size()) {
+                log.info("Bad!!! should not continue.");
+                points.clear();
+            }
+            //format: start time;endTime;type;context|
+            for (int i=0; i<points.size(); i++) {
+                PoiPoint point = points.get(i);
+                PoiEvent event = events.get(i);
+                String context = "";
+                try {
+                    context = URLEncoder.encode(event.getContext(), "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String poiStrHere = point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
+                log.info("poi output:" + poiStrHere);
+                poiStr += poiStrHere;
+                log.info("poi output:" + poiStr);
+            }
+        }
+        List<String> ori = new ArrayList<String>();
+        ori.add("0");
+        ori.add(c.getIdStr());
+        ori.add(name);
+        ori.add(c.getPlayerIntro());
+        ori.add(imageUrl); //c.getPlayerPrefImageUrl());                        
+        ori.add(String.valueOf(c.getCntEpisode()));
+        ori.add(String.valueOf(c.getType()));
+        ori.add(String.valueOf(c.getStatus()));
+        ori.add(String.valueOf(c.getContentType()));
+        ori.add(c.getPlayerPrefSource());
+        ori.add(convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()));
+        ori.add(String.valueOf(getDefaultSorting(c))); //use default sorting for all
+        ori.add(c.getPiwik());
+        ori.add(""); //recently watched program
+        ori.add(c.getOriName());
+        ori.add(String.valueOf(c.getCntSubscribe())); //cnt subscribe, replace
+        ori.add(String.valueOf(c.getCntView()));
+        ori.add(c.getTag());
+        ori.add(""); //ciratorProfile, curator id
+        ori.add(""); //userName
+        ori.add(""); //userIntro
+        ori.add(""); //userImageUrl
+        ori.add(""); //subscriberProfile, used to be subscriber profile urls, will be removed
+        ori.add(""); //subscriberImage, used to be subscriber image urls
+        ori.add(""); //lastEpisodeTitle
+        if (version > 32)
+            ori.add(poiStr);
+        /*
         String[] ori = {"0", //seq
                         c.getIdStr(),
                         name,
@@ -906,10 +940,14 @@ public class NnChannelManager {
                         "", //subscriberProfile, used to be subscriber profile urls, will be removed
                         "", //subscriberImage, used to be subscriber image urls
                         "", //lastEpisodeTitle
+                        poiStr,
                        };
-        String output = NnStringUtil.getDelimitedStr(ori);
+        */
+        String size[] = new String[ori.size()];    
+        String output = NnStringUtil.getDelimitedStr(ori.toArray(size));
         output = output.replaceAll("null", "");
-        if (CacheFactory.isRunning)
+        
+        if (version > 32 && CacheFactory.isRunning)
             CacheFactory.set(NnChannelManager.getCacheKey(c.getId()), output);
         return output;
     }
