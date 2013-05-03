@@ -49,6 +49,8 @@ public class SysTagDisplayManager {
             if (systag != null ) { 
                 long systagId = Long.parseLong(systag.getAttr());
                 display.get(0).setSystagId(systagId);
+                SysTagDisplay previousDisplay = this.findBySysTagIdAndLang(systagId, lang);                
+                display.get(0).setImageUrl(previousDisplay.getImageUrl());
                 log.info("previous systag id set:" + systagId);
             }
             log.info("previous systag id:" + display.get(0).getSystagId());
