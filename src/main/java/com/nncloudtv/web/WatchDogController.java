@@ -120,14 +120,18 @@ public class WatchDogController {
 
     @RequestMapping(value="channelLineup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String channelLineup(
-            @RequestParam(value="channel", required=false) String channel) {
+            @RequestParam(value="channel", required=false) String channel,
+            @RequestParam(value="v", required=false) String v) {
         NnChannelManager mngr = new NnChannelManager();
         NnChannel c = mngr.findById(Long.parseLong(channel));
         if (c == null)
             return "channel does not exist";
         List<NnChannel> channels = new ArrayList<NnChannel>();
         channels.add(c);
-        String result = mngr.composeChannelLineup(channels);
+        int version = 40;
+        if (v != null)
+            version = Integer.parseInt(v);
+        String result = mngr.composeChannelLineup(channels, version);
         if (result == null) {
             return "error, can't be null";
         }
