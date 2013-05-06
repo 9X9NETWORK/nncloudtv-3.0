@@ -44,13 +44,6 @@ public class SysTagMapManager {
         
         SysTagMap result = dao.save(sysTagMap);
         
-        /*
-        if (result != null && result.getSeq() == 0) {
-            reorderSysTagChannels(sysTagMap.getSysTagId());
-            result.setSeq((short) 1);
-        }
-        */
-        
         return result;
     }
     
