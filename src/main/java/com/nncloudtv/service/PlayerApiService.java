@@ -704,6 +704,7 @@ public class PlayerApiService {
             if (setInfo) {
                 String setOutput = "";
                 List<NnUserSubscribeGroup> groups = new ArrayList<NnUserSubscribeGroup>();
+                String[] list = new String[9];
                 if (user != null) {
                     groups.addAll(groupMngr.findByUser(user));
                     for (NnUserSubscribeGroup g : groups) {
@@ -714,22 +715,27 @@ public class PlayerApiService {
                                 g.getImageUrl(),
                                 String.valueOf(g.getType()),
                         };
-                        setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";
-                    }
-                } else {
-                    List<MsoIpg> ipgs = new MsoIpgManager().findSetsByMso(mso.getId());
-                    for (MsoIpg i : ipgs) {
-                        String[] obj = {
-                                String.valueOf(i.getSeq()),
-                                String.valueOf(0),
-                                i.getGroupName(),                        
-                                "",
-                                String.valueOf(i.getType()),
-                        };
-                        setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";                        
+                        list[g.getSeq() - 1] = NnStringUtil.getDelimitedStr(obj);
+                        //setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";
                     }
                 }
-                
+                //overwrite user's
+                List<MsoIpg> ipgs = new MsoIpgManager().findSetsByMso(mso.getId());
+                for (MsoIpg i : ipgs) {
+                    String[] obj = {
+                            String.valueOf(i.getSeq()),
+                            String.valueOf(0),
+                            i.getGroupName(),                        
+                            "",
+                            String.valueOf(i.getType()),
+                    };
+                    list[i.getSeq() - 1] = NnStringUtil.getDelimitedStr(obj);
+                    //setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";                        
+                }
+                for (int i=0; i < list.length; i++) {
+                    if (list[i] != null)
+                        setOutput += list[i] + "\n"; 
+                }
                 result.add(setOutput);
             }
         }
