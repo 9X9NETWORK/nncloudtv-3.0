@@ -43,16 +43,33 @@ public class MsoIpgDao extends GenericDao<MsoIpg> {
         }
     }
 
-    public List<MsoIpg> findAllByMsoId(long msoId) {
+    public List<MsoIpg> findChannelsByMso(long msoId) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<MsoIpg> detached = new ArrayList<MsoIpg>(); 
         try {
             Query q = pm.newQuery(MsoIpg.class);
-            q.setFilter("msoId == msoIdParam");
-            q.declareParameters("long msoIdParam");
+            q.setFilter("msoId == msoIdParam && channelId > channelIdParam ");
+            q.declareParameters("long msoIdParam, long channelIdParam");
             q.setOrdering("seq asc");
             @SuppressWarnings("unchecked")
-            List<MsoIpg> ipg = (List<MsoIpg>)q.execute(msoId);
+            List<MsoIpg> ipg = (List<MsoIpg>)q.execute(msoId, 0);
+            detached = (List<MsoIpg>)pm.detachCopyAll(ipg);
+        } finally {
+            pm.close();
+        }
+        return detached;
+    }
+
+    public List<MsoIpg> findSetsByMso(long msoId) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<MsoIpg> detached = new ArrayList<MsoIpg>(); 
+        try {
+            Query q = pm.newQuery(MsoIpg.class);
+            q.setFilter("msoId == msoIdParam && channelId == channelIdParam ");
+            q.declareParameters("long msoIdParam, long channelIdParam");
+            q.setOrdering("seq asc");
+            @SuppressWarnings("unchecked")
+            List<MsoIpg> ipg = (List<MsoIpg>)q.execute(msoId, 0);
             detached = (List<MsoIpg>)pm.detachCopyAll(ipg);
         } finally {
             pm.close();
