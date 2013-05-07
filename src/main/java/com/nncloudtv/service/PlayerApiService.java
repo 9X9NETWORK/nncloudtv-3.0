@@ -678,6 +678,7 @@ public class PlayerApiService {
         }
         List<String> result = new ArrayList<String>();
         NnUser user = null;
+        NnGuest guest = null;
         if (userToken != null || subscriptions != null) {
             if (subscriptions != null) {
                 user = userMngr.findByProfileUrl(subscriptions, mso.getId());
@@ -685,33 +686,50 @@ public class PlayerApiService {
                 user = userMngr.findByToken(userToken, mso.getId());
             }
             if (user == null) {
-                NnGuest guest = new NnGuestManager().findByToken(userToken);
+                guest = new NnGuestManager().findByToken(userToken);
                 if (guest == null)
-                    return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-                else
-                    return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+                    return this.assembleMsgs(NnStatusCode.USER_INVALID, null);                
+                /*else
+                    return this.assembleMsgs(NnStatusCode.SUCCESS, null);*/                                        
             }
         }
         
         //user info
-        if (userInfo)
+        if (userInfo && user != null && guest != null)
             result.add(this.prepareUserInfo(user, null, req, true));
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
-        if (curatorIdStr == null && user != null ) {
-            List<NnUserSubscribeGroup> groups = groupMngr.findByUser(user);    
+        //if (curatorIdStr == null && user != null ) {
+        if (curatorIdStr == null) {
             //set info
             if (setInfo) {
                 String setOutput = "";
-                for (NnUserSubscribeGroup g : groups) {
-                    String[] obj = {
-                            String.valueOf(g.getSeq()),
-                            String.valueOf(g.getId()),
-                            g.getName(),                        
-                            g.getImageUrl(),
-                            String.valueOf(g.getType()),
-                    };
-                    setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";
+                List<NnUserSubscribeGroup> groups = new ArrayList<NnUserSubscribeGroup>();
+                if (user != null) {
+                    groups.addAll(groupMngr.findByUser(user));
+                    for (NnUserSubscribeGroup g : groups) {
+                        String[] obj = {
+                                String.valueOf(g.getSeq()),
+                                String.valueOf(g.getId()),
+                                g.getName(),                        
+                                g.getImageUrl(),
+                                String.valueOf(g.getType()),
+                        };
+                        setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";
+                    }
+                } else {
+                    List<MsoIpg> ipgs = new MsoIpgManager().findSetsByMso(mso.getId());
+                    for (MsoIpg i : ipgs) {
+                        String[] obj = {
+                                String.valueOf(i.getSeq()),
+                                String.valueOf(0),
+                                i.getGroupName(),                        
+                                "",
+                                String.valueOf(i.getType()),
+                        };
+                        setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";                        
+                    }
                 }
+                
                 result.add(setOutput);
             }
         }
@@ -719,13 +737,15 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         boolean channelPos = true;
         if (channelIds == null && curatorIdStr == null) {
-            //find subscribed channels 
-            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-            channels = subMngr.findSubscribedChannels(user);
+            //find subscribed channels
+            if (user != null) {
+                NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
+                channels = subMngr.findSubscribedChannels(user);
+            }
             //default channels goes after channels, to make sure it overwrites original ones
-            List<NnChannel> defaultChannels = chMngr.findMsoDefaultChannels(user.getMsoId(), false);
+            List<NnChannel> defaultChannels = chMngr.findMsoDefaultChannels(mso.getId(), false);
             channels.addAll(defaultChannels);
-            log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
+            log.info("user: " + userToken + " find subscribed size:" + channels.size());
         } else if (curatorIdStr != null) {
             channelPos = false;
             NnUser curator = userMngr.findByProfileUrl(curatorIdStr, mso.getId());
@@ -762,7 +782,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         //sort by seq
         if (channelPos) {
-            if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
+            if (user == null || user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
                 TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
                 for (NnChannel c : channels) {
                     channelMap.put(c.getSeq(), c);                
