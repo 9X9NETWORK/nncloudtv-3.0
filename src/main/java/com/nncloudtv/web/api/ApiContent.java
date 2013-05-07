@@ -1238,6 +1238,75 @@ public class ApiContent extends ApiGeneric {
         return null;
     }
     
+    @RequestMapping(value = "episodes", method = RequestMethod.GET)
+    public @ResponseBody
+    List<NnEpisode> episodesSearch(HttpServletResponse resp,
+            HttpServletRequest req,
+            @RequestParam(required = false, value = "channelId") String channelIdStr) {
+        
+        if (channelIdStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            return null;
+        }
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+        }
+        if (channelId == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            return null;
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        List<NnEpisode> results = null;
+        
+        // paging
+        long page = 0, rows = 0;
+        try {
+            String pageStr = req.getParameter("page");
+            String rowsStr = req.getParameter("rows");
+            if (pageStr != null && rowsStr != null) {
+                page = Long.valueOf(pageStr);
+                rows = Long.valueOf(rowsStr);
+            }
+        } catch (NumberFormatException e) {
+        }
+        
+        if (page > 0 && rows > 0) {
+            
+            results = episodeMngr.list(page, rows, "seq", "asc", "channelId == " + channelId);
+            
+        } else {
+            
+            results = episodeMngr.findByChannelId(channelId);
+            
+        }
+        if (results == null) {
+            return new ArrayList<NnEpisode>();
+        }
+        
+        Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
+        
+        for (NnEpisode episode : results) {
+            
+            episode.setName(NnStringUtil.revertHtml(episode.getName()));
+            episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+            episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
+        }
+        
+        return results;
+    }
+    
     @RequestMapping(value = "episodes/{episodeId}", method = RequestMethod.DELETE)
     public @ResponseBody
     String episodeDelete(HttpServletRequest req, HttpServletResponse resp,
