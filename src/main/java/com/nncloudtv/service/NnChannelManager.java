@@ -557,7 +557,7 @@ public class NnChannelManager {
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        
         //find msoIpg
         MsoIpgManager msoIpgMngr = new MsoIpgManager();
-        List<MsoIpg>msoIpg = msoIpgMngr.findAllByMsoId(msoId);
+        List<MsoIpg>msoIpg = msoIpgMngr.findChannelsByMso(msoId);
         //retrieve channels
         List<NnChannel> channels = new ArrayList<NnChannel>();
         for (MsoIpg i : msoIpg) {

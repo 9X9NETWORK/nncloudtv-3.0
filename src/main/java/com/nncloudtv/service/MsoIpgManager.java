@@ -42,9 +42,13 @@ public class MsoIpgManager {
         if (msoIpg != null) { msoIpgDao.delete(msoIpg); }
     }
     
-    public List<MsoIpg> findAllByMsoId(long msoId) {
-        return msoIpgDao.findAllByMsoId(msoId);
+    public List<MsoIpg> findChannelsByMso(long msoId) {
+        return msoIpgDao.findChannelsByMso(msoId);
     }
+    
+    public List<MsoIpg> findSetsByMso(long msoId) {
+        return msoIpgDao.findSetsByMso(msoId);
+    }    
     
     public MsoIpg findByMsoIdAndChannelId(long msoId, long channelId) {
         return msoIpgDao.findByMsoIdAndChannelId(msoId, channelId);
