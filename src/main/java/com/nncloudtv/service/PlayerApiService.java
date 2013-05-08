@@ -1032,7 +1032,7 @@ public class PlayerApiService {
         MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.CDN);
         if (config == null) {
             config = new MsoConfig(mso.getId(), MsoConfig.CDN, MsoConfig.CDN_AMAZON);
-            log.severe("mso config does not exist! mso: " + mso.getId());
+            log.info("mso config does not exist! mso: " + mso.getId());
         }
         String userInfoStr = "";
         if (userInfo) {
