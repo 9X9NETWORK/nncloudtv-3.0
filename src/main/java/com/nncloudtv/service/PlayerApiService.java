@@ -2337,7 +2337,7 @@ public class PlayerApiService {
         if (channels.size() > 0) {
             for (int i=0; i<lines.length; i++) {                   
                 lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
-                log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
+                //log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
                 adjust += lines[i] + "\n";
             }
         }
