@@ -695,8 +695,15 @@ public class PlayerApiService {
         }
         
         //user info
-        if (userInfo && user != null && guest != null)
+        if (userInfo && user != null) {
+            log.info("userInfo is added");
             result.add(this.prepareUserInfo(user, null, req, true));
+        }
+        if (userInfo && guest != null) {
+            log.info("userInfo(guest)  is added");
+            result.add("");
+        }
+        
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
         //if (curatorIdStr == null && user != null ) {
         if (curatorIdStr == null) {
