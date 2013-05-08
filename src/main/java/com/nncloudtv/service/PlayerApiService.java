@@ -701,7 +701,7 @@ public class PlayerApiService {
         }
         if (userInfo && guest != null) {
             log.info("userInfo(guest)  is added");
-            result.add(this.prepareUserInfo(user, null, req, true));
+            result.add(this.prepareUserInfo(null, guest, req, true));
         }
         
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
