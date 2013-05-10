@@ -291,6 +291,7 @@ public class NnProgramManager {
         if (CacheFactory.isRunning) {
             log.info("reset program info cache: " + channelId);
             CacheFactory.delete(getCacheKey(channelId));
+            CacheFactory.delete(getV31CacheKey(channelId));
             CacheFactory.delete(NnChannelManager.getCacheKey(channelId));
         }
     }
@@ -320,6 +321,11 @@ public class NnProgramManager {
     //example: nnprogram(channel_id)
     public String getCacheKey(long channelId) {
         String str = "nnprogram(" + channelId + ")"; 
+        return str;
+    }
+
+    public String getV31CacheKey(long channelId) {
+        String str = "nnprogram-v31(" + channelId + ")"; 
         return str;
     }
     
