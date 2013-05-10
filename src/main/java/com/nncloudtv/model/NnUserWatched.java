@@ -24,11 +24,8 @@ public class NnUserWatched implements Serializable {
     @Persistent
     private long userId;
 
-    //when looking up NnUser, token and userId should find the same user 
-    //for easier lookup    
     @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
-    private String userToken;
+    private long msoId;
     
     @Persistent
     private long channelId;
@@ -36,16 +33,13 @@ public class NnUserWatched implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String program; //it can be a 9x9 program id or youtube program id (not number)
-
-    @Persistent
-    private Date createDate;
     
     @Persistent
     private Date updateDate;
     
     public NnUserWatched(NnUser user, long channelId, String program) {
+        this.msoId = user.getMsoId();
         this.userId = user.getId();
-        this.userToken = user.getToken();
         this.channelId = channelId;
         this.program = program;
     }
@@ -64,22 +58,6 @@ public class NnUserWatched implements Serializable {
 
     public void setChannelId(long channelId) {
         this.channelId = channelId;
-    }
-
-    public String getUserToken() {
-        return userToken;
-    }
-
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 
     public Date getUpdateDate() {
@@ -105,4 +83,13 @@ public class NnUserWatched implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
+    }
+    
 }
