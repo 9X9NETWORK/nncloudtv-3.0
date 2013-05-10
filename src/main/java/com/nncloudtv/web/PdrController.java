@@ -92,7 +92,7 @@ public class PdrController {
         MsoManager msoMngr = new MsoManager();
         Mso brand = msoMngr.findByName(mso);
         if (brand == null) {
-            msoMngr.findNNMso();
+            brand = msoMngr.findNNMso();
         }
         NnDevice d = null;
         if (user != null) {
@@ -145,7 +145,6 @@ public class PdrController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         List<NnUserReport> list = new ArrayList<NnUserReport>();
         NnUserReportManager reportMngr = new NnUserReportManager();
-        
         Date sinceDate = null;
         if (since != null) {
             try {
@@ -173,7 +172,7 @@ public class PdrController {
         MsoManager msoMngr = new MsoManager();
         Mso brand = msoMngr.findByName(mso);
         if (brand == null) {
-            msoMngr.findNNMso();
+            brand = msoMngr.findNNMso();
         }
         String nbsp = "&nbsp;&nbsp;&nbsp;";
         for (NnUserReport r : list) {
