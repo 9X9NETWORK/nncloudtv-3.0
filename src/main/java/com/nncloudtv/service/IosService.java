@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
@@ -242,9 +243,23 @@ public class IosService {
     
     public String findPlayerProgramInfoByChannel(long channelId) {
         log.info("request from != v32");
-        List<NnProgram> programs = new NnProgramManager().findPlayerProgramsByChannel(channelId);
-        log.info("channel id:" + channelId + "; program size:" + programs.size());
+        String result = null;
+        NnProgramManager programMngr = new NnProgramManager();
+        try {
+            result = (String)CacheFactory.get(programMngr.getV31CacheKey(channelId));            
+        } catch (Exception e) {
+            log.info("memcache error");
+        }
+        if (result != null && channelId != 0) { //id = 0 means fake channel, it is dynamic
+            log.info("get programInfo from v31 cache");
+            return result;
+        }        
+        List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(channelId);
+        log.info("retrieve v31 from db, channel id:" + channelId + "; program size:" + programs.size());        
         String str = this.composeProgramInfoStr(programs);
+        if (CacheFactory.isRunning)
+            CacheFactory.set(programMngr.getV31CacheKey(channelId), str);
+        
         return str;
     }    
 
