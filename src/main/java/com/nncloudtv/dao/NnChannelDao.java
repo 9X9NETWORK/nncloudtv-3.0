@@ -282,6 +282,39 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     }        
 
     @SuppressWarnings("unchecked")
+    public List<NnChannel> findPersonalHistory(long userId, long msoId) {
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        PersistenceManager pm = PMF.getContent().getPersistenceManager(); 
+        try {
+            /*
+            select * 
+            from nncloudtv_content.nnchannel c
+           where c.id in 
+             (select channelId from nncloudtv_nnuser1.nnuser_watched
+                where channelId not in 
+                   (select channelId from nncloudtv_nnuser1.nnuser_subscribe where userId=1 and msoId=1)) 
+                order by updateDate desc;   
+            */
+            String sql = "select * " +
+                          " from nncloudtv_content.nnchannel c " +  
+                          "where c.id in " +                           
+                             "(select channelId from nncloudtv_nnuser1.nnuser_watched " +
+                              " where channelId not in " +  
+                                  " (select channelId from nncloudtv_nnuser1.nnuser_subscribe where userId=" + userId + " and msoId=" + msoId + ")) " +                                   
+                         " order by updateDate desc";   
+            
+            log.info("Sql=" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnChannel.class);
+            channels = (List<NnChannel>) q.execute();                                            
+            channels = (List<NnChannel>)pm.detachCopyAll(channels);
+        } finally {
+            pm.close();
+        }
+        return channels;        
+    }
+    
+    @SuppressWarnings("unchecked")
     public List<NnChannel> findByIds(List<Long> ids) {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
