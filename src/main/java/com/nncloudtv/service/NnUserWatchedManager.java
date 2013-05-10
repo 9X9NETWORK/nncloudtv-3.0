@@ -12,29 +12,46 @@ public class NnUserWatchedManager {
 
     protected static final Logger log = Logger.getLogger(NnUserWatchedManager.class.getName());
     
-    private NnUserWatchedDao watchedDao= new NnUserWatchedDao();
+    private NnUserWatchedDao dao= new NnUserWatchedDao();
                     
     public NnUserWatched save(NnUser user, NnUserWatched watched) {
         Date now = new Date();
-        NnUserWatched existed = this.findByUserTokenAndChannel(user.getToken(), watched.getChannelId());
+        NnUserWatched existed = this.findByUserAndChannel(user, watched.getChannelId());
         if (existed != null) {
             existed.setProgram(watched.getProgram());
             watched = existed;
         }
-        if (watched.getCreateDate() == null) {watched.setCreateDate(now);}
         watched.setUpdateDate(now);        
-        return watchedDao.save(user, watched);
+        return dao.save(user, watched);
+    }
+        
+    public void savePersonalHistory(NnUser user, NnUserWatched watched) {
+        NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
+        //discard if it's already in the guide
+        if (subMngr.findByUserAndChannel(user, watched.getChannelId()) == null) {
+            List<NnUserWatched> watches = dao.findHistory(user);
+            log.info("history size:" + watches.size());
+            if (watches.size() <= 26) {
+                log.info("add more entries: (userid)" + user.getId() + "(channelId)" + watched.getChannelId());
+                this.save(user, watched);
+            } else {
+                //if already have 27 entries then update the oldest entry
+                NnUserWatched old = watches.get(watches.size()-1); 
+                log.info("update the oldest:" + old.getChannelId() + ";" + old.getProgram());
+                old.setChannelId(watched.getChannelId());
+                old.setProgram(watched.getProgram());
+                old.setUpdateDate(new Date());
+                dao.save(user, old);
+            }
+        }
     }
     
-    public NnUserWatched findByUserTokenAndChannel(String token, long channelId) {
-        return watchedDao.findByUserTokenAndChannel(token, channelId);
+    public NnUserWatched findByUserAndChannel(NnUser user, long channelId) {
+        return dao.findByUserAndChannel(user, channelId);
     }
 
     public void delete(NnUser user, NnUserWatched watched) {
-        watchedDao.delete(user, watched);
+        dao.delete(user, watched);
     }
         
-    public List<NnUserWatched> findByUserToken(String token) {
-        return watchedDao.findByUserToken(token);
-    }
 }

@@ -36,6 +36,7 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Captcha;
+import com.nncloudtv.model.EndPoint;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -55,7 +56,6 @@ import com.nncloudtv.model.NnUserReport;
 import com.nncloudtv.model.NnUserShare;
 import com.nncloudtv.model.NnUserSubscribe;
 import com.nncloudtv.model.NnUserSubscribeGroup;
-import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.Tag;
@@ -466,7 +466,8 @@ public class PlayerApiService {
         if (device == null && user == null)
             return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
         
-        String ip = NnNetUtil.getIp(req);         
+        String ip = NnNetUtil.getIp(req);
+System.out.println("enter process pdr!!!!!!");        
         pdrMngr.processPdr(user, device, session, pdr, ip);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }    
@@ -701,6 +702,7 @@ public class PlayerApiService {
         }
         List<String> result = new ArrayList<String>();
         NnUser user = null;
+        NnGuest guest = null;
         if (userToken != null || subscriptions != null) {
             if (subscriptions != null) {
                 user = userMngr.findByProfileUrl(subscriptions, mso.getId());
@@ -708,32 +710,57 @@ public class PlayerApiService {
                 user = userMngr.findByToken(userToken, mso.getId());
             }
             if (user == null) {
-                NnGuest guest = new NnGuestManager().findByToken(userToken);
+                guest = new NnGuestManager().findByToken(userToken);
                 if (guest == null)
-                    return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
-                else
-                    return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+                    return this.assembleMsgs(NnStatusCode.USER_INVALID, null);                
+                /*else
+                    return this.assembleMsgs(NnStatusCode.SUCCESS, null);*/                                        
             }
         }
         
         //user info
-        if (userInfo)
-            result.add(this.prepareUserInfo(user, null, req, true));
+        if (userInfo) {
+            log.info("userInfo is added");
+            result.add(this.prepareUserInfo(user, guest, req, true));
+        }
         NnUserSubscribeGroupManager groupMngr = new NnUserSubscribeGroupManager();
-        if (curatorIdStr == null && user != null ) {
-            List<NnUserSubscribeGroup> groups = groupMngr.findByUser(user);    
+        //if (curatorIdStr == null && user != null ) {
+        if (curatorIdStr == null) {
             //set info
             if (setInfo) {
                 String setOutput = "";
-                for (NnUserSubscribeGroup g : groups) {
+                List<NnUserSubscribeGroup> groups = new ArrayList<NnUserSubscribeGroup>();
+                String[] list = new String[9];
+                if (user != null) {
+                    groups.addAll(groupMngr.findByUser(user));
+                    for (NnUserSubscribeGroup g : groups) {
+                        String[] obj = {
+                                String.valueOf(g.getSeq()),
+                                String.valueOf(g.getId()),
+                                g.getName(),                        
+                                g.getImageUrl(),
+                                String.valueOf(g.getType()),
+                        };
+                        list[g.getSeq() - 1] = NnStringUtil.getDelimitedStr(obj);
+                        //setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";
+                    }
+                }
+                //overwrite user's
+                List<MsoIpg> ipgs = new MsoIpgManager().findSetsByMso(mso.getId());
+                for (MsoIpg i : ipgs) {
                     String[] obj = {
-                            String.valueOf(g.getSeq()),
-                            String.valueOf(g.getId()),
-                            g.getName(),                        
-                            g.getImageUrl(),
-                            String.valueOf(g.getType()),
+                            String.valueOf(i.getSeq()),
+                            String.valueOf(0),
+                            i.getGroupName(),                        
+                            "",
+                            String.valueOf(i.getType()),
                     };
-                    setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";
+                    list[i.getSeq() - 1] = NnStringUtil.getDelimitedStr(obj);
+                    //setOutput += NnStringUtil.getDelimitedStr(obj) + "\n";                        
+                }
+                for (int i=0; i < list.length; i++) {
+                    if (list[i] != null)
+                        setOutput += list[i] + "\n"; 
                 }
                 result.add(setOutput);
             }
@@ -742,13 +769,15 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         boolean channelPos = true;
         if (channelIds == null && curatorIdStr == null) {
-            //find subscribed channels 
-            NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
-            channels = subMngr.findSubscribedChannels(user);
+            //find subscribed channels
+            if (user != null) {
+                NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
+                channels = subMngr.findSubscribedChannels(user);
+            }
             //default channels goes after channels, to make sure it overwrites original ones
-            List<NnChannel> defaultChannels = chMngr.findMsoDefaultChannels(user.getMsoId(), false);
+            List<NnChannel> defaultChannels = chMngr.findMsoDefaultChannels(mso.getId(), false);
             channels.addAll(defaultChannels);
-            log.info("user: " + user.getToken() + " find subscribed size:" + channels.size());
+            log.info("user: " + userToken + " find subscribed size:" + channels.size());
         } else if (curatorIdStr != null) {
             channelPos = false;
             NnUser curator = userMngr.findByProfileUrl(curatorIdStr, mso.getId());
@@ -785,7 +814,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         //sort by seq
         if (channelPos) {
-            if (user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
+            if (user == null || user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
                 TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
                 for (NnChannel c : channels) {
                     channelMap.put(c.getSeq(), c);                
@@ -800,14 +829,12 @@ public class PlayerApiService {
         }
         String channelOutput = "";
         if (version < 32) {
-            log.info("output ios string");
             channelOutput += new IosService().composeChannelLineup(channels);
         } else {
             if (isReduced) {
                 log.info("output reduced string");
                 channelOutput += chMngr.composeReducedChannelLineup(channels);
             } else {
-                log.info("output v32 string");
                 channelOutput += chMngr.composeChannelLineup(channels, version);
             }
         }
@@ -1029,7 +1056,7 @@ public class PlayerApiService {
         MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.CDN);
         if (config == null) {
             config = new MsoConfig(mso.getId(), MsoConfig.CDN, MsoConfig.CDN_AMAZON);
-            log.severe("mso config does not exist! mso: " + mso.getId());
+            log.info("mso config does not exist! mso: " + mso.getId());
         }
         String userInfoStr = "";
         if (userInfo) {
@@ -1128,24 +1155,6 @@ public class PlayerApiService {
     }
     
     public String deviceRegister(String userToken, String type, HttpServletRequest req, HttpServletResponse resp) {
-        NnUser user = null;
-        if (userToken != null) {
-            @SuppressWarnings({ "rawtypes"})
-            HashMap map = this.checkUser(userToken, false);
-            if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
-                return this.assembleMsgs((Integer)map.get("s"), null);
-            }
-            user = (NnUser) map.get("u");
-        }
-        NnDeviceManager deviceMngr = new NnDeviceManager();
-        deviceMngr.setReq(req); //!!!
-        NnDevice device = deviceMngr.create(null, user, type);        
-        String[] result = {device.getToken()};        
-        this.setUserCookie(resp, CookieHelper.DEVICE, device.getToken());
-        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
-    }
-
-    public String endpointRegister(String userToken, String type, HttpServletRequest req, HttpServletResponse resp) {
         NnUser user = null;
         if (userToken != null) {
             @SuppressWarnings({ "rawtypes"})
@@ -1627,8 +1636,21 @@ public class PlayerApiService {
         }
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
+
+    public String personalHistory(String userToken) {
+        @SuppressWarnings("rawtypes")
+        HashMap map = this.checkUser(userToken, false);
+        if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
+            return this.assembleMsgs((Integer)map.get("s"), null);
+        }
+        NnUser user = (NnUser) map.get("u");
+        List<NnChannel> channels = chMngr.findPersonalHistory(user.getId(), user.getMsoId());
+        String result[] = {chMngr.composeChannelLineup(channels, version)};
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+    }
     
     public String userWatched(String userToken, String count, boolean channelInfo, boolean episodeIndex, String channel) {
+        /*
         @SuppressWarnings("rawtypes")
         HashMap map = this.checkUser(userToken, false);
         if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
@@ -1675,7 +1697,8 @@ public class PlayerApiService {
         if (channelInfo) {
             chMngr.composeChannelLineup(channels, version);
         }
-        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+        */
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
     public String copyChannel(String userToken, String channelId, String grid) {        
@@ -2373,7 +2396,7 @@ public class PlayerApiService {
         if (channels.size() > 0) {
             for (int i=0; i<lines.length; i++) {                   
                 lines[i] = lines[i].replaceAll("^\\d+\\t", channels.get(i).getSeq() + "\t");
-                log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
+                //log.info("ch id:" + channels.get(i).getId() + "; seq = " + channels.get(i).getSeq());
                 adjust += lines[i] + "\n";
             }
         }
@@ -2821,10 +2844,64 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
 
-    public String endpointRegister(String userToken, String deviceToken, String vendor) {
+    public String endpointRegister(String userToken, String token, String vendor, String action) {
+        //input verification
+        if (userToken == null || token == null || vendor == null || action == null)
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        @SuppressWarnings("rawtypes")
+        HashMap map = this.checkUser(userToken, false);
+        if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
+            return this.assembleMsgs((Integer)map.get("s"), null);
+        }
+        NnUser user = (NnUser) map.get("u");
+        if (!action.equals("register") && !action.equals("unregister"))
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        boolean register = true;
+        if (action.equals("unregister"))
+            register = false;        
+        user = (NnUser) map.get("u");
+        //endpoint verify
+        EndPointManager endpointMngr = new EndPointManager();
+        short srtVendor = endpointMngr.getVendorType(vendor);
+        if (srtVendor == EndPoint.VENDOR_UNDEFINED)
+            return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+        EndPoint endpoint = endpointMngr.findByEndPoint(user.getId(), mso.getId(), token, srtVendor);
+        if (endpoint == null && register) {
+            endpoint = new EndPoint(user.getId(), mso.getId(), token, srtVendor);
+            endpointMngr.save(endpoint);            
+            return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+        }
+        if (!register) {
+            if (endpoint == null) { 
+                return this.assembleMsgs(NnStatusCode.DEVICE_INVALID, null);
+            } else {
+                endpointMngr.delete(endpoint);
+            }
+        }
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
-    
+
+    public String poiAction(String userToken, String poiId, String select) {
+        //input verification
+        if (userToken == null || poiId == null || select == null)
+            return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        @SuppressWarnings("rawtypes")
+        HashMap map = this.checkUser(userToken, false);
+        if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
+            return this.assembleMsgs((Integer)map.get("s"), null);
+        }
+        /*
+        NnUser user = (NnUser) map.get("u");
+        PoiPointManager poiMngr = new PoiPointManager();
+        */
+        /*
+        Poi poi = poiMngr.findById(Long.parseLong(poiId));
+        if (poi == null)
+            return this.assembleMsgs(NnStatusCode.PIWIK_INVALID, null); //poi invalid
+            */
+        //poi table
+        return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+    }
     /*
     public String solr(String text) {
         //check input
