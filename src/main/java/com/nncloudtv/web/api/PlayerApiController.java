@@ -1670,6 +1670,15 @@ public class PlayerApiController {
         */                        
     }
 
+    /**
+     *  Return personal history, for streaming portal version
+     * 
+     * @param user user token
+     * @param mso mso name, default is 9x9 if not given
+     * @param rx
+     * @param req
+     * @return list of channels. Reference channelLineup.
+     */
     @RequestMapping(value="personalHistory", produces = "text/plain; charset=utf-8")
     public @ResponseBody String personalHistory(
             @RequestParam(value="user", required=false) String userToken,
