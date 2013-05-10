@@ -1675,8 +1675,6 @@ public class PlayerApiController {
      * 
      * @param user user token
      * @param mso mso name, default is 9x9 if not given
-     * @param rx
-     * @param req
      * @return list of channels. Reference channelLineup.
      */
     @RequestMapping(value="personalHistory", produces = "text/plain; charset=utf-8")
