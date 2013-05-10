@@ -12,6 +12,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.service.CounterFactory;
 
@@ -258,6 +259,7 @@ public class NnChannel implements Serializable {
         String name = this.getName(); 
         if (name != null) {         
            name = name.replaceAll("\\s", " ");
+           name = NnStringUtil.revertHtml(name);
         }
         return name;        
     }
