@@ -25,9 +25,12 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.PMF;
 import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.model.NnEmail;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.Pdr;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.EmailService;
 import com.nncloudtv.service.PdrManager;
+import com.nncloudtv.service.PlayerApiService;
 import com.nncloudtv.web.json.facebook.FBPost;
 import com.nncloudtv.web.json.facebook.FacebookError;
 import com.nncloudtv.web.json.facebook.FacebookMe;
@@ -106,6 +109,20 @@ public class HelloController {
         Pdr pdr = new Pdr(1, "session1", "test");
         pdrMngr.create(pdr);
         return "OK";
+    }                
+
+    @RequestMapping("pdr_process")
+    public @ResponseBody String pdr_process(HttpServletRequest req, 
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="channel", required=false) String channel,
+            @RequestParam(value="program", required=false) String program) { 
+        PlayerApiService apiservice = new PlayerApiService();
+        Mso mso = new MsoManager().findNNMso();
+        apiservice.setMso(mso);
+        String detail = " w\t" + channel + "\t" + program;
+        System.out.println("detail:" + detail);
+        String result = apiservice.pdr(userToken, null, "1", detail, req);       
+        return result;
     }                
     
     //cache test
