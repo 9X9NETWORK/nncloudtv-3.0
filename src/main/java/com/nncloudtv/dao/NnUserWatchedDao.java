@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jdo.JDODataStoreException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -24,6 +25,8 @@ public class NnUserWatchedDao extends GenericDao<NnUserWatched>{
         try {
             pm.makePersistent(watched);
             watched = pm.detachCopy(watched);
+        } catch (JDODataStoreException e){
+            e.printStackTrace();
         } finally {
             pm.close();
         }
@@ -41,14 +44,14 @@ public class NnUserWatchedDao extends GenericDao<NnUserWatched>{
     }
 
     @SuppressWarnings("unchecked")
-    public NnUserWatched findByUserTokenAndChannel(String token, long channelId) {
-        PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, token);
+    public NnUserWatched findByUserAndChannel(NnUser user, long channelId) {
+        PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, user.getToken());
         NnUserWatched watched = null;
         try {
             Query q = pm.newQuery(NnUserWatched.class);
-            q.setFilter("userToken == userTokenParam && channelId== channelIdParam");
-            q.declareParameters("String userTokenParam, long channelIdParam");
-            List<NnUserWatched> results = (List<NnUserWatched>) q.execute(token, channelId);
+            q.setFilter("userId == userIdParam && channelId== channelIdParam && msoId == msoIdParam");
+            q.declareParameters("long userIdParam, long channelIdParam, long msoIdParam");
+            List<NnUserWatched> results = (List<NnUserWatched>) q.execute(user.getId(), channelId, user.getMsoId());
             if (results.size() > 0) {
                 watched = results.get(0);        
             }
@@ -59,49 +62,22 @@ public class NnUserWatchedDao extends GenericDao<NnUserWatched>{
         return watched;        
     }
     
-    
     @SuppressWarnings("unchecked")
-    public List<NnUserWatched> findByUserToken(String token) {
-        PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, token);
+    public List<NnUserWatched> findHistory(NnUser user) {
+        PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, user.getToken());
+        //userPersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
         ArrayList<NnUserWatched> results = new ArrayList<NnUserWatched>();
         try {
             Query q = pm.newQuery(NnUserWatched.class);
-            q.setFilter("userToken == userTokenParam");
-            q.declareParameters("String userTokenParam");
-            results.addAll((List<NnUserWatched>)q.execute(token));
+            q.setFilter("userId == userIdParam && msoId == msoIdParam");
+            q.declareParameters("long userIdParam, long msoIdParam");
+            q.setOrdering("updateDate desc");
+            results.addAll((List<NnUserWatched>)q.execute(user.getId(), user.getMsoId()));
             results = (ArrayList<NnUserWatched>) pm.detachCopyAll(results);
         } finally {
             pm.close();
         }
         return results;        
-    }
+    }            
         
-    
-    /*
-    @SuppressWarnings("unchecked")
-    public List<NnUserWatched> findAllByUser(long userId, String userToken) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        ArrayList<NnUserWatched> results = new ArrayList<NnUserWatched>();
-        
-        try {
-            Query query = pm.newQuery(NnUserWatched.class);
-            if (userId != 0) {
-                query.setFilter("userId == userIdParam");
-                query.declareParameters("long userIdParam");
-                query.setOrdering("createDate DESC");
-                results.addAll((List<NnUserWatched>)query.execute(userId));
-            } else {
-                query.setFilter("userToken == userTokenParam");
-                query.declareParameters("String userTokenParam");                
-                results.addAll((List<NnUserWatched>)query.execute(userToken));
-            }
-            results = (ArrayList<NnUserWatched>) pm.detachCopyAll(results);
-        } catch (JDOObjectNotFoundException e) {
-        } finally {
-            pm.close();
-        }
-        return results;    
-    }
-
-    */
 }
