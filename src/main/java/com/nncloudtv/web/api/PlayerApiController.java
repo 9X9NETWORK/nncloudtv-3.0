@@ -1670,6 +1670,24 @@ public class PlayerApiController {
         */                        
     }
 
+    @RequestMapping(value="personalHistory", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String personalHistory(
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="mso", required=false) String mso,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);        
+        try {
+            this.prepService(req, true);
+            output = playerApiService.personalHistory(userToken);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;                
+    }
+    
     /**
      * @deprecated
      * User's recently watched channel and its episode.
@@ -2612,10 +2630,9 @@ public class PlayerApiController {
         return output;
     }
  
-    //API: http://www.9x9.tv/deviceRegister?userId={}&msoId={}&deviceToken={}&NotificationVendor={gcm|apns|sms}
-    //API: http://www.9x9.tv/deviceUnRegister?userId={}&msoId={}&deviceToken={}&NotificationVendor={gcm|apns|sms}    
     @RequestMapping(value="endpointRegister", produces = "text/plain; charset=utf-8")
     public @ResponseBody String endpointRegister(
+            @RequestParam(value="action", required=false) String action,
             @RequestParam(value="user", required=false) String userToken,
             @RequestParam(value="mso", required=false) String mso,
             @RequestParam(value="device", required=false) String device,
@@ -2629,7 +2646,32 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            output = playerApiService.endpointRegister(userToken, device, vendor);
+            output = playerApiService.endpointRegister(userToken, device, vendor, action);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }
+
+    //http://www.9x9.tv/poiaction?poiId={}&userId={}&select={}
+    //{msg:"", duration:0} 
+    @RequestMapping(value="poiAction", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String poiAction(
+            @RequestParam(value="poi", required=false) String poiId,
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="select", required=false) String select,
+            @RequestParam(value="rx", required = false) String rx,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {
+                return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
+            }
+            output = playerApiService.poiAction(userToken, poiId, select);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
