@@ -32,7 +32,6 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserProfile;
-import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.SysTag;
@@ -161,6 +160,16 @@ public class NnChannelManager {
     //example: nnchannel(channel_id)
     public static String getCacheKey(long channelId) {
         String str = "nnchannel(" + channelId + ")"; 
+        return str;
+    }
+
+    public static String getV31CacheKey(long channelId) {
+        String str = "nnchannel-v31(" + channelId + ")"; 
+        return str;
+    }
+
+    public static String getV32CacheKey(long channelId) {
+        String str = "nnchannel-v32(" + channelId + ")"; 
         return str;
     }
     
@@ -463,7 +472,7 @@ public class NnChannelManager {
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        
         //find msoIpg
         MsoIpgManager msoIpgMngr = new MsoIpgManager();
-        List<MsoIpg>msoIpg = msoIpgMngr.findAllByMsoId(msoId);
+        List<MsoIpg>msoIpg = msoIpgMngr.findChannelsByMso(msoId);
         //retrieve channels
         List<NnChannel> channels = new ArrayList<NnChannel>();
         for (MsoIpg i : msoIpg) {
@@ -749,6 +758,7 @@ public class NnChannelManager {
     public String composeChannelLineupStr(NnChannel c, int version) {
         String result = null;
         log.info("version number: " + version);
+        
         if (version > 32) {
             try {
                 result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));            
@@ -979,11 +989,6 @@ public class NnChannelManager {
         for (NnUserChannelSorting s : sorts) {
             sortMap.put(s.getChannelId(), s.getSort());
         }
-        NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
-        List<NnUserWatched> watched = watchedMngr.findByUserToken(user.getToken());
-        for (NnUserWatched w : watched) {
-            watchedMap.put(w.getChannelId(), w.getProgram());
-        }            
         for (NnChannel c : channels) {
             if (user != null && sortMap.containsKey(c.getId()))
                 c.setSorting(sortMap.get(c.getId()));
@@ -1101,6 +1106,10 @@ public class NnChannelManager {
         NnChannel channel = dao.findById(channelId);
         channel.setUpdateDate(now);
         dao.save(channel);
+    }
+    
+    public List<NnChannel> findPersonalHistory(long userId, long msoId) {
+        return dao.findPersonalHistory(userId, msoId);
     }
     
     /** recommend deprecated, where findByIds exist */
