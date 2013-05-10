@@ -24,6 +24,9 @@ public class MsoIpg  implements Serializable {
 
     @Persistent 
     private long channelId;
+
+    @Persistent 
+    private String groupName;
     
     public static short TYPE_GENERAL = 1;
     public static short TYPE_READONLY = 2;
@@ -102,4 +105,11 @@ public class MsoIpg  implements Serializable {
         this.updateDate = updateDate;
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }    
 }
