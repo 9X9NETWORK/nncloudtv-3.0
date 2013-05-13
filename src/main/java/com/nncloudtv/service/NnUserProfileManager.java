@@ -60,7 +60,7 @@ public class NnUserProfileManager {
             return null;
         } else {
             for (NnUserProfile profile : profiles) {
-                if (profile.getPriv().startsWith("111")) { // logic hard coded
+                if (profile.getPriv() != null && profile.getPriv().startsWith("111")) { // logic hard coded
                     if (target == null) {
                         target = profile;
                     } else {
