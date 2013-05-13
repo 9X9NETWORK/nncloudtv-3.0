@@ -41,6 +41,10 @@ public class User implements Serializable {
     private int cntChannel;
     
     private int cntFollower;
+    
+    private long msoId;
+    
+    private String priv;
 
     public long getId() {
         return id;
@@ -168,6 +172,22 @@ public class User implements Serializable {
 
     public void setCntFollower(int cntFollower) {
         this.cntFollower = cntFollower;
+    }
+
+    public long getMsoId() {
+        return msoId;
+    }
+
+    public void setMsoId(long msoId) {
+        this.msoId = msoId;
+    }
+
+    public String getPriv() {
+        return priv;
+    }
+
+    public void setPriv(String priv) {
+        this.priv = priv;
     }
 
 }

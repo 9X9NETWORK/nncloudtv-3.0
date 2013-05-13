@@ -210,6 +210,12 @@ public class ApiGeneric {
 	    userResp.setCntChannel(user.getProfile().getCntChannel());
 	    //result.put("cntFollower", user.getProfile().getCntFollower());
 	    userResp.setCntFollower(user.getProfile().getCntFollower());
+	    userResp.setMsoId(user.getProfile().getMsoId());
+	    if (user.getProfile().getPriv() == null) {
+	        userResp.setPriv("000111"); // TODO hard coded default
+	    } else {
+	        userResp.setPriv(user.getProfile().getPriv());
+	    }
 	    
 	    return userResp;
 	}

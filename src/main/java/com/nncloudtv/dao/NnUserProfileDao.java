@@ -1,5 +1,6 @@
 package com.nncloudtv.dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,32 @@ public class NnUserProfileDao extends GenericDao<NnUserProfile> {
         } finally {
             pm.close();
         }
+        return detached;
+    }
+    
+    public List<NnUserProfile> findByUserId(long userId) {
+        
+        List<NnUserProfile> detached = null;
+        PersistenceManager pm = NnUserDao.getPersistenceManager(NnUser.SHARD_DEFAULT, null);
+        
+        try {
+            String sql = "select * " +
+                    " from nnuser_profile " + 
+                   " where userId = " + userId;
+            log.info("sql:" + sql);
+            Query q = pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnUserProfile.class);
+            @SuppressWarnings("unchecked")
+            List<NnUserProfile> results = (List<NnUserProfile>) q.execute();
+            if (results != null && results.size() > 0) {
+                detached = (List<NnUserProfile>) pm.detachCopyAll(results);
+            } else {
+                detached = new ArrayList<NnUserProfile>();
+            }
+        } finally {
+            pm.close();
+        }
+        
         return detached;
     }
 

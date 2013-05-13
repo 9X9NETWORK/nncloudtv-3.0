@@ -29,9 +29,11 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
+import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.web.json.cms.User;
 import com.nncloudtv.web.json.facebook.FBPost;
 
@@ -97,7 +99,8 @@ public class ApiMisc extends ApiGeneric {
 		okResponse(resp);
         return null;
 	}
-
+	
+	/** if not provide mso parameter, the super profile will return if exist that replace the default 9x9 profile */
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public @ResponseBody User loginCheck(HttpServletRequest req, HttpServletResponse resp) {
 	    
@@ -110,12 +113,30 @@ public class ApiMisc extends ApiGeneric {
 		}
         
         NnUserManager userMngr = new NnUserManager();
-        Mso brand = new MsoManager().findOneByName(mso);
-        NnUser user = userMngr.findById(verifiedUserId, brand.getId(), (short) 0);
+        NnUser user = null;
+        
+        if (mso != null) {
+            Mso brand = new MsoManager().findOneByName(mso);
+            user = userMngr.findById(verifiedUserId, brand.getId(), (short) 0);
+        } else {
+            NnUserProfile profile = new NnUserProfileManager().pickSuperProfile(verifiedUserId);
+            if (profile != null) {
+                user = userMngr.findById(verifiedUserId, profile.getMsoId(), (short) 0);
+            } else {
+                user = userMngr.findById(verifiedUserId, new MsoManager().findNNMso().getId(), (short) 0);
+            }
+        }
+        
+        if (user == null) {
+            nullResponse(resp);
+            log.warning("undefined exception happend");
+            return null;
+        }
 		
 		return userResponse(user);
 	}
 	
+	/** if not provide mso parameter, the super profile will return if exist that replace the default 9x9 profile */
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public @ResponseBody User login(HttpServletRequest req, HttpServletResponse resp) {
 		
@@ -147,6 +168,14 @@ public class ApiMisc extends ApiGeneric {
 		if (user == null) {
 		    nullResponse(resp);
 		    return null;
+		}
+		
+		
+		if (mso == null) {
+		    NnUserProfile profile = new NnUserProfileManager().pickSuperProfile(user.getId());
+            if (profile != null) {
+                user.setProfile(profile);
+            }
 		}
 		
 		return userResponse(user);

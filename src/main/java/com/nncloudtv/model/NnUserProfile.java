@@ -73,6 +73,10 @@ public class NnUserProfile implements Serializable {
     
     @Persistent
     private Date updateDate;
+    
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=6)
+    private String priv; // indicate pcs read write delete and ccs read write delete
 
     public long getMsoId() {
         return msoId;
@@ -262,6 +266,14 @@ public class NnUserProfile implements Serializable {
             return "~" + profileUrl;
         }
         return profileUrl;
+    }
+
+    public String getPriv() {
+        return priv;
+    }
+
+    public void setPriv(String priv) {
+        this.priv = priv;
     }
 
 }
