@@ -758,14 +758,18 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Long verifiedUserId = userIdentify(req);
-        if (verifiedUserId == null) {
-            unauthorized(resp);
-            return null;
-        }
-        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
-            forbidden(resp);
-            return null;
+        if (mso.getName().equals(Mso.NAME_9X9)) {
+            // read 9x9 store is public
+        } else {
+            Long verifiedUserId = userIdentify(req);
+            if (verifiedUserId == null) {
+                unauthorized(resp);
+                return null;
+            }
+            else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
+                forbidden(resp);
+                return null;
+            }
         }
         
         // categoryId, default : 1, category : All
