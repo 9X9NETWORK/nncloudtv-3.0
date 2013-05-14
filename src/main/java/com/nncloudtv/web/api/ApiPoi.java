@@ -1270,13 +1270,13 @@ public class ApiPoi extends ApiGeneric {
             }
             
             Short originType = event.getType();
-            if (originType == PoiEvent.TYPE_UNDEFINED || originType == PoiEvent.TYPE_HYPERLINK ||
+            if (originType == PoiEvent.TYPE_POPUP || originType == PoiEvent.TYPE_HYPERLINK ||
                  originType == PoiEvent.TYPE_POLL) {
                 if (type == PoiEvent.TYPE_INSTANTNOTIFICATION || type == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
                     shouldContainNotifyMsg = true;
                 }
             }
-            if (originType == PoiEvent.TYPE_UNDEFINED || originType == PoiEvent.TYPE_HYPERLINK ||
+            if (originType == PoiEvent.TYPE_POPUP || originType == PoiEvent.TYPE_HYPERLINK ||
                     originType == PoiEvent.TYPE_POLL || originType == PoiEvent.TYPE_INSTANTNOTIFICATION) {
                    if (type == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
                        shouldContainNotifyScheduler = true;
