@@ -32,6 +32,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserProfile;
+import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.SysTag;
@@ -780,7 +781,6 @@ public class NnChannelManager {
         
         //image url, favorite channel image will be overwritten later
         String imageUrl = c.getPlayerPrefImageUrl();
-        /*
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED ||
@@ -791,7 +791,7 @@ public class NnChannelManager {
                 Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
                 for (int i=0; i<3; i++) {
                     if (i < programs.size()) {
-                       lastEpisodeTitle = programs.get(0).getName();
+                       //lastEpisodeTitle = programs.get(0).getName();
                        imageUrl += "|" + programs.get(i).getImageUrl();
                     } else {
                        i=4;
@@ -803,7 +803,7 @@ public class NnChannelManager {
                 Collections.sort(episodes, eMngr.getEpisodePublicSeqComparator());
                 for (int i=0; i<3; i++) {
                     if (i < episodes.size()) {
-                       lastEpisodeTitle = episodes.get(0).getName();
+                       //lastEpisodeTitle = episodes.get(0).getName();
                        imageUrl += "|" + episodes.get(i).getImageUrl();
                     } else {
                        i=4;
@@ -811,7 +811,6 @@ public class NnChannelManager {
                 }
             }
         }
-        */
         //curator info
         /*
         NnUserManager userMngr = new NnUserManager();
@@ -869,8 +868,9 @@ public class NnChannelManager {
         String poiStr = "";
         if (version > 32) {
             PoiEventManager eventMngr = new PoiEventManager();
-            PoiPointManager pointMngr = new PoiPointManager();        
+            PoiPointManager pointMngr = new PoiPointManager();            
             List<PoiPoint> points = pointMngr.findCurrentByChannel(c.getId());
+            List<Poi> pois = pointMngr.findCurrentPoiByChannel(c.getId());
             List<PoiEvent> events = new ArrayList<PoiEvent>();
             for (PoiPoint p : points) {
                 PoiEvent event = eventMngr.findByPoint(p.getId());
@@ -884,12 +884,14 @@ public class NnChannelManager {
             for (int i=0; i<points.size(); i++) {
                 PoiPoint point = points.get(i);
                 PoiEvent event = events.get(i);
+                Poi poi = pois.get(i);
                 String context = "";
                 try {
                     context = URLEncoder.encode(event.getContext(), "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+                //String poiStrHere = poi.getId() + ";" + point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
                 String poiStrHere = point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
                 log.info("poi output:" + poiStrHere);
                 poiStr += poiStrHere;
