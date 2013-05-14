@@ -78,7 +78,7 @@ public class CategoryDao extends GenericDao<Category> {
             detached = (List<Category>)pm.detachCopyAll(results);
             */
             
-            String sql = "select * from category where lang = '" + lang + "' and msoId = " + msoId;
+            String sql = "select * from category where lang = '" + lang + "' and msoId = " + msoId + " order by seq";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(Category.class);
