@@ -16,7 +16,7 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
     public PoiEventDao() {
         super(PoiEvent.class);
     }
-
+    
     public PoiEvent findByPoint(long pointId) {
         PoiEvent detached = null;
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
@@ -40,30 +40,31 @@ public class PoiEventDao extends GenericDao<PoiEvent> {
         return detached;                            
     }
     
-    /*
-    public List<PoiEvent> findPoiEventsByPoi(long poiId) {
-        List<PoiEvent> results = new ArrayList<PoiEvent>();
+    public PoiEvent findByPoi(long poiId) {
+        PoiEvent result = null;
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
+            //select * 
+            //  from poi_event 
+            // where id= (select eventId from poi where id=1);
             String sql = "select * " +
-                    "  from poi_event " +
-                    " where id in (select eventId " +
-                                   " from poi_map " +
-                                   " where poiId = " + poiId + ")";
+                          " from poi_event " +
+                         " where id = (select eventId " +
+                                       " from poi " +
+                                      " where id = " + poiId + ")";
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
             query.setClass(PoiEvent.class);
             @SuppressWarnings("unchecked")
             List<PoiEvent> poiEvents = (List<PoiEvent>) query.execute();
-            
-            results = (List<PoiEvent>) pm.detachCopyAll(poiEvents);
+            if (poiEvents.size() > 0)
+                result = pm.detachCopy(poiEvents.get(0));
             
         } finally {
             pm.close();
         } 
-        return results;                            
+        return result;                            
     }
-    */
     
 }
 

@@ -12,6 +12,7 @@ import com.nncloudtv.lib.PMF;
 import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.Pdr;
+import com.nncloudtv.model.PoiPdr;
 
 public class PdrDao {
 
@@ -47,6 +48,34 @@ public class PdrDao {
         }
         return pdr;
     }
+
+    public PoiPdr findPoiPdr(NnUser user, long poiId) {
+        PoiPdr result = null;
+        PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+        try {
+            Query q = pm.newQuery(PoiPdr.class);
+            q.setFilter("userId == userIdParam, msoId == msoIdParam, poiId == poiIdParam");
+            q.declareParameters("long userIdParam, long msoIdParam, long poiIdParam");
+            @SuppressWarnings("unchecked")
+            List<PoiPdr> results = (List<PoiPdr>)q.execute(user.getId(), user.getMsoId(), poiId);
+            result = (PoiPdr)pm.detachCopy(results);
+        } finally {
+            pm.close();
+        }
+        return result;        
+    }
+    
+    public PoiPdr savePoiPdr(PoiPdr pdr) {        
+        PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
+        if (pm == null) return null;
+        try {
+            pm.makePersistent(pdr);
+            pdr = pm.detachCopy(pdr);
+        } finally {
+            pm.close();
+        }
+        return pdr;
+    }
     
     public List<Pdr> findByUserId(long userId) {
         List<Pdr> detached = new ArrayList<Pdr>();
@@ -61,8 +90,7 @@ public class PdrDao {
         } finally {
             pm.close();
         }
-        return detached;
-        
+        return detached;        
     }
 
     /*
@@ -110,8 +138,8 @@ public class PdrDao {
             } else if (ip != null) {
                 log.info("ip:" + ip);
                 q.declareImports("import java.util.Date");
-                q.setFilter("ip == ipParam && createDate > createDateParam");
-                q.declareParameters("String ipParam, Date createDateParam");
+                q.setFilter("ip == ipParam && updateDate > updateDateParam");
+                q.declareParameters("String ipParam, Date updateDateParam");
                 results = (List<Pdr>)q.execute(ip, since);
             }
             q.setRange(0,199);

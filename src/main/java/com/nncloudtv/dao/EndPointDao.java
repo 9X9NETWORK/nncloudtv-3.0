@@ -35,14 +35,14 @@ public class EndPointDao {
         }
     }
     
-    public EndPoint findByEndPoint(long userId, long msoId, String token, short vendor) {
+    public EndPoint findByEndPoint(long userId, long msoId, short vendor) {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
         EndPoint detached = null;
         try {
             String sql = "select * from endpoint " + 
                          " where userId = " + userId +
                            " and msoId = " + msoId +
-                           " and token = " + token + 
+                           //" and token = '" + token + "'" +  
                            " and vendor = " + vendor;
             log.info("Sql=" + sql);
             
