@@ -25,6 +25,9 @@ public class NnStatusCode {
     public static final int PIWIK_INVALID = 120;
     public static final int PIWIK_ERROR = 121;
     
+    public static final int POI_INVALID = 125;
+    public static final int POI_DUPLICATED = 126;
+    
     public static final int DEVICE_INVALID = 130;
     
     //150 output error
