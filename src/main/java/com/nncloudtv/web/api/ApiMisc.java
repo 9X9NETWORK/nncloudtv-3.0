@@ -100,7 +100,7 @@ public class ApiMisc extends ApiGeneric {
         return null;
 	}
 	
-	/** if not provide mso parameter, the super profile will return if exist that replace the default 9x9 profile */
+	/** super profile's msoId priv will replace the result one if super profile exist */
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public @ResponseBody User loginCheck(HttpServletRequest req, HttpServletResponse resp) {
 	    
@@ -115,16 +115,13 @@ public class ApiMisc extends ApiGeneric {
         NnUserManager userMngr = new NnUserManager();
         NnUser user = null;
         
-        if (mso != null) {
-            Mso brand = new MsoManager().findOneByName(mso);
-            user = userMngr.findById(verifiedUserId, brand.getId(), (short) 0);
-        } else {
-            NnUserProfile profile = new NnUserProfileManager().pickSuperProfile(verifiedUserId);
-            if (profile != null) {
-                user = userMngr.findById(verifiedUserId, profile.getMsoId(), (short) 0);
-            } else {
-                user = userMngr.findById(verifiedUserId, new MsoManager().findNNMso().getId(), (short) 0);
-            }
+        Mso brand = new MsoManager().findOneByName(mso);
+        user = userMngr.findById(verifiedUserId, brand.getId(), (short) 0);
+        
+        NnUserProfile profile = new NnUserProfileManager().pickSuperProfile(verifiedUserId);
+        if (profile != null) {
+            user.getProfile().setMsoId(profile.getMsoId());
+            user.getProfile().setPriv(profile.getPriv());
         }
         
         if (user == null) {
@@ -136,7 +133,7 @@ public class ApiMisc extends ApiGeneric {
 		return userResponse(user);
 	}
 	
-	/** if not provide mso parameter, the super profile will return if exist that replace the default 9x9 profile */
+	/** super profile's msoId priv will replace the result one if super profile exist */
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public @ResponseBody User login(HttpServletRequest req, HttpServletResponse resp) {
 		
@@ -170,12 +167,10 @@ public class ApiMisc extends ApiGeneric {
 		    return null;
 		}
 		
-		
-		if (mso == null) {
-		    NnUserProfile profile = new NnUserProfileManager().pickSuperProfile(user.getId());
-            if (profile != null) {
-                user.setProfile(profile);
-            }
+		NnUserProfile profile = new NnUserProfileManager().pickSuperProfile(user.getId());
+		if (profile != null) {
+		    user.getProfile().setMsoId(profile.getMsoId());
+            user.getProfile().setPriv(profile.getPriv());
 		}
 		
 		return userResponse(user);
