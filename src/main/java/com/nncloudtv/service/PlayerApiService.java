@@ -580,8 +580,8 @@ public class PlayerApiService {
         }
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         long cid = Long.parseLong(id);
-        SysTagDisplay cat = displayMngr.findById(cid);
-        if (cat == null)
+        SysTagDisplay display = displayMngr.findById(cid);
+        if (display == null)
             return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (start == null)
@@ -601,20 +601,20 @@ public class PlayerApiService {
         if (tagStr != null) {
             channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
-            channels = systagMngr.findPlayerChannelsById(cat.getId(), cat.getLang(), page, limit);
+            channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), page, limit);
         }
         String result[] = {"", "", ""};
         //category info        
-        result[0] += assembleKeyValue("id", String.valueOf(cat.getId()));
-        result[0] += assembleKeyValue("name", cat.getName());
+        result[0] += assembleKeyValue("id", String.valueOf(display.getId()));
+        result[0] += assembleKeyValue("name", display.getName());
         result[0] += assembleKeyValue("start", start);
-        String total = String.valueOf(cat.getCntChannel());
+        String total = String.valueOf(display.getCntChannel());
         if (count.equals("0"))
             count = total;
         result[0] += assembleKeyValue("count", count);
         result[0] += assembleKeyValue("total", total);        
         //category tag
-        String tags = cat.getPopularTag();
+        String tags = display.getPopularTag();
         if (tags != null) {
             String[] tag = tags.split(",");
             for (String t : tag) {
