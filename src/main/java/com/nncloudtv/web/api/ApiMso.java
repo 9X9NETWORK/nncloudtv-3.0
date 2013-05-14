@@ -18,11 +18,13 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.SysTagMap;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.StoreListingManager;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
@@ -42,16 +44,47 @@ public class ApiMso extends ApiGeneric {
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
+    private NnUserProfileManager userProfileMngr;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr,
-            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr) {
+            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
+            NnUserProfileManager userProfileMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
+        this.userProfileMngr = userProfileMngr;
+    }
+    
+    /** indicate logging user has access right to target mso in PCS API
+     *  @param requirePriv 3-characters string with '0' or '1' indicate the required of PCS read write delete access right
+     */
+    private boolean hasRightAccessPCS(Long userId, Long msoId, String requirePriv) {
+        
+        if (userId == null || msoId == null || requirePriv == null || requirePriv.matches("[01]{3}") == false) {
+            return false;
+        }
+        
+        NnUserProfile profile = userProfileMngr.findByUserIdAndMsoId(userId, msoId);
+        if (profile == null) {
+            profile = new NnUserProfile();
+            profile.setPriv("000111");
+        }
+        
+        if (requirePriv.charAt(0) == '1' && profile.getPriv().charAt(0) != '1') {
+            return false;
+        }
+        if (requirePriv.charAt(1) == '1' && profile.getPriv().charAt(1) != '1') {
+            return false;
+        }
+        if (requirePriv.charAt(2) == '1' && profile.getPriv().charAt(2) != '1') {
+            return false;
+        }
+        
+        return true;
     }
     
     @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.GET)
@@ -70,6 +103,16 @@ public class ApiMso extends ApiGeneric {
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -109,6 +152,16 @@ public class ApiMso extends ApiGeneric {
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "010") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -207,6 +260,16 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "100") == false) {
+            forbidden(resp);
+            return null;
+        }
+        
         SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
         if (setMeta == null) {
             notFound(resp, "Set Not Found");
@@ -238,6 +301,16 @@ public class ApiMso extends ApiGeneric {
         SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
         if (setMeta == null) {
             notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -331,6 +404,16 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "101") == false) {
+            forbidden(resp);
+            return null;
+        }
+        
         // delete channels in set, SysTagMap
         List<SysTagMap>  sysTagMaps = sysTagMapMngr.findSysTagMaps(set.getId());
         if (sysTagMaps != null && sysTagMaps.size() > 0) {
@@ -364,6 +447,16 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "100") == false) {
+            forbidden(resp);
+            return null;
+        }
+        
         List<NnChannel> results = null;
         if (set.getSorting() == SysTag.SORT_SEQ) {
             results = sysTagMapMngr.findChannelsBySysTagIdOrderBySeq(set.getId());
@@ -394,6 +487,16 @@ public class ApiMso extends ApiGeneric {
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -508,6 +611,16 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "101") == false) {
+            forbidden(resp);
+            return null;
+        }
+        
         Long channelId = null;
         String channelIdStr = req.getParameter("channelId");
         if (channelIdStr != null) {
@@ -558,6 +671,16 @@ public class ApiMso extends ApiGeneric {
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -629,6 +752,16 @@ public class ApiMso extends ApiGeneric {
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -716,6 +849,16 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "101") == false) {
+            forbidden(resp);
+            return null;
+        }
+        
         // channels
         String channelIdsStr = req.getParameter("channels");
         if (channelIdsStr == null) {
@@ -759,6 +902,16 @@ public class ApiMso extends ApiGeneric {
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "110") == false) {
+            forbidden(resp);
             return null;
         }
         
@@ -808,6 +961,16 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
+            forbidden(resp);
+            return null;
+        }
+        
         Mso result = mso;
         result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
         result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
@@ -831,6 +994,16 @@ public class ApiMso extends ApiGeneric {
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "110") == false) {
+            forbidden(resp);
             return null;
         }
         

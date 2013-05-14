@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Service;
+
 import com.nncloudtv.dao.NnUserProfileDao;
-import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserProfile;
 
+@Service
 public class NnUserProfileManager {
 
     protected static final Logger log = Logger.getLogger(NnUserProfileManager.class.getName());
@@ -20,6 +22,13 @@ public class NnUserProfileManager {
         if (user == null)
             return null;
         return dao.findByUser(user);
+    }
+    
+    public NnUserProfile findByUserIdAndMsoId(Long userId, Long msoId) {
+        if (userId == null || msoId == null) {
+            return null;
+        }
+        return dao.findByUserIdAndMsoId(userId, msoId);
     }
     
     public List<NnUserProfile> findByUserId(Long userId) {
