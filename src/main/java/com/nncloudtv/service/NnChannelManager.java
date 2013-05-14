@@ -870,7 +870,7 @@ public class NnChannelManager {
             PoiEventManager eventMngr = new PoiEventManager();
             PoiPointManager pointMngr = new PoiPointManager();            
             List<PoiPoint> points = pointMngr.findCurrentByChannel(c.getId());
-            List<Poi> pois = pointMngr.findCurrentPoiByChannel(c.getId());
+            //List<Poi> pois = pointMngr.findCurrentPoiByChannel(c.getId());
             List<PoiEvent> events = new ArrayList<PoiEvent>();
             for (PoiPoint p : points) {
                 PoiEvent event = eventMngr.findByPoint(p.getId());
@@ -884,7 +884,7 @@ public class NnChannelManager {
             for (int i=0; i<points.size(); i++) {
                 PoiPoint point = points.get(i);
                 PoiEvent event = events.get(i);
-                Poi poi = pois.get(i);
+                //Poi poi = pois.get(i);
                 String context = "";
                 try {
                     context = URLEncoder.encode(event.getContext(), "utf-8");

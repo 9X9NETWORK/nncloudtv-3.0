@@ -687,7 +687,7 @@ public class NnProgramManager {
                 String poiStr = "";
                 for (NnProgram p : list) { //sub-episodes
                     List<PoiPoint> points = pointMngr.findCurrentByProgram(p.getId());
-                    List<Poi> pois = pointMngr.findCurrentPoiByProgram(p.getId());                    
+                    //List<Poi> pois = pointMngr.findCurrentPoiByProgram(p.getId());                    
                     log.info("points size:" + points.size());                    
                     List<PoiEvent> events = new ArrayList<PoiEvent>();
                     for (PoiPoint point : points) {
@@ -701,7 +701,7 @@ public class NnProgramManager {
                     for (int j=0; j<points.size(); j++) {
                         PoiPoint point = points.get(j);
                         PoiEvent event = events.get(j);
-                        Poi poi = pois.get(j);
+                        //Poi poi = pois.get(j);
                         String context = "";
                         try {
                             context = URLEncoder.encode(event.getContext(), "utf-8");
