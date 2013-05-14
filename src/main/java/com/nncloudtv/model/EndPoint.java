@@ -25,7 +25,6 @@ public class EndPoint {
     private long msoId;
     
     @Persistent
-    @Column(jdbcType="VARCHAR", length=255)
     private short vendor; //not really used for now, to identify device type
     public static short VENDOR_UNDEFINED = 0;
     public static short VENDOR_GCM = 1;
@@ -84,7 +83,6 @@ public class EndPoint {
     public void setId(long id) {
         this.id = id;
     }
-
 
     public long getMsoId() {
         return msoId;
