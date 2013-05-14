@@ -35,10 +35,10 @@ public class EndPointManager {
         return EndPoint.VENDOR_UNDEFINED;
     }
     
-    public EndPoint findByEndPoint(long userId, long msoId, String token, short vendor) {
+    public EndPoint findByEndPoint(long userId, long msoId, short vendor) {
         if (vendor == 0)
             return null;
-        return dao.findByEndPoint(userId, msoId, token, vendor);                
+        return dao.findByEndPoint(userId, msoId, vendor);                
     }
     
     public void delete(EndPoint endpoint) {
