@@ -73,6 +73,9 @@ public class ApiMso extends ApiGeneric {
             profile = new NnUserProfile();
             profile.setPriv("000111");
         }
+        if (profile.getPriv() == null) {
+            profile.setPriv("000111");
+        }
         
         if (requirePriv.charAt(0) == '1' && profile.getPriv().charAt(0) != '1') {
             return false;
