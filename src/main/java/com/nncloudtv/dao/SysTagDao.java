@@ -50,7 +50,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             inner join ( 
              select distinct c.id  
                from systag_display d, systag_map m, nnchannel c  
-              where d.systagId = 56 
+              where d.dd = 56 
                 and d.systagId = m.systagId 
                 and c.id = m.channelId
                 and c.isPublic = true  
@@ -71,10 +71,11 @@ public class SysTagDao extends GenericDao<SysTag> {
                          " inner join " + 
                        " (select distinct c.id " + 
                           " from systag_display d, systag_map m, nnchannel c " +
-                         " where d.systagId = " + id + 
+                         " where d.id = " + id + 
                            " and d.systagId = m.systagId " +                           
                            " and c.id = m.channelId " +
-                           " and c.isPublic = true" + 
+                           " and c.isPublic = true" +
+                           " and c.contentType != " + NnChannel.CONTENTTYPE_FAVORITE +
                            " and c.status = " + NnChannel.STATUS_SUCCESS +
                            " and (c.lang = '" + lang + "' or c.lang = 'other')" +
                            str +
