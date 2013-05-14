@@ -47,10 +47,7 @@ public class Pdr implements Serializable {
     @Persistent
     @Column(jdbcType="LONGVARCHAR", length=100000)
     private String detail;    
-    
-    @Persistent
-    private Date createDate;
-    
+
     @Persistent
     private Date updateDate;
     
@@ -87,14 +84,6 @@ public class Pdr implements Serializable {
 
     public void setDetail(String detail) {
         this.detail = detail;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 
     public Date getUpdateDate() {
