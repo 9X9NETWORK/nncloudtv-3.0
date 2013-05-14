@@ -50,7 +50,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             inner join ( 
              select distinct c.id  
                from systag_display d, systag_map m, nnchannel c  
-              where d.dd = 56 
+              where d.systagId = 56 
                 and d.systagId = m.systagId 
                 and c.id = m.channelId
                 and c.isPublic = true  
@@ -60,9 +60,9 @@ public class SysTagDao extends GenericDao<SysTag> {
                 limit 3, 5                
               ) a2 on a1.id=a2.id
             */            
-            String str = "order by c.updateDate desc";
+            String str = " order by c.updateDate desc";
             if (limitRows)
-                str = "order by rand() limit 9";
+                str = " order by rand() limit 9";
             if (limit > 0 && page > 0) {
                 int start = (page-1) * limit;                
                 str += " limit " + start + ", " + limit;
@@ -71,7 +71,7 @@ public class SysTagDao extends GenericDao<SysTag> {
                          " inner join " + 
                        " (select distinct c.id " + 
                           " from systag_display d, systag_map m, nnchannel c " +
-                         " where d.id = " + id + 
+                         " where d.systagId = " + id + 
                            " and d.systagId = m.systagId " +                           
                            " and c.id = m.channelId " +
                            " and c.isPublic = true" +
