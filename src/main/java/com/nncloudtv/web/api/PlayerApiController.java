@@ -833,7 +833,7 @@ public class PlayerApiController {
      *         2.  channel id, <br/>
      *         3.  channel name, <br/>
      *         4.  channel description, <br/> 
-     *         5.  channel image url, separeted by |, max 3, version before 3.2 will have one image url without |<br/>
+     *         5.  channel image url, first is channel thumbnail, followed by 3 latest episode thumbnail(could be empty), all separeted by "|". Version before 3.2 will have one image url without |<br/>
      *         6.  program count, <br/> 
      *         7.  channel type(integer, see note), <br/> 
      *         8.  channel status(integer, see note), <br/>
