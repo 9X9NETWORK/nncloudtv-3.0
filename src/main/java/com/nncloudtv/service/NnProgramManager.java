@@ -25,6 +25,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.TitleCard;
@@ -686,6 +687,7 @@ public class NnProgramManager {
                 String poiStr = "";
                 for (NnProgram p : list) { //sub-episodes
                     List<PoiPoint> points = pointMngr.findCurrentByProgram(p.getId());
+                    List<Poi> pois = pointMngr.findCurrentPoiByProgram(p.getId());                    
                     log.info("points size:" + points.size());                    
                     List<PoiEvent> events = new ArrayList<PoiEvent>();
                     for (PoiPoint point : points) {
@@ -699,12 +701,14 @@ public class NnProgramManager {
                     for (int j=0; j<points.size(); j++) {
                         PoiPoint point = points.get(j);
                         PoiEvent event = events.get(j);
+                        Poi poi = pois.get(j);
                         String context = "";
                         try {
                             context = URLEncoder.encode(event.getContext(), "utf-8");
                         } catch (UnsupportedEncodingException exception) {
                             exception.printStackTrace();
                         }
+                        //String poiStrHere = i + ";" + poi.getId() + ";" + point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
                         String poiStrHere = i + ";" + point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
                         log.info("poi output:" + poiStrHere);
                         poiStr += poiStrHere;

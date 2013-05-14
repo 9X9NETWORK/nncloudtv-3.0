@@ -47,6 +47,9 @@ public class NnStatusMsg {
                 case NnStatusCode.PIWIK_INVALID: return NnStatusMsg.assembleMsg(status, "PIWIK_INVALID");
                 case NnStatusCode.PIWIK_ERROR: return NnStatusMsg.assembleMsg(status, "PIWIK_ERROR");
     
+                case NnStatusCode.POI_INVALID: return NnStatusMsg.assembleMsg(status, "POI_INVALID");
+                case NnStatusCode.POI_DUPLICATED: return NnStatusMsg.assembleMsg(status, "POI_DUPLICATED");
+                
                 case NnStatusCode.DEVICE_INVALID: return NnStatusMsg.assembleMsg(status, "DEVICE_INVALID");
     
                 case NnStatusCode.OUTPUT_NO_MSG_DEFINED: return NnStatusMsg.assembleMsg(status, "OUTPUT_NO_MSG_DEFINED");

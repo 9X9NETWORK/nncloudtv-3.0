@@ -56,6 +56,9 @@ import com.nncloudtv.model.NnUserReport;
 import com.nncloudtv.model.NnUserShare;
 import com.nncloudtv.model.NnUserSubscribe;
 import com.nncloudtv.model.NnUserSubscribeGroup;
+import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiEvent;
+import com.nncloudtv.model.PoiPdr;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.Tag;
@@ -466,8 +469,7 @@ public class PlayerApiService {
         if (device == null && user == null)
             return this.assembleMsgs(NnStatusCode.ACCOUNT_INVALID, null);
         
-        String ip = NnNetUtil.getIp(req);
-System.out.println("enter process pdr!!!!!!");        
+        String ip = NnNetUtil.getIp(req);        
         pdrMngr.processPdr(user, device, session, pdr, ip);
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }    
@@ -2865,9 +2867,13 @@ System.out.println("enter process pdr!!!!!!");
         short srtVendor = endpointMngr.getVendorType(vendor);
         if (srtVendor == EndPoint.VENDOR_UNDEFINED)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
-        EndPoint endpoint = endpointMngr.findByEndPoint(user.getId(), mso.getId(), token, srtVendor);
-        if (endpoint == null && register) {
-            endpoint = new EndPoint(user.getId(), mso.getId(), token, srtVendor);
+        EndPoint endpoint = endpointMngr.findByEndPoint(user.getId(), mso.getId(), srtVendor);
+        if (register) {
+            if (endpoint == null) {
+                endpoint = new EndPoint(user.getId(), mso.getId(), token, srtVendor);                
+            } else {
+                endpoint.setToken(token);
+            }
             endpointMngr.save(endpoint);            
             return this.assembleMsgs(NnStatusCode.SUCCESS, null);
         }
@@ -2890,16 +2896,44 @@ System.out.println("enter process pdr!!!!!!");
         if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
             return this.assembleMsgs((Integer)map.get("s"), null);
         }
-        /*
         NnUser user = (NnUser) map.get("u");
         PoiPointManager poiMngr = new PoiPointManager();
-        */
-        /*
-        Poi poi = poiMngr.findById(Long.parseLong(poiId));
+        long lPoiId = Long.parseLong(poiId);
+        Poi poi = poiMngr.findPoiById(lPoiId);
         if (poi == null)
-            return this.assembleMsgs(NnStatusCode.PIWIK_INVALID, null); //poi invalid
-            */
-        //poi table
+            return this.assembleMsgs(NnStatusCode.POI_INVALID, null); //poi invalid
+        PoiEventManager eventMngr = new PoiEventManager();
+        PoiEvent event = eventMngr.findByPoint(lPoiId);
+        if (event == null) {
+            log.info("event invalid");
+            return this.assembleMsgs(NnStatusCode.POI_INVALID, null); //poi invalid
+        }
+        //record action
+        PdrManager pdrMngr = new PdrManager();        
+        if (event.getType() == PoiEvent.TYPE_POPUP) {
+            pdrMngr.processPoi(user, poi, event, select);
+        } else if (event.getType() == PoiEvent.TYPE_HYPERLINK) {
+            pdrMngr.processPoi(user, poi, event, select);
+        } else if (event.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION) {
+            //instantNotificationPush (push to apns)
+        } else if (event.getType()== PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+            PoiPdr pdr = pdrMngr.findPoiPdr(user, lPoiId);
+            if (pdr != null) {
+                return this.assembleMsgs(NnStatusCode.POI_DUPLICATED, null);
+            } else {
+                pdrMngr.processPoiScheduler(user, poi, event, select);
+                return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+            }
+        } else if (event.getType() == PoiEvent.TYPE_POLL) {
+            PoiPdr pdr = pdrMngr.findPoiPdr(user, lPoiId);
+            if (pdr != null) {
+                return this.assembleMsgs(NnStatusCode.POI_DUPLICATED, null);
+            } else {
+                pdrMngr.processPoiPdr(user, poi, event, select);
+                return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+            }
+        }
+        
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
     /*

@@ -11,34 +11,67 @@ import com.nncloudtv.model.NnDevice;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserWatched;
 import com.nncloudtv.model.Pdr;
+import com.nncloudtv.model.Poi;
+import com.nncloudtv.model.PoiEvent;
+import com.nncloudtv.model.PoiPdr;
 
 public class PdrManager {
 
     protected static final Logger log = Logger.getLogger(PdrManager.class.getName());
     
-    private PdrDao pdrDao= new PdrDao();
+    private PdrDao dao = new PdrDao();
             
     public void create(Pdr pdr) {
         Date now = new Date();
-        pdr.setCreateDate(now);
         pdr.setUpdateDate(now);
-        pdrDao.save(pdr);
+        dao.save(pdr);
     }
     
     public Pdr save(Pdr pdr) {
         pdr.setUpdateDate(new Date());
-        return pdrDao.save(pdr);
+        return dao.save(pdr);
     }        
 
     public List<Pdr> findDebugging(
             NnUser user, NnDevice device, String session,
             String ip, Date since) {
-        return pdrDao.findDebugging(user, device, session, ip, since);
+        return dao.findDebugging(user, device, session, ip, since);
+    }
+
+    public PoiPdr findPoiPdr(NnUser user, long poiId) {
+        return dao.findPoiPdr(user, poiId);
+    }
+    
+    //for poll
+    public void processPoiPdr(NnUser user, Poi poi, PoiEvent event, String select) {
+        PoiPdr pdr = new PoiPdr(user.getId(), user.getMsoId(), poi.getId(), event.getId(), select);
+        dao.savePoiPdr(pdr);
+    }
+    
+    public void processPoiScheduler(NnUser user, Poi poi, PoiEvent event, String select) {
+        PoiPdr pdr = new PoiPdr(user.getId(), user.getMsoId(), poi.getId(), event.getId(), select);
+        String list = event.getNotifyScheduler();
+        if (list != null) {
+            String[] time = list.split(",");
+            if (time.length > 0) {
+                long epoch = Long.parseLong(time[0]);
+                Date myDate = new Date (epoch*1000);
+                pdr.setScheduledDate(myDate);
+                dao.savePoiPdr(pdr);
+            }
+        }        
+    }
+    
+    //for statistics
+    public void processPoi(NnUser user, Poi poi, PoiEvent event, String select) {        
+        String session = "poi";
+        String detail = "poi id:" + poi.getId() + ";select:" + select;
+        Pdr pdr = new Pdr(user, null, session, detail);
+        this.save(pdr);
     }
     
     public void processPdr(NnUser user, NnDevice device, String sessionId, String pdr, String ip) {        
-        if (pdr == null) {return;}
-        PdrManager pdrMngr = new PdrManager();        
+        if (pdr == null) {return;}        
         NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
         String reg = "\\sw\t(\\d++)\t(\\w++)";        
         Pattern pattern = Pattern.compile(reg);
@@ -60,6 +93,6 @@ public class PdrManager {
         }
         Pdr raw = new Pdr(user, device, sessionId, pdr.trim());            
         raw.setIp(ip);
-        pdrMngr.create(raw);        
+        this.create(raw);        
     }        
 }

@@ -265,4 +265,16 @@ public class PoiPointManager {
         }
     }
 
+    public Poi findPoiById(long id) {
+        return poiDao.findById(id);
+    }
+    
+    public List<Poi> findCurrentPoiByChannel(long channelId) {
+        return poiDao.findCurrentByChannel(channelId);
+    }
+    
+    public List<Poi> findCurrentPoiByProgram(long programId) {
+        return poiDao.findCurrentByProgram(programId);
+    }
+    
 }

@@ -101,11 +101,9 @@ public class PoiEventManager {
         return output;
     }
     
-    /*
-    public List<PoiEvent> findPoiEventsByPoiId(long poiId) {
-        return dao.findPoiEventsByPoi(poiId);
+    public PoiEvent findEventsByPoi(long poiId) {
+        return dao.findByPoi(poiId);
     }
-    */
     
     public PoiEvent findByPoint(long pointId) {
         return dao.findByPoint(pointId);
@@ -126,7 +124,7 @@ public class PoiEventManager {
         if (eventType == null) {
             return false;
         }
-        if (eventType == PoiEvent.TYPE_UNDEFINED) {
+        if (eventType == PoiEvent.TYPE_POPUP) {
             return true;
         }
         if (eventType == PoiEvent.TYPE_HYPERLINK) {
