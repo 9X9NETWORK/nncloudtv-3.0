@@ -927,7 +927,7 @@ public class ApiPoi extends ApiGeneric {
         if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUserId != ownerUserId) {
+        } else if (verifiedUserId.longValue() != ownerUserId.longValue()) {
             forbidden(resp);
             return null;
         }
@@ -1038,7 +1038,7 @@ public class ApiPoi extends ApiGeneric {
         if (verifiedUserId == null) {
             unauthorized(resp);
             return null;
-        } else if (verifiedUserId != ownerUserId) {
+        } else if (verifiedUserId.longValue() != ownerUserId.longValue()) {
             forbidden(resp);
             return null;
         }
