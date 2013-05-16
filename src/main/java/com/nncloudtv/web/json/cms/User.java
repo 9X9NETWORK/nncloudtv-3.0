@@ -3,6 +3,8 @@ package com.nncloudtv.web.json.cms;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class User implements Serializable {
     
     /**
@@ -45,6 +47,29 @@ public class User implements Serializable {
     private long msoId;
     
     private String priv;
+    
+    public String toString() {
+        return new ToStringBuilder(this).
+            append("id", id).
+            append("createDate", createDate).
+            append("updateDate", updateDate).
+            append("userEmail", userEmail).
+            append("fbUser", fbUser).
+            append("name", name).
+            append("intro", intro).
+            append("imageUrl", imageUrl).
+            append("lang", lang).
+            append("profileUrl", profileUrl).
+            append("shard", shard).
+            append("sphere", sphere).
+            append("type", type).
+            append("cntSubscribe", cntSubscribe).
+            append("cntChannel", cntChannel).
+            append("cntFollower", cntFollower).
+            append("msoId", msoId).
+            append("priv", priv).
+            toString();
+    }
 
     public long getId() {
         return id;

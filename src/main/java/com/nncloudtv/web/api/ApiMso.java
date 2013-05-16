@@ -1,6 +1,7 @@
 package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -95,27 +96,34 @@ public class ApiMso extends ApiGeneric {
     List<Set> msoSets(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -124,6 +132,7 @@ public class ApiMso extends ApiGeneric {
         
         List<SysTag> sets = sysTagMngr.findSetsByMsoId(mso.getId());
         if (sets == null || sets.size() == 0) {
+            log.info(printExitState(now, req, "ok"));
             return results;
         }
         
@@ -136,6 +145,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
+        log.info(printExitState(now, req, "ok"));
         return results;
     }
     
@@ -144,27 +154,34 @@ public class ApiMso extends ApiGeneric {
     Set msoSetCreate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "010") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -172,6 +189,7 @@ public class ApiMso extends ApiGeneric {
         String name = req.getParameter("name");
         if (name == null || name.isEmpty()) {
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         name = NnStringUtil.htmlSafeAndTruncated(name);
@@ -192,6 +210,7 @@ public class ApiMso extends ApiGeneric {
                 seq = Short.valueOf(seqStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         } else {
@@ -213,10 +232,12 @@ public class ApiMso extends ApiGeneric {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             if (sysTagMngr.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         } else {
@@ -241,6 +262,7 @@ public class ApiMso extends ApiGeneric {
         newSetMeta.setSystagId(newSet.getId());
         newSetMeta = sysTagDisplayMngr.save(newSetMeta);
         
+        log.info(printExitState(now, req, "ok"));
         return setResponse(newSet, newSetMeta);
     }
     
@@ -249,36 +271,45 @@ public class ApiMso extends ApiGeneric {
     Set set(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "100") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
         SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
         if (setMeta == null) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
+        log.info(printExitState(now, req, "ok"));
         return setResponse(set, setMeta);
     }
     
@@ -287,33 +318,41 @@ public class ApiMso extends ApiGeneric {
     Set setUpdate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
         if (setMeta == null) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -337,6 +376,7 @@ public class ApiMso extends ApiGeneric {
                 seq = Short.valueOf(seqStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             set.setSeq(seq);
@@ -358,10 +398,12 @@ public class ApiMso extends ApiGeneric {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             if (sysTagMngr.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             set.setSorting(sortingType);
@@ -379,6 +421,7 @@ public class ApiMso extends ApiGeneric {
         
         //sysTagMapMngr.reorderSysTagChannels(set.getId());
         
+        log.info(printExitState(now, req, "ok"));
         return setResponse(set, setMeta);
     }
     
@@ -387,33 +430,41 @@ public class ApiMso extends ApiGeneric {
     String setDelete(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
         if (setMeta == null) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "101") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -428,6 +479,7 @@ public class ApiMso extends ApiGeneric {
         sysTagMngr.delete(set);
         
         okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
         return null;
     }
     
@@ -436,27 +488,34 @@ public class ApiMso extends ApiGeneric {
     List<NnChannel> setChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "100") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -468,9 +527,11 @@ public class ApiMso extends ApiGeneric {
             results = sysTagMapMngr.findChannelsBySysTagIdOrderByUpdateTime(set.getId());
         }
         if (results == null) {
+            log.info(printExitState(now, req, "ok"));
             return new ArrayList<NnChannel>();
         }
         
+        log.info(printExitState(now, req, "ok"));
         return results;
     }
     
@@ -479,27 +540,34 @@ public class ApiMso extends ApiGeneric {
     String setChannelAdd(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -511,10 +579,12 @@ public class ApiMso extends ApiGeneric {
                 channelId = Long.valueOf(channelIdStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         } else {
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         
@@ -522,6 +592,7 @@ public class ApiMso extends ApiGeneric {
         channel = channelMngr.findById(channelId);
         if (channel == null) {
             badRequest(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         
@@ -543,10 +614,12 @@ public class ApiMso extends ApiGeneric {
                 timeStart = Short.valueOf(timeStartStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             if (timeStart < 0 || timeStart > 23) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         }
@@ -559,10 +632,12 @@ public class ApiMso extends ApiGeneric {
                 timeEnd = Short.valueOf(timeEndStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             if (timeEnd < 0 || timeEnd > 23) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         }
@@ -579,6 +654,7 @@ public class ApiMso extends ApiGeneric {
             }
         } else { // they should be pair
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         
@@ -592,6 +668,7 @@ public class ApiMso extends ApiGeneric {
         sysTagMapMngr.save(sysTagMap);
         
         okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
         return null;
     }
     
@@ -600,27 +677,34 @@ public class ApiMso extends ApiGeneric {
     String setChannelRemove(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "101") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -631,10 +715,12 @@ public class ApiMso extends ApiGeneric {
                 channelId = Long.valueOf(channelIdStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         } else {
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         
@@ -655,6 +741,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
         return null;
     }
     
@@ -663,27 +750,34 @@ public class ApiMso extends ApiGeneric {
     String setChannelsSorting(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long setId = null;
         try {
             setId = Long.valueOf(setIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             notFound(resp, "Set Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -691,6 +785,7 @@ public class ApiMso extends ApiGeneric {
         if (channelIdsStr == null) {
             sysTagMapMngr.reorderSysTagChannels(set.getId());
             okResponse(resp);
+            log.info(printExitState(now, req, "ok"));
             return null;
         }
         String[] channelIdStrList = channelIdsStr.split(",");
@@ -724,6 +819,7 @@ public class ApiMso extends ApiGeneric {
         // parameter should contain all channelId
         if (checkedChannelIdList.size() != 0) {
             badRequest(resp, INVALID_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         
@@ -736,6 +832,7 @@ public class ApiMso extends ApiGeneric {
         sysTagMapMngr.saveAll(orderedSetChannels);
         
         okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
         return null;
     }
     
@@ -744,17 +841,22 @@ public class ApiMso extends ApiGeneric {
     List<Long> storeChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
@@ -764,10 +866,12 @@ public class ApiMso extends ApiGeneric {
             Long verifiedUserId = userIdentify(req);
             if (verifiedUserId == null) {
                 unauthorized(resp);
+                log.info(printExitState(now, req, "401"));
                 return null;
             }
             else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
                 forbidden(resp);
+                log.info(printExitState(now, req, "403"));
                 return null;
             }
         }
@@ -780,10 +884,12 @@ public class ApiMso extends ApiGeneric {
                 categoryId = Long.valueOf(categoryIdStr);
             } catch (NumberFormatException e) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
             if (sysTagMngr.is9x9category(categoryId) == false) {
                 badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
                 return null;
             }
         } else {
@@ -831,9 +937,11 @@ public class ApiMso extends ApiGeneric {
         }
         
         if (results == null) {
+            log.info(printExitState(now, req, "ok"));
             return new ArrayList<Long>();
         }
         
+        log.info(printExitState(now, req, "ok"));
         return results;
     }
     
@@ -842,27 +950,34 @@ public class ApiMso extends ApiGeneric {
     String storeChannelRemove(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "101") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -870,6 +985,7 @@ public class ApiMso extends ApiGeneric {
         String channelIdsStr = req.getParameter("channels");
         if (channelIdsStr == null) {
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         String[] channelIdStrList = channelIdsStr.split(",");
@@ -890,6 +1006,7 @@ public class ApiMso extends ApiGeneric {
         storeListingMngr.addChannelsToStore(channelIdList, mso.getId());
         
         okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
         return null;
     }
     
@@ -898,27 +1015,34 @@ public class ApiMso extends ApiGeneric {
     String storeChannelAdd(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "110") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -926,6 +1050,7 @@ public class ApiMso extends ApiGeneric {
         String channelIdsStr = req.getParameter("channels");
         if (channelIdsStr == null) {
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         String[] channelIdStrList = channelIdsStr.split(",");
@@ -946,6 +1071,7 @@ public class ApiMso extends ApiGeneric {
         storeListingMngr.removeChannelsFromStore(channelIdList, mso.getId());
         
         okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
         return null;
     }
     
@@ -954,27 +1080,34 @@ public class ApiMso extends ApiGeneric {
     Mso mso(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -982,6 +1115,7 @@ public class ApiMso extends ApiGeneric {
         result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
         result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
         
+        log.info(printExitState(now, req, "ok"));
         return result;
     }
     
@@ -990,27 +1124,34 @@ public class ApiMso extends ApiGeneric {
     Mso msoUpdate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
         
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
         Long msoId = null;
         try {
             msoId = Long.valueOf(msoIdStr);
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         }
         else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "110") == false) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
@@ -1036,6 +1177,7 @@ public class ApiMso extends ApiGeneric {
         result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
         result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
         
+        log.info(printExitState(now, req, "ok"));
         return result;
     }
 

@@ -2,6 +2,9 @@ package com.nncloudtv.web.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -245,5 +248,61 @@ public class ApiGeneric {
         //return result;
         return setResp;
     }
+	
+	/** log the enter state
+	 *  @param now the enter time
+	 *  */
+	public String printEnterState(Date now, HttpServletRequest req) {
+	    
+	    if (now == null || req == null) {
+            return null;
+        }
+	    
+	    String result = req.getRequestURI() + "@" + now + "[";
+	    String parameterPairs = "";
+	    
+	    try {
+	        Map<String, String[]> map = (Map<String, String[]>) req.getParameterMap();
+	        Enumeration<String> names = (Enumeration<String>) req.getParameterNames();
+        
+	        while(names.hasMoreElements()) {
+	            
+	            String name = names.nextElement();
+	            String[] values = map.get(name);
+	            
+	            parameterPairs += "," + name + "=";
+	            if (values.length > 1) {
+	                parameterPairs += "(";
+	            }
+	            
+	            String parameterValues = "";
+	            for (String value : values) {
+	                parameterValues += ",\"" + value + "\"";
+	            }
+	            parameterValues = parameterValues.replaceFirst(",", "");
+	            
+	            parameterPairs += parameterValues;
+	            if (values.length > 1) {
+	                parameterPairs += ")";
+	            }
+	        }
+	        parameterPairs = parameterPairs.replaceFirst(",", "");
+	        
+	    } catch (ClassCastException e) {
+	        NnLogUtil.logException(e);
+	    }
+	    
+	    result += parameterPairs + "]";
+        
+	    return result;
+	}
+	
+	/** log the exit state
+	 *  @param now the enter time, not the exit time
+	 *  @param exitState the exit state : ok, 400, 401, 403, 404
+	 *  */
+	public String printExitState(Date now, HttpServletRequest req, String exitState) {
+	    return req.getRequestURI() + "@" + now + "[exit-state=" + exitState + "]";
+	}
 	
 }

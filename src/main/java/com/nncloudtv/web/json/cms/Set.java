@@ -2,6 +2,8 @@ package com.nncloudtv.web.json.cms;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class Set implements Serializable {
     
     /**
@@ -24,6 +26,19 @@ public class Set implements Serializable {
     private String name;
     
     private short sortingType;
+    
+    public String toString() {
+        return new ToStringBuilder(this).
+            append("id", id).
+            append("msoId", msoId).
+            append("channelCnt", channelCnt).
+            append("lang", lang).
+            append("seq", seq).
+            append("tag", tag).
+            append("name", name).
+            append("sortingType", sortingType).
+            toString();
+    }
 
     public long getId() {
         return id;
