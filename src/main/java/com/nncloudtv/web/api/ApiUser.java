@@ -38,6 +38,7 @@ import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.service.SysTagManager;
+import com.nncloudtv.validation.NnUserValidator;
 import com.nncloudtv.web.json.cms.User;
 import com.nncloudtv.web.json.cms.UserFavorite;
 import com.nncloudtv.web.json.facebook.FacebookError;
@@ -130,6 +131,34 @@ public class ApiUser extends ApiGeneric {
             return null;
         } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
+            return null;
+        }
+        
+        // password
+        String oldPassword = req.getParameter("oldPassword");
+        String newPassword = req.getParameter("newPassword");
+        if (oldPassword != null && newPassword != null) {
+            
+            if (user.isFbUser()) {
+                badRequest(resp, "Facebook User cant change password");
+                return null;
+            }
+            
+            NnUser passwordCheckedUser = userMngr.findAuthenticatedUser(user.getUserEmail(), oldPassword, brand.getId(), req);
+            if (passwordCheckedUser == null) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            int status = NnUserValidator.validatePassword(newPassword);
+            if (status != NnStatusCode.SUCCESS) {
+                badRequest(resp, INVALID_PARAMETER);
+                return null;
+            }
+            
+            user.setPassword(newPassword);
+            
+        } else if (oldPassword != null || newPassword != null) {
+            badRequest(resp, MISSING_PARAMETER);
             return null;
         }
         
