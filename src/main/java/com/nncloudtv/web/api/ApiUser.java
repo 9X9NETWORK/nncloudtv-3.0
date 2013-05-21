@@ -140,18 +140,18 @@ public class ApiUser extends ApiGeneric {
         if (oldPassword != null && newPassword != null) {
             
             if (user.isFbUser()) {
-                badRequest(resp, "Facebook User cant change password");
+                badRequest(resp, "FB_USER");
                 return null;
             }
             
             NnUser passwordCheckedUser = userMngr.findAuthenticatedUser(user.getUserEmail(), oldPassword, brand.getId(), req);
             if (passwordCheckedUser == null) {
-                badRequest(resp, INVALID_PARAMETER);
+                badRequest(resp, "WRONG_PASSWORD");
                 return null;
             }
             int status = NnUserValidator.validatePassword(newPassword);
             if (status != NnStatusCode.SUCCESS) {
-                badRequest(resp, INVALID_PARAMETER);
+                badRequest(resp, "WEAK_PASSWORD");
                 return null;
             }
             
