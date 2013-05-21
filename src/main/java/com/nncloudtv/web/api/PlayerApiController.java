@@ -2479,6 +2479,7 @@ public class PlayerApiController {
     public @ResponseBody String portal(                      
             @RequestParam(value="lang", required=false) String lang,
             @RequestParam(value="time", required=false) String time,
+            @RequestParam(value="minimal", required=false) String minimal,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -2488,7 +2489,8 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            output = playerApiService.portal(lang, time);    
+            boolean isMinimal = Boolean.parseBoolean(minimal);
+            output = playerApiService.portal(lang, time, isMinimal);    
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
