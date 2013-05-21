@@ -2406,8 +2406,7 @@ public class PlayerApiService {
         
     }
     
-    public String portal(String lang, String time) {
-        String result[] = {"", "", ""};        
+    public String portal(String lang, String time, boolean minimal) {
         lang = this.checkLang(lang);    
         if (lang == null)
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
@@ -2423,15 +2422,6 @@ public class PlayerApiService {
         displays.add(dayparting);        
         SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
         displays.add(previously);
-        //2: list of channel's channelInfo of the first set
-        List<NnChannel> channels = new ArrayList<NnChannel>();
-        if (displays.size() > 0) {
-            channels.addAll(systagMngr.findPlayerChannelsById(displays.get(0).getSystagId(), lang));
-        }
-        //3. list of the latest episode of each channel of the first set
-        NnProgramManager programMngr = new NnProgramManager();
-        /*string assembly, put to the end to get channels info*/
-        //1. set
         String setStr = "";
         for (SysTagDisplay display : displays) {
             String[] obj = {
@@ -2442,15 +2432,33 @@ public class PlayerApiService {
                 String.valueOf(display.getCntChannel()),
             };
             setStr += NnStringUtil.getDelimitedStr(obj) + "\n";          
-        }       
-        result[0] = setStr;
-        //2. channels
-        String channelStr = chMngr.composeChannelLineup(channels, version);        
-        result[1] = channelStr;
-        //3. programs
-        String programStr = programMngr.findLatestProgramInfoByChannels(channels);
-        result[2] = programStr;        
-        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+        }
+        
+        String channelStr = "";
+        String programStr = "";
+        if (!minimal) {
+	        //2: list of channel's channelInfo of the first set
+	        List<NnChannel> channels = new ArrayList<NnChannel>();
+	        if (displays.size() > 0) {
+	            channels.addAll(systagMngr.findPlayerChannelsById(displays.get(0).getSystagId(), lang));
+	        }
+	        channelStr = chMngr.composeChannelLineup(channels, version);        
+	        //3. list of the latest episode of each channel of the first set
+	        NnProgramManager programMngr = new NnProgramManager();
+	        programStr = programMngr.findLatestProgramInfoByChannels(channels);
+        }
+        if (minimal) {
+            String result[] = {""};
+            result[0] = setStr;
+            return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+        } else {
+        	String result[] = {"", "", ""};
+            result[0] = setStr;        	
+	        result[1] = channelStr;
+	        result[2] = programStr;
+            return this.assembleMsgs(NnStatusCode.SUCCESS, result);	        
+        }
+        
     }
     
     public String frontpage(String time, String stack, String user) {
