@@ -127,6 +127,12 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null) {
+            lang = NnStringUtil.validateLangCode(lang);
+        }
+        
         List<Set> results = new ArrayList<Set>();
         Set result = null;
         
@@ -138,7 +144,13 @@ public class ApiMso extends ApiGeneric {
         
         SysTagDisplay setMeta = null;
         for (SysTag set : sets) {
-            setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+            
+            if (lang != null) {
+                setMeta = sysTagDisplayMngr.findBySysTagIdAndLang(set.getId(), lang);
+            } else {
+                setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+            }
+            
             if (setMeta != null) {
                 result = setResponse(set, setMeta);
                 results.add(result);
@@ -149,7 +161,7 @@ public class ApiMso extends ApiGeneric {
         return results;
     }
     
-    @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.POST)
+    //@RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.POST)
     public @ResponseBody
     Set msoSetCreate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
