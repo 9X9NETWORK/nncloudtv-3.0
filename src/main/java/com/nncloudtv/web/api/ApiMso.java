@@ -437,7 +437,7 @@ public class ApiMso extends ApiGeneric {
         return setResponse(set, setMeta);
     }
     
-    @RequestMapping(value = "sets/{setId}", method = RequestMethod.DELETE)
+    //@RequestMapping(value = "sets/{setId}", method = RequestMethod.DELETE)
     public @ResponseBody
     String setDelete(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
