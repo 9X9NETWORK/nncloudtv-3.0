@@ -38,10 +38,10 @@ import com.nncloudtv.service.PlayerApiService;
 import com.nncloudtv.web.json.facebook.FacebookMe;
 
 /**
- * This is API specification for 9x9 Player. Please note although the document is written in JavaDoc form, it is generic Web Service API via HTTP request-response, no Java necessary.
+// * This is API specification for 9x9 chaPlayer. Please note although the document is written in JavaDoc form, it is generic Web Service API via HTTP request-response, no Java necessary.
  * <p>
- * <blockquote>
- * Example:
+ * <blockquote>/
+// * Example:
  * <p>
  * Player Request: <br/>
  * http://qa.9x9.tv/playerAPI/brandInfo?mso=9x9
@@ -887,7 +887,8 @@ public class PlayerApiController {
     @RequestMapping(value="channelLineup", produces = "text/plain; charset=utf-8")
     public @ResponseBody String channelLineup(
             @RequestParam(value="v", required=false) String v,
-            @RequestParam(value="user", required=false) String userToken, 
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="programInfo", required=false) String programInfo,
             @RequestParam(value="subscriptions", required=false) String subscriptions,
             @RequestParam(value="curator", required=false) String curatorIdStr,
             @RequestParam(value="userInfo", required=false) String userInfo,
@@ -908,7 +909,8 @@ public class PlayerApiController {
             boolean isSetInfo = Boolean.parseBoolean(setInfo);
             boolean isRequired = Boolean.parseBoolean(required);
             boolean isReduced= Boolean.parseBoolean(reduced);
-            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced, req);
+            boolean isProgramInfo = Boolean.parseBoolean(programInfo);
+            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced, isProgramInfo, req);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
