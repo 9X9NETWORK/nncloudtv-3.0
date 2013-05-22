@@ -689,11 +689,12 @@ public class PlayerApiService {
     public String channelLineup(String userToken,
                                 String curatorIdStr,
                                 String subscriptions,
-                                boolean userInfo, 
+                                boolean userInfo,
                                 String channelIds, 
                                 boolean setInfo, 
                                 boolean isRequired,
                                 boolean isReduced,
+                                boolean programInfo,                                
                                 HttpServletRequest req) {
         //verify input
         if (((userToken == null && userInfo == true) || 
@@ -843,8 +844,13 @@ public class PlayerApiService {
         if (channelPos && channelOutput != null) {
             channelOutput = this.chAdjust(channels, channelOutput);
         }
-        
         result.add(channelOutput);
+        String programStr = "";
+        if (programInfo) {
+	        NnProgramManager programMngr = new NnProgramManager();
+	        programStr = programMngr.findLatestProgramInfoByChannels(channels);
+	        result.add(programStr);
+        } 
         String size[] = new String[result.size()];
         return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
     }
@@ -2022,7 +2028,7 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup(token, null, null, false, null, true, false, false, req);
+        String lineup = this.channelLineup(token, null, null, false, null, true, false, false, false, req);
         data.add(lineup);
         if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
@@ -2944,6 +2950,7 @@ public class PlayerApiService {
         
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
+    
     /*
     public String solr(String text) {
         //check input
