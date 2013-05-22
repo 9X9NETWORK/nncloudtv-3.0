@@ -82,34 +82,34 @@ public class PlayerApiServiceTest {
         //Assert.assertTrue(userInfo.contains("SUCCESS")); 
     }
 	
-    @Test
-    public void testChannelLineup() {
-        String user = "8s12689Ns28RN2992sut";
-        String channelStr = service.channelLineup(user, null, null, false, null, false, false, false, req);
-        //System.out.println("channelStr:" + channelStr);
-        String sections[] = channelStr.split("--");
-        System.out.println("sections length:" + sections.length);
-        //System.out.println(channelStr);
-        String lines[] = sections[1].split("\n");
-        System.out.println("---lines size----" + lines.length);
-        String newChannelStr = "";
-        for (String line : lines) {
-            String str = ""; 
-            String elm[] = line.split("\t");
-            for (int i=0; i<elm.length; i++) {
-                //System.out.println( "i=" + i + ":" + elm[i]); 
-                if (i == 15)
-                    elm[i] = "sub-count";
-                else if (i == 16)
-                    elm[i] = "view-count"; 
-                str += elm[i] + "\t";                            
-            }
-            newChannelStr += str + "\n";
-        }
-        String l[] = newChannelStr.split("\n");
-        //System.out.println("---new lines size----" + l.length);
-        //System.out.println("channelStr:" + newChannelStr);
-        Assert.assertTrue(channelStr.contains("SUCCESS")); 
-    }
+//    @Test
+//    public void testChannelLineup() {
+//        String user = "8s12689Ns28RN2992sut";
+//        String channelStr = service.channelLineup(user, null, null, false, null, false, false, false, req);
+//        //System.out.println("channelStr:" + channelStr);
+//        String sections[] = channelStr.split("--");
+//        System.out.println("sections length:" + sections.length);
+//        //System.out.println(channelStr);
+//        String lines[] = sections[1].split("\n");
+//        System.out.println("---lines size----" + lines.length);
+//        String newChannelStr = "";
+//        for (String line : lines) {
+//            String str = ""; 
+//            String elm[] = line.split("\t");
+//            for (int i=0; i<elm.length; i++) {
+//                //System.out.println( "i=" + i + ":" + elm[i]); 
+//                if (i == 15)
+//                    elm[i] = "sub-count";
+//                else if (i == 16)
+//                    elm[i] = "view-count"; 
+//                str += elm[i] + "\t";                            
+//            }
+//            newChannelStr += str + "\n";
+//        }
+//        String l[] = newChannelStr.split("\n");
+//        //System.out.println("---new lines size----" + l.length);
+//        //System.out.println("channelStr:" + newChannelStr);
+//        Assert.assertTrue(channelStr.contains("SUCCESS")); 
+//    }
 	
 }
