@@ -574,10 +574,11 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
 
-    public String categoryInfo(String id, String tagStr, String start, String count, String sort) {
+    public String categoryInfo(String id, String tagStr, String start, String count, String sort, boolean programInfo) {
         if (id == null) {
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
+        List<String> result = new ArrayList<String>();
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         long cid = Long.parseLong(id);
         SysTagDisplay display = displayMngr.findById(cid);
@@ -591,6 +592,8 @@ public class PlayerApiService {
         int limit = Integer.valueOf(count);
         if (limit > 200)
             limit = 200;
+        if (programInfo)
+        	limit = 20;
         int startIndex = Integer.parseInt(start);
         int page = 0;
         if (limit != 0) {
@@ -603,26 +606,36 @@ public class PlayerApiService {
         } else {
             channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), page, limit);
         }
-        String result[] = {"", "", ""};
         //category info        
-        result[0] += assembleKeyValue("id", String.valueOf(display.getId()));
-        result[0] += assembleKeyValue("name", display.getName());
-        result[0] += assembleKeyValue("start", start);
+        String categoryInfo = "";
+        categoryInfo += assembleKeyValue("id", String.valueOf(display.getId()));
+        categoryInfo += assembleKeyValue("name", display.getName());
+        categoryInfo += assembleKeyValue("start", start);
         String total = String.valueOf(display.getCntChannel());
         if (count.equals("0"))
             count = total;
-        result[0] += assembleKeyValue("count", count);
-        result[0] += assembleKeyValue("total", total);        
+        categoryInfo += assembleKeyValue("count", count);
+        categoryInfo += assembleKeyValue("total", total);
+        result.add(categoryInfo);
         //category tag
+        String tagInfo = "";
         String tags = display.getPopularTag();
         if (tags != null) {
             String[] tag = tags.split(",");
             for (String t : tag) {
-                result[1] += t + "\n";
+                tagInfo += t + "\n";
             }
         }
-        result[2] += chMngr.composeChannelLineup(channels, version);
-        return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+        result.add(tagInfo);
+        String channelInfo = chMngr.composeChannelLineup(channels, version); 
+        result.add(channelInfo);
+        if (programInfo) {
+        	NnProgramManager programMngr = new NnProgramManager();
+        	String programInfoStr = programMngr.findLatestProgramInfoByChannels(channels);
+        	result.add(programInfoStr);
+        }
+        String size[] = new String[result.size()];
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result.toArray(size));
     }
      
     
