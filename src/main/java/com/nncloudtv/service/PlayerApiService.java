@@ -2437,10 +2437,12 @@ public class PlayerApiService {
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         SysTagManager systagMngr = new SysTagManager();
         List<SysTagDisplay> displays = displayMngr.findRecommendedSets(lang, mso.getId());        
-        SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());        
-        displays.add(dayparting);        
+        SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
+        if (dayparting != null)
+        	displays.add(dayparting);        
         SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
-        displays.add(previously);
+        if (previously != null)
+        	displays.add(previously);
         String setStr = "";
         for (SysTagDisplay display : displays) {
             String[] obj = {
