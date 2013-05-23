@@ -872,22 +872,6 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        if (mso.getName().equals(Mso.NAME_9X9)) {
-            // read 9x9 store is public
-        } else {
-            Long verifiedUserId = userIdentify(req);
-            if (verifiedUserId == null) {
-                unauthorized(resp);
-                log.info(printExitState(now, req, "401"));
-                return null;
-            }
-            else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
-                forbidden(resp);
-                log.info(printExitState(now, req, "403"));
-                return null;
-            }
-        }
-        
         // categoryId, default : 1, category : All
         Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
