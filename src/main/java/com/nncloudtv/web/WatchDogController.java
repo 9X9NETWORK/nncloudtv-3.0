@@ -172,7 +172,7 @@ public class WatchDogController {
                             String jsonstr = URLDecoder.decode(json[3], "utf-8");
                             ObjectMapper mapper = new ObjectMapper();
                             JsonFactory factory = mapper.getJsonFactory(); 
-                            JsonParser jp = factory.createJsonParser(jsonstr);
+                            JsonParser jp = factory.createJsonParser(jsonstr); //to test valid json
                             output += "\n" + URLDecoder.decode(json[3], "utf-8") + "\n--\n";
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
