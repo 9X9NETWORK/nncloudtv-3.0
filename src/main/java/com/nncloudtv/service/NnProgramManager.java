@@ -25,7 +25,6 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
-import com.nncloudtv.model.Poi;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiPoint;
 import com.nncloudtv.model.TitleCard;
@@ -705,6 +704,7 @@ public class NnProgramManager {
                         String context = "";
                         try {
                             context = URLEncoder.encode(event.getContext(), "utf-8");
+                            context = context.replace("+", "%20");
                         } catch (UnsupportedEncodingException exception) {
                             exception.printStackTrace();
                         }
