@@ -2930,20 +2930,22 @@ public class PlayerApiService {
         if (poi == null)
             return this.assembleMsgs(NnStatusCode.POI_INVALID, null); //poi invalid
         PoiEventManager eventMngr = new PoiEventManager();
-        PoiEvent event = eventMngr.findByPoint(lPoiId);
+        PoiEvent event = eventMngr.findByPoi(lPoiId);
         if (event == null) {
             log.info("event invalid");
             return this.assembleMsgs(NnStatusCode.POI_INVALID, null); //poi invalid
         }
         //record action
-        PdrManager pdrMngr = new PdrManager();        
+        PdrManager pdrMngr = new PdrManager();
         if (event.getType() == PoiEvent.TYPE_POPUP) {
+            //TYPE_POPUP, actually won't happen here, but in pdr api, data will be stored in pdr table    	
             pdrMngr.processPoi(user, poi, event, select);
         } else if (event.getType() == PoiEvent.TYPE_HYPERLINK) {
+        	//TYPE_HYPERLINK, actually won't happen here, but in pdr api, data will be stored in pdr table
             pdrMngr.processPoi(user, poi, event, select);
         } else if (event.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION) {
             //instantNotificationPush (push to apns)
-        } else if (event.getType()== PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+        } else if (event.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
             PoiPdr pdr = pdrMngr.findPoiPdr(user, lPoiId);
             if (pdr != null) {
                 return this.assembleMsgs(NnStatusCode.POI_DUPLICATED, null);
@@ -2952,6 +2954,7 @@ public class PlayerApiService {
                 return this.assembleMsgs(NnStatusCode.SUCCESS, null);
             }
         } else if (event.getType() == PoiEvent.TYPE_POLL) {
+        	//TYPE_POLL, data will be saved in poi_pdr;
             PoiPdr pdr = pdrMngr.findPoiPdr(user, lPoiId);
             if (pdr != null) {
                 return this.assembleMsgs(NnStatusCode.POI_DUPLICATED, null);
