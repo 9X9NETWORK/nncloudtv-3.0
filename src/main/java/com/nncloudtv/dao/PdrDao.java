@@ -54,11 +54,12 @@ public class PdrDao {
         PersistenceManager pm = PMF.getAnalytics().getPersistenceManager();
         try {
             Query q = pm.newQuery(PoiPdr.class);
-            q.setFilter("userId == userIdParam, msoId == msoIdParam, poiId == poiIdParam");
+            q.setFilter("userId == userIdParam && msoId == msoIdParam && poiId == poiIdParam");
             q.declareParameters("long userIdParam, long msoIdParam, long poiIdParam");
             @SuppressWarnings("unchecked")
             List<PoiPdr> results = (List<PoiPdr>)q.execute(user.getId(), user.getMsoId(), poiId);
-            result = (PoiPdr)pm.detachCopy(results);
+            if (results.size() > 0)
+               result = (PoiPdr)pm.detachCopy(results.get(0));
         } finally {
             pm.close();
         }

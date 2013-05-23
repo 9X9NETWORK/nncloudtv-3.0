@@ -142,5 +142,10 @@ public class PoiEventManager {
         
         return false;
     }
+
+    public PoiEvent findByPoi(Long poiId) {        
+        PoiEvent result = dao.findByPoi(poiId);
+        return result;
+    }
     
 }

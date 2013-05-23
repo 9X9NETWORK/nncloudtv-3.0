@@ -53,6 +53,7 @@ public class PdrManager {
         String list = event.getNotifyScheduler();
         if (list != null) {
             String[] time = list.split(",");
+        	log.info("process poi scheduler (quantity): " + time.length);        
             if (time.length > 0) {
                 long epoch = Long.parseLong(time[0]);
                 Date myDate = new Date (epoch*1000);
