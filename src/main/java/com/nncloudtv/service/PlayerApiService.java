@@ -2916,7 +2916,7 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
     }
 
-    public String poiAction(String userToken, String poiId, String select) {
+    public String poiAction(String userToken, String deviceToken, String vendor, String poiId, String select) {
         //input verification
         if (userToken == null || poiId == null || select == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
@@ -2937,6 +2937,15 @@ public class PlayerApiService {
             log.info("event invalid");
             return this.assembleMsgs(NnStatusCode.POI_INVALID, null); //poi invalid
         }
+        //?! requirement question: or it's user based
+        if (event.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION || event.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
+        	if (deviceToken == null || vendor == null)
+        		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        	EndPointManager endpointMngr = new EndPointManager();
+        	EndPoint endpoint = endpointMngr.findByEndPoint(user.getId(), user.getMsoId(), endpointMngr.getVendorType(vendor));
+        	if (endpoint == null)
+        		return this.assembleMsgs(NnStatusCode.DEVICE_INVALID, null);
+        }
         //record action
         PdrManager pdrMngr = new PdrManager();
         if (event.getType() == PoiEvent.TYPE_POPUP) {
@@ -2947,6 +2956,10 @@ public class PlayerApiService {
             pdrMngr.processPoi(user, poi, event, select);
         } else if (event.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION) {
             //instantNotificationPush (push to apns)
+        	//put into queue        	
+        	String url = "/notify/send?device=" + deviceToken + "&msg=" + event.getMessage() + "&vendor="+ vendor;
+        	log.info("url:" + url);
+        	QueueFactory.add(url, null);
         } else if (event.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {
             PoiPdr pdr = pdrMngr.findPoiPdr(user, lPoiId);
             if (pdr != null) {

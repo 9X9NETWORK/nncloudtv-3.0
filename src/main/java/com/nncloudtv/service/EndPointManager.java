@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import com.nncloudtv.dao.EndPointDao;
 import com.nncloudtv.model.EndPoint;
@@ -25,6 +26,9 @@ public class EndPointManager {
     public short getVendorType(String vendor) {
         if (vendor == null) 
             return EndPoint.VENDOR_UNDEFINED;
+        if (Pattern.matches("^\\d*$", vendor)) {
+        	return Short.valueOf(vendor);
+        }
         vendor = vendor.toLowerCase();
         if (vendor.equals("gcm"))
             return EndPoint.VENDOR_GCM;

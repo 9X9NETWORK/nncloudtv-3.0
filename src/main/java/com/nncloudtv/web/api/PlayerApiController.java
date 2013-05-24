@@ -2674,6 +2674,8 @@ public class PlayerApiController {
     public @ResponseBody String poiAction(
             @RequestParam(value="poi", required=false) String poiId,
             @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="device", required=false) String deviceToken,
+            @RequestParam(value="vendor", required=false) String vendor,
             @RequestParam(value="select", required=false) String select,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
@@ -2684,7 +2686,7 @@ public class PlayerApiController {
             if (status != NnStatusCode.SUCCESS) {
                 return playerApiService.assembleMsgs(NnStatusCode.DATABASE_READONLY, null);                        
             }
-            output = playerApiService.poiAction(userToken, poiId, select);
+            output = playerApiService.poiAction(userToken, deviceToken, vendor, poiId, select);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

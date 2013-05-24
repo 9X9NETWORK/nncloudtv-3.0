@@ -25,7 +25,7 @@ public class PoiPdr {
 
     @Persistent
     private long poiId; //if a device has associated user account, not always
-    
+
     @Persistent
     @Column(jdbcType="VARCHAR", length=200)
     private String select;
@@ -35,6 +35,9 @@ public class PoiPdr {
 
     @Persistent
     private Date scheduledDate;
+
+    @Persistent
+    private boolean notified;    
     
     public PoiPdr(long userId, long msoId, long poiId, long eventId, String select) {
         this.userId = userId;
@@ -108,5 +111,13 @@ public class PoiPdr {
     public void setScheduledDate(Date scheduledDate) {
         this.scheduledDate = scheduledDate;
     }
-    
+
+	public boolean isNotified() {
+		return notified;
+	}
+
+	public void setNotified(boolean notified) {
+		this.notified = notified;
+	}
+ 
 }

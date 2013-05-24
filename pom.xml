@@ -450,7 +450,12 @@
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>com.google.android.gcm</groupId>
+      <artifactId>gcm-server</artifactId>
+      <version>1.0.2</version>
+    </dependency>        
   </dependencies>
 
   <!-- ====================================================================== -->
@@ -471,6 +476,10 @@
         <url>http://repo1.maven.org/maven2/com/atomikos</url>
      </repository>
       -->
+     <repository>
+        <id>gcm-server-repository</id>
+        <url>https://raw.github.com/slorber/gcm-server-repository/master/releases/</url>
+     </repository>      
      <repository>
         <id>spy</id>
         <name>Spy Repository</name>
