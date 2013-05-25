@@ -41,22 +41,25 @@ for sr in scheduler_rows:
       vendor = dr[1]
       print "token:" + str(token) + ";vendor:" + str(vendor)
       cursor.execute("""                             
-         select context
+         select message
            from nncloudtv_content.poi_event
           where id = %s
          """, (eventId))
       event_rows = cursor.fetchall()
       for er in event_rows:
-         context = er[0]
-         url = "http://localhost:8080/notify/send?device=" + str(token) + "&msg=" + str(context) + "&vendor=" + str(vendor);
-         print url
-         urllib2.urlopen(url).read()
+         msg = er[0]
+	 mapmsg = {'msg': msg}
+         msg = urllib.quote(msg, '')
+         print "msg:" + msg 
+         #url = "http://localhost:8080/notify/send?device=" + str(token) + "&msg=" + str(msg) + "&vendor=" + str(vendor);
+         #print url
+         #urllib2.urlopen(url).read()
          cursor.execute("""
              update nncloudtv_analytics.poi_pdr
                 set notified = true
               where id = %s
              """, (scheduledId))       
-         dbcontent.commit() 
+         #dbcontent.commit() 
  
 cursor.close()                                                                          
 dbcontent.close()
