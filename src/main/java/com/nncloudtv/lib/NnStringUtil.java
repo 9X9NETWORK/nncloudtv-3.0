@@ -1,6 +1,7 @@
 package com.nncloudtv.lib;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +20,19 @@ public class NnStringUtil {
       if (s.equals("0"))
         return false;
       throw new IllegalArgumentException(s +" is not a bool");
+    }
+
+    public static String urlencode(String text) {
+    	if (text == null)
+    		return null;
+    	String str = "";
+	    try {
+	        str = URLEncoder.encode(text, "utf-8");
+	        str = str.replace("+", "%20");                    
+	    } catch (UnsupportedEncodingException e) {
+	        e.printStackTrace();
+	    }
+	    return str;
     }
     
     public static String capitalize(String str) {

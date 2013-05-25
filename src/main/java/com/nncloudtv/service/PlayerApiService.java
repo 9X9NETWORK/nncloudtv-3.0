@@ -2957,7 +2957,8 @@ public class PlayerApiService {
         } else if (event.getType() == PoiEvent.TYPE_INSTANTNOTIFICATION) {
             //instantNotificationPush (push to apns)
         	//put into queue        	
-        	String url = "/notify/send?device=" + deviceToken + "&msg=" + event.getMessage() + "&vendor="+ vendor;
+        	String msg = NnStringUtil.urlencode(event.getMessage());
+        	String url = "/notify/send?device=" + deviceToken + "&msg=" + msg + "&vendor="+ vendor;
         	log.info("url:" + url);
         	QueueFactory.add(url, null);
         } else if (event.getType() == PoiEvent.TYPE_SCHEDULEDNOTIFICATION) {

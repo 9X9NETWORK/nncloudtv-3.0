@@ -1,7 +1,5 @@
 package com.nncloudtv.service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -701,13 +699,7 @@ public class NnProgramManager {
                         PoiPoint point = points.get(j);
                         PoiEvent event = events.get(j);
                         //Poi poi = pois.get(j);
-                        String context = "";
-                        try {
-                            context = URLEncoder.encode(event.getContext(), "utf-8");
-                            context = context.replace("+", "%20");
-                        } catch (UnsupportedEncodingException exception) {
-                            exception.printStackTrace();
-                        }
+                        String context = NnStringUtil.urlencode(event.getContext());
                         //String poiStrHere = i + ";" + poi.getId() + ";" + point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
                         String poiStrHere = i + ";" + point.getStartTime() + ";" + point.getEndTime() + ";" + event.getType() + ";" + context + "|";
                         log.info("poi output:" + poiStrHere);
