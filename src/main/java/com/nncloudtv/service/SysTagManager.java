@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDao;
@@ -24,7 +25,16 @@ public class SysTagManager {
     
     private SysTagDao dao = new SysTagDao();
     private SysTagMapDao mapDao = new SysTagMapDao();
-    private MsoManager msoMngr = new MsoManager();
+    private MsoManager msoMngr;
+    
+    @Autowired
+    public SysTagManager(MsoManager msoMngr) {
+        this.msoMngr = msoMngr;
+    }
+    
+    public SysTagManager() {
+        this.msoMngr = new MsoManager();
+    }
 
     public SysTag findById(long id) {
         return dao.findById(id);

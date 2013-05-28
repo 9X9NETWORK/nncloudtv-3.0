@@ -29,13 +29,14 @@ public class NnChannelPref implements Serializable {
     private String item;
     
     public static final String FB_AUTOSHARE = "fb-autoshare";
+    public static final String BRAND_AUTOSHARE = "brand-autoshare"; // indicate which brand the channel sharing at, the value is mso's name
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String value;
     
-    public NnChannelPref(NnChannel channel, String item, String value) {
-        this.channelId = channel.getId();
+    public NnChannelPref(Long channelId, String item, String value) {
+        this.channelId = channelId;
         this.item = item;
         this.value = value;
     }

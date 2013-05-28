@@ -167,9 +167,9 @@ public class ApiContent extends ApiGeneric {
         
         for (int i = 0; i < fbUserIdList.length; i++) {
             if (accessTokenList[i].equals(fbUserToken.getValue())) { // post to facebook time line use app token
-                prefList.add(new NnChannelPref(channel, NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], MsoConfigManager.getAutoshareFacebookApptoken())));
+                prefList.add(new NnChannelPref(channel.getId(), NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], MsoConfigManager.getAutoshareFacebookApptoken())));
             } else {
-                prefList.add(new NnChannelPref(channel, NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], accessTokenList[i])));
+                prefList.add(new NnChannelPref(channel.getId(), NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], accessTokenList[i])));
             }
         }
         
@@ -263,6 +263,158 @@ public class ApiContent extends ApiGeneric {
         okResponse(resp);
         return null;
         //return "episode ID called : " + episodeId;
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/autosharing/brand", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, Object> brandAutosharingGet(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
+        NnChannelPref pref = prefMngr.getBrand(channel.getId());
+        
+        Map<String, Object> result = new TreeMap<String, Object>();
+        result.put("brand", pref.getValue());
+        log.info(printExitState(now, req, "ok"));
+        return result;
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/autosharing/brand", method = RequestMethod.PUT)
+    public @ResponseBody
+    Map<String, Object> brandAutosharingSet(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        } else if (verifiedUserId != channel.getUserId()) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        // brand
+        String brand = req.getParameter("brand");
+        if (brand == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
+            return null;
+        }
+        MsoManager msoMngr = new MsoManager();
+        Mso mso = msoMngr.findByName(brand);
+        if (mso == null) {
+            badRequest(resp, INVALID_PARAMETER);
+            log.info(printExitState(now, req, "400"));
+            return null;
+        }
+        if (msoMngr.isValidBrand(channel.getId(), mso) == false) {
+            badRequest(resp, INVALID_PARAMETER);
+            log.info(printExitState(now, req, "400"));
+            return null;
+        }
+        
+        NnChannelPrefManager prefMngr = new NnChannelPrefManager();
+        prefMngr.setBrand(channel.getId(), mso);
+        
+        okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
+        return null;
+    }
+    
+    @RequestMapping(value = "channels/{channelId}/autosharing/validBrands", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Map<String, Object>> validBrandsAutosharingGet(HttpServletRequest req,
+            HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long channelId = null;
+        try {
+            channelId = Long.valueOf(channelIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        } else if (verifiedUserId != channel.getUserId()) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        MsoManager msoMngr = new MsoManager();
+        // TODO : get valid brands
+        List<Mso> msos = msoMngr.getValidBrands(channel.getId());
+        
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        for (Mso mso : msos) {
+            Map<String, Object> result = new TreeMap<String, Object>();
+            result.put("brand", mso.getName());
+            results.add(result);
+        }
+        
+        log.info(printExitState(now, req, "ok"));
+        return results;
     }
     
     @RequestMapping(value = "programs/{programId}", method = RequestMethod.GET)

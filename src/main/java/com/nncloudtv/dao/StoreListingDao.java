@@ -66,4 +66,25 @@ public class StoreListingDao extends GenericDao<StoreListing> {
         return detached;
     }
     
+    public List<StoreListing> findByChannelId(long channelId) {
+        
+        List<StoreListing> detached = new ArrayList<StoreListing>();
+        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        try {
+            Query query = pm.newQuery(StoreListing.class);
+            query.setFilter("channelId == channelIdParam");
+            query.declareParameters("long channelIdParam");
+            @SuppressWarnings("unchecked")
+            List<StoreListing> results = (List<StoreListing>)query.execute(channelId);
+            if (results.size() > 0) {
+                detached = (List<StoreListing>) pm.detachCopyAll(results);
+            }
+        } finally {
+            pm.close();
+        }
+        
+        return detached;
+    }
+    
 }

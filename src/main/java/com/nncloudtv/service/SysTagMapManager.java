@@ -30,6 +30,10 @@ public class SysTagMapManager {
         this.channelMngr = channelMngr;
     }
     
+    public SysTagMapManager() {
+        this.channelMngr = new NnChannelManager();
+    }
+    
     public SysTagMap save(SysTagMap sysTagMap) {
         
         if (sysTagMap == null) {

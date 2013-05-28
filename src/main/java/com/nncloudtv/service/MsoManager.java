@@ -1,7 +1,10 @@
 package com.nncloudtv.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +14,8 @@ import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
+import com.nncloudtv.model.StoreListing;
+import com.nncloudtv.model.SysTagMap;
 
 @Service
 public class MsoManager {
@@ -171,6 +176,60 @@ public class MsoManager {
     
     public int total(String filter) {
         return msoDao.total(filter);
+    }
+    
+    /** indicate which brands that channel can play on, means channel is in the brand's store */
+    public List<Mso> getValidBrands(Long channelId) {
+        
+        if (channelId == null) {
+            return new ArrayList<Mso>();
+        }
+        
+        List<Mso> validMsos = new ArrayList<Mso>();
+        validMsos.add(findNNMso()); // channel is always playable on 9x9
+        
+        SysTagMapManager sysTagMapMngr = new SysTagMapManager();
+        SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap((long) 1, channelId); // TODO : categoryId = 1 is hard coded
+        if (sysTagMap == null) { // the channel not in the 9x9 store
+            return validMsos;
+        }
+        
+        StoreListingManager storeListingMngr = new StoreListingManager();
+        List<StoreListing> blackList = storeListingMngr.getBlackList(channelId);
+        Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
+        if (blackList != null && blackList.size() > 0) {
+            for (StoreListing item : blackList) {
+                blackListMap.put(item.getMsoId(), item.getMsoId());
+            }
+        }
+        
+        List<Mso> msos = findByType(Mso.TYPE_MSO);
+        for (Mso mso : msos) {
+            if (blackListMap.containsKey(mso.getId())) {
+                // channel is not playable on this brand
+            } else {
+                validMsos.add(mso);
+            }
+        }
+        
+        return validMsos;
+    }
+    
+    /** indicate channel can or can't play on target brand */
+    public boolean isValidBrand(Long channelId, Mso mso) {
+        
+        if (channelId == null || mso == null) {
+            return false;
+        }
+        
+        List<Mso> validMsos = getValidBrands(channelId);
+        for (Mso validMso : validMsos) {
+            if (validMso.getName().equals(mso.getName())) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
 }

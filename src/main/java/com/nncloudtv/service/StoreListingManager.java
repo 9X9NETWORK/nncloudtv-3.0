@@ -29,6 +29,11 @@ public class StoreListingManager {
         this.channelMngr = channelMngr;
     }
     
+    public StoreListingManager() {
+        this.sysTagMngr = new SysTagManager();
+        this.channelMngr = new NnChannelManager();
+    }
+    
     /** return channels that have channelIds whom are in the mso store */
     public List<Long> findByChannelIdsAndMsoId(List<Long> channelIds, Long msoId) {
         
@@ -36,7 +41,7 @@ public class StoreListingManager {
             return new ArrayList<Long>();
         }
         
-        List<Long> storeMso = findByMsoId(msoId, (long) 1); // sysTagId = 1, 9x9's category : All
+        List<Long> storeMso = findByMsoId(msoId, (long) 1); // TODO : hard coded, sysTagId = 1, 9x9's category : All
         if (storeMso == null || storeMso.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -221,6 +226,16 @@ public class StoreListingManager {
         }
         
         return storeMsoIds;
+    }
+    
+    public List<StoreListing> getBlackList(Long channelId) {
+        
+        if (channelId == null) {
+            return new ArrayList<StoreListing>();
+        }
+        
+        List<StoreListing> results = dao.findByChannelId(channelId);
+        return results;
     }
 
 }
