@@ -1752,7 +1752,9 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
         
 
-        String link = NnNetUtil.getUrlRoot(req) + "/#!resetpwd!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);        
+        //String link = NnNetUtil.getUrlRoot(req) + "/#!resetpwd!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);
+        String link = NnNetUtil.getUrlRoot(req) + "/signin.html?ac=resetpwd&e=" + email + "!pass=" + userMngr.forgotPwdToken(user);
+        //signin.html?ac=resetpwd&e=marshsu.9x9@gmail.com&pass=b38ea3c1e56135827a6e4343d6ac4ea3
         log.info("link:" + link);
         
         NnContentManager contentMngr = new NnContentManager();
