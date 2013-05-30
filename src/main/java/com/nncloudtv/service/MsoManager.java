@@ -123,7 +123,7 @@ public class MsoManager {
             }            
         }
         if (regionSet == false) {
-        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en, zh");
+        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en English;zh 中文");
         }
         
         if (CacheFactory.isRunning) { 
