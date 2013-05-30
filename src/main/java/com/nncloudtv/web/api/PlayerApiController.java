@@ -931,7 +931,7 @@ public class PlayerApiController {
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         try {
             int status = this.prepService(req, true);
-            if (status != NnStatusCode.API_FORCE_UPGRADE) {            	
+            if (status == NnStatusCode.API_FORCE_UPGRADE) {            	
                 return playerApiService.assembleMsgs(status, null);
             }                                                            
             boolean isUserInfo = Boolean.parseBoolean(userInfo);
