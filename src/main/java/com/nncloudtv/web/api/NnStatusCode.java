@@ -11,6 +11,7 @@ public class NnStatusCode {
     
     public static final int API_DEPRECATED = 50;
     public static final int API_UNDER_CONSTRUCTION = 51;
+    public static final int API_FORCE_UPGRADE = 52;
     
     //100 input error
     public static final int INPUT_ERROR = 100;

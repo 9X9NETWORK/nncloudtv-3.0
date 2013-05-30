@@ -7,6 +7,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.web.api.NnStatusCode;
 
 /**
@@ -34,7 +35,7 @@ public class NnStatusMsg {
     
                 case NnStatusCode.API_DEPRECATED: return NnStatusMsg.assembleMsg(status, "THIS FEATURE IS TEMPORARILY DISABLED");
                 case NnStatusCode.API_UNDER_CONSTRUCTION: return NnStatusMsg.assembleMsg(status, "API_UNDER_CONSTRUCTION");
-    
+                case NnStatusCode.API_FORCE_UPGRADE: return NnStatusMsg.assembleMsg(status, MsoConfig.FORCE_UPGRADE);                                                 
                 case NnStatusCode.INPUT_ERROR: return NnStatusMsg.assembleMsg(status, "INPUT_ERROR");
                 case NnStatusCode.INPUT_MISSING: return NnStatusMsg.assembleMsg(status, "INPUT_MISSING");
                 case NnStatusCode.INPUT_BAD: return NnStatusMsg.assembleMsg(status, "INPUT_BAD");

@@ -100,7 +100,8 @@ public class MsoManager {
         result[0] += PlayerApiService.assembleKeyValue("preferredLangCode", mso.getLang());
         result[0] += PlayerApiService.assembleKeyValue("jingleUrl", mso.getJingleUrl());
         List<MsoConfig> list = configMngr.findByMso(mso);
-        //config        
+        //config
+        boolean regionSet = false;
         for (MsoConfig c : list) {
             System.out.println(c.getItem() + ";" + c.getValue());
             if (c.getItem().equals(MsoConfig.DEBUG))
@@ -110,12 +111,19 @@ public class MsoManager {
             if (c.getItem().equals(MsoConfig.RO)) {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.RO, c.getValue());
             }            
+            if (c.getItem().equals(MsoConfig.SUPPORTED_REGION)) {
+            	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, c.getValue());
+            	regionSet = true;
+            }
             if (c.getItem().equals(MsoConfig.FORCE_UPGRADE)) {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.FORCE_UPGRADE, c.getValue());
             }            
             if (c.getItem().equals(MsoConfig.UPGRADE_MSG)) {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.UPGRADE_MSG, c.getValue());
             }            
+        }
+        if (regionSet == false) {
+        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en, zh");
         }
         
         if (CacheFactory.isRunning) { 

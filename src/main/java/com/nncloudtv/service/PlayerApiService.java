@@ -335,6 +335,14 @@ public class PlayerApiService {
         return NnStatusCode.SUCCESS;
     }
     
+    public int checkApiMinimal() {
+        MsoConfigManager configMngr = new MsoConfigManager();
+        MsoConfig config = configMngr.findByItem(MsoConfig.API_MINIMAL);  
+        if (config == null)
+        	return 0;
+        return Integer.parseInt(config.getValue());
+    }
+    
     public String guestRegister(HttpServletRequest req, HttpServletResponse resp) {
         //verify input        
         NnGuestManager mngr = new NnGuestManager();

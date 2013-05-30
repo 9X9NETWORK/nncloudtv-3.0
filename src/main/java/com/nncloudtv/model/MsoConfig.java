@@ -31,6 +31,8 @@ public class MsoConfig {
     public static String FORCE_UPGRADE = "force-upgrade";
     public static String UPGRADE_MSG = "upgrade-msg";
     public static String QUEUED = "queued";
+    public static String SUPPORTED_REGION = "supported-region";
+    public static String API_MINIMAL = "api-minimal";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
