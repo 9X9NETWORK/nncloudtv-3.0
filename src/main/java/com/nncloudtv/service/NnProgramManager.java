@@ -783,6 +783,8 @@ public class NnProgramManager {
         name = this.removePlayerUnwanted(name);
         intro = this.removePlayerUnwanted(intro);
         String output = "";
+        if (e.getPublishDate() == null)
+        	e.setPublishDate(new Date()); //should not happen, just in case
         String[] ori = {String.valueOf(e.getChannelId()), 
                         "e" + String.valueOf(e.getId()), 
                         name, 
@@ -795,7 +797,7 @@ public class NnProgramManager {
                         "", //url2
                         "", //url3
                         "", //audio file           
-                        String.valueOf(e.getUpdateDate().getTime()),
+                        String.valueOf(e.getPublishDate().getTime()),
                         "", //comment
                         card,
                         poiStr};
@@ -823,6 +825,9 @@ public class NnProgramManager {
             imageUrl = imageUrl.replaceFirst(regexCache, cache);
             imageUrl = imageUrl.replaceAll(regexPod, pod);
         }
+        if (p.getPublishDate() == null)
+        	p.setPublishDate(new Date()); //should not happen, just in case
+
         String[] ori = {String.valueOf(p.getChannelId()), 
                         String.valueOf(p.getId()), 
                         p.getPlayerName(), 
@@ -835,7 +840,7 @@ public class NnProgramManager {
                         "", //file type 2 
                         "", //file type 3
                         p.getAudioFileUrl(), //audio file            
-                        String.valueOf(p.getUpdateDate().getTime()),
+                        String.valueOf(p.getPublishDate().getTime()),
                         p.getComment(),
                         ""}; //card
         output = output + NnStringUtil.getDelimitedStr(ori);
