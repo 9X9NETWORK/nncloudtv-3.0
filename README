@@ -78,6 +78,11 @@ ps. add this line to the end of /home/ubuntu/.bashrc
 
 - read pom.xml
 
+- generate javadoc
+mvn javadoc:javadoc
+sudo rm -rf /var/www/9x9/apidocs
+sudo mv ~/files/nncloudtv/doc/apidocs /var/www/9x9/
+
 ================================
 Datanucleus tool
 ================================
