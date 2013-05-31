@@ -1424,7 +1424,7 @@ public class PlayerApiController {
      * Set user profile information. Facebook users will be turned down for most of the options.
      * 
      * @param user user token
-     * @param <p>key keys include "name", "email", "gender", "year", "sphere", "ui-lang", "password", "oldPassword", "description", "image". <br/> 
+     * @param <p>key keys include "name", "email", "gender", "year", "sphere", "ui-lang", "password", "oldPassword", "description", "image", "phone" <br/> 
      *               Keys are separated by comma.
      * @param <p>value value that pairs with keys. values are separated by comma. The sequence of value has to be the same as 
      *        the sequence of keys. 
@@ -1434,6 +1434,7 @@ public class PlayerApiController {
      *        <p>gender: valid gender value is 1 and 0
      *        <p>ui-lang: ui language. Currently valid values are "zh" and "en".
      *        <p>sphere: content region. Currently valid values are "zh" and "en".
+     *        <p>phone: only number is allowed
      */
     //localhost:8080/playerAPI/setUserProfile?user=8s12689Ns28RN2992sut&key=description,lang&value=hello%2C妳好,en
     @RequestMapping(value="setUserProfile", produces = "text/plain; charset=utf-8")
@@ -1555,13 +1556,13 @@ public class PlayerApiController {
     }
 
     /**
-     * For user's sharing via email function
+     * For user's sharing via email function. Captcha and text is used for captcah verification. It is not required for ios device.
      * 
      * @param user user token
-     * @param toEmail receiver email
+     * @param toEmail required. receiver email
      * @param toName receiver name 
      * @param subject email subject
-     * @param content email content
+     * @param content required. email content
      * @param captcha captcha
      * @param text captcha text
      * @return status
