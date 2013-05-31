@@ -52,6 +52,10 @@ public class NnUserProfile implements Serializable {
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String profileUrl; //curator url
+
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=15)
+    private String phoneNumber;
     
     @Persistent
     private short gender; //0 (f) or 1(m) or 2(not specified)
@@ -276,4 +280,12 @@ public class NnUserProfile implements Serializable {
         this.priv = priv;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    
 }

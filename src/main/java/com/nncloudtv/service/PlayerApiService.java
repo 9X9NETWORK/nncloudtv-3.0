@@ -1427,7 +1427,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
         }
         String[] valid = {"name", "year", "password", 
-                "oldPassword", "sphere", "ui-lang", "gender", "description", "image"};
+                "oldPassword", "sphere", "ui-lang", "gender", "description", "image", "phone"};
         //description,lang,name
         HashSet<String> dic = new HashSet<String>();
         for (int i=0; i<valid.length; i++) {
@@ -1457,6 +1457,11 @@ public class PlayerApiService {
                 if (theValue.equals(NnUser.GUEST_NAME))
                     return this.assembleMsgs(NnStatusCode.INPUT_ERROR, null);
                 profile.setName(theValue);
+            }
+            if (key[i].equals("phone")) {
+            	if (!Pattern.matches("^\\d*$", theValue)) 
+            		return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);
+                profile.setPhoneNumber(theValue);
             }
             if (key[i].equals("image"))
                 profile.setImageUrl(theValue);
@@ -1522,7 +1527,8 @@ public class PlayerApiService {
         result[0] += assembleKeyValue("gender", gender);
         result[0] += assembleKeyValue("year", String.valueOf(profile.getDob()));
         result[0] += assembleKeyValue("sphere", profile.getSphere());
-        result[0] += assembleKeyValue("ui-lang", profile.getLang());
+        result[0] += assembleKeyValue("ui-lang", profile.getPhoneNumber());
+        result[0] += assembleKeyValue("phone", profile.getLang());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
