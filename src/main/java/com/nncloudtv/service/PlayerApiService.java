@@ -1536,7 +1536,6 @@ public class PlayerApiService {
             return this.assembleMsgs((Integer)map.get("s"), null);
         }
         boolean isIos = new PlayerService().isIos(req);
-        isIos = true;
         if (!isIos) {
         	if (captcha == null || text == null)
         		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
