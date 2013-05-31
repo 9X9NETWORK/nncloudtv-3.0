@@ -1527,8 +1527,8 @@ public class PlayerApiService {
         result[0] += assembleKeyValue("gender", gender);
         result[0] += assembleKeyValue("year", String.valueOf(profile.getDob()));
         result[0] += assembleKeyValue("sphere", profile.getSphere());
-        result[0] += assembleKeyValue("ui-lang", profile.getPhoneNumber());
-        result[0] += assembleKeyValue("phone", profile.getLang());
+        result[0] += assembleKeyValue("ui-lang", profile.getLang());
+        result[0] += assembleKeyValue("phone", profile.getPhoneNumber());
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
