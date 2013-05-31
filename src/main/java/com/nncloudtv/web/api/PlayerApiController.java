@@ -1585,7 +1585,7 @@ public class PlayerApiController {
             if (status == NnStatusCode.API_FORCE_UPGRADE) {
                 return playerApiService.assembleMsgs(status, null);        
             }            
-            output = playerApiService.shareByEmail(userToken, toEmail, toName, subject, content, captcha, text);
+            output = playerApiService.shareByEmail(userToken, toEmail, toName, subject, content, captcha, text, req);
         } catch (Exception e) {
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

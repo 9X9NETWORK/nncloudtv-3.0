@@ -1528,13 +1528,20 @@ public class PlayerApiService {
     
     public String shareByEmail(String userToken, String toEmail, String toName, 
             String subject, String content, 
-            String captcha, String text) {        
+            String captcha, String text,
+            HttpServletRequest req) {        
         @SuppressWarnings("rawtypes")
         HashMap map = this.checkUser(userToken, false);
         if ((Integer)map.get("s") != NnStatusCode.SUCCESS) {
             return this.assembleMsgs((Integer)map.get("s"), null);
         }
-        if (captcha == null || text == null || toEmail == null || content == null)
+        boolean isIos = new PlayerService().isIos(req);
+        isIos = true;
+        if (!isIos) {
+        	if (captcha == null || text == null)
+        		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+        }
+        if (toEmail == null || content == null)
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         NnUser user = (NnUser) map.get("u");
         if (captcha != null) {
