@@ -1866,8 +1866,8 @@ public class PlayerApiService {
         int limit = Integer.parseInt(count);
         if (startIndex < 1)
             startIndex = 1;
-        if (limit < 0 || limit > 9)
-            limit = 9;
+        if (limit < 0 || limit > 20)
+            limit = 20;
         startIndex = startIndex - 1;
 
         //public static List<NnChannel> search(String queryStr, boolean total, boolean all, int start, int count) {

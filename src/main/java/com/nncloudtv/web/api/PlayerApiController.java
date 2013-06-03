@@ -1858,7 +1858,7 @@ public class PlayerApiController {
      * 
      * @param search search text
      * @param start start index
-     * @param count number of records returned. Returns 9 if not specified.
+     * @param count number of records returned. Returns 9 if not specified. Max is 20.
      * @return matched channels and curators
      *         <p> 
      *         For version before 3.2, search returns a list of channel info. Please reference channelLineup. 
