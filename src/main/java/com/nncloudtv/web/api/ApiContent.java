@@ -1232,6 +1232,51 @@ public class ApiContent extends ApiGeneric {
         return categories;
     }
     
+    @RequestMapping(value = "store", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Long> categoryChannels(HttpServletRequest req, HttpServletResponse resp) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        SysTagManager sysTagMngr = new SysTagManager();
+        
+        // categoryId, default : 1, category : All
+        Long categoryId = null;
+        String categoryIdStr = req.getParameter("categoryId");
+        if (categoryIdStr != null) {
+            try {
+                categoryId = Long.valueOf(categoryIdStr);
+            } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return null;
+            }
+            if (sysTagMngr.is9x9category(categoryId) == false) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return null;
+            }
+        } else {
+            categoryId = (long) 1; // TODO categoryId = 1 is hard coded
+        }
+        
+        List<NnChannel> channels = sysTagMngr.findStoreChannelsById(categoryId);
+        
+        if (channels == null) {
+            log.info(printExitState(now, req, "ok"));
+            return new ArrayList<Long>();
+        }
+        
+        List<Long> channelIds = new ArrayList<Long>();
+        for (NnChannel channel : channels) {
+            channelIds.add(channel.getId());
+        }
+        
+        log.info(printExitState(now, req, "ok"));
+        return channelIds;
+    }
+    
     @RequestMapping(value = "channels/{channelId}/episodes", method = RequestMethod.GET)
     public @ResponseBody
     List<NnEpisode> channelEpisodes(HttpServletResponse resp,
