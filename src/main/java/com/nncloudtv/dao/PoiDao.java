@@ -68,9 +68,9 @@ public class PoiDao extends GenericDao<Poi> {
                            " and pp.targetId = " + channelId +
                            " and poi.pointId = pp.id " +
                            " and pp.type = " + PoiPoint.TYPE_CHANNEL +
-                           " and poi.pointId = pp.id" +   
-                           " and now() > poi.startDate " +
-                           " and now() < poi.endDate) a2" +
+                           " and poi.pointId = pp.id ) a2 " +   
+                           //" and now() > poi.startDate " +
+                           //" and now() < poi.endDate) a2" +
                              " on a1.id=a2.id";
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
@@ -112,9 +112,9 @@ public class PoiDao extends GenericDao<Poi> {
                            " and pp.targetId = " + programId +
                            " and poi.pointId = pp.id " +
                            " and pp.type = " + PoiPoint.TYPE_SUBEPISODE +
-                           " and poi.pointId = pp.id" +   
-                           " and now() > poi.startDate " +
-                           " and now() < poi.endDate) a2" +
+                           " and poi.pointId = pp.id) a2 " +   
+                           //" and now() > poi.startDate " +
+                           //" and now() < poi.endDate) a2" +
                              " on a1.id=a2.id";
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
