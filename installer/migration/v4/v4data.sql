@@ -1,11 +1,3 @@
-######################
-use nncloudtv_content;
-#####################
-# systag: category
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 1,  1, false, now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 2,  1, false, now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 3,  1, false, now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 4,  1, false, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 5,  1, false, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 6,  1, false, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 7,  1, false, now(), now());
@@ -59,9 +51,9 @@ insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '4'   from dashboard where id=5);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '5'   from dashboard where id=6);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '6'   from dashboard where id=7);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 2,  4, false, now(), now(), timeStart, timeEnd, null, from dashboard where id=8);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 3,  4, false, now(), now(), timeStart, timeEnd, null, from dashboard where id=9);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 4,  4, false, now(), now(), timeStart, timeEnd, null, from dashboard where id=10);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 2,  4, false, now(), now(), timeStart, timeEnd, null  from dashboard where id=8);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 3,  4, false, now(), now(), timeStart, timeEnd, null  from dashboard where id=9);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 4,  4, false, now(), now(), timeStart, timeEnd, null  from dashboard where id=10);
 
 # systag: dashboard tzuchi
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '7'  from dashboard where id=11);
@@ -77,6 +69,7 @@ insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart
 
 ############################################
 # systag_display: category 9x9
+truncate systag_display;
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 1,  name, null, lang, null, now(), channelCnt from category where id=1);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 2,  name, null, lang, null, now(), channelCnt from category where id=2);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 3,  name, null, lang, null, now(), channelCnt from category where id=3);
@@ -158,30 +151,31 @@ insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDa
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 56,  name, null, "en", null, now(), 9 from dashboard where id=9);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 57,  name, null, "en", null, now(), 9 from dashboard where id=10);
 
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 48,  '早上',     null, "zh", null, now(), 9 from dashboard where id=1);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 49,  '白天',     null, "zh", null, now(), 9 from dashboard where id=2);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 50,  '下午',     null, "zh", null, now(), 9 from dashboard where id=3);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 51,  '晚間新聞', null, "zh", null, now(), 9 from dashboard where id=4);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 52,  '晚上',     null, "zh", null, now(), 9 from dashboard where id=5);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 53,  '深夜',     null, "zh", null, now(), 9 from dashboard where id=6);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 54,  '半夜',     null, "zh", null, now(), 9 from dashboard where id=7);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 48,  '活力早晨',     null, "zh", null, now(), 9 from dashboard where id=1);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 49,  '日間焦點',     null, "zh", null, now(), 9 from dashboard where id=2);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 50,  '午後光影',     null, "zh", null, now(), 9 from dashboard where id=3);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 51,  '傍晚時分', null, "zh", null, now(), 9 from dashboard where id=4);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 52,  '黃金強檔',     null, "zh", null, now(), 9 from dashboard where id=5);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 53,  '夜間精選',     null, "zh", null, now(), 9 from dashboard where id=6);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 54,  '午夜小品',     null, "zh", null, now(), 9 from dashboard where id=7);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 55,  '前時段',   null, "zh", null, now(), 9 from dashboard where id=8);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 56,  '訂閱',     null, "zh", null, now(), 9 from dashboard where id=9);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 57,  '帳戶',     null, "zh", null, now(), 9 from dashboard where id=10);
 
 # systag_display: dashboard tzuchi
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 58,  name, null, "zh", null, now(), 9 from dashboard where id=11);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 59,  name, null, "zh", null, now(), 9 from dashboard where id=12);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 60,  name, null, "zh", null, now(), 9 from dashboard where id=13);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 61,  name, null, "zh", null, now(), 9 from dashboard where id=14);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 62,  name, null, "zh", null, now(), 9 from dashboard where id=15);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 63,  name, null, "zh", null, now(), 9 from dashboard where id=16);
-insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 64,  name, null, "zh", null, now(), 9 from dashboard where id=17);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 58,  '活力早晨', null, "zh", null, now(), 9 from dashboard where id=11);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 59,  '日間焦點', null, "zh", null, now(), 9 from dashboard where id=12);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 60,  '午後光影', null, "zh", null, now(), 9 from dashboard where id=13);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 61,  '傍晚時分', null, "zh", null, now(), 9 from dashboard where id=14);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 62,  '黃金強檔', null, "zh", null, now(), 9 from dashboard where id=15);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 63,  '夜間精選', null, "zh", null, now(), 9 from dashboard where id=16);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 64,  '午夜小品', null, "zh", null, now(), 9 from dashboard where id=17);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 65,  name, null, "en", null, now(), 9 from dashboard where id=18);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 66,  name, null, "en", null, now(), 9 from dashboard where id=19);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 67,  name, null, "en", null, now(), 9 from dashboard where id=20);
 ############################################
 # systag_map: category channel map cts
+truncate systag_map;
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 20, channelId, now(), now() from category_map where categoryId = 39);
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 21, channelId, now(), now() from category_map where categoryId = 40);
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 22, channelId, now(), now() from category_map where categoryId = 42);
@@ -197,19 +191,42 @@ insert into systag_map (systagId, channelId, createDate, updateDate) (select 31,
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 32, channelId, now(), now() from category_map where categoryId = 52);
 
 # systag_map: nnset channels, cts
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 35, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=1)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 36, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=2)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 37, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=3)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 38, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=4)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 39, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=5)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 40, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=6)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 41, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=7)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 42, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=8)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 43, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=9)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 44, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=10)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 45, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=11)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 46, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=12)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 47, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=13)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 33, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=1)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 34, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=2)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 35, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=3)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 36, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=4)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 37, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=5)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 38, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=6)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 39, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=7)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 40, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=8)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 41, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=9)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 42, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=10)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 43, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=11)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 44, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=12)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 45, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(ctszh)') from nnset where id=13)));
+
+#systag_map: nnset 9x9
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 26825, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 8816,  now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 14381, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 14384, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 14383, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 14382, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 8599,  now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 8600,  now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 8601,  now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 8602,  now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (46, 14385, now(), now());
+
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 8763, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 8784, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 2659, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 480, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 483, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 8800, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 8761, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 8763, now(), now());
+insert into systag_map (sytagId, channelId, createDate, updateDate) values (47, 8784, now(), now());
 
 # systag_map: dashboard channels 9x9
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 48, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=1)));
@@ -219,12 +236,5 @@ insert into systag_map (systagId, channelId, createDate, updateDate) (select 51,
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 52, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=5)));
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 53, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=6)));
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 54, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=7)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 55, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=11)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 56, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=12)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 57, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=13)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 58, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=14)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 59, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=15)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 60, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=16)));
-insert into systag_map (systagId, channelId, createDate, updateDate) (select 61, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(tzuchien)') from dashboard where id=17)));
 
 # systag_display imageUrl for all dashboard and nnset
