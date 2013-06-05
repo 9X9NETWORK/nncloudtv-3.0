@@ -28,7 +28,7 @@ for myfile in files:
     cId = data[0]
     name = data[1]
     url = data[2]
-    category = data[3]
+    category = data[3]        
     lang = data[5]
     sphere = data[6]
     print "cid: " + cId + "; name:" + name + "; url:" + url + "; category:" + category + "; lang:" + lang + "; sphere:" + sphere
