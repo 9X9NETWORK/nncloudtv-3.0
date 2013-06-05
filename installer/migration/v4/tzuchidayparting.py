@@ -30,7 +30,7 @@ for daypart in files:
     print "url:" + url
     # -- translate data            
     url = url.strip()
-    posturl = "http://localhost:8080/wd/urlSubmit?url=" + url + "&lang=" + lang + "&sphere=" + sphere
+    posturl = "http://localhost:8080/wd/urlSubmit?url=" + url + "&lang=zh&sphere=zh"
     print "lookup cid posturl:" + posturl
     cId = urllib2.urlopen(posturl).read()
     print "lookup id:" + cId 
@@ -48,7 +48,7 @@ for daypart in files:
     #if i > 2:
     #   break
   print "================================"    
-  #dbcontent.commit()  
+  dbcontent.commit()  
 cursor.close ()
 
 print "record done:" + str(i)
