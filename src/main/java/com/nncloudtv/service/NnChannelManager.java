@@ -104,9 +104,9 @@ public class NnChannelManager {
                     log.info("channel can't find author:" + youtubeName + ";url:" + sourceUrl);
                     channel.setPublic(false);
                 }
-                NnUserManager mngr = new NnUserManager();
-                NnUser user = mngr.createFakeYoutube(info, req);
-                channel.setUserIdStr(user.getIdStr());
+                //NnUserManager mngr = new NnUserManager();
+                //NnUser user = mngr.createFakeYoutube(info, req);
+                //channel.setUserIdStr(user.getIdStr());
             }
         }
         channel.setPublic(false);
@@ -156,13 +156,10 @@ public class NnChannelManager {
     */
 
     //example: nnchannel(channel_id)
-    public static String getCacheKey(long channelId) {
+    public static String getCacheKey(long channelId, int version) {
+    	if (version == 32)
+    		return getV32CacheKey(channelId);
         String str = "nnchannel(" + channelId + ")"; 
-        return str;
-    }
-
-    public static String getV31CacheKey(long channelId) {
-        String str = "nnchannel-v31(" + channelId + ")"; 
         return str;
     }
 
@@ -688,7 +685,8 @@ public class NnChannelManager {
     public void resetCache(long channelId) {        
         if (CacheFactory.isRunning) {
             log.info("reset channel info cache: " + channelId);
-            CacheFactory.delete(getCacheKey(channelId));
+            CacheFactory.delete(getCacheKey(channelId, 32));
+            CacheFactory.delete(getCacheKey(channelId, 40));
         }
     }
     
@@ -756,18 +754,18 @@ public class NnChannelManager {
     public String composeChannelLineupStr(NnChannel c, int version) {
         String result = null;
         log.info("version number: " + version);
-        
-        if (version > 32) {
-            try {
-                result = (String)CacheFactory.get(NnChannelManager.getCacheKey(c.getId()));            
-            } catch (Exception e) {
-                log.info("memcache error");
-            }
-            if (result != null && c.getId() != 0) { //id = 0 means fake channel, it is dynamic
-                log.info("get channel lineup from cache");
-                return result;
-            }
+      
+        String cacheKey = NnChannelManager.getCacheKey(c.getId(), version);
+        try {
+            result = (String)CacheFactory.get(cacheKey);            
+        } catch (Exception e) {
+            log.info("memcache error");
         }
+        if (result != null && c.getId() != 0) { //id = 0 means fake channel, it is dynamic
+            log.info("get channel lineup from cache" + ". v=" + version +";channel=" + c.getId());
+            return result;
+        }
+        
         log.info("channel lineup NOT from cache:" + c.getId());
         //name and last episode title
         //favorite channel name will be overwritten later
@@ -950,9 +948,10 @@ public class NnChannelManager {
         String size[] = new String[ori.size()];    
         String output = NnStringUtil.getDelimitedStr(ori.toArray(size));
         output = output.replaceAll("null", "");
-        
-        if (version > 32 && CacheFactory.isRunning)
-            CacheFactory.set(NnChannelManager.getCacheKey(c.getId()), output);
+        if (CacheFactory.isRunning) {
+        	log.info("set channelLineup cahce for cacheKey:" + cacheKey);
+            CacheFactory.set(cacheKey, output);
+        }
         return output;
     }
 
