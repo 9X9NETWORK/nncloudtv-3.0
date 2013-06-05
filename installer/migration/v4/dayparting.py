@@ -14,8 +14,8 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              use_unicode = True,
                              db = "nncloudtv_content")
 
-#files = ['morning', 'daytime', 'slack', 'evening', 'primetime', 'latenight', 'nightowl']
-files = ['morning']
+files = ['morning', 'daytime', 'slack', 'evening', 'primetime', 'latenight', 'nightowl']
+#files = ['morning']
 for daypart in files:
    filename = "data/" + daypart + ".csv"
    print filename
@@ -63,20 +63,20 @@ for daypart in files:
               """, (systagId, cId))
           except MySQLdb.IntegrityError:
              print "duplicate key"
-     daypartSystagId = translate.get_daypartingSystagId(daypart)    
-     print "daypartSystagId is:" + daypartSystagId
-     try:
-        cursor.execute("""
-           insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now());
-          """, (daypartSystagId, cId))
-     except MySQLdb.IntegrityError:
-     	print "duplicate key"
+     if not "error" in cId:
+        daypartSystagId = translate.get_daypartingSystagId(daypart)    
+        print "daypartSystagId is:" + str(daypartSystagId)
+        try:
+           cursor.execute("""
+              insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now());
+             """, (daypartSystagId, cId))
+        except MySQLdb.IntegrityError:
+           print "duplicate key"
      i = i+1
      print "----------"
      #if i > 2:
-     #   break
-    
-   #dbcontent.commit()  
+     #   break    
+  dbcontent.commit()  
 cursor.close ()
 
 print "record done:" + str(i)
