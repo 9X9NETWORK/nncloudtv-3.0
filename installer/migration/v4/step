@@ -1,0 +1,17 @@
+#----------------------
+# ssh -i ~/.ssh/prod-west2.pem ubuntu@mysql02.9x9.tv 
+# mysqldump --user=root nncloudtv_content > nncontent.sql
+# mysqldump --user=root nncloudtv_nnuser1 > nnuser1.sql
+# scp -i ~/keys/dev-west2.pem *.sql ubuntu@dev1.9x9.tv:/home/ubuntu/files/nndb/0605
+# drop database nncloudtv_content;
+# drop database nncloudtv_nnuser1;
+# use nncloudtv_analytics;
+# drop table poi_pdr;
+# create database nncloudtv_nnuser1 character set = utf8;
+# cat nncontent.sql | mysql nncloudtv_content -h localhost -u root -p 
+#----------------------
+
+mysql < v4base.sql -u root -p --verbose > out/v4base.out
+mysql < v4data.sql -u root -p --verbose > out/v4data.out
+python worldwide.py > out/worldwide.out
+python tw.py > out/tw.out
