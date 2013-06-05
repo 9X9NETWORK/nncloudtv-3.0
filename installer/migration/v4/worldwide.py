@@ -50,9 +50,11 @@ for myfile in files:
          if systagId == -1:
             break
          print "updated lang:" + lang + ";updated sphere:" + sphere
+         #update channel property    
          cursor.execute("""
             update nnchannel set lang=%s, sphere=%s, isPublic=true, status=0 where id=%s
             """, (lang, sphere, cId))
+         # insert into systag_map    
          try:
             cursor.execute("""
                insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now())
