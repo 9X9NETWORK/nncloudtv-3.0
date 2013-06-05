@@ -63,7 +63,7 @@ for line in feed:
   #if i > 2:
   #   break
  
-#dbcontent.commit()  
+dbcontent.commit()  
 cursor.close ()
 
 print "record done:" + str(i)

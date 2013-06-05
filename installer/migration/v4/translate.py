@@ -21,6 +21,21 @@ def get_lang(text):
    else:
       return "zh"
 
+def get_daypartingSystagId(daypart):
+   if daypart == "morning":
+      return 48 
+   elif daypart == "daytime":
+      return 49  
+   elif daypart == "slack":
+      return 50
+   elif daypart == "evening":
+      return 51
+   elif daypart == "primetime":
+      return 52
+   elif daypart == "latenight":
+      return 53
+   elif daypart == "nightowl":
+      return 54
 
 def get_systagId(meow):
    category = meow.strip()
