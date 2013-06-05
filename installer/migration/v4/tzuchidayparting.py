@@ -17,7 +17,7 @@ dbcontent = MySQLdb.connect (host = "localhost",
 files = ['morning', 'daytime', 'slack', 'evening', 'primetime', 'latenight', 'nightowl']
 #files = ['morning']
 for daypart in files:
-  filename = "data/" + daypart + ".csv"
+  filename = "data/" + "tzuchi_" + daypart + ".csv"
   print filename
   feed = open(filename, "rU")
   i = 0
@@ -26,45 +26,16 @@ for daypart in files:
   for line in feed:
     # -- get data
     data = line.split(',')
-    cId = data[0]
-    name = data[1]                                                           
-    url = data[2]
-    category = data[3]
-    lang = data[5]
-    sphere = data[6]
-    print "cid: " + cId + "; name:" + name + "; url:" + url + "; category:" + category + "; lang:" + lang + "; sphere:" + sphere
+    url = data[1]                                                           
+    print "url:" + url
     # -- translate data            
-    sphere = translate.get_sphere(sphere)
-    lang = translate.get_lang(lang)
-    if cId == "":
-      url = url.strip()
-      posturl = "http://localhost:8080/wd/urlSubmit?url=" + url + "&lang=" + lang + "&sphere=" + sphere
-      print "lookup cid posturl:" + posturl
-      cId = urllib2.urlopen(posturl).read()
-      print "lookup id:" + cId
-    if url == "":
-      cntNnChannel = cntNnChannel+1
-      cursor.execute("""
-         update nnchannel set isPublic=true, status=0 where id= %s
-             """, (cId))
-    else:
-      if not "error" in cId:
-         systagId = translate.get_systagId(category)
-         print "systagId:" + str(systagId)
-         if systagId == -1:
-            break
-         print "updated lang:" + lang + ";updated sphere:" + sphere
-         cursor.execute("""
-            update nnchannel set lang=%s, sphere=%s, isPublic=true, status=0 where id=%s
-            """, (lang, sphere, cId))
-         try:
-            cursor.execute("""
-               insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now())
-             """, (systagId, cId))
-         except MySQLdb.IntegrityError:
-            print "duplicate key"
+    url = url.strip()
+    posturl = "http://localhost:8080/wd/urlSubmit?url=" + url + "&lang=" + lang + "&sphere=" + sphere
+    print "lookup cid posturl:" + posturl
+    cId = urllib2.urlopen(posturl).read()
+    print "lookup id:" + cId 
     if not "error" in cId:
-       daypartSystagId = translate.get_daypartingSystagId(daypart)    
+       daypartSystagId = translate.get_tzuchi_daypartingSystagId(daypart)    
        print "daypartSystagId is:" + str(daypartSystagId)
        try:
           cursor.execute("""
@@ -77,7 +48,7 @@ for daypart in files:
     #if i > 2:
     #   break
   print "================================"    
-  dbcontent.commit()  
+  #dbcontent.commit()  
 cursor.close ()
 
 print "record done:" + str(i)

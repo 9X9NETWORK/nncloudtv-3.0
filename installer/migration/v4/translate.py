@@ -37,6 +37,22 @@ def get_daypartingSystagId(daypart):
    elif daypart == "nightowl":
       return 54
 
+def get_tzuchi_daypartingSystagId(daypart):
+   if daypart == "morning":
+      return 58 
+   elif daypart == "daytime":
+      return 59  
+   elif daypart == "slack":
+      return 60
+   elif daypart == "evening":
+      return 61
+   elif daypart == "primetime":
+      return 62
+   elif daypart == "latenight":
+      return 63
+   elif daypart == "nightowl":
+      return 64
+
 def get_systagId(meow):
    category = meow.strip()
    print "category: " + category + "."
