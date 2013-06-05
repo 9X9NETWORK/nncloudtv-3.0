@@ -2873,8 +2873,15 @@ public class PlayerApiService {
         if (display == null)
             return this.assembleMsgs(NnStatusCode.SET_INVALID, null);
         if (systagId == 0)
-            systagId = display.getSystagId();            
-        List<NnChannel> channels = systagMngr.findPlayerChannelsById(systagId, display.getLang());
+            systagId = display.getSystagId();         
+        SysTag systag = systagMngr.findById(systagId);
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        if (systag.getType() == SysTag.TYPE_DAYPARTING) {
+        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, display.getLang(), true));
+        } else {
+        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, display.getLang()));
+        }
+        	
         String result[] = {"", "", "", ""};
         //mso info
         result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
