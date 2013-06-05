@@ -913,7 +913,10 @@ public class NnChannelManager {
         ori.add(""); //userImageUrl
         ori.add(""); //subscriberProfile, used to be subscriber profile urls, will be removed
         ori.add(""); //subscriberImage, used to be subscriber image urls
-        ori.add(""); //lastEpisodeTitle
+        if (version == 32)
+        	ori.add(" ");
+        else
+        	ori.add(""); //lastEpisodeTitle
         if (version > 32)
             ori.add(poiStr);
         /*
