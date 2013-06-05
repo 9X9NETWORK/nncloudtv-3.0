@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
@@ -35,6 +36,34 @@ import com.nncloudtv.web.api.NnStatusCode;
 public class WatchDogController {
 
     protected static final Logger log = Logger.getLogger(WatchDogController.class.getName());
+
+    @RequestMapping(value="urlSubmit")
+    public ResponseEntity<String> urlSubmit(HttpServletRequest req) {
+       String url = req.getParameter("url") ;
+       String lang = req.getParameter("lang") ;
+       if (url == null)
+          return NnNetUtil.textReturn("error\nurl empty");
+       if (lang == null)
+          lang = "en";
+       url = url.trim();               
+       NnChannelManager chMngr = new NnChannelManager();               
+       url = chMngr.verifyUrl(url); //verify url, also converge youtube url         
+       if (url == null)
+          return NnNetUtil.textReturn("error\nurl invalid");    	   
+       
+       //verify channel status for existing channel
+       NnChannel channel = chMngr.findBySourceUrl(url);                                        
+       if (channel != null && (channel.getStatus() == NnChannel.STATUS_ERROR)) {
+           log.info("channel id and status :" + channel.getId()+ ";" + channel.getStatus());
+           return NnNetUtil.textReturn("error\nstatus error:" + channel.getId() + "; status:" + channel.getStatus());  
+       }
+       if (channel == null) {
+           channel = chMngr.create(url, null, lang, req);
+           if (channel == null)
+        	   return NnNetUtil.textReturn("error\nurl invalid verified by youtube");  
+       }           
+       return NnNetUtil.textReturn(channel.getIdStr());
+    }
     
     @RequestMapping(value="msoInfo")
     public ResponseEntity<String> msoInfo(HttpServletRequest req) {
@@ -132,8 +161,11 @@ public class WatchDogController {
         if (result == null) {
             return "error, can't be null";
         }
+        String[] lengthTest = result.split("\t", -1);
         String[] data = result.split("\t");
         String output = "";
+        output += "number of fields:" + lengthTest.length + "\n\n";
+
         for (int i=0; i < data.length; i++) {
             if (i == 0)  output += "grid:";
             if (i == 1)  output += "channel id:"; 
