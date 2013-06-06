@@ -403,7 +403,6 @@ public class ApiContent extends ApiGeneric {
         }
         
         MsoManager msoMngr = new MsoManager();
-        // TODO : get valid brands
         List<Mso> msos = msoMngr.getValidBrands(channel.getId());
         
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
@@ -1234,14 +1233,14 @@ public class ApiContent extends ApiGeneric {
     
     @RequestMapping(value = "store", method = RequestMethod.GET)
     public @ResponseBody
-    List<Long> categoryChannels(HttpServletRequest req, HttpServletResponse resp) {
+    List<Long> storeChannels(HttpServletRequest req, HttpServletResponse resp) {
         
         Date now = new Date();
         log.info(printEnterState(now, req));
         
         SysTagManager sysTagMngr = new SysTagManager();
         
-        // categoryId, default : 1, category : All
+        // categoryId
         Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
@@ -1257,11 +1256,14 @@ public class ApiContent extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-        } else {
-            categoryId = (long) 1; // TODO categoryId = 1 is hard coded
         }
         
-        List<NnChannel> channels = sysTagMngr.findStoreChannelsById(categoryId);
+        List<NnChannel> channels;
+        if (categoryId != null) {
+            channels = sysTagMngr.findStoreChannelsById(categoryId);
+        } else {
+            channels = sysTagMngr.findStoreChannels();
+        }
         
         if (channels == null) {
             log.info(printExitState(now, req, "ok"));

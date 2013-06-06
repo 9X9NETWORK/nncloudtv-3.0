@@ -41,7 +41,7 @@ public class StoreListingManager {
             return new ArrayList<Long>();
         }
         
-        List<Long> storeMso = findByMsoId(msoId, (long) 1); // TODO : hard coded, sysTagId = 1, 9x9's category : All
+        List<Long> storeMso = findByMsoId(msoId);
         if (storeMso == null || storeMso.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -77,31 +77,7 @@ public class StoreListingManager {
         return results;
     }
     
-    public List<NnChannel> findByPaging(long page, long rows, Long msoId) {
-        
-        if (page <= 0 || rows <= 0 || msoId == null) {
-            return new ArrayList<NnChannel>();
-        }
-        
-        String filter = "msoId == " + msoId;
-        List<StoreListing> storeListing = dao.list(page, rows, "updateDate", "desc", filter);
-        if ((storeListing == null) || (storeListing.size() == 0)) {
-            return new ArrayList<NnChannel>();
-        }
-        
-        List<Long> channelIdList = new ArrayList<Long>();
-        for (StoreListing item : storeListing) {
-            channelIdList.add(item.getChannelId());
-        }
-        List<NnChannel> results = channelMngr.findByIds(channelIdList);
-        if (results == null) {
-            return new ArrayList<NnChannel>();
-        }
-        
-        return results;
-    }
-    
-    public void addChannelsToStore(List<Long> channelIds, Long msoId) {
+    public void addChannelsToBlackList(List<Long> channelIds, Long msoId) {
         
         if (channelIds == null || msoId == null || channelIds.size() == 0) {
             return ;
@@ -143,7 +119,7 @@ public class StoreListingManager {
         saveAll(newStoreListing);
     }
     
-    public void removeChannelsFromStore(List<Long> channelIds, Long msoId) {
+    public void removeChannelsFromBlackList(List<Long> channelIds, Long msoId) {
         
         if (channelIds == null || msoId == null || channelIds.size() == 0) {
             return ;
@@ -196,7 +172,7 @@ public class StoreListingManager {
     }
     
     /** mso store = 9x9 store - blackList, use categoryId to find partial store */
-    public List<Long> findByMsoId(Long msoId, Long categoryId) {
+    public List<Long> findByCategoryIdAndMsoId(Long categoryId, Long msoId) {
         
         if (msoId == null || categoryId == null) {
             return new ArrayList<Long>();
@@ -216,16 +192,48 @@ public class StoreListingManager {
             }
         }
         
-        List<Long> storeMsoIds = new ArrayList<Long>();
+        List<Long> msoStoreChannelIds = new ArrayList<Long>();
         for (NnChannel channel : store9x9) {
             if (blackListMap.containsKey(channel.getId())) {
                 // skip
             } else {
-                storeMsoIds.add(channel.getId());
+                msoStoreChannelIds.add(channel.getId());
             }
         }
         
-        return storeMsoIds;
+        return msoStoreChannelIds;
+    }
+    
+    /** mso store = 9x9 store - blackList */
+    public List<Long> findByMsoId(Long msoId) {
+        
+        if (msoId == null) {
+            return new ArrayList<Long>();
+        }
+        List<StoreListing> blackList = dao.findByMsoId(msoId);
+        
+        List<NnChannel> store9x9 = sysTagMngr.findStoreChannels();
+        if (store9x9 == null || store9x9.size() == 0) {
+            return new ArrayList<Long>();
+        }
+        
+        Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
+        if (blackList != null && blackList.size() > 0) {
+            for (StoreListing item : blackList) {
+                blackListMap.put(item.getChannelId(), item.getChannelId());
+            }
+        }
+        
+        List<Long> msoStoreChannelIds = new ArrayList<Long>();
+        for (NnChannel channel : store9x9) {
+            if (blackListMap.containsKey(channel.getId())) {
+                // skip
+            } else {
+                msoStoreChannelIds.add(channel.getId());
+            }
+        }
+        
+        return msoStoreChannelIds;
     }
     
     public List<StoreListing> getBlackList(Long channelId) {

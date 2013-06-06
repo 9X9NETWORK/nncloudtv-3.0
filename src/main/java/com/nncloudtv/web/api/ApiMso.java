@@ -872,7 +872,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        // categoryId, default : 1, category : All
+        // categoryId
         Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
@@ -888,26 +888,10 @@ public class ApiMso extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-        } else {
-            categoryId = (long) 1; // TODO categoryId = 1 is hard coded
         }
         
         // channels
         String channelIdsStr = req.getParameter("channels");
-        
-        // paging
-        /*
-        long page = 0, rows = 0;
-        try {
-            String pageStr = req.getParameter("page");
-            String rowsStr = req.getParameter("rows");
-            if (pageStr != null && rowsStr != null) {
-                page = Long.valueOf(pageStr);
-                rows = Long.valueOf(rowsStr);
-            }
-        } catch (NumberFormatException e) {
-        }
-        */
         
         List<Long> results = null;
         if (channelIdsStr != null) { // find by channelIdList
@@ -928,8 +912,10 @@ public class ApiMso extends ApiGeneric {
             }
             results = storeListingMngr.findByChannelIdsAndMsoId(channelIdList, msoId);
             
+        } else if (categoryId != null) {
+            results = storeListingMngr.findByCategoryIdAndMsoId(categoryId, msoId);
         } else {
-            results = storeListingMngr.findByMsoId(msoId, categoryId);
+            results = storeListingMngr.findByMsoId(msoId);
         }
         
         if (results == null) {
@@ -999,7 +985,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        storeListingMngr.addChannelsToStore(channelIdList, mso.getId());
+        storeListingMngr.addChannelsToBlackList(channelIdList, mso.getId());
         
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
@@ -1064,7 +1050,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        storeListingMngr.removeChannelsFromStore(channelIdList, mso.getId());
+        storeListingMngr.removeChannelsFromBlackList(channelIdList, mso.getId());
         
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));

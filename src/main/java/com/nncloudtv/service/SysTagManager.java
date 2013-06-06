@@ -122,6 +122,16 @@ public class SysTagManager {
         return channels;
     }
     
+    public List<NnChannel> findStoreChannels() {
+        
+        List<NnChannel> channels = dao.findStoreChannels();
+        if (channels == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        return channels;
+    }
+    
     public short convertDashboardType(long systagId) {
         SysTag tag = this.findById(systagId);
         if (tag == null)
