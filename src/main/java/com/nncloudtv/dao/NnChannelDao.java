@@ -128,8 +128,14 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                               "|| lower(intro) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + "))";
             if (!all) {
                 sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
-                if (content != null && content.equals("youtube")) {
-                    sql += " and contentType = " + NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL;
+                if (content != null) {
+                    if (content.equals("youtube")) {
+                        sql += " and contentType = "
+                                + NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL;
+                    } else if (content.equals("store")) {
+                        // store only
+                        sql += " and (status = " + NnChannel.STATUS_SUCCESS + ")";
+                    }
                 }
                 sql += " and isPublic = true";
             }

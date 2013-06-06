@@ -951,7 +951,7 @@ public class ApiContent extends ApiGeneric {
             log.info("keyword: " + keyword);
             Set<Long> channelIdSet = new HashSet<Long>();
             
-            List<NnChannel> channels = NnChannelManager.search(keyword, null, false, 0, 150);
+            List<NnChannel> channels = NnChannelManager.search(keyword, "store", false, 0, 150);
             log.info("found channels = " + channels.size());
             for (NnChannel channel : channels) {
                 channelIdSet.add(channel.getId());
