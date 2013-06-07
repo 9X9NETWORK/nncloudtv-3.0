@@ -9,9 +9,23 @@
 # drop table poi_pdr;
 # create database nncloudtv_nnuser1 character set = utf8;
 # cat nncontent.sql | mysql nncloudtv_content -h localhost -u root -p 
+# cat nnuser1.sql | mysql nncloudtv_nnuser1 -h localhost -u root -p
 #----------------------
 
-mysql < v4base.sql -u root -p --verbose > out/v4base.out
-mysql < v4data.sql -u root -p --verbose > out/v4data.out
-python worldwide.py > out/worldwide.out
-python tw.py > out/tw.out
+> cd ~/files/nncloudtv/installer/migration/v4
+> mysql < v4base.sql -u root -p --verbose > out/v4base.out
+> mysql < v4data.sql -u root -p --verbose > out/v4data.out
+# http://dev1.9x9.tv/playerAPI/category?v=40
+# http://dev1.9x9.tv/playerAPI/category?v=40&lang=zh
+# http://dev1.9x9.tv/playerAPI/category?v=40&lang=zh&mso=cts
+# http://dev1.9x9.tv/playerAPI/listRecommended?v=40&lang=zh&mso=cts
+# http://dev1.9x9.tv/playerAPI/setInfo?set=54&v=40
+# http://dev1.9x9.tv/playerAPI/frontpage?time=1
+
+> python worldwide.py > out/worldwide.out
+> python tw.py > out/tw.out
+> python dayparting.py > out/dayparting.out
+> python tzuchidayparting.py > out/tzuchidayparting.out
+
+# http://dev1.9x9.tv/playerAPI/frontpage?time=1&mso=tzuchi
+
