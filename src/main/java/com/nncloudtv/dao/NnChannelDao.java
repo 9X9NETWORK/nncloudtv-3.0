@@ -297,15 +297,16 @@ public class NnChannelDao extends GenericDao<NnChannel> {
             from nncloudtv_content.nnchannel c
            where c.id in 
              (select channelId from nncloudtv_nnuser1.nnuser_watched
-                where channelId not in 
+                where userId = 2170 and msoId = 1 and channelId not in   
                    (select channelId from nncloudtv_nnuser1.nnuser_subscribe where userId=1 and msoId=1)) 
-                order by updateDate desc;   
+                order by updateDate desc
+                limit 10;   
             */
             String sql = "select * " +
                           " from nncloudtv_content.nnchannel c " +  
                           "where c.id in " +                           
                              "(select channelId from nncloudtv_nnuser1.nnuser_watched " +
-                              " where channelId not in " +  
+                              " where userId = " + userId + " and msoId = " + msoId + " and channelId not in " +  
                                   " (select channelId from nncloudtv_nnuser1.nnuser_subscribe where userId=" + userId + " and msoId=" + msoId + ")) " +                                   
                          " order by updateDate desc";   
             
