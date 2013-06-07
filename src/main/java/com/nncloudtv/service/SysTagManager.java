@@ -92,8 +92,13 @@ public class SysTagManager {
 
     //player channels means status=true and isPublic=true
     //channels = systagMngr.findPlayerChannelsById(display.getId(), display.getLang(), page, limit);
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, int page, int limit) {
-        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, page, limit);
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, int start, int count) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, start, count);
+        return channels;
+    }
+    
+    public List<NnChannel> findSetChannelsById(long id, int page, int limit) {
+        List<NnChannel> channels = dao.findSetChannelsById(id, false, page, limit);
         return channels;
     }
 
