@@ -8,7 +8,7 @@ alter table poi add column eventId     bigint(20) DEFAULT '0';
 alter table poi add column pointId     bigint(20) DEFAULT '0';
 alter table poi add column startDate   datetime DEFAULT NULL;
 alter table poi add column endDate     datetime DEFAULT NULL;
-alter table poi add column hourOfWeek  varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
+alter table poi add column hoursOfWeek  varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
 update poi set updateDate = now();
 #####alter table poi modify updateDate timestamp not null DEFAULT CURRENT_TIMESTAMP;
 
@@ -101,6 +101,7 @@ use nncloudtv_nnuser1;
 alter table nnuser_profile add column phoneNumber varchar(15);
 alter table nnuser_profile add column priv varchar(6);
 alter table nnuser_subscribe drop index userSubscribe;
+alter table nnuser_watched add msoId bigint(20) default 1;
 
 CREATE TABLE `endpoint` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
