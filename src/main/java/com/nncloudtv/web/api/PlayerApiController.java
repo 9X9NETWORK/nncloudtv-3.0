@@ -495,7 +495,7 @@ public class PlayerApiController {
         String session = req.getParameter("session");
         String pdr = req.getParameter("session");
         */
-        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
+        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {        	
         //if (!root.equals(pdrServer)) {
             path = "/playerAPI/pdrServer";
             URL url;
@@ -519,6 +519,9 @@ public class PlayerApiController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+        	log.info("at pdr devel server");
+        	this.pdrServer(userToken, deviceToken, session, pdr, rx, req, resp);
         }
         return playerApiService.assembleMsgs(NnStatusCode.SUCCESS, null); 
             
