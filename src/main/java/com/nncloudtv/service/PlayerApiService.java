@@ -597,6 +597,7 @@ public class PlayerApiService {
             start = "1";
         if (count == null)
             count = "200";
+        /*
         int limit = Integer.valueOf(count);
         if (limit > 200)
             limit = 200;
@@ -607,12 +608,13 @@ public class PlayerApiService {
         if (limit != 0) {
             page = (int) (startIndex / limit) + 1;
         }
+        */
         TagManager tagMngr = new TagManager();
         SysTagManager systagMngr = new SysTagManager();
         if (tagStr != null) {
             channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
-            channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), page, limit);
+            channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), Integer.parseInt(start), Integer.parseInt(count));
         }
         //category info        
         String categoryInfo = "";
@@ -2514,22 +2516,22 @@ public class PlayerApiService {
 
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         SysTagManager systagMngr = new SysTagManager();
-        List<SysTagDisplay> sets = new ArrayList<SysTagDisplay>();
+        List<SysTagDisplay> displays = new ArrayList<SysTagDisplay>();
         
         //1. dayparting
         SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
-        sets.add(dayparting);
+        displays.add(dayparting);
         //2. on previosly 
         SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);        
-        sets.add(previously);
+        displays.add(previously);
         //3. following
         SysTagDisplay follow = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_SUBSCRIPTION, lang);
-        sets.add(follow);
+        displays.add(follow);
         //4 account
         SysTagDisplay account = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_ACCOUNT, lang);        
-        sets.add(account);   
-        for (int i=0; i<sets.size(); i++) {            
-            SysTagDisplay d = sets.get(i);
+        displays.add(account);   
+        for (int i=0; i<displays.size(); i++) {            
+            SysTagDisplay d = displays.get(i);
             int opened = 0;
             if (i == 0) opened = 1; 
             String stackname = d.getId() + "-" + d.getSystagId();
@@ -2548,11 +2550,12 @@ public class PlayerApiService {
         itemOutput[0] = itemOutput[0].replaceAll("null", "");
         itemOutput[0] = this.assembleMsgs(NnStatusCode.SUCCESS, itemOutput);
         data.add(itemOutput[0]);
+        String sphere = mso.getLang();
         try {
             //section 2: virtual channels
             String virtualOutput = "";
             String stackName = String.valueOf(dayparting.getId());
-            virtualOutput = this.virtualChannel(stackName, LangTable.LANG_EN, user, null, false);
+            virtualOutput = this.virtualChannel(stackName, sphere, user, null, false);
             data.add(virtualOutput);
             return this.assembleSections(data);
         } catch (Exception e) {
