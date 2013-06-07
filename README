@@ -50,6 +50,7 @@ Go to project root folder,
 - Run nncloudtv on Jetty: 
 Go to project root folder, 
 > mvn jetty:run
+> nohup mvn jetty:run > ~/jetty.log 2>&1
 (c:\Java\projects\nncloudtv>mvn -Dslf4j=false -Dlog4j.configuration=file:./target/classes/log4j.properties jetty:run)
 
 - Basic tests,
