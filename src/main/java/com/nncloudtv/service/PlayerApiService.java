@@ -401,10 +401,18 @@ public class PlayerApiService {
         if (id == null)
             id = "0";
         
+        
         String[] result = {"", "", ""};
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
-        result[0] = "id" + "\t" + id + "\n";        
-        List<SysTagDisplay> categories = displayMngr.findPlayerCategories(lang, mso.getId());
+        result[0] = "id" + "\t" + id + "\n";
+        
+        List<SysTagDisplay> categories = new ArrayList<SysTagDisplay>();
+        Mso nnMso = mso;
+        if (!MsoManager.isNNMso(mso)) {
+        	categories.addAll(displayMngr.findPlayerCategories(lang, mso.getId()));
+        	nnMso = msoMngr.findNNMso();
+        }        
+        categories.addAll(displayMngr.findPlayerCategories(lang, nnMso.getId()));
         for (SysTagDisplay c : categories) {
             String subItemHint = "ch"; //what's under this level
             String[] str = {String.valueOf(c.getId()), 
@@ -2882,7 +2890,7 @@ public class PlayerApiService {
         if (systag.getType() == SysTag.TYPE_DAYPARTING) {
         	channels.addAll(systagMngr.findPlayerChannelsById(systagId, display.getLang(), true));
         } else {
-        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, display.getLang()));
+        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, null));
         }
         	
         String result[] = {"", "", "", ""};
