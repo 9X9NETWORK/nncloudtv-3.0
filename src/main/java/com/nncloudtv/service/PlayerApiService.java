@@ -2394,7 +2394,7 @@ public class PlayerApiService {
                         SysTagDisplay display = displayMngr.findById(Long.parseLong(stack)); 
                         systagId = display.getSystagId();
                     }                    
-                    channels.addAll(systagMngr.findPlayerChannelsById(systagId, lang, true));
+                    channels.addAll(systagMngr.findPlayerChannelsById(systagId, null, true));
                 }
             }
         } else if (channel != null) {
