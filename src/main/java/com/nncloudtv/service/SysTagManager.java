@@ -97,11 +97,6 @@ public class SysTagManager {
         return channels;
     }
     
-    public List<NnChannel> findSetChannelsById(long id, int page, int limit) {
-        List<NnChannel> channels = dao.findSetChannelsById(id, false, page, limit);
-        return channels;
-    }
-
     public List<NnChannel> findPlayerChannelsById(long id, String lang) {
         List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, 0, 0);
         return channels;

@@ -60,12 +60,15 @@ public class SysTagDao extends GenericDao<SysTag> {
                 limit 3, 5                
               ) a2 on a1.id=a2.id
             */            
-            String str = " order by c.updateDate desc";
+            String orderStr = " order by c.updateDate desc";
             if (limitRows)
-                str = " order by rand() limit 9";
+                orderStr = " order by rand() limit 9";
             if (start > 0 && count > 0) {
-                str += " limit " + start + ", " + count;
+                orderStr += " limit " + start + ", " + count;
             }
+            String langStr = "";
+            if (lang != null)
+            	langStr = " and (c.lang = '" + lang + "' or c.lang = 'other')";
             String sql = "select * from nnchannel a1 " +
                          " inner join " + 
                        " (select distinct c.id " + 
@@ -76,8 +79,8 @@ public class SysTagDao extends GenericDao<SysTag> {
                            " and c.isPublic = true" +
                            " and c.contentType != " + NnChannel.CONTENTTYPE_FAVORITE +
                            " and c.status = " + NnChannel.STATUS_SUCCESS +
-                           " and (c.lang = '" + lang + "' or c.lang = 'other')" +
-                           str +
+                           langStr + 
+                           orderStr +
                            ") a2 on a1.id=a2.id";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
@@ -89,58 +92,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             pm.close();
         }
         return detached;                
-    }
-
-    public List<NnChannel> findSetChannelsById(long id, boolean limitRows, int page, int limit) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<NnChannel> detached = new ArrayList<NnChannel>();
-        try {
-            /*
-            select * 
-              from nnchannel a1  
-            inner join ( 
-             select distinct c.id  
-               from systag_display d, systag_map m, nnchannel c  
-              where d.systagId = 56 
-                and d.systagId = m.systagId 
-                and c.id = m.channelId
-                and c.isPublic = true  
-                and c.status = 0                
-                and (c.lang = 'en' or c.lang = 'other')
-                order by c.updateDate desc
-                limit 3, 5                
-              ) a2 on a1.id=a2.id
-            */            
-            String str = " order by c.updateDate desc";
-            if (limitRows)
-                str = " order by rand() limit 9";
-            if (limit > 0 && page > 0) {
-                int start = (page-1) * limit;                
-                str += " limit " + start + ", " + limit;
-            }
-            String sql = "select * from nnchannel a1 " +
-                         " inner join " + 
-                       " (select distinct c.id " + 
-                          " from systag_display d, systag_map m, nnchannel c " +
-                         " where d.systagId = " + id + 
-                           " and d.systagId = m.systagId " +                           
-                           " and c.id = m.channelId " +
-                           " and c.isPublic = true" +
-                           " and c.contentType != " + NnChannel.CONTENTTYPE_FAVORITE +
-                           str +
-                           ") a2 on a1.id=a2.id";
-            log.info("sql:" + sql);
-            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-            q.setClass(NnChannel.class);
-            @SuppressWarnings("unchecked")
-            List<NnChannel> results = (List<NnChannel>) q.execute();            
-            detached = (List<NnChannel>)pm.detachCopyAll(results);
-        } finally {
-            pm.close();
-        }
-        return detached;                
-    }
-    
+    }    
     
     /** twin whit findPlayerChannelsById but lang independent */
     public List<NnChannel> findStoreChannelsById(long sysTagId) {
