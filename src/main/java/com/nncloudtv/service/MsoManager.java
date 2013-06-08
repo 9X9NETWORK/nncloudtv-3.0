@@ -74,6 +74,14 @@ public class MsoManager {
         return list.get(0);
     }
     
+    public static boolean isNNMso(Mso mso) {
+    	if (mso == null)
+    		return false;
+    	if (mso.getId() == 1)
+    		return true;
+    	return false;
+    }
+    
     public String[] getBrandInfoCache(Mso mso) {
         if (mso == null) {return null; }
         String[] result = {""};
