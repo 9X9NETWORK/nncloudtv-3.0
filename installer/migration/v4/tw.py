@@ -42,6 +42,20 @@ for line in feed:
     cursor.execute("""
        update nnchannel set isPublic=true, status=0 where id= %s
            """, (cId))
+    cursor.execute("""
+       select categoryId from category_map where channelId = %s
+          """, (cId))
+    rows = cursor.fetchall()
+    for r in rows:
+       categoryId = r[0]
+       systagId = translate.get_systagIdByCategoryId(categoryId)
+       try:
+          cursor.execute("""
+             insert into systag_map (channelId, systagId, createDate, updateDate) values (%s, %s, now(), now());
+             """, (cId, systagId))
+       except MySQLdb.IntegrityError:
+          print "duplicate key"
+    
   else:
     if not "error" in cId:
        systagId = translate.get_systagId(category)
@@ -62,7 +76,16 @@ for line in feed:
   print "----------"
   #if i > 2:
   #   break
- 
+
+print "--- category all ---"
+try:
+   cursor.execute("""
+          insert into systag_map (systagId, channelId, createDate, updateDate) (select 1, id, now(), now() from systag_map where systagId < 20 order by systagId);
+       """)
+except MySQLdb.IntegrityError:
+   print "duplicate key"
+
+
 dbcontent.commit()  
 cursor.close ()
 

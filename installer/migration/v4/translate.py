@@ -21,7 +21,30 @@ def get_lang(text):
    else:
       return "zh"
 
+def get_systagIdByCategoryId(categoryId):
+   if categoryId < 20: 
+      return categoryId
+   if categoryId > 19:
+      return categoryId - 19
+
+
 def get_daypartingSystagId(daypart):
+   if daypart == "morning":
+      return 38 
+   elif daypart == "daytime":
+      return 39  
+   elif daypart == "slack":
+      return 40
+   elif daypart == "evening":
+      return 41
+   elif daypart == "primetime":
+      return 42
+   elif daypart == "latenight":
+      return 43
+   elif daypart == "nightowl":
+      return 44
+
+def get_tzuchi_daypartingSystagId(daypart):
    if daypart == "morning":
       return 48 
    elif daypart == "daytime":
@@ -37,24 +60,8 @@ def get_daypartingSystagId(daypart):
    elif daypart == "nightowl":
       return 54
 
-def get_tzuchi_daypartingSystagId(daypart):
-   if daypart == "morning":
-      return 58 
-   elif daypart == "daytime":
-      return 59  
-   elif daypart == "slack":
-      return 60
-   elif daypart == "evening":
-      return 61
-   elif daypart == "primetime":
-      return 62
-   elif daypart == "latenight":
-      return 63
-   elif daypart == "nightowl":
-      return 64
-
-def get_systagId(meow):
-   category = meow.strip()
+def get_systagId(category):
+   category = category.strip()
    print "category: " + category + "."
    if category == "All":
       return 1

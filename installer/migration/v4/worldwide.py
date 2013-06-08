@@ -1,4 +1,4 @@
-#process world wide channels
+#process world wide n US channels
 
 import urllib, urllib2
 import os
