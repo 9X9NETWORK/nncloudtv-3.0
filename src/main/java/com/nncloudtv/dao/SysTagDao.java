@@ -55,7 +55,7 @@ public class SysTagDao extends GenericDao<SysTag> {
                 and c.id = m.channelId
                 and c.isPublic = true  
                 and c.status = 0                
-                and (c.lang = 'en' or c.lang = 'other')
+                and (c.sphere = 'en' or c.sphere = 'other')
                 order by c.updateDate desc
                 limit 3, 5                
               ) a2 on a1.id=a2.id
@@ -68,7 +68,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             }
             String langStr = "";
             if (lang != null)
-            	langStr = " and (c.lang = '" + lang + "' or c.lang = 'other')";
+            	langStr = " and (c.sphere = '" + lang + "' or c.sphere = 'other')";
             String sql = "select * from nnchannel a1 " +
                          " inner join " + 
                        " (select distinct c.id " + 
