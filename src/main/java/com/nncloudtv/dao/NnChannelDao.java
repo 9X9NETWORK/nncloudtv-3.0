@@ -132,7 +132,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                     if (content.equals("youtube")) {
                         sql += " and contentType = "
                                 + NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL;
-                    } else if (content.equals("store")) {
+                    } else if (content.equals("store_only")) {
                         // store only
                         sql += " and (status = " + NnChannel.STATUS_SUCCESS + ")";
                     }

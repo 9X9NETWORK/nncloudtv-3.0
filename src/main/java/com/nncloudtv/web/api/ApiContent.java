@@ -945,12 +945,12 @@ public class ApiContent extends ApiGeneric {
                 channelMngr.populateMoreImageUrl(channel);
                 results.add(channel);
             }
-        } else if (keyword != null) {
+        } else if (keyword != null && keyword.length() > 0) {
             
             log.info("keyword: " + keyword);
             Set<Long> channelIdSet = new HashSet<Long>();
             
-            List<NnChannel> channels = NnChannelManager.search(keyword, "store", false, 0, 150);
+            List<NnChannel> channels = NnChannelManager.search(keyword, "store_only", false, 0, 150);
             log.info("found channels = " + channels.size());
             for (NnChannel channel : channels) {
                 channelIdSet.add(channel.getId());
@@ -967,7 +967,10 @@ public class ApiContent extends ApiGeneric {
             for (NnUser user : users) {
                 List<NnChannel> userChannels = channelMngr.findByUser(user, 30, false);
                 for (NnChannel channel : userChannels) {
-                    channelIdSet.add(channel.getId());
+                    if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
+                        log.info("from curator: " + channel.getName());
+                        channelIdSet.add(channel.getId());
+                    }
                 }
             }
             
