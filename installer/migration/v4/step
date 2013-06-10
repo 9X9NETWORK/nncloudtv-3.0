@@ -3,6 +3,7 @@
 # mysqldump --user=root nncloudtv_content > nncontent.sql
 # mysqldump --user=root nncloudtv_nnuser1 > nnuser1.sql
 # scp -i ~/keys/dev-west2.pem *.sql ubuntu@dev1.9x9.tv:/home/ubuntu/files/nndb/0605
+#----------------------
 # drop database nncloudtv_content;
 # drop database nncloudtv_nnuser1;
 # use nncloudtv_analytics;
@@ -12,20 +13,58 @@
 # cat nnuser1.sql | mysql nncloudtv_nnuser1 -h localhost -u root -p
 #----------------------
 
+> build
+> upload to stage
 > cd ~/files/nncloudtv/installer/migration/v4
 > mysql < v4base.sql -u root -p --verbose > out/v4base.out
 > mysql < v4data.sql -u root -p --verbose > out/v4data.out
+
 # http://dev1.9x9.tv/playerAPI/category?v=40
 # http://dev1.9x9.tv/playerAPI/category?v=40&lang=zh
 # http://dev1.9x9.tv/playerAPI/category?v=40&lang=zh&mso=cts
 # http://dev1.9x9.tv/playerAPI/listRecommended?v=40&lang=zh&mso=cts
-# http://dev1.9x9.tv/playerAPI/setInfo?set=54&v=40
-# http://dev1.9x9.tv/playerAPI/frontpage?time=1
+# http://dev1.9x9.tv/playerAPI/setInfo?set=44&v=40
+# http://dev1.9x9.tv/playerAPI/frontpage?time=1&v=40 (test on english dayparting porting)
 
+> python worldwide.py > out/worldwide.out
+> python tw.py > out/tw.out
+> python dayparting.py > out/dayparting.out  (chinese daypargting)
+> python tzuchidayparting.py > out/tzuchidayparting.out
+> mysql < v4data_after.sql -u root -p --verbose > out/v4data_after.out (set ch counter)
+> python final.py > out/final.out (category ch counter, image url, set image url)
+> python all.py > out/all.out (category all)
+> ssh -i ~/.ssh/prod-west2.pem ubuntu@moveout-log.9x9.tv
+> cd ~/bin/v32
+> ./deploy_cms_all.sh
+
+# insert into poi_point  (name, type, targetId, active, createDate, updateDate, startTime, endTime) values ('c-14381', 3, 14381, true, now(), now(), 5, 20);
+# insert into poi_event (userId, msoId, name, context, type, createDate, updateDate) values (1, 1, 'e1', "context", 1, now(), now());
+# insert into poi (eventId, pointId, startDate, endDate, hoursOfWeek) values (1, 1, now(), DATE_ADD(now(), INTERVAL 31 DAY), null);
+# insert into poi_point (name, type, targetId, active, createDate, updateDate, startTime, endTime) values ('c-14382-1', 5, 202467, true, now(), now(), 5,10);
+# insert into poi (eventId, pointId, startDate, endDate, hoursOfWeek) values (1, 2, now(), DATE_ADD(now(), INTERVAL 31 DAY), null);
+
+# http://dev1.9x9.tv/playerAPI/flush
+# http://dev1.9x9.tv/playerAPI/channelLineup?channel=14381&v=40
+# http://dev1.9x9.tv/playerAPI/programInfo?channel=14382&v=40
+# http://dev1.9x9.tv/playerAPI/portal?time=1&lang=zh
+# http://dev1.9x9.tv/playerAPI/portal?time=1&lang=zh&mso=tzuchi
+# http://dev1.9x9.tv/playerAPI/setInfo?set=73-44&v=40
+# http://dev1.9x9.tv/playerAPI/frontpage?time=1&mso=tzuchi&lang=zh
+
+#===================================================================
+> build
+> deploy stage
+> cd ~/files/nncloudtv/installer/migration/v4
+> mysql < v4base.sql -u root -p --verbose > out/v4base.out
+> mysql < v4data.sql -u root -p --verbose > out/v4data.out
 > python worldwide.py > out/worldwide.out
 > python tw.py > out/tw.out
 > python dayparting.py > out/dayparting.out
 > python tzuchidayparting.py > out/tzuchidayparting.out
-
-# http://dev1.9x9.tv/playerAPI/frontpage?time=1&mso=tzuchi
+> mysql < v4data_after.sql -u root -p --verbose > out/v4data_after.out
+> python final.py > out/final.out
+> python all.py > out/all.out
+> ssh -i ~/.ssh/prod-west2.pem ubuntu@moveout-log.9x9.tv
+> cd ~/bin/v32
+> ./deploy_cms_all.sh
 
