@@ -48,7 +48,7 @@ for n in range(48, 56):
 dbcontent.commit()
 
 # dashboard image url
-systagIds = [38, 39, 40,41,42,43,44, 48, 49,50,51,52,54]
+systagIds = [23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,41,42,43,44, 48, 49,50,51,52,54]
 for systagId in systagIds:
    lang = ['zh', 'en']
    for l in lang:
@@ -71,7 +71,7 @@ for systagId in systagIds:
                print "systagId:" + str(systagId) + ";lang:" + l + ";imageUrl:" + imageUrl + ";cId:" + str(cId)
                cursor.execute("""
                   update systag_display set imageUrl = %s where systagId = %s and lang = %s
-                  """, (systagId, l))
+                  """, (imageUrl, systagId, l))
          else: 
             cursor.execute("""
               select imageUrl from ytprogram 
