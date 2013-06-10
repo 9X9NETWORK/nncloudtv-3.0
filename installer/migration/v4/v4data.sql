@@ -1,7 +1,7 @@
 use nncloudtv_content;
 # mso_config
-#insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 3, now(), 'zh 中文');
-#insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 4, now(), 'zh 中文');
+insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 3, now(), 'zh 中文');
+insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 4, now(), 'zh 中文');
 
 # re-arrange status
 update nnchannel set status=3 where status=0;
