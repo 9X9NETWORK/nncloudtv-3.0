@@ -49,12 +49,12 @@ for line in feed:
     for r in rows:
        categoryId = r[0]
        systagId = translate.get_systagIdByCategoryId(categoryId)
-       try:
-          cursor.execute("""
-             insert into systag_map (channelId, systagId, createDate, updateDate) values (%s, %s, now(), now());
-             """, (cId, systagId))
-       except MySQLdb.IntegrityError:
-          print "duplicate key"
+       #try:
+       cursor.execute("""
+             insert into systag_map (channelId, systagId, createDate, updateDate) values (%s, %s, now(), now()) on duplicate key update channelId = %s, systagId = %s;
+             """, (cId, systagId, cId, systagId))
+       #except MySQLdb.IntegrityError:
+       #   print "duplicate key"
     
   else:
     if not "error" in cId:
@@ -66,24 +66,25 @@ for line in feed:
        cursor.execute("""
           update nnchannel set lang=%s, sphere=%s, isPublic=true, status=0 where id=%s
           """, (lang, sphere, cId))
-       try:
-          cursor.execute("""
-             insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now())
-           """, (systagId, cId))
-       except MySQLdb.IntegrityError:
-          print "duplicate key"
+       #try:
+       cursor.execute("""
+             insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now()) on duplicate key update channelId = %s, systagId = %s
+           """, (systagId, cId, cId, systagId))
+       #except MySQLdb.IntegrityError:
+       #   print "duplicate key"
   i = i+1
   print "----------"
   #if i > 2:
   #   break
 
-print "--- category all ---"
-try:
-   cursor.execute("""
-          insert into systag_map (systagId, channelId, createDate, updateDate) (select 1, id, now(), now() from systag_map where systagId < 20 order by systagId);
-       """)
-except MySQLdb.IntegrityError:
-   print "duplicate key"
+#print "--- category all ---"
+#try:
+#   cursor.execute("""
+#          insert into systag_map (systagId, channelId, createDate, updateDate) (select 1, id, now(), now() from systag_map where systagId < 20 order by systagId);
+#       """)
+#   dbcontent.commit()
+#except MySQLdb.IntegrityError:
+#   print "duplicate key"
 
 
 dbcontent.commit()  

@@ -55,16 +55,18 @@ for myfile in files:
             update nnchannel set lang=%s, sphere=%s, isPublic=true, status=0 where id=%s
             """, (lang, sphere, cId))
          # insert into systag_map    
-         try:
-            cursor.execute("""
-               insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now())
-             """, (systagId, cId))
-         except MySQLdb.IntegrityError:
-            print "duplicate key"
+         #try:
+         cursor.execute("""
+               insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now()) on duplicate key update systagId = %s, channelId = %s
+             """, (systagId, cId, systagId, cId))
+         #except MySQLdb.IntegrityError:
+         #   print "duplicate key"
     i = i+1
     print "----------"
-    #if i > 2:
-    #   break
+  print "record done:" + str(i)
+  print "nnchannel count:" + str(cntNnChannel)
+  print "===================================="
+  i = 0
  
 dbcontent.commit()  
 cursor.close ()

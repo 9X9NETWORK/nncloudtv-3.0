@@ -49,25 +49,25 @@ insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 22,  2, false, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 33,  2, false, now(), now());
 # systag: dashboard 9x9
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '7'   from dashboard where id=1);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '1'   from dashboard where id=2);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '2'   from dashboard where id=3);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '3'   from dashboard where id=4);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '4'   from dashboard where id=5);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '5'   from dashboard where id=6);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '6'   from dashboard where id=7);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '44'   from dashboard where id=1);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '38'   from dashboard where id=2);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '39'   from dashboard where id=3);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '40'   from dashboard where id=4);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '41'   from dashboard where id=5);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '42'   from dashboard where id=6);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '43'   from dashboard where id=7);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 2,  4, false, now(), now(), timeStart, timeEnd, null  from dashboard where id=8);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 3,  5, false, now(), now(), timeStart, timeEnd, null  from dashboard where id=9);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 4,  6, false, now(), now(), timeStart, timeEnd, null  from dashboard where id=10);
 
 # systag: dashboard tzuchi
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '7'  from dashboard where id=11);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '1'  from dashboard where id=12);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '2'  from dashboard where id=13);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '3'  from dashboard where id=14);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '4'  from dashboard where id=15);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '5'  from dashboard where id=16);
-insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '6'  from dashboard where id=17);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '54'  from dashboard where id=11);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '48'  from dashboard where id=12);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '49'  from dashboard where id=13);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '50'  from dashboard where id=14);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '51'  from dashboard where id=15);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '52'  from dashboard where id=16);
+insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 1,  3, false, now(), now(), timeStart, timeEnd,  '53'  from dashboard where id=17);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 2,  4, false, now(), now(), timeStart, timeEnd,  null from dashboard where id=18);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 3,  5, false, now(), now(), timeStart, timeEnd,  null from dashboard where id=19);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 4,  6, false, now(), now(), timeStart, timeEnd,  null from dashboard where id=20);

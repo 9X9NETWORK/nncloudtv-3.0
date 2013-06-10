@@ -40,9 +40,12 @@ for daypart in files:
        try:
           cursor.execute("""
              insert into systag_map (systagId, channelId, createDate, updateDate) values (%s, %s, now(), now());
-            """, (daypartSystagId, cId))
+             """, (daypartSystagId, cId)) 
        except MySQLdb.IntegrityError:
           print "duplicate key"
+       cursor.execute("""
+          update nnchannel set status = 0, isPublic = true where id = %s
+           """, (cId))
     i = i+1
     print "----------"
     #if i > 2:
