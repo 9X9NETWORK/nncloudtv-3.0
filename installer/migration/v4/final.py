@@ -55,6 +55,7 @@ for systagId in systagIds:
             episode_rows = cursor.fetchall()
             for e in episode_rows:
                imageUrl = e[0] 
+               print "systagId:" + str(systagId) + ";lang:" + l + ";imageUrl:" + imageUrl + ";cId:" + str(cId)
                cursor.execute("""
                   update systag_display set imageUrl = %s where systagId = %s and lang = %s
                   """, (systagId, l))
@@ -66,10 +67,11 @@ for systagId in systagIds:
             ytprogram_rows = cursor.fetchall()
             for y in ytprogram_rows:
                imageUrl = y[0]
+               print "systagId:" + str(systagId) + ";lang:" + l + ";imageUrl:" + imageUrl + ";cId:" + str(cId)
                cursor.execute("""
                    update systag_display set imageUrl = %s where systagId = %s and lang=%s
                    """, (imageUrl, systagId, l))
-
+         print "============================"
 previousIds = [45, 55]
 for previousId in previousIds:
    lang = ['zh', 'en']
