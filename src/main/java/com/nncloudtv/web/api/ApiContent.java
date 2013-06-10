@@ -963,12 +963,13 @@ public class ApiContent extends ApiGeneric {
                 userIdSet.add(profile.getUserId());
             }
             List<NnUser> users = userMngr.findAllByIds(userIdSet);
+            log.info("found users = " + users.size());
             
             for (NnUser user : users) {
                 List<NnChannel> userChannels = channelMngr.findByUser(user, 30, false);
                 for (NnChannel channel : userChannels) {
                     if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
-                        log.info("from curator: " + channel.getName());
+                        log.info("from curator = " + channel.getName());
                         channelIdSet.add(channel.getId());
                     }
                 }
