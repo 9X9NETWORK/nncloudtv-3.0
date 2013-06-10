@@ -15,26 +15,39 @@ dbcontent = MySQLdb.connect (host = "localhost",
                              db = "nncloudtv_content")
 
 cursor = dbcontent.cursor()
-#for n in range(1, 20):
-#   print "n:" + str(n)
-#   cursor.execute("""
-#      update systag_display set cntChannel = (
-#        select count(*) from nnchannel where (lang = 'en' or lang='other') and id in (select channelId from systag_map where systagId=%s))
-#      where systagId = %s and lang='en';
-#   """, (n, n))
-#   cursor.execute("""
-#      update systag_display set cntChannel = (
-#        select count(*) from nnchannel where (lang = 'zh' or lang='other') and id in (select channelId from systag_map where systagId=%s))
-#      where systagId = %s and lang='zh';
-#   """, (n, n))
+# category channel count
+for n in range(1, 20):
+   print "n:" + str(n)
+   cursor.execute("""
+      update systag_display set cntChannel = (
+        select count(*) from nnchannel where (lang = 'en' or lang='other') and id in (select channelId from systag_map where systagId=%s))
+      where systagId = %s and lang='en';
+   """, (n, n))
+   cursor.execute("""
+      update systag_display set cntChannel = (
+        select count(*) from nnchannel where (lang = 'zh' or lang='other') and id in (select channelId from systag_map where systagId=%s))
+      where systagId = %s and lang='zh';
+   """, (n, n))
+dbcontent.commit()
 
-#for n in range(38, 58):
-#   print "n:" + str(n)
-#   cursor.execute("""
-#      update systag_display set cntChannel = 9
-#      where systagId = %s
-#   """, (n))
+# dashboard channel count
+for n in range(38, 46):
+   print "n:" + str(n)
+   cursor.execute("""
+      update systag_display set cntChannel = 9
+      where systagId = %s
+   """, (n))
 
+for n in range(48, 56):
+   print "n:" + str(n)
+   cursor.execute("""
+      update systag_display set cntChannel = 9
+      where systagId = %s
+   """, (n))
+
+dbcontent.commit()
+
+# dashboard image url
 systagIds = [38, 39, 40,41,42,43,44, 48, 49,50,51,52,54]
 for systagId in systagIds:
    lang = ['zh', 'en']
