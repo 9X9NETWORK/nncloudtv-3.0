@@ -40,7 +40,7 @@ public class SysTagDao extends GenericDao<SysTag> {
     }
     
     //player channels means status=true and isPublic=true
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limitRows, int start, int count) {
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limitRows, int start, int count, short sort) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
@@ -50,7 +50,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             inner join ( 
              select distinct c.id  
                from systag_display d, systag_map m, nnchannel c  
-              where d.systagId = 56 
+              where d.systagId = 3 
                 and d.systagId = m.systagId 
                 and c.id = m.channelId
                 and c.isPublic = true  
@@ -59,8 +59,12 @@ public class SysTagDao extends GenericDao<SysTag> {
                 order by c.updateDate desc
                 limit 3, 5                
               ) a2 on a1.id=a2.id
-            */            
+            */
+        	        	
             String orderStr = " order by c.updateDate desc";
+            if (sort == SysTag.SORT_SEQ) {
+            	orderStr = " order by m.seq ";
+            }
             if (limitRows)
                 orderStr = " order by rand() limit 9";
             if (start > 0 && count > 0) {
