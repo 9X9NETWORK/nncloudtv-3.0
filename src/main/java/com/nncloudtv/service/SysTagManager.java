@@ -91,7 +91,9 @@ public class SysTagManager {
     }
 
     //player channels means status=true and isPublic=true
-    //channels = systagMngr.findPlayerChannelsById(display.getId(), display.getLang(), page, limit);
+    //lang: if lang is null, then don't filter sphere
+    //sort: if order = SysTag.SEQ, order by seq, otherwise order by updateDate
+    //msoId: if msoId =0, do store_listing black listing check
     public List<NnChannel> findPlayerChannelsById(long id, String lang, int start, int count, short sort, long msoId) {
         List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, start, count, sort, msoId);
         return channels;
