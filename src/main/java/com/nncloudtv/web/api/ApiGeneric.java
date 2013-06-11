@@ -20,6 +20,8 @@ import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.web.json.cms.Set;
 import com.nncloudtv.web.json.cms.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class ApiGeneric {
 	
 	protected static Logger log = Logger.getLogger(ApiGeneric.class.getName());
@@ -33,6 +35,9 @@ public class ApiGeneric {
 	public static final String API_DOC = "API-DOC";
 	public static final String API_DOC_URL = "http://goo.gl/H7Jzl"; // API design document url
 	public static final String BLACK_HOLE = "Black Hole!";
+
+    @Autowired
+    protected HttpServletRequest httpRequest;
 	
 	public void unauthorized(HttpServletResponse resp, String message) {
         try {
