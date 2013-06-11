@@ -633,6 +633,8 @@ public class PlayerApiService {
         String total = String.valueOf(display.getCntChannel());
         if (count.equals("0"))
             count = total;
+        if (Integer.parseInt(count) > Integer.parseInt(total))
+        	count = total;
         categoryInfo += assembleKeyValue("count", count);
         categoryInfo += assembleKeyValue("total", total);
         result.add(categoryInfo);
