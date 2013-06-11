@@ -69,6 +69,7 @@ public class SysTagDao extends GenericDao<SysTag> {
             if (limitRows)
                 orderStr = " order by rand() limit 9";
             if (start > 0 && count > 0) {
+            	start = start - 1;
                 orderStr += " limit " + start + ", " + count;
             }
             String langStr = "";

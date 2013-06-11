@@ -602,7 +602,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.CATEGORY_INVALID, null);
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (start == null)
-            start = "1";
+            start = "0";
         if (count == null)
             count = "200";
         /*
