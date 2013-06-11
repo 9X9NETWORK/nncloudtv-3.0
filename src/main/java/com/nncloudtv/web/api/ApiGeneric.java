@@ -36,7 +36,7 @@ public class ApiGeneric {
 	
 	public void unauthorized(HttpServletResponse resp, String message) {
         try {
-            resp.reset();
+            resp.resetBuffer();
             resp.setContentType(PLAIN_TEXT_UTF8);
             resp.setHeader(API_DOC, API_DOC_URL);
             if (message != null) {
@@ -56,7 +56,7 @@ public class ApiGeneric {
 	
 	public void forbidden(HttpServletResponse resp, String message) {
         try {
-            resp.reset();
+            resp.resetBuffer();
             resp.setContentType(PLAIN_TEXT_UTF8);
             resp.setHeader(API_DOC, API_DOC_URL);
             if (message != null) {
@@ -77,7 +77,7 @@ public class ApiGeneric {
 	public void notFound(HttpServletResponse resp, String message) {
 		
 		try {
-			resp.reset();
+		    resp.resetBuffer();
             resp.setContentType(PLAIN_TEXT_UTF8);
             resp.setHeader(API_DOC, API_DOC_URL);
 			if (message != null) {
@@ -103,7 +103,7 @@ public class ApiGeneric {
 	public void badRequest(HttpServletResponse resp, String message) {
 		
 		try {
-			resp.reset();
+		    resp.resetBuffer();
             resp.setContentType(PLAIN_TEXT_UTF8);
             resp.setHeader(API_DOC, API_DOC_URL);
 			if (message != null) {
@@ -125,7 +125,7 @@ public class ApiGeneric {
 	public void internalError(HttpServletResponse resp, Exception e) {
 		
 		try {
-			resp.reset();
+		    resp.resetBuffer();
             resp.setContentType(PLAIN_TEXT_UTF8);
             resp.setHeader(API_DOC, API_DOC_URL);
 			PrintWriter writer = resp.getWriter();
