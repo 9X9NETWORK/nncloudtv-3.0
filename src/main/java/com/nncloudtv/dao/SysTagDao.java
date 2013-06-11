@@ -40,7 +40,7 @@ public class SysTagDao extends GenericDao<SysTag> {
     }
     
     //player channels means status=true and isPublic=true
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limitRows, int start, int count, short sort) {
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean limitRows, int start, int count, short sort, long msoId) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
@@ -55,6 +55,7 @@ public class SysTagDao extends GenericDao<SysTag> {
                 and c.id = m.channelId
                 and c.isPublic = true  
                 and c.status = 0                
+                and c.id not in (select channelId from store_listing where msoId=3)
                 and (c.sphere = 'en' or c.sphere = 'other')
                 order by c.updateDate desc
                 limit 3, 5                
@@ -73,6 +74,10 @@ public class SysTagDao extends GenericDao<SysTag> {
             String langStr = "";
             if (lang != null)
             	langStr = " and (c.sphere = '" + lang + "' or c.sphere = 'other')";
+            String blackList = "";
+            if (msoId != 0) {
+            	blackList = " and c.id not in (select channelId from store_listing where msoId=" + msoId + ") ";
+            }
             String sql = "select * from nnchannel a1 " +
                          " inner join " + 
                        " (select distinct c.id " + 
@@ -83,6 +88,7 @@ public class SysTagDao extends GenericDao<SysTag> {
                            " and c.isPublic = true" +
                            " and c.contentType != " + NnChannel.CONTENTTYPE_FAVORITE +
                            " and c.status = " + NnChannel.STATUS_SUCCESS +
+                           blackList +   
                            langStr + 
                            orderStr +
                            ") a2 on a1.id=a2.id";

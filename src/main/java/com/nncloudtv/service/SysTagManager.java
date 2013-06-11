@@ -92,19 +92,19 @@ public class SysTagManager {
 
     //player channels means status=true and isPublic=true
     //channels = systagMngr.findPlayerChannelsById(display.getId(), display.getLang(), page, limit);
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, int start, int count, short sort) {
-        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, start, count, sort);
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, int start, int count, short sort, long msoId) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, start, count, sort, msoId);
         return channels;
     }
     
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, short sort) {
-        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, 0, 0, sort);
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, short sort, long msoId) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, 0, 0, sort, msoId);
         return channels;
     }
 
     //find channels for dayparting
-    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean rand) {
-        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, true, 0, 0, SysTag.SORT_DATE);
+    public List<NnChannel> findPlayerChannelsById(long id, String lang, boolean rand, long msoId) {
+        List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, true, 0, 0, SysTag.SORT_DATE, 0);
         return channels;
     }
     

@@ -622,7 +622,8 @@ public class PlayerApiService {
         if (tagStr != null) {
             channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
-            channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), Integer.parseInt(start), Integer.parseInt(count), SysTag.SORT_DATE);
+            channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), Integer.parseInt(start), 
+            		Integer.parseInt(count), SysTag.SORT_DATE, mso.getId());
         }
         //category info        
         String categoryInfo = "";
@@ -685,7 +686,7 @@ public class PlayerApiService {
                     set = displayMngr.findById(Long.parseLong(stack)); 
                 }
                 if (set != null)
-                    chs = systagMngr.findPlayerChannelsById(set.getSystagId(), set.getLang(), SysTag.SORT_DATE);                
+                    chs = systagMngr.findPlayerChannelsById(set.getSystagId(), set.getLang(), SysTag.SORT_DATE, 0);                
             }
             
             String output = "";
@@ -2394,7 +2395,7 @@ public class PlayerApiService {
                         SysTagDisplay display = displayMngr.findById(Long.parseLong(stack)); 
                         systagId = display.getSystagId();
                     }                    
-                    channels.addAll(systagMngr.findPlayerChannelsById(systagId, null, true));
+                    channels.addAll(systagMngr.findPlayerChannelsById(systagId, null, true, 0));
                 }
             }
         } else if (channel != null) {
@@ -2499,7 +2500,7 @@ public class PlayerApiService {
 	        	if (systag.getType() == SysTag.TYPE_SET) {
 	        		sort = systag.getSorting();
 	        	}
-	            channels.addAll(systagMngr.findPlayerChannelsById(displays.get(0).getSystagId(), lang, sort));
+	            channels.addAll(systagMngr.findPlayerChannelsById(displays.get(0).getSystagId(), lang, sort, 0));
 	        }
 	        channelStr = chMngr.composeChannelLineup(channels, version);        
 	        //3. list of the latest episode of each channel of the first set
@@ -2894,9 +2895,9 @@ public class PlayerApiService {
         SysTag systag = systagMngr.findById(systagId);
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (systag.getType() == SysTag.TYPE_DAYPARTING) {
-        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, display.getLang(), true));
+        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, display.getLang(), true, 0));
         } else {
-        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, null, systag.getSorting()));
+        	channels.addAll(systagMngr.findPlayerChannelsById(systagId, null, systag.getSorting(), 0));
         }
         	
         String result[] = {"", "", "", ""};
