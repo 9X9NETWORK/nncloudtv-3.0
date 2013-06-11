@@ -1,3 +1,6 @@
+use nncloudtv_nnuser1;
+update nnuser_profile set priv='111111' where userId=11607;
+
 use nncloudtv_content;
 # mso_config
 insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 3, now(), 'zh 中文');

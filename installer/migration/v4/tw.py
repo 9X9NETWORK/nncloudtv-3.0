@@ -6,10 +6,22 @@ from array import *
 import MySQLdb
 import time
 import translate
+import myconfig
+import sys
+
+env = "dev"
+pwd = ""
+urlroot = ""
+for arg in sys.argv:
+   myconfig.getSqlconfig(arg)
+   urlroot = myconfig.getUrlRoot(arg)   
+
+print "pwd:" + pwd
+print "urlroot:" + urlroot
 
 dbcontent = MySQLdb.connect (host = "localhost",
                              user = "root",
-                             passwd = "",
+                             passwd = pwd,
                              charset = "utf8",
                              use_unicode = True,
                              db = "nncloudtv_content")
@@ -33,7 +45,7 @@ for line in feed:
   lang = translate.get_lang(lang)
   if cId == "":
     url = url.strip()
-    posturl = "http://localhost:8080/wd/urlSubmit?url=" + url + "&lang=" + lang + "&sphere=" + sphere
+    posturl = urlroot + "/wd/urlSubmit?url=" + url + "&lang=" + lang + "&sphere=" + sphere
     print "lookup cid posturl:" + posturl
     cId = urllib2.urlopen(posturl).read()
     print "lookup id:" + cId
