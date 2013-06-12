@@ -102,7 +102,7 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
         return detached;                
     }
             
-    public List<SysTagDisplay> findRecommendedSets(String lang, long msoId) {
+    public List<SysTagDisplay> findRecommendedSets(String lang, long msoId, short type) {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<SysTagDisplay> detached = new ArrayList<SysTagDisplay>();
         try {
@@ -124,7 +124,7 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
                          "(select d.id " + 
                           " from systag s, systag_display d " +
                          " where s.msoId = " + msoId + "" +
-                           " and s.type = " + SysTag.TYPE_SET + 
+                           " and s.type = " + type + 
                            " and s.id = d.systagId " +
                            " and featured = true " +
                            " and d.lang='" + lang + "') a2" +

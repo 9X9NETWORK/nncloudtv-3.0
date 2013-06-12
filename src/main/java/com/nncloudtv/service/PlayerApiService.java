@@ -215,7 +215,12 @@ public class PlayerApiService {
         */
         //NnSetManager setMngr = new NnSetManager();
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
-        List<SysTagDisplay> sets = displayMngr.findRecommendedSets(lang, mso.getId());
+        List<SysTagDisplay> sets = new ArrayList<SysTagDisplay>();
+        if (version < 40) {
+        	sets.addAll(displayMngr.find33RecommendedSets(lang, mso.getId()));
+        } else {
+            sets.addAll(displayMngr.findRecommendedSets(lang, mso.getId()));        	
+        }
         String[] result = {""};
         for (SysTagDisplay set : sets) {
             String[] obj = {
@@ -408,8 +413,9 @@ public class PlayerApiService {
         
         List<SysTagDisplay> categories = new ArrayList<SysTagDisplay>();
         Mso nnMso = mso;
-        if (!MsoManager.isNNMso(mso)) {
+        if (!MsoManager.isNNMso(mso)) {        	
         	categories.addAll(displayMngr.findPlayerCategories(lang, mso.getId()));
+        	log.info("non 9x9 mso categories:" + mso.getId() + ";" + categories.size());
         	nnMso = msoMngr.findNNMso();
         }        
         categories.addAll(displayMngr.findPlayerCategories(lang, nnMso.getId()));

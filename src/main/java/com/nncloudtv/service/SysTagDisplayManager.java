@@ -23,8 +23,14 @@ public class SysTagDisplayManager {
     }
 
     public List<SysTagDisplay> findRecommendedSets(String lang, long msoId) {
-        List<SysTagDisplay> sets = dao.findRecommendedSets(lang, msoId);
+        List<SysTagDisplay> sets = dao.findRecommendedSets(lang, msoId, SysTag.TYPE_SET);
         log.info("recommended size:" + sets.size());        
+        return sets;
+    }
+
+    public List<SysTagDisplay> find33RecommendedSets(String lang, long msoId) {
+        List<SysTagDisplay> sets = dao.findRecommendedSets(lang, msoId, SysTag.TYPE_33SET);
+        log.info("33 recommended size:" + sets.size());        
         return sets;
     }
 
