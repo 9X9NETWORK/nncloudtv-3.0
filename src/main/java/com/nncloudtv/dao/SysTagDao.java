@@ -68,8 +68,8 @@ public class SysTagDao extends GenericDao<SysTag> {
             }
             if (limitRows)
                 orderStr = " order by rand() limit 9";
-            if (start > 0 && count > 0) {
-            	start = start - 1;
+            if (start >= 0 && count > 0) {
+            	//start = start - 1;
                 orderStr += " limit " + start + ", " + count;
             }
             String langStr = "";
@@ -104,6 +104,56 @@ public class SysTagDao extends GenericDao<SysTag> {
         }
         return detached;                
     }    
+
+    public long findPlayerChannelsCountById(long id, String lang, long msoId) {
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        long size = 0;
+        try {
+            /*
+             select count(*) 
+               from nnchannel a1  inner join  
+             (select distinct c.id  
+               from systag_display d, systag_map m, nnchannel c  
+              where d.systagId = 3 
+                and d.systagId = m.systagId 
+                and c.id = m.channelId
+                and c.isPublic = true  
+                and c.status = 0                
+                and c.id not in (select channelId from store_listing where msoId=3)
+                and (c.sphere = 'zh' or c.sphere = 'other')) a2 on a1.id=a2.id
+            */
+        	        	
+            String langStr = "";
+            if (lang != null)
+            	langStr = " and (c.sphere = '" + lang + "' or c.sphere = 'other')";
+            String blackList = "";
+            if (msoId != 0) {
+            	blackList = " and c.id not in (select channelId from store_listing where msoId=" + msoId + ") ";
+            }
+            String sql =  "select count(*) " + 
+                           " from nnchannel a1 inner join " + 
+            		     "(select distinct c.id " +                         
+                          " from systag_display d, systag_map m, nnchannel c " +
+                         " where d.systagId = " + id + 
+                           " and d.systagId = m.systagId " +                           
+                           " and c.id = m.channelId " +
+                           " and c.isPublic = true" +
+                           " and c.contentType != " + NnChannel.CONTENTTYPE_FAVORITE +
+                           " and c.status = " + NnChannel.STATUS_SUCCESS +
+                           blackList +   
+                           langStr + 
+                           " ) a2 on a1.id=a2.id"; 
+            log.info("sql:" + sql);
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            @SuppressWarnings("rawtypes")
+            List results = (List) q.execute();
+            size = (Long)results.iterator().next();
+        } finally {
+            pm.close();
+        }
+        return size;                
+    }    
+    
     
     /** twin whit findPlayerChannelsById but lang independent */
     public List<NnChannel> findStoreChannelsById(long sysTagId) {

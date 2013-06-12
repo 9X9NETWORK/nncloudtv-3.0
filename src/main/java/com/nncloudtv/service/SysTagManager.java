@@ -90,10 +90,16 @@ public class SysTagManager {
         // delete sysTags, sysTagDisplays, sysTagMaps
     }
 
+    public long findPlayerChannelsCountById(long id, String lang, long msoId) {
+        long size = dao.findPlayerChannelsCountById(id, lang, msoId);        
+        return size;
+    }
+    
+    
     //player channels means status=true and isPublic=true
     //lang: if lang is null, then don't filter sphere
     //sort: if order = SysTag.SEQ, order by seq, otherwise order by updateDate
-    //msoId: if msoId =0, do store_listing black listing check
+    //msoId: if msoId =0, do store_listing black list
     public List<NnChannel> findPlayerChannelsById(long id, String lang, int start, int count, short sort, long msoId) {
         List<NnChannel> channels = dao.findPlayerChannelsById(id, lang, false, start, count, sort, msoId);
         return channels;

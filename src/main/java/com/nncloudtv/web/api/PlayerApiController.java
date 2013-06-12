@@ -674,7 +674,7 @@ public class PlayerApiController {
      * Get list of channels under the category. Start and count is for the channel records in the last block.  
      *  
      * @param category category id
-     * @param start the start of the index, start from 1
+     * @param start the start of the index, start from 0
      * @param count count of records
      * 
      * @return First block has category info, id and name. <br/>

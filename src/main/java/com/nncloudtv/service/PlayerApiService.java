@@ -609,14 +609,17 @@ public class PlayerApiService {
         List<NnChannel> channels = new ArrayList<NnChannel>();
         if (start == null)
             start = "0";
-        if (count == null)
-            count = "200";
-        /*
-        int limit = Integer.valueOf(count);
+        long limit = 0;
+        if (count != null) {
+        	limit = Integer.valueOf(count);
+        } else {
+        	limit = 200;
+        }
         if (limit > 200)
             limit = 200;
         if (programInfo)
         	limit = 20;
+        /*
         int startIndex = Integer.parseInt(start);
         int page = 0;
         if (limit != 0) {
@@ -629,20 +632,18 @@ public class PlayerApiService {
             channels = tagMngr.findChannelsByTag(tagStr, true); //TODO removed            
         } else {
             channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), Integer.parseInt(start), 
-            		Integer.parseInt(count), SysTag.SORT_DATE, mso.getId());
+            		Integer.parseInt(String.valueOf(limit)), SysTag.SORT_DATE, mso.getId());
         }
         //category info        
         String categoryInfo = "";
         categoryInfo += assembleKeyValue("id", String.valueOf(display.getId()));
         categoryInfo += assembleKeyValue("name", display.getName());
         categoryInfo += assembleKeyValue("start", start);
-        String total = String.valueOf(display.getCntChannel());
-        if (count.equals("0"))
-            count = total;
-        if (Integer.parseInt(count) > Integer.parseInt(total))
-        	count = total;
-        categoryInfo += assembleKeyValue("count", count);
-        categoryInfo += assembleKeyValue("total", total);
+        //String total = String.valueOf(display.getCntChannel());
+        
+        long longTotal = systagMngr.findPlayerChannelsCountById(display.getSystagId(), display.getLang(), mso.getId());
+        categoryInfo += assembleKeyValue("count", String.valueOf(limit));
+        categoryInfo += assembleKeyValue("total", String.valueOf(longTotal));
         result.add(categoryInfo);
         //category tag
         String tagInfo = "";
