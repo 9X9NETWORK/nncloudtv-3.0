@@ -3,8 +3,8 @@ update nnuser_profile set priv='111111' where userId=11607;
 
 use nncloudtv_content;
 # mso_config
-insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 3, now(), 'zh 中文');
-insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 4, now(), 'zh 中文');
+#insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 3, now(), 'zh 中文');
+#insert into mso_config (createDate, item, msoId, updateDate, value) values (now(), 'supported-region', 4, now(), 'zh 中文');
 
 # re-arrange status
 update nnchannel set status=3 where status=0;
@@ -34,23 +34,23 @@ insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 1,  1, false, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 2,  1, false, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 3,  1, false, now(), now());
-# systag: nnset 9x9
+# systag: nnset 9x9 4.0 chinese
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 1,   2, true, now(), now());
 insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 2,   2, true, now(), now());
-# systag: nnset cts
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 1,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 2,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 3,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 4,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 5,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 6,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 7,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 8,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 9,   2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 10,  2, true,  now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 11,  2, false, now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 22,  2, false, now(), now());
-insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 33,  2, false, now(), now());
+# systag: nnset cts 33
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 1,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 2,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 3,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 4,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 5,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 6,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 7,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 8,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 9,   7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 10,  7, true,  now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 11,  7, false, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 22,  7, false, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (3, 33,  7, false, now(), now());
 # systag: dashboard 9x9
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '44'   from dashboard where id=1);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 1, 1,  3, false, now(), now(), timeStart, timeEnd, '38'   from dashboard where id=2);
@@ -75,6 +75,28 @@ insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 3,  5, false, now(), now(), timeStart, timeEnd,  null from dashboard where id=19);
 insert into systag(msoId, seq, type, featured, createDate, updateDate, timeStart, timeEnd, attr) (select 4, 4,  6, false, now(), now(), timeStart, timeEnd,  null from dashboard where id=20);
 
+# systag: 9x9 33 chinese
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 1, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 2, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 3, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 4, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 5, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 6, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 7, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 8, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 9, 7, true, now(), now());
+
+# systag: 9x9 33 english
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 1, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 2, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 3, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 4, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 5, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 6, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 7, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 8, 7, true, now(), now());
+insert into systag(msoId, seq, type, featured, createDate, updateDate) values (1, 9, 7, true, now(), now());
+ 
 ############################################
 # systag_display: category 9x9
 truncate systag_display;
@@ -171,6 +193,30 @@ insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDa
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 55,  name,       null, "zh", null, now(), 9 from dashboard where id=18);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 56,  name,       null, "zh", null, now(), 9 from dashboard where id=19);
 insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 57,  name,       null, "zh", null, now(), 9 from dashboard where id=20);
+
+# systag_display: 33 set chinese
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 58, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5001);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 59, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5002);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 60, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5003);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 61, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5004);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 62, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5005);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 63, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5006);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 64, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5007);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 65, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5008);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) (select 66, name, imageUrl, lang, null, now(), cntChannel from nnset where id=5009);
+
+# systag_display: 33 set english
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (67, 'Newest Channels', 'http://i3.ytimg.com/i/nOVVuoLJ_1YY8A0V802wHA/1.jpg?v=4f6a332d', 'en', null, now(), 54);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (68, 'Top 9 Web Musicians', 'http://i2.ytimg.com/i/yJEAZW-4U9wK30v-OqG59g/1.jpg?v=9d8aff', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (69, 'Top 9 VEVO Musicians', 'http://i4.ytimg.com/i/omP_epzeKzvBX156r6pm1Q/1.jpg?v=4ef8ddbd', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (70, 'Top 9 Fail/Viral Channels', 'http://i1.ytimg.com/i/H0zkFwT77Og7vRPDVmfNXw/1.jpg?v=4f40d523', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (71, 'Top 9 Shorts Channels', 'http://i2.ytimg.com/i/M2YmsRUeIbRkqjgNm0eTGQ/1.jpg?v=b6cc36', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (72, 'Top 9 Web Fashionistas', 'http://i1.ytimg.com/i/tC8m_F7jX2fGOQ3_nomg4g/1.jpg?v=4f3d532f', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (73, 'Top 9 Vloggers', 'http://i1.ytimg.com/i/lFSU9_bUb4Rc6OYfTt5SPw/1.jpg?v=c93da0', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (74, 'Top 9 Extreme Sports Channels', 'http://i2.ytimg.com/i/-LqvZMkzlQIT2Wy6LyE1_A/1.jpg?v=4ffb1512', 'en', null, now(), 9);
+insert into systag_display (systagId, name, imageUrl, lang, popularTag, updateDate, cntChannel) values (75, 'Top 9 Entertainment', 'http://i3.ytimg.com/i/bdTs9fanN16NOrYSmq1JeQ/1.jpg?v=c7402e', 'en', null, now(), 9);
+
+
 ############################################
 # systag_map: category channel map cts
 truncate systag_map;
@@ -222,6 +268,163 @@ insert into systag_map (systagId, channelId, createDate, updateDate) (select 41,
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 42, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=5)));
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 43, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=6)));
 insert into systag_map (systagId, channelId, createDate, updateDate) (select 44, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(stackName,'(9x9en)') from dashboard where id=7)));
+
+# systag_map: 33 9x9 set chinese
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 58, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5001)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 59, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5002)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 60, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5003)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 61, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5004)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 62, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5005)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 63, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5006)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 64, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5007)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 65, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5008)));
+insert into systag_map (systagId, channelId, createDate, updateDate) (select 66, channelId, now(), now() from tag_map where tagId in (select id from tag where name = (select concat(name,'(9x9zh)') from nnset where id=5009)));
+
+# systag_map 33 9x9 set english
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8557, now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8540, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 6915, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8490, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8464, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8425, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8424, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8423, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8421, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8420, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8412, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8409, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8392, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8388, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8387, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8363, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8362, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8352, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8351, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8350, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8349, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8347, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8344, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8089, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8090, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8125, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8189, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8341, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 8340, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 1497, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7564, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7505, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7531, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7561, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7562, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7549, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7546, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7503, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7576, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7572, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7594, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7581, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7580, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7573, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7566, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7583, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7553, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7571, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7578, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7598, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7582, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7600, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7601, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (67, 7602, now(), now());
+
+# 100
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 3804, now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 7594, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 6682, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 3671, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 3703, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 1992, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 1004, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 3796, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (68, 6783, now(), now());
+                                  
+#101
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 2071	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 762	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 928	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 6260	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 6843	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 3532	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 392	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 104   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (69, 2036	, now(), now());
+
+#106
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 3798   , now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 7230   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 7592   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 7348   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 445	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 7269   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 3704   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 7571   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (70, 7456   , now(), now());
+
+#103 
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 197	, now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 3752   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 6675   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 1753   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 3794   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 107	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 3634   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 1468   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (71, 6796   , now(), now());
+
+#102
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 7580   , now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 3639   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 6709   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 7407   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 237	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 7417   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 6678   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 6686   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 7474   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (72, 6755   , now(), now());
+                                                                                 
+#105
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 2145   , now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 6825   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 6700   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 5307   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 4720   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 6800   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 386	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 3789   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (73, 3611   , now(), now());
+
+#104
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 8490   , now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 7591   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 7597   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 7575   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 7574   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 1246   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 374	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 41	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (74, 7564   , now(), now());
+
+
+#107
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 418	, now(), now());   
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 7570   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 7568   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 7265   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 6929   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 442	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 201	, now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 3594   , now(), now());
+insert into systag_map (systagId, channelId, createDate, updateDate) values (75, 7349   , now(), now());
 
 # channel status
 update nnchannel a, systag_map b set a.status = 0, isPublic=true  where a.id = b.channelId;
