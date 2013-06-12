@@ -54,6 +54,7 @@
 #===================================================================
 > build
 > deploy stage
+> mark data read-only
 > cd ~/files/nncloudtv/installer/migration/v4
 > mysql < v4base.sql -u root -p --verbose > out/v4base.out
 > mysql < v4data.sql -u root -p --verbose > out/v4data.out
@@ -67,4 +68,9 @@
 > ssh -i ~/.ssh/prod-west2.pem ubuntu@moveout-log.9x9.tv
 > cd ~/bin/v32
 > ./deploy_cms_all.sh
+
+
+#===================================================================
+
+
 
