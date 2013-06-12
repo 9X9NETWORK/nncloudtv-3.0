@@ -158,13 +158,11 @@ public class NnChannelManager {
     //example: nnchannel(channel_id)
     public static String getCacheKey(long channelId, int version) {
     	if (version == 32)
-    		return getV32CacheKey(channelId);
+    		return "nnchannel-v32(" + channelId + ")";
+    	if (version < 32) {
+        	return "nnchannel-v31(" + channelId + ")";
+    	}			
         String str = "nnchannel(" + channelId + ")"; 
-        return str;
-    }
-
-    public static String getV32CacheKey(long channelId) {
-        String str = "nnchannel-v32(" + channelId + ")"; 
         return str;
     }
     
@@ -685,6 +683,7 @@ public class NnChannelManager {
     public void resetCache(long channelId) {        
         if (CacheFactory.isRunning) {
             log.info("reset channel info cache: " + channelId);
+            CacheFactory.delete(getCacheKey(channelId, 31));
             CacheFactory.delete(getCacheKey(channelId, 32));
             CacheFactory.delete(getCacheKey(channelId, 40));
         }
@@ -776,10 +775,16 @@ public class NnChannelManager {
         
         //image url, favorite channel image will be overwritten later
         String imageUrl = c.getPlayerPrefImageUrl();
-        if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
+        if (version < 32) {
+        	imageUrl = imageUrl.indexOf("|") < 0 ? imageUrl : imageUrl.substring(0, imageUrl.indexOf("|"));
+        	log.info("v31 imageUrl:" + imageUrl);
+        }
+        
+        if (version > 31 && (
+        	c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY ||
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED ||
-            c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+            c.getContentType() == NnChannel.CONTENTTYPE_FAVORITE)) {
             if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
                 NnProgramManager pMngr = new NnProgramManager();
                 List<NnProgram> programs = pMngr.findPlayerProgramsByChannel(c.getId());
@@ -1109,8 +1114,7 @@ public class NnChannelManager {
     }
     
     /** recommend deprecated, where findByIds exist */
-    public List<NnChannel> findAllByIds(Set<Long> channelIdSet) {
-    
+    public List<NnChannel> findAllByIds(Set<Long> channelIdSet) {    
         return dao.findAllByIds(channelIdSet);
     }
     

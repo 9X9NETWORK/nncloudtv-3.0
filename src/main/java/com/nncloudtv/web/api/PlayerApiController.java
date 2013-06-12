@@ -442,6 +442,7 @@ public class PlayerApiController {
                 return playerApiService.assembleMsgs(status, null);
             }                        
             boolean flatten = Boolean.parseBoolean(isFlatten);
+            /*
             if (playerApiService.getVersion() < 32) {
                 log.info("category:" + category);
                 String msoName = req.getParameter("mso");
@@ -452,6 +453,7 @@ public class PlayerApiController {
                 }                
                 return new IosService().category(category, lang, flatten, brand ); 
             }
+            */
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
             output = playerApiService.handleException(e);

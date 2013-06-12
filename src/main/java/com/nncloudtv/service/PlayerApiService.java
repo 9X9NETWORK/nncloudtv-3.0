@@ -872,16 +872,17 @@ public class PlayerApiService {
             }
         }
         String channelOutput = "";
-        if (version < 32) {
-            channelOutput += new IosService().composeChannelLineup(channels);
+        //if (version < 32) {
+        //    channelOutput += new IosService().composeChannelLineup(channels);
+        //} else {
+        //}
+        if (isReduced) {
+            log.info("output reduced string");
+            channelOutput += chMngr.composeReducedChannelLineup(channels);
         } else {
-            if (isReduced) {
-                log.info("output reduced string");
-                channelOutput += chMngr.composeReducedChannelLineup(channels);
-            } else {
-                channelOutput += chMngr.composeChannelLineup(channels, version);
-            }
+            channelOutput += chMngr.composeChannelLineup(channels, version);
         }
+        
         if (channelPos && channelOutput != null) {
             channelOutput = this.chAdjust(channels, channelOutput);
         }
