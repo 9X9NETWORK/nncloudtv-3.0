@@ -14,7 +14,7 @@ env = "dev"
 pwd = ""
 urlroot = ""
 for arg in sys.argv:
-   myconfig.getSqlconfig(arg)
+   pwd = myconfig.getSqlconfig(arg)
    urlroot = myconfig.getUrlRoot(arg)   
 
 print "pwd:" + pwd
