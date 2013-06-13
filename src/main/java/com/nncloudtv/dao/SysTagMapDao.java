@@ -42,8 +42,13 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
     }
     
     public List<SysTagMap> findCategoryMapsByChannelId(long channelId) {
-        
-        return sql("select * from systag_map where systagId in (select id from systag where type = 1) and channelId = " + channelId);
+    	//select * from systag_map where systagId in (select id from systag where type = 1) and channelId = " + channelId
+        return sql("select * from systag_map a1 " +
+                   " inner join (" + 
+        		   "select m.id from systag s, systag_map m " +
+        		   " where s.type = 1 " + 
+        		     " and m.channelId = " + channelId + 
+        		     " and s.id = m.systagId) a2 on a1.id=a2.id");
     }
     
     public List<SysTagMap> findSysTagMaps(long sysTagId) {

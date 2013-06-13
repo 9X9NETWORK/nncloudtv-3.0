@@ -270,12 +270,27 @@ public class NnProgramDao extends GenericDao<NnProgram> {
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnProgram> detached = new ArrayList<NnProgram>();
         try {
+        	String sql = "select * from nnprogram a1 " + 
+        			      " inner join ( " + 
+        			      "select p.id " + 
+        			       " from nnprogram p, nnepisode e, nnchannel c " + 
+        			      " where c.id = " + channelId + 
+        			        " and c.isPublic = true " +  
+        			        " and p.channelId = c.id " +    
+        			        " and e.id = p.episodeId " + 
+        			        " and e.isPublic = true " + 
+        			        " and p.status !=  " + NnProgram.STATUS_ERROR +  
+        			        " order by e.seq, p.seq, p.subSeq " +
+        			        ") a2 on a1.id=a2.id";
+        
+        			/*
             String sql = "select * " +
                            "from nnprogram " +
                          " where episodeId in " +
                           "(select id from nnepisode where channelId = " + channelId + " and isPublic=true order by seq) " +
                           " and status != " + NnProgram.STATUS_ERROR + " " + 
                           "order by seq, subSeq"; //TODO, order by seq is wrong
+                          */
             log.info("sql:" + sql);
             Query query = pm.newQuery("javax.jdo.query.SQL", sql);
             query.setClass(NnProgram.class);
