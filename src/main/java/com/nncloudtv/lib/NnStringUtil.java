@@ -137,9 +137,9 @@ public class NnStringUtil {
     public static String revertHtml(String str) {
         if (str == null) return null;
         return str.replaceAll("&quot;", "\"")
-                   .replaceAll("&gt;", ">")
-                   .replaceAll("&lt;", "<")
-                   .replaceAll("&amp;", "&");
+                  .replaceAll("&gt;",   ">")
+                  .replaceAll("&lt;",   "<")
+                  .replaceAll("&amp;",  "&");
     }
     
     public static String htmlSafeAndTruncated(String str) {
@@ -151,14 +151,14 @@ public class NnStringUtil {
         if (str == null || str.length() == 0) {
             return str;
         }
-        log.info("length = " + length);
+        log.info("max length = " + length);
         
         for (int i = length; i > 0; i--) {
             String truncated = truncateUTF8(str, i);
             String htmlSafe = htmlSafeChars(truncated);
             Integer bytelen = htmlSafe.getBytes(Charset.forName("UTF-8")).length;
             if (bytelen <= length) {
-                log.info("length in bytes: " + bytelen);
+                log.info("truncated length = " + bytelen);
                 return htmlSafe;
             }
         }
