@@ -30,7 +30,6 @@ import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnEpisode;
-import com.nncloudtv.service.IosService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnStatusMsg;
@@ -454,6 +453,7 @@ public class PlayerApiController {
                 return new IosService().category(category, lang, flatten, brand ); 
             }
             */
+            
             output = playerApiService.category(category, lang, flatten);
         } catch (Exception e) {
             output = playerApiService.handleException(e);

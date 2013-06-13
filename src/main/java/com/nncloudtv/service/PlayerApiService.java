@@ -405,11 +405,18 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);                        
         if (id == null)
             id = "0";
-        
-        
         String[] result = {"", "", ""};
-        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         result[0] = "id" + "\t" + id + "\n";
+
+        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
+        SysTagManager systagMngr = new SysTagManager();        
+        if (!id.equals("0")) { //v30 compatibilities            
+            long displayId = Long.parseLong(id);
+            SysTagDisplay display = displayMngr.findById(displayId);
+            List<NnChannel> channels = systagMngr.findPlayerChannelsById(display.getSystagId(), display.getLang(), 0, 200, SysTag.SORT_DATE, mso.getId());  
+            result[2] = chMngr.composeChannelLineup(channels, version);
+            return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+        }        
         
         List<SysTagDisplay> categories = new ArrayList<SysTagDisplay>();
         Mso nnMso = mso;
@@ -417,19 +424,21 @@ public class PlayerApiService {
         	categories.addAll(displayMngr.findPlayerCategories(lang, mso.getId()));
         	log.info("non 9x9 mso categories:" + mso.getId() + ";" + categories.size());
         	nnMso = msoMngr.findNNMso();
-        }        
+        }                
         categories.addAll(displayMngr.findPlayerCategories(lang, nnMso.getId()));
-        for (SysTagDisplay c : categories) {
+        
+        for (SysTagDisplay display : categories) {
             String subItemHint = "ch"; //what's under this level
-            String[] str = {String.valueOf(c.getId()), 
-                            c.getName(), 
-                            String.valueOf(c.getCntChannel()), 
+            String[] str = {String.valueOf(display.getId()), 
+                            display.getName(), 
+                            String.valueOf(display.getCntChannel()), 
                             subItemHint};                
             result[1] += NnStringUtil.getDelimitedStr(str) + "\n";
         }
-
+                         
         //flatten result process
         if (id.equals("0") && flatten) {
+        	log.info("return flatten data");
             List<String> flattenResult = new ArrayList<String>();
             flattenResult.add(result[0]);
             flattenResult.add(result[1]);
