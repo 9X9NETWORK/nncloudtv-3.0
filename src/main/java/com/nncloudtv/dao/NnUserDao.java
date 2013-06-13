@@ -31,13 +31,22 @@ public class NnUserDao extends GenericDao<NnUser> {
         PersistenceManager pm = PMF.getNnUser1().getPersistenceManager();
         try {
             String sql = "";
-            //select id from nnuser where id in (select userId from nnuser_profile where name like ('%a%'));
             if (generic != null) {
+            	sql = "select * from nnuser a1 " + 
+            			" inner join (" + 
+            			  "select distinct u.id " +
+            			   " from nnuser_profile p, nnuser u " +
+            			  " where p.userId = u.id " +
+            			    " and (lower(p.name) like lower(\"%" + generic + "%\") " + 
+            			          " or lower(p.intro) like lower(\"%" + generic + "%\")) " + 
+            			  ") a2 on a1.id=a2.id";
+            	/*
                 sql = "select * from nnuser " + 
                        "where id in (select userId from nnuser_profile " +
                                     " where msoId = " + msoId +  
                                     "   and (lower(name) like lower(\"%" + generic + "%\") " +  
-                                    "   or lower(intro) like lower(\"%" + generic + "%\")))";                              
+                                    "   or lower(intro) like lower(\"%" + generic + "%\")))";
+                                    */                              
             } else {
                sql = "select * from nnuser " + "where ";                      
                if (email != null) {
