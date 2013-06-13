@@ -23,6 +23,7 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.LangTable;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoIpg;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
@@ -453,10 +454,13 @@ public class NnChannelManager {
             return null;
         }
         
+        // TODO: to be independent out
+        MsoManager msoMngr = new MsoManager();
+        Mso nnMso = msoMngr.findNNMso();
         SysTagManager tagMngr = new SysTagManager();
-        List<SysTag> sysTags = tagMngr.findCategoriesByChannelId(id);
-        if (sysTags.size() > 0) {
-            channel.setCategoryId(sysTags.get(0).getId());
+        List<SysTag> categories = tagMngr.findCategoriesByChannelId(id, nnMso.getId());
+        if (categories.size() > 0) {
+            channel.setCategoryId(categories.get(0).getId());
         }
         
         return channel;

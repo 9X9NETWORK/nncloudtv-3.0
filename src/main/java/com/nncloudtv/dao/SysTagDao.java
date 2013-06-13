@@ -208,8 +208,15 @@ public class SysTagDao extends GenericDao<SysTag> {
         return detached;                
     }
     
-    public List<SysTag> findCategoriesByChannelId(long channelId) {
+    public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) {
     
-        return sql("select * from systag where type = 1 and id in (select systagId from systag_map where channelId = " + channelId + ")");
+        String query = " select * from systag a1"
+                     + " inner join (select s.id from systag_map m, systag s"
+                     +             " where s.type = "      + SysTag.TYPE_CATEGORY
+                     +               " and s.msoId = "     + msoId
+                     +               " and m.channelId = " + channelId
+                     +               " and s.id = m.systagId) a2 on a1.id = a2.id";
+        
+        return sql(query);
     }
 }

@@ -8,6 +8,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagMap;
 
 public class SysTagMapDao extends GenericDao<SysTagMap> {
@@ -41,14 +42,16 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         return detached;
     }
     
-    public List<SysTagMap> findCategoryMapsByChannelId(long channelId) {
-    	//select * from systag_map where systagId in (select id from systag where type = 1) and channelId = " + channelId
-        return sql("select * from systag_map a1 " +
-                   " inner join (" + 
-        		   "select m.id from systag s, systag_map m " +
-        		   " where s.type = 1 " + 
-        		     " and m.channelId = " + channelId + 
-        		     " and s.id = m.systagId) a2 on a1.id=a2.id");
+    public List<SysTagMap> findCategoryMapsByChannelId(long channelId, long msoId) {
+        
+        String query = " select * from systag_map a1"
+                     + " inner join (select m.id from systag s, systag_map m"
+                     +             " where s.type = "      + SysTag.TYPE_CATEGORY
+                     +               " and s.msoId = "     + msoId
+                     +               " and m.channelId = " + channelId
+                     +               " and s.id = m.systagId) a2 on a1.id = a2.id";
+        
+        return sql(query);
     }
     
     public List<SysTagMap> findSysTagMaps(long sysTagId) {

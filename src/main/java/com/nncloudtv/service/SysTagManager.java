@@ -157,7 +157,8 @@ public class SysTagManager {
     
     public void setupChannelCategory(Long categoryId, Long channelId) {
         
-        List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId);
+        Mso nnMso = msoMngr.findNNMso();
+        List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId, nnMso.getId());
         mapDao.deleteAll(tagMaps);
         mapDao.save(new SysTagMap(categoryId, channelId));
     }
@@ -185,9 +186,9 @@ public class SysTagManager {
         return new CategorySeqComparator();
     }
 
-    public List<SysTag> findCategoriesByChannelId(long channelId) {
+    public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) {
     
-        return dao.findCategoriesByChannelId(channelId);
+        return dao.findCategoriesByChannelId(channelId, msoId);
     }
     
     public boolean isValidSortingType(Short sortingType) {
