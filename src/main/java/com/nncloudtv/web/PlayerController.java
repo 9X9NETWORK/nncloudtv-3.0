@@ -95,7 +95,7 @@ public class PlayerController {
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);            
         }
-        return "player/mini";
+        return "player/tv";
     }    
     
     //?_escaped_fragment_=ch=2%26ep=3
