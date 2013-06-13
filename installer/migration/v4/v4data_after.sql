@@ -17,5 +17,5 @@ update systag_display set cntChannel = (select count(*) from systag_map where sy
 update systag_display set cntChannel = (select count(*) from systag_map where systagId=36) where systagId=36;
 update systag_display set cntChannel = (select count(*) from systag_map where systagId=37) where systagId=37;
 
-# systag_display imageUrl for all dashboard and nnset
-
+delete from  systag_map where channelId=26320;
+update nnchannel set status=3 where id=26320;

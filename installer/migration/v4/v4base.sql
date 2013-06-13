@@ -18,6 +18,9 @@ alter table poi_event add column name               varchar(255) CHARACTER SET u
 alter table poi_event add column notifyMsg          varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
 alter table poi_event add column notifyScheduler    varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
 
+create index counter_shard_name on counter_shard (counterName);
+
+
 CREATE TABLE `poi_point` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `active` bit(1) NOT NULL,
@@ -56,6 +59,8 @@ CREATE TABLE `systag` (
   `createDate` datetime DEFAULT NULL,
   `updateDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `sorting` smallint(6) DEFAULT '1',
+  KEY `mso_id` (`msoId`),
+  KEY `type` (`type`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -66,11 +71,12 @@ CREATE TABLE `systag_map` (
   `seq` smallint(6) NOT NULL DEFAULT '0',
   `createDate` datetime DEFAULT NULL,
   `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `startTime` smallint(6) DEFAULT '0',
-  `endTime` smallint(6) DEFAULT '0',
+  `timeStart` smallint(6) DEFAULT '0',
+  `timeEnd` smallint(6) DEFAULT '0',
   `attr` varchar(10) DEFAULT NULL,
   `alwaysOnTop` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`),
+  KEY `channel_id` (`channelId`),
   UNIQUE KEY `systagMap` (`systagId`,`channelId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -83,6 +89,7 @@ CREATE TABLE `systag_display` (
   `lang` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `popularTag` varchar(500) DEFAULT NULL,
   `updateDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  KEY `lang` (`lang`),
   PRIMARY KEY (`id`),
   KEY `systag_id` (`systagId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
