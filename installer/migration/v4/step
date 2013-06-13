@@ -22,7 +22,10 @@
 # http://dev1.9x9.tv/playerAPI/category?v=40
 # http://dev1.9x9.tv/playerAPI/category?v=40&lang=zh
 # http://dev1.9x9.tv/playerAPI/category?v=40&lang=zh&mso=cts
-# http://dev1.9x9.tv/playerAPI/listRecommended?v=40&lang=zh&mso=cts
+# http://dev1.9x9.tv/playerAPI/listRecommended?v=40&lang=zh&mso=cts (empty)
+# http://dev1.9x9.tv/playerAPI/listRecommended?lang=zh&mso=cts
+# http://dev1.9x9.tv/playerAPI/listRecommended?lang=en
+# http://dev1.9x9.tv/playerAPI/listRecommended?lang=zh
 # http://dev1.9x9.tv/playerAPI/setInfo?set=44&v=40
 # http://dev1.9x9.tv/playerAPI/frontpage?time=1&v=40 (test on english dayparting porting)
 
@@ -31,8 +34,8 @@
 > python dayparting.py > out/dayparting.out  (chinese daypargting)
 > python tzuchidayparting.py > out/tzuchidayparting.out
 > mysql < v4data_after.sql -u root -p --verbose > out/v4data_after.out (set ch counter)
-> python final.py > out/final.out (category ch counter, image url, set image url)
 > python all.py > out/all.out (category all)
+> python final.py > out/final.out (category ch counter, image url, set image url)
 > ssh -i ~/.ssh/prod-west2.pem ubuntu@moveout-log.9x9.tv
 > cd ~/bin/v32
 > ./deploy_cms_all.sh
@@ -58,13 +61,13 @@
 > cd ~/files/nncloudtv/installer/migration/v4
 > mysql < v4base.sql -u root -p --verbose > out/v4base.out
 > mysql < v4data.sql -u root -p --verbose > out/v4data.out
-> python worldwide.py > out/worldwide.out
-> python tw.py > out/tw.out
-> python dayparting.py > out/dayparting.out
-> python tzuchidayparting.py > out/tzuchidayparting.out
-> mysql < v4data_after.sql -u root -p --verbose > out/v4data_after.out
-> python final.py > out/final.out
-> python all.py > out/all.out
+> python worldwide.py prod > out/worldwide.out
+> python tw.py prod > out/tw.out
+> python dayparting.py prod > out/dayparting.out
+> python tzuchidayparting.py prod > out/tzuchidayparting.out
+> mysql < v4data_after.sql -u root-p --verbose > out/v4data_after.out
+> python all.py prod > out/all.out
+> python final.py prod > out/final.out
 > ssh -i ~/.ssh/prod-west2.pem ubuntu@moveout-log.9x9.tv
 > cd ~/bin/v32
 > ./deploy_cms_all.sh
