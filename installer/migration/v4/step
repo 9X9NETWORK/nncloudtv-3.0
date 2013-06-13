@@ -57,15 +57,16 @@
 #===================================================================
 > build
 > deploy stage
-> mark data read-only
+> update mso_config set value='1' where item='read-only'
 > cd ~/files/nncloudtv/installer/migration/v4
 > mysql < v4base.sql -u root -p --verbose > out/v4base.out
 > mysql < v4data.sql -u root -p --verbose > out/v4data.out
+> start stage
 > python worldwide.py prod > out/worldwide.out
 > python tw.py prod > out/tw.out
 > python dayparting.py prod > out/dayparting.out
 > python tzuchidayparting.py prod > out/tzuchidayparting.out
-> mysql < v4data_after.sql -u root-p --verbose > out/v4data_after.out
+> mysql < v4data_after.sql -u root -p --verbose > out/v4data_after.out
 > python all.py prod > out/all.out
 > python final.py prod > out/final.out
 > ssh -i ~/.ssh/prod-west2.pem ubuntu@moveout-log.9x9.tv
