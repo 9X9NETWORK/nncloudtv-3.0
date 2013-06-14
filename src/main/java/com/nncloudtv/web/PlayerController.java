@@ -113,7 +113,7 @@ public class PlayerController {
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);            
         }
-        return "player/mini.jsp";
+        return "player/mini";
     }  
     
     //?_escaped_fragment_=ch=2%26ep=3
