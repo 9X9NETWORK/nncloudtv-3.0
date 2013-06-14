@@ -98,6 +98,24 @@ public class PlayerController {
         return "player/tv";
     }    
     
+    @RequestMapping("tv40")
+    public String tvforty(@RequestParam(value="mso",required=false) String mso, 
+            HttpServletRequest req, HttpServletResponse resp, Model model,
+            @RequestParam(value="jsp",required=false) String jsp,
+            @RequestParam(value="js",required=false) String js) {
+        try {
+            PlayerService service = new PlayerService();
+            model = service.prepareBrand(model, mso, resp);
+            model = service.preparePlayer(model, js, jsp, req);            
+            if (jsp != null && jsp.length() > 0) {
+                return "player/" + jsp;
+            }
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);            
+        }
+        return "player/mini.jsp";
+    }  
+    
     //?_escaped_fragment_=ch=2%26ep=3
     @RequestMapping("/")
     public String index(
