@@ -27,6 +27,7 @@ import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.StoreListingManager;
+import com.nncloudtv.service.StoreManager;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.SysTagMapManager;
@@ -42,18 +43,20 @@ public class ApiMso extends ApiGeneric {
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
     private StoreListingManager storeListingMngr;
+    private StoreManager storeMngr;
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
     private NnUserProfileManager userProfileMngr;
     
     @Autowired
-    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr,
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreManager storeMngr,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
             NnUserProfileManager userProfileMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
+        this.storeMngr = storeMngr;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
@@ -910,12 +913,12 @@ public class ApiMso extends ApiGeneric {
                     channelIdList.add(channelId);
                 }
             }
-            results = storeListingMngr.findByChannelIdsAndMsoId(channelIdList, msoId);
+            results = storeMngr.checkChannelIdsInMsoStore(channelIdList, msoId);
             
         } else if (categoryId != null) {
-            results = storeListingMngr.findByCategoryIdAndMsoId(categoryId, msoId);
+            results = storeMngr.getChannelIdsFromMsoStoreCategory(categoryId, msoId);
         } else {
-            results = storeListingMngr.findByMsoId(msoId);
+            results = storeMngr.getChannelIdsFromMsoStore(msoId);
         }
         
         if (results == null) {

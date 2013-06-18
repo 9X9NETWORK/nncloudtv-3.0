@@ -194,6 +194,7 @@ public class NnChannel implements Serializable {
     @NotPersistent
     private short timeEnd;
     
+    // used in set, mark as true means the results sorting that this channel will put in the first
     @NotPersistent
     private boolean alwaysOnTop;
 

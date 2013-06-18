@@ -211,7 +211,7 @@ public class MsoManager {
         }
         
         StoreListingManager storeListingMngr = new StoreListingManager();
-        List<StoreListing> blackList = storeListingMngr.getBlackList(channelId);
+        List<StoreListing> blackList = storeListingMngr.getBlackListByChannelId(channelId);
         Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
         if (blackList != null && blackList.size() > 0) {
             for (StoreListing item : blackList) {

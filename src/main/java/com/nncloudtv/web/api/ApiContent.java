@@ -46,6 +46,7 @@ import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.service.NnUserProfileManager;
+import com.nncloudtv.service.StoreManager;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.TitleCardManager;
@@ -1243,6 +1244,7 @@ public class ApiContent extends ApiGeneric {
         log.info(printEnterState(now, req));
         
         SysTagManager sysTagMngr = new SysTagManager();
+        StoreManager storeMngr = new StoreManager();
         
         // categoryId
         Long categoryId = null;
@@ -1264,9 +1266,9 @@ public class ApiContent extends ApiGeneric {
         
         List<NnChannel> channels;
         if (categoryId != null) {
-            channels = sysTagMngr.findStoreChannelsById(categoryId);
+            channels = storeMngr.getStoreChannelsFromCategory(categoryId);
         } else {
-            channels = sysTagMngr.findStoreChannels();
+            channels = storeMngr.getStoreChannels();
         }
         
         if (channels == null) {

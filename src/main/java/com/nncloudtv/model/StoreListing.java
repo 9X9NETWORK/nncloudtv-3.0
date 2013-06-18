@@ -8,6 +8,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+/** use as black list for channels not in the specific mso */
 @PersistenceCapable(table="store_listing", detachable="true")
 public class StoreListing implements Serializable {
 

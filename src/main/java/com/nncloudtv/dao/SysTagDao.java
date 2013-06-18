@@ -152,60 +152,6 @@ public class SysTagDao extends GenericDao<SysTag> {
             pm.close();
         }
         return size;                
-    }    
-    
-    
-    /** twin whit findPlayerChannelsById but lang independent */
-    public List<NnChannel> findStoreChannelsById(long sysTagId) {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<NnChannel> detached = new ArrayList<NnChannel>();
-        try {  
-            String str = " order by c.updateDate desc";
-            String sql = "select * from nnchannel a1 " +
-                         " inner join " +
-                       " (select distinct c.id " +
-                          " from systag_display d, systag_map m, nnchannel c " +
-                         " where d.systagId = " + sysTagId +
-                           " and d.systagId = m.systagId " +
-                           " and c.id = m.channelId " +
-                           " and c.isPublic = true" +
-                           " and c.status = " + NnChannel.STATUS_SUCCESS +
-                           str +
-                           ") a2 on a1.id=a2.id";
-            log.info("sql:" + sql);
-            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-            q.setClass(NnChannel.class);
-            @SuppressWarnings("unchecked")
-            List<NnChannel> results = (List<NnChannel>) q.execute(); 
-            if (results != null && results.size() > 0) {
-                detached = (List<NnChannel>)pm.detachCopyAll(results);
-            }
-        } finally {
-            pm.close();
-        }
-        return detached;                
-    }
-    
-    /** find all channels in the store */
-    public List<NnChannel> findStoreChannels() {
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();
-        List<NnChannel> detached = new ArrayList<NnChannel>();
-        try {
-            String sql = "select * from nnchannel where isPublic = true" +
-                           " and status = " + NnChannel.STATUS_SUCCESS +
-                           " order by updateDate desc";
-            log.info("sql:" + sql);
-            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
-            q.setClass(NnChannel.class);
-            @SuppressWarnings("unchecked")
-            List<NnChannel> results = (List<NnChannel>) q.execute(); 
-            if (results != null && results.size() > 0) {
-                detached = (List<NnChannel>)pm.detachCopyAll(results);
-            }
-        } finally {
-            pm.close();
-        }
-        return detached;                
     }
     
     public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) {
