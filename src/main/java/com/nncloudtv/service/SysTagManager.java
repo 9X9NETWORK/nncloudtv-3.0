@@ -181,7 +181,7 @@ public class SysTagManager {
         return false;
     }
     
-    public boolean is9x9category(Long categoryId) {
+    public boolean isNnCategory(Long categoryId) {
         
         if (categoryId == null) {
             return false;
