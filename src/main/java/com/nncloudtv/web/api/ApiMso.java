@@ -27,7 +27,7 @@ import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.StoreListingManager;
-import com.nncloudtv.service.StoreManager;
+import com.nncloudtv.service.StoreService;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.SysTagMapManager;
@@ -43,14 +43,14 @@ public class ApiMso extends ApiGeneric {
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
     private StoreListingManager storeListingMngr;
-    private StoreManager storeMngr;
+    private StoreService storeMngr;
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
     private NnUserProfileManager userProfileMngr;
     
     @Autowired
-    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreManager storeMngr,
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreService storeMngr,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
             NnUserProfileManager userProfileMngr) {
         this.msoMngr = msoMngr;

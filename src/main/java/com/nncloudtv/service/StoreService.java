@@ -14,19 +14,19 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.StoreListing;
 
 @Service
-public class StoreManager {
+public class StoreService {
     
-    protected static final Logger log = Logger.getLogger(StoreManager.class.getName());
+    protected static final Logger log = Logger.getLogger(StoreService.class.getName());
     
     private StoreDao dao = new StoreDao();
     private StoreListingManager storeListingMngr;
     
     @Autowired
-    public StoreManager(StoreListingManager storeListingMngr) {
+    public StoreService(StoreListingManager storeListingMngr) {
         this.storeListingMngr = storeListingMngr;
     }
     
-    public StoreManager() {
+    public StoreService() {
         this.storeListingMngr = new StoreListingManager();
     }
     
