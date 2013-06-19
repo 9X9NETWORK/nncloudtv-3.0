@@ -19,7 +19,7 @@ public class Mso implements Serializable {
         
     @Persistent 
     @Column(jdbcType="VARCHAR", length=255)
-    private String name; //name is unique, used as unique nameId
+    private String name; //name is unique, used as unique nameId, be careful of the case
     public static String NAME_9X9 = "9x9";
     public static String NAME_5F = "5f";
 
