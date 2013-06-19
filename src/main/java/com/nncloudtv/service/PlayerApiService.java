@@ -1522,6 +1522,7 @@ public class PlayerApiService {
             return this.assembleMsgs(status, null);
         }
         if (password.length() > 0 && oldPassword.length() > 0) {
+        	log.info("password:" + password + ";oldPassword:" + oldPassword);
             NnUser authenticated = userMngr.findAuthenticatedUser(user.getEmail(), oldPassword, mso.getId(), req);
             if (authenticated == null)
                 return this.assembleMsgs(NnStatusCode.USER_LOGIN_FAILED, null);
@@ -1799,12 +1800,14 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
         }
         if (user.isFbUser())
-            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);
+            return this.assembleMsgs(NnStatusCode.USER_PERMISSION_ERROR, null);        
         
-
         //String link = NnNetUtil.getUrlRoot(req) + "/#!resetpwd!e=" + email + "!pass=" + userMngr.forgotPwdToken(user);
-        String link = NnNetUtil.getUrlRoot(req) + "/cms/signin.html?ac=resetpwd&e=" + email + "&pass=" + userMngr.forgotPwdToken(user);
         //signin.html?ac=resetpwd&e=marshsu.9x9@gmail.com&pass=b38ea3c1e56135827a6e4343d6ac4ea3
+        String link = NnNetUtil.getUrlRoot(req) + "/cms/signin.html?ac=resetpwd&e=" + email + "&pass=" + userMngr.forgotPwdToken(user);
+        if (req.getRequestURL().toString().contains("cms40")) {
+        	link = NnNetUtil.getUrlRoot(req) + "/cms40/signin.html?ac=resetpwd&e=" + email + "&pass=" + userMngr.forgotPwdToken(user);
+        }
         log.info("link:" + link);
         
         NnContentManager contentMngr = new NnContentManager();
