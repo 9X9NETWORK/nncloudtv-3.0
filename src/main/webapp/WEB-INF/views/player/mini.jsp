@@ -17,24 +17,24 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" charset="utf-8"></script>
 
 <!-- 3rd party libararies -->
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0/js/3rd/plugins.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0/js/3rd/plugins.js"></script>
 
 <!-- 9x9 plugins -->
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
 
 
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/dev.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/dev.js"></script>
 
 <!-- components -->
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Navigatable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Navigatable.js" charset="utf-8"></script>
 <!-- components -->
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Controllable.js" charset="utf-8"></script>
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/StreamingPortal.js"></script>
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Store.js"></script>
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Playback.js"></script>
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Guide.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Controllable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/StreamingPortal.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Store.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Playback.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Guide.js"></script>
 
-<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/tv4.0.prod/js/4.0.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/4.0.js"></script>
 
 </head>
 <body style="display: none">
