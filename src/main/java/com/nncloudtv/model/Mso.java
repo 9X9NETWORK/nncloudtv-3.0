@@ -62,6 +62,10 @@ public class Mso implements Serializable {
     
     @Persistent
     private Date updateDate;
+    
+    // the value comes from MsoConfig's SUPPORTED_REGION
+    @NotPersistent
+    private String supportedRegion;
 
     public Mso(String name, String intro, String contactEmail, short type) {
         this.name = name;
@@ -156,6 +160,14 @@ public class Mso implements Serializable {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public String getSupportedRegion() {
+        return supportedRegion;
+    }
+
+    public void setSupportedRegion(String supportedRegion) {
+        this.supportedRegion = supportedRegion;
     }
 
 }

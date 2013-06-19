@@ -174,6 +174,24 @@ public class MsoManager {
         return msoDao.findById(id);
     }
     
+    /** rewrite method findById, populate supportedRegion information */
+    public Mso findByIdWithSupportedRegion(long id) {
+        Mso mso = msoDao.findById(id);
+        if (mso == null) {
+            return null;
+        }
+        
+        MsoConfigManager configMngr = new MsoConfigManager();
+        MsoConfig config = configMngr.findByMsoAndItem(mso, MsoConfig.SUPPORTED_REGION);
+        if (config == null) {
+            mso.setSupportedRegion(null);
+        } else {
+            mso.setSupportedRegion(config.getValue());
+        }
+        
+        return mso;
+    }
+    
     public List<Mso> findAll() {
         return msoDao.findAll();
     }

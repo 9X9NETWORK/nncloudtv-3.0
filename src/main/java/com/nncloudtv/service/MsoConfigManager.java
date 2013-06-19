@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -10,6 +11,7 @@ import com.nncloudtv.dao.MsoConfigDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 
@@ -139,6 +141,31 @@ public class MsoConfigManager {
     
     public MsoConfig findByItem(String item) {
         return configDao.findByItem(item);
+    }
+    
+    /** parse supportedRegion to list of sphere that mso can supported */
+    public static List<String> parseSupportedRegion(String supportedRegion) {
+        
+        if (supportedRegion == null) {
+            return new ArrayList<String>();
+        }
+        
+        List<String> spheres = new ArrayList<String>();
+        String[] pairs = supportedRegion.split(",");
+        for (String pair : pairs) {
+            String[] values = pair.split(" ");
+            if (values[0].equals(LangTable.LANG_EN)) {
+                spheres.add(LangTable.LANG_EN);
+            }
+            if (values[0].equals(LangTable.LANG_ZH)) {
+                spheres.add(LangTable.LANG_ZH);
+            }
+            if (values[0].equals(LangTable.OTHER)) {
+                spheres.add(LangTable.OTHER);
+            }
+        }
+        
+        return spheres;
     }
 
 }
