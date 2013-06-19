@@ -112,6 +112,33 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         }
         return size;
     }
+
+    @SuppressWarnings("unchecked")
+    public static List<NnChannel> searchTemp(String queryStr, boolean all, int start, int limit) {
+        log.info("start:" + start + ";end:" + limit);
+        if (start == 0) start = 0;            
+        if (limit == 0) limit = 9;
+        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        List<NnChannel> detached = new ArrayList<NnChannel>();
+        try {
+            String sql = "select * from nnchannel " + 
+                          "where (lower(name) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + ")" +
+                              "|| lower(intro) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + "))";
+            sql += " limit " + start + ", " + limit;
+            log.info("Sql=" + sql);
+            
+            Query q= pm.newQuery("javax.jdo.query.SQL", sql);
+            q.setClass(NnChannel.class);
+            List<NnChannel> results = (List<NnChannel>) q.execute();
+            detached = (List<NnChannel>)pm.detachCopyAll(results);
+        } finally {
+            pm.close();
+        }
+
+        return detached;     
+    	
+    }
     
     //replaced with Apache Lucene
     @SuppressWarnings("unchecked")

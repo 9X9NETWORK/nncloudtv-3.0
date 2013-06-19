@@ -19,10 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.dao.NnChannelDao;
+import com.nncloudtv.dao.SysTagDao;
+import com.nncloudtv.dao.SysTagDisplayDao;
+import com.nncloudtv.dao.SysTagMapDao;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.NnUser;
+import com.nncloudtv.model.SysTag;
+import com.nncloudtv.model.SysTagDisplay;
+import com.nncloudtv.model.SysTagMap;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
@@ -36,7 +42,74 @@ import com.nncloudtv.web.api.NnStatusCode;
 public class WatchDogController {
 
     protected static final Logger log = Logger.getLogger(WatchDogController.class.getName());
+    
+    @RequestMapping(value="search")
+    public ResponseEntity<String> search(HttpServletRequest req) {
+       String text = req.getParameter("text");
+       List<NnChannel> channels = NnChannelDao.searchTemp(text, false, 0, 100);
+       String result = "";
+       if (channels.size() > 0) {
+    	   for (NnChannel c : channels) {
+        	   result += c.getId() + ";" + c.getName() + "\n";	       		   
+    	   }
+       } else {
+    	   result = "no data";
+       }
+       return NnNetUtil.textReturn(result);
+    }
+    
+    @RequestMapping(value="statusChange")
+    public ResponseEntity<String> statusChange(HttpServletRequest req) {
+       String chId = req.getParameter("channel");
+       String status = req.getParameter("status");
+       NnChannelDao dao = new NnChannelDao();
+       NnChannel c = dao.findById(Long.parseLong(chId));
+       String result = "";
+       if (c != null) {
+    	   c.setStatus(Short.parseShort(status));
+    	   dao.save(c);
+    	   result = "success";
+       } else {
+    	   result = "no channel found";
+       }
+       return NnNetUtil.textReturn(result);
+    }    
 
+    @RequestMapping(value="categoryChange")
+    public ResponseEntity<String> storeChange(HttpServletRequest req) {
+       String chId = req.getParameter("channel");
+       String categoryId = req.getParameter("category");
+       
+       SysTagMapDao dao = new SysTagMapDao();
+       SysTagDisplay display = new SysTagDisplayDao().findById(Long.parseLong(categoryId));
+       String result = "";
+       if (display != null) {       
+	       SysTagMap map = dao.findSysTagMap(display.getSystagId(), Long.parseLong(chId));
+	       if (map == null) {
+	    	   NnChannel c = new NnChannelDao().findById(Long.parseLong(chId));
+	    	   if (c != null) {
+	    		   SysTag systag = new SysTagDao().findById(display.getSystagId());
+	    		   if (systag == null) {
+	    			   result = "category (systagId) is null";
+	    		   } else {
+	    			   result = "add";
+		    		   log.info("channel is not null:" + c.getName() + ";systag id=" + systag.getId());
+	    			   map = new SysTagMap(display.getSystagId(), c.getId());
+	    			   dao.save(map);
+	    		   }
+	    	   } else {
+	    		   result = "channel is null";
+	    	   }
+	       } else {
+	    	   result = "delete";
+	    	   dao.delete(map);
+	       }
+       } else {
+    	   result = "category (systag display) is null";
+       }
+       return NnNetUtil.textReturn(result);
+    }    
+    
     @RequestMapping(value="urlSubmit")
     public ResponseEntity<String> urlSubmit(HttpServletRequest req) {
        String url = req.getParameter("url") ;
