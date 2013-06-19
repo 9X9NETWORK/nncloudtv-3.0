@@ -50,7 +50,7 @@ public class WatchDogController {
        String result = "";
        if (channels.size() > 0) {
     	   for (NnChannel c : channels) {
-        	   result += c.getId() + ";" + c.getName() + "\n";	       		   
+        	   result += "id:" + c.getId() + "; name:" + c.getName() + "; status:" + c.getStatus() + "\n";	       		   
     	   }
        } else {
     	   result = "no data";
