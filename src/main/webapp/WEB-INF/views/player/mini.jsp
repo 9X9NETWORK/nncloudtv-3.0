@@ -8,9 +8,9 @@
 <meta name="viewport" content="width=device-width">
 <!-- https://9x9ui.s3.amazonaws.com/tv4.0/ -->
 <!-- http://dev6.9x9.tv/playerjs/ -->
-<link rel="stylesheet" href="https://9x9ui.s3.amazonaws.com/tv4.0/css/main.css">
-<link href="https://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
-<link href="https://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0/css/main.css">
+<link href="http://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+<link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
@@ -21,7 +21,6 @@
 
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
-
 
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/dev.js"></script>
 
