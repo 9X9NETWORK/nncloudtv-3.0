@@ -233,24 +233,16 @@ public class ApiGeneric {
         //Map<String, Object> result = new TreeMap<String, Object>();
         Set setResp = new Set();
         
-        //result.put("id", set.getId());
         setResp.setId(set.getId());
-        //result.put("msoId", set.getMsoId());
         setResp.setMsoId(set.getMsoId());
-        //result.put("channelCnt", setMeta.getCntChannel());
+        setResp.setDisplayId(setMeta.getId());
         setResp.setChannelCnt(setMeta.getCntChannel());
-        //result.put("lang", setMeta.getLang());
         setResp.setLang(setMeta.getLang());
-        //result.put("seq", set.getSeq());
         setResp.setSeq(set.getSeq());
-        //result.put("tag", setMeta.getPopularTag());
         setResp.setTag(setMeta.getPopularTag());
-        //result.put("name", NnStringUtil.revertHtml(setMeta.getName()));
         setResp.setName(NnStringUtil.revertHtml(setMeta.getName()));
-        //result.put("sortingType", set.getSorting());
         setResp.setSortingType(set.getSorting());
         
-        //return result;
         return setResp;
     }
 	

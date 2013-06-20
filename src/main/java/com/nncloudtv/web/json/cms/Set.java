@@ -15,6 +15,8 @@ public class Set implements Serializable {
     
     private long msoId;
     
+    private long displayId;
+    
     private int channelCnt;
     
     private String lang;
@@ -102,6 +104,14 @@ public class Set implements Serializable {
 
     public void setSortingType(short sortingType) {
         this.sortingType = sortingType;
+    }
+
+    public long getDisplayId() {
+        return displayId;
+    }
+
+    public void setDisplayId(long displayId) {
+        this.displayId = displayId;
     }
     
 }
