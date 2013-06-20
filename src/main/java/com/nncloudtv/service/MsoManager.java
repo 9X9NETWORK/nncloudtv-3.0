@@ -14,8 +14,8 @@ import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.StoreListing;
-import com.nncloudtv.model.SysTagMap;
 
 @Service
 public class MsoManager {
@@ -218,13 +218,20 @@ public class MsoManager {
         if (channelId == null) {
             return new ArrayList<Mso>();
         }
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            return new ArrayList<Mso>();
+        }
         
         List<Mso> validMsos = new ArrayList<Mso>();
         validMsos.add(findNNMso()); // channel is always playable on 9x9
         
-        SysTagMapManager sysTagMapMngr = new SysTagMapManager();
-        SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap((long) 1, channelId); // TODO : categoryId = 1 is hard coded
-        if (sysTagMap == null) { // the channel not in the 9x9 store
+        if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
+                channel.getContentType() != NnChannel.CONTENTTYPE_FAVORITE &&
+                channel.isPublic() == true) {
+            // the channel in the official store
+        } else {
             return validMsos;
         }
         
@@ -237,12 +244,27 @@ public class MsoManager {
             }
         }
         
+        MsoConfigManager configMngr = new MsoConfigManager();
+        MsoConfig supportedRegion = null;
+        List<String> spheres = null;
         List<Mso> msos = findByType(Mso.TYPE_MSO);
         for (Mso mso : msos) {
             if (blackListMap.containsKey(mso.getId())) {
-                // channel is not playable on this brand
+                // channel is not playable on this mso, in mso's black list
             } else {
-                validMsos.add(mso);
+                supportedRegion = configMngr.findByMsoAndItem(mso, MsoConfig.SUPPORTED_REGION); // TODO : sql in the for loop
+                if (supportedRegion == null) {
+                    validMsos.add(mso); // mso support all region
+                } else {
+                    spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
+                    for (String sphere : spheres) {
+                        if (channel.getSphere().equals(sphere)) { // this channel's sphere that mso supported
+                            validMsos.add(mso);
+                            break;
+                        }
+                        // if not hit any of sphere, channel is not playable on this mso, mso's region not supported
+                    }
+                }
             }
         }
         
