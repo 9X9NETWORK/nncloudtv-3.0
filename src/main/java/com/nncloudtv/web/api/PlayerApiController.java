@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -506,8 +507,10 @@ public class PlayerApiController {
                 String params = "user=" + userToken + 
                  "&device=" + deviceToken + 
                  "&session=" + session +
-                 "&pdr=" + pdr +                     
-                 "&rx=" + rx;
+                 "&pdr=" + URLEncoder.encode(pdr, "UTF-8") +                     
+                 "&rx=" + rx +
+                 "&mso=" + playerApiService.getMso().getName();
+                log.info(urlStr + "?" + params);
                 url = new URL(urlStr);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);

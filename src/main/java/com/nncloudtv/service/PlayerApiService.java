@@ -97,6 +97,10 @@ public class PlayerApiService {
         this.mso = mso;
     }
     
+    public Mso getMso() {
+        return mso;
+    }
+    
     public String handleException (Exception e) {
         if (e.getClass().equals(NumberFormatException.class)) {
             return this.assembleMsgs(NnStatusCode.INPUT_BAD, null);            
