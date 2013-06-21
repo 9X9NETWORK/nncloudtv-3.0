@@ -31,7 +31,7 @@ public class SysTag implements Serializable {
     public static final short TYPE_33SET = 7;
     
     @Persistent
-    private short sorting;
+    private short sorting; // indicate how to sort SysTagMaps that belong to this SysTag
     public static final short SORT_SEQ = 1; //default
     public static final short SORT_DATE = 2;
     

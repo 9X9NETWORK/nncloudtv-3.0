@@ -49,11 +49,12 @@ public class ApiMso extends ApiGeneric {
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
     private NnUserProfileManager userProfileMngr;
+    private MsoConfigManager configMngr;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreService storeMngr,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
-            NnUserProfileManager userProfileMngr) {
+            NnUserProfileManager userProfileMngr, MsoConfigManager configMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
@@ -62,6 +63,7 @@ public class ApiMso extends ApiGeneric {
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
         this.userProfileMngr = userProfileMngr;
+        this.configMngr = configMngr;
     }
     
     /** indicate logging user has access right to target mso in PCS API
@@ -629,6 +631,13 @@ public class ApiMso extends ApiGeneric {
         channel = channelMngr.findById(channelId);
         if (channel == null) {
             badRequest(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "400"));
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(set.getMsoId());
+        if (msoMngr.isValidBrand(channel.getId(), mso) == false) {
+            badRequest(resp, "Channel Cant Play On This Mso");
             log.info(printExitState(now, req, "400"));
             return null;
         }

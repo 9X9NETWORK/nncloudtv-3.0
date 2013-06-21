@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Service;
+
 import com.nncloudtv.dao.MsoConfigDao;
 import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnLogUtil;
@@ -15,6 +17,7 @@ import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 
+@Service
 public class MsoConfigManager {
     
     private MsoConfigDao configDao = new MsoConfigDao();

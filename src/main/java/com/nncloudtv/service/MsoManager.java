@@ -271,7 +271,7 @@ public class MsoManager {
         return validMsos;
     }
     
-    /** indicate channel can or can't play on target brand */
+    /* indicate channel can or can't play on target brand
     public boolean isValidBrand(Long channelId, Mso mso) {
         
         if (channelId == null || mso == null) {
@@ -286,6 +286,50 @@ public class MsoManager {
         }
         
         return false;
+    } */
+    
+    /** indicate channel can or can't play on target brand */
+    public boolean isValidBrand(Long channelId, Mso mso) {
+        
+        if (channelId == null || mso == null) {
+            return false;
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            return false;
+        }
+        
+        // official store check
+        if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
+                channel.getContentType() != NnChannel.CONTENTTYPE_FAVORITE &&
+                channel.isPublic() == true) {
+            // the channel is in official store
+        } else {
+            return false; // the channel is not in official store
+        }
+        
+        // black list check
+        StoreListingManager storeListingMngr = new StoreListingManager();
+        if (storeListingMngr.isChannelInMsoBlackList(mso.getId(), channel.getId())) {
+            return false; // the channel in Mso's black list
+        }
+        
+        // support region check
+        MsoConfigManager configMngr = new MsoConfigManager();
+        MsoConfig supportedRegion = configMngr.findByMsoAndItem(mso, MsoConfig.SUPPORTED_REGION);
+        if (supportedRegion == null) {
+            return true; // Mso's region support all sphere
+        } else {
+            List<String> spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
+            for (String sphere : spheres) {
+                if (channel.getSphere().equals(sphere)) { // Mso's region support channel's sphere
+                    return true;
+                }
+            }
+            return false; // Mso's region not support channel's sphere
+        }
     }
     
 }

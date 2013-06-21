@@ -148,5 +148,20 @@ public class StoreListingManager {
         }
         return results;
     }
+    
+    /** indicate whether channel is in Mso's black list or not */
+    public boolean isChannelInMsoBlackList(Long msoId, Long channelId) {
+        
+        if (msoId == null || channelId == null) {
+            return false;
+        }
+        
+        StoreListing storeListing = dao.findByChannelIdAndMsoId(channelId, msoId);
+        if (storeListing == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 }
