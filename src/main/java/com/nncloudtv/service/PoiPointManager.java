@@ -1,6 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -116,7 +117,13 @@ public class PoiPointManager {
     }
     
     public List<PoiPoint> findByProgram(long programId) {
-        return pointDao.findByProgram(programId);
+        
+        List<PoiPoint> points = pointDao.findByProgram(programId);
+        if (points != null) {
+            Collections.sort(points, getPointStartTimeComparator());
+        }
+        
+        return points;
     }
     
     /*
