@@ -956,7 +956,7 @@ public class ApiContent extends ApiGeneric {
             Set<Long> channelIdSet = new HashSet<Long>();
             List<String> sphereList = new ArrayList<String>();
             String sphereFilter = null;
-            if (sphereStr != null) {
+            if (sphereStr != null && !sphereStr.isEmpty()) {
                 String[] sphereArr = new String[0];
                 sphereArr = sphereStr.split(",");
                 for (String sphere : sphereArr) {
@@ -986,7 +986,7 @@ public class ApiContent extends ApiGeneric {
                 List<NnChannel> userChannels = channelMngr.findByUser(user, 30, false);
                 for (NnChannel channel : userChannels) {
                     if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
-                        if (!sphereList.isEmpty() && sphereList.contains(channel.getSphere())) {
+                        if ((!sphereList.isEmpty() && sphereList.contains(channel.getSphere())) || sphereList.isEmpty()) {
                             log.info("from curator = " + channel.getName());
                             channelIdSet.add(channel.getId());
                         }
