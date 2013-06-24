@@ -1282,11 +1282,30 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
+        // sphere
+        String sphere = req.getParameter("sphere");
+        List<String> spheres;
+        if (sphere == null) {
+            spheres = null;
+        } else {
+            spheres = new ArrayList<String>();
+            String[] values = sphere.split(",");
+            for (String value : values) {
+                if (value.equals(LangTable.LANG_ZH) || value.equals(LangTable.LANG_EN) || value.equals(LangTable.OTHER)) {
+                    spheres.add(value);
+                } else {
+                    badRequest(resp, INVALID_PARAMETER);
+                    log.info(printExitState(now, req, "400"));
+                    return null;
+                }
+            }
+        }
+        
         List<NnChannel> channels;
         if (categoryId != null) {
-            channels = storeMngr.getStoreChannelsFromCategory(categoryId);
+            channels = storeMngr.getStoreChannelsFromCategory(categoryId, spheres);
         } else {
-            channels = storeMngr.getStoreChannels();
+            channels = storeMngr.getStoreChannels(spheres);
         }
         
         if (channels == null) {

@@ -49,12 +49,11 @@ public class ApiMso extends ApiGeneric {
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
     private NnUserProfileManager userProfileMngr;
-    private MsoConfigManager configMngr;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreService storeMngr,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
-            NnUserProfileManager userProfileMngr, MsoConfigManager configMngr) {
+            NnUserProfileManager userProfileMngr) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
@@ -63,7 +62,6 @@ public class ApiMso extends ApiGeneric {
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
         this.userProfileMngr = userProfileMngr;
-        this.configMngr = configMngr;
     }
     
     /** indicate logging user has access right to target mso in PCS API

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.MsoDao;
 import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
@@ -257,6 +258,7 @@ public class MsoManager {
                     validMsos.add(mso); // mso support all region
                 } else {
                     spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
+                    spheres.add(LangTable.OTHER);
                     for (String sphere : spheres) {
                         if (channel.getSphere().equals(sphere)) { // this channel's sphere that mso supported
                             validMsos.add(mso);
@@ -323,6 +325,7 @@ public class MsoManager {
             return true; // Mso's region support all sphere
         } else {
             List<String> spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
+            spheres.add(LangTable.OTHER);
             for (String sphere : spheres) {
                 if (channel.getSphere().equals(sphere)) { // Mso's region support channel's sphere
                     return true;

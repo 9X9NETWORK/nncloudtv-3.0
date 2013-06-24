@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.StoreDao;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.StoreListing;
 
@@ -20,10 +21,12 @@ public class StoreService {
     
     private StoreDao dao = new StoreDao();
     private StoreListingManager storeListingMngr;
+    private MsoManager msoMngr;
     
     @Autowired
-    public StoreService(StoreListingManager storeListingMngr) {
+    public StoreService(StoreListingManager storeListingMngr, MsoManager msoMngr) {
         this.storeListingMngr = storeListingMngr;
+        this.msoMngr = msoMngr;
     }
     
     public StoreService() {
@@ -65,7 +68,17 @@ public class StoreService {
         }
         List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
-        List<NnChannel> store9x9 = dao.getStoreChannels();
+        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        if (mso == null) {
+            return new ArrayList<Long>();
+        }
+        List<String> spheres;
+        if (mso.getSupportedRegion() == null) {
+            spheres = null;
+        } else {
+            spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
+        }
+        List<NnChannel> store9x9 = dao.getStoreChannels(spheres);
         if (store9x9 == null || store9x9.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -97,8 +110,18 @@ public class StoreService {
         }
         List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
-        // this categoryId = sysTagId, it should belong to 9x9, the 9x9's category
-        List<NnChannel> store9x9 = dao.getStoreChannelsFromCategory(categoryId);
+        // TODO : check this categoryId = sysTagId, it should belong to 9x9, the 9x9's category
+        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        if (mso == null) {
+            return new ArrayList<Long>();
+        }
+        List<String> spheres;
+        if (mso.getSupportedRegion() == null) {
+            spheres = null;
+        } else {
+            spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
+        }
+        List<NnChannel> store9x9 = dao.getStoreChannelsFromCategory(categoryId, spheres);
         if (store9x9 == null || store9x9.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -123,13 +146,13 @@ public class StoreService {
     }
     
     /** get channels from official store's category */
-    public List<NnChannel> getStoreChannelsFromCategory(Long categoryId) {
+    public List<NnChannel> getStoreChannelsFromCategory(Long categoryId, List<String> spheres) {
         
         if (categoryId == null) {
             return new ArrayList<NnChannel>();
         }
         
-        List<NnChannel> channels = dao.getStoreChannelsFromCategory(categoryId);
+        List<NnChannel> channels = dao.getStoreChannelsFromCategory(categoryId, spheres);
         if (channels == null) {
             return new ArrayList<NnChannel>();
         }
@@ -138,9 +161,9 @@ public class StoreService {
     }
     
     /** get channels from official store */
-    public List<NnChannel> getStoreChannels() {
+    public List<NnChannel> getStoreChannels(List<String> spheres) {
         
-        List<NnChannel> channels = dao.getStoreChannels();
+        List<NnChannel> channels = dao.getStoreChannels(spheres);
         if (channels == null) {
             return new ArrayList<NnChannel>();
         }
