@@ -498,11 +498,13 @@ public class PlayerApiController {
         String session = req.getParameter("session");
         String pdr = req.getParameter("session");
         */
+        log.info("root = " + root);
         if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {        	
         //if (!root.equals(pdrServer)) {
             path = "/playerAPI/pdrServer";
             URL url;
             try {        
+                this.prepService(req, false);
                 String urlStr = pdrServer + path;
                 String params = "user=" + userToken + 
                  "&device=" + deviceToken + 
@@ -510,7 +512,7 @@ public class PlayerApiController {
                  "&pdr=" + URLEncoder.encode(pdr, "UTF-8") +                     
                  "&rx=" + rx +
                  "&mso=" + playerApiService.getMso().getName();
-                log.info(urlStr + "?" + params);
+                //log.info(urlStr + "?" + params);
                 url = new URL(urlStr);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
