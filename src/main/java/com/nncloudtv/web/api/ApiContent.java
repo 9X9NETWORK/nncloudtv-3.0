@@ -962,7 +962,7 @@ public class ApiContent extends ApiGeneric {
                 for (String sphere : sphereArr) {
                     sphereList.add(NnStringUtil.escapedQuote(sphere));
                 }
-                sphereList.add(LangTable.OTHER);
+                sphereList.add(NnStringUtil.escapedQuote(LangTable.OTHER));
                 sphereFilter = "sphere in (" + StringUtils.join(sphereList, ',') + ")";
                 log.info("sphere filter = " + sphereFilter);
             }
