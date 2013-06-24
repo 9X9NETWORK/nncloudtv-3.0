@@ -167,7 +167,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                 sql += " and isPublic = true";
             }
             if (extra != null) {
-                sql += " " + extra;
+                sql += " and (" + extra + ")";
             }
             sql += " limit " + start + ", " + limit;
             log.info("Sql=" + sql);

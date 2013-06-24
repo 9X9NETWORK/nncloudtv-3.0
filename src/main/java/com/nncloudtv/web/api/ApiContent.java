@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnAd;
 import com.nncloudtv.model.NnChannel;
@@ -961,7 +962,8 @@ public class ApiContent extends ApiGeneric {
                 for (String sphere : sphereArr) {
                     sphereList.add(NnStringUtil.escapedQuote(sphere));
                 }
-                sphereFilter = "sphere in (" + StringUtils.join(sphereList, ',');
+                sphereList.add(LangTable.OTHER);
+                sphereFilter = "sphere in (" + StringUtils.join(sphereList, ',') + ")";
                 log.info("sphere filter = " + sphereFilter);
             }
             
