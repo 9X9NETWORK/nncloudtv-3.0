@@ -264,7 +264,7 @@ public class IosService {
     }    
 
 	public String search(String text) {
-		List<NnChannel> searchResults = NnChannelManager.search(text, null, false, 1, 9);
+		List<NnChannel> searchResults = NnChannelManager.search(text, null, null, false, 1, 9);
 		String[] result = {""};
 		result[0] = this.composeChannelLineup(searchResults);
 		return new PlayerApiService().assembleMsgs(NnStatusCode.SUCCESS, result);

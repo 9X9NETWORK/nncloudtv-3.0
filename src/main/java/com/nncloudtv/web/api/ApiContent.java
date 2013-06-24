@@ -1,6 +1,7 @@
 package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -888,6 +890,7 @@ public class ApiContent extends ApiGeneric {
     List<NnChannel> channelsSearch(HttpServletRequest req,
             HttpServletResponse resp,
             @RequestParam(required = false) String mso,
+            @RequestParam(required = false, value = "sphere") String sphereStr,
             @RequestParam(required = false, value = "channels") String channelIdList,
             @RequestParam(required = false, value = "keyword") String keyword,
             @RequestParam(required = false, value = "userId") String userIdStr) {
@@ -950,8 +953,19 @@ public class ApiContent extends ApiGeneric {
             
             log.info("keyword: " + keyword);
             Set<Long> channelIdSet = new HashSet<Long>();
+            List<String> sphereList = new ArrayList<String>();
+            String sphereFilter = null;
+            if (sphereStr != null) {
+                String[] sphereArr = new String[0];
+                sphereArr = sphereStr.split(",");
+                for (String sphere : sphereArr) {
+                    sphereList.add(NnStringUtil.escapedQuote(sphere));
+                }
+                sphereFilter = "sphere in (" + StringUtils.join(sphereList, ',');
+                log.info("sphere filter = " + sphereFilter);
+            }
             
-            List<NnChannel> channels = NnChannelManager.search(keyword, "store_only", false, 0, 150);
+            List<NnChannel> channels = NnChannelManager.search(keyword, "store_only", sphereFilter, false, 0, 150);
             log.info("found channels = " + channels.size());
             for (NnChannel channel : channels) {
                 channelIdSet.add(channel.getId());
@@ -970,8 +984,10 @@ public class ApiContent extends ApiGeneric {
                 List<NnChannel> userChannels = channelMngr.findByUser(user, 30, false);
                 for (NnChannel channel : userChannels) {
                     if (channel.getStatus() == NnChannel.STATUS_SUCCESS && channel.isPublic()) {
-                        log.info("from curator = " + channel.getName());
-                        channelIdSet.add(channel.getId());
+                        if (!sphereList.isEmpty() && sphereList.contains(channel.getSphere())) {
+                            log.info("from curator = " + channel.getName());
+                            channelIdSet.add(channel.getId());
+                        }
                     }
                 }
             }

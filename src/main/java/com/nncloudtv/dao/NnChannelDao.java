@@ -142,7 +142,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     
     //replaced with Apache Lucene
     @SuppressWarnings("unchecked")
-    public static List<NnChannel> search(String queryStr, String content, boolean all, int start, int limit) {
+    public static List<NnChannel> search(String keyword, String content, String extra, boolean all, int start, int limit) {
         log.info("start:" + start + ";end:" + limit);
         if (start == 0) start = 0;            
         if (limit == 0) limit = 9;
@@ -151,8 +151,8 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         List<NnChannel> detached = new ArrayList<NnChannel>();
         try {
             String sql = "select * from nnchannel " + 
-                          "where (lower(name) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + ")" +
-                              "|| lower(intro) like lower(" + NnStringUtil.escapedQuote("%" + queryStr + "%") + "))";
+                          "where (lower(name) like lower(" + NnStringUtil.escapedQuote("%" + keyword + "%") + ")" +
+                              "|| lower(intro) like lower(" + NnStringUtil.escapedQuote("%" + keyword + "%") + "))";
             if (!all) {
                 sql += " and (status = " + NnChannel.STATUS_SUCCESS + " or status = " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")";
                 if (content != null) {
@@ -166,6 +166,9 @@ public class NnChannelDao extends GenericDao<NnChannel> {
                 }
                 sql += " and isPublic = true";
             }
+            if (extra != null) {
+                sql += " " + extra;
+            }
             sql += " limit " + start + ", " + limit;
             log.info("Sql=" + sql);
             
@@ -176,7 +179,6 @@ public class NnChannelDao extends GenericDao<NnChannel> {
         } finally {
             pm.close();
         }
-
         return detached;     
     }
     

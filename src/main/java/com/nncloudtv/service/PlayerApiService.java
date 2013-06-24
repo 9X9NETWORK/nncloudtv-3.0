@@ -1908,7 +1908,7 @@ public class PlayerApiService {
         startIndex = startIndex - 1;
 
         //public static List<NnChannel> search(String queryStr, boolean total, boolean all, int start, int count) {
-        List<NnChannel> channels = NnChannelManager.search(text, content, false, startIndex, limit);
+        List<NnChannel> channels = NnChannelManager.search(text, content, null, false, startIndex, limit);
         String[] result = {"", "", "", ""}; //count, curator, curator's channels, channels, suggestion channels
         result[2] = chMngr.composeChannelLineup(channels, version);
         //matched curators

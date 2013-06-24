@@ -156,7 +156,7 @@ public class AdminChannelController {
             results = new ArrayList<NnChannel>();
             List<NnChannel> totalResults = new ArrayList<NnChannel>();
             try{
-                totalResults = NnChannelManager.search(searchString, null, true, 1, 9);
+                totalResults = NnChannelManager.search(searchString, null, null, true, 1, 9);
                 totalRecords = totalResults.size();
                 totalPages = (int)Math.ceil((double)totalRecords / rowsPerPage);                
                 if(totalPages==0)
