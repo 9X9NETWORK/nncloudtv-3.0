@@ -260,7 +260,7 @@ public class MsoManager {
                     spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
                     spheres.add(LangTable.OTHER);
                     for (String sphere : spheres) {
-                        if (channel.getSphere().equals(sphere)) { // this channel's sphere that mso supported
+                        if (sphere.equals(channel.getSphere())) { // this channel's sphere that mso supported
                             validMsos.add(mso);
                             break;
                         }
@@ -327,7 +327,7 @@ public class MsoManager {
             List<String> spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
             spheres.add(LangTable.OTHER);
             for (String sphere : spheres) {
-                if (channel.getSphere().equals(sphere)) { // Mso's region support channel's sphere
+                if (sphere.equals(channel.getSphere())) { // Mso's region support channel's sphere
                     return true;
                 }
             }
