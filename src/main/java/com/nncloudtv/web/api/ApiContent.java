@@ -395,6 +395,7 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
+        /*
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
@@ -405,6 +406,7 @@ public class ApiContent extends ApiGeneric {
             log.info(printExitState(now, req, "403"));
             return null;
         }
+        */
         
         MsoManager msoMngr = new MsoManager();
         List<Mso> msos = msoMngr.getValidBrands(channel.getId());
