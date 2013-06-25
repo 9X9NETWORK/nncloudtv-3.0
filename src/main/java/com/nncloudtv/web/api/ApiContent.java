@@ -1011,6 +1011,8 @@ public class ApiContent extends ApiGeneric {
             if (mso != null) {
                 channelIdList = storeService.checkChannelIdsInMsoStore(channelIdSet, brand.getId());
                 log.info("total channels (filtered) = " + channelIdList.size());
+            } else {
+                channelIdList = new ArrayList<Long>(channelIdSet);
             }
             results = channelMngr.findByIds(channelIdList);
             for (NnChannel channel : results) {
