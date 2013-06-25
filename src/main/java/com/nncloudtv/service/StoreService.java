@@ -20,6 +20,7 @@ public class StoreService {
     protected static final Logger log = Logger.getLogger(StoreService.class.getName());
     
     private StoreDao dao = new StoreDao();
+
     private StoreListingManager storeListingMngr;
     private MsoManager msoMngr;
     
@@ -68,6 +69,7 @@ public class StoreService {
         }
         List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
+        MsoManager msoMngr = new MsoManager();
         Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
         if (mso == null) {
             return new ArrayList<Long>();
