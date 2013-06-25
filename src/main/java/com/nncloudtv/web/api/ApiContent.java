@@ -25,6 +25,7 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnAd;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnChannelPref;
@@ -902,6 +903,7 @@ public class ApiContent extends ApiGeneric {
         NnUserManager userMngr = new NnUserManager();
         NnUserProfileManager profileMngr = new NnUserProfileManager();
         StoreService storeService = new StoreService();
+        MsoConfigManager configMngr = new MsoConfigManager();
         Mso brand = new MsoManager().findOneByName(mso);
         
         if (userIdStr != null) {
@@ -959,6 +961,14 @@ public class ApiContent extends ApiGeneric {
             List<Long> channelIdList = new ArrayList<Long>();
             List<String> sphereList = new ArrayList<String>();
             String sphereFilter = null;
+            if (sphereStr == null && mso != null) {
+                log.info("mso = " + mso);
+                MsoConfig supportedRegion = configMngr.findByMsoAndItem(brand, MsoConfig.SUPPORTED_REGION);
+                if (supportedRegion != null) {
+                    sphereStr = supportedRegion.getValue();
+                    log.info("mso supported region = " + sphereStr);
+                }
+            }
             if (sphereStr != null && !sphereStr.isEmpty()) {
                 String[] sphereArr = new String[0];
                 sphereArr = sphereStr.split(",");
