@@ -1304,7 +1304,7 @@ public class ApiContent extends ApiGeneric {
         // sphere
         String sphere = req.getParameter("sphere");
         List<String> spheres;
-        if (sphere == null) {
+        if (sphere == null || sphere.isEmpty()) {
             spheres = null;
         } else {
             spheres = new ArrayList<String>();
