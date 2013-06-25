@@ -62,7 +62,7 @@ public class SysTagDao extends GenericDao<SysTag> {
               ) a2 on a1.id=a2.id
             */
         	        	
-            String orderStr = " order by c.updateDate desc";
+            String orderStr = " order by m.alwaysOnTop desc, c.updateDate desc";
             if (sort == SysTag.SORT_SEQ) {
             	orderStr = " order by m.seq ";
             }
