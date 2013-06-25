@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1115,11 +1114,6 @@ public class NnChannelManager {
     
     public List<NnChannel> findPersonalHistory(long userId, long msoId) {
         return dao.findPersonalHistory(userId, msoId);
-    }
-    
-    /** recommend deprecated, where findByIds exist */
-    public List<NnChannel> findAllByIds(Set<Long> channelIdSet) {    
-        return dao.findAllByIds(channelIdSet);
     }
     
 }

@@ -34,7 +34,7 @@ public class StoreService {
     }
     
     /** output channelIds if input channelIds are in the mso store */
-    public List<Long> checkChannelIdsInMsoStore(List<Long> channelIds, Long msoId) {
+    public List<Long> checkChannelIdsInMsoStore(java.util.Set<Long> channelIds, Long msoId) {
         
         if (channelIds == null || channelIds.size() == 0 || msoId == null) {
             return new ArrayList<Long>();

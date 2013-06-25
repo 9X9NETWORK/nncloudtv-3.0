@@ -2,6 +2,7 @@ package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -929,7 +930,7 @@ public class ApiMso extends ApiGeneric {
         if (channelIdsStr != null) { // find by channelIdList
             
             String[] channelIdStrList = channelIdsStr.split(",");
-            List<Long> channelIdList = new ArrayList<Long>();
+            java.util.Set<Long> channelIdSet = new HashSet<Long>();
             Long channelId = null;
             for (String channelIdStr : channelIdStrList) {
                 
@@ -939,10 +940,10 @@ public class ApiMso extends ApiGeneric {
                 } catch(Exception e) {
                 }
                 if (channelId != null) {
-                    channelIdList.add(channelId);
+                    channelIdSet.add(channelId);
                 }
             }
-            results = storeMngr.checkChannelIdsInMsoStore(channelIdList, msoId);
+            results = storeMngr.checkChannelIdsInMsoStore(channelIdSet, msoId);
             
         } else if (categoryId != null) {
             results = storeMngr.getChannelIdsFromMsoStoreCategory(categoryId, msoId);

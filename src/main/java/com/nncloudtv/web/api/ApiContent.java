@@ -1,7 +1,6 @@
 package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -894,7 +893,7 @@ public class ApiContent extends ApiGeneric {
             HttpServletResponse resp,
             @RequestParam(required = false) String mso,
             @RequestParam(required = false, value = "sphere") String sphereStr,
-            @RequestParam(required = false, value = "channels") String channelIdList,
+            @RequestParam(required = false, value = "channels") String channelIdListStr,
             @RequestParam(required = false, value = "keyword") String keyword,
             @RequestParam(required = false, value = "userId") String userIdStr) {
     
@@ -902,6 +901,8 @@ public class ApiContent extends ApiGeneric {
         NnChannelManager channelMngr = new NnChannelManager();
         NnUserManager userMngr = new NnUserManager();
         NnUserProfileManager profileMngr = new NnUserProfileManager();
+        StoreService storeService = new StoreService();
+        Mso brand = new MsoManager().findOneByName(mso);
         
         if (userIdStr != null) {
             
@@ -915,7 +916,6 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             
-            Mso brand = new MsoManager().findOneByName(mso);
             NnUser user = userMngr.findById(userId, brand.getId());
             if (user == null) {
                 notFound(resp, "User Not Found");
@@ -932,9 +932,9 @@ public class ApiContent extends ApiGeneric {
             
             Collections.sort(results, channelMngr.getChannelComparator("seq"));
             
-        } else if (channelIdList != null) {
+        } else if (channelIdListStr != null) {
             
-            for (String channelIdStr : channelIdList.split(",")) {
+            for (String channelIdStr : channelIdListStr.split(",")) {
                 
                 Long channelId = null;
                 try {
@@ -956,6 +956,7 @@ public class ApiContent extends ApiGeneric {
             
             log.info("keyword: " + keyword);
             Set<Long> channelIdSet = new HashSet<Long>();
+            List<Long> channelIdList = new ArrayList<Long>();
             List<String> sphereList = new ArrayList<String>();
             String sphereFilter = null;
             if (sphereStr != null && !sphereStr.isEmpty()) {
@@ -997,7 +998,11 @@ public class ApiContent extends ApiGeneric {
             }
             
             log.info("total channels = " + channelIdSet.size());
-            results = channelMngr.findAllByIds(channelIdSet);
+            if (mso != null) {
+                channelIdList = storeService.checkChannelIdsInMsoStore(channelIdSet, brand.getId());
+                log.info("total channels (filtered) = " + channelIdList.size());
+            }
+            results = channelMngr.findByIds(channelIdList);
             for (NnChannel channel : results) {
                 channelMngr.populateMoreImageUrl(channel);
             }
