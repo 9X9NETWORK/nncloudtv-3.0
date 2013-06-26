@@ -965,7 +965,8 @@ public class ApiContent extends ApiGeneric {
                 log.info("mso = " + mso);
                 MsoConfig supportedRegion = configMngr.findByMsoAndItem(brand, MsoConfig.SUPPORTED_REGION);
                 if (supportedRegion != null) {
-                    sphereStr = supportedRegion.getValue();
+                    List<String> spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
+                    sphereStr = StringUtils.join(spheres, ',');
                     log.info("mso supported region = " + sphereStr);
                 }
             }
