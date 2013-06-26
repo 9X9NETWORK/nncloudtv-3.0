@@ -509,7 +509,7 @@ public class PlayerApiController {
                 String params = "user=" + userToken + 
                  "&device=" + deviceToken + 
                  "&session=" + session +
-                 "&pdr=" + URLEncoder.encode(pdr, "UTF-8") +                     
+                 "&pdr=" + URLEncoder.encode("" + pdr, "UTF-8") +                     
                  "&rx=" + rx +
                  "&mso=" + playerApiService.getMso().getName();
                 //log.info(urlStr + "?" + params);
