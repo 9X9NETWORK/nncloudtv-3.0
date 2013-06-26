@@ -154,7 +154,7 @@ public class MsoConfigManager {
         }
         
         List<String> spheres = new ArrayList<String>();
-        String[] pairs = supportedRegion.split(",");
+        String[] pairs = supportedRegion.split(";");
         for (String pair : pairs) {
             String[] values = pair.split(" ");
             if (values[0].equals(LangTable.LANG_EN)) {
