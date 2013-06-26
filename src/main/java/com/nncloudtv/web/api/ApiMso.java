@@ -28,6 +28,7 @@ import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserProfileManager;
+import com.nncloudtv.service.SetService;
 import com.nncloudtv.service.StoreListingManager;
 import com.nncloudtv.service.StoreService;
 import com.nncloudtv.service.SysTagDisplayManager;
@@ -45,24 +46,26 @@ public class ApiMso extends ApiGeneric {
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
     private StoreListingManager storeListingMngr;
-    private StoreService storeMngr;
+    private StoreService storeServ;
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
     private NnUserProfileManager userProfileMngr;
+    private SetService setServ;
     
     @Autowired
-    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreService storeMngr,
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreService storeServ,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
-            NnUserProfileManager userProfileMngr) {
+            NnUserProfileManager userProfileMngr, SetService setServ) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeListingMngr = storeListingMngr;
-        this.storeMngr = storeMngr;
+        this.storeServ = storeServ;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
         this.userProfileMngr = userProfileMngr;
+        this.setServ = setServ;
     }
     
     /** indicate logging user has access right to target mso in PCS API
@@ -159,28 +162,11 @@ public class ApiMso extends ApiGeneric {
             lang = NnStringUtil.validateLangCode(lang);
         }
         
-        List<Set> results = new ArrayList<Set>();
-        Set result = null;
-        
-        List<SysTag> sets = sysTagMngr.findSetsByMsoId(mso.getId());
-        if (sets == null || sets.size() == 0) {
-            log.info(printExitState(now, req, "ok"));
-            return results;
-        }
-        
-        SysTagDisplay setMeta = null;
-        for (SysTag set : sets) {
-            
-            if (lang != null) {
-                setMeta = sysTagDisplayMngr.findBySysTagIdAndLang(set.getId(), lang);
-            } else {
-                setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
-            }
-            
-            if (setMeta != null) {
-                result = setResponse(set, setMeta);
-                results.add(result);
-            }
+        List<Set> results = null;
+        if (lang != null) {
+            results = setServ.findByMsoIdAndLang(mso.getId(), lang);
+        } else {
+            results = setServ.findByMsoId(mso.getId());
         }
         
         log.info(printExitState(now, req, "ok"));
@@ -943,12 +929,12 @@ public class ApiMso extends ApiGeneric {
                     channelIdSet.add(channelId);
                 }
             }
-            results = storeMngr.checkChannelIdsInMsoStore(channelIdSet, msoId);
+            results = storeServ.checkChannelIdsInMsoStore(channelIdSet, msoId);
             
         } else if (categoryId != null) {
-            results = storeMngr.getChannelIdsFromMsoStoreCategory(categoryId, msoId);
+            results = storeServ.getChannelIdsFromMsoStoreCategory(categoryId, msoId);
         } else {
-            results = storeMngr.getChannelIdsFromMsoStore(msoId);
+            results = storeServ.getChannelIdsFromMsoStore(msoId);
         }
         
         if (results == null) {

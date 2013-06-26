@@ -40,6 +40,13 @@ public class SysTagManager {
         return dao.findById(id);
     }
     
+    public SysTag findById(Long id) {
+        if(id == null) {
+            return null;
+        }
+        return dao.findById(id);
+    }
+    
     public SysTag save(SysTag sysTag) {
         
         if (sysTag == null) {
@@ -64,37 +71,19 @@ public class SysTagManager {
         dao.delete(sysTag);
     }
     
-    public SysTag findById(Long id) {
-        if(id == null) {
-            return null;
-        }
-        return dao.findById(id);
-    }
-    
-    public List<SysTag> findSetsByMsoId(Long msoId) {
-        
-        if (msoId == null) {
-            return new ArrayList<SysTag>();
-        }
-        
-        List<SysTag> results = dao.findSetsByMsoId(msoId);
-        if (results == null) {
-            return new ArrayList<SysTag>();
-        }
-        
-        return results;
-    }
-    
     /** call when Mso is going to delete **/
     public void deleteByMsoId(Long msoId) {
         // delete sysTags, sysTagDisplays, sysTagMaps
+    }
+    
+    public List<SysTag> findByMsoIdAndType(Long msoId, short type) {
+        return dao.findByMsoIdAndType(msoId, type);
     }
 
     public long findPlayerChannelsCountById(long id, String lang, long msoId) {
         long size = dao.findPlayerChannelsCountById(id, lang, msoId);        
         return size;
     }
-    
     
     //player channels means status=true and isPublic=true
     //lang: if lang is null, then don't filter sphere
@@ -130,7 +119,7 @@ public class SysTagManager {
             
     }
     
-    public void setupChannelCategory(Long categoryId, Long channelId) {
+    public void setupChannelCategory(Long categoryId, Long channelId) { // TODO : move, delete
         
         Mso nnMso = msoMngr.findNNMso();
         List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId, nnMso.getId());
@@ -138,7 +127,7 @@ public class SysTagManager {
         mapDao.save(new SysTagMap(categoryId, channelId));
     }
     
-    public Comparator<Category> getCategoryComparator(String field) {
+    public Comparator<Category> getCategoryComparator(String field) { // TODO : move, delete
         
         class CategorySeqComparator implements Comparator<Category> {
             public int compare(Category category1, Category category2) {
@@ -161,7 +150,7 @@ public class SysTagManager {
         return new CategorySeqComparator();
     }
 
-    public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) {
+    public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) { // TODO : move, delete
     
         return dao.findCategoriesByChannelId(channelId, msoId);
     }
@@ -181,7 +170,7 @@ public class SysTagManager {
         return false;
     }
     
-    public boolean isNnCategory(Long categoryId) {
+    public boolean isNnCategory(Long categoryId) { // TODO : move, delete
         
         if (categoryId == null) {
             return false;

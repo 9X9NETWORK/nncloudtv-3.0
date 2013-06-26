@@ -19,19 +19,22 @@ public class SysTagDao extends GenericDao<SysTag> {
         super(SysTag.class);
     }
     
-    public List<SysTag> findSetsByMsoId(long msoId) {        
+    public List<SysTag> findByMsoIdAndType(long msoId, short type) {
+        
         List<SysTag> detached = new ArrayList<SysTag>();
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
         try {
             String sql = " select * from systag where msoId = " + msoId +
-                           " and type = " + SysTag.TYPE_SET +
+                           " and type = " + type +
                            " order by seq asc";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(SysTag.class);
             @SuppressWarnings("unchecked")
-            List<SysTag> results = (List<SysTag>) q.execute();            
-            detached = (List<SysTag>) pm.detachCopyAll(results);
+            List<SysTag> results = (List<SysTag>) q.execute();
+            if (results != null && results.size() > 0) {
+                detached = (List<SysTag>) pm.detachCopyAll(results);
+            }
         } finally {
             pm.close();
         }
