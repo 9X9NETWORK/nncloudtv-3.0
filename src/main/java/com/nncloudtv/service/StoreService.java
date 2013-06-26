@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.dao.StoreDao;
+import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.StoreListing;
@@ -19,7 +19,7 @@ public class StoreService {
     
     protected static final Logger log = Logger.getLogger(StoreService.class.getName());
     
-    private StoreDao dao = new StoreDao();
+    private NnChannelDao channelDao = new NnChannelDao();
 
     private StoreListingManager storeListingMngr;
     private MsoManager msoMngr;
@@ -80,7 +80,7 @@ public class StoreService {
         } else {
             spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
         }
-        List<NnChannel> store9x9 = dao.getStoreChannels(spheres);
+        List<NnChannel> store9x9 = getStoreChannels(spheres);
         if (store9x9 == null || store9x9.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -123,7 +123,7 @@ public class StoreService {
         } else {
             spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
         }
-        List<NnChannel> store9x9 = dao.getStoreChannelsFromCategory(categoryId, spheres);
+        List<NnChannel> store9x9 = getStoreChannelsFromCategory(categoryId, spheres);
         if (store9x9 == null || store9x9.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -153,8 +153,9 @@ public class StoreService {
         if (categoryId == null) {
             return new ArrayList<NnChannel>();
         }
+        // TODO : can't promise categoryId is true
         
-        List<NnChannel> channels = dao.getStoreChannelsFromCategory(categoryId, spheres);
+        List<NnChannel> channels = channelDao.getStoreChannelsFromCategory(categoryId, spheres);
         if (channels == null) {
             return new ArrayList<NnChannel>();
         }
@@ -165,7 +166,7 @@ public class StoreService {
     /** get channels from official store */
     public List<NnChannel> getStoreChannels(List<String> spheres) {
         
-        List<NnChannel> channels = dao.getStoreChannels(spheres);
+        List<NnChannel> channels = channelDao.getStoreChannels(spheres);
         if (channels == null) {
             return new ArrayList<NnChannel>();
         }
