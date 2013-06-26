@@ -32,6 +32,7 @@ public class StoreService {
     
     public StoreService() {
         this.storeListingMngr = new StoreListingManager();
+        this.msoMngr = new MsoManager();
     }
     
     /** output channelIds if input channelIds are in the mso store */
@@ -69,7 +70,6 @@ public class StoreService {
         }
         List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
-        MsoManager msoMngr = new MsoManager();
         Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
         if (mso == null) {
             return new ArrayList<Long>();
