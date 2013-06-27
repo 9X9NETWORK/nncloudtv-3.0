@@ -37,6 +37,7 @@ import com.nncloudtv.service.NnProgramManager;
 import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
+import com.nncloudtv.service.StoreService;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.validation.NnUserValidator;
 import com.nncloudtv.web.json.cms.User;
@@ -712,14 +713,15 @@ public class ApiUser extends ApiGeneric {
             }
             
             SysTagManager tagMngr = new SysTagManager();
-            SysTag category = tagMngr.findById(categoryId);
+            StoreService storeServ = new StoreService();
+            SysTag category = tagMngr.findById(categoryId); // TODO : can't ensure this Id is 9x9's Category
             if (category == null) {
                 badRequest(resp, "Category Not Found");
                 return null;
             }
             
             // category mapping
-            tagMngr.setupChannelCategory(categoryId, channelId);
+            storeServ.setupChannelCategory(categoryId, channelId);
             
             channel.setCategoryId(categoryId);
         }

@@ -127,6 +127,20 @@ public class SysTagMapManager {
         return sysTagMaps;
     }
     
+    public List<SysTagMap> findCategoryMapsByChannelId(Long channelId, Long msoId) {
+        
+        if (channelId == null || msoId == null) {
+            return new ArrayList<SysTagMap>();
+        }
+        
+        List<SysTagMap> results = dao.findCategoryMapsByChannelId(channelId, msoId);
+        if (results == null) {
+            return new ArrayList<SysTagMap>();
+        }
+        
+        return results;
+    }
+    
     /** call when NnChannel is going to delete **/
     public void deleteByChannelId(Long channelId) {
         // delete sysTagMaps

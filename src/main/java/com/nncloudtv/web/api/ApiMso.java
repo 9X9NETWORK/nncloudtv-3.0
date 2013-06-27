@@ -902,7 +902,7 @@ public class ApiMso extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            if (sysTagMngr.isNnCategory(categoryId) == false) {
+            if (storeServ.isNnCategory(categoryId) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
                 return null;

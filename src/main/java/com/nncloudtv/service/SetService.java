@@ -37,7 +37,7 @@ public class SetService {
     }
     
     /** build Set from SysTag and SysTagDisplay */
-    private Set setResponse(SysTag set, SysTagDisplay setMeta) {
+    private Set composeSet(SysTag set, SysTagDisplay setMeta) {
         
         Set setResp = new Set();
         setResp.setId(set.getId());
@@ -79,7 +79,7 @@ public class SetService {
             }
             
             if (setMeta != null) {
-                result = setResponse(set, setMeta);
+                result = composeSet(set, setMeta);
                 results.add(result);
             }
         }

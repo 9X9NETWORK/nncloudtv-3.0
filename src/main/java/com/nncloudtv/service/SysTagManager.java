@@ -1,22 +1,15 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.SysTagDao;
-import com.nncloudtv.dao.SysTagMapDao;
-import com.nncloudtv.model.LangTable;
-import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
-import com.nncloudtv.model.SysTagMap;
-import com.nncloudtv.web.json.cms.Category;
 
 @Service
 public class SysTagManager {
@@ -24,17 +17,6 @@ public class SysTagManager {
     protected static final Logger log = Logger.getLogger(SysTagManager.class.getName());
     
     private SysTagDao dao = new SysTagDao();
-    private SysTagMapDao mapDao = new SysTagMapDao();
-    private MsoManager msoMngr;
-    
-    @Autowired
-    public SysTagManager(MsoManager msoMngr) {
-        this.msoMngr = msoMngr;
-    }
-    
-    public SysTagManager() {
-        this.msoMngr = new MsoManager();
-    }
 
     public SysTag findById(long id) {
         return dao.findById(id);
@@ -124,42 +106,6 @@ public class SysTagManager {
             
     }
     
-    public void setupChannelCategory(Long categoryId, Long channelId) { // TODO : move, delete
-        
-        Mso nnMso = msoMngr.findNNMso();
-        List<SysTagMap> tagMaps = mapDao.findCategoryMapsByChannelId(channelId, nnMso.getId());
-        mapDao.deleteAll(tagMaps);
-        mapDao.save(new SysTagMap(categoryId, channelId));
-    }
-    
-    public Comparator<Category> getCategoryComparator(String field) { // TODO : move, delete
-        
-        class CategorySeqComparator implements Comparator<Category> {
-            public int compare(Category category1, Category category2) {
-                int seq1 = category1.getSeq();
-                if (category1.getLang() != null
-                        && category1.getLang().equalsIgnoreCase(
-                                LangTable.LANG_EN)) {
-                    seq1 -= 100;
-                }
-                int seq2 = category2.getSeq();
-                if (category2.getLang() != null
-                        && category2.getLang().equalsIgnoreCase(
-                                LangTable.LANG_EN)) {
-                    seq2 -= 100;
-                }
-                return (seq1 - seq2);
-            }
-        }
-        
-        return new CategorySeqComparator();
-    }
-
-    public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) { // TODO : move, delete
-    
-        return dao.findCategoriesByChannelId(channelId, msoId);
-    }
-    
     /** indicate input value is in model SysTag's sorting table or not */
     public boolean isValidSortingType(Short sortingType) {
         
@@ -170,24 +116,6 @@ public class SysTagManager {
             return true;
         }
         if (sortingType == SysTag.SORT_DATE) {
-            return true;
-        }
-        
-        return false;
-    }
-    
-    public boolean isNnCategory(Long categoryId) { // TODO : move, delete
-        
-        if (categoryId == null) {
-            return false;
-        }
-        
-        SysTag category = findById(categoryId);
-        if (category == null) {
-            return false;
-        }
-        Mso mso9x9 = msoMngr.findNNMso();
-        if (category.getMsoId() == mso9x9.getId() && category.getType() == SysTag.TYPE_CATEGORY) {
             return true;
         }
         

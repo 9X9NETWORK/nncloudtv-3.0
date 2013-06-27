@@ -1144,7 +1144,8 @@ public class ApiContent extends ApiGeneric {
             }
             
             SysTagManager tagMngr = new SysTagManager();
-            SysTag category = tagMngr.findById(categoryId);
+            StoreService storeServ = new StoreService();
+            SysTag category = tagMngr.findById(categoryId); // TODO : can't ensure this Id is 9x9's Category
             if (category == null) {
                 badRequest(resp, "Category Not Found");
                 return null;
@@ -1153,7 +1154,7 @@ public class ApiContent extends ApiGeneric {
             // category mapping
             if (categoryId != channel.getCategoryId()) {
                 
-                tagMngr.setupChannelCategory(categoryId, channelId);
+                storeServ.setupChannelCategory(categoryId, channelId);
                 
                 channel.setCategoryId(categoryId);
             }
@@ -1244,32 +1245,15 @@ public class ApiContent extends ApiGeneric {
     List<Category> categories(HttpServletRequest req, HttpServletResponse resp) {
         
         String lang = req.getParameter("lang");
-        SysTagDisplayManager displayMngr = new SysTagDisplayManager();
-        SysTagManager tagMngr = new SysTagManager();
-        MsoManager msoMngr = new MsoManager();
-        List<Category> categories = new ArrayList<Category>();
-        
         if (lang == null) {
             lang = NnUserManager.findLocaleByHttpRequest(req);
         }
         
-        List<SysTagDisplay> tagDisplayList = displayMngr.findPlayerCategories(lang, msoMngr.findNNMso().getId());
-        
-        for (SysTagDisplay tagDisplay : tagDisplayList) {
-            
-            SysTag sysTag = tagMngr.findById(tagDisplay.getSystagId());
-            
-            Category category = new Category();
-            category.setId(sysTag.getId());
-            category.setLang(tagDisplay.getLang());
-            category.setMsoId(sysTag.getMsoId());
-            category.setName(tagDisplay.getName());
-            category.setSeq(sysTag.getSeq());
-            
-            categories.add(category);
+        StoreService storeServ = new StoreService();
+        List<Category> categories = storeServ.getStoreCategories(lang);
+        if (categories == null) {
+            return new ArrayList<Category>();
         }
-        
-        Collections.sort(categories, tagMngr.getCategoryComparator("seq"));
         
         return categories;
     }
@@ -1281,7 +1265,6 @@ public class ApiContent extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        SysTagManager sysTagMngr = new SysTagManager();
         StoreService storeMngr = new StoreService();
         
         // categoryId
@@ -1295,7 +1278,7 @@ public class ApiContent extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            if (sysTagMngr.isNnCategory(categoryId) == false) {
+            if (storeMngr.isNnCategory(categoryId) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
                 return null;

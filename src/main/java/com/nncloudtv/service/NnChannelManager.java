@@ -32,7 +32,6 @@ import com.nncloudtv.model.NnUserChannelSorting;
 import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.PoiEvent;
 import com.nncloudtv.model.PoiPoint;
-import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.Tag;
 import com.nncloudtv.model.TagMap;
 import com.nncloudtv.web.api.NnStatusCode;
@@ -456,10 +455,10 @@ public class NnChannelManager {
         // TODO: to be independent out
         MsoManager msoMngr = new MsoManager();
         Mso nnMso = msoMngr.findNNMso();
-        SysTagManager tagMngr = new SysTagManager();
-        List<SysTag> categories = tagMngr.findCategoriesByChannelId(id, nnMso.getId());
-        if (categories.size() > 0) {
-            channel.setCategoryId(categories.get(0).getId());
+        StoreService storeServ = new StoreService();
+        List<Long> categoryIds = storeServ.findCategoryIdsByChannelId(id, nnMso.getId());
+        if (categoryIds.size() > 0) {
+            channel.setCategoryId(categoryIds.get(0));
         }
         
         return channel;
