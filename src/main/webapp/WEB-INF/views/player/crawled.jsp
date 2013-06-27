@@ -91,88 +91,8 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 <link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
 
-<script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-
-<script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/jquery-ui.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/i18n/jquery-ui-i18n.min.js"></script>
-
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/all.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/swfobject.js"></script>
-<script type="text/javascript" charset="utf-8" src="${root}/javascripts/jquery.swfobject.1-1-1.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/scripts/flowplayer-3.2.4.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="${nroot}/javascripts/jquery.ellipsis.js"></script>
-
-<!--
-<c:if test="${js == \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/player32.js"></script>
-</c:if>
-<c:if test="${js != \"\"}">
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/${js}.js"></script>
-</c:if>
--->
-
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/vertical.slider.V2.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.mousewheel.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/jquery.ba-hashchange.min.js"></script>
-
-<script type="text/javascript" charset="utf-8" src="http://9x9ui.s3.amazonaws.com/soundmanager/soundmanager2.js"></script>
-                                                                                                                        
-<script type="text/javascript">
-var analytz = false;
-var _gaq = _gaq || [];
-var acct = document.location.host.match (/(dev|stage|alpha)/) ? 'UA-31930874-1' : 'UA-21595932-1';
-_gaq.push(['_setAccount', acct]);
-_gaq.push(['_setDomainName', '.9x9.tv']);
-_gaq.push(['_trackPageview']);
-function analytics()
-  {
-  if (!analytz)
-    {
-    log ('submitting analytics');
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    setTimeout ("_gaq.push(['_trackEvent', 'NoBounce', '10 second ping'])", 10000);
-    analytz = true;
-    }
-  }
-</script>
-
-<!-- Quantcast Tag -->
-<script type="text/javascript">
-var _qevents = _qevents || [];
-(function() {
-var elem = document.createElement('script');
-elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-elem.async = true;
-elem.type = "text/javascript";
-var scpt = document.getElementsByTagName('script')[0];
-scpt.parentNode.insertBefore(elem, scpt);
-})();
-_qevents.push({
-qacct:"p-b2xUunKYSaIeQ"
-});
-</script>
-<noscript>
-<div style="display:none;">
-<img src="//pixel.quantserve.com/pixel/p-b2xUunKYSaIeQ.gif" border="0" height="1" width="1" alt="Quantcast"/>
-</div>
-</noscript>
-<!-- End Quantcast tag -->
-
 <script type="text/javascript">
 var brandinfo = "${brandInfo}";
-</script>
-
-<script type="text/javascript">
-soundManager.url = '/player/';
-soundManager.useFlashBlock = false;
-soundManager.onready(function()
-  {
-  log ('***************************************** SOUND MANAGER READY **********************************************\n');
-  });
 </script>
 
 <title>9x9.tv</title>
@@ -529,18 +449,6 @@ soundManager.onready(function()
 
 <div id="fb-root"></div>
 
-<!--
-<div id="relaydiv" style="z-index: 1; position: absolute; top: 0px; left: 0px; width=500px; height=500px">
-<object id="relay" width=481 height=86>
-<param name=movie value="relay4.swf">
-<embed play=false swliveconnect="true" name="relay" 
-src="http://relay-puppy.9x9.tv/relay4.swf" quality=high bgcolor=#FFFFFF 
-width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="always" allowScripting="on" wmode="transparent">
-</embed>
-</object>
-</div>
--->
-
 <div id="relaydiv" style="z-index: 1; position: absolute; top: 0px; left: 0px; width=500px; height=500px">
 </div>
 
@@ -606,19 +514,6 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
   </p>
 </div>
 
-<div id="flipr-bubble">
-  <img src="${nroot}/images/add_bubble_tip.png" id="flipr-bubble-tip">
-  <img src="${nroot}/images/bg_add_bubble.png" class="bg-flipr-bubble">
-  <p id="fliprbubble-content">
-    <span>Flip to preview the next channel</span>
-  </p>
-</div>
-
-<div id="flip-bubble" class="draggable ui-widget-content">
-  <img src="${nroot}/images/flip-bubble.png">
-  <p><span>Ch </span><span id="chOrder">1</span><br><span>of </span><span id="chNum">20</span></p>
-</div>
-
 <div id="store-layer" class="stage" style="display: block; background: #f0f0f0">
   <div id="store-holder">
     <div id="pool-waiting">
@@ -660,8 +555,6 @@ width=500 height=500 type="application/x-shockwave-flash" allowScriptAccess="alw
         <img src="${nroot}/images/btn_flip_L_on.png" id="btn-fp-on">
         <img src="${nroot}/images/btn_flip_L_disable.png" id="btn-fp-disable">
       </p>
-
-
 
       <div id="preview-win">
         <div id="preview-win-top-bar">
