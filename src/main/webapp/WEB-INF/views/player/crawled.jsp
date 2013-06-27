@@ -92,12 +92,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 <link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
 
-<script type="text/javascript">
-var brandinfo = "${brandInfo}";
-
-setTimeout("location.replace('${playerPromotionUrl}')", 3000);
-</script>
-
 <title>9x9.tv</title>
 
 </head>
@@ -981,6 +975,11 @@ setTimeout("location.replace('${playerPromotionUrl}')", 3000);
   </ul>
   <p id="copyright"><span>&copy; 2012 9x9.tv.  All rights reserved</span></p>
 </div>
+
+<script type="text/javascript">
+var brandinfo = "${brandInfo}";
+setTimeout("location.replace('${playerPromotionUrl}')", 3000);
+</script>
 
 </body>
 </html>
