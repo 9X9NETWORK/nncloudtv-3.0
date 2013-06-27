@@ -109,6 +109,8 @@ public class PlayerService {
             NnProgram program = programMngr.findById(Long.valueOf(pid));
             if (program != null) {
                 log.info("nnprogram found = " + pid);
+                model.addAttribute("crawlEpisodeTitle", program.getName());
+                model.addAttribute("crawlEpThumb1", program.getImageUrl());
                 model.addAttribute("fbName", this.prepareFb(program.getName(), 0));
                 model.addAttribute("fbDescription", this.prepareFb(program.getIntro(), 1));
                 model.addAttribute("fbImg", this.prepareFb(program.getImageUrl(), 2));
@@ -119,6 +121,8 @@ public class PlayerService {
             NnEpisode episode = episodeMngr.findById(Long.valueOf(eid));
             if (episode != null) {
                 log.info("nnepisode found = " + eid);
+                model.addAttribute("crawlEpisodeTitle", episode.getName());
+                model.addAttribute("crawlEpThumb1", episode.getImageUrl());
                 model.addAttribute("fbName", this.prepareFb(episode.getName(), 0));
                 model.addAttribute("fbDescription", this.prepareFb(episode.getIntro(), 1));
                 model.addAttribute("fbImg", this.prepareFb(episode.getImageUrl(), 2));
@@ -142,6 +146,8 @@ public class PlayerService {
         NnChannel channel = channelMngr.findById(Long.valueOf(cid));
         if (channel != null) {
             log.info("found channel = " + cid);
+            model.addAttribute("crawlChannelTitle", channel.getName());
+            model.addAttribute("crawlVideoThumb", channel.getOneImageUrl());
             model.addAttribute("fbName", this.prepareFb(channel.getName(), 0));
             model.addAttribute("fbDescription", this.prepareFb(channel.getIntro(), 1));
             model.addAttribute("fbImg", this.prepareFb(channel.getOneImageUrl(), 2));
