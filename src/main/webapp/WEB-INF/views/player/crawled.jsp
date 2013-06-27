@@ -87,6 +87,7 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 <meta property="og:title" content="${fbName}"/>
 <meta property="og:image" content="${fbImg}"/>
 <meta property="og:description" content="${fbDescription}"/>
+<meta property="og:url" content="${fbUrl}"/>
 
 <link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
@@ -459,6 +460,7 @@ setTimeout("location.replace('${playerPromotionUrl}')", 3000);
 <div id="header">
   <img src="${nroot}/images/bg_header.gif" id="bg-header">
   <img src="${nroot}/images/logo.png" id="logo">
+  <img src="${nroot}/images/tutorial_screenshot.jpg" style="display:none">
   <p id="slogan"><span>Your Personal Channel Browser</span></p>
   <ul id="nav">
     <li id="btn-account">
