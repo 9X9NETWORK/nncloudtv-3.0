@@ -84,7 +84,7 @@ public class WatchDogController {
        SysTagDisplay display = new SysTagDisplayDao().findById(Long.parseLong(categoryId));
        String result = "";
        if (display != null) {       
-	       SysTagMap map = dao.findSysTagMap(display.getSystagId(), Long.parseLong(chId));
+	       SysTagMap map = dao.findBySysTagIdAndChannelId(display.getSystagId(), Long.parseLong(chId));
 	       if (map == null) {
 	    	   NnChannel c = new NnChannelDao().findById(Long.parseLong(chId));
 	    	   if (c != null) {

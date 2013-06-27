@@ -19,7 +19,7 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         super(SysTagMap.class);
     }
     
-    public SysTagMap findSysTagMap(long sysTagId, long channelId) {
+    public SysTagMap findBySysTagIdAndChannelId(long sysTagId, long channelId) {
         
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         SysTagMap detached = null;
@@ -32,7 +32,7 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
             q.setClass(SysTagMap.class);
             @SuppressWarnings("unchecked")
             List<SysTagMap> results = (List<SysTagMap>) q.execute();
-            if (results.size() > 0) {
+            if (results != null && results.size() > 0) {
                 detached = pm.detachCopy(results.get(0));
             }
         } finally {
@@ -54,7 +54,7 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         return sql(query);
     }
     
-    public List<SysTagMap> findSysTagMaps(long sysTagId) {
+    public List<SysTagMap> findBySysTagId(long sysTagId) {
         
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<SysTagMap> detached = new ArrayList<SysTagMap>();
@@ -66,8 +66,10 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(SysTagMap.class);
             @SuppressWarnings("unchecked")
-            List<SysTagMap> results = (List<SysTagMap>) q.execute();            
-            detached = (List<SysTagMap>) pm.detachCopyAll(results);
+            List<SysTagMap> results = (List<SysTagMap>) q.execute();
+            if (results != null && results.size() > 0) {
+                detached = (List<SysTagMap>) pm.detachCopyAll(results);
+            }
         } finally {
             pm.close();
         }

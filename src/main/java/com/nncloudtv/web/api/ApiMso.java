@@ -438,7 +438,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         // cntChannel
-        List<SysTagMap> channels = sysTagMapMngr.findSysTagMaps(set.getId());
+        List<SysTagMap> channels = sysTagMapMngr.findBySysTagId(set.getId());
         setMeta.setCntChannel(channels.size());
         
         setMeta = sysTagDisplayMngr.save(setMeta);
@@ -493,7 +493,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         // delete channels in set, SysTagMap
-        List<SysTagMap>  sysTagMaps = sysTagMapMngr.findSysTagMaps(set.getId());
+        List<SysTagMap>  sysTagMaps = sysTagMapMngr.findBySysTagId(set.getId());
         if (sysTagMaps != null && sysTagMaps.size() > 0) {
             sysTagMapMngr.deleteAll(sysTagMaps);
         }
@@ -545,10 +545,10 @@ public class ApiMso extends ApiGeneric {
         
         List<NnChannel> results = null;
         if (set.getSorting() == SysTag.SORT_SEQ) {
-            results = sysTagMapMngr.findChannelsBySysTagIdOrderBySeq(set.getId());
+            results = setServ.getChannelsOrderBySeq(set.getId());
         }
         if (set.getSorting() == SysTag.SORT_DATE) {
-            results = sysTagMapMngr.findChannelsBySysTagIdOrderByUpdateTime(set.getId());
+            results = setServ.getChannelsOrderByUpdateTime(set.getId());
         }
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
@@ -628,7 +628,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         // create if not exist
-        SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channel.getId());
+        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(set.getId(), channel.getId());
         if (sysTagMap == null) {
             sysTagMap = new SysTagMap(set.getId(), channel.getId());
             sysTagMap.setSeq((short) 0);
@@ -764,7 +764,7 @@ public class ApiMso extends ApiGeneric {
         }
         */
         
-        SysTagMap sysTagMap = sysTagMapMngr.findSysTagMap(set.getId(), channelId);
+        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(set.getId(), channelId);
         if (sysTagMap == null) {
             // do nothing
         } else {
@@ -814,14 +814,14 @@ public class ApiMso extends ApiGeneric {
         
         String channelIdsStr = req.getParameter("channels");
         if (channelIdsStr == null) {
-            sysTagMapMngr.reorderSysTagChannels(set.getId());
+            sysTagMapMngr.reorderSysTagMaps(set.getId());
             okResponse(resp);
             log.info(printExitState(now, req, "ok"));
             return null;
         }
         String[] channelIdStrList = channelIdsStr.split(",");
         
-        List<SysTagMap> setChannels = sysTagMapMngr.findSysTagMaps(set.getId()); // it must same as setChannels's result
+        List<SysTagMap> setChannels = sysTagMapMngr.findBySysTagId(set.getId()); // it must same as setChannels's result
         List<Long> channelIdList = new ArrayList<Long>();
         List<Long> checkedChannelIdList = new ArrayList<Long>();
         for (SysTagMap item : setChannels) {

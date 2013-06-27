@@ -77,6 +77,11 @@ public class SysTagManager {
     }
     
     public List<SysTag> findByMsoIdAndType(Long msoId, short type) {
+        
+        if (msoId == null) {
+            return new ArrayList<SysTag>();
+        }
+        
         return dao.findByMsoIdAndType(msoId, type);
     }
 
@@ -155,6 +160,7 @@ public class SysTagManager {
         return dao.findCategoriesByChannelId(channelId, msoId);
     }
     
+    /** indicate input value is in model SysTag's sorting table or not */
     public boolean isValidSortingType(Short sortingType) {
         
         if (sortingType == null) {
