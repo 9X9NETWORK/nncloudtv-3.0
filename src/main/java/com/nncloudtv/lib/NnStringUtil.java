@@ -216,12 +216,17 @@ public class NnStringUtil {
                 + channelIdStr + "&ep=" + programIdStr;
     }
     
-    public static String getEpisodePlaybackUrl(long channelId, long episodeId) {
+    public static String getEpisodePlaybackUrl(Long channelId, Long episodeId) {
         
         NnChannelPrefManager channelPrefMngr = new NnChannelPrefManager();
         NnChannelPref channelPref = channelPrefMngr.getBrand(channelId);
         
-        return "http://" + MsoConfigManager.getServerDomain() + "/view?brand=" + channelPref.getValue() + "&ch="
-                + channelId + "&ep=e" + episodeId;
+        String url = "http://" + MsoConfigManager.getServerDomain()
+                   + "/view?mso=" + channelPref.getValue() + "&ch=" + channelId;
+        if (episodeId != null) {
+            url += "&ep=e" + episodeId;
+        }
+        
+        return url;
     }
 }

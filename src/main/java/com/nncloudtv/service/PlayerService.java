@@ -114,6 +114,7 @@ public class PlayerService {
                 model.addAttribute("fbName", this.prepareFb(program.getName(), 0));
                 model.addAttribute("fbDescription", this.prepareFb(program.getIntro(), 1));
                 model.addAttribute("fbImg", this.prepareFb(program.getImageUrl(), 2));
+                model.addAttribute("fbUrl", this.prepareFb(NnStringUtil.getProgramPlaybackUrl("" + program.getChannelId(), pid), 3));
             }
         } else if (pid.matches("e[0-9]+")){
             String eid = pid.replace("e", "");
@@ -126,6 +127,7 @@ public class PlayerService {
                 model.addAttribute("fbName", this.prepareFb(episode.getName(), 0));
                 model.addAttribute("fbDescription", this.prepareFb(episode.getIntro(), 1));
                 model.addAttribute("fbImg", this.prepareFb(episode.getImageUrl(), 2));
+                model.addAttribute("fbUrl", this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()), 3));
             }
             /*
             Map<String, String> entry = YouTubeLib.getYouTubeVideoEntry(pid);
@@ -151,6 +153,7 @@ public class PlayerService {
             model.addAttribute("fbName", this.prepareFb(channel.getName(), 0));
             model.addAttribute("fbDescription", this.prepareFb(channel.getIntro(), 1));
             model.addAttribute("fbImg", this.prepareFb(channel.getOneImageUrl(), 2));
+            model.addAttribute("fbUrl", this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(channel.getId(), null), 3));
         }
         return model;
     }
