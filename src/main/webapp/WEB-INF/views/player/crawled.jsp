@@ -93,6 +93,8 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 
 <script type="text/javascript">
 var brandinfo = "${brandInfo}";
+
+setTimeout("location.replace('${playerPromotionUrl}')", 3000);
 </script>
 
 <title>9x9.tv</title>
