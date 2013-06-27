@@ -190,6 +190,26 @@ public class PlayerService {
         return "";
     }
     
+    // http://player.9x9.tv/tv#/promotion/{ch}/{ep}
+    public String getPlayerProtionUrl(HttpServletRequest req, Mso mso, String ch, String ep) {
+        
+        String root = NnNetUtil.getUrlRoot(req).replaceFirst("^www\\.", "");
+        
+        if (MsoManager.isNNMso(mso)) {
+            root = "player." + root;
+        } else {
+            root = mso.getName() + "." + root;
+        }
+        
+        String url = "http://" + root + "/tv#/promotion/" + ch;
+        if (ep != null) {
+            url += "/" + ep;
+        }
+        
+        return url;
+    }
+    
+    // TODO: to be removed
     public String getQueryString(HttpServletRequest req, String channel, String episode, String ch, String ep) {
         String queryStr = this.rewrite(req);
         System.out.println("query str:" + queryStr);

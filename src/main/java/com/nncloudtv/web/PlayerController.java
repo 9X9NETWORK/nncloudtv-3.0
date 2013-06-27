@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerService;
 
@@ -179,7 +181,7 @@ public class PlayerController {
      * redirect to:  #!ch=x!ep=y  
      */
     @RequestMapping("view")
-    public String view(@RequestParam(value="mso",required=false) String mso, 
+    public String view(@RequestParam(value="mso",required=false) String msoName, 
                        HttpServletRequest req, HttpServletResponse resp, Model model, 
                        @RequestParam(value="channel", required=false) String channel,
                        @RequestParam(value="episode", required=false) String episode,
@@ -189,17 +191,33 @@ public class PlayerController {
                        @RequestParam(value="ep", required=false) String ep) {
         //additional params
         PlayerService service = new PlayerService();
+        MsoManager msoMngr = new MsoManager();
         boolean isIos = service.isIos(req);
+        
+        Mso mso = msoMngr.getByNameFromCache(msoName);
+        if (mso == null) {
+            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);;
+        }
+        String cid = channel != null ? channel : ch;
+        String pid = episode != null ? episode : ep;
+        
         if (isIos) {
-            String cid = channel != null ? channel : ch;
-            String pid = episode != null ? episode : ep;
+            log.info("It is iOS");
             pid = service.findFirstSubepisodeId(pid);
             String iosStr = service.getRedirectIosUrl(cid, pid, req);
             model.addAttribute("fliprUrl", iosStr);
             return "player/ios";
         }
-        String str = service.getQueryString(req, channel, episode, ch, ep);
-        return "redirect:/" + str;
+        
+        model = service.prepareBrand(model, msoName, resp);
+        model = service.prepareChannel(model, cid, resp);
+        model = service.prepareEpisode(model, pid, resp);
+        
+        String playerPromotionUrl = service.getPlayerProtionUrl(req, mso, cid, pid);
+        log.info("player promotion url = " + playerPromotionUrl);
+        model.addAttribute("playerPromotionUrl", playerPromotionUrl);
+        
+        return "player/crawled";
     }
     
     @RequestMapping("android")
@@ -207,7 +225,6 @@ public class PlayerController {
         log.info("android landing");
         return "player/android";
     }
-    
     
     @RequestMapping("flview")
     public String flview(@RequestParam(value="mso",required=false) String mso, 
