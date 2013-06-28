@@ -543,18 +543,11 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<NnChannel> results = null;
-        if (set.getSorting() == SysTag.SORT_SEQ) {
-            results = setServ.getChannelsOrderBySeq(set.getId());
-        }
-        if (set.getSorting() == SysTag.SORT_DATE) {
-            results = setServ.getChannelsOrderByUpdateTime(set.getId());
-        }
+        List<NnChannel> results = setServ.setChannels(set);
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<NnChannel>();
         }
-        
         log.info(printExitState(now, req, "ok"));
         return results;
     }
@@ -627,16 +620,6 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        // create if not exist
-        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(set.getId(), channel.getId());
-        if (sysTagMap == null) {
-            sysTagMap = new SysTagMap(set.getId(), channel.getId());
-            sysTagMap.setSeq((short) 0);
-            sysTagMap.setTimeStart((short) 0);
-            sysTagMap.setTimeEnd((short) 0);
-            sysTagMap.setAlwaysOnTop(false);
-        }
-        
         // timeStart
         String timeStartStr = req.getParameter("timeStart");
         Short timeStart = null;
@@ -677,11 +660,8 @@ public class ApiMso extends ApiGeneric {
             // as origin setting
         } else if (timeStartStr != null && timeEndStr != null) {
             if (timeStart == timeEnd) {
-                sysTagMap.setTimeStart((short) 0);
-                sysTagMap.setTimeEnd((short) 0);
-            } else {
-                sysTagMap.setTimeStart(timeStart);
-                sysTagMap.setTimeEnd(timeEnd);
+                timeStart = 0;
+                timeEnd = 0;
             }
         } else { // they should be pair
             badRequest(resp, MISSING_PARAMETER);
@@ -691,13 +671,12 @@ public class ApiMso extends ApiGeneric {
         
         // alwaysOnTop
         String alwaysOnTopStr = req.getParameter("alwaysOnTop");
+        Boolean alwaysOnTop = null;
         if (alwaysOnTopStr != null) {
-            Boolean alwaysOnTop = Boolean.valueOf(alwaysOnTopStr);
-            sysTagMap.setAlwaysOnTop(alwaysOnTop);
+            alwaysOnTop = Boolean.valueOf(alwaysOnTopStr);
         }
         
-        sysTagMapMngr.save(sysTagMap);
-        
+        setServ.setChannelAdd(set.getId(), channel.getId(), timeStart, timeEnd, alwaysOnTop);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
@@ -764,13 +743,7 @@ public class ApiMso extends ApiGeneric {
         }
         */
         
-        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(set.getId(), channelId);
-        if (sysTagMap == null) {
-            // do nothing
-        } else {
-            sysTagMapMngr.delete(sysTagMap);
-        }
-        
+        setServ.setChannelRemove(set.getId(), channelId);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;

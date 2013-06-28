@@ -133,6 +133,8 @@ public class SetService {
                 result.setSeq(item.getSeq());
                 result.setAlwaysOnTop(item.isAlwaysOnTop());
                 results.add(result);
+            } else {
+                // TODO : Channel not exist
             }
         }
         
@@ -175,6 +177,72 @@ public class SetService {
         results.addAll(orderedChannels);
         
         return results;
+    }
+    
+    /** service for ApiMso.setChannels */
+    public List<NnChannel> setChannels(SysTag set) {
+        
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        List<NnChannel> results = null;
+        if (set.getSorting() == SysTag.SORT_SEQ) {
+            results = getChannelsOrderBySeq(set.getId());
+        }
+        if (set.getSorting() == SysTag.SORT_DATE) {
+            results = getChannelsOrderByUpdateTime(set.getId());
+        }
+        
+        if (results == null) {
+            return new ArrayList<NnChannel>();
+        }
+        return results;
+    }
+    
+    /** service for ApiMso.setChannelAdd */
+    public void setChannelAdd(Long setId, Long channelId, Short timeStart, Short timeEnd, Boolean alwaysOnTop) {
+        
+        if (setId == null || channelId == null) {
+            return ;
+        }
+        
+        // create if not exist
+        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(setId, channelId);
+        if (sysTagMap == null) {
+            sysTagMap = new SysTagMap(setId, channelId);
+            sysTagMap.setSeq((short) 0);
+            sysTagMap.setTimeStart((short) 0);
+            sysTagMap.setTimeEnd((short) 0);
+            sysTagMap.setAlwaysOnTop(false);
+        }
+        
+        if (timeStart != null) {
+            sysTagMap.setTimeStart(timeStart);
+        }
+        if (timeEnd != null) {
+            sysTagMap.setTimeEnd(timeEnd);
+        }
+        if (alwaysOnTop != null) {
+            sysTagMap.setAlwaysOnTop(alwaysOnTop);
+        }
+        
+        sysTagMapMngr.save(sysTagMap);
+    }
+    
+    /** service for ApiMso.setChannelRemove */
+    public void setChannelRemove(Long setId, Long channelId) {
+        
+        if (setId == null || channelId == null) {
+            return ;
+        }
+        
+        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(setId, channelId);
+        if (sysTagMap == null) {
+            // do nothing
+        } else {
+            sysTagMapMngr.delete(sysTagMap);
+        }
     }
 
 }

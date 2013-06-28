@@ -42,6 +42,7 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         return detached;
     }
     
+    // see SysTagDao.findCategoriesByChannelId
     public List<SysTagMap> findCategoryMapsByChannelId(long channelId, long msoId) {
         
         String query = " select * from systag_map a1"

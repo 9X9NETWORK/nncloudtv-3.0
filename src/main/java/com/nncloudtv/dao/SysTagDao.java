@@ -157,6 +157,7 @@ public class SysTagDao extends GenericDao<SysTag> {
         return size;                
     }
     
+    // see SysTagMapDao.findCategoryMapsByChannelId
     public List<SysTag> findCategoriesByChannelId(long channelId, long msoId) {
     
         String query = " select * from systag a1"
