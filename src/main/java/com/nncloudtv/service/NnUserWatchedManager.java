@@ -43,7 +43,9 @@ public class NnUserWatchedManager {
                 old.setUpdateDate(new Date());
                 dao.save(user, old);
             }
-        }
+        } else {
+            log.info("already subscribed");
+	}
     }
     
     public NnUserWatched findByUserAndChannel(NnUser user, long channelId) {

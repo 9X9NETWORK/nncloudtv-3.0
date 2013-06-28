@@ -74,17 +74,19 @@ public class PdrManager {
     public void processPdr(NnUser user, NnDevice device, String sessionId, String pdr, String ip) {        
         if (pdr == null) {return;}        
         NnUserWatchedManager watchedMngr = new NnUserWatchedManager();
-        String reg = "\\sw\t(\\d++)\t(\\w++)";        
+        String reg = "\\bw\t(\\d+)\t(\\S+)";        
         Pattern pattern = Pattern.compile(reg);
         Matcher m = pattern.matcher(pdr);
         if (user != null) {
+            log.info("user is not null");
             while (m.find()) {            
                 long channelId = Long.parseLong(m.group(1));
+		log.info("found channelId = " + channelId);
                 String program = m.group(2);
+		log.info("found program = " + program);
                 if (channelId != 0 && !program.equals("0")) {
                     NnUserWatched watched = new NnUserWatched(user, channelId, program);
                     log.info("user watched channel and program:" + user.getToken() + ";" + channelId + ";" + program);
-                    //watchedMngr.save(user, watched);
                     watchedMngr.savePersonalHistory(user, watched);
                 }
             }
