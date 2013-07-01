@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -3054,6 +3055,61 @@ public class PlayerApiService {
         }
         
         return this.assembleMsgs(NnStatusCode.SUCCESS, null);
+    }
+    
+    public String shareInChannelList(Long channelId, HttpServletRequest req) {
+        
+        if (channelId == null)
+            return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
+        
+        NnChannel channel = chMngr.findById(channelId);
+        if (channel == null)
+            return this.assembleMsgs(NnStatusCode.CHANNEL_NOT_FOUND, null);
+        
+        List<NnChannel> channels = new ArrayList<NnChannel>();
+        NnUser curator = null;
+        String result[] = {"", "", "", ""};
+        
+        //mso info
+        result[0] += PlayerApiService.assembleKeyValue("name", mso.getName());
+        result[0] += PlayerApiService.assembleKeyValue("imageUrl", mso.getLogoUrl()); 
+        result[0] += PlayerApiService.assembleKeyValue("intro", mso.getIntro());            
+        
+        if (channel.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
+            
+            channels.add(channel);
+            
+            //set info
+            result[1] += PlayerApiService.assembleKeyValue("id", String.valueOf(channel.getId()));
+            result[1] += PlayerApiService.assembleKeyValue("name", channel.getName());
+            result[1] += PlayerApiService.assembleKeyValue("imageUrl", channel.getImageUrl());
+            
+        } else {
+            
+            curator = userMngr.findByIdStr(channel.getUserIdStr(), mso.getId());
+            if (curator == null)
+                return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
+            
+            List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, false);
+            
+            for (NnChannel ch : curatorChannels) {
+                if (ch.getStatus() == NnChannel.STATUS_SUCCESS && ch.isPublic() && ch.getContentType() == NnChannel.CONTENTTYPE_MIXED)
+                    channels.add(ch);
+            }
+            
+            Collections.sort(channels, chMngr.getChannelComparator("seq"));
+            
+            //set info
+            result[1] += PlayerApiService.assembleKeyValue("id", String.valueOf(curator.getId()));
+            result[1] += PlayerApiService.assembleKeyValue("name", curator.getProfile().getName());
+            result[1] += PlayerApiService.assembleKeyValue("imageUrl", curator.getProfile().getImageUrl());
+        }
+        result[2] = chMngr.composeChannelLineup(channels, version);
+        //program info
+        NnProgramManager programMngr = new NnProgramManager();
+        String programStr = programMngr.findLatestProgramInfoByChannels(channels);
+        result[3] = programStr;        
+        return this.assembleMsgs(NnStatusCode.SUCCESS, result);        
     }
     
     /*

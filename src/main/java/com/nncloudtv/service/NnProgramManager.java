@@ -217,6 +217,12 @@ public class NnProgramManager {
                     output += this.composeYtProgramInfo(c, programs);
                 }
             }
+            if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
+                c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {
+                
+                // TODO: ....
+                
+            }
             if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
                 List<NnEpisode> episodes = new NnEpisodeManager().findPlayerLatestEpisodes(c.getId());                
                 if (episodes.size() > 0) {

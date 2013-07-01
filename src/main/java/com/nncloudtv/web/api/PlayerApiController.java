@@ -847,6 +847,41 @@ public class PlayerApiController {
     }
     
     /**
+     * Share-in Channel List
+     * 
+     * return curator channels as a set
+     * if channel is not a curator channel,
+     * return one set that contais only that channel
+     */
+    @RequestMapping(value="shareInChannelList", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String shareInChannelList(
+            @RequestParam(value="user", required=false) String userToken,
+            @RequestParam(value="channel", required=false) String channelIdStr,
+            HttpServletRequest req,
+            HttpServletResponse resp) {
+        log.info("userToken=" + userToken + ";channel=" + channelIdStr);                
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        try {
+            int status = this.prepService(req, true);
+            if (status == NnStatusCode.API_FORCE_UPGRADE) {             
+                return playerApiService.assembleMsgs(status, null);
+            }                                 
+            
+            if (channelIdStr == null)
+                playerApiService.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+            
+            Long channelId = Long.parseLong(channelIdStr);
+            
+            output = playerApiService.shareInChannelList(channelId, req);
+        } catch (Exception e){
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    }
+    
+    /**
      * Get channel information 
      * 
      * @param user user's unique identifier. 

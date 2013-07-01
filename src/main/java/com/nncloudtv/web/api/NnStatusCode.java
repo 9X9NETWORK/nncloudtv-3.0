@@ -58,6 +58,7 @@ public class NnStatusCode {
     public static final int CHANNEL_OR_USER_INVALID = 303;
     public static final int CHANNEL_STATUS_ERROR = 304;
     public static final int CHANNEL_MAXSIZE_EXCEEDED = 305;
+    public static final int CHANNEL_NOT_FOUND = 306;
     public static final int CHANNEL_YOUTUBE_NOT_AVAILABLE = 30;
     
     public static final int PROGRAM_ERROR = 320;

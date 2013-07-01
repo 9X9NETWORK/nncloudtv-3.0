@@ -1008,21 +1008,6 @@ public class NnChannelManager {
         return channels;
     }        
     
-    public Comparator<NnChannel> getChannelUpdateDateComparator() {
-        
-        class ChannelUpdateDateComparator implements Comparator<NnChannel> {
-            
-            public int compare(NnChannel channel1, NnChannel channel2) {
-                Date date1 = channel1.getUpdateDate();
-                Date date2 = channel2.getUpdateDate();
-                
-                return date2.compareTo(date1);
-            }
-        }
-        
-        return new ChannelUpdateDateComparator();
-    }
-    
     public void populateMoreImageUrl(NnChannel channel) {
         
         List<String> imgs = new ArrayList<String>();
