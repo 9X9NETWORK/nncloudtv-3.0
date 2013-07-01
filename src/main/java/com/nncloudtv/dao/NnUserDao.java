@@ -246,6 +246,7 @@ public class NnUserDao extends GenericDao<NnUser> {
     
     public NnUser findByToken(String token) {
         NnUser user = null;
+        log.info("token = " + token);
         PersistenceManager pm = NnUserDao.getPersistenceManager((short)0, token);
         try {
             Query query = pm.newQuery(NnUser.class);

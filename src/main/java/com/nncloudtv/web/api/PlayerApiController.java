@@ -176,6 +176,7 @@ public class PlayerApiController {
         int status = playerApiService.checkRO();
         String version = (req.getParameter("v") == null) ? "31" : req.getParameter("v");
         int intVersion = Integer.parseInt(version);
+        log.info("version = " + intVersion);
         int minimal = playerApiService.checkApiMinimal();        
         playerApiService.setVersion(Integer.parseInt(version));
         if (intVersion < minimal)

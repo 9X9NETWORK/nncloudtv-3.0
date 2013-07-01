@@ -790,11 +790,13 @@ public class NnChannelManager {
             if (c.getContentType() != NnChannel.CONTENTTYPE_MIXED) {
                 NnProgramManager pMngr = new NnProgramManager();
                 List<NnProgram> programs = pMngr.findPlayerProgramsByChannel(c.getId());
+                log.info("programs = " + programs.size());
                 Collections.sort(programs, pMngr.getProgramComparator("updateDate"));        
                 for (int i=0; i<3; i++) {
                     if (i < programs.size()) {
                        //lastEpisodeTitle = programs.get(0).getName();
                        imageUrl += "|" + programs.get(i).getImageUrl();
+                       log.info("imageUrl = " + imageUrl);
                     } else {
                        i=4;
                     }
@@ -802,11 +804,13 @@ public class NnChannelManager {
             } else {
                 NnEpisodeManager eMngr = new NnEpisodeManager();
                 List<NnEpisode> episodes = eMngr.findPlayerEpisodes(c.getId());
+                log.info("episodes = " + episodes.size());
                 Collections.sort(episodes, eMngr.getEpisodePublicSeqComparator());
                 for (int i=0; i<3; i++) {
                     if (i < episodes.size()) {
                        //lastEpisodeTitle = episodes.get(0).getName();
                        imageUrl += "|" + episodes.get(i).getImageUrl();
+                       log.info("imageUrl = " + imageUrl);
                     } else {
                        i=4;
                     }
