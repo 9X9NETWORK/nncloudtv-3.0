@@ -81,6 +81,12 @@ public class SetService {
             if (setMeta != null) {
                 result = composeSet(set, setMeta);
                 results.add(result);
+            } else {
+                if (lang == null) {
+                    log.warning("invalid structure : SysTag's Id=" + set.getId() + " exist but not found any of SysTagDisPlay");
+                } else {
+                    log.info("SysTag's Id=" + set.getId() + " exist but not found match SysTagDisPlay for lang=" + lang);
+                }
             }
         }
         
@@ -95,6 +101,27 @@ public class SetService {
         }
         
         return findByMsoIdAndLang(msoId, null);
+    }
+    
+    /** find Set by SysTag's Id */
+    public Set findById(Long setId) {
+        
+        if (setId == null) {
+            return null;
+        }
+        
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            return null;
+        }
+        
+        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+        if (setMeta == null) {
+            log.warning("invalid structure : SysTag's Id=" + setId + " exist but not found any of SysTagDisPlay");
+            return null;
+        }
+        
+        return composeSet(set, setMeta);
     }
     
     /** get Channels from Set ordered by Seq, the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop)
@@ -177,6 +204,16 @@ public class SetService {
         results.addAll(orderedChannels);
         
         return results;
+    }
+    
+    /** service for ApiMso.set */
+    public Set set(Long setId) {
+        
+        if (setId == null) {
+            return null;
+        }
+        
+        return findById(setId);
     }
     
     /** service for ApiMso.setChannels */

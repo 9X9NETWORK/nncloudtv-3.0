@@ -326,15 +326,15 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
-        if (setMeta == null) {
+        Set result = setServ.set(set.getId());
+        if (result == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
             return null;
         }
         
         log.info(printExitState(now, req, "ok"));
-        return setResponse(set, setMeta);
+        return result;
     }
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.PUT)
