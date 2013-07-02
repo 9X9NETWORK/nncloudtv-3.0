@@ -3091,9 +3091,12 @@ public class PlayerApiService {
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             
             List<NnChannel> curatorChannels = chMngr.findByUser(curator, 0, false);
+            log.info("curatorChannels = " + curatorChannels.size());
             
             for (NnChannel ch : curatorChannels) {
-                if (ch.getStatus() == NnChannel.STATUS_SUCCESS && ch.isPublic() && ch.getContentType() == NnChannel.CONTENTTYPE_MIXED)
+                if ((ch.getStatus() == NnChannel.STATUS_SUCCESS || ch.getStatus() == NnChannel.STATUS_WAIT_FOR_APPROVAL) &&
+                     ch.isPublic() && ch.getContentType() == NnChannel.CONTENTTYPE_MIXED)
+                    
                     channels.add(ch);
             }
             
@@ -3104,6 +3107,7 @@ public class PlayerApiService {
             result[1] += PlayerApiService.assembleKeyValue("name", curator.getProfile().getName());
             result[1] += PlayerApiService.assembleKeyValue("imageUrl", curator.getProfile().getImageUrl());
         }
+        log.info("channels = " + channels.size());
         result[2] = chMngr.composeChannelLineup(channels, version);
         result[2] = this.chAdjust(channels, result[2]);
         //program info
