@@ -3064,7 +3064,7 @@ public class PlayerApiService {
         
         NnChannel channel = chMngr.findById(channelId);
         if (channel == null)
-            return this.assembleMsgs(NnStatusCode.CHANNEL_NOT_FOUND, null);
+            return this.assembleMsgs(NnStatusCode.CHANNEL_INVALID, null);
         
         List<NnChannel> channels = new ArrayList<NnChannel>();
         NnUser curator = null;
@@ -3105,6 +3105,7 @@ public class PlayerApiService {
             result[1] += PlayerApiService.assembleKeyValue("imageUrl", curator.getProfile().getImageUrl());
         }
         result[2] = chMngr.composeChannelLineup(channels, version);
+        result[2] = this.chAdjust(channels, result[2]);
         //program info
         NnProgramManager programMngr = new NnProgramManager();
         String programStr = programMngr.findLatestProgramInfoByChannels(channels);
