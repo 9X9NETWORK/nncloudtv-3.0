@@ -162,13 +162,11 @@ public class ApiMso extends ApiGeneric {
             lang = NnStringUtil.validateLangCode(lang);
         }
         
-        List<Set> results = null;
-        if (lang != null) {
-            results = setServ.findByMsoIdAndLang(mso.getId(), lang);
-        } else {
-            results = setServ.findByMsoId(mso.getId());
+        List<Set> results = setServ.msoSets(mso.getId(), lang);
+        if (results == null) {
+            log.info(printExitState(now, req, "ok"));
+            return new ArrayList<Set>();
         }
-        
         log.info(printExitState(now, req, "ok"));
         return results;
     }
@@ -543,7 +541,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<NnChannel> results = setServ.setChannels(set);
+        List<NnChannel> results = setServ.setChannels(set.getId());
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<NnChannel>();

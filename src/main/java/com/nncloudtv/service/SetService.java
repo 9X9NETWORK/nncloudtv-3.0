@@ -206,7 +206,30 @@ public class SetService {
         return results;
     }
     
-    /** service for ApiMso.set */
+    /** service for ApiMso.msoSets
+     *  @param msoId required, Mso's Id
+     *  @param lang optional, filter for Set's lang */
+    public List<Set> msoSets(Long msoId, String lang) {
+        
+        if (msoId == null) {
+            return new ArrayList<Set>();
+        }
+        
+        List<Set> results = null;
+        if (lang != null) {
+            results = findByMsoIdAndLang(msoId, lang);
+        } else {
+            results = findByMsoId(msoId);
+        }
+        
+        if (results == null) {
+            return new ArrayList<Set>();
+        }
+        return results;
+    }
+    
+    /** service for ApiMso.set
+     *  @param setId required, SysTag's Id with SysTag's type = Set */
     public Set set(Long setId) {
         
         if (setId == null) {
@@ -216,9 +239,15 @@ public class SetService {
         return findById(setId);
     }
     
-    /** service for ApiMso.setChannels */
-    public List<NnChannel> setChannels(SysTag set) {
+    /** service for ApiMso.setChannels
+     *  @param setId required, SysTag's Id with SysTag's type = Set */
+    public List<NnChannel> setChannels(Long setId) {
         
+        if (setId == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        SysTag set = sysTagMngr.findById(setId);
         if (set == null || set.getType() != SysTag.TYPE_SET) {
             return new ArrayList<NnChannel>();
         }
@@ -237,7 +266,12 @@ public class SetService {
         return results;
     }
     
-    /** service for ApiMso.setChannelAdd */
+    /** service for ApiMso.setChannelAdd
+     *  @param setId required, SysTag's Id with SysTag's type = Set
+     *  @param channelId required, Channel's Id
+     *  @param timeStart optional, set a period start that Channel appear in the Set
+     *  @param timeEnd optional, set a period end that Channel appear in the Set
+     *  @param alwaysOnTop optional, put this Channel in the head when Channels sorting by update time get from Set */
     public void setChannelAdd(Long setId, Long channelId, Short timeStart, Short timeEnd, Boolean alwaysOnTop) {
         
         if (setId == null || channelId == null) {
@@ -267,7 +301,9 @@ public class SetService {
         sysTagMapMngr.save(sysTagMap);
     }
     
-    /** service for ApiMso.setChannelRemove */
+    /** service for ApiMso.setChannelRemove
+     *  @param setId required, SysTag's Id with SysTag's type = Set
+     *  @param channelId required, Channel's Id */
     public void setChannelRemove(Long setId, Long channelId) {
         
         if (setId == null || channelId == null) {
