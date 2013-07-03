@@ -117,7 +117,7 @@ public class SetService {
         
         SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
         if (setMeta == null) {
-            log.warning("invalid structure : SysTag's Id=" + setId + " exist but not found any of SysTagDisPlay");
+            log.warning("invalid structure : SysTag's Id=" + set.getId() + " exist but not found any of SysTagDisPlay");
             return null;
         }
         
@@ -237,6 +237,51 @@ public class SetService {
         }
         
         return findById(setId);
+    }
+    
+    /** service for ApiMso.setUpdate
+     *  @param setId required, SysTag's Id with SysTag's type = Set
+     *  @param name optional, Set's name save in SysTagDisplay's name
+     *  @param seq optional, Set's seq save in SysTag's seq
+     *  @param tag optional, Set's tag save in SysTagDisplay's popularTag
+     *  @param sortingType optional, Set's sortingType save in SysTag's sorting */
+    public Set setUpdate(Long setId, String name, Short seq, String tag, Short sortingType) {
+        
+        if (setId == null) {
+            return null;
+        }
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null) {
+            return null;
+        }
+        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
+        if (setMeta == null) {
+            log.warning("invalid structure : SysTag's Id=" + set.getId() + " exist but not found any of SysTagDisPlay");
+            return null;
+        }
+        
+        if (name != null) {
+            setMeta.setName(name);
+        }
+        if (seq != null) {
+            set.setSeq(seq);
+        }
+        if (tag != null) {
+            setMeta.setPopularTag(tag);
+        }
+        if (sortingType != null) {
+            set.setSorting(sortingType);
+        }
+        // automated update cntChannel
+        List<SysTagMap> channels = sysTagMapMngr.findBySysTagId(set.getId());
+        setMeta.setCntChannel(channels.size());
+        
+        if (seq != null || sortingType != null) {
+            set = sysTagMngr.save(set);
+        }
+        setMeta = sysTagDisplayMngr.save(setMeta);
+        
+        return composeSet(set, setMeta);
     }
     
     /** service for ApiMso.setChannels

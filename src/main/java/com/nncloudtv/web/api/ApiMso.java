@@ -381,13 +381,7 @@ public class ApiMso extends ApiGeneric {
         // name
         String name = req.getParameter("name");
         if (name != null) {
-            setMeta.setName(NnStringUtil.htmlSafeAndTruncated(name));
-        }
-        
-        // lang
-        String lang = req.getParameter("lang");
-        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
-            setMeta.setLang(lang);
+            name = NnStringUtil.htmlSafeAndTruncated(name);
         }
         
         // seq
@@ -401,7 +395,6 @@ public class ApiMso extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            set.setSeq(seq);
         }
         
         // tag TODO see NnChannelManager .processTagText .processChannelTag
@@ -409,7 +402,6 @@ public class ApiMso extends ApiGeneric {
         String tag = null;
         if (tagText != null) {
             tag = TagManager.processTagText(tagText);
-            setMeta.setPopularTag(tag);
         }
         
         // sortingType
@@ -428,23 +420,17 @@ public class ApiMso extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            set.setSorting(sortingType);
         }
         
-        if (seqStr != null || sortingTypeStr != null) {
-            set = sysTagMngr.save(set);
+        Set result = setServ.setUpdate(set.getId(), name, seq, tag, sortingType);
+        if (result == null) {
+            log.warning("Unexcepted result : setServ.setUpdate return null");
+            log.info(printExitState(now, req, "ok"));
+            nullResponse(resp);
+            return null;
         }
-        
-        // cntChannel
-        List<SysTagMap> channels = sysTagMapMngr.findBySysTagId(set.getId());
-        setMeta.setCntChannel(channels.size());
-        
-        setMeta = sysTagDisplayMngr.save(setMeta);
-        
-        //sysTagMapMngr.reorderSysTagChannels(set.getId());
-        
         log.info(printExitState(now, req, "ok"));
-        return setResponse(set, setMeta);
+        return result;
     }
     
     //@RequestMapping(value = "sets/{setId}", method = RequestMethod.DELETE)
