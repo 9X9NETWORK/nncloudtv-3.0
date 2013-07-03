@@ -892,7 +892,7 @@ public class ApiContent extends ApiGeneric {
     public @ResponseBody
     List<NnChannel> channelsSearch(HttpServletRequest req,
             HttpServletResponse resp,
-            @RequestParam(required = false) String mso,
+            @RequestParam(required = false, value = "mso") String mso,
             @RequestParam(required = false, value = "sphere") String sphereStr,
             @RequestParam(required = false, value = "channels") String channelIdListStr,
             @RequestParam(required = false, value = "keyword") String keyword,
