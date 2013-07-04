@@ -925,13 +925,13 @@ public class ApiContent extends ApiGeneric {
             }
             
             results = channelMngr.findByUser(user, 0, false);
-            
+            /*
             for (NnChannel channel : results) {
                 
                 channel.setName(NnStringUtil.revertHtml(channel.getName()));
                 channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
             }
-            
+            */
             Collections.sort(results, channelMngr.getChannelComparator("seq"));
             
         } else if (channelIdListStr != null) {
@@ -951,7 +951,7 @@ public class ApiContent extends ApiGeneric {
                     log.info("channel not found: " + channelId);
                     continue;
                 }
-                channelMngr.populateMoreImageUrl(channel);
+                //channelMngr.populateMoreImageUrl(channel);
                 results.add(channel);
             }
         } else if (keyword != null && keyword.length() > 0) {
@@ -1016,12 +1016,15 @@ public class ApiContent extends ApiGeneric {
                 channelIdList = new ArrayList<Long>(channelIdSet);
             }
             results = channelMngr.findByIds(channelIdList);
+            /*
             for (NnChannel channel : results) {
                 channelMngr.populateMoreImageUrl(channel);
             }
+            */
             Collections.sort(results, channelMngr.getChannelComparator("updateDate"));
         }
         
+        results = channelMngr.responseNormalization(results);
         return results;
     }
     

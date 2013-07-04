@@ -165,13 +165,6 @@ public class SetService {
             }
         }
         
-        for (NnChannel channel : results) {
-            channelMngr.populateMoreImageUrl(channel); // TODO : sql in loop
-            
-            channel.setName(NnStringUtil.revertHtml(channel.getName()));
-            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
-        }
-        
         return results;
     }
     
@@ -308,6 +301,8 @@ public class SetService {
         if (results == null) {
             return new ArrayList<NnChannel>();
         }
+        
+        results = channelMngr.responseNormalization(results);
         return results;
     }
     
