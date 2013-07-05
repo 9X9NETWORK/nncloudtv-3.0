@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
@@ -78,10 +79,48 @@ public class PlayerApiService {
     private NnUserManager userMngr = new NnUserManager();    
     private MsoManager msoMngr = new MsoManager();
     private NnChannelManager chMngr = new NnChannelManager();
-    private Locale locale;
+    private Locale locale = Locale.ENGLISH;
     private Mso mso;
     private int version = 32;    
-
+    
+    public int prepService(HttpServletRequest req, boolean tolog) {        
+        /*
+        String userAgent = req.getHeader("user-agent");
+        if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
+            playerApiService.setUserAgent(PlayerApiService.PLAYER_IOS);
+            log.info("from iOS");
+        }
+        */
+        String userAgent = req.getHeader("user-agent");
+        log.info("user agent:" + userAgent);
+        
+        String msoName = req.getParameter("mso");
+        if (tolog) 
+            NnNetUtil.logUrl(req);
+        HttpSession session = req.getSession();
+        session.setMaxInactiveInterval(60);
+        MsoManager msoMngr = new MsoManager();
+        Mso mso = msoMngr.getByNameFromCache(msoName);
+        if (mso == null) {
+            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);;
+           //mso = msoMngr.findNNMso();
+        }
+        log.info("mso entrance:" + mso.getId());
+        Locale locale = Locale.ENGLISH;
+        setLocale(locale);
+        setMso(mso);
+        int status = checkRO();
+        String version = (req.getParameter("v") == null) ? "31" : req.getParameter("v");
+        int intVersion = Integer.parseInt(version);
+        log.info("version = " + intVersion);
+        int minimal = checkApiMinimal();        
+        setVersion(Integer.parseInt(version));
+        if (intVersion < minimal)
+            status = NnStatusCode.API_FORCE_UPGRADE;
+        this.locale = locale;
+        return status;                
+    }
+    
     public int getVersion() {
         return version;
     }
