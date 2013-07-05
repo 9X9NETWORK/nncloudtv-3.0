@@ -45,10 +45,11 @@ public class ApiContext {
         
         channelMngr = new NnChannelManager();
         userMngr = new NnUserManager();
+        msoMngr = new MsoManager();
         
-        mso = msoMngr.getByNameFromCache(this.httpReqest.getParameter(ApiContext.PARAM_MSO));
+        mso = this.msoMngr.getByNameFromCache(this.httpReqest.getParameter(ApiContext.PARAM_MSO));
         if (mso == null) {
-            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);;
+            mso = this.msoMngr.getByNameFromCache(Mso.NAME_9X9);;
         }
         log.info("mso entrance = " + mso.getId());
         
