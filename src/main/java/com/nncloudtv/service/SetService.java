@@ -303,6 +303,9 @@ public class SetService {
         }
         
         results = channelMngr.responseNormalization(results);
+        if (results.size() > 0) { // dependence with front end use case
+            channelMngr.populateMoreImageUrl(results.get(0));
+        }
         return results;
     }
     

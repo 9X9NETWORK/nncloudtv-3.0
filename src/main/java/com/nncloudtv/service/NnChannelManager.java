@@ -1108,25 +1108,32 @@ public class NnChannelManager {
     public List<NnChannel> responseNormalization(List<NnChannel> channels) {
         
         for (NnChannel channel : channels) {
-            
-            // imageUrl
-            if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
-                    channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
-                String[] imageUrls = channel.getImageUrl().split("\\|");
-                channel.setImageUrl(imageUrls[0]);
-            }
-            
-            // moreImageUrl
-            populateMoreImageUrl(channel); // TODO : sql in loop
-            
-            // name
-            channel.setName(NnStringUtil.revertHtml(channel.getName()));
-            
-            // intro
-            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+            channel = responseNormalization(channel);
         }
         
         return channels;
+    }
+    
+    /** adapt NnChannel to format that CMS API required */
+    public NnChannel responseNormalization(NnChannel channel) {
+        
+        // imageUrl
+        if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
+                channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
+            String[] imageUrls = channel.getImageUrl().split("\\|");
+            channel.setImageUrl(imageUrls[0]);
+        }
+        
+        // moreImageUrl
+        // populateMoreImageUrl(channel); // populate its value is optional 
+        
+        // name
+        channel.setName(NnStringUtil.revertHtml(channel.getName()));
+        
+        // intro
+        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        
+        return channel;
     }
     
 }
