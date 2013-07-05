@@ -185,11 +185,7 @@ public class ApiMisc extends ApiGeneric {
 		
 		ApiContext ctx = new ApiContext(req);
 		
-		if (ctx.isProductionSite()) {
-		    log.info("production site");
-		} else {
-		    log.info("development site");
-		}
+        log.info("isProductionSite = " + ctx.isProductionSite());
 		
 		for (String name : names.keySet()) {
 			
