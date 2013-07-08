@@ -15,7 +15,7 @@ import com.nncloudtv.service.NnUserManager;
 
 public class ApiContext {
     
-    public final static String PRODUCTION_SITE_URL = "http://www.9x9.tv";
+    public final static String PRODUCTION_SITE_URL = "http://www.9x9.tv"; // TODO: regex, http(s), (www.)9x9.tv
     public final static String DEFAULT_VERSION = "31";
     public final static String HEADER_USER_AGENT = "user-agent";
     
@@ -24,15 +24,20 @@ public class ApiContext {
     public final static String PARAM_SPHERE = "shpere";
     public final static String PARAM_VERSION = "v";
     
-    public NnChannelManager channelMngr;
-    public NnUserManager userMngr;
-    public MsoManager msoMngr;
+    NnChannelManager channelMngr;
+    NnUserManager userMngr;
+    MsoManager msoMngr;
     
-    public HttpServletRequest httpReqest;
-    public Mso mso;
-    public Locale language;
-    public Long version;
-    public String root;
+    HttpServletRequest httpReqest;
+    Locale language;
+    Long version;
+    String root;
+    Mso mso;
+    
+    public Mso getMso() {
+    
+        return mso;
+    }
     
     protected static final Logger log = Logger.getLogger(ApiContext.class.getName());
     

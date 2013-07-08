@@ -443,36 +443,27 @@ public class PlayerApiController {
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
-        String root = NnNetUtil.getUrlRoot(req); //http://dev.9x9.tv
+        
         String pdrServer = "http://v32d.9x9.tv";
-        String prod1 = "http://www.9x9.tv";
-        String prod2 = "http://9x9.tv";
-        String path = "";
-        
+        String path = "/playerAPI/pdrServer";
         PlayerApiService playerApiService = new PlayerApiService();
+        playerApiService.prepService(req, false);
+        ApiContext ctx = new ApiContext(req);
         
-        /*
-        String userToken = req.getParameter("user");
-        String deviceToken = req.getParameter("device");
-        String session = req.getParameter("session");
-        String pdr = req.getParameter("session");
-        */
-        log.info("root = " + root);
-        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {        	
-        //if (!root.equals(pdrServer)) {
-            path = "/playerAPI/pdrServer";
-            URL url;
-            try {        
-                playerApiService.prepService(req, false);
+        if (ctx.isProductionSite()) {
+            
+            try {
                 String urlStr = pdrServer + path;
+                log.info("forward to " + urlStr);
                 String params = "user=" + userToken + 
                  "&device=" + deviceToken + 
                  "&session=" + session +
                  "&pdr=" + URLEncoder.encode("" + pdr, "UTF-8") +                     
                  "&rx=" + rx +
-                 "&mso=" + playerApiService.getMso().getName();
+                 "&mso=" + ctx.getMso().getName();
                 //log.info(urlStr + "?" + params);
-                url = new URL(urlStr);
+                
+                URL url = new URL(urlStr);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
@@ -490,22 +481,6 @@ public class PlayerApiController {
         	this.pdrServer(userToken, deviceToken, session, pdr, rx, req, resp);
         }
         return playerApiService.assembleMsgs(NnStatusCode.SUCCESS, null); 
-            
-//        if (!root.equals(pdrServer) && (root.equals(prod1) || root.equals(prod2))) {
-//        //if (!root.equals(pdrServer)) {
-//            String queryStr = req.getQueryString(); //user=a&session=1
-//            if (queryStr != null && !queryStr.equals("null"))
-//                queryStr = "?" + queryStr;
-//            else 
-//                queryStr = "";
-//            path = "/playerAPI/pdrServer" + queryStr;
-//            String url = pdrServer + path;
-//            log.info("url:" + url);
-//            log.info("redirect to v32d");
-//            return "redirect:" + url;
-//        }
-//        log.info("path:" + path);
-//        return "redirect:" + path;
     }
 
     /**
