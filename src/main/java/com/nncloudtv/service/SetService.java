@@ -199,6 +199,42 @@ public class SetService {
         return results;
     }
     
+    /** check if input Channel Ids represent all Channels in the Set */
+    public boolean isContainAllChannels(Long setId, List<Long> channelIds) {
+        
+        if (setId == null || channelIds == null) {
+            return false;
+        }
+        
+        // it must same as setChannels's result
+        List<SysTagMap> setChannels = sysTagMapMngr.findBySysTagId(setId);
+        if (setChannels == null) {
+            if (channelIds.size() == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        int index;
+        for (SysTagMap channel : setChannels) {
+            index = channelIds.indexOf(channel.getChannelId());
+            if (index > -1) {
+                // pass
+            } else {
+                // input missing this Channel ID 
+                return false;
+            }
+        }
+        
+        if (setChannels.size() != channelIds.size()) {
+            // input contain duplicate or other Channel Id
+            return false;
+        }
+        
+        return true;
+    }
+    
     /** service for ApiMso.msoSets
      *  @param msoId required, Mso's Id
      *  @param lang optional, filter for Set's lang */
@@ -359,6 +395,51 @@ public class SetService {
         } else {
             sysTagMapMngr.delete(sysTagMap);
         }
+    }
+    
+    /** service for ApiMso.setChannelsSorting
+     *  @param setId required, SysTag's Id with SysTag's type = Set
+     *  @param sortedChannels required, the Channel Ids from Set to be sorted */
+    public void setChannelsSorting(Long setId, List<Long> sortedChannels) {
+        
+        if (setId == null || sortedChannels == null) {
+            return ;
+        }
+        
+        // it must same as setChannels's result, order by seq asc
+        List<SysTagMap> setChannels = sysTagMapMngr.findBySysTagId(setId);
+        
+        List<Long> oldSequence = new ArrayList<Long>();
+        List<Long> remainder = new ArrayList<Long>();
+        for (SysTagMap channel : setChannels) {
+            oldSequence.add(channel.getChannelId());
+            remainder.add(channel.getChannelId());
+        }
+        
+        List<SysTagMap> newSequence = new ArrayList<SysTagMap>();
+        for (Long channelId : sortedChannels) {
+            int index = oldSequence.indexOf(channelId);
+            if (index > -1) {
+                newSequence.add(setChannels.get(index));
+                remainder.remove(channelId);
+            }
+        }
+        
+        // add remainder channels to the end of list
+        for (Long channelId : remainder) {
+            int index = oldSequence.indexOf(channelId);
+            if (index > -1) {
+                newSequence.add(setChannels.get(index));
+            }
+        }
+        
+        int seq = 1;
+        for (SysTagMap channel : newSequence) {
+            channel.setSeq((short) seq);
+            seq++;
+        }
+        
+        sysTagMapMngr.saveAll(newSequence);
     }
 
 }

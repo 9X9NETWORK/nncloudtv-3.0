@@ -770,7 +770,7 @@ public class ApiMso extends ApiGeneric {
         }
         
         String channelIdsStr = req.getParameter("channels");
-        if (channelIdsStr == null) {
+        if (channelIdsStr == null || channelIdsStr.equals("")) {
             sysTagMapMngr.reorderSysTagMaps(set.getId());
             okResponse(resp);
             log.info(printExitState(now, req, "ok"));
@@ -778,47 +778,27 @@ public class ApiMso extends ApiGeneric {
         }
         String[] channelIdStrList = channelIdsStr.split(",");
         
-        List<SysTagMap> setChannels = sysTagMapMngr.findBySysTagId(set.getId()); // it must same as setChannels's result
         List<Long> channelIdList = new ArrayList<Long>();
-        List<Long> checkedChannelIdList = new ArrayList<Long>();
-        for (SysTagMap item : setChannels) {
-            channelIdList.add(item.getChannelId());
-            checkedChannelIdList.add(item.getChannelId());
-        }
-        
-        int index;
-        Long channelId = null;
-        List<SysTagMap> orderedSetChannels = new ArrayList<SysTagMap>();
         for (String channelIdStr : channelIdStrList) {
             
-            channelId = null;
+            Long channelId = null;
             try {
                 channelId = Long.valueOf(channelIdStr);
             } catch(Exception e) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return null;
             }
-            if (channelId != null) {
-                index = channelIdList.indexOf(channelId);
-                if (index > -1) {
-                    orderedSetChannels.add(setChannels.get(index));
-                    checkedChannelIdList.remove(channelId);
-                }
-            }
+            channelIdList.add(channelId);
         }
-        // parameter should contain all channelId
-        if (checkedChannelIdList.size() != 0) {
+        
+        if (setServ.isContainAllChannels(set.getId(), channelIdList) == false) {
             badRequest(resp, INVALID_PARAMETER);
             log.info(printExitState(now, req, "400"));
             return null;
         }
         
-        int counter = 1;
-        for (SysTagMap item : orderedSetChannels) {
-            item.setSeq((short) counter);
-            counter++;
-        }
-        
-        sysTagMapMngr.saveAll(orderedSetChannels);
-        
+        setServ.setChannelsSorting(set.getId(), channelIdList);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
