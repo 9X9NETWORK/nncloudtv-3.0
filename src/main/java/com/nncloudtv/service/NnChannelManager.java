@@ -446,22 +446,8 @@ public class NnChannelManager {
         return dao.findBySourceUrl(url);
     }
     
-    public NnChannel findById(long id) {        
-        NnChannel channel = dao.findById(id);
-        if (channel == null) {
-            return null;
-        }
-        
-        // TODO: to be independent out
-        MsoManager msoMngr = new MsoManager();
-        Mso nnMso = msoMngr.findNNMso();
-        StoreService storeServ = new StoreService();
-        List<Long> categoryIds = storeServ.findCategoryIdsByChannelId(id, nnMso.getId());
-        if (categoryIds.size() > 0) {
-            channel.setCategoryId(categoryIds.get(0));
-        }
-        
-        return channel;
+    public NnChannel findById(long id) {
+        return dao.findById(id);
     }
     
     public List<NnChannel> findMsoDefaultChannels(long msoId, boolean needSubscriptionCnt) {        
@@ -1134,6 +1120,24 @@ public class NnChannelManager {
         channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
         
         return channel;
+    }
+    
+    /** get CategoryId that Channel belongs to */
+    public Long getCategoryId(Long channelId) {
+        
+        if (channelId == null) {
+            return null;
+        }
+        
+        MsoManager msoMngr = new MsoManager();
+        Mso nnMso = msoMngr.findNNMso();
+        StoreService storeServ = new StoreService();
+        List<Long> categoryIds = storeServ.findCategoryIdsByChannelId(channelId, nnMso.getId());
+        if (categoryIds != null && categoryIds.size() > 0) {
+            return categoryIds.get(0);
+        } else {
+            return null;
+        }
     }
     
 }

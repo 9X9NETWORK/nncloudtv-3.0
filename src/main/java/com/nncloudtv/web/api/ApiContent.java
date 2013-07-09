@@ -1050,8 +1050,8 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        channel.setName(NnStringUtil.revertHtml(channel.getName()));
-        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        channel.setCategoryId(channelMngr.getCategoryId(channel.getId()));
+        channel = channelMngr.responseNormalization(channel);
         
         return channel;
     }
@@ -1133,10 +1133,10 @@ public class ApiContent extends ApiGeneric {
         }
         
         // categoryId
+        Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
             
-            Long categoryId = null;
             try {
                 categoryId = Long.valueOf(categoryIdStr);
             } catch (NumberFormatException e) {
@@ -1147,26 +1147,25 @@ public class ApiContent extends ApiGeneric {
             }
             
             SysTagManager tagMngr = new SysTagManager();
-            StoreService storeServ = new StoreService();
-            SysTag category = tagMngr.findById(categoryId); // TODO : can't ensure this Id is 9x9's Category
-            if (category == null) {
+            SysTag category = tagMngr.findById(categoryId);
+            if (category == null || category.getType() != SysTag.TYPE_CATEGORY ||
+                    category.getMsoId() != new MsoManager().findNNMso().getId()) {
                 badRequest(resp, "Category Not Found");
                 return null;
-            }
-            
-            // category mapping
-            if (categoryId != channel.getCategoryId()) {
-                
-                storeServ.setupChannelCategory(categoryId, channelId);
-                
-                channel.setCategoryId(categoryId);
             }
         }
         
         NnChannel savedChannel = channelMngr.save(channel);
+        
+        channel.setCategoryId(channelMngr.getCategoryId(channel.getId()));
+        if (categoryIdStr != null && categoryId != channel.getCategoryId()) {
+            StoreService storeServ = new StoreService();
+            storeServ.setupChannelCategory(categoryId, channel.getId());
+            channel.setCategoryId(categoryId);
+        }
         savedChannel.setCategoryId(channel.getCategoryId());
-        savedChannel.setName(NnStringUtil.revertHtml(savedChannel.getName()));
-        savedChannel.setIntro(NnStringUtil.revertHtml(savedChannel.getIntro()));
+        
+        savedChannel = channelMngr.responseNormalization(savedChannel);
         
         return savedChannel;
     }

@@ -488,10 +488,9 @@ public class ApiUser extends ApiGeneric {
         
         for (NnChannel channel : results) {
             
-            channelMngr.populateMoreImageUrl(channel);
+            channel = channelMngr.responseNormalization(channel);
             
-            channel.setName(NnStringUtil.revertHtml(channel.getName()));
-            channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+            channelMngr.populateMoreImageUrl(channel);
             
             if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
                 channel.setContentType(NnChannel.CONTENTTYPE_FAVORITE); // To fake is necessary to fake like that
@@ -605,6 +604,7 @@ public class ApiUser extends ApiGeneric {
             @PathVariable("userId") String userIdStr) {
         
         NnChannelManager channelMngr = new NnChannelManager();
+        MsoManager msoMngr = new MsoManager();
         
         Long userId = null;
         try {
@@ -617,7 +617,7 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnUserManager userMngr = new NnUserManager();
-        Mso brand = new MsoManager().findOneByName(mso);
+        Mso brand = msoMngr.findOneByName(mso);
         NnUser user = userMngr.findById(userId, brand.getId());
         if (user == null) {
             notFound(resp, "User Not Found");
@@ -698,7 +698,6 @@ public class ApiUser extends ApiGeneric {
         
         channelMngr.reorderUserChannels(user);
         
-        long channelId = channel.getId();
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
             
@@ -714,20 +713,20 @@ public class ApiUser extends ApiGeneric {
             
             SysTagManager tagMngr = new SysTagManager();
             StoreService storeServ = new StoreService();
-            SysTag category = tagMngr.findById(categoryId); // TODO : can't ensure this Id is 9x9's Category
-            if (category == null) {
+            SysTag category = tagMngr.findById(categoryId);
+            if (category == null || category.getType() != SysTag.TYPE_CATEGORY ||
+                    category.getMsoId() != msoMngr.findNNMso().getId()) {
                 badRequest(resp, "Category Not Found");
                 return null;
             }
             
             // category mapping
-            storeServ.setupChannelCategory(categoryId, channelId);
+            storeServ.setupChannelCategory(categoryId, channel.getId());
             
             channel.setCategoryId(categoryId);
         }
         
-        channel.setName(NnStringUtil.revertHtml(channel.getName()));
-        channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
+        channel = channelMngr.responseNormalization(channel);
         
         return channel;
     }
