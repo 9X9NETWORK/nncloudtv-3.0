@@ -213,7 +213,7 @@ public class PlayerController {
         model = service.prepareChannel(model, cid, resp);
         model = service.prepareEpisode(model, pid, resp);
         
-        String playerPromotionUrl = service.getPlayerProtionUrl(req, mso, cid, pid);
+        String playerPromotionUrl = service.getPlayerPromotionUrl(req, mso, cid, pid);
         log.info("player promotion url = " + playerPromotionUrl);
         model.addAttribute("playerPromotionUrl", playerPromotionUrl);
         
