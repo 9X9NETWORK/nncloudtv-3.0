@@ -210,7 +210,7 @@ public class NnProgramManager {
         
         for (NnChannel c : channels) {
             
-            String cacheKey = this.getCacheKey(c.getId());
+            String cacheKey = this.getProgramInfoCacheKey(c.getId());
             String programInfo = (String) CacheFactory.get(cacheKey);
             
             if (programInfo != null) {
@@ -340,7 +340,13 @@ public class NnProgramManager {
         String str = "nnprogram(" + channelId + ")"; 
         return str;
     }
-
+    
+    //cache the 1st program of channel
+    public String getProgramInfoCacheKey(long channelId) {
+        String str = "nnprogram-info(" + channelId + ")";
+        return str;
+    }
+    
     public String getV31CacheKey(long channelId) {
         String str = "nnprogram-v31(" + channelId + ")"; 
         return str;
@@ -528,7 +534,7 @@ public class NnProgramManager {
     
     //player programInfo entry
     public String findPlayerProgramInfoByChannel(long channelId) {
-        String cacheKey = "nnprogram(" + channelId + ")";
+        String cacheKey = this.getCacheKey(channelId);
         try {
             String result = (String)CacheFactory.get(cacheKey);
             if (result != null) { 
