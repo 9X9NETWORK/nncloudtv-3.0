@@ -204,9 +204,20 @@ public class NnProgramManager {
     }
     
     public String findLatestProgramInfoByChannels(List<NnChannel> channels) {
+        
         YtProgramDao ytDao = new YtProgramDao();
         String output = "";
+        
         for (NnChannel c : channels) {
+            
+            String cacheKey = this.getCacheKey(c.getId());
+            String programInfo = (String) CacheFactory.get(cacheKey);
+            
+            if (programInfo != null) {
+                log.info("get programInfo from cache, channelId = " + c.getId());
+                output += programInfo;
+                continue;
+            }
             if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
                 c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) {
                 YtProgram yt = ytDao.findLatestByChannel(c.getId());
@@ -214,21 +225,22 @@ public class NnProgramManager {
                 if (yt != null) {
                     programs.add(yt);
                     log.info("find latest yt program:" + yt.getId());
-                    output += this.composeYtProgramInfo(c, programs);
+                    programInfo = this.composeYtProgramInfo(c, programs);
                 }
-            }
-            if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP ||
-                c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY) {
-                
-                // TODO: ....
-                
             }
             if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
                 List<NnEpisode> episodes = new NnEpisodeManager().findPlayerLatestEpisodes(c.getId());                
                 if (episodes.size() > 0) {
                     log.info("find latest episode id:" + episodes.get(0).getId());
                     List<NnProgram> programs = this.findByEpisodeId(episodes.get(0).getId());
-                    output += this.composeNnProgramInfo(c, episodes, programs);                
+                    programInfo = this.composeNnProgramInfo(c, episodes, programs);
+                }
+            }
+            if (programInfo != null) {
+                output += programInfo;
+                if (CacheFactory.isRunning) {
+                    CacheFactory.set(cacheKey, programInfo);
+                    log.info("save programInfo to cache, channelId = " + c.getId());
                 }
             }
         }        
