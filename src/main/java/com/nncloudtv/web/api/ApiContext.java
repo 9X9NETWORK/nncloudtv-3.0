@@ -15,7 +15,7 @@ import com.nncloudtv.service.NnUserManager;
 
 public class ApiContext {
     
-    public final static String PRODUCTION_SITE_URL = "http://www.9x9.tv"; // TODO: regex, http(s), (www.)9x9.tv
+    public final static String PRODUCTION_SITE_URL_REGEX = "^http(s)?:\\/\\/(www\\.)?9x9\\.tv$";
     public final static String DEFAULT_VERSION = "31";
     public final static String HEADER_USER_AGENT = "user-agent";
     
@@ -78,11 +78,11 @@ public class ApiContext {
     
     public Boolean isProductionSite() {
         
-        if (root == null) {
+        if (root == null || root.isEmpty()) {
             
             return false;
             
-        } else if (root.equals(ApiContext.PRODUCTION_SITE_URL)) {
+        } else if (root.matches(ApiContext.PRODUCTION_SITE_URL_REGEX)) {
             
             return true;
             
