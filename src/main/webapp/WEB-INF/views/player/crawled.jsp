@@ -978,7 +978,7 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 
 <script type="text/javascript">
 var brandinfo = "${brandInfo}";
-setTimeout("location.replace('${playerPromotionUrl}')", 3000);
+setTimeout("location.replace('${playerPromotionUrl}')", 1000);
 </script>
 
 </body>
