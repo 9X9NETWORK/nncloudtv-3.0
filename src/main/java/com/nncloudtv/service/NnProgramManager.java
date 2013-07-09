@@ -308,6 +308,7 @@ public class NnProgramManager {
             log.info("reset program info cache: " + channelId);
             CacheFactory.delete(getCacheKey(channelId));
             CacheFactory.delete(getV31CacheKey(channelId));
+            CacheFactory.delete(getProgramInfoCacheKey(channelId));
             CacheFactory.delete(NnChannelManager.getCacheKey(channelId, 32));
             CacheFactory.delete(NnChannelManager.getCacheKey(channelId, 40));
         }
