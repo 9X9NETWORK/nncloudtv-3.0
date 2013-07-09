@@ -13,7 +13,6 @@ public class CacheFactory {
     
     protected static final Logger log = Logger.getLogger(CacheFactory.class.getName());
     
-    private static MemcachedClient cache = null;
     public static int EXP_DEFAULT = 2592000;
     public static int PORT_DEFAULT = 11211;
     public static String ERROR = "ERROR";
@@ -22,6 +21,7 @@ public class CacheFactory {
     public static MemcachedClient getClient() {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
         Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
+        MemcachedClient cache = null;
      
         try {
             Properties properties = new Properties();
