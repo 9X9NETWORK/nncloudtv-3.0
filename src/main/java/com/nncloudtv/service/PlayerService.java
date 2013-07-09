@@ -218,56 +218,6 @@ public class PlayerService {
         return url;
     }
     
-    // TODO: to be removed
-    public String getQueryString(HttpServletRequest req, String channel, String episode, String ch, String ep) {
-        String queryStr = this.rewrite(req);
-        System.out.println("query str:" + queryStr);
-        String cid = channel;
-        if (ch != null)
-            cid = ch;
-        String pid = episode;
-        if (ep != null)
-            pid = ep;
-        String epStr = "";
-        if (pid != null) {
-            Pattern pattern = Pattern.compile("[\\d]*");
-            Matcher matcher = pattern.matcher(cid);
-            if (matcher.matches()) {
-                NnChannel c = new NnChannelManager().findById(Long.parseLong(cid));
-                if (c != null) {
-                    if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
-                        matcher = pattern.matcher(pid);
-                        if (matcher.matches()) {
-                            NnProgram p = new NnProgramManager().findById(Long.parseLong(pid));
-                            if (p != null) {
-                                log.info("before pid:" + pid + ";after pid:" + p.getEpisodeId());
-                                pid = String.valueOf("e" + p.getEpisodeId());                                
-                            }
-                        }
-                    }
-                }
-            }            
-            epStr = "!ep=" + pid;
-        }
-        log.info("rewritten url to : " + queryStr + "#!ch=" + cid + epStr);
-        return queryStr + "#!ch=" + cid + epStr;
-    }
-    
-    /*
-    public String rewrite(String js, String jsp) {
-        String url = "";
-        if (jsp != null)
-            url += "?jsp=" + jsp;
-        if (js != null) {
-            if (jsp != null)
-                url += "&js=" + js;
-            else
-                url += "?js=" + js;
-        }
-        return url;
-    }
-    */
-        
     public Model prepareCrawled(Model model, String escaped) {
         try {
             escaped = URLDecoder.decode(escaped, "UTF-8");
