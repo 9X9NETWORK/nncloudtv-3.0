@@ -1094,14 +1094,14 @@ public class NnChannelManager {
     public List<NnChannel> responseNormalization(List<NnChannel> channels) {
         
         for (NnChannel channel : channels) {
-            channel = responseNormalization(channel);
+            this.normalize(channel);
         }
         
         return channels;
     }
     
     /** adapt NnChannel to format that CMS API required */
-    public NnChannel responseNormalization(NnChannel channel) {
+    public void normalize(NnChannel channel) {
         
         // imageUrl
         if (channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
@@ -1119,7 +1119,6 @@ public class NnChannelManager {
         // intro
         channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
         
-        return channel;
     }
     
     /** get CategoryId that Channel belongs to */
@@ -1140,4 +1139,18 @@ public class NnChannelManager {
         }
     }
     
+    public void populateCategoryId(NnChannel channel) {
+        
+        if (channel == null)
+            return;
+        
+        MsoManager msoMngr = new MsoManager();
+        Mso nnMso = msoMngr.findNNMso();
+        StoreService storeServ = new StoreService();
+        
+        List<Long> categoryIds = storeServ.findCategoryIdsByChannelId(channel.getId(), nnMso.getId());
+        if (categoryIds != null && categoryIds.size() > 0) {
+            channel.setCategoryId(categoryIds.get(0));
+        }
+    }
 }

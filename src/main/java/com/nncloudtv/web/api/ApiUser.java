@@ -488,8 +488,7 @@ public class ApiUser extends ApiGeneric {
         
         for (NnChannel channel : results) {
             
-            channel = channelMngr.responseNormalization(channel);
-            
+            channelMngr.normalize(channel);
             channelMngr.populateMoreImageUrl(channel);
             
             if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
@@ -726,7 +725,7 @@ public class ApiUser extends ApiGeneric {
             channel.setCategoryId(categoryId);
         }
         
-        channel = channelMngr.responseNormalization(channel);
+        channelMngr.normalize(channel);
         
         return channel;
     }

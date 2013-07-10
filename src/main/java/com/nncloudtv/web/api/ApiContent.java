@@ -1050,8 +1050,8 @@ public class ApiContent extends ApiGeneric {
             return null;
         }
         
-        channel.setCategoryId(channelMngr.getCategoryId(channel.getId()));
-        channel = channelMngr.responseNormalization(channel);
+        channelMngr.populateCategoryId(channel);
+        channelMngr.normalize(channel);
         
         return channel;
     }
@@ -1157,7 +1157,7 @@ public class ApiContent extends ApiGeneric {
         
         NnChannel savedChannel = channelMngr.save(channel);
         
-        channel.setCategoryId(channelMngr.getCategoryId(channel.getId()));
+        channelMngr.populateCategoryId(channel);
         if (categoryIdStr != null && categoryId != channel.getCategoryId()) {
             StoreService storeServ = new StoreService();
             storeServ.setupChannelCategory(categoryId, channel.getId());
@@ -1165,7 +1165,7 @@ public class ApiContent extends ApiGeneric {
         }
         savedChannel.setCategoryId(channel.getCategoryId());
         
-        savedChannel = channelMngr.responseNormalization(savedChannel);
+        channelMngr.normalize(savedChannel);
         
         return savedChannel;
     }
