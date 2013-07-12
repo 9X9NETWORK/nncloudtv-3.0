@@ -280,6 +280,9 @@ public class PlayerApiService {
     }
     
     public String fbDeviceSignup(FacebookMe me, String expire, String msoString, HttpServletRequest req, HttpServletResponse resp) {
+    	if (me.getAccessToken() == null || me.getId() == null || me.getEmail() == null) {
+    		return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
+    	}    	
         return this.fbSignup(me, expire, msoString, req, resp);
     }
     
@@ -2551,6 +2554,7 @@ public class PlayerApiService {
                 "", //description
                 display.getImageUrl(),
                 String.valueOf(display.getCntChannel()),
+                display.getImageUrl2(),
             };
             setStr += NnStringUtil.getDelimitedStr(obj) + "\n";          
         }
