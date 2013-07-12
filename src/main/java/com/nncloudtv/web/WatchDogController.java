@@ -5,9 +5,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+
+import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.OperationTimeoutException;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParseException;
@@ -23,6 +27,7 @@ import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.SysTagDao;
 import com.nncloudtv.dao.SysTagDisplayDao;
 import com.nncloudtv.dao.SysTagMapDao;
+import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
@@ -345,5 +350,50 @@ public class WatchDogController {
         tagMngr.createTagMap(tagId, chId);
         return "OK";                
     }    
+
+    //delete cache with key
+    @RequestMapping("cache_delete")
+    public ResponseEntity<String> cache_delete(@RequestParam(value="key", required=false)String key) {
+        MemcachedClient cache = CacheFactory.getClient();
+        try {
+            cache.delete(key).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        cache.shutdown(); //unsure
+        return NnNetUtil.textReturn("cache delete:" + key);
+    }
+
+    @RequestMapping("cache_get")
+    public ResponseEntity<String> cache_get(@RequestParam(value="key", required=false)String key) {
+        MemcachedClient cache = CacheFactory.getClient();
+        String value = "";
+        if (cache != null) { 
+            value = (String)cache.get(key);        
+            cache.shutdown();
+        }
+        return NnNetUtil.textReturn("cache get:" + value);
+    }
+
+    @RequestMapping("cache_set")
+    public ResponseEntity<String> cache_set(
+            @RequestParam(value="key", required=false)String key,
+            @RequestParam(value="value", required=false)String value) {
+        MemcachedClient cache = null;
+        try {
+            cache = CacheFactory.getClient();
+        } catch (OperationTimeoutException e) {
+            log.info("memcache down");
+        }
+        String setValue = "";
+        if (cache != null) { 
+            cache.set(key, CacheFactory.EXP_DEFAULT, value);
+            setValue = (String)cache.get(key);
+            cache.shutdown();
+        }
+        return NnNetUtil.textReturn("cache get:" + setValue);
+    }
     
 }
