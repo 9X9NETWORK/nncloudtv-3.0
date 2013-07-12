@@ -129,10 +129,10 @@ public class MsoManager {
             }            
             if (c.getItem().equals(MsoConfig.UPGRADE_MSG)) {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.UPGRADE_MSG, c.getValue());
-            }            
+            }    
         }
         if (regionSet == false) {
-        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en English;zh 中文");
+        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en US;zh 台灣");
         }
         
         if (CacheFactory.isRunning) { 
