@@ -31,8 +31,12 @@ public class SysTagDisplay implements Serializable {
 
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
-    private String imageUrl;
+    private String imageUrl; //currently episode thumbnail
 
+    @Persistent
+    @Column(jdbcType="VARCHAR", length=255)
+    private String imageUrl2; //currently channel thumbnail
+    
     @Persistent
     @Column(jdbcType="VARCHAR", length=500)
     private String popularTag; //sequence shown in the directory
@@ -105,6 +109,14 @@ public class SysTagDisplay implements Serializable {
 
     public void setCntChannel(int cntChannel) {
         this.cntChannel = cntChannel;
+    } 
+
+    public String getImageUrl2() {
+        return imageUrl2;
+    }
+
+    public void setImageUrl2(String imageUrl2) {
+        this.imageUrl2 = imageUrl2;
     } 
     
 }
