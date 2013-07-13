@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.nncloudtv.dao.NnUserWatchedDao;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserWatched;
 
@@ -25,10 +26,21 @@ public class NnUserWatchedManager {
         return dao.save(user, watched);
     }
         
+    public boolean findInDefaultIpg(NnUser user, long channelId) {
+    	List<NnChannel> channels = new NnChannelManager().findMsoDefaultChannels(user.getMsoId(), false);
+    	for (NnChannel c : channels) {
+    		if (c.getId() == channelId) {
+    			return false;
+    		}    		
+    	}
+    	return true;
+    }
+    
     public void savePersonalHistory(NnUser user, NnUserWatched watched) {
         NnUserSubscribeManager subMngr = new NnUserSubscribeManager();
         //discard if it's already in the guide
-        if (subMngr.findByUserAndChannel(user, watched.getChannelId()) == null) {
+        if (subMngr.findByUserAndChannel(user, watched.getChannelId()) == null &&
+        	(this.findInDefaultIpg(user, watched.getChannelId()) == true) ) {
             List<NnUserWatched> watches = dao.findHistory(user);
             log.info("history size:" + watches.size());
             if (watches.size() <= 26) {
