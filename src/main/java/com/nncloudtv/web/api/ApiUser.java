@@ -28,7 +28,6 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
-import com.nncloudtv.model.SysTag;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
@@ -38,7 +37,6 @@ import com.nncloudtv.service.NnUserLibraryManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserPrefManager;
 import com.nncloudtv.service.StoreService;
-import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.validation.NnUserValidator;
 import com.nncloudtv.web.json.cms.User;
 import com.nncloudtv.web.json.cms.UserFavorite;
@@ -710,11 +708,8 @@ public class ApiUser extends ApiGeneric {
                 return null;
             }
             
-            SysTagManager tagMngr = new SysTagManager();
             StoreService storeServ = new StoreService();
-            SysTag category = tagMngr.findById(categoryId);
-            if (category == null || category.getType() != SysTag.TYPE_CATEGORY ||
-                    category.getMsoId() != msoMngr.findNNMso().getId()) {
+            if (storeServ.isNnCategory(categoryId) == false) {
                 badRequest(resp, "Category Not Found");
                 return null;
             }

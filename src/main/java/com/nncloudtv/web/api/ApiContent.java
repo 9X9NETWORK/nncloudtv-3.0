@@ -1133,6 +1133,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         // categoryId
+        StoreService storeServ = new StoreService();
         Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
@@ -1146,10 +1147,7 @@ public class ApiContent extends ApiGeneric {
                 return null;
             }
             
-            SysTagManager tagMngr = new SysTagManager();
-            SysTag category = tagMngr.findById(categoryId);
-            if (category == null || category.getType() != SysTag.TYPE_CATEGORY ||
-                    category.getMsoId() != new MsoManager().findNNMso().getId()) {
+            if (storeServ.isNnCategory(categoryId) == false) {
                 badRequest(resp, "Category Not Found");
                 return null;
             }
@@ -1159,7 +1157,6 @@ public class ApiContent extends ApiGeneric {
         
         channelMngr.populateCategoryId(channel);
         if (categoryIdStr != null && categoryId != channel.getCategoryId()) {
-            StoreService storeServ = new StoreService();
             storeServ.setupChannelCategory(categoryId, channel.getId());
             channel.setCategoryId(categoryId);
         }
