@@ -305,5 +305,45 @@ public class StoreService {
         sysTagMapMngr.deleteAll(tagMaps);
         sysTagMapMngr.save(new SysTagMap(categoryId, channelId));
     }
+    
+    /** service for ApiMso.storeChannels */
+    public List<Long> storeChannels(Long msoId, java.util.Set<Long> channelIds, Long categoryId) {
+        
+        if (msoId == null) {
+            return new ArrayList<Long>();
+        }
+        
+        List<Long> results = null;
+        if (channelIds != null) {
+            results = checkChannelIdsInMsoStore(channelIds, msoId);
+        } else if (categoryId != null) {
+            results = getChannelIdsFromMsoStoreCategory(categoryId, msoId);
+        } else {
+            results = getChannelIdsFromMsoStore(msoId);
+        }
+        
+        if (results == null) {
+            return new ArrayList<Long>();
+        }
+        return results;
+    }
+    
+    /** service for ApiMso.storeChannelRemove */
+    public void storeChannelRemove(Long msoId, List<Long> channelIds) {
+        
+        if (msoId == null || channelIds == null) {
+            return ;
+        }
+        storeListingMngr.addChannelsToBlackList(channelIds, msoId);
+    }
+    
+    /** service for ApiMso.storeChannelAdd */
+    public void storeChannelAdd(Long msoId, List<Long> channelIds) {
+        
+        if (msoId == null || channelIds == null) {
+            return ;
+        }
+        storeListingMngr.removeChannelsFromBlackList(channelIds, msoId);
+    }
 
 }

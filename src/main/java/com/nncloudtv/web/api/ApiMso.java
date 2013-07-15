@@ -29,7 +29,6 @@ import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.SetService;
-import com.nncloudtv.service.StoreListingManager;
 import com.nncloudtv.service.StoreService;
 import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
@@ -45,7 +44,6 @@ public class ApiMso extends ApiGeneric {
     
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
-    private StoreListingManager storeListingMngr;
     private StoreService storeServ;
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
@@ -54,12 +52,11 @@ public class ApiMso extends ApiGeneric {
     private SetService setServ;
     
     @Autowired
-    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreListingManager storeListingMngr, StoreService storeServ,
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreService storeServ,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
             NnUserProfileManager userProfileMngr, SetService setServ) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
-        this.storeListingMngr = storeListingMngr;
         this.storeServ = storeServ;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
@@ -847,15 +844,14 @@ public class ApiMso extends ApiGeneric {
         }
         
         // channels
-        String channelIdsStr = req.getParameter("channels");
-        
-        List<Long> results = null;
-        if (channelIdsStr != null) { // find by channelIdList
+        java.util.Set<Long> channelIds = null;
+        String channelsStr = req.getParameter("channels");
+        if (channelsStr != null) {
             
-            String[] channelIdStrList = channelIdsStr.split(",");
-            java.util.Set<Long> channelIdSet = new HashSet<Long>();
+            String[] channelIdsStr = channelsStr.split(",");
+            channelIds = new HashSet<Long>();
             Long channelId = null;
-            for (String channelIdStr : channelIdStrList) {
+            for (String channelIdStr : channelIdsStr) {
                 
                 channelId = null;
                 try {
@@ -863,22 +859,16 @@ public class ApiMso extends ApiGeneric {
                 } catch(Exception e) {
                 }
                 if (channelId != null) {
-                    channelIdSet.add(channelId);
+                    channelIds.add(channelId);
                 }
             }
-            results = storeServ.checkChannelIdsInMsoStore(channelIdSet, msoId);
-            
-        } else if (categoryId != null) {
-            results = storeServ.getChannelIdsFromMsoStoreCategory(categoryId, msoId);
-        } else {
-            results = storeServ.getChannelIdsFromMsoStore(msoId);
         }
         
+        List<Long> results = storeServ.storeChannels(mso.getId(), channelIds, categoryId);
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<Long>();
         }
-        
         log.info(printExitState(now, req, "ok"));
         return results;
     }
@@ -920,16 +910,16 @@ public class ApiMso extends ApiGeneric {
         }
         
         // channels
-        String channelIdsStr = req.getParameter("channels");
-        if (channelIdsStr == null) {
+        String channelsStr = req.getParameter("channels");
+        if (channelsStr == null) {
             badRequest(resp, MISSING_PARAMETER);
             log.info(printExitState(now, req, "400"));
             return null;
         }
-        String[] channelIdStrList = channelIdsStr.split(",");
-        List<Long> channelIdList = new ArrayList<Long>();
+        String[] channelIdsStr = channelsStr.split(",");
+        List<Long> channelIds = new ArrayList<Long>();
         Long channelId = null;
-        for (String channelIdStr : channelIdStrList) {
+        for (String channelIdStr : channelIdsStr) {
             
             channelId = null;
             try {
@@ -937,12 +927,11 @@ public class ApiMso extends ApiGeneric {
             } catch(Exception e) {
             }
             if (channelId != null) {
-                channelIdList.add(channelId);
+                channelIds.add(channelId);
             }
         }
         
-        storeListingMngr.addChannelsToBlackList(channelIdList, mso.getId());
-        
+        storeServ.storeChannelRemove(mso.getId(), channelIds);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
@@ -985,16 +974,16 @@ public class ApiMso extends ApiGeneric {
         }
         
         // channels
-        String channelIdsStr = req.getParameter("channels");
-        if (channelIdsStr == null) {
+        String channelsStr = req.getParameter("channels");
+        if (channelsStr == null) {
             badRequest(resp, MISSING_PARAMETER);
             log.info(printExitState(now, req, "400"));
             return null;
         }
-        String[] channelIdStrList = channelIdsStr.split(",");
-        List<Long> channelIdList = new ArrayList<Long>();
+        String[] channelIdsStr = channelsStr.split(",");
+        List<Long> channelIds = new ArrayList<Long>();
         Long channelId = null;
-        for (String channelIdStr : channelIdStrList) {
+        for (String channelIdStr : channelIdsStr) {
             
             channelId = null;
             try {
@@ -1002,12 +991,11 @@ public class ApiMso extends ApiGeneric {
             } catch(Exception e) {
             }
             if (channelId != null) {
-                channelIdList.add(channelId);
+                channelIds.add(channelId);
             }
         }
         
-        storeListingMngr.removeChannelsFromBlackList(channelIdList, mso.getId());
-        
+        storeServ.storeChannelAdd(mso.getId(), channelIds);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
