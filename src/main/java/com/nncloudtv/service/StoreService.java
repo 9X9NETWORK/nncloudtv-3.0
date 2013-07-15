@@ -306,7 +306,10 @@ public class StoreService {
         sysTagMapMngr.save(new SysTagMap(categoryId, channelId));
     }
     
-    /** service for ApiMso.storeChannels */
+    /** service for ApiMso.storeChannels, get channels from Mso's store
+     *  @param msoId required, the Mso's Id
+     *  @param channelIds optional, check if these Channel IDs are in the Mso's store
+     *  @param categoryId optional, the official Category's ID, get channels from Mso's store's Category */
     public List<Long> storeChannels(Long msoId, java.util.Set<Long> channelIds, Long categoryId) {
         
         if (msoId == null) {
@@ -344,6 +347,29 @@ public class StoreService {
             return ;
         }
         storeListingMngr.removeChannelsFromBlackList(channelIds, msoId);
+    }
+    
+    /** service for ApiContent.storeChannels, get channels from official store
+     *  @param categoryId optional, the official Category's ID, get channels from official store's Category
+     *  @param spheres optional, the spheres used for filter the result channels */
+    public List<Long> storeChannels(Long categoryId, List<String> spheres) {
+        
+        List<NnChannel> channels;
+        if (categoryId != null) {
+            channels = getStoreChannelsFromCategory(categoryId, spheres);
+        } else {
+            channels = getStoreChannels(spheres);
+        }
+        
+        if (channels == null) {
+            return new ArrayList<Long>();
+        }
+        
+        List<Long> channelIds = new ArrayList<Long>();
+        for (NnChannel channel : channels) {
+            channelIds.add(channel.getId());
+        }
+        return channelIds;
     }
 
 }

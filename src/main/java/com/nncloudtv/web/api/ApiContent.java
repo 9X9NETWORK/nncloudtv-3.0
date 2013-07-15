@@ -1264,7 +1264,7 @@ public class ApiContent extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        StoreService storeMngr = new StoreService();
+        StoreService storeService = new StoreService();
         
         // categoryId
         Long categoryId = null;
@@ -1277,7 +1277,7 @@ public class ApiContent extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            if (storeMngr.isNnCategory(categoryId) == false) {
+            if (storeService.isNnCategory(categoryId) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
                 return null;
@@ -1303,23 +1303,8 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
-        List<NnChannel> channels;
-        if (categoryId != null) {
-            channels = storeMngr.getStoreChannelsFromCategory(categoryId, spheres);
-        } else {
-            channels = storeMngr.getStoreChannels(spheres);
-        }
         
-        if (channels == null) {
-            log.info(printExitState(now, req, "ok"));
-            return new ArrayList<Long>();
-        }
-        
-        List<Long> channelIds = new ArrayList<Long>();
-        for (NnChannel channel : channels) {
-            channelIds.add(channel.getId());
-        }
-        
+        List<Long> channelIds = storeService.storeChannels(categoryId, spheres);
         log.info(printExitState(now, req, "ok"));
         return channelIds;
     }

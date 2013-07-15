@@ -367,7 +367,7 @@ public class NnChannelDao extends GenericDao<NnChannel> {
     }
     
     /** get channels from official store's category */
-    public List<NnChannel> getStoreChannelsFromCategory(long categoryId, List<String> spheres) { // TODO : can't promise categoryId is true
+    public List<NnChannel> getStoreChannelsFromCategory(long categoryId, List<String> spheres) {
         
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         List<NnChannel> detached = new ArrayList<NnChannel>();
