@@ -113,7 +113,7 @@ public class StoreService {
         } else {
             spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
         }
-        List<NnChannel> store9x9 = getStoreChannels(spheres);
+        List<NnChannel> store9x9 = getChannelsFromOfficialStore(spheres);
         if (store9x9 == null || store9x9.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -137,7 +137,9 @@ public class StoreService {
         return msoStoreChannelIds;
     }
     
-    /** mso store's category = official store's category - mso's blackList */
+    /** mso store's category = official store's category - mso's blackList
+     *  @param categoryId required, the official category's ID
+     *  @param msoId required, Mso's ID */
     public List<Long> getChannelIdsFromMsoStoreCategory(Long categoryId, Long msoId) {
         
         if (msoId == null || categoryId == null) {
@@ -145,7 +147,6 @@ public class StoreService {
         }
         List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
-        // TODO : check this categoryId = sysTagId, it should belong to 9x9, the 9x9's category
         Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
         if (mso == null) {
             return new ArrayList<Long>();
@@ -156,7 +157,7 @@ public class StoreService {
         } else {
             spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
         }
-        List<NnChannel> store9x9 = getStoreChannelsFromCategory(categoryId, spheres);
+        List<NnChannel> store9x9 = getChannelsFromOfficialStoreCategory(categoryId, spheres);
         if (store9x9 == null || store9x9.size() == 0) {
             return new ArrayList<Long>();
         }
@@ -180,13 +181,14 @@ public class StoreService {
         return msoStoreChannelIds;
     }
     
-    /** get channels from official store's category */
-    public List<NnChannel> getStoreChannelsFromCategory(Long categoryId, List<String> spheres) {
+    /** get channels from official store's category
+     *  @param categoryId required, the official category's ID
+     *  @param spheres optional, the spheres used for filter the result channels */
+    public List<NnChannel> getChannelsFromOfficialStoreCategory(Long categoryId, List<String> spheres) {
         
         if (categoryId == null) {
             return new ArrayList<NnChannel>();
         }
-        // TODO : can't promise categoryId is true
         
         List<NnChannel> channels = channelDao.getStoreChannelsFromCategory(categoryId, spheres);
         if (channels == null) {
@@ -197,7 +199,7 @@ public class StoreService {
     }
     
     /** get channels from official store */
-    public List<NnChannel> getStoreChannels(List<String> spheres) {
+    public List<NnChannel> getChannelsFromOfficialStore(List<String> spheres) {
         
         List<NnChannel> channels = channelDao.getStoreChannels(spheres);
         if (channels == null) {
@@ -356,9 +358,9 @@ public class StoreService {
         
         List<NnChannel> channels;
         if (categoryId != null) {
-            channels = getStoreChannelsFromCategory(categoryId, spheres);
+            channels = getChannelsFromOfficialStoreCategory(categoryId, spheres);
         } else {
-            channels = getStoreChannels(spheres);
+            channels = getChannelsFromOfficialStore(spheres);
         }
         
         if (channels == null) {
