@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,6 +20,15 @@ public class SysTagDisplayManager {
     private SysTagDisplayDao dao = new SysTagDisplayDao();
     
     public List<SysTagDisplay> findPlayerCategories(String lang, long msoId) {
+        return dao.findPlayerCategories(lang, msoId);       
+    }
+
+    public List<SysTagDisplay> findPlayerCategoriesAll(String lang, long msoId) {
+        List<SysTagDisplay> categories = new ArrayList<SysTagDisplay>();
+        if (msoId != 1) {        	
+        	categories.addAll(this.findPlayerCategories(lang, msoId));
+        }
+        categories.addAll(this.findPlayerCategories(lang, 1));
         return dao.findPlayerCategories(lang, msoId);       
     }
 
