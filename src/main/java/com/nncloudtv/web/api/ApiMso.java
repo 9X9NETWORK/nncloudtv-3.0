@@ -25,7 +25,6 @@ import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.SysTagMap;
 import com.nncloudtv.service.ApiMsoService;
-import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserProfileManager;
@@ -97,27 +96,6 @@ public class ApiMso extends ApiGeneric {
         }
         
         return true;
-    }
-    
-    /** format supportedRegion of Mso for response, ex : en,zh,other */
-    private String formatSupportedRegion(String input) {
-        
-        if (input == null) {
-            return null;
-        }
-        
-        List<String> spheres = MsoConfigManager.parseSupportedRegion(input);
-        String supportedRegion = "";
-        for (String sphere : spheres) {
-            supportedRegion = supportedRegion + "," + sphere;
-        }
-        supportedRegion = supportedRegion.replaceFirst(",", "");
-        
-        String output = supportedRegion;
-        if (output.equals("")) {
-            return null;
-        }
-        return output;
     }
     
     @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.GET)
@@ -1021,7 +999,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
             log.info(printExitState(now, req, "404"));
@@ -1040,11 +1018,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Mso result = mso;
-        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
-        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
-        result.setSupportedRegion(formatSupportedRegion(result.getSupportedRegion()));
-        
+        Mso result = apiMsoService.mso(mso.getId());
         log.info(printExitState(now, req, "ok"));
         return result;
     }
@@ -1066,7 +1040,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             notFound(resp, "Mso Not Found");
             log.info(printExitState(now, req, "404"));
@@ -1089,27 +1063,12 @@ public class ApiMso extends ApiGeneric {
         String title = req.getParameter("title");
         if (title != null) {
             title = NnStringUtil.htmlSafeAndTruncated(title);
-            mso.setTitle(title);
         }
         
         // logoUrl
         String logoUrl = req.getParameter("logoUrl");
-        if (logoUrl != null) {
-            mso.setLogoUrl(logoUrl);
-        }
         
-        Mso result = null;
-        if (title != null || logoUrl != null) {
-            Mso savedMso = msoMngr.save(mso);
-            savedMso.setSupportedRegion(mso.getSupportedRegion());
-            result = savedMso;
-        } else {
-            result = mso;
-        }
-        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
-        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
-        result.setSupportedRegion(formatSupportedRegion(result.getSupportedRegion()));
-        
+        Mso result = apiMsoService.msoUpdate(mso.getId(), title, logoUrl);
         log.info(printExitState(now, req, "ok"));
         return result;
     }

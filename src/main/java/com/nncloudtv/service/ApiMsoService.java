@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
@@ -25,12 +27,13 @@ public class ApiMsoService {
     private NnChannelManager channelMngr;
     private StoreService storeService;
     private StoreListingManager storeListingMngr;
+    private MsoManager msoMngr;
     
     @Autowired
     public ApiMsoService(SetService setService, SysTagManager sysTagMngr,
                             SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
                             NnChannelManager channelMngr, StoreService storeService,
-                            StoreListingManager storeListingMngr) {
+                            StoreListingManager storeListingMngr, MsoManager msoMngr) {
         this.setService = setService;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
@@ -38,6 +41,28 @@ public class ApiMsoService {
         this.channelMngr = channelMngr;
         this.storeService = storeService;
         this.storeListingMngr = storeListingMngr;
+        this.msoMngr = msoMngr;
+    }
+    
+    /** format supportedRegion of Mso for response, ex : en,zh,other */
+    private String formatSupportedRegion(String input) {
+        
+        if (input == null) {
+            return null;
+        }
+        
+        List<String> spheres = MsoConfigManager.parseSupportedRegion(input);
+        String supportedRegion = "";
+        for (String sphere : spheres) {
+            supportedRegion = supportedRegion + "," + sphere;
+        }
+        supportedRegion = supportedRegion.replaceFirst(",", "");
+        
+        String output = supportedRegion;
+        if (output.equals("")) {
+            return null;
+        }
+        return output;
     }
     
     /** service for ApiMso.msoSets
@@ -288,6 +313,58 @@ public class ApiMsoService {
             return ;
         }
         storeListingMngr.removeChannelsFromBlackList(channelIds, msoId);
+    }
+    
+    /** service for ApiMso.mso */
+    public Mso mso(Long msoId) {
+        
+        if (msoId == null) {
+            return null;
+        }
+        
+        Mso result = msoMngr.findByIdWithSupportedRegion(msoId);
+        if (result == null) {
+            return null;
+        }
+        
+        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
+        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
+        result.setSupportedRegion(formatSupportedRegion(result.getSupportedRegion()));
+        
+        return result;
+    }
+    
+    /** service for ApiMso.msoUpdate */
+    public Mso msoUpdate(Long msoId, String title, String logoUrl) {
+        
+        if (msoId == null) {
+            return null;
+        }
+        
+        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        if (mso == null) {
+            return null;
+        }
+        
+        if (title != null) {
+            mso.setTitle(title);
+        }
+        if (logoUrl != null) {
+            mso.setLogoUrl(logoUrl);
+        }
+        
+        Mso result = null;
+        if (title != null || logoUrl != null) {
+            Mso savedMso = msoMngr.save(mso);
+            result = savedMso;
+        } else {
+            result = mso;
+        }
+        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
+        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
+        result.setSupportedRegion(formatSupportedRegion(mso.getSupportedRegion()));
+        
+        return result;
     }
 
 }
