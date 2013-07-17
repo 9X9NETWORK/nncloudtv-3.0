@@ -24,6 +24,7 @@ import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.SysTagMap;
+import com.nncloudtv.service.ApiMsoService;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
@@ -50,11 +51,12 @@ public class ApiMso extends ApiGeneric {
     private SysTagMapManager sysTagMapMngr;
     private NnUserProfileManager userProfileMngr;
     private SetService setServ;
+    private ApiMsoService apiMsoService;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreService storeServ,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
-            NnUserProfileManager userProfileMngr, SetService setServ) {
+            NnUserProfileManager userProfileMngr, SetService setServ, ApiMsoService apiMsoService) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeServ = storeServ;
@@ -63,6 +65,7 @@ public class ApiMso extends ApiGeneric {
         this.sysTagMapMngr = sysTagMapMngr;
         this.userProfileMngr = userProfileMngr;
         this.setServ = setServ;
+        this.apiMsoService = apiMsoService;
     }
     
     /** indicate logging user has access right to target mso in PCS API
@@ -159,7 +162,7 @@ public class ApiMso extends ApiGeneric {
             lang = NnStringUtil.validateLangCode(lang);
         }
         
-        List<Set> results = setServ.msoSets(mso.getId(), lang);
+        List<Set> results = apiMsoService.msoSets(mso.getId(), lang);
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<Set>();
@@ -321,7 +324,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Set result = setServ.set(set.getId());
+        Set result = apiMsoService.set(set.getId());
         if (result == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
@@ -419,7 +422,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        Set result = setServ.setUpdate(set.getId(), name, seq, tag, sortingType);
+        Set result = apiMsoService.setUpdate(set.getId(), name, seq, tag, sortingType);
         if (result == null) {
             log.warning("Unexcepted result : setServ.setUpdate return null");
             log.info(printExitState(now, req, "ok"));
@@ -524,7 +527,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<NnChannel> results = setServ.setChannels(set.getId());
+        List<NnChannel> results = apiMsoService.setChannels(set.getId());
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<NnChannel>();
@@ -657,7 +660,7 @@ public class ApiMso extends ApiGeneric {
             alwaysOnTop = Boolean.valueOf(alwaysOnTopStr);
         }
         
-        setServ.setChannelAdd(set.getId(), channel.getId(), timeStart, timeEnd, alwaysOnTop);
+        apiMsoService.setChannelAdd(set.getId(), channel.getId(), timeStart, timeEnd, alwaysOnTop);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
@@ -724,7 +727,7 @@ public class ApiMso extends ApiGeneric {
         }
         */
         
-        setServ.setChannelRemove(set.getId(), channelId);
+        apiMsoService.setChannelRemove(set.getId(), channelId);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
@@ -795,7 +798,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        setServ.setChannelsSorting(set.getId(), channelIdList);
+        apiMsoService.setChannelsSorting(set.getId(), channelIdList);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
@@ -864,7 +867,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        List<Long> results = storeServ.storeChannels(mso.getId(), channelIds, categoryId);
+        List<Long> results = apiMsoService.storeChannels(mso.getId(), channelIds, categoryId);
         if (results == null) {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<Long>();
@@ -931,7 +934,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        storeServ.storeChannelRemove(mso.getId(), channelIds);
+        apiMsoService.storeChannelRemove(mso.getId(), channelIds);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;
@@ -995,7 +998,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        storeServ.storeChannelAdd(mso.getId(), channelIds);
+        apiMsoService.storeChannelAdd(mso.getId(), channelIds);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return null;

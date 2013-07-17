@@ -308,49 +308,6 @@ public class StoreService {
         sysTagMapMngr.save(new SysTagMap(categoryId, channelId));
     }
     
-    /** service for ApiMso.storeChannels, get channels from Mso's store
-     *  @param msoId required, the Mso's Id
-     *  @param channelIds optional, check if these Channel IDs are in the Mso's store
-     *  @param categoryId optional, the official Category's ID, get channels from Mso's store's Category */
-    public List<Long> storeChannels(Long msoId, java.util.Set<Long> channelIds, Long categoryId) {
-        
-        if (msoId == null) {
-            return new ArrayList<Long>();
-        }
-        
-        List<Long> results = null;
-        if (channelIds != null) {
-            results = checkChannelIdsInMsoStore(channelIds, msoId);
-        } else if (categoryId != null) {
-            results = getChannelIdsFromMsoStoreCategory(categoryId, msoId);
-        } else {
-            results = getChannelIdsFromMsoStore(msoId);
-        }
-        
-        if (results == null) {
-            return new ArrayList<Long>();
-        }
-        return results;
-    }
-    
-    /** service for ApiMso.storeChannelRemove */
-    public void storeChannelRemove(Long msoId, List<Long> channelIds) {
-        
-        if (msoId == null || channelIds == null) {
-            return ;
-        }
-        storeListingMngr.addChannelsToBlackList(channelIds, msoId);
-    }
-    
-    /** service for ApiMso.storeChannelAdd */
-    public void storeChannelAdd(Long msoId, List<Long> channelIds) {
-        
-        if (msoId == null || channelIds == null) {
-            return ;
-        }
-        storeListingMngr.removeChannelsFromBlackList(channelIds, msoId);
-    }
-    
     /** service for ApiContent.storeChannels, get channels from official store
      *  @param categoryId optional, the official Category's ID, get channels from official store's Category
      *  @param spheres optional, the spheres used for filter the result channels */
