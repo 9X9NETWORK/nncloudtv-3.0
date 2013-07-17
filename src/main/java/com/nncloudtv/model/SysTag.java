@@ -29,6 +29,7 @@ public class SysTag implements Serializable {
     public static final short TYPE_SUBSCRIPTION = 5;
     public static final short TYPE_ACCOUNT = 6;
     public static final short TYPE_33SET = 7;
+    public static final short TYPE_DESTROYED = 8;
     
     @Persistent
     private short sorting; // indicate how to sort SysTagMaps that belong to this SysTag
