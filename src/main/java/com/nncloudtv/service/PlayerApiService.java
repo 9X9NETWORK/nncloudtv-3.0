@@ -2605,13 +2605,16 @@ public class PlayerApiService {
         
         //1. dayparting
         SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
-        displays.add(dayparting);
+        if (dayparting != null)
+        	displays.add(dayparting);
         //2. on previosly 
-        SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);        
-        displays.add(previously);
+        SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
+        if (previously != null)
+        	displays.add(previously);
         //3. following
         SysTagDisplay follow = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_SUBSCRIPTION, lang);
-        displays.add(follow);
+        if (follow != null)
+        	displays.add(follow);
         //4 account
         SysTagDisplay account = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_ACCOUNT, lang);        
         displays.add(account);   
