@@ -482,17 +482,26 @@ public class ApiUser extends ApiGeneric {
         }
         
         NnChannelManager channelMngr = new NnChannelManager();
-        results = channelMngr.findByUserAndHisFavorite(user, 0, true);
+        //results = channelMngr.findByUserAndHisFavorite(user, 0, true);
+        results = channelMngr.findByUser(user, 0, true);
+        for (NnChannel channel : results) {
+            if (channel.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+                results.remove(channel);
+                break;
+            }
+        }
         
         for (NnChannel channel : results) {
             
             channelMngr.normalize(channel);
             channelMngr.populateMoreImageUrl(channel);
             
+            /*
             if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
                 channel.setContentType(NnChannel.CONTENTTYPE_FAVORITE); // To fake is necessary to fake like that
                 channel.setMoreImageUrl(NnChannel.IMAGE_EPISODE_URL + "|" + NnChannel.IMAGE_EPISODE_URL + "|" + NnChannel.IMAGE_EPISODE_URL);
             }
+            */
         }
         
         Collections.sort(results, channelMngr.getChannelComparator("seq"));
@@ -542,13 +551,22 @@ public class ApiUser extends ApiGeneric {
         
         // the result should be same as userChannels but not include fake channel
         NnChannelManager channelMngr = new NnChannelManager();
-        List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, true);
+        //List<NnChannel> channels = channelMngr.findByUserAndHisFavorite(user, 0, true);
+        List<NnChannel> channels = channelMngr.findByUser(user, 0, true);
+        for (NnChannel channel : channels) {
+            if (channel.getContentType() == NnChannel.CONTENTTYPE_FAVORITE) {
+                channels.remove(channel);
+                break;
+            }
+        }
+        /*
         for (NnChannel channel : channels) {
             if (channel.getContentType() == NnChannel.CONTENTTYPE_FAKE_FAVORITE) {
                 channels.remove(channel);
                 break;
             }
         }
+        */
         
         List<NnChannel> orderedChannels = new ArrayList<NnChannel>();
         List<Long> channelIdList = new ArrayList<Long>();
