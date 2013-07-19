@@ -2541,7 +2541,7 @@ public class PlayerApiService {
         List<SysTagDisplay> displays = displayMngr.findRecommendedSets(lang, mso.getId());        
         SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
         if (dayparting != null)
-        	displays.add(dayparting);        
+        	displays.add(dayparting);
         SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
         if (previously != null) {
         	displays.add(previously);
@@ -2602,7 +2602,6 @@ public class PlayerApiService {
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         SysTagManager systagMngr = new SysTagManager();
         List<SysTagDisplay> displays = new ArrayList<SysTagDisplay>();
-        
         //1. dayparting
         SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
         if (dayparting != null)
@@ -2611,6 +2610,8 @@ public class PlayerApiService {
         SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
         if (previously != null)
         	displays.add(previously);
+        //2.5. newly added        
+        displays.addAll(displayMngr.findRecommendedSets(lang, mso.getId()));
         //3. following
         SysTagDisplay follow = displayMngr.findFrontpage(mso.getId(), SysTag.TYPE_SUBSCRIPTION, lang);
         if (follow != null)
