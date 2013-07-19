@@ -13,30 +13,28 @@ public class CacheFactory {
     
     protected static final Logger log = Logger.getLogger(CacheFactory.class.getName());
     
-    public static int EXP_DEFAULT = 2592000;
-    public static int PORT_DEFAULT = 11211;
-    public static String ERROR = "ERROR";
+    public static final int EXP_DEFAULT = 2592000;
+    public static final int PORT_DEFAULT = 11211;
+    public static final String ERROR = "ERROR";
     public static boolean isRunning = true;
     
     public static MemcachedClient getClient() {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
         Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
-        MemcachedClient cache = null;
      
         try {
             Properties properties = new Properties();
             properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
             String server = properties.getProperty("server");
             //log.info("memcache server:" + server);
-            cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
+            return new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
         } catch (IOException e) {
            log.severe("memcache io exception");
-           cache = null;
+           return null;
         } catch (Exception e) {
            log.severe("memcache exception");
-           cache = null;
+           return null;
         }        
-        return cache;
     }    
 
     public static Object get(String key) {
