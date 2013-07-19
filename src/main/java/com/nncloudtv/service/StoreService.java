@@ -68,7 +68,10 @@ public class StoreService {
         return categoryResp;
     }
     
-    /** output channelIds if input channelIds are in the mso store */
+    /** output channelIds if input channelIds are in the mso store
+     *  @param msoId required, indicate which Mso Store
+     *  @param channelIds, required, the Channel IDs to be verified
+     *  @return list of Channel's ID */
     public List<Long> checkChannelIdsInMsoStore(java.util.Set<Long> channelIds, Long msoId) {
         
         if (channelIds == null || channelIds.size() == 0 || msoId == null) {
@@ -95,7 +98,10 @@ public class StoreService {
         return results;
     }
     
-    /** mso store = official store - mso's blackList */
+    /** get Channel IDs from Mso's Store
+     *  mso store = official store - mso's blackList - channel's sphere not fit mso's supportedRegion
+     *  @param msoId required, indicate which Mso Store
+     *  @return list of Channel's ID */
     public List<Long> getChannelIdsFromMsoStore(Long msoId) {
         
         if (msoId == null) {
@@ -137,9 +143,11 @@ public class StoreService {
         return msoStoreChannelIds;
     }
     
-    /** mso store's category = official store's category - mso's blackList
+    /** get Channel IDs from Mso's Store's Category
+     *  mso store's category = official store's category - mso's blackList - channel's sphere not fit mso's supportedRegion
      *  @param categoryId required, the official category's ID
-     *  @param msoId required, Mso's ID */
+     *  @param msoId required, indicate which Mso Store
+     *  @return list of Channel's ID */
     public List<Long> getChannelIdsFromMsoStoreCategory(Long categoryId, Long msoId) {
         
         if (msoId == null || categoryId == null) {
@@ -181,9 +189,10 @@ public class StoreService {
         return msoStoreChannelIds;
     }
     
-    /** get channels from official store's category
+    /** get Channels from official Store's Category
      *  @param categoryId required, the official category's ID
-     *  @param spheres optional, the spheres used for filter the result channels */
+     *  @param spheres optional, used to filter the result channels
+     *  @return list of Channels */
     public List<NnChannel> getChannelsFromOfficialStoreCategory(Long categoryId, List<String> spheres) {
         
         if (categoryId == null) {
@@ -198,7 +207,9 @@ public class StoreService {
         return channels;
     }
     
-    /** get channels from official store */
+    /** get Channels from official Store
+     *  @param spheres optional, the spheres used for filter the result channels
+     *  @return list of Channels */
     public List<NnChannel> getChannelsFromOfficialStore(List<String> spheres) {
         
         List<NnChannel> channels = channelDao.getStoreChannels(spheres);
@@ -209,7 +220,9 @@ public class StoreService {
         return channels;
     }
     
-    /** indicate input Id is 9x9's CategoryId or not */
+    /** indicate input Id is 9x9's CategoryId or not
+     *  @param categoryId required, the SysTag's ID with type = Category
+     *  @return true if input ID is 9x9's Category's ID, false for not */
     public boolean isNnCategory(Long categoryId) {
         
         if (categoryId == null) {
@@ -228,7 +241,10 @@ public class StoreService {
         return false;
     }
     
-    /** find CategoryIds where Channel is in those Categories */
+    /** find CategoryIds where Channel is in those Categories
+     *  @param channelId required, result Categories that contain this Channel
+     *  @param msoId required, result Categories that belong to this specified Mso
+     *  @return list of Category's ID */
     public List<Long> findCategoryIdsByChannelId(long channelId, long msoId) {
         
         List<SysTag> sysTags = sysTagDao.findCategoriesByChannelId(channelId, msoId);
@@ -266,7 +282,9 @@ public class StoreService {
         return new CategorySeqComparator();
     }
     
-    /** get Categories from official store */
+    /** get Categories from official Store
+     *  @param lang required, used to filter the result Categories
+     *  @return list of Categories */
     public List<Category> getStoreCategories(String lang) {
         
         if (lang == null) {
@@ -295,7 +313,9 @@ public class StoreService {
         return results;
     }
     
-    /** set up which official Category that Channel belongs to, Channel will belongs to only one official Category */
+    /** set up which official Category that Channel belongs to, Channel will belongs to only one official Category
+     *  @param categoryId required, SysTag's ID with type = Category
+     *  @param channelId, Channel's ID */
     public void setupChannelCategory(Long categoryId, Long channelId) {
         
         if (categoryId == null || channelId == null) {
@@ -308,9 +328,10 @@ public class StoreService {
         sysTagMapMngr.save(new SysTagMap(categoryId, channelId));
     }
     
-    /** service for ApiContent.storeChannels, get channels from official store
-     *  @param categoryId optional, the official Category's ID, get channels from official store's Category
-     *  @param spheres optional, the spheres used for filter the result channels */
+    /** service for ApiContent.storeChannels, get channels from official Store
+     *  @param categoryId optional, the official Category's ID, get channels from official Store's Category
+     *  @param spheres optional, used to filter the result Channels
+     *  @return list of Channel's IDs */
     public List<Long> storeChannels(Long categoryId, List<String> spheres) {
         
         List<NnChannel> channels;

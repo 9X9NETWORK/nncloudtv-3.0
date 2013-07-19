@@ -53,7 +53,10 @@ public class SetService {
         return setResp;
     }
     
-    /** find Sets that owned by Mso with specify display language */
+    /** find Sets that owned by Mso with specify display language
+     *  @param msoId required, result Sets that belong to this specified Mso
+     *  @param lang optional, result Sets has specified display language
+     *  @return list of Sets */
     public List<Set> findByMsoIdAndLang(Long msoId, String lang) {
         
         List<Set> results = new ArrayList<Set>();
@@ -93,7 +96,9 @@ public class SetService {
         return results;
     }
     
-    /** find Sets that owned by Mso */
+    /** find Sets that owned by Mso
+     *  @param msoId required, result Sets that belong to this specified Mso
+     *  @return list of Sets */
     public List<Set> findByMsoId(Long msoId) {
         
         if (msoId == null) {
@@ -103,7 +108,9 @@ public class SetService {
         return findByMsoIdAndLang(msoId, null);
     }
     
-    /** find Set by SysTag's Id */
+    /** find Set by SysTag's Id
+     *  @param setId required, SysTag's ID with type = Set
+     *  @return object Set or null if not exist */
     public Set findById(Long setId) {
         
         if (setId == null) {
@@ -125,7 +132,9 @@ public class SetService {
     }
     
     /** get Channels from Set ordered by Seq, the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop)
-     *  retrieve from SysTagMap */
+     *  retrieve from SysTagMap
+     *  @param setId required, SysTag's ID with type = Set
+     *  @return list of Channels */
     public List<NnChannel> getChannelsOrderBySeq(Long setId) {
         
         if (setId == null) {
@@ -161,7 +170,7 @@ public class SetService {
                 result.setAlwaysOnTop(item.isAlwaysOnTop());
                 results.add(result);
             } else {
-                // TODO : Channel not exist
+                // TODO : Channel not exist, delete SysTagMap ?
             }
         }
         
@@ -169,7 +178,9 @@ public class SetService {
     }
     
     /** get Channels from Set ordered by UpdateTime, Channel with AlwaysOnTop set to True will put in the head of results,
-     *  the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop) retrieve from SysTagMap */
+     *  the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop) retrieve from SysTagMap
+     *  @param setId required, SysTag's ID with type = Set
+     *  @return list of Channels */
     public List<NnChannel> getChannelsOrderByUpdateTime(Long setId) {
         
         if (setId == null) {
@@ -199,7 +210,10 @@ public class SetService {
         return results;
     }
     
-    /** check if input Channel Ids represent all Channels in the Set */
+    /** check if input Channel's IDs represent all Channels in the Set
+     *  @param setId required, SysTag's ID with type = Set
+     *  @param channelIds required, Channel's IDs to be tested
+     *  @return true if full match, false for not */
     public boolean isContainAllChannels(Long setId, List<Long> channelIds) {
         
         if (setId == null || channelIds == null) {
