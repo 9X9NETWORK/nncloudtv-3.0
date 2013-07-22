@@ -44,7 +44,7 @@ public class ApiMsoService {
         this.msoMngr = msoMngr;
     }
     
-    /** format supportedRegion of Mso for response, ex : en,zh,other */
+    /** format supportedRegion of Mso to response format, ex : "en,zh,other" */
     private String formatSupportedRegion(String input) {
         
         if (input == null) {
@@ -66,8 +66,10 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.msoSets
+     *  get Sets that belong to target Mso
      *  @param msoId required, Mso's Id
-     *  @param lang optional, filter for Set's lang */
+     *  @param lang optional, filter for Set's lang
+     *  @return list of Sets */
     public List<Set> msoSets(Long msoId, String lang) {
         
         if (msoId == null) {
@@ -88,7 +90,9 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.set
-     *  @param setId required, SysTag's Id with SysTag's type = Set */
+     *  get Set by given Set's ID
+     *  @param setId required, SysTag's Id with SysTag's type = Set
+     *  @return object Set or null if not exist */
     public Set set(Long setId) {
         
         if (setId == null) {
@@ -99,11 +103,13 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.setUpdate
+     *  update object Set
      *  @param setId required, SysTag's Id with SysTag's type = Set
      *  @param name optional, Set's name save in SysTagDisplay's name
      *  @param seq optional, Set's seq save in SysTag's seq
      *  @param tag optional, Set's tag save in SysTagDisplay's popularTag
-     *  @param sortingType optional, Set's sortingType save in SysTag's sorting */
+     *  @param sortingType optional, Set's sortingType save in SysTag's sorting
+     *  @return object Set or null if not exist */
     public Set setUpdate(Long setId, String name, Short seq, String tag, Short sortingType) {
         
         if (setId == null) {
@@ -144,7 +150,9 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.setChannels
-     *  @param setId required, SysTag's Id with SysTag's type = Set */
+     *  get Channels from Set
+     *  @param setId required, SysTag's Id with SysTag's type = Set
+     *  @return list of Channels */
     public List<NnChannel> setChannels(Long setId) {
         
         if (setId == null) {
@@ -176,6 +184,7 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.setChannelAdd
+     *  add Channel to Set
      *  @param setId required, SysTag's Id with SysTag's type = Set
      *  @param channelId required, Channel's Id
      *  @param timeStart optional, set a period start that Channel appear in the Set
@@ -211,6 +220,7 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.setChannelRemove
+     *  remove Channel from Set
      *  @param setId required, SysTag's Id with SysTag's type = Set
      *  @param channelId required, Channel's Id */
     public void setChannelRemove(Long setId, Long channelId) {
@@ -228,6 +238,7 @@ public class ApiMsoService {
     }
     
     /** service for ApiMso.setChannelsSorting
+     *  sort Channels that in the Set
      *  @param setId required, SysTag's Id with SysTag's type = Set
      *  @param sortedChannels required, the Channel Ids from Set to be sorted */
     public void setChannelsSorting(Long setId, List<Long> sortedChannels) {
@@ -272,10 +283,12 @@ public class ApiMsoService {
         sysTagMapMngr.saveAll(newSequence);
     }
     
-    /** service for ApiMso.storeChannels, get channels from Mso's store
+    /** service for ApiMso.storeChannels
+     *  get Channel's IDs from Mso's store
      *  @param msoId required, the Mso's Id
      *  @param channelIds optional, check if these Channel IDs are in the Mso's store
-     *  @param categoryId optional, the official Category's ID, get channels from Mso's store's Category */
+     *  @param categoryId optional, the official Category's ID, get channels from Mso's store's Category
+     *  @return list of Channel's IDs */
     public List<Long> storeChannels(Long msoId, java.util.Set<Long> channelIds, Long categoryId) {
         
         if (msoId == null) {
@@ -297,7 +310,10 @@ public class ApiMsoService {
         return results;
     }
     
-    /** service for ApiMso.storeChannelRemove */
+    /** service for ApiMso.storeChannelRemove
+     *  remove Channels from Mso's store
+     *  @param msoId required, the Mso's Id
+     *  @param channelIds required, the Channel's IDs */
     public void storeChannelRemove(Long msoId, List<Long> channelIds) {
         
         if (msoId == null || channelIds == null) {
@@ -306,7 +322,10 @@ public class ApiMsoService {
         storeListingMngr.addChannelsToBlackList(channelIds, msoId);
     }
     
-    /** service for ApiMso.storeChannelAdd */
+    /** service for ApiMso.storeChannelAdd
+     *  add Channels to Mso's store
+     *  @param msoId required, the Mso's Id
+     *  @param channelIds required, the Channel's IDs */
     public void storeChannelAdd(Long msoId, List<Long> channelIds) {
         
         if (msoId == null || channelIds == null) {
@@ -315,7 +334,10 @@ public class ApiMsoService {
         storeListingMngr.removeChannelsFromBlackList(channelIds, msoId);
     }
     
-    /** service for ApiMso.mso */
+    /** service for ApiMso.mso
+     *  get Mso by given Mso's ID
+     *  @param msoId required, the Mso's Id
+     *  @return object Mso or null if not exist */
     public Mso mso(Long msoId) {
         
         if (msoId == null) {
@@ -334,7 +356,12 @@ public class ApiMsoService {
         return result;
     }
     
-    /** service for ApiMso.msoUpdate */
+    /** service for ApiMso.msoUpdate
+     *  update object Mso
+     *  @param msoId required, the Mso's Id
+     *  @param title optional, Mso's title
+     *  @param logoUrl optional, Mso's logoUrl
+     *  @return object Mso or null if not exist */
     public Mso msoUpdate(Long msoId, String title, String logoUrl) {
         
         if (msoId == null) {
