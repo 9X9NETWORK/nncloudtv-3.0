@@ -2546,6 +2546,10 @@ public class PlayerApiService {
         if (previously != null) {
         	displays.add(previously);
         }
+        //system sets
+        if (!MsoManager.isNNMso(mso)) {
+            displays.addAll(displayMngr.findRecommendedSets(lang, msoMngr.findNNMso().getId()));
+        }
         String setStr = "";
         for (SysTagDisplay display : displays) {
             String[] obj = {
