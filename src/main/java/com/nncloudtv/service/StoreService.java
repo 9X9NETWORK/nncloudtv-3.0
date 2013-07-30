@@ -233,8 +233,8 @@ public class StoreService {
         if (category == null) {
             return false;
         }
-        Mso mso9x9 = msoMngr.findNNMso();
-        if (category.getMsoId() == mso9x9.getId() && category.getType() == SysTag.TYPE_CATEGORY) {
+        Mso nnMso = msoMngr.findNNMso();
+        if (category.getMsoId() == nnMso.getId() && category.getType() == SysTag.TYPE_CATEGORY) {
             return true;
         }
         
