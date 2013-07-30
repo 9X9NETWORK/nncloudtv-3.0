@@ -538,7 +538,8 @@ public class NnProgramManager {
         String cacheKey = this.getCacheKey(channelId);
         try {
             String result = (String)CacheFactory.get(cacheKey);
-            if (result != null) { 
+            if (result != null) {
+                log.info("cached programInfo, channelId = " + channelId);
                 return result;
             } 
         } catch (Exception e) {
@@ -549,6 +550,7 @@ public class NnProgramManager {
             return "";
         String output = this.assembleProgramInfo(c);
         if (CacheFactory.isRunning) { 
+            log.info("saved programInfo, channelId = " + channelId);
             CacheFactory.set(cacheKey, output);
         }
         return output;
