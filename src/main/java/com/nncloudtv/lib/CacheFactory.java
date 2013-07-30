@@ -43,7 +43,6 @@ public class CacheFactory {
         Object obj = null;
         try {
             obj = cache.get(key);
-            CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
@@ -54,6 +53,7 @@ public class CacheFactory {
         } finally {
             if (cache != null)
                 cache.shutdown();            
+            CacheFactory.isRunning = true;
         }
         return obj;
     }
@@ -65,7 +65,6 @@ public class CacheFactory {
         try {
             cache.set(key, CacheFactory.EXP_DEFAULT, obj);
             myObj = cache.get(key);
-            CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
             log.severe("memcache OperationTimeoutException");
         } catch (NullPointerException e) {
@@ -76,6 +75,7 @@ public class CacheFactory {
         } finally {
             if (cache != null)
                 cache.shutdown();
+            CacheFactory.isRunning = true;
         }
         return myObj;
     }    
@@ -86,14 +86,15 @@ public class CacheFactory {
         Object obj = null;
         try {
             cache.delete(key).get();
-            CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown();            
+            if (cache != null)
+                cache.shutdown();            
+            CacheFactory.isRunning = true;
         }
         return obj;
     }    
