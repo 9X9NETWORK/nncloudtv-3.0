@@ -3,6 +3,8 @@ package com.nncloudtv.lib;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Properties;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,10 +41,11 @@ public class CacheFactory {
 
     public static Object get(String key) {
         MemcachedClient cache = CacheFactory.getClient();
-        CacheFactory.isRunning = false;
+        if (cache == null) return null;
         Object obj = null;
+        Future<Object> future = cache.asyncGet(key);
         try {
-            obj = cache.get(key);
+            obj = future.get(5, TimeUnit.SECONDS);
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
@@ -52,14 +55,15 @@ public class CacheFactory {
             e.printStackTrace();
         } finally {
             if (cache != null)
-                cache.shutdown();            
-            CacheFactory.isRunning = true;
+                cache.shutdown(); 
+            future.cancel(false);
         }
         return obj;
     }
 
     public static Object set(String key, Object obj) {        
         MemcachedClient cache = CacheFactory.getClient();
+        if (cache == null) return null;
         CacheFactory.isRunning = false;
         Object myObj = null;
         try {
@@ -82,6 +86,7 @@ public class CacheFactory {
 
     public static Object delete(String key) {        
         MemcachedClient cache = CacheFactory.getClient();
+        if (cache == null) return null;
         CacheFactory.isRunning = false;
         Object obj = null;
         try {
