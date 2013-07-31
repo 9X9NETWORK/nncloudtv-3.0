@@ -34,9 +34,10 @@ public class CacheFactory {
             //log.info("memcache server:" + server);
             cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
         } catch (IOException e) {
-           log.severe("memcache io exception");
+            log.severe("memcache io exception");
         } catch (Exception e) {
-           log.severe("memcache exception");
+            log.severe("memcache exception");
+            e.printStackTrace();
         }
         
         return cache;
@@ -44,32 +45,28 @@ public class CacheFactory {
 
     public static Object get(String key) {
         
-        //if (!CacheFactory.isRunning) {
-        //    log.warning("cache is not running");
-        //    return null;
-        //}
-        CacheFactory.isRunning = false;
-        
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
         
         Object obj = null;
-        Future<Object> future = cache.asyncGet(key);
+        CacheFactory.isRunning = false;
+        Future<Object> future = null;
         try {
+            future = cache.asyncGet(key);
             obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS); // Asynchronously 
+            CacheFactory.isRunning = true;
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
-            log.severe("memcache not found");
+            log.severe("future not found");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
             cache.shutdown(); 
             future.cancel(false);
-            CacheFactory.isRunning = true;
         }
         if (obj == null)
             log.info("cache [" + key + "] --> missed");
@@ -82,17 +79,17 @@ public class CacheFactory {
             log.warning("cache is not running");
             return null;
         }
-        CacheFactory.isRunning = false;
-        
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
         
         Future<Object> future = null;
         Object retObj = null;
+        CacheFactory.isRunning = false;
         try {
             cache.set(key, CacheFactory.EXP_DEFAULT, obj);
             future = cache.asyncGet(key);;
             retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
+            CacheFactory.isRunning = true;
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
@@ -105,7 +102,6 @@ public class CacheFactory {
         } finally {
             cache.shutdown();
             future.cancel(false);
-            CacheFactory.isRunning = true;
         }
         if (retObj == null)
             log.info("cache [" + key + "] --> not saved");
@@ -116,17 +112,17 @@ public class CacheFactory {
 
     public static void delete(String key) {
         
-        //if (!CacheFactory.isRunning) {
-        //    log.warning("cache is not running");
-        //    return;
-        //}
-        CacheFactory.isRunning = false;
-        
+        if (!CacheFactory.isRunning) {
+            log.warning("cache is not running");
+            return;
+        }
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return;
         
+        CacheFactory.isRunning = false;
         try {
             cache.delete(key).get();
+            CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (Exception e) {
@@ -134,7 +130,6 @@ public class CacheFactory {
             e.printStackTrace();
         } finally {
             cache.shutdown();            
-            CacheFactory.isRunning = true;
         }
         log.info("cache [" + key + "] --> deleted");
     }    
