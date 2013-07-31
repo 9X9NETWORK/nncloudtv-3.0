@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.OperationTimeoutException;
+import net.spy.memcached.internal.CheckedOperationTimeoutException;
 
 public class CacheFactory {
     
@@ -57,6 +58,8 @@ public class CacheFactory {
         Future<Object> future = cache.asyncGet(key);
         try {
             obj = future.get(2, TimeUnit.SECONDS); // Asynchronously 
+        } catch (CheckedOperationTimeoutException e){
+            log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
@@ -69,7 +72,8 @@ public class CacheFactory {
             future.cancel(false);
             CacheFactory.isRunning = true;
         }
-        log.info("cache [" + key + "] --> hit");
+        if (obj != null)
+            log.info("cache [" + key + "] --> hits");
         return obj;
     }
 
