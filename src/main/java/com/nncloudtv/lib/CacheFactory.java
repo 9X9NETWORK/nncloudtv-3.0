@@ -20,7 +20,7 @@ public class CacheFactory {
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 5;
     public static final String ERROR = "ERROR";
-    //public static boolean isRunning = true;
+    public static boolean isRunning = true;
     
     public static MemcachedClient getClient() {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
