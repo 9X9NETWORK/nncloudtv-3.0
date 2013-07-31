@@ -411,9 +411,13 @@ public class ApiContent extends ApiGeneric {
         
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         for (Mso mso : msos) {
-            Map<String, Object> result = new TreeMap<String, Object>();
-            result.put("brand", mso.getName());
-            results.add(result);
+            if (mso.getName().equals("5f") || mso.getName().equals("tzuchi")) { // hard coded for policy required
+                // skip
+            } else {
+                Map<String, Object> result = new TreeMap<String, Object>();
+                result.put("brand", mso.getName());
+                results.add(result);
+            }
         }
         
         log.info(printExitState(now, req, "ok"));
