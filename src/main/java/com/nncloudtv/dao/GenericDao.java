@@ -223,7 +223,7 @@ public class GenericDao<T> {
         List<T> detached = new ArrayList<T>();
         
         try {
-            log.info("sql: " + queryStr);
+            log.info("[sql] " + queryStr);
             Query query = pm.newQuery("javax.jdo.query.SQL", queryStr);
             query.setClass(daoClass);
             @SuppressWarnings("unchecked")

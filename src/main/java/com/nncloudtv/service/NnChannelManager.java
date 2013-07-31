@@ -669,12 +669,10 @@ public class NnChannelManager {
     }
     
     public void resetCache(long channelId) {        
-        if (CacheFactory.isRunning) {
-            log.info("reset channel info cache: " + channelId);
-            CacheFactory.delete(getCacheKey(channelId, 31));
-            CacheFactory.delete(getCacheKey(channelId, 32));
-            CacheFactory.delete(getCacheKey(channelId, 40));
-        }
+        log.info("reset channel info cache: " + channelId);
+        CacheFactory.delete(getCacheKey(channelId, 31));
+        CacheFactory.delete(getCacheKey(channelId, 32));
+        CacheFactory.delete(getCacheKey(channelId, 40));
     }
     
     /*
@@ -948,10 +946,8 @@ public class NnChannelManager {
         String size[] = new String[ori.size()];    
         String output = NnStringUtil.getDelimitedStr(ori.toArray(size));
         output = output.replaceAll("null", "");
-        if (CacheFactory.isRunning) {
-        	log.info("set channelLineup cahce for cacheKey:" + cacheKey);
-            CacheFactory.set(cacheKey, output);
-        }
+        log.info("set channelLineup cahce for cacheKey:" + cacheKey);
+        CacheFactory.set(cacheKey, output);
         return output;
     }
 

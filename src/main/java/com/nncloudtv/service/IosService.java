@@ -257,8 +257,7 @@ public class IosService {
         List<NnProgram> programs = programMngr.findPlayerProgramsByChannel(channelId);
         log.info("retrieve v31 from db, channel id:" + channelId + "; program size:" + programs.size());        
         String str = this.composeProgramInfoStr(programs);
-        if (CacheFactory.isRunning)
-            CacheFactory.set(programMngr.getV31CacheKey(channelId), str);
+        CacheFactory.set(programMngr.getV31CacheKey(channelId), str);
         
         return str;
     }    

@@ -168,8 +168,7 @@ public class NnEpisode implements Serializable {
             log.info("cnt view not in the cache:" + name);
             CounterFactory factory = new CounterFactory();
             cntView = factory.getCount(name);
-            if (CacheFactory.isRunning)
-                CacheFactory.set(name, String.valueOf(cntView));
+            CacheFactory.set(name, String.valueOf(cntView));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;            

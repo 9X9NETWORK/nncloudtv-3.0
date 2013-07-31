@@ -238,10 +238,8 @@ public class NnProgramManager {
             }
             if (programInfo != null) {
                 output += programInfo;
-                if (CacheFactory.isRunning) {
-                    CacheFactory.set(cacheKey, programInfo);
-                    log.info("save programInfo to cache, channelId = " + c.getId());
-                }
+                log.info("save programInfo to cache, channelId = " + c.getId());
+                CacheFactory.set(cacheKey, programInfo);
             }
         }        
         return output;
@@ -304,14 +302,12 @@ public class NnProgramManager {
     }
     
     public void resetCache(long channelId) {        
-        if (CacheFactory.isRunning) {
-            log.info("reset program info cache: " + channelId);
-            CacheFactory.delete(getCacheKey(channelId));
-            CacheFactory.delete(getV31CacheKey(channelId));
-            CacheFactory.delete(getProgramInfoCacheKey(channelId));
-            CacheFactory.delete(NnChannelManager.getCacheKey(channelId, 32));
-            CacheFactory.delete(NnChannelManager.getCacheKey(channelId, 40));
-        }
+        log.info("reset program info cache: " + channelId);
+        CacheFactory.delete(getCacheKey(channelId));
+        CacheFactory.delete(getV31CacheKey(channelId));
+        CacheFactory.delete(getProgramInfoCacheKey(channelId));
+        CacheFactory.delete(NnChannelManager.getCacheKey(channelId, 32));
+        CacheFactory.delete(NnChannelManager.getCacheKey(channelId, 40));
     }
     
     /*
@@ -549,10 +545,8 @@ public class NnProgramManager {
         if (c == null)
             return "";
         String output = this.assembleProgramInfo(c);
-        if (CacheFactory.isRunning) { 
-            log.info("saved programInfo, channelId = " + channelId);
-            CacheFactory.set(cacheKey, output);
-        }
+        log.info("saved programInfo, channelId = " + channelId);
+        CacheFactory.set(cacheKey, output);
         return output;
     }
     

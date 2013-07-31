@@ -134,10 +134,7 @@ public class MsoManager {
         if (regionSet == false) {
         	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en US;zh 台灣");
         }
-        
-        if (CacheFactory.isRunning) { 
-            CacheFactory.set(cacheKey, result);
-        } 
+        CacheFactory.set(cacheKey, result);
         return result;        
     }
             
@@ -165,9 +162,7 @@ public class MsoManager {
         }        
         log.info("NOT get mso object from cache:" + name);
         Mso mso = msoDao.findByName(name);
-        if (CacheFactory.isRunning) { 
-            CacheFactory.set(cacheKey, mso);
-        }         
+        CacheFactory.set(cacheKey, mso);
         return mso;
     }
     

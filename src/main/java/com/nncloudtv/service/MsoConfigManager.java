@@ -117,9 +117,7 @@ public class MsoConfigManager {
         boolean value = false;
         MsoConfig config = new MsoConfigDao().findByItem(key);
         if (config != null) {
-            if (CacheFactory.isRunning) {
-                CacheFactory.set(cacheKey, config.getValue());
-            }
+            CacheFactory.set(cacheKey, config.getValue());
             value = NnStringUtil.stringToBool(config.getValue());
         }
         return value;

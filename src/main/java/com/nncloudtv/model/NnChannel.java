@@ -474,8 +474,7 @@ public class NnChannel implements Serializable {
             log.info("cnt view not in the cache:" + name);
             CounterFactory factory = new CounterFactory();            
             cntView = factory.getCount(name); 
-            if (CacheFactory.isRunning)
-                CacheFactory.set(name, String.valueOf(cntView));
+            CacheFactory.set(name, String.valueOf(cntView));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -596,8 +595,7 @@ public class NnChannel implements Serializable {
             log.info("cnt view not in the cache:" + name);
             CounterFactory factory = new CounterFactory();            
             cntVisit = factory.getCount(name);
-            if (CacheFactory.isRunning)
-                CacheFactory.set(name, String.valueOf(cntVisit));
+            CacheFactory.set(name, String.valueOf(cntVisit));
         } catch (Exception e){
             //e.printStackTrace();
             System.out.println("msg:" + e.getMessage());

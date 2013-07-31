@@ -40,12 +40,20 @@ public class CacheFactory {
     }    
 
     public static Object get(String key) {
+        
+        if (!CacheFactory.isRunning) {
+            log.warning("cache is not running");
+            return null;
+        }
+        CacheFactory.isRunning = false;
+        
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
+        
         Object obj = null;
         Future<Object> future = cache.asyncGet(key);
         try {
-            obj = future.get(5, TimeUnit.SECONDS);
+            obj = future.get(2, TimeUnit.SECONDS); // Asynchronously 
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
@@ -54,21 +62,26 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            if (cache != null)
-                cache.shutdown(); 
+            cache.shutdown(); 
             future.cancel(false);
+            CacheFactory.isRunning = true;
         }
         return obj;
     }
 
-    public static Object set(String key, Object obj) {        
-        MemcachedClient cache = CacheFactory.getClient();
-        if (cache == null) return null;
+    public static void set(String key, Object obj) {
+        
+        if (!CacheFactory.isRunning) {
+            log.warning("cache is not running");
+            return;
+        }
         CacheFactory.isRunning = false;
-        Object myObj = null;
+        
+        MemcachedClient cache = CacheFactory.getClient();
+        if (cache == null) return;
+        
         try {
             cache.set(key, CacheFactory.EXP_DEFAULT, obj);
-            myObj = cache.get(key);
         } catch (OperationTimeoutException e) {
             log.severe("memcache OperationTimeoutException");
         } catch (NullPointerException e) {
@@ -77,18 +90,22 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            if (cache != null)
-                cache.shutdown();
+            cache.shutdown();
             CacheFactory.isRunning = true;
         }
-        return myObj;
     }    
 
-    public static Object delete(String key) {        
-        MemcachedClient cache = CacheFactory.getClient();
-        if (cache == null) return null;
+    public static void delete(String key) {
+        
+        //if (!CacheFactory.isRunning) {
+        //    log.warning("cache is not running");
+        //    return;
+        //}
         CacheFactory.isRunning = false;
-        Object obj = null;
+        
+        MemcachedClient cache = CacheFactory.getClient();
+        if (cache == null) return;
+        
         try {
             cache.delete(key).get();
         } catch (OperationTimeoutException e) {
@@ -97,11 +114,10 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            if (cache != null)
-                cache.shutdown();            
-            CacheFactory.isRunning = true;
+            cache.shutdown();            
+        //    CacheFactory.isRunning = true;
         }
-        return obj;
+        return;
     }    
     
 }
