@@ -49,10 +49,7 @@ public class CacheFactory {
         CacheFactory.isRunning = false;
         
         MemcachedClient cache = CacheFactory.getClient();
-        if (cache == null) {
-            log.info("cache [" + key + "] --> miss");
-            return null;
-        }
+        if (cache == null) return null;
         
         Object obj = null;
         Future<Object> future = cache.asyncGet(key);
@@ -72,8 +69,11 @@ public class CacheFactory {
             future.cancel(false);
             CacheFactory.isRunning = true;
         }
-        if (obj != null)
+        if (obj == null) {
+            log.info("cache [" + key + "] --> miss");
+        } else {
             log.info("cache [" + key + "] --> hits");
+        }
         return obj;
     }
 
