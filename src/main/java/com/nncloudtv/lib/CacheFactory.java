@@ -48,7 +48,10 @@ public class CacheFactory {
         CacheFactory.isRunning = false;
         
         MemcachedClient cache = CacheFactory.getClient();
-        if (cache == null) return null;
+        if (cache == null) {
+            log.info("cache [" + key + "] --> miss");
+            return null;
+        }
         
         Object obj = null;
         Future<Object> future = cache.asyncGet(key);
@@ -66,6 +69,7 @@ public class CacheFactory {
             future.cancel(false);
             CacheFactory.isRunning = true;
         }
+        log.info("cache [" + key + "] --> hit");
         return obj;
     }
 
@@ -93,6 +97,7 @@ public class CacheFactory {
             cache.shutdown();
             CacheFactory.isRunning = true;
         }
+        log.info("cache [" + key + "] --> set");
     }    
 
     public static void delete(String key) {
@@ -117,7 +122,7 @@ public class CacheFactory {
             cache.shutdown();            
         //    CacheFactory.isRunning = true;
         }
-        return;
+        log.info("cache [" + key + "] --> delete");
     }    
     
 }
