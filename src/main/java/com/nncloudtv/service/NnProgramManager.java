@@ -214,7 +214,7 @@ public class NnProgramManager {
             String programInfo = (String) CacheFactory.get(cacheKey);
             
             if (programInfo != null) {
-                log.info("get programInfo from cache, channelId = " + c.getId());
+                log.info("got programInfo from cache, channelId = " + c.getId());
                 output += programInfo;
                 continue;
             }
@@ -238,7 +238,7 @@ public class NnProgramManager {
             }
             if (programInfo != null) {
                 output += programInfo;
-                log.info("save programInfo to cache, channelId = " + c.getId());
+                log.info("save lastProgramInfo to cache, channelId = " + c.getId());
                 CacheFactory.set(cacheKey, programInfo);
             }
         }        
@@ -545,7 +545,7 @@ public class NnProgramManager {
         if (c == null)
             return "";
         String output = this.assembleProgramInfo(c);
-        log.info("saved programInfo, channelId = " + channelId);
+        log.info("store programInfo, channelId = " + channelId);
         CacheFactory.set(cacheKey, output);
         return output;
     }
