@@ -18,6 +18,7 @@ public class CacheFactory {
     
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
+    public static final int ASYNC_CACHE_TIMEOUT = 5;
     public static final String ERROR = "ERROR";
     public static boolean isRunning = true;
     
@@ -54,7 +55,7 @@ public class CacheFactory {
         Object obj = null;
         Future<Object> future = cache.asyncGet(key);
         try {
-            obj = future.get(2, TimeUnit.SECONDS); // Asynchronously 
+            obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS); // Asynchronously 
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
