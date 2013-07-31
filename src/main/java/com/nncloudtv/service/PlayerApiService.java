@@ -2540,10 +2540,12 @@ public class PlayerApiService {
         SysTagManager systagMngr = new SysTagManager();
         List<SysTagDisplay> displays = displayMngr.findRecommendedSets(lang, mso.getId());
         //The dayparting set is system set, always shows up
-        SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, msoMngr.findNNMso().getId());
-        if (dayparting != null)
-        	displays.add(dayparting);
-        SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
+        Mso nnMso = msoMngr.findNNMso();
+        SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, nnMso.getId());
+        if (dayparting != null) {
+            displays.add(dayparting);
+        }
+        SysTagDisplay previously = displayMngr.findPrevious(nnMso.getId(), lang, dayparting);
         if (previously != null) {
         	displays.add(previously);
         }
