@@ -1078,8 +1078,11 @@ public class NnChannelManager {
     public void renewChannelUpdateDate(long channelId) {
         Date now = new Date();
         NnChannel channel = dao.findById(channelId);
+        if (channel == null) {
+            return ;
+        }
         channel.setUpdateDate(now);
-        dao.save(channel);
+        save(channel);
     }
     
     public List<NnChannel> findPersonalHistory(long userId, long msoId) {
