@@ -1151,6 +1151,13 @@ public class ApiContent extends ApiGeneric {
             }
         }
         
+        // updateDate
+        String updateDateStr = req.getParameter("updateDate");
+        if (updateDateStr != null) {
+            Date now = new Date();
+            channel.setUpdateDate(now);
+        }
+        
         NnChannel savedChannel = channelMngr.save(channel);
         
         channelMngr.populateCategoryId(channel);
