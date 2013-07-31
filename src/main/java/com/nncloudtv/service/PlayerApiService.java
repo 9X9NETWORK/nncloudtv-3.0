@@ -2538,17 +2538,14 @@ public class PlayerApiService {
         //1: list of sets, including dayparting 
         SysTagDisplayManager displayMngr = new SysTagDisplayManager();
         SysTagManager systagMngr = new SysTagManager();
-        List<SysTagDisplay> displays = displayMngr.findRecommendedSets(lang, mso.getId());        
-        SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, mso.getId());
+        List<SysTagDisplay> displays = displayMngr.findRecommendedSets(lang, mso.getId());
+        //The dayparting set is system set, always shows up
+        SysTagDisplay dayparting = displayMngr.findDayparting(baseTime, lang, msoMngr.findNNMso().getId());
         if (dayparting != null)
         	displays.add(dayparting);
         SysTagDisplay previously = displayMngr.findPrevious(mso.getId(), lang, dayparting);
         if (previously != null) {
         	displays.add(previously);
-        }
-        //system sets
-        if (!MsoManager.isNNMso(mso)) {
-            displays.addAll(displayMngr.findRecommendedSets(lang, msoMngr.findNNMso().getId()));
         }
         String setStr = "";
         for (SysTagDisplay display : displays) {
