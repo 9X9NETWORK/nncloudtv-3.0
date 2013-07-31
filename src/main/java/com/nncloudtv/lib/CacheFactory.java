@@ -20,7 +20,7 @@ public class CacheFactory {
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 5;
     public static final String ERROR = "ERROR";
-    public static boolean isRunning = true;
+    //public static boolean isRunning = true;
     
     public static MemcachedClient getClient() {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
@@ -80,11 +80,11 @@ public class CacheFactory {
 
     public static void set(String key, Object obj) {
         
-        if (!CacheFactory.isRunning) {
-            log.warning("cache is not running");
-            return;
-        }
-        CacheFactory.isRunning = false;
+        //if (!CacheFactory.isRunning) {
+        //    log.warning("cache is not running");
+        //    return;
+        //}
+        //CacheFactory.isRunning = false;
         
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return;
@@ -100,7 +100,7 @@ public class CacheFactory {
             e.printStackTrace();
         } finally {
             cache.shutdown();
-            CacheFactory.isRunning = true;
+            //CacheFactory.isRunning = true;
         }
         log.info("cache [" + key + "] --> set");
     }    
