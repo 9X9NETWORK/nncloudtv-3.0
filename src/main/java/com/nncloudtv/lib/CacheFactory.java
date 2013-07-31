@@ -43,11 +43,11 @@ public class CacheFactory {
 
     public static Object get(String key) {
         
-        if (!CacheFactory.isRunning) {
-            log.warning("cache is not running");
-            return null;
-        }
-        CacheFactory.isRunning = false;
+        //if (!CacheFactory.isRunning) {
+        //    log.warning("cache is not running");
+        //    return null;
+        //}
+        //CacheFactory.isRunning = false;
         
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
@@ -68,7 +68,7 @@ public class CacheFactory {
         } finally {
             cache.shutdown(); 
             future.cancel(false);
-            CacheFactory.isRunning = true;
+            //CacheFactory.isRunning = true;
         }
         if (obj == null) {
             log.info("cache [" + key + "] --> miss");
@@ -111,7 +111,7 @@ public class CacheFactory {
         //    log.warning("cache is not running");
         //    return;
         //}
-        CacheFactory.isRunning = false;
+        //CacheFactory.isRunning = false;
         
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return;
@@ -125,7 +125,7 @@ public class CacheFactory {
             e.printStackTrace();
         } finally {
             cache.shutdown();            
-        //    CacheFactory.isRunning = true;
+            //CacheFactory.isRunning = true;
         }
         log.info("cache [" + key + "] --> delete");
     }    
