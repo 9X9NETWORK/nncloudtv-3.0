@@ -262,11 +262,9 @@ public class ApiContent extends ApiGeneric {
         
         // mark as hook position
         episodeMngr.autoShareToFacebook(episode);
-        //log.info("====================episode ID called : " + episodeId + "====================");
         
         okResponse(resp);
         return null;
-        //return "episode ID called : " + episodeId;
     }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/brand", method = RequestMethod.GET)
@@ -1461,7 +1459,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         episodeMngr.save(orderedEpisodes);
-        channelMngr.save(channel); // update channel updateDate
+        channelMngr.renewChannelUpdateDate(channel.getId());
         
         okResponse(resp);
         return null;
