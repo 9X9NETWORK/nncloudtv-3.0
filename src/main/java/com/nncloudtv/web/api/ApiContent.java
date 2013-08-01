@@ -1176,37 +1176,6 @@ public class ApiContent extends ApiGeneric {
         return savedChannel;
     }
     
-    @RequestMapping(value = "channels/{channelId}/isOwner", method = RequestMethod.GET)
-    public @ResponseBody
-    Boolean isChannelOwner(HttpServletRequest req, HttpServletResponse resp,
-            @PathVariable("channelId") String channelIdStr) {
-        
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
-        if (channelId == null) {
-            notFound(resp, INVALID_PATH_PARAMETER);
-            return null;
-        }
-        
-        NnChannelManager channelMngr = new NnChannelManager();
-        NnChannel channel = channelMngr.findById(channelId);
-        if (channel == null) {
-            notFound(resp, "Channel Not Found");
-            return null;
-        }
-        
-        String mail = req.getParameter("mail");
-        if (mail == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            return null;
-        }
-        
-        return channelMngr.isChannelOwner(channel, mail);
-    }
-    
     @RequestMapping(value = "tags", method = RequestMethod.GET)
     public @ResponseBody String[] tags(HttpServletRequest req, HttpServletResponse resp) {
         
@@ -2535,4 +2504,48 @@ public class ApiContent extends ApiGeneric {
         return null;
     }
     
+    @RequestMapping(value = "weifilm", method = RequestMethod.GET)
+    public @ResponseBody List<Map<String, Object>> weifilm(HttpServletRequest req, HttpServletResponse resp) {
+        
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        long channelId = 9010;
+        
+        NnProgramManager programMngr = new NnProgramManager();
+        List<NnProgram> programs = programMngr.findByChannelId(channelId); // input hard coded Channel ID
+        if (programs == null || programs.size() == 0) {
+            return results;
+        }
+        
+        NnEpisodeManager episodeMngr = new NnEpisodeManager();
+        List<NnEpisode> episodes = episodeMngr.findByChannelId(channelId); // input hard coded Channel ID
+        if (episodes == null || episodes.size() == 0) {
+            return results;
+        }
+        
+        Map<Long, NnEpisode> episodeMap = new TreeMap<Long, NnEpisode>();
+        for (NnEpisode episode : episodes) {
+            episodeMap.put(episode.getId(), episode);
+        }
+
+        Map<String, Object> result;
+        NnEpisode episode;
+        for (NnProgram program : programs) {
+            result = new TreeMap<String, Object>();
+            String[] fragment = program.getFileUrl().split("watch\\?v=");
+            if (fragment.length > 1) {
+                String youtubeId = fragment[1];
+                result.put("youtubeId", youtubeId); // youtubeId YouTube ID
+            }
+            episode = episodeMap.get(program.getEpisodeId());
+            if (episode != null) {
+                result.put("score", episode.getCntView()); // score: 得分
+                // shareUrl 用於分享及點擊觀看的網址
+                result.put("shareUrl", NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
+                result.put("updateDate", episode.getUpdateDate()); // updateDate 更新日期 (timestamp)
+            }
+            results.add(result);
+        }
+        
+        return results;
+    }
 }
