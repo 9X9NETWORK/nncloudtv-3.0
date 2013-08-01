@@ -215,7 +215,8 @@ public class NnProgramManager {
             
             if (programInfo != null) {
                 log.info("got programInfo from cache, channelId = " + c.getId());
-                output += programInfo;
+                if (!programInfo.isEmpty())
+                    output += programInfo;
                 continue;
             }
             if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL || 
@@ -240,6 +241,9 @@ public class NnProgramManager {
                 output += programInfo;
                 log.info("save lastProgramInfo to cache, channelId = " + c.getId());
                 CacheFactory.set(cacheKey, programInfo);
+            } else {
+                log.info("save lastProgramInfo to cache, channelId = " + c.getId() + ", though its empty");
+                CacheFactory.set(cacheKey, ""); // save an empty string to prevent cache miss
             }
         }        
         return output;

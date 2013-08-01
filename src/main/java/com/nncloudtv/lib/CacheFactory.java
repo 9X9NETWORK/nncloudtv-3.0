@@ -19,8 +19,11 @@ public class CacheFactory {
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 2;
+    public static final int DELAY_CHECK_COUNT = 300;
     public static final String ERROR = "ERROR";
+    
     public static boolean isRunning = true;
+    private static int delay_check = 0;
     
     public static MemcachedClient getClient() {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
@@ -33,6 +36,8 @@ public class CacheFactory {
             String server = properties.getProperty("server");
             //log.info("memcache server:" + server);
             cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
+        } catch (NullPointerException e) {
+            log.severe("memcache is missing");
         } catch (IOException e) {
             log.severe("memcache io exception");
         } catch (Exception e) {
@@ -45,11 +50,17 @@ public class CacheFactory {
 
     public static Object get(String key) {
         
+        if (delay_check++ > CacheFactory.DELAY_CHECK_COUNT) {
+            delay_check = 0;
+            CacheFactory.isRunning = false;
+        } else if (!CacheFactory.isRunning) {
+            log.warning("cache is not running");
+            return null;
+        }
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
         
         Object obj = null;
-        CacheFactory.isRunning = false;
         Future<Object> future = null;
         try {
             future = cache.asyncGet(key);
@@ -75,21 +86,16 @@ public class CacheFactory {
 
     public static Object set(String key, Object obj) {
         
-        if (!CacheFactory.isRunning) {
-            log.warning("cache is not running");
-            return null;
-        }
+        if (!CacheFactory.isRunning) return null;
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
         
         Future<Object> future = null;
         Object retObj = null;
-        CacheFactory.isRunning = false;
         try {
             cache.set(key, CacheFactory.EXP_DEFAULT, obj);
             future = cache.asyncGet(key);;
             retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
-            CacheFactory.isRunning = true;
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
@@ -112,17 +118,12 @@ public class CacheFactory {
 
     public static void delete(String key) {
         
-        if (!CacheFactory.isRunning) {
-            log.warning("cache is not running");
-            return;
-        }
+        if (!CacheFactory.isRunning) return;
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return;
         
-        CacheFactory.isRunning = false;
         try {
             cache.delete(key).get();
-            CacheFactory.isRunning = true;
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (Exception e) {
