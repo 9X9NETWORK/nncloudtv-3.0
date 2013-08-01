@@ -2538,7 +2538,7 @@ public class ApiContent extends ApiGeneric {
             }
             episode = episodeMap.get(program.getEpisodeId());
             if (episode != null) {
-                result.put("score", episode.getCntView()); // score: 得分
+                result.put("score", Float.parseFloat(String.valueOf(episode.getCntView()))); // score: 得分
                 // shareUrl 用於分享及點擊觀看的網址
                 result.put("shareUrl", NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
                 result.put("updateDate", episode.getUpdateDate()); // updateDate 更新日期 (timestamp)
