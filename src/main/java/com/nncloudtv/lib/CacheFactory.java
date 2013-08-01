@@ -19,7 +19,7 @@ public class CacheFactory {
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 2;
-    public static final int DELAY_CHECK_COUNT = 300;
+    public static final int DELAY_CHECK_THRESHOLD = 100;
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
@@ -50,7 +50,7 @@ public class CacheFactory {
 
     public static Object get(String key) {
         
-        if (delay_check++ > CacheFactory.DELAY_CHECK_COUNT) {
+        if (delay_check++ > CacheFactory.DELAY_CHECK_THRESHOLD) {
             delay_check = 0;
             CacheFactory.isRunning = false;
         } else if (!CacheFactory.isRunning) {
