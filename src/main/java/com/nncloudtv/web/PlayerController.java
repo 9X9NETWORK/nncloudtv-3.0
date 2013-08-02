@@ -204,7 +204,7 @@ public class PlayerController {
         if (isIos) {
             log.info("It is iOS");
             pid = service.findFirstSubepisodeId(pid);
-            String iosStr = service.getRedirectIosUrl(cid, pid, req);
+            String iosStr = service.getRedirectIosUrl(cid, pid, msoName, req);
             model.addAttribute("fliprUrl", iosStr);
             return "player/ios";
         }
@@ -246,7 +246,7 @@ public class PlayerController {
                 boolean isIos = service.isIos(req);
                 if (isIos) {
                     pid = service.findFirstSubepisodeId(pid);
-                    String iosStr = service.getRedirectIosUrl(cid, pid, req);
+                    String iosStr = service.getRedirectIosUrl(cid, pid, mso, req);
                     model.addAttribute("fliprUrl", iosStr);
                     return "player/ios";
                 }
