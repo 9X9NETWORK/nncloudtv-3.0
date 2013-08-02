@@ -149,7 +149,7 @@ public class MsoManager {
     }
 
     public Mso getByNameFromCache(String name) {
-        if (name == null) {return null;}
+        if (name == null || name.isEmpty()) {return null;}
         String cacheKey = "mso(" + name + ")";
         try {
             Mso cached = (Mso) CacheFactory.get(cacheKey);

@@ -53,7 +53,7 @@ public class ApiContext {
         
         mso = msoMngr.getByNameFromCache(httpReqest.getParameter(ApiContext.PARAM_MSO));
         if (mso == null) {
-            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);;
+            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);
         }
         
         String lang = httpReqest.getParameter(ApiContext.PARAM_LANG);

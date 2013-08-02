@@ -50,6 +50,7 @@ public class CacheFactory {
 
     public static Object get(String key) {
         
+        if (key == null || key.isEmpty()) return null;
         if (delay_check++ > CacheFactory.DELAY_CHECK_THRESHOLD) {
             delay_check = 0;
             CacheFactory.isRunning = false;
@@ -87,7 +88,7 @@ public class CacheFactory {
 
     public static Object set(String key, Object obj) {
         
-        if (!CacheFactory.isRunning) return null;
+        if (!CacheFactory.isRunning || key == null || key.isEmpty()) return null;
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return null;
         
@@ -120,7 +121,7 @@ public class CacheFactory {
 
     public static void delete(String key) {
         
-        if (!CacheFactory.isRunning) return;
+        if (!CacheFactory.isRunning || key == null || key.isEmpty()) return;
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return;
         
