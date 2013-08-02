@@ -71,13 +71,14 @@ public class CacheFactory {
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
-            log.severe("future not found");
+            log.warning("future not found");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
             cache.shutdown(); 
-            future.cancel(false);
+            if (future != null)
+                future.cancel(false);
         }
         if (obj == null)
             log.info("cache [" + key + "] --> missed");
@@ -101,13 +102,14 @@ public class CacheFactory {
         } catch (OperationTimeoutException e) {
             log.severe("memcache OperationTimeoutException");
         } catch (NullPointerException e) {
-            log.severe("memcache not found");
+            log.warning("future not found");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
             cache.shutdown();
-            future.cancel(false);
+            if (future != null)
+                future.cancel(false);
         }
         if (retObj == null)
             log.info("cache [" + key + "] --> not saved");
