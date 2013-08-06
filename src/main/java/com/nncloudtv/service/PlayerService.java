@@ -208,7 +208,7 @@ public class PlayerService {
         String root = null;
         
         if (MsoManager.isNNMso(mso)) {
-            root = NnNetUtil.getUrlRoot(req);
+            root = NnNetUtil.getUrlRoot(req).replaceFirst("^http(s)?:\\/\\/", "");
         } else {
             root = mso.getName() + "." + NnNetUtil.getUrlRoot(req).replaceFirst("^http(s)?:\\/\\/(www\\.)?", "");
         }
