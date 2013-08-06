@@ -205,12 +205,12 @@ public class PlayerService {
     // http://player.9x9.tv/tv#/promotion/{ch}/{ep}
     public String getPlayerPromotionUrl(HttpServletRequest req, Mso mso, String ch, String ep) {
         
-        String root = NnNetUtil.getUrlRoot(req).replaceFirst("^http(s)?:\\/\\/(www\\.)?", "");
+        String root = null;
         
         if (MsoManager.isNNMso(mso)) {
-            root = "www." + root;
+            root = NnNetUtil.getUrlRoot(req);
         } else {
-            root = mso.getName() + "." + root;
+            root = mso.getName() + "." + NnNetUtil.getUrlRoot(req).replaceFirst("^http(s)?:\\/\\/(www\\.)?", "");
         }
         
         String url = "http://" + root + "/tv#/promotion/" + ch;
