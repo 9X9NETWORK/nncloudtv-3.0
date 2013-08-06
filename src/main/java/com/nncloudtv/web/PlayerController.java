@@ -97,7 +97,7 @@ public class PlayerController {
         } catch (Throwable t) {
             NnLogUtil.logThrowable(t);            
         }
-        return "player/tv";
+        return "player/mini";
     }    
     
     @RequestMapping("tv40")
