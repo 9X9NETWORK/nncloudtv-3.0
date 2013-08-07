@@ -3,39 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>9x9.tv Stream Portal</title>
+<title>9x9.tv</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width">
-<!-- http://9x9ui.s3.amazonaws.com/tv4.0/ -->
-<!-- http://dev6.9x9.tv/playerjs/ -->
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0/css/main.css">
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.prod/css/main.css">
 <link href="http://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
-
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" charset="utf-8"></script>
-
 <!-- 3rd party libararies -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0/js/3rd/plugins.js"></script>
-
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
-
-
+<!-- components -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/dev.js"></script>
-
-<!-- components -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Navigatable.js" charset="utf-8"></script>
-<!-- components -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Controllable.js" charset="utf-8"></script>
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/StreamingPortal.js"></script>
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Store.js"></script>
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Playback.js"></script>
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/nn/comp/Guide.js"></script>
-
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.prod/js/4.0.js"></script>
-
 </head>
 <body style="display: none">
 
