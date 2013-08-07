@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
-%><!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/">
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="http://9x9ui.s3.amazonaws.com/9x9playerV68a"/>
@@ -79,8 +79,8 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 <meta itemprop="image" content="${fbImg}"><!-- Google+ requires thumbnail size at least 125px -->
 
 <!-- FB Sharing meta data -->
-<meta name="title" content="${fbName}" />
-<meta name="description" content="${fbDescription}" />
+<meta name="title" content="${fbName}"/>
+<meta name="description" content="${fbDescription}"/>
 
 <link rel="image_src" href="${fbImg}" />
 
@@ -89,17 +89,21 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 <meta property="og:description" content="${fbDescription}"/>
 <meta property="og:url" content="${fbUrl}"/>
 
-<link rel="stylesheet" href="${nroot}/stylesheets/main.css" />
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css" />
+<script type="text/javascript">
+var brandinfo = "${brandInfo}";
+location.replace('${playerPromotionUrl}');
+</script>
+
+<link rel="stylesheet" href="${nroot}/stylesheets/main.css"/>
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/contest/contest.css"/>
 
 <title>9x9.tv</title>
 
 </head>
 
-<body id="body" style="overflow: hidden">
+<body id="body" style="overflow: hidden; visibility: hidden">
 
-<div id="blue" style="background: black; width: 100%; height: 100%; display: block; position: absolute; color: white">
-</div>
+<div id="blue" style="background: black; width: 100%; height: 100%; display: block; position: absolute; color: white"></div>
 
 <div id="bg-layer"><img src="${nroot}/images/bg_body.png"></div>
 
@@ -204,8 +208,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
   </div>
 </div>
 
-
-
 <div id="preload-control-images" style="display: none"></div>
 
 <div id="delete-layer">
@@ -218,7 +220,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
     <a class="btn" id="btn-delMore" onclick="delete_enter(2)"><span id="delmore">Delete More Channels</span></a></div>
   </div>
 </div>
-
 
 <div id="confirm-layer">
   <div id="confirm-holder">
@@ -386,7 +387,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
     </div>
   </div>
 </div>
-
 
 <div id="help-layer">
   <div id="help-holder">
@@ -824,8 +824,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
   </div>
 </div>
 
-
-
 <div id="settings-layer">
   <div id="settings-holder">
     <p id="btn-settings-close"><img src="${nroot}/images/btn_delete_off.png" class="off"><img src="${nroot}/images/btn_delete_on.png" class="on"></p>
@@ -957,8 +955,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
 
 <div id="footer">
   <ul id="footer-list">
-
-
     <li id="btn-company"><span>Company</span></li>
     <li class="divider"></li>
     <li id="btn-blog"><a href="http://blog.9x9.tv/"><span>Blog</span></a></li>
@@ -975,11 +971,6 @@ crawlRecommendCount9: ${crawlRecommendCount9}
   </ul>
   <p id="copyright"><span>&copy; 2012 9x9.tv.  All rights reserved</span></p>
 </div>
-
-<script type="text/javascript">
-var brandinfo = "${brandInfo}";
-setTimeout("location.replace('${playerPromotionUrl}')", 1000);
-</script>
 
 </body>
 </html>
