@@ -224,8 +224,7 @@ public class PlayerController {
             return "player/ios";
         }
         
-        boolean isAndroid = service.isAndroid(req);
-isAndroid = true;        
+        boolean isAndroid = service.isAndroid(req);       
         if (isAndroid) {
         	log.info("It is Android");
             pid = service.findFirstSubepisodeId(pid);
