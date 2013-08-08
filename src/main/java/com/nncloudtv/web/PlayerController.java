@@ -176,8 +176,6 @@ public class PlayerController {
         return "player/zooatomics";
     }
         
-    //apache does view -> redirect
-    //if not trigger another redirect, then it is ok.
     @RequestMapping("/redirect/{name}/view")
     public String brandView(HttpServletRequest req, 
     		                HttpServletResponse resp,
@@ -229,7 +227,6 @@ public class PlayerController {
         	log.info("It is Android");
             pid = service.findFirstSubepisodeId(pid);
             String androidStr = service.getRedirectAndroidUrl(cid, pid, msoName, req);
-            resp.setStatus(307);
             return "redirect:/" + androidStr;
         }
         
