@@ -159,8 +159,8 @@
           <artifactId>maven-war-plugin</artifactId>
           <version>2.2</version>
           <configuration>
-              <warName>root</warName>             
-             <warSourceExcludes>images/, stylesheets/, javascripts/, videos/, installer/, ios/</warSourceExcludes>
+            <warName>root</warName>             
+            <warSourceExcludes>player/, videos/, installer/, ios/</warSourceExcludes>
           </configuration>
         </plugin>        
      </plugins>     
