@@ -175,6 +175,21 @@ public class PlayerController {
         service.preparePlayer(model, js, jsp, req);
         return "player/zooatomics";
     }
+        
+    //apache does view -> redirect
+    //if not trigger another redirect, then it is ok.
+    @RequestMapping("/redirect/{name}/view")
+    public String brandView(HttpServletRequest req, 
+    		                HttpServletResponse resp,
+    		                boolean internal,
+    		                @RequestParam(value="mso",required=false) String msoName) {
+    	String url = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
+    	/*
+    	if (msoName.equals(Mso.NAME_CTS));
+    		url = "";
+    	*/
+    	return "redirect:" + url;
+    }
     
     /**
      * original url: view?channel=x&episode=y
@@ -207,6 +222,16 @@ public class PlayerController {
             String iosStr = service.getRedirectIosUrl(cid, pid, msoName, req);
             model.addAttribute("fliprUrl", iosStr);
             return "player/ios";
+        }
+        
+        boolean isAndroid = service.isAndroid(req);
+isAndroid = true;        
+        if (isAndroid) {
+        	log.info("It is Android");
+            pid = service.findFirstSubepisodeId(pid);
+            String androidStr = service.getRedirectAndroidUrl(cid, pid, msoName, req);
+            resp.setStatus(307);
+            return "redirect:/" + androidStr;
         }
         
         model = service.prepareBrand(model, msoName, resp);

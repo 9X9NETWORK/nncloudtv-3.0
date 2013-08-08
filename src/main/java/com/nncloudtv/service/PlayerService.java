@@ -60,6 +60,20 @@ public class PlayerService {
         log.info("ios redirect url:" + iosStr);
         return iosStr;
     }
+
+    public String getRedirectAndroidUrl(String cid, String pid, String mso, HttpServletRequest req) {
+        //String root = NnNetUtil.getUrlRoot(req);
+        String url = "redirect/";
+        if (mso != null && !mso.equals(Mso.NAME_9X9))
+        	url += mso;
+        if (mso == null)
+        	url += Mso.NAME_9X9;
+        url += cid != null ? "/view?ch=" + cid : "";
+        if (cid != null)
+            url += pid != null ? "&ep=" + pid : "";   
+        log.info("android redirect url:" + url);
+        return url;
+    }
     
     public boolean isIos(HttpServletRequest req) {
         String userAgent = req.getHeader("user-agent");
@@ -70,7 +84,17 @@ public class PlayerService {
         }        
         return false;
     }
-    
+
+    public boolean isAndroid(HttpServletRequest req) {
+        String userAgent = req.getHeader("user-agent");
+        log.info("user agent:" + userAgent);
+        if (userAgent.contains("Android")) {
+            log.info("request from Android");
+            return true;            
+        }        
+        return false;
+    }
+        
     public String findFirstSubepisodeId(String eId) {
         if (eId != null && eId.matches("e[0-9]+")) {
             String eid = eId.replace("e", "");
