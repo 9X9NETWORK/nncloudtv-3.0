@@ -100,6 +100,7 @@ public class PlayerController {
         return "player/mini";
     }    
     
+    // TODO: remove
     @RequestMapping("tv40")
     public String tvforty(@RequestParam(value="mso",required=false) String mso, 
             HttpServletRequest req, HttpServletResponse resp, Model model,
