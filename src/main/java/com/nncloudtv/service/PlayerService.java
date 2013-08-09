@@ -95,6 +95,7 @@ public class PlayerService {
         return false;
     }
         
+    //it is likely for old ios app who doesn't know about episdoe
     public String findFirstSubepisodeId(String eId) {
         if (eId != null && eId.matches("e[0-9]+")) {
             String eid = eId.replace("e", "");
