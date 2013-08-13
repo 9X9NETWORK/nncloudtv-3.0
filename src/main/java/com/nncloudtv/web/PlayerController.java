@@ -178,15 +178,14 @@ public class PlayerController {
     }
         
     @RequestMapping("/redirect/{name}/view")
-    public String brandView(HttpServletRequest req, 
+    public String brandView(@PathVariable("name") String name,
+    						HttpServletRequest req, 
     		                HttpServletResponse resp,
     		                boolean internal,
     		                @RequestParam(value="mso",required=false) String msoName) {
     	String url = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
-    	/*
-    	if (msoName.equals(Mso.NAME_CTS));
-    		url = "";
-    	*/
+    	if (name.equals(Mso.NAME_CTS) || msoName.equals(Mso.NAME_CTS));
+    		url = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
     	return "redirect:" + url;
     }
     
