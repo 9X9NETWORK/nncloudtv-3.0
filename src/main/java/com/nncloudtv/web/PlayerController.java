@@ -178,15 +178,22 @@ public class PlayerController {
     }
         
     @RequestMapping("/redirect/{name}/view")
-    public String brandView(@PathVariable("name") String name,
-    						HttpServletRequest req, 
-    		                HttpServletResponse resp,
-    		                boolean internal) {    		                
-    	String url = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
+    public String brandView(
+    		        Model model,
+    		        @PathVariable("name") String name,
+            		@RequestParam(value="ch", required=false) String ch,
+                    @RequestParam(value="ep", required=false) String ep,    		
+    				HttpServletRequest req, 
+    		        HttpServletResponse resp) {    		       
+    	String redirectUrl = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
+    	String reportUrl = new PlayerService().getGAReportUrl(ch, ep);
+    	log.info("reportUrl:" + reportUrl); 
     	if (name.equals(Mso.NAME_CTS)) {
-    		url = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
+    		redirectUrl = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
     	}
-    	return "redirect:" + url;
+    	model.addAttribute("reportUrl", reportUrl);
+    	model.addAttribute("redirectUrl", redirectUrl);
+        return ("player/googleplay");    	
     }
     
     /**
@@ -218,7 +225,9 @@ public class PlayerController {
             log.info("It is iOS");
             //pid = service.findFirstSubepisodeId(pid);
             String iosStr = service.getRedirectIosUrl(cid, pid, msoName, req);
+            String reportUrl = service.getGAReportUrl(ch, ep);
             model.addAttribute("fliprUrl", iosStr);
+            model.addAttribute("reportUrl", reportUrl);
             return "player/ios";
         }
         

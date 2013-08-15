@@ -61,6 +61,21 @@ public class PlayerService {
         return iosStr;
     }
 
+    public String getGAReportUrl(String ch, String ep) {
+    	String reportUrl = "/promotion";
+    	if (ch != null) {
+    		reportUrl += "/ch" + ch;
+    	}
+    	if (ep != null) {
+    		if (ep.matches("e[0-9]+")) {
+    			reportUrl += "/" + ep;
+    		} else {
+    			reportUrl += "/yt" + ep;
+    		}
+    	} 
+    	return reportUrl;
+    }
+    
     public String getRedirectAndroidUrl(String cid, String pid, String mso, HttpServletRequest req) {
         //String root = NnNetUtil.getUrlRoot(req);
         String url = "redirect/";
