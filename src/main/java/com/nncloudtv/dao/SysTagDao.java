@@ -64,8 +64,12 @@ public class SysTagDao extends GenericDao<SysTag> {
                 limit 3, 5                
               ) a2 on a1.id=a2.id
             */
-        	        	
-            String orderStr = " order by m.alwaysOnTop desc, c.updateDate desc";
+            
+            // (alwaysOnTop == true)  ==>  order by 'seq'
+            // (alwaysOntop == flase) ==>  order by 'sphere', 'updateDate'
+            String orderStr = " order by m.alwaysOnTop desc, " +
+                                       " case m.alwaysOnTop when true then m.seq else (case c.sphere when '" + lang + "' then 1 else 2 end) end, " +
+                                       " c.updateDate desc ";
             if (sort == SysTag.SORT_SEQ) {
             	orderStr = " order by m.seq ";
             }
