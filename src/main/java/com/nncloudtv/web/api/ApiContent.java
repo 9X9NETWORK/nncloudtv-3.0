@@ -38,6 +38,7 @@ import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.TitleCard;
+import com.nncloudtv.service.CounterFactory;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnAdManager;
@@ -2529,6 +2530,7 @@ public class ApiContent extends ApiGeneric {
 
         Map<String, Object> result;
         NnEpisode episode;
+        CounterFactory factory = new CounterFactory();
         for (NnProgram program : programs) {
             result = new TreeMap<String, Object>();
             String[] fragment = program.getFileUrl().split("watch\\?v=");
@@ -2538,10 +2540,11 @@ public class ApiContent extends ApiGeneric {
             }
             episode = episodeMap.get(program.getEpisodeId());
             if (episode != null) {
-                result.put("score", episode.getCntView() + 0.5); // score: 得分
+                String counterName = "s_ch" + episode.getChannelId() + "_e" + episode.getId();
+                result.put("score", factory.getCount(counterName)); // score: 得分
                 // shareUrl 用於分享及點擊觀看的網址
                 result.put("shareUrl", NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
-                result.put("updateDate", episode.getUpdateDate()); // updateDate 更新日期 (timestamp)
+                result.put("updateDate", episode.getAdId()); // updateDate 更新日期 (timestamp)
             }
             results.add(result);
         }
