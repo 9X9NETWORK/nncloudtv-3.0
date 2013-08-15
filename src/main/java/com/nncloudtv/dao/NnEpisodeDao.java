@@ -60,12 +60,16 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
 
     public List<NnEpisode> findPlayerEpisode(long channelId) {
         List<NnEpisode> detached = new ArrayList<NnEpisode>();
-        PersistenceManager pm = PMF.getContent().getPersistenceManager();        
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        long[] weifilmCh = { 28180, 28179, 28178, 28177, 28176, 28175, 28174, 28087 }; // TODO: remove (weifilm)
         try {
             Query query = pm.newQuery(NnEpisode.class);
             query.setFilter("channelId == channelIdParam && isPublic == isPublicParam");
             query.declareParameters("long channelIdParam, boolean isPublicParam");
             query.setOrdering("seq");
+            if (!((List<Long>)java.util.Arrays.asList(org.apache.commons.lang.ArrayUtils.toObject(weifilmCh))).contains(channelId)) {
+                query.setRange(0, 50); // TODO: remove (weifilm)
+            }
             @SuppressWarnings("unchecked")
             List<NnEpisode> episodes = (List<NnEpisode>)query.execute(channelId, true);
             if (episodes.size() > 0) {
