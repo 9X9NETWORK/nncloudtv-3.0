@@ -2549,7 +2549,10 @@ public class ApiContent extends ApiGeneric {
                 log.info(episode.getName() + ", score = " + score);
                 result.put("score", score); // score: 得分
                 // shareUrl 用於分享及點擊觀看的網址
-                result.put("shareUrl", NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
+                String url = "http://" + MsoConfigManager.getServerDomain()
+                           + "/view?mso=cts&ch=" + episode.getChannelId()
+                           + "&ep=e" + episode.getId();
+                result.put("shareUrl", url);
                 result.put("updateDate", episode.getAdId()); // updateDate 更新日期 (timestamp)
             }
             results.add(result);
