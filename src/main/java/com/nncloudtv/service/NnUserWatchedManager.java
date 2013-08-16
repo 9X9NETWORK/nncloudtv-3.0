@@ -43,21 +43,34 @@ public class NnUserWatchedManager {
         	(this.findInDefaultIpg(user, watched.getChannelId()) == true) ) {
             List<NnUserWatched> watches = dao.findHistory(user);
             log.info("history size:" + watches.size());
-            if (watches.size() <= 26) {
-                log.info("add more entries: (userid)" + user.getId() + "(channelId)" + watched.getChannelId());
-                this.save(user, watched);
-            } else {
-                //if already have 27 entries then update the oldest entry
-                NnUserWatched old = watches.get(watches.size()-1); 
-                log.info("update the oldest:" + old.getChannelId() + ";" + old.getProgram());
-                old.setChannelId(watched.getChannelId());
-                old.setProgram(watched.getProgram());
-                old.setUpdateDate(new Date());
-                dao.save(user, old);
-            }
+        	boolean existed = false;
+        	for (NnUserWatched w : watches) {
+        		if (w.getChannelId() == watched.getChannelId()) {
+        			existed = true;
+        			w.setProgram(watched.getProgram());
+        			w.setUpdateDate(new Date());
+        			dao.save(user, w);
+        			log.info("update the exising record:" + w.getChannelId());
+        		}            			
+        	}  
+        	if (!existed) {
+	            if (watches.size() <= 26) {
+	                log.info("add more entries: (userid)" + user.getId() + "(channelId)" + watched.getChannelId());
+	                this.save(user, watched);
+	            } else {
+	                //if already have 27 entries then update the oldest entry
+	                NnUserWatched old = watches.get(watches.size()-1); 
+	                log.info("update the oldest:" + old.getChannelId() + ";" + old.getProgram());
+	                old.setChannelId(watched.getChannelId());
+	                old.setProgram(watched.getProgram());
+	                old.setUpdateDate(new Date());
+	                dao.save(user, old);
+	                log.info("replace the oldest entry");
+	            }
+        	}
         } else {
             log.info("already subscribed");
-	}
+        }
     }
     
     public NnUserWatched findByUserAndChannel(NnUser user, long channelId) {
