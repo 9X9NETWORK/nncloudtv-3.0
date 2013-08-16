@@ -2544,7 +2544,7 @@ public class ApiContent extends ApiGeneric {
             episode = episodeMap.get(program.getEpisodeId());
             if (episode != null) {
                 String counterName = "s_ch" + episode.getChannelId() + "_e" + episode.getId();
-                double score = factory.getCount(counterName) / 1000000;
+                double score = (double)factory.getCount(counterName) / 1000000;
                 log.info("counter name = " + counterName);
                 log.info(episode.getName() + ", score = " + score);
                 result.put("score", score); // score: 得分
