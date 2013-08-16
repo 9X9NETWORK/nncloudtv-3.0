@@ -61,7 +61,7 @@ public class PlayerService {
         return iosStr;
     }
 
-    public String getGAReportUrl(String ch, String ep) {
+    public String getGAReportUrl(String ch, String ep, String mso) {
     	String reportUrl = "/promotion";
     	if (ch != null) {
     		reportUrl += "/ch" + ch;
@@ -73,6 +73,10 @@ public class PlayerService {
     			reportUrl += "/yt" + ep;
     		}
     	} 
+    	String msoDomain = "www.9x9.tv";
+    	if (mso != null && !mso.equals(Mso.NAME_9X9))
+    		msoDomain = mso + ".9x9.tv"; 
+    	reportUrl += "?mso=" + msoDomain;
     	return reportUrl;
     }
     

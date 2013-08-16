@@ -186,7 +186,7 @@ public class PlayerController {
     				HttpServletRequest req, 
     		        HttpServletResponse resp) {    		       
     	String redirectUrl = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
-    	String reportUrl = new PlayerService().getGAReportUrl(ch, ep);
+    	String reportUrl = new PlayerService().getGAReportUrl(ch, ep, name);
     	log.info("reportUrl:" + reportUrl); 
     	if (name.equals(Mso.NAME_CTS)) {
     		redirectUrl = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
@@ -225,7 +225,7 @@ public class PlayerController {
             log.info("It is iOS");
             //pid = service.findFirstSubepisodeId(pid);
             String iosStr = service.getRedirectIosUrl(cid, pid, msoName, req);
-            String reportUrl = service.getGAReportUrl(ch, ep);
+            String reportUrl = service.getGAReportUrl(ch, ep, msoName);
             model.addAttribute("fliprUrl", iosStr);
             model.addAttribute("reportUrl", reportUrl);
             return "player/ios";
