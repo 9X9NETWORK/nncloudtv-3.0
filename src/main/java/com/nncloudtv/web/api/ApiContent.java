@@ -2510,18 +2510,21 @@ public class ApiContent extends ApiGeneric {
         
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         long channelId = 9010;
+        log.info("weifilm channel = " + channelId);
         
         NnProgramManager programMngr = new NnProgramManager();
         List<NnProgram> programs = programMngr.findByChannelId(channelId); // input hard coded Channel ID
         if (programs == null || programs.size() == 0) {
             return results;
         }
+        log.info("program size = " + programs.size());
         
         NnEpisodeManager episodeMngr = new NnEpisodeManager();
         List<NnEpisode> episodes = episodeMngr.findByChannelId(channelId); // input hard coded Channel ID
         if (episodes == null || episodes.size() == 0) {
             return results;
         }
+        log.info("episode size = " + episodes.size());
         
         Map<Long, NnEpisode> episodeMap = new TreeMap<Long, NnEpisode>();
         for (NnEpisode episode : episodes) {
@@ -2541,7 +2544,9 @@ public class ApiContent extends ApiGeneric {
             episode = episodeMap.get(program.getEpisodeId());
             if (episode != null) {
                 String counterName = "s_ch" + episode.getChannelId() + "_e" + episode.getId();
-                result.put("score", factory.getCount(counterName)); // score: 得分
+                float score = factory.getCount(counterName) / 1000000;
+                log.info(episode.getName() + ", score = " + score);
+                result.put("score", factory.getCount(counterName) / 1000000); // score: 得分
                 // shareUrl 用於分享及點擊觀看的網址
                 result.put("shareUrl", NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
                 result.put("updateDate", episode.getAdId()); // updateDate 更新日期 (timestamp)
