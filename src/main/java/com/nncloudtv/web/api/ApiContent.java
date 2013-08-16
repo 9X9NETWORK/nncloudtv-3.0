@@ -2545,8 +2545,9 @@ public class ApiContent extends ApiGeneric {
             if (episode != null) {
                 String counterName = "s_ch" + episode.getChannelId() + "_e" + episode.getId();
                 float score = factory.getCount(counterName) / 1000000;
+                log.info("counter name = " + counterName);
                 log.info(episode.getName() + ", score = " + score);
-                result.put("score", factory.getCount(counterName) / 1000000); // score: 得分
+                result.put("score", score); // score: 得分
                 // shareUrl 用於分享及點擊觀看的網址
                 result.put("shareUrl", NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
                 result.put("updateDate", episode.getAdId()); // updateDate 更新日期 (timestamp)
