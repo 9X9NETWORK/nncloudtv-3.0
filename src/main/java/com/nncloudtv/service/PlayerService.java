@@ -133,6 +133,10 @@ public class PlayerService {
     private String prepareFb(String text, int type) {
         //0 = name, 1 = description, 2 = image
         if (type == 1) {
+        	 if (text == null || text.length() == 0) {
+        		 log.info("make fb description empty space with &nbsp;");
+        		 return "&nbsp;";
+        	 }
             return PlayerService.revertHtml(text);
         }
         if (type == 2) {
