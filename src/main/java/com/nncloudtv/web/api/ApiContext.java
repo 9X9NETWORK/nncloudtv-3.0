@@ -51,11 +51,6 @@ public class ApiContext {
         userMngr = new NnUserManager();
         msoMngr = new MsoManager();
         
-        mso = msoMngr.getByNameFromCache(httpReqest.getParameter(ApiContext.PARAM_MSO));
-        if (mso == null) {
-            mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);
-        }
-        
         String lang = httpReqest.getParameter(ApiContext.PARAM_LANG);
         if (LangTable.isValidLanguage(lang)) {
             language = LangTable.getLocale(lang);
@@ -74,6 +69,18 @@ public class ApiContext {
         
         root = NnNetUtil.getUrlRoot(httpReqest);
         log.info("language = " + language.getLanguage() + "; mso = " + mso.getName() + "; version = " + version + "; root = " + root);
+        
+        mso = msoMngr.getByNameFromCache(httpReqest.getParameter(ApiContext.PARAM_MSO));
+        if (mso == null) {
+            String domain = root.replaceAll("^http(s)?:\\/\\/", "");
+            String[] split = domain.split("\\.");
+            if (split.length > 2) {
+                log.info("sub-domain = " + split[0]);
+                mso = msoMngr.findByName(split[0]);
+            }
+            if (mso == null)
+                mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);
+        }
     }
     
     public Boolean isProductionSite() {

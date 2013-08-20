@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>9x9.tv</title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width">
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.prod/css/main.css">
-<link href="http://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
-<link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
+<title>${fbTitle}</title>
+<meta name="keyword" content="${fbKeyword}"/>
+<meta name="description" content="${fbDescription}"/>
+<meta name="viewport" content="width=device-width"/>
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.prod/css/main.css"/>
+<link href="http://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css"/>
+<link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" charset="utf-8"></script>

@@ -33,15 +33,28 @@ public class PlayerService {
             msoName = Mso.NAME_9X9;
         }
         
-        FBService fbService = new FBService();
-        model = fbService.setBrandMetadata(model, msoName);
         if (msoName.equals(Mso.NAME_5F)) {
+            
             model.addAttribute("brandInfo", "5f");
+            model.addAttribute("fbTitle", "5f.tv");
+            model.addAttribute("fbDescription", "&nbsp;");
             CookieHelper.setCookie(resp, CookieHelper.MSO, Mso.NAME_5F);
-        } else {
+            
+        } else if (msoName.equals(Mso.NAME_CTS)) {
+            
+            model.addAttribute("brandInfo", "cts");
+            model.addAttribute("fbTitle", "華視-微電影節(微新運動元年)");
+            model.addAttribute("fbDescription", "微新運動(weifilm)元年第一屆臺灣微電影節選拔活動，主題以臺灣的社會創新，鼓勵臺灣人民與各行各業運用新科技、新方法、新思維、新管理方式，解決社會問題，創造價值與幸福的精彩故事");
+            model.addAttribute("fbKeyword", "微電影節,微新運動,2013台灣微電影節-微視界‧大創新,華視 微電影節,臺灣微電影節,weifilm");
+            
+        }else {
+            
             model.addAttribute("brandInfo", "9x9");
+            model.addAttribute("fbTitle", "9x9.tv");
+            model.addAttribute("fbDescription", "&nbsp;");
             CookieHelper.deleteCookie(resp, CookieHelper.MSO); //delete brand cookie
         }
+        model.addAttribute("fbImg", "http://9x9ui.s3.amazonaws.com/9x9playerV39/images/9x9-facebook-icon.png");
         return model;        
     }
 

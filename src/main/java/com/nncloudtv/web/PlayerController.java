@@ -20,6 +20,7 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerService;
+import com.nncloudtv.web.api.ApiContext;
 
 @Controller
 @RequestMapping("")
@@ -37,9 +38,11 @@ public class PlayerController {
     public String tenft(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model,
             @RequestParam(value="jsp",required=false) String jsp,
             @RequestParam(value="js",required=false) String js) {
+        
+        ApiContext context = new ApiContext(req);
         try {
             PlayerService service = new PlayerService();
-            model = service.prepareBrand(model, mso, resp);
+            model = service.prepareBrand(model, context.getMso().getName(), resp);
             model = service.preparePlayer(model, js, jsp, req);            
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
