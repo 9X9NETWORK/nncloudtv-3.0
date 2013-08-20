@@ -33,26 +33,8 @@ public class PlayerController {
         NnLogUtil.logException(e);
         return "error/exception";                
     }        
-        
-    @RequestMapping("10ft")
-    public String tenft(@RequestParam(value="mso",required=false) String mso, HttpServletRequest req, HttpServletResponse resp, Model model,
-            @RequestParam(value="jsp",required=false) String jsp,
-            @RequestParam(value="js",required=false) String js) {
-        
-        ApiContext context = new ApiContext(req);
-        try {
-            PlayerService service = new PlayerService();
-            model = service.prepareBrand(model, context.getMso().getName(), resp);
-            model = service.preparePlayer(model, js, jsp, req);            
-            if (jsp != null && jsp.length() > 0) {
-                return "player/" + jsp;
-            }
-        } catch (Throwable t) {
-            NnLogUtil.logThrowable(t);            
-        }            
-        return "player/mini";
-    }    
-        
+    
+    // TODO: remove
     @RequestMapping("playback")
     public String playback(@RequestParam(value="mso",required=false) String mso, 
             HttpServletRequest req, HttpServletResponse resp, Model model,
@@ -71,7 +53,7 @@ public class PlayerController {
             String pid = episode != null ? episode : ep;
             model = service.prepareChannel(model, cid, resp);
             model = service.prepareEpisode(model, pid, resp);
-
+            
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
             }
@@ -81,7 +63,7 @@ public class PlayerController {
         return "player/playback";
     }    
     
-    @RequestMapping("tv")
+    @RequestMapping({"tv","10ft"})
     public String tv(@RequestParam(value="mso",required=false) String mso, 
             HttpServletRequest req, HttpServletResponse resp, Model model,
             @RequestParam(value="channel", required=false) String channel,
@@ -91,8 +73,9 @@ public class PlayerController {
             @RequestParam(value="jsp",required=false) String jsp,
             @RequestParam(value="js",required=false) String js) {
         try {
+            ApiContext context = new ApiContext(req);
             PlayerService service = new PlayerService();
-            model = service.prepareBrand(model, mso, resp);
+            model = service.prepareBrand(model, context.getMso().getName(), resp);
             model = service.preparePlayer(model, js, jsp, req);
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
@@ -102,25 +85,6 @@ public class PlayerController {
         }
         return "player/mini";
     }    
-    
-    // TODO: remove
-    @RequestMapping("tv40")
-    public String tvforty(@RequestParam(value="mso",required=false) String mso, 
-            HttpServletRequest req, HttpServletResponse resp, Model model,
-            @RequestParam(value="jsp",required=false) String jsp,
-            @RequestParam(value="js",required=false) String js) {
-        try {
-            PlayerService service = new PlayerService();
-            model = service.prepareBrand(model, mso, resp);
-            model = service.preparePlayer(model, js, jsp, req);            
-            if (jsp != null && jsp.length() > 0) {
-                return "player/" + jsp;
-            }
-        } catch (Throwable t) {
-            NnLogUtil.logThrowable(t);            
-        }
-        return "player/mini";
-    }  
     
     //?_escaped_fragment_=ch=2%26ep=3
     @RequestMapping("/")
