@@ -68,7 +68,6 @@ public class ApiContext {
         }
         
         root = NnNetUtil.getUrlRoot(httpReqest);
-        log.info("language = " + language.getLanguage() + "; mso = " + mso.getName() + "; version = " + version + "; root = " + root);
         
         mso = msoMngr.getByNameFromCache(httpReqest.getParameter(ApiContext.PARAM_MSO));
         if (mso == null) {
@@ -81,6 +80,8 @@ public class ApiContext {
             if (mso == null)
                 mso = msoMngr.getByNameFromCache(Mso.NAME_9X9);
         }
+        
+        log.info("language = " + language.getLanguage() + "; mso = " + mso.getName() + "; version = " + version + "; root = " + root);
     }
     
     public Boolean isProductionSite() {
