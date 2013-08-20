@@ -228,6 +228,9 @@ public class PlayerController {
             String reportUrl = service.getGAReportUrl(ch, ep, msoName);
             model.addAttribute("fliprUrl", iosStr);
             model.addAttribute("reportUrl", reportUrl);
+            if (mso.getName().equals(Mso.NAME_CTS)) {
+            	return "player/ios_cts";
+            }
             return "player/ios";
         }
         
