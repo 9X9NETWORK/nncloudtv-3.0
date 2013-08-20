@@ -7,6 +7,7 @@
 <meta name="keyword" content="${fbKeyword}"/>
 <meta name="description" content="${fbDescription}"/>
 <meta name="viewport" content="width=device-width"/>
+<link rel="image_src" href="${fbImg}" />
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.prod/css/main.css"/>
 <link href="http://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css"/>
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css"/>
