@@ -5,6 +5,20 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app/cts/stylesheets/main.css" />
 <title>9x9.tv</title>
+<script type="text/javascript">
+  var url = '${reportUrl}';
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21595932-1']);
+  _gaq.push(['_trackPageview', url]);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 </head>
 <body>
     <div id="ios-holder">
