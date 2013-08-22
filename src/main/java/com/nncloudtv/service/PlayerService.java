@@ -108,10 +108,12 @@ public class PlayerService {
     public String getRedirectAndroidUrl(String cid, String pid, String mso, HttpServletRequest req) {
         //String root = NnNetUtil.getUrlRoot(req);
         String url = "redirect/";
+        String msoName = "9x9";
         if (mso != null && !mso.equals(Mso.NAME_9X9))
-        	url += mso;
+        	msoName = mso;
         if (mso == null)
-        	url += Mso.NAME_9X9;
+        	msoName = Mso.NAME_9X9;
+        url += msoName;
         url += cid != null ? "/view?ch=" + cid : "";
         if (cid != null)
             url += pid != null ? "&ep=" + pid : "";   
