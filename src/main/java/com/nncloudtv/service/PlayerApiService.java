@@ -68,6 +68,7 @@ import com.nncloudtv.model.UserInvite;
 import com.nncloudtv.model.YtProgram;
 import com.nncloudtv.validation.BasicValidator;
 import com.nncloudtv.validation.NnUserValidator;
+import com.nncloudtv.web.api.ApiContext;
 import com.nncloudtv.web.api.NnStatusCode;
 import com.nncloudtv.web.json.facebook.FacebookMe;
 
@@ -85,13 +86,13 @@ public class PlayerApiService {
     
     public int prepService(HttpServletRequest req, boolean tolog) {        
         /*
-        String userAgent = req.getHeader("user-agent");
+        String userAgent = req.getHeader(ApiContext.HEADER_USER_AGENT);
         if ((userAgent.indexOf("CFNetwork") > -1) && (userAgent.indexOf("Darwin") > -1))     {
             playerApiService.setUserAgent(PlayerApiService.PLAYER_IOS);
             log.info("from iOS");
         }
         */
-        String userAgent = req.getHeader("user-agent");
+        String userAgent = req.getHeader(ApiContext.HEADER_USER_AGENT);
         log.info("user agent:" + userAgent);
         
         String msoName = req.getParameter("mso");

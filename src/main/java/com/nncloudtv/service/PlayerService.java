@@ -21,10 +21,22 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
+import com.nncloudtv.web.api.ApiContext;
 
 public class PlayerService {
     
     protected static final Logger log = Logger.getLogger(PlayerService.class.getName());
+    
+    public static final String META_NAME = "fbName";
+    public static final String META_IMAGE = "fbImg";
+    public static final String META_DESCRIPTION = "fbDescription";
+    public static final String META_URL = "fbUrl";
+    public static final String META_KEYWORD = "fbKeyword";
+    public static final String META_TITLE = "fbTitle"; // <title/>
+    public static final String META_BRANDINFO = "brandInfo";
+    public static final String META_CHANNEL_TITLE = "crawlChannelTitle";
+    public static final String META_EPISODE_TITLE = "crawlEpisodeTitle";
+    public static final String META_VIDEO_THUMBNAIL = "crawlVideoThumb";
     
     public Model prepareBrand(Model model, String msoName, HttpServletResponse resp) {
         if (msoName != null) {
@@ -35,26 +47,26 @@ public class PlayerService {
         
         if (msoName.equals(Mso.NAME_5F)) {
             
-            model.addAttribute("brandInfo", "5f");
-            model.addAttribute("fbTitle", "5f.tv");
-            model.addAttribute("fbDescription", "&nbsp;");
+            model.addAttribute(META_BRANDINFO, "5f");
+            model.addAttribute(META_TITLE, "5f.tv");
+            model.addAttribute(META_DESCRIPTION, "&nbsp;");
             CookieHelper.setCookie(resp, CookieHelper.MSO, Mso.NAME_5F);
             
         } else if (msoName.equals(Mso.NAME_CTS)) {
             
-            model.addAttribute("brandInfo", "cts");
-            model.addAttribute("fbTitle", "華視-微電影節(微新運動元年)");
-            model.addAttribute("fbDescription", "微新運動(weifilm)元年第一屆臺灣微電影節選拔活動，主題以臺灣的社會創新，鼓勵臺灣人民與各行各業運用新科技、新方法、新思維、新管理方式，解決社會問題，創造價值與幸福的精彩故事");
-            model.addAttribute("fbKeyword", "微電影節,微新運動,2013台灣微電影節-微視界‧大創新,華視 微電影節,臺灣微電影節,weifilm");
+            model.addAttribute(META_BRANDINFO, "cts");
+            model.addAttribute(META_TITLE, "華視-微電影節(微新運動元年)");
+            model.addAttribute(META_DESCRIPTION, "微新運動(weifilm)元年第一屆臺灣微電影節選拔活動，主題以臺灣的社會創新，鼓勵臺灣人民與各行各業運用新科技、新方法、新思維、新管理方式，解決社會問題，創造價值與幸福的精彩故事");
+            model.addAttribute(META_KEYWORD, "微電影節,微新運動,2013台灣微電影節-微視界‧大創新,華視 微電影節,臺灣微電影節,weifilm");
             
         }else {
             
-            model.addAttribute("brandInfo", "9x9");
-            model.addAttribute("fbTitle", "9x9.tv");
-            model.addAttribute("fbDescription", "&nbsp;");
+            model.addAttribute(META_BRANDINFO, "9x9");
+            model.addAttribute(META_TITLE, "9x9.tv");
+            model.addAttribute(META_DESCRIPTION, "&nbsp;");
             CookieHelper.deleteCookie(resp, CookieHelper.MSO); //delete brand cookie
         }
-        model.addAttribute("fbImg", "http://9x9ui.s3.amazonaws.com/9x9playerV39/images/9x9-facebook-icon.png");
+        model.addAttribute(META_IMAGE, "http://9x9ui.s3.amazonaws.com/9x9playerV39/images/9x9-facebook-icon.png");
         return model;        
     }
 
@@ -108,7 +120,7 @@ public class PlayerService {
     }
     
     public boolean isIos(HttpServletRequest req) {
-        String userAgent = req.getHeader("user-agent");
+        String userAgent = req.getHeader(ApiContext.HEADER_USER_AGENT);
         log.info("user agent:" + userAgent);
         if (userAgent.contains("iPhone") || userAgent.contains("iPad")) {
             log.info("request from ios");
@@ -118,7 +130,7 @@ public class PlayerService {
     }
 
     public boolean isAndroid(HttpServletRequest req) {
-        String userAgent = req.getHeader("user-agent");
+        String userAgent = req.getHeader(ApiContext.HEADER_USER_AGENT);
         log.info("user agent:" + userAgent);
         if (userAgent.contains("Android")) {
             log.info("request from Android");
@@ -173,12 +185,12 @@ public class PlayerService {
             NnProgram program = programMngr.findById(Long.valueOf(pid));
             if (program != null) {
                 log.info("nnprogram found = " + pid);
-                model.addAttribute("crawlEpisodeTitle", program.getName());
+                model.addAttribute(META_EPISODE_TITLE, program.getName());
                 model.addAttribute("crawlEpThumb1", program.getImageUrl());
-                model.addAttribute("fbName", this.prepareFb(program.getName(), 0));
-                model.addAttribute("fbDescription", this.prepareFb(program.getIntro(), 1));
-                model.addAttribute("fbImg", this.prepareFb(program.getImageUrl(), 2));
-                model.addAttribute("fbUrl", this.prepareFb(NnStringUtil.getProgramPlaybackUrl("" + program.getChannelId(), pid), 3));
+                model.addAttribute(META_NAME, this.prepareFb(program.getName(), 0));
+                model.addAttribute(META_DESCRIPTION, this.prepareFb(program.getIntro(), 1));
+                model.addAttribute(META_IMAGE, this.prepareFb(program.getImageUrl(), 2));
+                model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getProgramPlaybackUrl("" + program.getChannelId(), pid), 3));
             }
         } else if (pid.matches("e[0-9]+")){
             String eid = pid.replace("e", "");
@@ -186,18 +198,18 @@ public class PlayerService {
             NnEpisode episode = episodeMngr.findById(Long.valueOf(eid));
             if (episode != null) {
                 log.info("nnepisode found = " + eid);
-                model.addAttribute("crawlEpisodeTitle", episode.getName());
+                model.addAttribute(META_EPISODE_TITLE, episode.getName());
                 model.addAttribute("crawlEpThumb1", episode.getImageUrl());
-                model.addAttribute("fbName", this.prepareFb(episode.getName(), 0));
-                model.addAttribute("fbDescription", this.prepareFb(episode.getIntro(), 1));
-                model.addAttribute("fbImg", this.prepareFb(episode.getImageUrl(), 2));
-                model.addAttribute("fbUrl", this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()), 3));
+                model.addAttribute(META_NAME, this.prepareFb(episode.getName(), 0));
+                model.addAttribute(META_DESCRIPTION, this.prepareFb(episode.getIntro(), 1));
+                model.addAttribute(META_IMAGE, this.prepareFb(episode.getImageUrl(), 2));
+                model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()), 3));
             }
             /*
             Map<String, String> entry = YouTubeLib.getYouTubeVideoEntry(pid);
-            model.addAttribute("fbName", NnStringUtil.htmlSafeChars(entry.get("title")));
-            model.addAttribute("fbDescription", NnStringUtil.htmlSafeChars(entry.get("description")));
-            model.addAttribute("fbImg", NnStringUtil.htmlSafeChars(entry.get("thumbnail")));
+            model.addAttribute(META_NAME, NnStringUtil.htmlSafeChars(entry.get("title")));
+            model.addAttribute(META_DESCRIPTION, NnStringUtil.htmlSafeChars(entry.get("description")));
+            model.addAttribute(META_IMAGE, NnStringUtil.htmlSafeChars(entry.get("thumbnail")));
             */
         }
         return model;
@@ -212,12 +224,12 @@ public class PlayerService {
         NnChannel channel = channelMngr.findById(Long.valueOf(cid));
         if (channel != null) {
             log.info("found channel = " + cid);
-            model.addAttribute("crawlChannelTitle", channel.getName());
-            model.addAttribute("crawlVideoThumb", channel.getOneImageUrl());
-            model.addAttribute("fbName", this.prepareFb(channel.getName(), 0));
-            model.addAttribute("fbDescription", this.prepareFb(channel.getIntro(), 1));
-            model.addAttribute("fbImg", this.prepareFb(channel.getOneImageUrl(), 2));
-            model.addAttribute("fbUrl", this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(channel.getId(), null), 3));
+            model.addAttribute(META_CHANNEL_TITLE, channel.getName());
+            model.addAttribute(META_VIDEO_THUMBNAIL, channel.getOneImageUrl());
+            model.addAttribute(META_NAME, this.prepareFb(channel.getName(), 0));
+            model.addAttribute(META_DESCRIPTION, this.prepareFb(channel.getIntro(), 1));
+            model.addAttribute(META_IMAGE, this.prepareFb(channel.getOneImageUrl(), 2));
+            model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(channel.getId(), null), 3));
         }
         return model;
     }
@@ -336,14 +348,14 @@ public class PlayerService {
             NnChannelManager channelMngr = new NnChannelManager();        
             NnChannel c = channelMngr.findById(Long.parseLong(ch));
             if (c != null) {
-                model.addAttribute("crawlChannelTitle", c.getName());
+                model.addAttribute(META_CHANNEL_TITLE, c.getName());
                 //in case not enough episode data, use channel for default  
-                model.addAttribute("crawlEpisodeTitle", c.getName());
-                model.addAttribute("crawlVideoThumb", c.getOneImageUrl());
+                model.addAttribute(META_EPISODE_TITLE, c.getName());
+                model.addAttribute(META_VIDEO_THUMBNAIL, c.getOneImageUrl());
                 model.addAttribute("crawlEpThumb1", c.getOneImageUrl());                
-                model.addAttribute("fbName", this.prepareFb(c.getName(), 0));
-                model.addAttribute("fbDescription", this.prepareFb(c.getIntro(), 1));                
-                model.addAttribute("fbImg", this.prepareFb(c.getOneImageUrl(), 2));  
+                model.addAttribute(META_NAME, this.prepareFb(c.getName(), 0));
+                model.addAttribute(META_DESCRIPTION, this.prepareFb(c.getIntro(), 1));                
+                model.addAttribute(META_IMAGE, this.prepareFb(c.getOneImageUrl(), 2));  
 
                 if (ep != null && ep.startsWith("e")) {
                     ep = ep.replaceFirst("e", "");
@@ -357,13 +369,13 @@ public class PlayerService {
                             i++;
                         }
                         if (e.getId() == Long.parseLong(ep)) {
-                            model.addAttribute("crawlVideoThumb", e.getImageUrl());
-                            model.addAttribute("crawlEpisodeTitle", e.getName());
+                            model.addAttribute(META_VIDEO_THUMBNAIL, e.getImageUrl());
+                            model.addAttribute(META_EPISODE_TITLE, e.getName());
                             model.addAttribute("crawlEpThumb" + i, e.getImageUrl());
                             if (episodeShare) {
-                               model.addAttribute("fbName", this.prepareFb(e.getName(), 0));   
-                               model.addAttribute("fbDescription", this.prepareFb(e.getIntro(), 1));
-                               model.addAttribute("fbImg", this.prepareFb(e.getImageUrl(), 2));
+                               model.addAttribute(META_NAME, this.prepareFb(e.getName(), 0));   
+                               model.addAttribute(META_DESCRIPTION, this.prepareFb(e.getIntro(), 1));
+                               model.addAttribute(META_IMAGE, this.prepareFb(e.getImageUrl(), 2));
                             }
                             i++;
                         }
@@ -385,13 +397,13 @@ public class PlayerService {
                                 i++;
                             }
                             if (p.getId() == Long.parseLong(ep)) {
-                                model.addAttribute("crawlVideoThumb", p.getImageUrl());
-                                model.addAttribute("crawlEpisodeTitle", p.getName());
+                                model.addAttribute(META_VIDEO_THUMBNAIL, p.getImageUrl());
+                                model.addAttribute(META_EPISODE_TITLE, p.getName());
                                 model.addAttribute("crawlEpThumb" + i, p.getImageUrl());
                                 if (episodeShare) {
-                                   model.addAttribute("fbName", this.prepareFb(p.getName(), 0));
-                                   model.addAttribute("fbDescription", this.prepareFb(p.getIntro(), 1));
-                                   model.addAttribute("fbImg", this.prepareFb(p.getImageUrl(), 2));
+                                   model.addAttribute(META_NAME, this.prepareFb(p.getName(), 0));
+                                   model.addAttribute(META_DESCRIPTION, this.prepareFb(p.getIntro(), 1));
+                                   model.addAttribute(META_IMAGE, this.prepareFb(p.getImageUrl(), 2));
                                 }
                                 i++;
                             }
@@ -402,22 +414,22 @@ public class PlayerService {
                     } else {                    
                         if (youtubeEp != null) {
                             Map<String, String> result = YouTubeLib.getYouTubeVideo(youtubeEp);
-                            model.addAttribute("crawlEpisodeTitle", result.get("title"));
-                            model.addAttribute("crawlVideoThumb", result.get("imageUrl"));
+                            model.addAttribute(META_EPISODE_TITLE, result.get("title"));
+                            model.addAttribute(META_VIDEO_THUMBNAIL, result.get("imageUrl"));
                             model.addAttribute("crawlEpThumb1", result.get("imageUrl"));
                             model.addAttribute("crawlEpThumb2", result.get("imageUrl"));
                             model.addAttribute("crawlEpThumb3", result.get("imageUrl"));
                         }
                     }
                     if (episodeShare) {
-                        model.addAttribute("fbName", this.prepareFb((String)model.asMap().get("crawlEpisodeTitle"), 0));
-                        model.addAttribute("fbImg", this.prepareFb((String)model.asMap().get("crawlVideoThumb"), 2));
+                        model.addAttribute(META_NAME, this.prepareFb((String)model.asMap().get(META_EPISODE_TITLE), 0));
+                        model.addAttribute(META_IMAGE, this.prepareFb((String)model.asMap().get(META_VIDEO_THUMBNAIL), 2));
                     }
                 }
                 /*
-                String fbDescription = (String) model.asMap().get("fbDescription");
+                String fbDescription = (String) model.asMap().get(META_DESCRIPTION);
                 if (fbDescription == null || fbDescription.length() == 0) {
-                    model.addAttribute("fbDescription", " ");
+                    model.addAttribute(META_DESCRIPTION, " ");
                 }
                 */
             }
