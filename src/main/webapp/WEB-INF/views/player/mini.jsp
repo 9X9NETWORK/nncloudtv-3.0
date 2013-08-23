@@ -35,6 +35,7 @@
 
 <!-- en start -->	
 	
+<div id="en">
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt=""></a>
