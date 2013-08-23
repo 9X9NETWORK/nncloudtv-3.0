@@ -74,6 +74,22 @@ for line in feed:
        (%s, %s, %s, %s, %s, %s, %s, from_unixtime(%s), from_unixtime(%s))                     
      ON DUPLICATE KEY UPDATE updateDate = from_unixtime(%s), crawldate = from_unixtime(%s), name = %s
      """, (cid, username, videoid, name, description, thumbnail, duration, timestamp, crawldate, timestamp, crawldate, name))
+
+  # ch updateDate using video
+  cursor.execute("""
+     select unix_timestamp(updateDate) from nnchannel
+      where id = %s
+        """, (cid))
+  ch_row = cursor.fetchone()
+  ch_updateDate = ch_row[0]
+  print "original channel time: " + str(ch_updateDate) + "; time from youtube video:" + timestamp
+  if (ch_updateDate < long(timestamp)):
+     print "ch updateDate is older, update with yt video"
+     cursor.execute("""
+          update nnchannel set updateDate = from_unixtime(%s) 
+           where id = %s             
+               """, (timestamp, cid))  
+
   i = i+1
 dbcontent.commit()  
 cursor.close ()
