@@ -7,9 +7,8 @@
 <meta name="keyword" content="${fbKeyword}"/>
 <meta name="description" content="${fbDescription}"/>
 <meta name="viewport" content="width=device-width"/>
-<link rel="image_src" href="${fbImg}" />
+<link rel="image_src" href="${fbImg}"/>
 <link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/css/main.css"/>
-<link href="http://9x9ui.s3.amazonaws.com/tv4.0/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css"/>
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
@@ -36,9 +35,7 @@
 
 <!-- en start -->	
 	
-<div id="en">
-
-	<div id="logo-layer">
+<div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt=""></a>
 </div>
@@ -2374,7 +2371,7 @@
             <div class="sharing-wrap">
 
                 <div class="button-holder button-group">
-                    <a class="black-button on" href="#">Channel</a>
+                    <a class="black-button" href="#">Channel</a>
                     <a class="black-button" href="#">Episode</a>
                 </div>
                 <input type="text" class="with-style"></div>
@@ -2868,9 +2865,9 @@
                             <div class="form-group">
                                 <div class="form-elements" >
                                     By creating an account, I accept 9x9.tv&#39;s
-                                    <a class="textlink" href="#">Terms of Service</a>
+                                    <a class="textlink terms" href="#">Terms of Service</a>
                                     and
-                                    <a class="textlink" href="#">Privacy Policy</a>
+                                    <a class="textlink privacy" href="#">Privacy Policy</a>
                                     .
                                 </div>
                             </div>
@@ -3312,7 +3309,7 @@
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">Processing...</span>
     </div>
-    <div class="spcial-introduction">
+    <div class="special-introduction">
         <div class="cts-stream-tutorial-wrap">
             <span class="video-tutorial">點擊影片，觀看頻道內的所有節目</span>
             <form>
@@ -5752,7 +5749,7 @@
     <div class="sharing-wrap">
 
         <div class="button-holder button-group">
-            <a class="black-button on" href="#">頻道</a>
+            <a class="black-button" href="#">頻道</a>
             <a class="black-button" href="#">節目</a>
         </div>
         <input type="text" class="with-style">    
@@ -6254,7 +6251,7 @@
                         <div class="form-group">
                            <div class="form-elements">
                             點擊「註冊」同時，表示你同意了我們的
-                            <a class="textlink" href="#">使用條款</a>，並且你也詳讀和完全暸解我們的<a class="textlink" href="#">隱私政策</a>。 </div>
+                            <a class="textlink terms" href="#">使用條款</a>，並且你也詳讀和完全暸解我們的<a class="textlink privacy" href="#">隱私政策</a>。 </div>
                         </div>
                         <div class="overlay-button-wrap bottom">
 
@@ -6624,7 +6621,7 @@
     <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
     <span class="loading-words">讀取中...</span>
 </div>
-<div class="spcial-introduction">
+<div class="special-introduction">
     <div class="cts-stream-tutorial-wrap">
         <span class="video-tutorial">點擊影片，觀看頻道內的所有節目</span>
         <form>
@@ -6654,9 +6651,6 @@
             </div>
         </form>
 
-
-
-
     </div>
 
 
@@ -6666,7 +6660,6 @@
 </div>
 
 <div id="bg-layer"></div>
-
 	
 </div>
 
