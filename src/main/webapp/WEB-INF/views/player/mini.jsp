@@ -19,9 +19,9 @@
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
 <!-- components -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-node.js"></script>^M
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup.js"></script>^M
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-manager.js"></script>^M
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-node.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-manager.js"></script>
 
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/dev.js"></script>
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/Navigatable.js" charset="utf-8"></script>
