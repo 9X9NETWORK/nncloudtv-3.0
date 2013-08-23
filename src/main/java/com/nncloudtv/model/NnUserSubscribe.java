@@ -41,6 +41,9 @@ public class NnUserSubscribe implements Serializable {
     @Persistent
     private Date updateDate;
     
+    public static String SORT_GRID = "grid";
+    public static String SORT_DATE = "date";
+    
     public NnUserSubscribe(long userId, long channelId, short seq, short type, long msoId) {
         this.userId = userId;
         this.channelId= channelId;

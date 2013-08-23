@@ -912,6 +912,7 @@ public class PlayerApiController {
             @RequestParam(value="tag", required=false) String tag,
             @RequestParam(value="category", required=false) String category,
             @RequestParam(value="reduced", required=false) String reduced,
+            @RequestParam(value="sort", required=false) String sort,
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
@@ -928,7 +929,7 @@ public class PlayerApiController {
             boolean isRequired = Boolean.parseBoolean(required);
             boolean isReduced= Boolean.parseBoolean(reduced);
             boolean isProgramInfo = Boolean.parseBoolean(programInfo);
-            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced, isProgramInfo, req);
+            output = playerApiService.channelLineup(userToken, curatorIdStr, subscriptions, isUserInfo, channelIds, isSetInfo, isRequired, isReduced, isProgramInfo, sort, req);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {

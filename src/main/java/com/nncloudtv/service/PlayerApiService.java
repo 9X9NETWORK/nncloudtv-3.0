@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -792,7 +793,8 @@ public class PlayerApiService {
                                 boolean setInfo, 
                                 boolean isRequired,
                                 boolean isReduced,
-                                boolean programInfo,                                
+                                boolean programInfo,   
+                                String sort,
                                 HttpServletRequest req) {
         //verify input
         if (((userToken == null && userInfo == true) || 
@@ -916,16 +918,31 @@ public class PlayerApiService {
         //sort by seq
         if (channelPos) {
             if (user == null || user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
-                TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
-                for (NnChannel c : channels) {
-                    channelMap.put(c.getSeq(), c);                
-                }
-                Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
-                channels.clear();      
-                while (it.hasNext()) {
-                    Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
-                    channels.add((NnChannel)pairs.getValue());
-                }
+            	if (sort != null && sort.equals(NnUserSubscribe.SORT_DATE)) {
+            		log.info("sort by date");
+                    TreeMap<Date, NnChannel> channelMap = new TreeMap<Date, NnChannel>();
+                    for (NnChannel c : channels) {
+                        channelMap.put(c.getUpdateDate(), c);                
+                    }
+                    NavigableMap<Date, NnChannel> nmap = channelMap.descendingMap();                    
+                    Iterator<Entry<Date, NnChannel>> it = nmap.entrySet().iterator();
+                    channels.clear();      
+                    while (it.hasNext()) {
+                        Map.Entry<Date, NnChannel> pairs = (Map.Entry<Date, NnChannel>)it.next();
+                        channels.add((NnChannel)pairs.getValue());
+                    }
+            	} else {
+                    TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
+                    for (NnChannel c : channels) {
+                        channelMap.put(c.getSeq(), c);                
+                    }
+                    Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
+                    channels.clear();      
+                    while (it.hasNext()) {
+                        Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
+                        channels.add((NnChannel)pairs.getValue());
+                    }            		
+            	}
             }
         }
         String channelOutput = "";
@@ -2145,7 +2162,7 @@ public class PlayerApiService {
         data.add(userInfo);
         //2. channel lineup
         log.info ("[quickLogin] channel lineup: " + token);
-        String lineup = this.channelLineup(token, null, null, false, null, true, false, false, false, req);
+        String lineup = this.channelLineup(token, null, null, false, null, true, false, false, false, null, req);
         data.add(lineup);
         if (this.getStatus(lineup) != NnStatusCode.SUCCESS) {
             return this.assembleSections(data);
