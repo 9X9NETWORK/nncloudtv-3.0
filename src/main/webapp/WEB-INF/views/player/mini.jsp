@@ -33,9 +33,9 @@
 </head>
 <body style="display: none">
 
-<!-- en start -->	
-	
+<!-- en start -->   
 <div id="en">
+
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt=""></a>
@@ -2667,7 +2667,7 @@
                                 <span class="form-label">Account:</span>
                                 <span class="form-elements">
                                     <span>XXX-XXX@gmail.com</span>
-                                    <a href="#" class="black-button float-right">Sign Out</a>
+                                    <a href="#" class="black-button float-right signout">Sign Out</a>
                                 </span>
 
                             </div>
@@ -3313,6 +3313,7 @@
     <div class="special-introduction">
         <div class="cts-stream-tutorial-wrap">
             <span class="video-tutorial">點擊影片，觀看頻道內的所有節目</span>
+            <div class="fake-video-element"></div>
             <form>
                 <div class="show-check-wrap">
 
@@ -3353,21 +3354,21 @@
 
 <div id="bg-layer"></div>
 
-</div>	
+</div>  
 
 <!-- en end -->
 
 <script type="text/javascript" charset="UTF-8">
-	beforeRender();
-	initCookie();
-	if(lang != "en"){
-		$("#en").remove();
-	}else{
-		$("#en").unwrap();
-	}
+    beforeRender();
+    initCookie();
+    if(lang != "en"){
+        $("#en").remove();
+    }else{
+        $("#en").unwrap();
+    }
 </script>
 
-<!-- zh start -->	
+<!-- zh start -->   
 
 <div id="zh">
 
@@ -6053,7 +6054,7 @@
                         <div class="form-group">
                             <span class="form-label">帳號:</span>
                             <span class="form-elements"><span>XXX-XXX@gmail.com</span>
-                                <a href="#" class="black-button float-right">登出</a>
+                                <a href="#" class="black-button float-right signout">登出</a>
                             </span>
 
                         </div>
@@ -6625,6 +6626,7 @@
 <div class="special-introduction">
     <div class="cts-stream-tutorial-wrap">
         <span class="video-tutorial">點擊影片，觀看頻道內的所有節目</span>
+        <div class="fake-video-element"></div>
         <form>
             <div class="show-check-wrap">
 
@@ -6651,9 +6653,7 @@
 
             </div>
         </form>
-
     </div>
-
 
 </div>
 <div class="overlay-bg"></div>
@@ -6661,19 +6661,20 @@
 </div>
 
 <div id="bg-layer"></div>
-	
+
+
+    
 </div>
 
 <!-- zh end -->
 
 <script type="text/javascript" charset="UTF-8">
-	if(lang != "zh"){
-		$("#zh").remove();
-	}else{
-		$("#zh").unwrap();
-	}
-	afterRender();
+    if(lang != "zh"){
+        $("#zh").remove();
+    }else{
+        $("#zh").unwrap();
+    }
+    afterRender();
 </script>
-
 </body>
 </html>
