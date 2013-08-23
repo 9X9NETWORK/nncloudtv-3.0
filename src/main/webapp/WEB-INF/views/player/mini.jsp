@@ -17,6 +17,8 @@
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/3rd/plugins.js"></script>
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
+<script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/9x9miniV23j/javascripts/jquery.titlecard.js" charset="utf-8"></script>
+
 <!-- components -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-node.js"></script>
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup.js"></script>
