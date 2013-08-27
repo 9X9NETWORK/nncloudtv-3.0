@@ -409,7 +409,7 @@ public class ApiMsoService {
         return results;
     }
     
-    public Category msoCategoryCreate(Long msoId) {
+    public Category msoCategoryCreate(Long msoId, Short seq, String zhName, String enName) {
         
         if (msoId == null) {
             return null;
@@ -417,6 +417,15 @@ public class ApiMsoService {
         
         Category newCategory = new Category();
         newCategory.setMsoId(msoId);
+        if (seq != null) {
+            newCategory.setSeq(seq);
+        }
+        if (zhName != null) {
+            newCategory.setZhName(zhName);
+        }
+        if (enName != null) {
+            newCategory.setEnName(enName);
+        }
         
         // create
         Category savedCategory = categoryService.create(newCategory);
@@ -435,15 +444,26 @@ public class ApiMsoService {
         return result;
     }
     
-    public Category categoryUpdate(Long categoryId) {
+    public Category categoryUpdate(Long categoryId, Short seq, String zhName, String enName) {
         
         if (categoryId == null) {
             return null;
         }
         
         Category category = categoryService.findById(categoryId);
-        
-        // do modify
+        if (category == null) {
+            return null;
+        }
+        if (seq != null) {
+            category.setSeq(seq);
+        }
+        if (zhName != null) {
+            category.setZhName(zhName);
+        }
+        if (enName != null) {
+            category.setEnName(enName);
+        }
+        category.setCntChannel(categoryService.getCntChannel(category.getId()));
         
         Category savedCategory = categoryService.save(category);
         
@@ -459,37 +479,29 @@ public class ApiMsoService {
         categoryService.delete(categoryId);
     }
     
-    public List<Long> categoryChannels(Long categoryId) {
+    public List<NnChannel> categoryChannels(Long categoryId) {
         
         if (categoryId == null) {
-            return new ArrayList<Long>();
+            return new ArrayList<NnChannel>();
         }
         
-        List<NnChannel> channels = categoryService.getChannelsFromCategory(categoryId);
-        if (channels == null) {
-            return new ArrayList<Long>();
-        }
-        
-        List<Long> results = new ArrayList<Long>();
-        for (NnChannel channel : channels) {
-            results.add(channel.getId());
+        List<NnChannel> results = categoryService.getChannelsFromCategory(categoryId);
+        if (results == null) {
+            return new ArrayList<NnChannel>();
         }
         
         return results;
     }
     
-    public void categoryChannelAdd(Long categoryId, List<Long> channelIds) {
+    public void categoryChannelAdd(Category category, List<Long> channelIds) {
         
-        if (categoryId == null || channelIds == null || channelIds.size() < 1) {
+        if (category == null || category.getId() == 0 || channelIds == null || channelIds.size() < 1) {
             return ;
         }
         
-        List<NnChannel> channels = channelMngr.findByIds(channelIds);
-        if (channels == null || channels.size() < 1) {
-            return ;
-        }
+        List<Long> verifiedChannelIds = msoMngr.getPlayableChannels(channelIds, category.getMsoId());
         
-        categoryService.addChannelsToCategory(categoryId, channels);
+        categoryService.addChannelsToCategory(category.getId(), verifiedChannelIds);
     }
     
     public void categoryChannelRemove(Long categoryId, List<Long> channelIds) {

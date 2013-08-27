@@ -14,10 +14,13 @@ public class Category implements Serializable {
     
     private String lang;
     
-    private int seq;
+    private short seq;
     
     private long msoId;
     
+    private String enName;
+    
+    private String zhName;
 
     public String getName() {
     
@@ -29,14 +32,14 @@ public class Category implements Serializable {
         this.name = name;
     }
 
-    public int getCntView() {
+    public int getCntChannel() {
     
         return cntChannel;
     }
 
-    public void setCntView(int cntView) {
+    public void setCntChannel(int cntChannel) {
     
-        this.cntChannel = cntView;
+        this.cntChannel = cntChannel;
     }
 
     public long getId() {
@@ -59,12 +62,12 @@ public class Category implements Serializable {
         this.lang = lang;
     }
 
-    public int getSeq() {
+    public short getSeq() {
     
         return seq;
     }
 
-    public void setSeq(int seq) {
+    public void setSeq(short seq) {
     
         this.seq = seq;
     }
@@ -77,6 +80,22 @@ public class Category implements Serializable {
     public void setMsoId(long msoId) {
     
         this.msoId = msoId;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
+    }
+
+    public String getZhName() {
+        return zhName;
+    }
+
+    public void setZhName(String zhName) {
+        this.zhName = zhName;
     }
 
 }

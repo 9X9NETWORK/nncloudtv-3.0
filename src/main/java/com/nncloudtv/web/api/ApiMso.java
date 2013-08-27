@@ -28,6 +28,7 @@ import com.nncloudtv.service.ApiMsoService;
 import com.nncloudtv.service.CategoryService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
+import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.SetService;
 import com.nncloudtv.service.StoreService;
@@ -1114,7 +1115,30 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null) {
+            lang = NnStringUtil.validateLangCode(lang);
+            if (lang == null) {
+                lang = NnUserManager.findLocaleByHttpRequest(req);
+            }
+        } else {
+            lang = NnUserManager.findLocaleByHttpRequest(req);
+        }
+        
         List<Category> results = apiMsoService.msoCategories(mso.getId());
+        
+        for (Category result : results) {
+            if (lang.equals(LangTable.LANG_ZH)) {
+                result.setLang(LangTable.LANG_ZH);
+                result.setName(result.getZhName());
+            } else if (lang.equals(LangTable.LANG_EN)) {
+                result.setLang(LangTable.LANG_EN);
+                result.setName(result.getEnName());
+            }
+            result = CategoryService.normalize(result);
+        }
+        
         log.info(printExitState(now, req, "ok"));
         return results;
     }
@@ -1155,12 +1179,59 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Category result = apiMsoService.msoCategoryCreate(mso.getId());
+        // seq, default : 1
+        Short seq = null;
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            try {
+                seq = Short.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return null;
+            }
+        } else {
+            seq = 1;
+        }
+        
+        // zhName
+        String zhName = req.getParameter("zhName");
+        if (zhName != null) {
+            zhName = NnStringUtil.htmlSafeAndTruncated(zhName);
+        }
+        
+        // enName
+        String enName = req.getParameter("enName");
+        if (enName != null) {
+            enName = NnStringUtil.htmlSafeAndTruncated(enName);
+        }
+        
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null) {
+            lang = NnStringUtil.validateLangCode(lang);
+            if (lang == null) {
+                lang = NnUserManager.findLocaleByHttpRequest(req);
+            }
+        } else {
+            lang = NnUserManager.findLocaleByHttpRequest(req);
+        }
+        
+        Category result = apiMsoService.msoCategoryCreate(mso.getId(), seq, zhName, enName);
         if (result == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));
             return null;
         }
+        
+        if (lang.equals(LangTable.LANG_ZH)) {
+            result.setLang(LangTable.LANG_ZH);
+            result.setName(result.getZhName());
+        } else if (lang.equals(LangTable.LANG_EN)) {
+            result.setLang(LangTable.LANG_EN);
+            result.setName(result.getEnName());
+        }
+        result = CategoryService.normalize(result);
         
         log.info(printExitState(now, req, "ok"));
         return result;
@@ -1202,12 +1273,32 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null) {
+            lang = NnStringUtil.validateLangCode(lang);
+            if (lang == null) {
+                lang = NnUserManager.findLocaleByHttpRequest(req);
+            }
+        } else {
+            lang = NnUserManager.findLocaleByHttpRequest(req);
+        }
+        
         Category result = apiMsoService.category(category.getId());
         if (result == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));
             return null;
         }
+        
+        if (lang.equals(LangTable.LANG_ZH)) {
+            result.setLang(LangTable.LANG_ZH);
+            result.setName(result.getZhName());
+        } else if (lang.equals(LangTable.LANG_EN)) {
+            result.setLang(LangTable.LANG_EN);
+            result.setName(result.getEnName());
+        }
+        result = CategoryService.normalize(result);
         
         log.info(printExitState(now, req, "ok"));
         return result;
@@ -1249,12 +1340,57 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        Category result = apiMsoService.categoryUpdate(category.getId());
+        // seq
+        Short seq = null;
+        String seqStr = req.getParameter("seq");
+        if (seqStr != null) {
+            try {
+                seq = Short.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return null;
+            }
+        }
+        
+        // zhName
+        String zhName = req.getParameter("zhName");
+        if (zhName != null) {
+            zhName = NnStringUtil.htmlSafeAndTruncated(zhName);
+        }
+        
+        // enName
+        String enName = req.getParameter("enName");
+        if (enName != null) {
+            enName = NnStringUtil.htmlSafeAndTruncated(enName);
+        }
+        
+        // lang
+        String lang = req.getParameter("lang");
+        if (lang != null) {
+            lang = NnStringUtil.validateLangCode(lang);
+            if (lang == null) {
+                lang = NnUserManager.findLocaleByHttpRequest(req);
+            }
+        } else {
+            lang = NnUserManager.findLocaleByHttpRequest(req);
+        }
+        
+        Category result = apiMsoService.categoryUpdate(category.getId(), seq, zhName, enName);
         if (result == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));
             return null;
         }
+        
+        if (lang.equals(LangTable.LANG_ZH)) {
+            result.setLang(LangTable.LANG_ZH);
+            result.setName(result.getZhName());
+        } else if (lang.equals(LangTable.LANG_EN)) {
+            result.setLang(LangTable.LANG_EN);
+            result.setName(result.getEnName());
+        }
+        result = CategoryService.normalize(result);
         
         log.info(printExitState(now, req, "ok"));
         return result;
@@ -1304,7 +1440,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "category/{categoryId}/channels", method = RequestMethod.GET)
     public @ResponseBody
-    List<Long> categoryChannels(HttpServletRequest req,
+    List<NnChannel> categoryChannels(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
         
         Date now = new Date();
@@ -1338,7 +1474,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        List<Long> results = apiMsoService.categoryChannels(category.getId());
+        List<NnChannel> results = apiMsoService.categoryChannels(category.getId());
         log.info(printExitState(now, req, "ok"));
         return results;
     }
@@ -1401,7 +1537,7 @@ public class ApiMso extends ApiGeneric {
             }
         }
         
-        apiMsoService.categoryChannelAdd(category.getId(), channelIds);
+        apiMsoService.categoryChannelAdd(category, channelIds);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return ;

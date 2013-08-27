@@ -330,4 +330,58 @@ public class MsoManager {
         }
     }
     
+    /** get playable channels on target MSO */
+    public List<Long> getPlayableChannels(List<Long> channelIds, Long msoId) {
+        
+        if (channelIds == null || channelIds.size() < 1 || msoId == null) {
+            return new ArrayList<Long>();
+        }
+        
+        Mso mso = findByIdWithSupportedRegion(msoId);
+        if (mso == null) {
+            return new ArrayList<Long>();
+        }
+        
+        List<String> supportSpheres;
+        if (mso.getSupportedRegion() == null) {
+            supportSpheres = null; // means support all sphere
+        } else {
+            supportSpheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
+            supportSpheres.add(LangTable.OTHER);
+        }
+        
+        NnChannelManager channelMngr = new NnChannelManager();
+        List<NnChannel> channels = channelMngr.findByIds(channelIds);
+        if (channels == null || channels.size() < 1) {
+            return new ArrayList<Long>();
+        }
+        
+        List<Long> results = new ArrayList<Long>();
+        for (NnChannel channel : channels) {
+            
+            // official store check
+            if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
+                    channel.getContentType() != NnChannel.CONTENTTYPE_FAVORITE &&
+                    channel.isPublic() == true) {
+                // the channel is in official store
+            } else {
+                continue; // the channel is not in official store
+            }
+            
+            // MSO support region check
+            if (supportSpheres == null) { // Mso's region support all sphere
+                results.add(channel.getId());
+            } else {
+                for (String sphere : supportSpheres) {
+                    if (sphere.equals(channel.getSphere())) { // Mso's region support channel's sphere
+                        results.add(channel.getId());
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return results;
+    }
+    
 }

@@ -55,7 +55,7 @@ public class StoreService {
         this.sysTagMapMngr = new SysTagMapManager();
     }
     
-    /** build Category from SysTag and SysTagDisplay */
+    /** build System's Category from SysTag and SysTagDisplay */
     private Category composeCategory(SysTag category, SysTagDisplay categoryMeta) {
         
         Category categoryResp = new Category();
