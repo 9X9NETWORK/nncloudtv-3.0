@@ -55,7 +55,7 @@ public class PlayerService {
         } else if (msoName.equals(Mso.NAME_CTS)) {
             
             model.addAttribute(META_BRANDINFO, "cts");
-            model.addAttribute(META_TITLE, "華視-微電影節(微新運動元年)");
+            model.addAttribute(META_TITLE, "微電影節 - 華視");
             model.addAttribute(META_DESCRIPTION, "微新運動(weifilm)元年第一屆臺灣微電影節選拔活動，主題以臺灣的社會創新，鼓勵臺灣人民與各行各業運用新科技、新方法、新思維、新管理方式，解決社會問題，創造價值與幸福的精彩故事");
             model.addAttribute(META_KEYWORD, "微電影節,微新運動,2013台灣微電影節-微視界‧大創新,華視 微電影節,臺灣微電影節,weifilm");
             
