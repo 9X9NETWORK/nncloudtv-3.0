@@ -25,6 +25,7 @@ import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.SysTagMap;
 import com.nncloudtv.service.ApiMsoService;
+import com.nncloudtv.service.CategoryService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserProfileManager;
@@ -34,6 +35,7 @@ import com.nncloudtv.service.SysTagDisplayManager;
 import com.nncloudtv.service.SysTagManager;
 import com.nncloudtv.service.SysTagMapManager;
 import com.nncloudtv.service.TagManager;
+import com.nncloudtv.web.json.cms.Category;
 import com.nncloudtv.web.json.cms.Set;
 
 @Controller
@@ -51,11 +53,13 @@ public class ApiMso extends ApiGeneric {
     private NnUserProfileManager userProfileMngr;
     private SetService setServ;
     private ApiMsoService apiMsoService;
+    private CategoryService categoryService;
     
     @Autowired
     public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreService storeServ,
             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
-            NnUserProfileManager userProfileMngr, SetService setServ, ApiMsoService apiMsoService) {
+            NnUserProfileManager userProfileMngr, SetService setServ, ApiMsoService apiMsoService,
+            CategoryService categoryService) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
         this.storeServ = storeServ;
@@ -65,6 +69,7 @@ public class ApiMso extends ApiGeneric {
         this.userProfileMngr = userProfileMngr;
         this.setServ = setServ;
         this.apiMsoService = apiMsoService;
+        this.categoryService = categoryService;
     }
     
     /** indicate logging user has access right to target mso in PCS API
@@ -1071,6 +1076,399 @@ public class ApiMso extends ApiGeneric {
         Mso result = apiMsoService.msoUpdate(mso.getId(), title, logoUrl);
         log.info(printExitState(now, req, "ok"));
         return result;
+    }
+    
+    @RequestMapping(value = "mso/{msoId}/categories", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Category> msoCategories(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long msoId = null;
+        try {
+            msoId = Long.valueOf(msoIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        List<Category> results = apiMsoService.msoCategories(mso.getId());
+        log.info(printExitState(now, req, "ok"));
+        return results;
+    }
+    
+    @RequestMapping(value = "mso/{msoId}/categories", method = RequestMethod.POST)
+    public @ResponseBody
+    Category msoCategoryCreate(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long msoId = null;
+        try {
+            msoId = Long.valueOf(msoIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "010") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        Category result = apiMsoService.msoCategoryCreate(mso.getId());
+        if (result == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
+        }
+        
+        log.info(printExitState(now, req, "ok"));
+        return result;
+    }
+    
+    @RequestMapping(value = "category/{categoryId}", method = RequestMethod.GET)
+    public @ResponseBody
+    Category category(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        if (category == null) {
+            notFound(resp, "Category Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, category.getMsoId(), "100") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        Category result = apiMsoService.category(category.getId());
+        if (result == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
+        }
+        
+        log.info(printExitState(now, req, "ok"));
+        return result;
+    }
+    
+    @RequestMapping(value = "category/{categoryId}", method = RequestMethod.PUT)
+    public @ResponseBody
+    Category categoryUpdate(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        if (category == null) {
+            notFound(resp, "Category Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, category.getMsoId(), "110") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        Category result = apiMsoService.categoryUpdate(category.getId());
+        if (result == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
+        }
+        
+        log.info(printExitState(now, req, "ok"));
+        return result;
+    }
+    
+    @RequestMapping(value = "category/{categoryId}", method = RequestMethod.DELETE)
+    public @ResponseBody
+    void categoryDelete(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        if (category == null) {
+            notFound(resp, "Category Not Found");
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return ;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, category.getMsoId(), "101") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return ;
+        }
+        
+        apiMsoService.categoryDelete(category.getId());
+        okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
+        return ;
+    }
+    
+    @RequestMapping(value = "category/{categoryId}/channels", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Long> categoryChannels(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        if (category == null) {
+            notFound(resp, "Category Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, category.getMsoId(), "100") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        List<Long> results = apiMsoService.categoryChannels(category.getId());
+        log.info(printExitState(now, req, "ok"));
+        return results;
+    }
+    
+    @RequestMapping(value = "category/{categoryId}/channels", method = RequestMethod.POST)
+    public @ResponseBody
+    void categoryChannelAdd(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        if (category == null) {
+            notFound(resp, "Category Not Found");
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return ;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, category.getMsoId(), "110") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return ;
+        }
+        
+        // channels
+        String channelsStr = req.getParameter("channels");
+        if (channelsStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
+            return ;
+        }
+        String[] channelIdsStr = channelsStr.split(",");
+        List<Long> channelIds = new ArrayList<Long>();
+        Long channelId = null;
+        for (String channelIdStr : channelIdsStr) {
+            
+            channelId = null;
+            try {
+                channelId = Long.valueOf(channelIdStr);
+            } catch(Exception e) {
+            }
+            if (channelId != null) {
+                channelIds.add(channelId);
+            }
+        }
+        
+        apiMsoService.categoryChannelAdd(category.getId(), channelIds);
+        okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
+        return ;
+    }
+    
+    @RequestMapping(value = "category/{categoryId}/channels", method = RequestMethod.DELETE)
+    public @ResponseBody
+    void categoryChannelRemove(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("categoryId") String categoryIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long categoryId = null;
+        try {
+            categoryId = Long.valueOf(categoryIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        if (category == null) {
+            notFound(resp, "Category Not Found");
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return ;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, category.getMsoId(), "101") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return ;
+        }
+        
+        // channels
+        String channelsStr = req.getParameter("channels");
+        if (channelsStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
+            return ;
+        }
+        String[] channelIdsStr = channelsStr.split(",");
+        List<Long> channelIds = new ArrayList<Long>();
+        Long channelId = null;
+        for (String channelIdStr : channelIdsStr) {
+            
+            channelId = null;
+            try {
+                channelId = Long.valueOf(channelIdStr);
+            } catch(Exception e) {
+            }
+            if (channelId != null) {
+                channelIds.add(channelId);
+            }
+        }
+        
+        apiMsoService.categoryChannelRemove(category.getId(), channelIds);
+        okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
+        return ;
     }
 
 }

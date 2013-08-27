@@ -113,6 +113,24 @@ public class SysTagMapManager {
         return dao.findBySysTagIdAndChannelId(sysTagId, channelId);
     }
     
+    public List<SysTagMap> findBySysTagIdAndChannelIds(Long sysTadId, List<Long> channelIds) {
+        
+        if (sysTadId == null || channelIds == null || channelIds.size() < 1) {
+            return new ArrayList<SysTagMap>();
+        }
+        
+        List<SysTagMap> channels = dao.findByChannelIds(channelIds);
+        
+        List<SysTagMap> results = new ArrayList<SysTagMap>();
+        for (SysTagMap channel : channels) {
+            if (channel.getSysTagId() == sysTadId) {
+                results.add(channel);
+            }
+        }
+        
+        return results;
+    }
+    
     public List<SysTagMap> findBySysTagId(Long sysTagId) {
         
         if (sysTagId == null) {

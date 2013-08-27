@@ -13,6 +13,7 @@ import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.SysTagMap;
+import com.nncloudtv.web.json.cms.Category;
 import com.nncloudtv.web.json.cms.Set;
 
 @Service
@@ -28,12 +29,14 @@ public class ApiMsoService {
     private StoreService storeService;
     private StoreListingManager storeListingMngr;
     private MsoManager msoMngr;
+    private CategoryService categoryService;
     
     @Autowired
     public ApiMsoService(SetService setService, SysTagManager sysTagMngr,
                             SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
                             NnChannelManager channelMngr, StoreService storeService,
-                            StoreListingManager storeListingMngr, MsoManager msoMngr) {
+                            StoreListingManager storeListingMngr, MsoManager msoMngr,
+                            CategoryService categoryService) {
         this.setService = setService;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
@@ -42,6 +45,7 @@ public class ApiMsoService {
         this.storeService = storeService;
         this.storeListingMngr = storeListingMngr;
         this.msoMngr = msoMngr;
+        this.categoryService = categoryService;
     }
     
     /** format supportedRegion of Mso to response format, ex : "en,zh,other" */
@@ -392,6 +396,109 @@ public class ApiMsoService {
         result.setSupportedRegion(formatSupportedRegion(mso.getSupportedRegion()));
         
         return result;
+    }
+    
+    public List<Category> msoCategories(Long msoId) {
+        
+        if (msoId == null) {
+            return new ArrayList<Category>();
+        }
+        
+        List<Category> results = categoryService.findByMsoId(msoId);
+        
+        return results;
+    }
+    
+    public Category msoCategoryCreate(Long msoId) {
+        
+        if (msoId == null) {
+            return null;
+        }
+        
+        Category newCategory = new Category();
+        newCategory.setMsoId(msoId);
+        
+        // create
+        Category savedCategory = categoryService.create(newCategory);
+        
+        return savedCategory;
+    }
+    
+    public Category category(Long categoryId) {
+        
+        if (categoryId == null) {
+            return null;
+        }
+        
+        Category result = categoryService.findById(categoryId);
+        
+        return result;
+    }
+    
+    public Category categoryUpdate(Long categoryId) {
+        
+        if (categoryId == null) {
+            return null;
+        }
+        
+        Category category = categoryService.findById(categoryId);
+        
+        // do modify
+        
+        Category savedCategory = categoryService.save(category);
+        
+        return savedCategory;
+    }
+    
+    public void categoryDelete(Long categoryId) {
+        
+        if (categoryId == null) {
+            return ;
+        }
+        
+        categoryService.delete(categoryId);
+    }
+    
+    public List<Long> categoryChannels(Long categoryId) {
+        
+        if (categoryId == null) {
+            return new ArrayList<Long>();
+        }
+        
+        List<NnChannel> channels = categoryService.getChannelsFromCategory(categoryId);
+        if (channels == null) {
+            return new ArrayList<Long>();
+        }
+        
+        List<Long> results = new ArrayList<Long>();
+        for (NnChannel channel : channels) {
+            results.add(channel.getId());
+        }
+        
+        return results;
+    }
+    
+    public void categoryChannelAdd(Long categoryId, List<Long> channelIds) {
+        
+        if (categoryId == null || channelIds == null || channelIds.size() < 1) {
+            return ;
+        }
+        
+        List<NnChannel> channels = channelMngr.findByIds(channelIds);
+        if (channels == null || channels.size() < 1) {
+            return ;
+        }
+        
+        categoryService.addChannelsToCategory(categoryId, channels);
+    }
+    
+    public void categoryChannelRemove(Long categoryId, List<Long> channelIds) {
+        
+        if (categoryId == null || channelIds == null || channelIds.size() < 1) {
+            return ;
+        }
+        
+        categoryService.removeChannelsFromCategory(categoryId, channelIds);
     }
 
 }

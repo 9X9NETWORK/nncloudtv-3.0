@@ -93,6 +93,13 @@ public class SysTagDisplayManager {
         }
         return dao.findBySysTagId(sysTagId);
     }
+    
+    public List<SysTagDisplay> findAllBySysTagId(Long sysTagId) {
+        if (sysTagId == null) {
+            return new ArrayList<SysTagDisplay>();
+        }
+        return dao.findAllBySysTagId(sysTagId);
+    }
 
     public SysTagDisplay findByName(String name, long msoId) {
         return dao.findByName(name);
@@ -117,6 +124,13 @@ public class SysTagDisplayManager {
             return ;
         }
         dao.delete(sysTagDisplay);
+    }
+    
+    public void deleteAll(List<SysTagDisplay> sysTagDisplays) {
+        if (sysTagDisplays == null || sysTagDisplays.size() < 1) {
+            return ;
+        }
+        dao.deleteAll(sysTagDisplays);
     }
     
     public void addChannelCounter(NnChannel channel) {

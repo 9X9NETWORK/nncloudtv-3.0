@@ -77,5 +77,27 @@ public class SysTagMapDao extends GenericDao<SysTagMap> {
         
         return detached;
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<SysTagMap> findByChannelIds(List<Long> channelIds) {
+        
+        List<SysTagMap> detached;
+        PersistenceManager pm = PMF.getContent().getPersistenceManager();
+        
+        try {
+            Query q = pm.newQuery(SysTagMap.class, ":p.contains(channelId)");
+            //q.setOrdering("updateDate desc");
+            List<SysTagMap> results = ((List<SysTagMap>) q.execute(channelIds));
+            if (results != null && results.size() > 0) {
+                detached = (List<SysTagMap>) pm.detachCopyAll(results);
+            } else {
+                detached = new ArrayList<SysTagMap>();
+            }
+        } finally {
+            pm.close();
+        }
+        
+        return detached;
+    }
 
 }
