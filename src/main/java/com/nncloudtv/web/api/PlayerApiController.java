@@ -2437,18 +2437,14 @@ public class PlayerApiController {
      * Link of facebook login
      */
     @RequestMapping(value="fbLogin")
-    public String fbLogin(HttpServletRequest req,            
-            @RequestParam(value="mso", required=false) String mso) {
-        if (mso == null) 
-            mso = "9x9"; 
-        String uri = "";
-        try {
-            uri= new URI(req.getHeader("referer")).getPath();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+    public String fbLogin(HttpServletRequest req) {
+        
+        ApiContext context = new ApiContext(req);
+        String uri = req.getHeader(ApiContext.HEADER_REFERRER);
         log.info("uri:" + uri);
-        uri = uri.replaceAll("\\/", "_");
+        
+        if (uri == null || uri.isEmpty())
+            uri = "http://" + context.getAppDomain() + "/tv";
         log.info("rewrite uri:" + uri);
         String url = FacebookLib.getDialogOAuthPath(uri);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);

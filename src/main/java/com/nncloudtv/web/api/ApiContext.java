@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserManager;
@@ -18,6 +19,7 @@ public class ApiContext {
     public final static String PRODUCTION_SITE_URL_REGEX = "^http(s)?:\\/\\/(www\\.)?9x9\\.tv$";
     public final static String DEFAULT_VERSION = "31";
     public final static String HEADER_USER_AGENT = "user-agent";
+    public final static String HEADER_REFERRER = "referer";
     
     public final static String PARAM_MSO = "mso";
     public final static String PARAM_LANG = "lang";
@@ -107,5 +109,12 @@ public class ApiContext {
         }
         
         return false;
+    }
+    
+    public String getAppDomain() {
+        
+        String serverDomain = MsoConfigManager.getServerDomain();
+        
+        return MsoManager.isNNMso(mso) ? serverDomain : mso.getName() + "." + serverDomain.replaceAll("^www\\.", "");
     }
 }

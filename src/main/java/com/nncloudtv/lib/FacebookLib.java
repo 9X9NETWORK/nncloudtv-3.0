@@ -107,7 +107,7 @@ public class FacebookLib {
     
     public FacebookMe getFbMe(String accessToken) {
         try {
-            URL url = new URL("https://graph.facebook.com/me?access_token=" + URLEncoder.encode(accessToken, "utf-8"));
+            URL url = new URL("https://graph.facebook.com/me?access_token=" + URLEncoder.encode(accessToken, "ascii"));
             log.info("FACEBOOK:(me)-query:" + url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -147,12 +147,11 @@ public class FacebookLib {
         try {
             URL url = new URL(urlBase);
             log.info("uri using for token:" + uri);
-            String modifiedRedirectUri = redirectUri + "?uri=" + uri;
+            String modifiedRedirectUri = redirectUri + "?uri=" + URLEncoder.encode(uri, "ascii");
             String params = "client_id=" + clientId +             
                             "&code=" + code + 
                             "&client_secret=" + secret +
-                            "&redirect_uri=" + modifiedRedirectUri;
-                            //"&redirect_uri=" + redirectUri;
+                            "&redirect_uri=" + URLEncoder.encode(modifiedRedirectUri, "ascii");
             log.info("FACEBOOK: (oauth) params:" + params);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -182,6 +181,8 @@ public class FacebookLib {
             } else {
                 log.info("FACEBOOK: (oauth token)-failed response status:" + connection.getResponseCode());
             }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -236,18 +237,19 @@ public class FacebookLib {
         return data;
     }
     
-    public static String getDialogOAuthPath(String uri) {        
-        // add "publish_actions" to scope to enable FacebookLib.postToFacebook()
-        String scope = "user_likes,user_location,user_interests,email,user_birthday";
-        String state = FacebookLib.generateState();
-        String urlBase = "http://www.facebook.com/dialog/oauth?";
-        String modifiedRedirectUri = redirectUri + "?uri=" + uri;
-        String url = urlBase +
+    public static String getDialogOAuthPath(String uri) {
+        
+        String url = "http://www.facebook.com/dialog/oauth?" +
                      "client_id=" + clientId +
-                     "&redirect_uri=" + modifiedRedirectUri +
-                     "&scope=" + scope +
-                     "&state=" + state;
-        log.info("url:" + url);
+                     "&scope=user_likes,user_location,user_interests,email,user_birthday" +
+                     "&state=" + FacebookLib.generateState();
+        try {
+            String modifiedRedirectUri = redirectUri + "?uri=" + URLEncoder.encode(uri, "ascii");
+            url += "&redirect_uri=" + URLEncoder.encode(modifiedRedirectUri, "ascii");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        log.info("url = " + url);
         return url;
     }
 

@@ -54,12 +54,8 @@ public class FacebookController {
                 log.info("FACEBOOK: (login) have used data from facebook to create a 9x9 account");
             }                         
         }
-        String redirectPath = "/";
-        if (uri != null) {            
-            redirectPath = uri.replaceAll("_", "/");
-        }
-        log.info("FACEBOOK: (login) last step redirect to 9x9 player:" + redirectPath);
-        return "redirect:" + redirectPath;
+        log.info("FACEBOOK: (login) last step redirect to 9x9 player:" + uri);
+        return "redirect:" + uri;
     }
     
     /**
