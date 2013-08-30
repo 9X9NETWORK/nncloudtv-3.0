@@ -39,34 +39,30 @@ public class PlayerService {
     public static final String META_VIDEO_THUMBNAIL = "crawlVideoThumb";
     
     public Model prepareBrand(Model model, String msoName, HttpServletResponse resp) {
+        
         if (msoName != null) {
             msoName = msoName.toLowerCase();
         } else {
             msoName = Mso.NAME_9X9;
         }
         
-        if (msoName.equals(Mso.NAME_5F)) {
-            
-            model.addAttribute(META_BRANDINFO, "5f");
-            model.addAttribute(META_TITLE, "5f.tv");
-            model.addAttribute(META_DESCRIPTION, "&nbsp;");
-            CookieHelper.setCookie(resp, CookieHelper.MSO, Mso.NAME_5F);
-            
-        } else if (msoName.equals(Mso.NAME_CTS)) {
+        // TODO: move to mso_config
+        if (msoName.equals(Mso.NAME_CTS)) {
             
             model.addAttribute(META_BRANDINFO, "cts");
             model.addAttribute(META_TITLE, "微電影節 - 華視");
-            model.addAttribute(META_DESCRIPTION, "微新運動(weifilm)元年第一屆臺灣微電影節選拔活動，主題以臺灣的社會創新，鼓勵臺灣人民與各行各業運用新科技、新方法、新思維、新管理方式，解決社會問題，創造價值與幸福的精彩故事");
+            model.addAttribute(META_DESCRIPTION, "「華視雲端電視網」讓您跨地區、跨時間、跨裝置地收看華視為您精選的節目，現正推出：微新運動(weiflim)元年第一屆臺灣微電影節選拔活動，主題以臺灣的社會創新，鼓勵臺灣人民與各行各業運用新科技、新方法、新思維、新管理方式，解決社會問題，創造價值與幸福的精彩故事");
             model.addAttribute(META_KEYWORD, "微電影節,微新運動,2013台灣微電影節-微視界‧大創新,華視 微電影節,臺灣微電影節,weifilm");
+            model.addAttribute(META_IMAGE, "http://9x9ui.s3.amazonaws.com/tv4.0/img/cts-logo.png");
             
-        }else {
+        } else {
             
             model.addAttribute(META_BRANDINFO, "9x9");
             model.addAttribute(META_TITLE, "9x9.tv");
             model.addAttribute(META_DESCRIPTION, "&nbsp;");
+            model.addAttribute(META_IMAGE, "http://9x9ui.s3.amazonaws.com/9x9playerV39/images/9x9-facebook-icon.png");
             CookieHelper.deleteCookie(resp, CookieHelper.MSO); //delete brand cookie
         }
-        model.addAttribute(META_IMAGE, "http://9x9ui.s3.amazonaws.com/9x9playerV39/images/9x9-facebook-icon.png");
         return model;        
     }
 
