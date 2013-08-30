@@ -23,64 +23,53 @@ public class MsoConfigManager {
     private MsoConfigDao configDao = new MsoConfigDao();
     protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());
     
-    static public String getS3UploadBucket() {
+    static String getProperty(String propertyFile, String propertyName) {
+        
         Properties properties = new Properties();
-        String result = "";
+        String result = null;
+        log.info("to get property " + propertyName + " from " + propertyFile);
         try {
-            properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("aws.properties"));
-            result = properties.getProperty("s3_upload_bucket");
+            properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream(propertyFile));
+            result = properties.getProperty(propertyName);
         } catch (IOException e) {
             NnLogUtil.logException(e);
         }
         return result;
+    }
+    
+    static public String getS3UploadBucket() {
+        
+        return getProperty("aws.properties", "s3_upload_bucket");
     }
     
     static public String getPiwikDomain() {
-        Properties properties = new Properties();
-        String result = "";
-        try {
-            properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("piwik.properties"));
-            result = properties.getProperty("piwik_server");
-        } catch (IOException e) {
-            NnLogUtil.logException(e);
-        }
-        return result;
+        
+        return getProperty("piwik.properties", "piwik_server");
     }
     
     static public String getServerDomain() {
-        Properties properties = new Properties();
-        String result = "";
-        try {
-            properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("sns.properties"));
-            result = properties.getProperty("server_domain");
-        } catch (IOException e) {
-            NnLogUtil.logException(e);
-        }
-        return result;
+        
+        return getProperty("sns.properties", "server_domain");
     }
     
-    static public String getAutoshareFacebookApptoken() {
-        Properties properties = new Properties();
-        String result = "";
-        try {
-            properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("sns.properties"));
-            result = properties.getProperty("autoshare_facebook_apptoken");
-        } catch (IOException e) {
-            NnLogUtil.logException(e);
-        }
-        return result;
+    static public String getFacebookAppToken() {
+        
+        return getProperty("sns.properties", "facebook_app_token");
+    }
+    
+    static public String getFacebookClientId() {
+        
+        return getProperty("sns.properties", "facebook_client_id");
+    }
+    
+    static public String getFacebookClientSecret() {
+        
+        return getProperty("sns.properties", "facebook_client_secret");
     }
     
     static public String getExternalRootPath() {
-        Properties properties = new Properties();
-        String result = "";
-        try {
-            properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("aws.properties"));
-            result = properties.getProperty("static_file_root_path");
-        } catch (IOException e) {
-            NnLogUtil.logException(e);
-        }
-        return result;
+        
+        return getProperty("aws.properties", "static_file_root_path");
     }
     
     public MsoConfig create(MsoConfig config) {

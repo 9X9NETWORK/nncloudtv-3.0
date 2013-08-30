@@ -2439,14 +2439,17 @@ public class PlayerApiController {
     @RequestMapping(value="fbLogin")
     public String fbLogin(HttpServletRequest req) {
         
-        ApiContext context = new ApiContext(req);
-        String uri = req.getHeader(ApiContext.HEADER_REFERRER);
-        log.info("uri:" + uri);
+        String appDomain = (req.isSecure() ? "https://" : "http://") + new ApiContext(req).getAppDomain();
+        String referrer = req.getHeader(ApiContext.HEADER_REFERRER);
+        log.info("uri:" + referrer);
         
-        if (uri == null || uri.isEmpty())
-            uri = "http://" + context.getAppDomain() + "/tv";
-        log.info("rewrite uri:" + uri);
-        String url = FacebookLib.getDialogOAuthPath(uri);
+        if (referrer == null || referrer.isEmpty())
+            referrer = appDomain + "/tv";
+        log.info("rewrite uri:" + referrer);
+        
+        String fbLoginUri = appDomain + "/fb/login";
+        
+        String url = FacebookLib.getDialogOAuthPath(referrer, fbLoginUri);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;

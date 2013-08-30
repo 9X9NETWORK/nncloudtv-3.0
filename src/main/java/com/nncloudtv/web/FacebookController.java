@@ -17,6 +17,7 @@ import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.service.PlayerApiService;
+import com.nncloudtv.web.api.ApiContext;
 import com.nncloudtv.web.json.facebook.FBPost;
 
 @Controller
@@ -46,7 +47,9 @@ public class FacebookController {
                             ";errorDescription:" + errorDescription + 
                             ";accessToken:" + accessToken + ";stage:" + stage);
         if (code != null && accessToken == null) {
-            String[] data = new FacebookLib().getOAuthAccessToken(code, uri);
+            
+            String fbLoginUri = (req.isSecure() ? "https://" : "http://") + new ApiContext(req).getAppDomain() + "/fb/api";
+            String[] data = new FacebookLib().getOAuthAccessToken(code, uri, fbLoginUri);
             log.info("FACEBOOK: (login) back from access token request");
             if (data[0] != null) {               
                 log.info("FACEBOOK: (login) going to use data from facebook");

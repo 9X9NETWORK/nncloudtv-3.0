@@ -28,48 +28,8 @@ import com.nncloudtv.web.json.facebook.FacebookMe;
 import com.nncloudtv.web.json.facebook.FacebookResponse;
 
 public class FacebookLib {
-    protected static final Logger log = Logger.getLogger(FacebookLib.class.getName());
-
-    //TODO move to db or property file
-    //dev
-    /*
-    protected static String clientId = "248267975300785";
-    protected static String secret = "89f743a2c4088bc167b88ddc5d4575d1";
-    protected static String redirectUri = "http://dev.teltel.com:8080/fb/login";
-    */
     
-    //dev1
-    protected static String clientId = "417419178315486";
-    protected static String secret = "bb96e3578cfb0822796810601d554e97";
-    protected static String redirectUri = "http://dev1.9x9.tv/fb/login";
-
-    //dev2
-    /*
-    protected static String clientId = "409773719071373";
-    protected static String secret = "412472443830cf5dd62ee5f5cd2450a4";
-    protected static String redirectUri = "http://dev2.9x9.tv/fb/login";
-    */
-
-    //beagle    
-    /*
-    protected static String clientId = "411604618902543";
-    protected static String secret = "ea2ba5658851e3c02a97b10dc9c99146";
-    protected static String redirectUri = "http://beagle.9x9.tv/fb/login";
-    */
-
-    //demo
-    /*
-    protected static String clientId = "361253423962738";
-    protected static String secret = "85106cc16d80a5705a060a0bbae7cb60";
-    protected static String redirectUri = "http://demo.9x9.tv/fb/login";
-    */
-
-    //production
-    /*
-    protected static String clientId = "110847978946712";
-    protected static String secret = "1a6abc521920290b1e8c489134daeb06";
-    protected static String redirectUri = "http://www.9x9.tv/fb/login";
-    */
+    protected static final Logger log = Logger.getLogger(FacebookLib.class.getName());
     
     private static String generateState() {
         String time = String.valueOf(new Date().getTime());
@@ -140,17 +100,17 @@ public class FacebookLib {
         return me;
     }
     
-    public String[] getOAuthAccessToken(String code, String uri){
+    public String[] getOAuthAccessToken(String code, String uri, String fbLoginUri){
         String urlBase = "https://graph.facebook.com/oauth/access_token";
         String data[] = {null, null}; //token, expires
         log.info("pass back is?:" + uri);
         try {
             URL url = new URL(urlBase);
             log.info("uri using for token:" + uri);
-            String modifiedRedirectUri = redirectUri + "?uri=" + URLEncoder.encode(uri, "ascii");
-            String params = "client_id=" + clientId +             
+            String modifiedRedirectUri = fbLoginUri + "?uri=" + URLEncoder.encode(uri, "ascii");
+            String params = "client_id=" + MsoConfigManager.getFacebookClientId() +             
                             "&code=" + code + 
-                            "&client_secret=" + secret +
+                            "&client_secret=" + MsoConfigManager.getFacebookClientSecret() +
                             "&redirect_uri=" + URLEncoder.encode(modifiedRedirectUri, "ascii");
             log.info("FACEBOOK: (oauth) params:" + params);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -196,8 +156,8 @@ public class FacebookLib {
         String data[] = {null, null}; //token, expires
         try {
             URL url = new URL(urlBase);
-            String params = "client_id=" + clientId +
-                            "&client_secret=" + secret +
+            String params = "client_id=" + MsoConfigManager.getFacebookClientId() +
+                            "&client_secret=" + MsoConfigManager.getFacebookClientSecret() +
                             "&grant_type=fb_exchange_token" +
                             "&fb_exchange_token=" + shortLivedAccessToken;
             log.info("FACEBOOK: (oauth) params:" + params);
@@ -237,14 +197,14 @@ public class FacebookLib {
         return data;
     }
     
-    public static String getDialogOAuthPath(String uri) {
+    public static String getDialogOAuthPath(String referrer, String fbLoginUri) {
         
         String url = "http://www.facebook.com/dialog/oauth?" +
-                     "client_id=" + clientId +
+                     "client_id=" + MsoConfigManager.getFacebookClientId() +
                      "&scope=user_likes,user_location,user_interests,email,user_birthday" +
                      "&state=" + FacebookLib.generateState();
         try {
-            String modifiedRedirectUri = redirectUri + "?uri=" + URLEncoder.encode(uri, "ascii");
+            String modifiedRedirectUri = fbLoginUri + "?uri=" + URLEncoder.encode(referrer, "ascii");
             url += "&redirect_uri=" + URLEncoder.encode(modifiedRedirectUri, "ascii");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

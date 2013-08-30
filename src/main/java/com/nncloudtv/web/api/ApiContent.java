@@ -172,7 +172,7 @@ public class ApiContent extends ApiGeneric {
         
         for (int i = 0; i < fbUserIdList.length; i++) {
             if (accessTokenList[i].equals(fbUserToken.getValue())) { // post to facebook time line use app token
-                prefList.add(new NnChannelPref(channel.getId(), NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], MsoConfigManager.getAutoshareFacebookApptoken())));
+                prefList.add(new NnChannelPref(channel.getId(), NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], MsoConfigManager.getFacebookAppToken())));
             } else {
                 prefList.add(new NnChannelPref(channel.getId(), NnChannelPref.FB_AUTOSHARE, channelPrefMngr.composeFacebookAutoshare(fbUserIdList[i], accessTokenList[i])));
             }
