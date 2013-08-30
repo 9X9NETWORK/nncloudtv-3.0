@@ -152,15 +152,24 @@ public class PlayerController {
                     @RequestParam(value="ep", required=false) String ep,    		
     				HttpServletRequest req, 
     		        HttpServletResponse resp) {    		       
-    	String redirectUrl = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
-    	String reportUrl = new PlayerService().getGAReportUrl(ch, ep, name);
+    	String storeUrl = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
+    	PlayerService service = new PlayerService();
+    	String reportUrl = service.getGAReportUrl(ch, ep, name);
     	log.info("reportUrl:" + reportUrl); 
+    	
+        String fliprStr = service.getFliprUrl(ch, ep, name, req);    	
     	if (name.equals(Mso.NAME_CTS)) {
-    		redirectUrl = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
+    		storeUrl = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
     	}
+    	
+        model.addAttribute("fliprUrl", fliprStr);    	
     	model.addAttribute("reportUrl", reportUrl);
-    	model.addAttribute("redirectUrl", redirectUrl);
-        return ("player/googleplay");    	
+    	model.addAttribute("storeUrl", storeUrl);
+        if (name.equals(Mso.NAME_CTS)) {
+        	return "player/ios_cts";
+        }
+        return "player/ios";
+
     }
     
     /**
@@ -191,10 +200,15 @@ public class PlayerController {
         if (isIos) {
             log.info("It is iOS");
             //pid = service.findFirstSubepisodeId(pid);
-            String iosStr = service.getRedirectIosUrl(cid, pid, msoName, req);
+            String iosStr = service.getFliprUrl(cid, pid, msoName, req);
             String reportUrl = service.getGAReportUrl(ch, ep, msoName);
+            String storeUrl = "https://itunes.apple.com/app/9x9.tv/id443352510?mt=8";
+            if (mso.getName().equals(Mso.NAME_CTS)) {
+            	storeUrl = "https://itunes.apple.com/app/hua-shi-yun-duan-dian-shi-wang/id623085456?mt=8";
+            }
             model.addAttribute("fliprUrl", iosStr);
             model.addAttribute("reportUrl", reportUrl);
+            model.addAttribute("storeUrl", storeUrl);
             if (mso.getName().equals(Mso.NAME_CTS)) {
             	return "player/ios_cts";
             }
@@ -205,7 +219,7 @@ public class PlayerController {
         if (isAndroid) {
         	log.info("It is Android");
             //pid = service.findFirstSubepisodeId(pid);
-            String androidStr = service.getRedirectAndroidUrl(cid, pid, msoName, req);
+            String androidStr = service.getRedirectAndroidUrl(cid, pid, msoName, req);                        
             return "redirect:/" + androidStr;
         }
         
@@ -246,7 +260,7 @@ public class PlayerController {
                 boolean isIos = service.isIos(req);
                 if (isIos) {
                     //pid = service.findFirstSubepisodeId(pid);
-                    String iosStr = service.getRedirectIosUrl(cid, pid, mso, req);
+                    String iosStr = service.getFliprUrl(cid, pid, mso, req);
                     model.addAttribute("fliprUrl", iosStr);
                     return "player/ios";
                 }
