@@ -834,6 +834,7 @@ public class PlayerApiController {
      * @param setInfo true or false. Whether to return subscription set information.  
      * @param required true or false. Will return error in status block if the requested channel is not found.
      * @param stack featured/recommended/hot/trending. Each stack in return is separated by "--\n"
+     * @param sort use with 'user', for user's subscription sorting. There are two options: "date" or "grid". Default is "grid" if not specified. "date" returns channels in update date descending order. 
      * @return A string of all of requested channel information
      *         <p>
      *         First block: status. Second block: set information. This block shows only if setInfo is set to true. 
