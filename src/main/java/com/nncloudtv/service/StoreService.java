@@ -15,6 +15,7 @@ import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.SysTagDao;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.StoreListing;
 import com.nncloudtv.model.SysTag;
@@ -35,16 +36,18 @@ public class StoreService {
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
+    private MsoConfigManager msoConfigMngr;
     
     @Autowired
     public StoreService(StoreListingManager storeListingMngr, MsoManager msoMngr,
                             SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr,
-                            SysTagMapManager sysTagMapMngr) {
+                            SysTagMapManager sysTagMapMngr, MsoConfigManager msoConfigMngr) {
         this.storeListingMngr = storeListingMngr;
         this.msoMngr = msoMngr;
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
+        this.msoConfigMngr = msoConfigMngr;
     }
     
     public StoreService() {
@@ -53,6 +56,7 @@ public class StoreService {
         this.sysTagMngr = new SysTagManager();
         this.sysTagDisplayMngr = new SysTagDisplayManager();
         this.sysTagMapMngr = new SysTagMapManager();
+        this.msoConfigMngr = new MsoConfigManager();
     }
     
     /** build System's Category from SysTag and SysTagDisplay */
@@ -350,6 +354,56 @@ public class StoreService {
             channelIds.add(channel.getId());
         }
         return channelIds;
+    }
+    
+    public List<String> getStoreCategoryLocks(Long msoId) {
+        
+        if (msoId == null) {
+            return new ArrayList<String>();
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            return new ArrayList<String>();
+        }
+        MsoConfig systemCategoryMask = msoConfigMngr.findByMsoAndItem(mso, MsoConfig.SYSTEM_CATEGORY_MASK);
+        if (systemCategoryMask == null) {
+            return new ArrayList<String>();
+        }
+        List<String> results = MsoConfigManager.parseSystemCategoryMask(systemCategoryMask.getValue());
+        
+        return results;
+    }
+    
+    public List<String> setStoreCategoryLocks(Long msoId, List<String> systemCategoryLocks) {
+        
+        if (msoId == null) {
+            return new ArrayList<String>();
+        }
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            return new ArrayList<String>();
+        }
+        
+        MsoConfig systemCategoryMask = msoConfigMngr.findByMsoAndItem(mso, MsoConfig.SYSTEM_CATEGORY_MASK);
+        if (systemCategoryMask == null) {
+            systemCategoryMask = new MsoConfig();
+            systemCategoryMask.setMsoId(mso.getId());
+            systemCategoryMask.setItem(MsoConfig.SYSTEM_CATEGORY_MASK);
+            systemCategoryMask.setValue("");
+            systemCategoryMask = msoConfigMngr.create(systemCategoryMask);
+        }
+        
+        if (systemCategoryLocks == null || systemCategoryLocks.size() < 1) {
+            systemCategoryMask.setValue("");
+        } else {
+            List<String> verifiedSystemCategoryLocks = MsoConfigManager.verifySystemCategoryLocks(systemCategoryLocks);
+            systemCategoryMask.setValue(MsoConfigManager.composeSystemCategoryMask(verifiedSystemCategoryLocks));
+        }
+        
+        MsoConfig savedSystemCategoryMask = msoConfigMngr.save(mso, systemCategoryMask);
+        List<String> results = MsoConfigManager.parseSystemCategoryMask(savedSystemCategoryMask.getValue());
+        return results;
     }
 
 }

@@ -33,12 +33,14 @@ public class MsoConfig {
     public static String QUEUED = "queued";
     public static String SUPPORTED_REGION = "supported-region";
     public static String API_MINIMAL = "api-minimal";
+    public static String SYSTEM_CATEGORY_MASK = "system-category-mask";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
     private String value;
     public static String CDN_AMAZON = "amazon";
     public static String CDN_AKAMAI = "akamai";
+    public static String DISABLE_ALL_SYSTEM_CATEGORY = "ALL";
 
     @Persistent
     private Date createDate;

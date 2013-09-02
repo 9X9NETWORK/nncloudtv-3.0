@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.SysTag;
@@ -1605,6 +1606,114 @@ public class ApiMso extends ApiGeneric {
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return ;
+    }
+    
+    @RequestMapping(value = "mso/{msoId}/store/categoryLocks", method = RequestMethod.GET)
+    public @ResponseBody
+    List<String> msoSystemCategoryLocks(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long msoId = null;
+        try {
+            msoId = Long.valueOf(msoIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "100") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        List<String> results = apiMsoService.msoSystemCategoryLocks(mso.getId());
+        log.info(printExitState(now, req, "ok"));
+        return results;
+    }
+    
+    @RequestMapping(value = "mso/{msoId}/store/categoryLocks", method = RequestMethod.PUT)
+    public @ResponseBody
+    List<String> msoSystemCategoryLocksUpdate(HttpServletRequest req,
+            HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long msoId = null;
+        try {
+            msoId = Long.valueOf(msoIdStr);
+        } catch (NumberFormatException e) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Mso mso = msoMngr.findById(msoId);
+        if (mso == null) {
+            notFound(resp, "Mso Not Found");
+            log.info(printExitState(now, req, "404"));
+            return null;
+        }
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return null;
+        }
+        else if (hasRightAccessPCS(verifiedUserId, mso.getId(), "110") == false) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return null;
+        }
+        
+        // categories, indicate which system categories that be locked 
+        String categoriesStr = req.getParameter("categories");
+        if (categoriesStr == null) {
+            badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
+            return null;
+        }
+        String[] categoryIdsStr = categoriesStr.split(",");
+        List<String> categoryIds = new ArrayList<String>();
+        Long categoryId = null;
+        for (String categoryIdStr : categoryIdsStr) {
+            
+            categoryId = null;
+            try {
+                categoryId = Long.valueOf(categoryIdStr);
+            } catch(Exception e) {
+                // special lock for lock all System Category
+                if (categoryIdStr.equals(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY)) {
+                    categoryIds.add(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY);
+                }
+            }
+            if (categoryId != null) {
+                categoryIds.add(categoryIdStr);
+            }
+        }
+        
+        List<String> results = apiMsoService.msoSystemCategoryLocksUpdate(mso.getId(), categoryIds);
+        log.info(printExitState(now, req, "ok"));
+        return results;
     }
 
 }

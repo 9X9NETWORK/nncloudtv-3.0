@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.MsoConfigDao;
@@ -16,6 +19,7 @@ import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
+import com.nncloudtv.model.SysTag;
 
 @Service
 public class MsoConfigManager {
@@ -156,6 +160,73 @@ public class MsoConfigManager {
         }
         
         return spheres;
+    }
+    
+    public static List<String> parseSystemCategoryMask(String systemCategoryMask) {
+        
+        if (systemCategoryMask == null) {
+            return new ArrayList<String>();
+        }
+        
+        String[] systemCategoryLocks = systemCategoryMask.split(",");
+        if (systemCategoryLocks.length == 1 && systemCategoryLocks[0].equals("")) {
+            return new ArrayList<String>();
+        }
+        
+        List<String> results = new ArrayList<String>();
+        for (String systemCategoryLock : systemCategoryLocks) {
+            results.add(systemCategoryLock);
+        }
+        
+        return results;
+    }
+    
+    public static String composeSystemCategoryMask(List<String> systemCategoryLocks) {
+        
+        if (systemCategoryLocks == null || systemCategoryLocks.size() < 1) {
+            return "";
+        }
+        
+        String systemCategoryMask = StringUtils.join(systemCategoryLocks, ",");
+        return systemCategoryMask;
+    }
+    
+    public static List<String> verifySystemCategoryLocks(List<String> systemCategoryLocks) {
+        
+        if (systemCategoryLocks == null || systemCategoryLocks.size() < 1) {
+            return new ArrayList<String>();
+        }
+        
+        // populate System's CategoryIds
+        MsoManager msoMngr = new MsoManager();
+        SysTagManager sysTagMngr = new SysTagManager();
+        List<SysTag> systemCategories = sysTagMngr.findByMsoIdAndType(msoMngr.findNNMso().getId(), SysTag.TYPE_CATEGORY);
+        Map<Long, Long> systemCategoryIds = new TreeMap<Long, Long>();
+        for (SysTag systemCategory : systemCategories) {
+            systemCategoryIds.put(systemCategory.getId(), systemCategory.getId());
+        }
+        
+        List<String> verifiedLocks = new ArrayList<String>();
+        for (String lock : systemCategoryLocks) {
+            
+            Long categoryId = null;
+            try {
+                categoryId = Long.valueOf(lock);
+            } catch (NumberFormatException e) {
+                // special lock for lock all System Category
+                if (lock.equals(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY)) {
+                    verifiedLocks.add(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY);
+                }
+            }
+            
+            if (categoryId != null) {
+                if (systemCategoryIds.containsKey(categoryId)) {
+                    verifiedLocks.add(lock);
+                }
+            }
+        }
+        
+        return verifiedLocks;
     }
 
 }

@@ -512,5 +512,25 @@ public class ApiMsoService {
         
         categoryService.removeChannelsFromCategory(categoryId, channelIds);
     }
+    
+    public List<String> msoSystemCategoryLocks(Long msoId) {
+        
+        if (msoId == null) {
+            return new ArrayList<String>();
+        }
+        
+        List<String> results = storeService.getStoreCategoryLocks(msoId);
+        return results;
+    }
+    
+    public List<String> msoSystemCategoryLocksUpdate(Long msoId, List<String> systemCategoryLocks) {
+        
+        if (msoId == null) {
+            return new ArrayList<String>();
+        }
+        
+        List<String> results = storeService.setStoreCategoryLocks(msoId, systemCategoryLocks);
+        return results;
+    }
 
 }
