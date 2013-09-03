@@ -3155,7 +3155,7 @@ public class PlayerApiService {
             
         } else {
             
-            curator = userMngr.findByIdStr(channel.getUserIdStr(), mso.getId());
+            curator = userMngr.findByIdStr(channel.getUserIdStr(), msoMngr.findNNMso().getId()); // use 9x9 profile
             if (curator == null)
                 return this.assembleMsgs(NnStatusCode.USER_INVALID, null);
             
