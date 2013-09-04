@@ -152,14 +152,15 @@ public class PlayerController {
                     @RequestParam(value="ep", required=false) String ep,    		
     				HttpServletRequest req, 
     		        HttpServletResponse resp) {    		       
-    	String storeUrl = "http://play.google.com/store/apps/details?id=tv.tv9x9.player";
+    	String storeUrl = "market://details?id=tv.tv9x9.player";
+    	
     	PlayerService service = new PlayerService();
     	String reportUrl = service.getGAReportUrl(ch, ep, name);
     	log.info("reportUrl:" + reportUrl); 
     	
         String fliprStr = service.getFliprUrl(ch, ep, name, req);    	
     	if (name.equals(Mso.NAME_CTS)) {
-    		storeUrl = "http://play.google.com/store/apps/details?id=tw.com.cts.player";
+    		storeUrl = "market://details?id=tw.com.cts.player";
     	}
     	
         model.addAttribute("fliprUrl", fliprStr);    	
