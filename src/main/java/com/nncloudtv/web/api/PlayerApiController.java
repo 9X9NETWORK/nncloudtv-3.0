@@ -787,11 +787,15 @@ public class PlayerApiController {
     }
     
     /**
-     * Share-in Channel List
+     * Share-in Channel List. Return curator channels as a set. If channel is not a curator chanenl, return one set that contains only that channel.
      * 
-     * return curator channels as a set
-     * if channel is not a curator channel,
-     * return one set that contais only that channel
+     * @param user user token 
+     * @param channel channel id
+     * @return First block: mso info. 
+     *         <p> Second block: set info. id, name, image url. "name" here is the curator name.
+     *         <p> Third block: channel info. channels under the set. please reference channelLineup.
+     *         <p> Fourth block: program info. programs under the set. please reference programInfo. 
+     * 
      */
     @RequestMapping(value="shareInChannelList", produces = "text/plain; charset=utf-8")
     public @ResponseBody String shareInChannelList(
