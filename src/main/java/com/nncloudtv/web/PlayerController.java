@@ -200,8 +200,8 @@ public class PlayerController {
         if (isIos) {
             log.info("It is iOS");
             //pid = service.findFirstSubepisodeId(pid);
-            String iosStr = service.getFliprUrl(cid, pid, msoName, req);
-            String reportUrl = service.getGAReportUrl(ch, ep, msoName);
+            String iosStr = service.getFliprUrl(cid, pid, mso.getName(), req);
+            String reportUrl = service.getGAReportUrl(ch, ep, mso.getName());
             String storeUrl = "https://itunes.apple.com/app/9x9.tv/id443352510?mt=8";
             if (mso.getName().equals(Mso.NAME_CTS)) {
             	storeUrl = "https://itunes.apple.com/app/hua-shi-yun-duan-dian-shi-wang/id623085456?mt=8";
@@ -219,11 +219,11 @@ public class PlayerController {
         if (isAndroid) {
         	log.info("It is Android");
             //pid = service.findFirstSubepisodeId(pid);
-            String androidStr = service.getRedirectAndroidUrl(cid, pid, msoName, req);                        
+            String androidStr = service.getRedirectAndroidUrl(cid, pid, mso.getName(), req);                        
             return "redirect:/" + androidStr;
         }
         
-        model = service.prepareBrand(model, msoName, resp);
+        model = service.prepareBrand(model, mso.getName(), resp);
         model = service.prepareChannel(model, cid, resp);
         model = service.prepareEpisode(model, pid, resp);
         
