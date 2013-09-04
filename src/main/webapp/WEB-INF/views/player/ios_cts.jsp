@@ -29,10 +29,10 @@
   </div>
   <div id="ios-btn">
     <div class="btn-white" id="btn-ios-download">
-      <a href="${fliprUrl}">下載 App</a>
+      <a href="${storeUrl}">下載 App</a>
     </div>
     <div class="btn-white" id="btn-ios-launch">
-      <a href="${storeUrl}">打開 App</a>
+      <a href="${fliprUrl}">打開 App</a>
     </div>
   </div>
 </div>
