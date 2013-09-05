@@ -213,16 +213,11 @@ public class PlayerController {
             
             model = service.prepareBrand(model, mso.getName(), resp);
             model = service.prepareChannel(model, cid, resp);
-            model = service.prepareEpisode(model, pid, resp);
+            model = service.prepareEpisode(model, pid, mso.getName(), resp);
             
             String playerPromotionUrl = service.getPlayerPromotionUrl(req, mso, cid, pid);
             log.info("player promotion url = " + playerPromotionUrl);
             model.addAttribute("playerPromotionUrl", playerPromotionUrl);
-            
-            if (!MsoManager.isNNMso(mso)) {
-                
-                model.addAttribute(PlayerService.META_URL, NnStringUtil.htmlSafeChars(NnStringUtil.getSharingUrl(Long.parseLong(cid), Long.parseLong(pid), mso.getName())));
-            }
             
             return "player/crawled";
         }
@@ -271,7 +266,7 @@ public class PlayerController {
             model = service.prepareBrand(model, mso, resp);
             model = service.preparePlayer(model, js, jsp, req);
             model = service.prepareChannel(model, cid, resp);
-            model = service.prepareEpisode(model, pid, resp);
+            model = service.prepareEpisode(model, pid, mso, resp);
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;
             }        

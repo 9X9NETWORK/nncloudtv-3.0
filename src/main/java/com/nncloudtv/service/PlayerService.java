@@ -229,7 +229,7 @@ public class PlayerService {
     }
     
     public Model prepareEpisode(Model model, String pid,
-            HttpServletResponse resp) {
+            String mso, HttpServletResponse resp) {
         if (pid == null)
             return model;
         if (pid.matches("[0-9]+")) {
@@ -255,7 +255,7 @@ public class PlayerService {
                 model.addAttribute(META_NAME, this.prepareFb(episode.getName(), 0));
                 model.addAttribute(META_DESCRIPTION, this.prepareFb(episode.getIntro(), 1));
                 model.addAttribute(META_IMAGE, this.prepareFb(episode.getImageUrl(), 2));
-                model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null), 3));
+                model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), mso), 3));
             }
             /*
             Map<String, String> entry = YouTubeLib.getYouTubeVideoEntry(pid);
