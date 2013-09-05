@@ -96,7 +96,7 @@ public class PlayerController {
             @RequestParam(value="_escaped_fragment_", required=false) String escaped,
             HttpServletRequest req, HttpServletResponse resp, Model model) {
         try {
-            PlayerService service = new PlayerService();        
+            PlayerService service = new PlayerService();
             model = service.prepareBrand(model, mso, resp);
             if (escaped != null) {
                 model = service.prepareCrawled(model, escaped);
@@ -144,6 +144,21 @@ public class PlayerController {
         return "player/zooatomics";
     }
         
+    @RequestMapping("mobile") 
+	public String mobile(Model model, String mso, HttpServletRequest req) {
+        PlayerService service = new PlayerService();
+        String url = NnNetUtil.getUrlRoot(req);
+        if (url != null && url.contains(Mso.NAME_CTS)) {
+        	mso = "cts";
+        }
+        String brandName = service.getBrandName(mso);
+        Model transitModel = service.getTransitionModel(model, brandName, req);
+        if (transitModel != null) {
+        	return service.getTransitionPageFile(brandName);
+        }    	
+        return "redirect:/" + "en";
+	}
+    
     @RequestMapping("/redirect/{name}/view")
     public String brandView(
     		        Model model,
