@@ -150,6 +150,12 @@ public class NnChannelPrefManager {
 	    }
 	}
     
+	/**
+	 * Get channel specified promotion brand, 9x9 is default if empty.
+	 * 
+	 * @param channelId
+	 * @return msoName
+	 */
     public NnChannelPref getBrand(Long channelId) {
         
         if (channelId == null) {

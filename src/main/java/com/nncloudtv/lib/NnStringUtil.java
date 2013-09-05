@@ -222,7 +222,7 @@ public class NnStringUtil {
         NnChannelPref channelPref = channelPrefMngr.getBrand(channelId);
         
         String url = "http://" + MsoConfigManager.getServerDomain() + "/view?mso="
-                   + (mso == null ? mso : channelPref.getValue()) + "&ch=" + channelId
+                   + (mso == null ? channelPref.getValue() : mso) + "&ch=" + channelId
                    + (episodeId == null ? "" : "&ep=e" + episodeId);
         
         return url;
