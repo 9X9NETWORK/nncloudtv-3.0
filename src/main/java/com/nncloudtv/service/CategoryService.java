@@ -28,13 +28,15 @@ public class CategoryService {
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
+    private SetService setService;
     
     @Autowired
     public CategoryService(SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr,
-                        SysTagMapManager sysTagMapMngr) {
+                        SysTagMapManager sysTagMapMngr, SetService setService) {
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
+        this.setService = setService;
     }
     
     /** build MSO's Category from SysTag and SysTagDisplay */
@@ -246,11 +248,40 @@ public class CategoryService {
                 // skip
             } else {
                 SysTagMap newChannel = new SysTagMap(categoryId, channelId);
+                newChannel.setSeq((short) 0);
+                newChannel.setTimeStart((short) 0);
+                newChannel.setTimeEnd((short) 0);
+                newChannel.setAlwaysOnTop(false);
                 newChannels.add(newChannel);
             }
         }
         
         sysTagMapMngr.saveAll(newChannels);
+    }
+    
+    public void addChannelToCategory(Long categoryId, Long channelId, Short seq, Boolean alwaysOnTop) {
+        
+        if (categoryId == null || channelId == null) {
+            return ;
+        }
+        
+        SysTagMap channel = sysTagMapMngr.findBySysTagIdAndChannelId(categoryId, channelId);
+        if (channel == null) {
+            channel = new SysTagMap(categoryId, channelId);
+            channel.setSeq((short) 0);
+            channel.setTimeStart((short) 0);
+            channel.setTimeEnd((short) 0);
+            channel.setAlwaysOnTop(false);
+        }
+        
+        if (seq != null) {
+            channel.setSeq(seq);
+        }
+        if (alwaysOnTop != null) {
+            channel.setAlwaysOnTop(alwaysOnTop);
+        }
+        
+        sysTagMapMngr.save(channel);
     }
     
     public void removeChannelsFromCategory(Long categoryId, List<Long> channelIds) {
@@ -271,6 +302,21 @@ public class CategoryService {
         }
         
         List<NnChannel> results = channelDao.getStoreChannelsFromCategory(categoryId, null);
+        if (results == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        return results;
+    }
+    
+    public List<NnChannel> getChannelsOrderByUpdateTime(Long categoryId) {
+        
+        if (categoryId == null) {
+            return new ArrayList<NnChannel>();
+        }
+        
+        // TODO the execution logic is completely same with SetService.getChannelsOrderByUpdateTime, it should be extract.
+        List<NnChannel> results = setService.getChannelsOrderByUpdateTime(categoryId);
         if (results == null) {
             return new ArrayList<NnChannel>();
         }

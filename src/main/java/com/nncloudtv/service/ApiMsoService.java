@@ -181,9 +181,11 @@ public class ApiMsoService {
         }
         
         results = channelMngr.responseNormalization(results);
+        /*
         if (results.size() > 0) { // dependence with front end use case
             channelMngr.populateMoreImageUrl(results.get(0));
         }
+        */
         return results;
     }
     
@@ -485,23 +487,40 @@ public class ApiMsoService {
             return new ArrayList<NnChannel>();
         }
         
-        List<NnChannel> results = categoryService.getChannelsFromCategory(categoryId);
+        List<NnChannel> results = categoryService.getChannelsOrderByUpdateTime(categoryId);
         if (results == null) {
             return new ArrayList<NnChannel>();
         }
         
+        results = channelMngr.responseNormalization(results);
+        
         return results;
     }
     
-    public void categoryChannelAdd(Category category, List<Long> channelIds) {
+    public void categoryChannelAdd(Category category, List<Long> channelIds, Long channelId, Short seq, Boolean alwaysOnTop) {
         
-        if (category == null || category.getId() == 0 || channelIds == null || channelIds.size() < 1) {
+        if (category == null || category.getId() == 0) {
             return ;
         }
         
-        List<Long> verifiedChannelIds = msoMngr.getPlayableChannels(channelIds, category.getMsoId());
-        
-        categoryService.addChannelsToCategory(category.getId(), verifiedChannelIds);
+        if (channelIds != null) {
+            
+            if (channelIds.size() < 1) {
+                return ;
+            }
+            
+            List<Long> verifiedChannelIds = msoMngr.getPlayableChannels(channelIds, category.getMsoId());
+            categoryService.addChannelsToCategory(category.getId(), verifiedChannelIds);
+            
+        } else if (channelId != null) {
+            
+            List<Long> unverifiedChannelId = new ArrayList<Long>();
+            unverifiedChannelId.add(channelId);
+            List<Long> verifiedChannelId = msoMngr.getPlayableChannels(unverifiedChannelId, category.getMsoId());
+            if (verifiedChannelId != null && verifiedChannelId.size() != 0) {
+                categoryService.addChannelToCategory(category.getId(), verifiedChannelId.get(0), seq, alwaysOnTop);
+            }
+        }
     }
     
     public void categoryChannelRemove(Long categoryId, List<Long> channelIds) {

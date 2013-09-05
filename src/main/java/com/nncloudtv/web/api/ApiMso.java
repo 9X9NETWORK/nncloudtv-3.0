@@ -1518,27 +1518,60 @@ public class ApiMso extends ApiGeneric {
         
         // channels
         String channelsStr = req.getParameter("channels");
+        List<Long> channelIds = null;
         if (channelsStr == null) {
-            badRequest(resp, MISSING_PARAMETER);
-            log.info(printExitState(now, req, "400"));
-            return ;
-        }
-        String[] channelIdsStr = channelsStr.split(",");
-        List<Long> channelIds = new ArrayList<Long>();
-        Long channelId = null;
-        for (String channelIdStr : channelIdsStr) {
+            channelIds = null;
+        } else {
+            String[] channelIdsStr = channelsStr.split(",");
+            channelIds = new ArrayList<Long>();
+            Long channelId = null;
+            for (String channelIdStr : channelIdsStr) {
             
-            channelId = null;
-            try {
-                channelId = Long.valueOf(channelIdStr);
-            } catch(Exception e) {
-            }
-            if (channelId != null) {
-                channelIds.add(channelId);
+                channelId = null;
+                try {
+                    channelId = Long.valueOf(channelIdStr);
+                } catch(Exception e) {
+                }
+                if (channelId != null) {
+                    channelIds.add(channelId);
+                }
             }
         }
         
-        apiMsoService.categoryChannelAdd(category, channelIds);
+        // channelId
+        Long channelId = null;
+        String channelIdStr = req.getParameter("channelId");
+        if (channelIdStr != null) {
+            try {
+                channelId = Long.valueOf(channelIdStr);
+            } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return ;
+            }
+        }
+        
+        // seq
+        String seqStr = req.getParameter("seq");
+        Short seq = null;
+        if (seqStr != null) {
+            try {
+                seq = Short.valueOf(seqStr);
+            } catch (NumberFormatException e) {
+                badRequest(resp, INVALID_PARAMETER);
+                log.info(printExitState(now, req, "400"));
+                return ;
+            }
+        }
+        
+        // alwaysOnTop
+        String alwaysOnTopStr = req.getParameter("alwaysOnTop");
+        Boolean alwaysOnTop = null;
+        if (alwaysOnTopStr != null) {
+            alwaysOnTop = Boolean.valueOf(alwaysOnTopStr);
+        }
+        
+        apiMsoService.categoryChannelAdd(category, channelIds, channelId, seq, alwaysOnTop);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
         return ;
