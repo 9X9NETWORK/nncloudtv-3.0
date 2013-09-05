@@ -1352,7 +1352,7 @@ public class ApiContent extends ApiGeneric {
             
             episode.setName(NnStringUtil.revertHtml(episode.getName()));
             episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
-            episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
+            episode.setPlaybackUrl(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null));
         }
         
         return results;
@@ -1509,7 +1509,7 @@ public class ApiContent extends ApiGeneric {
             
             episode.setName(NnStringUtil.revertHtml(episode.getName()));
             episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
-            episode.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
+            episode.setPlaybackUrl(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null));
         }
         
         return results;

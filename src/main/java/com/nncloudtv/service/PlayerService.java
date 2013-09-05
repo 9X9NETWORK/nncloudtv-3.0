@@ -255,7 +255,7 @@ public class PlayerService {
                 model.addAttribute(META_NAME, this.prepareFb(episode.getName(), 0));
                 model.addAttribute(META_DESCRIPTION, this.prepareFb(episode.getIntro(), 1));
                 model.addAttribute(META_IMAGE, this.prepareFb(episode.getImageUrl(), 2));
-                model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()), 3));
+                model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null), 3));
             }
             /*
             Map<String, String> entry = YouTubeLib.getYouTubeVideoEntry(pid);
@@ -281,7 +281,7 @@ public class PlayerService {
             model.addAttribute(META_NAME, this.prepareFb(channel.getName(), 0));
             model.addAttribute(META_DESCRIPTION, this.prepareFb(channel.getIntro(), 1));
             model.addAttribute(META_IMAGE, this.prepareFb(channel.getOneImageUrl(), 2));
-            model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getEpisodePlaybackUrl(channel.getId(), null), 3));
+            model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getSharingUrl(channel.getId(), null, null), 3));
         }
         return model;
     }

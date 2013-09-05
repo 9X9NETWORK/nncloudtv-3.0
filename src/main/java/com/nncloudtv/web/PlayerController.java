@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoManager;
@@ -204,7 +205,6 @@ public class PlayerController {
         //additional params
         PlayerService service = new PlayerService();
         MsoManager msoMngr = new MsoManager();
-        boolean isIos = service.isIos(req);
         
         Mso mso = msoMngr.getByNameFromCache(msoName);
         if (mso == null) {
@@ -213,7 +213,8 @@ public class PlayerController {
         String cid = channel != null ? channel : ch;
         String pid = episode != null ? episode : ep;
         
-        if (isIos) {
+        if (service.isIos(req)) {
+            
             log.info("It is iOS");
             //pid = service.findFirstSubepisodeId(pid);
             String iosStr = service.getFliprUrl(cid, pid, mso.getName(), req);
@@ -229,25 +230,31 @@ public class PlayerController {
             	return "player/ios_cts";
             }
             return "player/ios";
-        }
-        
-        boolean isAndroid = service.isAndroid(req);       
-        if (isAndroid) {
-        	log.info("It is Android");
+            
+        } else if (service.isAndroid(req)) {
+            
+            log.info("It is Android");
             //pid = service.findFirstSubepisodeId(pid);
             String androidStr = service.getRedirectAndroidUrl(cid, pid, mso.getName(), req);                        
             return "redirect:/" + androidStr;
+            
+        } else {
+            
+            model = service.prepareBrand(model, mso.getName(), resp);
+            model = service.prepareChannel(model, cid, resp);
+            model = service.prepareEpisode(model, pid, resp);
+            
+            String playerPromotionUrl = service.getPlayerPromotionUrl(req, mso, cid, pid);
+            log.info("player promotion url = " + playerPromotionUrl);
+            model.addAttribute("playerPromotionUrl", playerPromotionUrl);
+            
+            if (!MsoManager.isNNMso(mso)) {
+                
+                model.addAttribute(PlayerService.META_URL, NnStringUtil.htmlSafeChars(NnStringUtil.getSharingUrl(Long.parseLong(cid), Long.parseLong(pid), mso.getName())));
+            }
+            
+            return "player/crawled";
         }
-        
-        model = service.prepareBrand(model, mso.getName(), resp);
-        model = service.prepareChannel(model, cid, resp);
-        model = service.prepareEpisode(model, pid, resp);
-        
-        String playerPromotionUrl = service.getPlayerPromotionUrl(req, mso, cid, pid);
-        log.info("player promotion url = " + playerPromotionUrl);
-        model.addAttribute("playerPromotionUrl", playerPromotionUrl);
-        
-        return "player/crawled";
     }
     
     @RequestMapping("android")

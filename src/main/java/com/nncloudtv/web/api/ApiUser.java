@@ -255,7 +255,7 @@ public class ApiUser extends ApiGeneric {
                 favorite.setPublishDate(episode.getPublishDate());
                 favorite.setCntView(episode.getCntView());
                 favorite.setPublic(episode.isPublic());
-                favorite.setPlaybackUrl(NnStringUtil.getEpisodePlaybackUrl(episode.getChannelId(), episode.getId()));
+                favorite.setPlaybackUrl(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null));
                 
             } else {
                 
