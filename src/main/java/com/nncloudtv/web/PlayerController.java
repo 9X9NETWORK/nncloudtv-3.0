@@ -35,35 +35,6 @@ public class PlayerController {
         return "error/exception";                
     }        
     
-    // TODO: remove
-    @RequestMapping("playback")
-    public String playback(@RequestParam(value="mso",required=false) String mso, 
-            HttpServletRequest req, HttpServletResponse resp, Model model,
-            @RequestParam(value="channel", required=false) String channel,
-            @RequestParam(value="episode", required=false) String episode,
-            @RequestParam(value="ch", required=false) String ch,
-            @RequestParam(value="ep", required=false) String ep,            
-            @RequestParam(value="jsp",required=false) String jsp,
-            @RequestParam(value="js",required=false) String js) {
-        try {
-            PlayerService service = new PlayerService();
-            model = service.prepareBrand(model, mso, resp);
-            model = service.preparePlayer(model, js, jsp, req);
-            
-            String cid = channel != null ? channel : ch;
-            String pid = episode != null ? episode : ep;
-            model = service.prepareChannel(model, cid, resp);
-            model = service.prepareEpisode(model, pid, resp);
-            
-            if (jsp != null && jsp.length() > 0) {
-                return "player/" + jsp;
-            }
-        } catch (Throwable t) {
-            NnLogUtil.logThrowable(t);            
-        }
-        return "player/playback";
-    }    
-    
     @RequestMapping({"tv","10ft"})
     public String tv(@RequestParam(value="mso",required=false) String mso, 
             HttpServletRequest req, HttpServletResponse resp, Model model,
