@@ -3,8 +3,6 @@ package com.nncloudtv.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
-import com.nncloudtv.model.StoreListing;
 
 @Service
 public class MsoManager {
@@ -221,23 +218,14 @@ public class MsoManager {
         }
         
         List<Mso> validMsos = new ArrayList<Mso>();
-        validMsos.add(findNNMso()); // channel is always playable on 9x9
+        validMsos.add(findNNMso()); // channel is always valid for brand 9x9
         
         if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
                 channel.getContentType() != NnChannel.CONTENTTYPE_FAVORITE &&
                 channel.isPublic() == true) {
-            // the channel in the official store
+            // the channel is in the official store
         } else {
             return validMsos;
-        }
-        
-        StoreListingManager storeListingMngr = new StoreListingManager();
-        List<StoreListing> blackList = storeListingMngr.getBlackListByChannelId(channelId);
-        Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
-        if (blackList != null && blackList.size() > 0) {
-            for (StoreListing item : blackList) {
-                blackListMap.put(item.getMsoId(), item.getMsoId());
-            }
         }
         
         MsoConfigManager configMngr = new MsoConfigManager();
@@ -245,22 +233,19 @@ public class MsoManager {
         List<String> spheres = null;
         List<Mso> msos = findByType(Mso.TYPE_MSO);
         for (Mso mso : msos) {
-            if (blackListMap.containsKey(mso.getId())) {
-                // channel is not playable on this mso, in mso's black list
+            
+            supportedRegion = configMngr.findByMsoAndItem(mso, MsoConfig.SUPPORTED_REGION); // TODO : sql in the for loop
+            if (supportedRegion == null) {
+                validMsos.add(mso); // mso support all region
             } else {
-                supportedRegion = configMngr.findByMsoAndItem(mso, MsoConfig.SUPPORTED_REGION); // TODO : sql in the for loop
-                if (supportedRegion == null) {
-                    validMsos.add(mso); // mso support all region
-                } else {
-                    spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
-                    spheres.add(LangTable.OTHER);
-                    for (String sphere : spheres) {
-                        if (sphere.equals(channel.getSphere())) { // this channel's sphere that mso supported
-                            validMsos.add(mso);
-                            break;
-                        }
-                        // if not hit any of sphere, channel is not playable on this mso, mso's region not supported
+                spheres = MsoConfigManager.parseSupportedRegion(supportedRegion.getValue());
+                spheres.add(LangTable.OTHER);
+                for (String sphere : spheres) {
+                    if (sphere.equals(channel.getSphere())) { // this channel's sphere that MSO supported
+                        validMsos.add(mso);
+                        break;
                     }
+                    // if not hit any of sphere, channel is not playable on this MSO, is not valid brand.
                 }
             }
         }
@@ -285,7 +270,8 @@ public class MsoManager {
         return false;
     } */
     
-    /** indicate channel can or can't play on target brand */
+    /** indicate channel can or can't set brand for target MSO,
+     *  9x9 is always a valid brand for auto-sharing even channel is not playable */
     public boolean isValidBrand(Long channelId, Mso mso) {
         
         if (channelId == null || mso == null) {
@@ -298,6 +284,11 @@ public class MsoManager {
             return false;
         }
         
+        // 9x9 always valid
+        if (mso.getType() == Mso.TYPE_NN) {
+            return true;
+        }
+        
         // official store check
         if (channel.getStatus() == NnChannel.STATUS_SUCCESS &&
                 channel.getContentType() != NnChannel.CONTENTTYPE_FAVORITE &&
@@ -305,12 +296,6 @@ public class MsoManager {
             // the channel is in official store
         } else {
             return false; // the channel is not in official store
-        }
-        
-        // black list check
-        StoreListingManager storeListingMngr = new StoreListingManager();
-        if (storeListingMngr.isChannelInMsoBlackList(mso.getId(), channel.getId())) {
-            return false; // the channel in Mso's black list
         }
         
         // support region check
@@ -330,7 +315,8 @@ public class MsoManager {
         }
     }
     
-    /** get playable channels on target MSO */
+    /** Get playable channels on target MSO.
+     *  The basic definition of playable should same as NnChannelDao.getStoreChannels. */
     public List<Long> getPlayableChannels(List<Long> channelIds, Long msoId) {
         
         if (channelIds == null || channelIds.size() < 1 || msoId == null) {
@@ -382,6 +368,22 @@ public class MsoManager {
         }
         
         return results;
+    }
+    
+    public boolean isPlayableChannel(Long channelId, Long msoId) {
+        
+        if (channelId == null || msoId==null) {
+            return false;
+        }
+        
+        List<Long> unverifiedChannel = new ArrayList<Long>();
+        unverifiedChannel.add(channelId);
+        
+        List<Long> verifiedChannel = getPlayableChannels(unverifiedChannel, msoId);
+        if (verifiedChannel != null && verifiedChannel.isEmpty() == false) {
+            return true;
+        }
+        return false;
     }
     
 }

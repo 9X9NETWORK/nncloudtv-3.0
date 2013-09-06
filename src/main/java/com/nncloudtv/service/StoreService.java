@@ -78,10 +78,12 @@ public class StoreService {
      *  @return list of Channel's ID */
     public List<Long> checkChannelIdsInMsoStore(java.util.Set<Long> channelIds, Long msoId) {
         
-        if (channelIds == null || channelIds.size() == 0 || msoId == null) {
+        
+        if (channelIds == null || channelIds.isEmpty() || msoId == null) {
             return new ArrayList<Long>();
         }
         
+        /*
         List<Long> storeMso = getChannelIdsFromMsoStore(msoId);
         if (storeMso == null || storeMso.size() == 0) {
             return new ArrayList<Long>();
@@ -98,12 +100,17 @@ public class StoreService {
                 results.add(channelId);
             }
         }
+        */
+        
+        ArrayList<Long> _channelIds = new ArrayList<Long>(channelIds);
+        List<Long> results = msoMngr.getPlayableChannels(_channelIds, msoId);
         
         return results;
     }
     
-    /** get Channel IDs from Mso's Store
-     *  mso store = official store - mso's blackList - channel's sphere not fit mso's supportedRegion
+    /** Get Channel IDs from Mso's Store.
+     *  mso store = official store - channel's sphere not fit mso's supportedRegion
+     *  The result should pass MsoManager.isPlayableChannel check.
      *  @param msoId required, indicate which Mso Store
      *  @return list of Channel's ID */
     public List<Long> getChannelIdsFromMsoStore(Long msoId) {
@@ -111,7 +118,6 @@ public class StoreService {
         if (msoId == null) {
             return new ArrayList<Long>();
         }
-        List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
         Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
         if (mso == null) {
@@ -123,25 +129,14 @@ public class StoreService {
         } else {
             spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
         }
-        List<NnChannel> store9x9 = getChannelsFromOfficialStore(spheres);
-        if (store9x9 == null || store9x9.size() == 0) {
+        List<NnChannel> msoStoreChannels = getChannelsFromOfficialStore(spheres);
+        if (msoStoreChannels == null || msoStoreChannels.isEmpty()) {
             return new ArrayList<Long>();
         }
         
-        Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
-        if (blackList != null && blackList.size() > 0) {
-            for (StoreListing item : blackList) {
-                blackListMap.put(item.getChannelId(), item.getChannelId());
-            }
-        }
-        
         List<Long> msoStoreChannelIds = new ArrayList<Long>();
-        for (NnChannel channel : store9x9) {
-            if (blackListMap.containsKey(channel.getId())) {
-                // skip
-            } else {
-                msoStoreChannelIds.add(channel.getId());
-            }
+        for (NnChannel channel : msoStoreChannels) {
+            msoStoreChannelIds.add(channel.getId());
         }
         
         return msoStoreChannelIds;
@@ -149,6 +144,7 @@ public class StoreService {
     
     /** get Channel IDs from Mso's Store's Category
      *  mso store's category = official store's category - mso's blackList - channel's sphere not fit mso's supportedRegion
+     *  The result should pass MsoManager.isPlayableChannel check.
      *  @param categoryId required, the official category's ID
      *  @param msoId required, indicate which Mso Store
      *  @return list of Channel's ID */
@@ -157,7 +153,6 @@ public class StoreService {
         if (msoId == null || categoryId == null) {
             return new ArrayList<Long>();
         }
-        List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         
         Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
         if (mso == null) {
@@ -169,28 +164,29 @@ public class StoreService {
         } else {
             spheres = MsoConfigManager.parseSupportedRegion(mso.getSupportedRegion());
         }
-        List<NnChannel> store9x9 = getChannelsFromOfficialStoreCategory(categoryId, spheres);
-        if (store9x9 == null || store9x9.size() == 0) {
+        List<NnChannel> msoStoreCategoryChannels = getChannelsFromOfficialStoreCategory(categoryId, spheres);
+        if (msoStoreCategoryChannels == null || msoStoreCategoryChannels.size() == 0) {
             return new ArrayList<Long>();
         }
         
+        List<StoreListing> blackList = storeListingMngr.getBlackListByMsoId(msoId);
         Map<Long, Long> blackListMap = new TreeMap<Long, Long>();
-        if (blackList != null && blackList.size() > 0) {
+        if (blackList != null && blackList.isEmpty() == false) {
             for (StoreListing item : blackList) {
                 blackListMap.put(item.getChannelId(), item.getChannelId());
             }
         }
         
-        List<Long> msoStoreChannelIds = new ArrayList<Long>();
-        for (NnChannel channel : store9x9) {
+        List<Long> msoStoreCategoryChannelIds = new ArrayList<Long>();
+        for (NnChannel channel : msoStoreCategoryChannels) {
             if (blackListMap.containsKey(channel.getId())) {
                 // skip
             } else {
-                msoStoreChannelIds.add(channel.getId());
+                msoStoreCategoryChannelIds.add(channel.getId());
             }
         }
         
-        return msoStoreChannelIds;
+        return msoStoreCategoryChannelIds;
     }
     
     /** get Channels from official Store's Category

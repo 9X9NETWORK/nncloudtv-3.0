@@ -954,6 +954,8 @@ public class ApiContent extends ApiGeneric {
                     log.info("channel not found: " + channelId);
                     continue;
                 }
+                
+                // TODO add mso check
                 //channelMngr.populateMoreImageUrl(channel);
                 results.add(channel);
             }

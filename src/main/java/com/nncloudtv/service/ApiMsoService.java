@@ -514,11 +514,8 @@ public class ApiMsoService {
             
         } else if (channelId != null) {
             
-            List<Long> unverifiedChannelId = new ArrayList<Long>();
-            unverifiedChannelId.add(channelId);
-            List<Long> verifiedChannelId = msoMngr.getPlayableChannels(unverifiedChannelId, category.getMsoId());
-            if (verifiedChannelId != null && verifiedChannelId.size() != 0) {
-                categoryService.addChannelToCategory(category.getId(), verifiedChannelId.get(0), seq, alwaysOnTop);
+            if (msoMngr.isPlayableChannel(channelId, category.getMsoId()) == true) {
+                categoryService.addChannelToCategory(category.getId(), channelId, seq, alwaysOnTop);
             }
         }
     }
