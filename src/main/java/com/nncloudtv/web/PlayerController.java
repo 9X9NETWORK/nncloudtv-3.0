@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
-import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoManager;
@@ -212,7 +211,7 @@ public class PlayerController {
         } else {
             
             model = service.prepareBrand(model, mso.getName(), resp);
-            model = service.prepareChannel(model, cid, resp);
+            model = service.prepareChannel(model, cid, mso.getName(), resp);
             model = service.prepareEpisode(model, pid, mso.getName(), resp);
             
             String playerPromotionUrl = service.getPlayerPromotionUrl(req, mso, cid, pid);
@@ -265,7 +264,7 @@ public class PlayerController {
             String pid = episode != null ? episode : ep;
             model = service.prepareBrand(model, mso, resp);
             model = service.preparePlayer(model, js, jsp, req);
-            model = service.prepareChannel(model, cid, resp);
+            model = service.prepareChannel(model, cid, mso, resp);
             model = service.prepareEpisode(model, pid, mso, resp);
             if (jsp != null && jsp.length() > 0) {
                 return "player/" + jsp;

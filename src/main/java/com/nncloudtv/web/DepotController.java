@@ -146,7 +146,7 @@ public class DepotController {
             model.addAttribute("type", "set");
             model.addAttribute("id", String.valueOf(set));
         } else if (ch != null) {
-            model = playerService.prepareChannel(model, String.valueOf(ch), resp);
+            model = playerService.prepareChannel(model, String.valueOf(ch), null, resp);
             model.addAttribute("type", "ch");
             model.addAttribute("id", String.valueOf(ch));
         }

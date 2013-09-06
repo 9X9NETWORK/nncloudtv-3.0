@@ -268,7 +268,7 @@ public class PlayerService {
     }
 
     public Model prepareChannel(Model model, String cid,
-            HttpServletResponse resp) {
+            String mso, HttpServletResponse resp) {
         NnChannelManager channelMngr = new NnChannelManager();
         if (cid == null || !cid.matches("[0-9]+")) {
             return model;
@@ -281,7 +281,7 @@ public class PlayerService {
             model.addAttribute(META_NAME, this.prepareFb(channel.getName(), 0));
             model.addAttribute(META_DESCRIPTION, this.prepareFb(channel.getIntro(), 1));
             model.addAttribute(META_IMAGE, this.prepareFb(channel.getOneImageUrl(), 2));
-            model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getSharingUrl(channel.getId(), null, null), 3));
+            model.addAttribute(META_URL, this.prepareFb(NnStringUtil.getSharingUrl(channel.getId(), null, mso), 3));
         }
         return model;
     }
