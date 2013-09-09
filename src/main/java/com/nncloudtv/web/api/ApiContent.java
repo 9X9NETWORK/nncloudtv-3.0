@@ -928,17 +928,12 @@ public class ApiContent extends ApiGeneric {
             }
             
             results = channelMngr.findByUser(user, 0, false);
-            /*
-            for (NnChannel channel : results) {
-                
-                channel.setName(NnStringUtil.revertHtml(channel.getName()));
-                channel.setIntro(NnStringUtil.revertHtml(channel.getIntro()));
-            }
-            */
+            
             Collections.sort(results, channelMngr.getChannelComparator("seq"));
             
         } else if (channelIdListStr != null) {
             
+            Set<Long> channelIds = new HashSet<Long>();
             for (String channelIdStr : channelIdListStr.split(",")) {
                 
                 Long channelId = null;
@@ -946,19 +941,38 @@ public class ApiContent extends ApiGeneric {
                     channelId = Long.valueOf(channelIdStr);
                 } catch (NumberFormatException e) {
                 }
-                if (channelId == null) {
-                    continue;
+                if (channelId != null) {
+                    channelIds.add(channelId);
                 }
-                NnChannel channel = channelMngr.findById(channelId);
-                if (channel == null) {
-                    log.info("channel not found: " + channelId);
-                    continue;
-                }
-                
-                // TODO add mso check
-                //channelMngr.populateMoreImageUrl(channel);
-                results.add(channel);
             }
+            
+            results = channelMngr.findByIds(new ArrayList<Long>(channelIds));
+            Set<Long> fetchedChannelIds = new HashSet<Long>();
+            for (NnChannel channel : results) {
+                fetchedChannelIds.add(channel.getId());
+            }
+            for (Long channelId : channelIds) {
+                if (fetchedChannelIds.contains(channelId) == false) {
+                    log.info("channel not found: " + channelId);
+                }
+            }
+            
+            log.info("total channels = " + results.size());
+            if (mso != null) {
+                // filter out channels that not in MSO's store
+                Set<Long> verifiedChannelIds = new HashSet<Long>(storeService.checkChannelIdsInMsoStore(fetchedChannelIds, brand.getId()));
+                List<NnChannel> verifiedChannels = new ArrayList<NnChannel>();
+                for (NnChannel channel : results) {
+                    if (verifiedChannelIds.contains(channel.getId()) == true) {
+                        verifiedChannels.add(channel);
+                    }
+                }
+                results = verifiedChannels;
+                log.info("total channels (filtered) = " + results.size());
+            }
+            
+            Collections.sort(results, channelMngr.getChannelComparator("updateDate"));
+            
         } else if (keyword != null && keyword.length() > 0) {
             
             log.info("keyword: " + keyword);
@@ -1020,12 +1034,9 @@ public class ApiContent extends ApiGeneric {
             } else {
                 channelIdList = new ArrayList<Long>(channelIdSet);
             }
+            
             results = channelMngr.findByIds(channelIdList);
-            /*
-            for (NnChannel channel : results) {
-                channelMngr.populateMoreImageUrl(channel);
-            }
-            */
+            
             Collections.sort(results, channelMngr.getChannelComparator("updateDate"));
         }
         
