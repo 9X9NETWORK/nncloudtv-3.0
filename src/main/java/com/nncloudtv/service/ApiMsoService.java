@@ -400,6 +400,12 @@ public class ApiMsoService {
         return result;
     }
     
+    /**
+     * service for ApiMso.msoCategories
+     * Get MSO promotion Categories.
+     * @param msoId required, the Mso's Id
+     * @return list of Categories
+     */
     public List<Category> msoCategories(Long msoId) {
         
         if (msoId == null) {
@@ -411,6 +417,15 @@ public class ApiMsoService {
         return results;
     }
     
+    /**
+     * service for ApiMso.msoCategoryCreate
+     * Create MSO promotion Category
+     * @param msoId required, the Mso's Id
+     * @param seq optional, sequence compare with other promotion Category
+     * @param zhName optional, zhong wen name for display
+     * @param enName optional, english name for display
+     * @return promotion Category
+     */
     public Category msoCategoryCreate(Long msoId, Short seq, String zhName, String enName) {
         
         if (msoId == null) {
@@ -435,6 +450,12 @@ public class ApiMsoService {
         return savedCategory;
     }
     
+    /**
+     * service for ApiMso.category
+     * Get promotion Category, don't use this get System Category.
+     * @param categoryId required, Category ID
+     * @return promotion Category
+     */
     public Category category(Long categoryId) {
         
         if (categoryId == null) {
@@ -446,6 +467,15 @@ public class ApiMsoService {
         return result;
     }
     
+    /**
+     * service for ApiMso.categoryUpdate
+     * Update promotion Category.
+     * @param categoryId required, Category ID
+     * @param seq optional, sequence compare with other promotion Category
+     * @param zhName optional, zhong wen name for display
+     * @param enName optional, english name for display
+     * @return promotion Category
+     */
     public Category categoryUpdate(Long categoryId, Short seq, String zhName, String enName) {
         
         if (categoryId == null) {
@@ -472,6 +502,11 @@ public class ApiMsoService {
         return savedCategory;
     }
     
+    /**
+     * service for ApiMso.categoryDelete
+     * Delete promotion Category.
+     * @param categoryId required, Category ID
+     */
     public void categoryDelete(Long categoryId) {
         
         if (categoryId == null) {
@@ -481,6 +516,12 @@ public class ApiMsoService {
         categoryService.delete(categoryId);
     }
     
+    /**
+     * service for ApiMso.categoryChannels
+     * Get Channels from promotion Category.
+     * @param categoryId required, Category ID
+     * @return list of Channels
+     */
     public List<NnChannel> categoryChannels(Long categoryId) {
         
         if (categoryId == null) {
@@ -497,6 +538,15 @@ public class ApiMsoService {
         return results;
     }
     
+    /**
+     * service for ApiMso.categoryChannelAdd
+     * Add Channel to promotion Category.
+     * @param category required, Category ID
+     * @param channelIds optional, list of IDs that Channels to be added to promotion Category
+     * @param channelId optional, ID that Channel to be added to promotion Category
+     * @param seq optional, follow with channelId, indicate specify sequence of Channel in promotion Category
+     * @param alwaysOnTop optional, follow with channelId, indicate Channel is set on top in the list of Channels from promotion Category
+     */
     public void categoryChannelAdd(Category category, List<Long> channelIds, Long channelId, Short seq, Boolean alwaysOnTop) {
         
         if (category == null || category.getId() == 0) {
@@ -520,6 +570,12 @@ public class ApiMsoService {
         }
     }
     
+    /**
+     * service for ApiMso.categoryChannelRemove
+     * Remove Channel from promotion Category.
+     * @param categoryId required, Category ID
+     * @param channelIds required, list of IDs that Channels to be removed from promotion Category
+     */
     public void categoryChannelRemove(Long categoryId, List<Long> channelIds) {
         
         if (categoryId == null || channelIds == null || channelIds.size() < 1) {
@@ -529,6 +585,12 @@ public class ApiMsoService {
         categoryService.removeChannelsFromCategory(categoryId, channelIds);
     }
     
+    /**
+     * service for ApiMso.msoSystemCategoryLocks
+     * Get system Category locks from MSO.
+     * @param msoId required, the Mso's Id
+     * @return the locks indicate system Category should hide or not in MSO's player
+     */
     public List<String> msoSystemCategoryLocks(Long msoId) {
         
         if (msoId == null) {
@@ -539,6 +601,13 @@ public class ApiMsoService {
         return results;
     }
     
+    /**
+     * service for ApiMso.msoSystemCategoryLocksUpdate
+     * Update system Category locks from MSO, overwrite previous one.
+     * @param msoId required, the Mso's Id
+     * @param systemCategoryLocks required, the locks indicate system Category should hide or not in MSO's player
+     * @return the locks indicate system Category should hide or not in MSO's player
+     */
     public List<String> msoSystemCategoryLocksUpdate(Long msoId, List<String> systemCategoryLocks) {
         
         if (msoId == null) {
