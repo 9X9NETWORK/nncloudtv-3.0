@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
-import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnUserManager;
@@ -113,8 +112,8 @@ public class ApiContext {
     
     public String getAppDomain() {
         
-        String serverDomain = MsoConfigManager.getServerDomain();
+        String domain = root.replaceAll("^http(s)?:\\/\\/", "");
         
-        return MsoManager.isNNMso(mso) ? serverDomain : mso.getName() + "." + serverDomain.replaceAll("^www\\.", "");
+        return MsoManager.isNNMso(mso) ? domain : mso.getName() + "." + domain.replaceAll("^www\\.", "");
     }
 }
