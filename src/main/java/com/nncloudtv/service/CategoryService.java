@@ -39,7 +39,7 @@ public class CategoryService {
         this.setService = setService;
     }
     
-    /** build MSO's Category from SysTag and SysTagDisplay */
+    /** build promotion Category (MSO owned) from SysTag and SysTagDisplay */
     private Category composeCategory(SysTag category, SysTagDisplay zhDisplay, SysTagDisplay enDisplay) {
         
         Category categoryResp = new Category();
@@ -65,6 +65,11 @@ public class CategoryService {
         return category;
     }
     
+    /**
+     * Find Categories by MSO ID, which they owned by MSO.
+     * @param msoId required, MSO ID
+     * @return list of Categories
+     */
     public List<Category> findByMsoId(Long msoId) {
         
         if (msoId == null) {
@@ -99,6 +104,11 @@ public class CategoryService {
         return results;
     }
     
+    /**
+     * Get Category by Category ID.
+     * @param categoryId required, Category ID
+     * @return fetched Category
+     */
     public Category findById(Long categoryId) {
         
         if (categoryId == null) {
@@ -130,6 +140,11 @@ public class CategoryService {
         return result;
     }
     
+    /**
+     * Create a new Category.
+     * @param category required, the new Category
+     * @return saved Category
+     */
     public Category create(Category category) {
         
         if (category == null) {
@@ -162,6 +177,11 @@ public class CategoryService {
         return result;
     }
     
+    /**
+     * Save a modified Category.
+     * @param modifiedCategory required, the Category that has modified
+     * @return saved Category
+     */
     public Category save(Category modifiedCategory) {
         
         if (modifiedCategory == null) {
@@ -211,6 +231,10 @@ public class CategoryService {
         return result;
     }
     
+    /**
+     * Delete a Category.
+     * @param categoryId required, Category ID
+     */
     public void delete(Long categoryId) {
         
         // delete channels, SysTagMap
@@ -230,6 +254,11 @@ public class CategoryService {
         }
     }
     
+    /**
+     * Add Channels to Category.
+     * @param categoryId required, Category ID
+     * @param channelIds required, Channel's IDs
+     */
     public void addChannelsToCategory(Long categoryId, List<Long> channelIds) {
         
         if (categoryId == null || channelIds == null || channelIds.size() < 1) {
@@ -259,6 +288,13 @@ public class CategoryService {
         sysTagMapMngr.saveAll(newChannels);
     }
     
+    /**
+     * Add Channel to Category with additional setting.
+     * @param categoryId required, Category ID
+     * @param channelId required, Channel ID
+     * @param seq optional, the sequence of Channel in the Category
+     * @param alwaysOnTop optional, indicate the Channel is set on top in Category or not
+     */
     public void addChannelToCategory(Long categoryId, Long channelId, Short seq, Boolean alwaysOnTop) {
         
         if (categoryId == null || channelId == null) {
@@ -284,6 +320,11 @@ public class CategoryService {
         sysTagMapMngr.save(channel);
     }
     
+    /**
+     * Remove Channels from Category.
+     * @param categoryId required, Category ID
+     * @param channelIds required, Channel's IDs to be removed
+     */
     public void removeChannelsFromCategory(Long categoryId, List<Long> channelIds) {
         
         if (categoryId == null || channelIds == null || channelIds.size() < 1) {
@@ -295,6 +336,11 @@ public class CategoryService {
         sysTagMapMngr.deleteAll(existChannels);
     }
     
+    /**
+     * Get Channels from Category, Channels are order by update time.
+     * @param categoryId required, Category ID
+     * @return list of Channels
+     */
     public List<NnChannel> getChannelsFromCategory(Long categoryId) {
         
         if (categoryId == null) {
@@ -309,6 +355,11 @@ public class CategoryService {
         return results;
     }
     
+    /**
+     * Get Channels from Category, Channels are order by update time with set on top feature.
+     * @param categoryId required, Category ID
+     * @return list of Channels
+     */
     public List<NnChannel> getChannelsOrderByUpdateTime(Long categoryId) {
         
         if (categoryId == null) {
@@ -324,6 +375,11 @@ public class CategoryService {
         return results;
     }
     
+    /**
+     * Get total number of Channels in the Category.
+     * @param categoryId required, Category ID
+     * @return number of Channels
+     */
     public int getCntChannel(Long categoryId) {
         
         if (categoryId == null) {

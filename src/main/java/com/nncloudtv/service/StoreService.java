@@ -59,7 +59,7 @@ public class StoreService {
         this.msoConfigMngr = new MsoConfigManager();
     }
     
-    /** build System's Category from SysTag and SysTagDisplay */
+    /** build system Category from SysTag and SysTagDisplay */
     private Category composeCategory(SysTag category, SysTagDisplay categoryMeta) {
         
         Category categoryResp = new Category();
@@ -72,39 +72,19 @@ public class StoreService {
         return categoryResp;
     }
     
-    /** output channelIds if input channelIds are in the mso store
+    /** Output Channel IDs if input Channel IDs are in the MSO store.
+     *  Since the definition of "in the MSO store" is equal to "can play on MSO player",
+     *    this function just call MsoMngr.getPlayableChannels by pass.
      *  @param msoId required, indicate which Mso Store
      *  @param channelIds, required, the Channel IDs to be verified
      *  @return list of Channel's ID */
     public List<Long> checkChannelIdsInMsoStore(java.util.Set<Long> channelIds, Long msoId) {
         
-        
         if (channelIds == null || channelIds.isEmpty() || msoId == null) {
             return new ArrayList<Long>();
         }
         
-        /*
-        List<Long> storeMso = getChannelIdsFromMsoStore(msoId);
-        if (storeMso == null || storeMso.size() == 0) {
-            return new ArrayList<Long>();
-        }
-        
-        Map<Long, Long> storeMsoMap = new TreeMap<Long, Long>();
-        for (Long channelId : storeMso) {
-            storeMsoMap.put(channelId, channelId);
-        }
-        
-        List<Long> results = new ArrayList<Long>();
-        for (Long channelId : channelIds) {
-            if (storeMsoMap.containsKey(channelId)) {
-                results.add(channelId);
-            }
-        }
-        */
-        
-        ArrayList<Long> _channelIds = new ArrayList<Long>(channelIds);
-        List<Long> results = msoMngr.getPlayableChannels(_channelIds, msoId);
-        
+        List<Long> results = msoMngr.getPlayableChannels(new ArrayList<Long>(channelIds), msoId);
         return results;
     }
     
@@ -352,6 +332,11 @@ public class StoreService {
         return channelIds;
     }
     
+    /**
+     * Get system Category locks setting from MSO store.
+     * @param msoId required, MSO ID
+     * @return system Category locks
+     */
     public List<String> getStoreCategoryLocks(Long msoId) {
         
         if (msoId == null) {
@@ -371,6 +356,12 @@ public class StoreService {
         return results;
     }
     
+    /**
+     * Set system Category locks setting to MSO store, overwrite previous setting.
+     * @param msoId required, MSO ID
+     * @param systemCategoryLocks required, system Category locks to be set up
+     * @return system Category locks that has set up
+     */
     public List<String> setStoreCategoryLocks(Long msoId, List<String> systemCategoryLocks) {
         
         if (msoId == null) {
