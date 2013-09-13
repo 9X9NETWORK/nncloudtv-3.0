@@ -2562,7 +2562,8 @@ public class ApiContent extends ApiGeneric {
                 log.info(episode.getName() + ", score = " + score);
                 result.put("score", score); // score: 得分
                 // shareUrl 用於分享及點擊觀看的網址
-                String url = "http://" + MsoConfigManager.getServerDomain()
+                String url = "http://" + Mso.NAME_CTS + "."
+                           + MsoConfigManager.getServerDomain().replaceAll("^www\\.", "")
                            + "/view?mso=cts&ch=" + episode.getChannelId()
                            + "&ep=e" + episode.getId();
                 result.put("shareUrl", url);
