@@ -224,7 +224,7 @@ public class PlayerController {
             
             String brandSharingUrl = "http://" + context.getAppDomain() + "/view?mso="
                     + context.getMso().getName() + "&ch=" + cid
-                    + (pid == null ? "" : "&ep=e" + pid);
+                    + (pid == null ? "" : "&ep=" + pid);
             log.info("brand sharing url = " + brandSharingUrl);
             
             model.addAttribute("playerPromotionUrl", NnStringUtil.htmlSafeChars(playerPromotionUrl));
