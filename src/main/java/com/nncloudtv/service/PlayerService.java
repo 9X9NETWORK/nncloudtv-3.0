@@ -327,19 +327,6 @@ public class PlayerService {
         return "";
     }
     
-    // http://player.9x9.tv/tv#/promotion/{ch}/{ep}
-    public String getPlayerPromotionUrl(String ch, String ep, HttpServletRequest req) {
-        
-        ApiContext context = new ApiContext(req);
-        
-        String url = "http://" + context.getAppDomain() + "/tv#/promotion/" + ch;
-        if (ep != null) {
-            url += "/" + ep;
-        }
-        
-        return url;
-    }
-    
     public Model prepareCrawled(Model model, String escaped) {
         try {
             escaped = URLDecoder.decode(escaped, "UTF-8");

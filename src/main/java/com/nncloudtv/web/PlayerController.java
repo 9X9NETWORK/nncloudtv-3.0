@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.service.MsoManager;
@@ -214,9 +215,20 @@ public class PlayerController {
             model = service.prepareChannel(model, cid, mso.getName(), resp);
             model = service.prepareEpisode(model, pid, mso.getName(), resp);
             
-            String playerPromotionUrl = service.getPlayerPromotionUrl(cid, pid, req);
+            ApiContext context = new ApiContext(req);
+            
+            String playerPromotionUrl = "http://" + context.getAppDomain()
+                                      + "/tv#/promotion/" + cid
+                                      + (pid == null ? "" : "/" + pid);
             log.info("player promotion url = " + playerPromotionUrl);
-            model.addAttribute("playerPromotionUrl", playerPromotionUrl);
+            
+            String brandSharingUrl = "http://" + context.getAppDomain() + "/view?mso="
+                    + context.getMso().getName() + "&ch=" + cid
+                    + (pid == null ? "" : "&ep=e" + pid);
+            log.info("brand sharing url = " + brandSharingUrl);
+            
+            model.addAttribute("playerPromotionUrl", NnStringUtil.htmlSafeChars(playerPromotionUrl));
+            model.addAttribute(PlayerService.META_URL, NnStringUtil.htmlSafeChars(brandSharingUrl));
             
             return "player/crawled";
         }
