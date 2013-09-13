@@ -1,10 +1,13 @@
 package com.nncloudtv.web.api;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.common.base.Joiner;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
@@ -98,11 +101,11 @@ public class ApiContext {
         } else {
             
             String domain = root.replaceAll("^http(s)?:\\/\\/", "");
-            String[] split = domain.split("\\.");
-            if (split.length > 2) {
-                log.info("sub-domain = " + split[0]);
-                Mso subdomain = msoMngr.findByName(split[0]);
-                if (subdomain != null)
+            String[] splits = domain.split("\\.");
+            if (splits.length == 3) {
+                String subdomain = splits[0];
+                log.info("subdomain = " + subdomain);
+                if (msoMngr.findByName(subdomain) != null)
                     return true;
             }
         }
@@ -112,8 +115,20 @@ public class ApiContext {
     
     public String getAppDomain() {
         
-        String domain = root.replaceAll("^http(s)?:\\/\\/", "");
+        String domain = root.replaceAll("^http(s)?:\\/\\/(www\\.)?", "");
+        log.info("domain = " + domain);
+        List<String> splits = Arrays.asList(domain.split("\\."));
         
-        return MsoManager.isNNMso(mso) ? domain : mso.getName() + "." + domain.replaceAll("^www\\.", "");
+        if (splits.size() < 3)
+            return MsoManager.isNNMso(mso) ? "www." + domain : mso.getName() + "." + domain;
+        
+        log.info("subdomain = " + splits.get(0));
+        if (msoMngr.findByName(splits.get(0)) != null) {
+            
+            splits.remove(0);
+        }
+        String remain = Joiner.on(".").join(splits);
+        
+        return MsoManager.isNNMso(mso) ? (splits.size() < 3 ? "www." + remain : remain) : mso.getName() + "." + remain;
     }
 }

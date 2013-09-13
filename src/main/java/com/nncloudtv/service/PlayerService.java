@@ -328,17 +328,11 @@ public class PlayerService {
     }
     
     // http://player.9x9.tv/tv#/promotion/{ch}/{ep}
-    public String getPlayerPromotionUrl(HttpServletRequest req, Mso mso, String ch, String ep) {
+    public String getPlayerPromotionUrl(String ch, String ep, HttpServletRequest req) {
         
-        String root = null;
+        ApiContext context = new ApiContext(req);
         
-        if (MsoManager.isNNMso(mso)) {
-            root = NnNetUtil.getUrlRoot(req).replaceFirst("^http(s)?:\\/\\/", "");
-        } else {
-            root = mso.getName() + "." + NnNetUtil.getUrlRoot(req).replaceFirst("^http(s)?:\\/\\/(www\\.)?", "");
-        }
-        
-        String url = "http://" + root + "/tv#/promotion/" + ch;
+        String url = "http://" + context.getAppDomain() + "/tv#/promotion/" + ch;
         if (ep != null) {
             url += "/" + ep;
         }
