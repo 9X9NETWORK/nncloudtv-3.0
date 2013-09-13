@@ -1,5 +1,6 @@
 package com.nncloudtv.web.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -117,7 +118,7 @@ public class ApiContext {
         
         String domain = root.replaceAll("^http(s)?:\\/\\/(www\\.)?", "");
         log.info("domain = " + domain);
-        List<String> splits = Arrays.asList(domain.split("\\."));
+        List<String> splits = new ArrayList<String>(Arrays.asList(domain.split("\\.")));
         
         if (splits.size() < 3)
             return MsoManager.isNNMso(mso) ? "www." + domain : mso.getName() + "." + domain;
