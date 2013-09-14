@@ -3178,7 +3178,6 @@ public class PlayerApiService {
         }
         log.info("channels = " + channels.size());
         result[2] = chMngr.composeChannelLineup(channels, version);
-        result[2] = this.chAdjust(channels, result[2]);
         //program info
         NnProgramManager programMngr = new NnProgramManager();
         String programStr = programMngr.findLatestProgramInfoByChannels(channels);
