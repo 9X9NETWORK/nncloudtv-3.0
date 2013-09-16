@@ -121,14 +121,15 @@ public class SysTagDisplayDao extends GenericDao<SysTagDisplay> {
             */
             String sql = " select * from systag_display a1 " +
                          " inner join " +
-                         "(select d.id " + 
+                         "(select d.id, s.seq " + 
                           " from systag s, systag_display d " +
                          " where s.msoId = " + msoId + "" +
                            " and s.type = " + type + 
                            " and s.id = d.systagId " +
                            " and featured = true " +
                            " and d.lang='" + lang + "') a2" +
-                           " on a1.id=a2.id";
+                           " on a1.id=a2.id" +
+                           " order by a2.seq asc";
             log.info("sql:" + sql);
             Query q= pm.newQuery("javax.jdo.query.SQL", sql);
             q.setClass(SysTagDisplay.class);
