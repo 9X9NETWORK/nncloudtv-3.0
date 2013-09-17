@@ -156,7 +156,7 @@ public class PlayerApiService {
         return output;
     }    
 
-    public int addMsoInfoVisitCounter(boolean readOnly) {
+    public long addMsoInfoVisitCounter(boolean readOnly) {
         if (!readOnly) {
             if (MsoConfigManager.isQueueEnabled(true)) {
                 //new QueueMessage().fanout("localhost",QueueMessage.VISITOR_COUNTER, null);
@@ -505,7 +505,7 @@ public class PlayerApiService {
         String locale = this.findLocaleByHttpRequest(req);
         result[0] += PlayerApiService.assembleKeyValue("locale", locale);
         //counter
-        int counter = 0;
+        long counter = 0;
         if (!readOnly)
             counter = this.addMsoInfoVisitCounter(readOnly);        
         result[0] += PlayerApiService.assembleKeyValue("brandInfoCounter", String.valueOf(counter));

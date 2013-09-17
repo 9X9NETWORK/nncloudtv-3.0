@@ -31,7 +31,7 @@ public class MsoManager {
         return mso;
     }
     
-    public int addMsoVisitCounter(boolean readOnly) {        
+    public long addMsoVisitCounter(boolean readOnly) {        
         String counterName = "9x9" + "BrandInfo";
         CounterFactory factory = new CounterFactory();
         ShardedCounter counter = factory.getOrCreateCounter(counterName);

@@ -40,7 +40,7 @@ public class CounterFactory {
     return counter;
   }
 
-  public int getCount(String name) {      
+  public long getCount(String name) {      
       ShardedCounter counter = this.getOrCreateCounter(name);
       return counter.getCount();
   }

@@ -55,7 +55,7 @@ public class NnEpisode implements Serializable {
     private Date updateDate;
     
     @NotPersistent
-    private int cntView;
+    private long cntView;
     
     @NotPersistent
     private String playbackUrl;
@@ -157,7 +157,7 @@ public class NnEpisode implements Serializable {
 		this.seq = seq;
 	}
 
-    public int getCntView() {    
+    public long getCntView() {    
         try {
             //v_ch10514_e21688
             String name = "u_ch" + channelId + "_e" + id;        

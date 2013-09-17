@@ -43,7 +43,7 @@ public class CounterShard {
     private String counterName;
   
     @Persistent
-    private Integer count;
+    private Long count;
   
     public CounterShard(String counterName, int shardNumber) {
       this(counterName, shardNumber, 0);
@@ -52,7 +52,7 @@ public class CounterShard {
     public CounterShard(String counterName, int shardNumber, int count) {
       this.counterName = counterName;
       this.shardNumber = new Integer(shardNumber);
-      this.count = new Integer(count);
+      this.count = new Long(count);
     }
   
     public Long getId() {
@@ -67,15 +67,15 @@ public class CounterShard {
       return shardNumber;
     }
   
-    public Integer getCount() {
+    public Long getCount() {
       return count;
     }
   
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
       this.count = count;
     }
   
     public void increment(int amount) {
-      count = new Integer(count.intValue() + amount);
+      count = new Long(count.intValue() + amount);
     }
 }

@@ -15,7 +15,7 @@ public class UserFavorite implements Serializable {
     
     private Date publishDate;
     
-    private int cntView;
+    private long cntView;
     
     private boolean isPublic;
     
@@ -61,12 +61,12 @@ public class UserFavorite implements Serializable {
         this.publishDate = publishDate;
     }
 
-    public int getCntView() {
+    public long getCntView() {
     
         return cntView;
     }
 
-    public void setCntView(int cntView) {
+    public void setCntView(long cntView) {
     
         this.cntView = cntView;
     }

@@ -544,8 +544,8 @@ public class NnChannelManager {
         if (sort.equals("cntView")) {
             class ChannelComparator implements Comparator<NnChannel> {
                 public int compare(NnChannel channel1, NnChannel channel2) {
-                Integer cntView1 = channel1.getCntView();
-                Integer cntView2 = channel2.getCntView();
+                Long cntView1 = channel1.getCntView();
+                Long cntView2 = channel2.getCntView();
                 return cntView2.compareTo(cntView1);
                 }
             }

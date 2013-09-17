@@ -158,10 +158,10 @@ public class NnChannel implements Serializable {
     private int cntSubscribe; //subscription count
 
     @NotPersistent    
-    private int cntView; //viewing count, in shard table
+    private long cntView; //viewing count, in shard table
 
     @NotPersistent    
-    private int cntVisit; //cnt visit count
+    private long cntVisit; //cnt visit count
     
     @Persistent 
     private Date createDate;
@@ -464,7 +464,7 @@ public class NnChannel implements Serializable {
         this.cntSubscribe = cntSubscribe;
     }
 
-    public int getCntView() {      
+    public long getCntView() {      
         try {
             String name = "u_ch" + id;        
             String result = (String)CacheFactory.get(name);
@@ -585,7 +585,7 @@ public class NnChannel implements Serializable {
         this.moreImageUrl = moreImageUrl;
     }
 
-    public int getCntVisit() {
+    public long getCntVisit() {
         try {
             String name = "u_ch" + id;        
             String result = (String)CacheFactory.get(name);

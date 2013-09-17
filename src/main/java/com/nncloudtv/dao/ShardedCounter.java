@@ -104,8 +104,8 @@ public class ShardedCounter {
     return counterStored;
   }
 
-  public int getCount() {
-    int sum = 0;
+  public long getCount() {
+    long sum = 0;
     PersistenceManager pm = PMF.getContent().getPersistenceManager();
 
     try {
