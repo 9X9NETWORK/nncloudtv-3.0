@@ -28,12 +28,8 @@
     <h2>第一屆台灣微電影節現正熱映中</h2>
   </div>
   <div id="ios-btn">
-    <div class="btn-white" id="btn-ios-download">
-      <a href="${storeUrl}">下載 App</a>
-    </div>
-    <div class="btn-white" id="btn-ios-launch">
-      <a href="${fliprUrl}">打開 App</a>
-    </div>
+    <a href="${storeUrl}"><div class="btn-white" id="btn-ios-download">下載 App</div></a>
+    <a href="${fliprUrl}"><div class="btn-white" id="btn-ios-launch">打開 App</div></a>
   </div>
 </div>
 <div id="ios-view">
