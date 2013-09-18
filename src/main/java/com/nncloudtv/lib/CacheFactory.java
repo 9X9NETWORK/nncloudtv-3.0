@@ -59,7 +59,7 @@ public class CacheFactory {
             delay_check = 0;
             CacheFactory.isRunning = false;
         } else if (!CacheFactory.isRunning) {
-            log.info("cache is temporarily not running");
+            log.warning("cache is temporarily not running");
             return null;
         }
         MemcachedClient cache = CacheFactory.getClient();
@@ -71,7 +71,7 @@ public class CacheFactory {
             future = cache.asyncGet(key);
             obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS); // Asynchronously 
             CacheFactory.isRunning = true;
-        } catch (CheckedOperationTimeoutException e){
+        } catch (CheckedOperationTimeoutException e) {
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
