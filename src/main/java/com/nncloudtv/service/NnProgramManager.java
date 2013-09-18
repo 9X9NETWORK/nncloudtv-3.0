@@ -511,6 +511,7 @@ public class NnProgramManager {
      */
     public String findPlayerProgramInfoByChannel(long channelId, long sidx, long limit) {
         String result = this.findPlayerProgramInfoByChannel(channelId);
+        if (channelId == 28087) return result; // weifilm, temporary workaround
         return this.composeLimitProgramInfoStr(result, sidx, limit);
     }    
 
