@@ -35,7 +35,7 @@ public class CacheFactory {
             properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
             String server = properties.getProperty("server");
             if (!isRunning) {
-                log.info("memcache server = " + server);
+                log.info("check point, memcache server = " + server);
                 Logger.getLogger("net.spy.memcached").setLevel(Level.INFO);
             }
             cache = new MemcachedClient(AddrUtil.getAddresses(server.replace(',',' ')));
