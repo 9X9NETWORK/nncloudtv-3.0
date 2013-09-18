@@ -34,7 +34,9 @@ public class CacheFactory {
             Properties properties = new Properties();
             properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
             String server = properties.getProperty("server");
-            //log.info("memcache server:" + server);
+            if (!isRunning) {
+                log.info("memcache server = " + server);
+            }
             cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
         } catch (NullPointerException e) {
             log.severe("memcache is missing");
@@ -55,7 +57,7 @@ public class CacheFactory {
             delay_check = 0;
             CacheFactory.isRunning = false;
         } else if (!CacheFactory.isRunning) {
-            log.warning("cache is not running");
+            log.info("cache is temporarily not running");
             return null;
         }
         MemcachedClient cache = CacheFactory.getClient();
