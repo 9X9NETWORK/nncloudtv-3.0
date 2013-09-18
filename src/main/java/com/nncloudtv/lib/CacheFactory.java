@@ -1,13 +1,13 @@
 package com.nncloudtv.lib;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.OperationTimeoutException;
 import net.spy.memcached.internal.CheckedOperationTimeoutException;
@@ -36,8 +36,10 @@ public class CacheFactory {
             String server = properties.getProperty("server");
             if (!isRunning) {
                 log.info("memcache server = " + server);
+                Logger.getLogger("net.spy.memcached").setLevel(Level.INFO);
             }
-            cache = new MemcachedClient(new InetSocketAddress(server, CacheFactory.PORT_DEFAULT));
+            cache = new MemcachedClient(AddrUtil.getAddresses(server.replace(',',' ')));
+            
         } catch (NullPointerException e) {
             log.severe("memcache is missing");
         } catch (IOException e) {
