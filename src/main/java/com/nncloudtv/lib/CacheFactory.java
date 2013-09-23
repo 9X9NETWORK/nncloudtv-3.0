@@ -23,7 +23,7 @@ public class CacheFactory {
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
-    private static int delay_check = 0;
+    private static int delayCheck = 0;
     
     public static MemcachedClient getClient() {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
@@ -55,11 +55,12 @@ public class CacheFactory {
     public static Object get(String key) {
         
         if (key == null || key.isEmpty()) return null;
-        if (delay_check++ > CacheFactory.DELAY_CHECK_THRESHOLD) {
-            delay_check = 0;
-            CacheFactory.isRunning = false;
+        boolean isChecked = true;
+        if (delayCheck++ > CacheFactory.DELAY_CHECK_THRESHOLD) {
+            delayCheck = 0;
+            isChecked = false;
         } else if (!CacheFactory.isRunning) {
-            log.warning("cache is temporarily not running");
+            // cache is temporarily not running
             return null;
         }
         MemcachedClient cache = CacheFactory.getClient();
@@ -70,13 +71,13 @@ public class CacheFactory {
         try {
             future = cache.asyncGet(key);
             obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS); // Asynchronously 
-            CacheFactory.isRunning = true;
+            isChecked = true;
         } catch (CheckedOperationTimeoutException e) {
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
             log.severe("get OperationTimeoutException");
         } catch (NullPointerException e) {
-            log.warning("future not found");
+            log.warning("there is no future");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
@@ -84,6 +85,7 @@ public class CacheFactory {
             cache.shutdown(); 
             if (future != null)
                 future.cancel(false);
+            CacheFactory.isRunning = isChecked;
         }
         if (obj == null)
             log.info("cache [" + key + "] --> missed");
@@ -107,7 +109,7 @@ public class CacheFactory {
         } catch (OperationTimeoutException e) {
             log.severe("memcache OperationTimeoutException");
         } catch (NullPointerException e) {
-            log.warning("future not found");
+            log.warning("there is no future");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
