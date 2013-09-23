@@ -25,17 +25,18 @@ public class CacheFactory {
     public static boolean isRunning = true;
     private static int delayCheck = 0;
     
-    public static MemcachedClient getClient() {
+    public static MemcachedClient getClient(boolean verbose) {
+        
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
         Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
         MemcachedClient cache = null;
-     
+        
         try {
             Properties properties = new Properties();
             properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
             String server = properties.getProperty("server");
-            if (!isRunning) {
-                log.info("check point, memcache server = " + server);
+            if (verbose) {
+                log.info("memcache server = " + server);
                 Logger.getLogger("net.spy.memcached").setLevel(Level.INFO);
             }
             cache = new MemcachedClient(AddrUtil.getAddresses(server.replace(',',' ')));
@@ -50,6 +51,11 @@ public class CacheFactory {
         }
         
         return cache;
+    }
+    
+    public static MemcachedClient getClient() {
+        
+        return getClient(false);
     }    
 
     public static Object get(String key) {
@@ -63,7 +69,8 @@ public class CacheFactory {
             // cache is temporarily not running
             return null;
         }
-        MemcachedClient cache = CacheFactory.getClient();
+        boolean verbose = (!isRunning && !isChecked);
+        MemcachedClient cache = CacheFactory.getClient(verbose);
         if (cache == null) return null;
         
         Object obj = null;
