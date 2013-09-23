@@ -89,7 +89,7 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown(); 
+            cache.shutdown();
             if (future != null)
                 future.cancel(false);
             CacheFactory.isRunning = isChecked;
@@ -109,7 +109,7 @@ public class CacheFactory {
         Object retObj = null;
         try {
             cache.set(key, CacheFactory.EXP_DEFAULT, obj);
-            future = cache.asyncGet(key);;
+            future = cache.asyncGet(key);
             retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
@@ -134,21 +134,31 @@ public class CacheFactory {
 
     public static void delete(String key) {
         
+        boolean isDeleted = false;
         if (!CacheFactory.isRunning || key == null || key.isEmpty()) return;
         MemcachedClient cache = CacheFactory.getClient();
         if (cache == null) return;
         
         try {
-            cache.delete(key).get();
+            cache.delete(key).get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
+            isDeleted = true;
+        } catch (CheckedOperationTimeoutException e){
+            log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
-            log.severe("get OperationTimeoutException");
+            log.severe("memcache OperationTimeoutException");
+        } catch (NullPointerException e) {
+            log.warning("there is no future");
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown();            
+            cache.shutdown();
         }
-        log.info("cache [" + key + "] --> deleted");
+        if (isDeleted) {
+            log.info("cache [" + key + "] --> deleted");
+        } else {
+            log.info("cache [" + key + "] --> not deleted");
+        }
     }    
     
 }
