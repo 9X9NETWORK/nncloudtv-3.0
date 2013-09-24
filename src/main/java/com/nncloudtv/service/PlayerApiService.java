@@ -1121,9 +1121,9 @@ public class PlayerApiService {
         return this.assembleMsgs(NnStatusCode.SUCCESS, result);
     }
     
-    public String programInfo(String channelIds, String userToken, 
-                                  String ipgId, boolean userInfo,
-                                  String sidx, String limit, HttpServletRequest req) {
+    public String programInfo(String channelIds, String episodeIds, 
+                                  String userToken, String ipgId,
+                                  boolean userInfo, String sidx, String limit, HttpServletRequest req) {
         if (channelIds == null || (channelIds.equals("*") && userToken == null && ipgId == null)) {           
             return this.assembleMsgs(NnStatusCode.INPUT_MISSING, null);
         }
@@ -1154,7 +1154,7 @@ public class PlayerApiService {
                 if (version < 32) {
                     programInfoStr = new IosService().findPlayerProgramInfoByChannel(l, sidxL, limitL);
                 } else {
-                    programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, sidxL, limitL);
+                    programInfoStr += programMngr.findPlayerProgramInfoByChannel(l, episodeIds, sidxL, limitL);
                 }
             }
         } else {
@@ -1173,16 +1173,11 @@ public class PlayerApiService {
                     log.info("ios program info debug string:" + debugStr);
                 }                                   
             } else {            
-                programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), sidxL, limitL);
+                programInfoStr = programMngr.findPlayerProgramInfoByChannel(Long.parseLong(channelIds), episodeIds, sidxL, limitL);
             }
+            
         }        
         
-        // NOTE: not used?
-        //MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.CDN);
-        //if (config == null) {
-        //    config = new MsoConfig(mso.getId(), MsoConfig.CDN, MsoConfig.CDN_AMAZON);
-        //    log.info("mso config does not exist! mso: " + mso.getId());
-        //}
         String userInfoStr = "";
         if (userInfo) {
             if (user == null && userToken != null) 

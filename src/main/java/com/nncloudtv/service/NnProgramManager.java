@@ -505,16 +505,39 @@ public class NnProgramManager {
     /**
      * player programInfo entry for iOS
      * @param channelId system channel id
+     * @param episodeIds specified episodes
      * @param sidx start index
      * @param limit number of records
      * @return program info string 
      */
-    public String findPlayerProgramInfoByChannel(long channelId, long sidx, long limit) {
+    public String findPlayerProgramInfoByChannel(long channelId, String episodeIds, long sidx, long limit) {
         String result = this.findPlayerProgramInfoByChannel(channelId);
+        if (episodeIds != null && !episodeIds.isEmpty()) return composeSpecifiedProgramInfoStr(result, channelId, episodeIds);
         if (channelId == 28087) return result; // weifilm, temporary workaround
         return this.composeLimitProgramInfoStr(result, sidx, limit);
     }    
-
+    
+    private String composeSpecifiedProgramInfoStr(String input, long channelId, String episodeIds) {
+        
+        if (episodeIds == null || episodeIds.isEmpty())
+            return input;
+        String[] lines = input.split("\n");
+        String[] episodeIdArr = episodeIds.split(",");
+        String result = "";
+            
+        for (String episodeId : episodeIdArr) {
+                
+            String regex = "^" + channelId + "\t" + episodeId + "\t.*";
+            log.info("regex = " + regex);
+            for (String line : lines) {
+                
+                if (line.matches(regex)) {
+                    result += line + "\n";
+                }
+            }
+        }
+        return result;
+    }
     //for iOS
     private String composeLimitProgramInfoStr(String input, long sidx, long limit) {
         if (sidx == 0 && limit == 0)

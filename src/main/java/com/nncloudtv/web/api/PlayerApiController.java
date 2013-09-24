@@ -1013,6 +1013,7 @@ public class PlayerApiController {
     public @ResponseBody String programInfo(
             @RequestParam(value="v", required=false) String v,
             @RequestParam(value="channel", required=false) String channelIds,
+            @RequestParam(value="episode", required=false) String episodeIds,
             @RequestParam(value="user", required = false) String userToken,
             @RequestParam(value="userInfo", required=false) String userInfo,
             @RequestParam(value="ipg", required = false) String ipgId,
@@ -1021,7 +1022,7 @@ public class PlayerApiController {
             @RequestParam(value="rx", required = false) String rx,
             HttpServletRequest req,
             HttpServletResponse resp) {
-        log.info("params: channel:" + channelIds + ";user:" + userToken + ";ipg:" + ipgId);
+        log.info("params: channel:" + channelIds + ";episode:" + episodeIds + ";user:" + userToken + ";ipg:" + ipgId);
         String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
         PlayerApiService playerApiService = new PlayerApiService();
         try {        	
@@ -1030,7 +1031,7 @@ public class PlayerApiController {
                 return playerApiService.assembleMsgs(status, null);
             }         
             boolean isUserInfo = Boolean.parseBoolean(userInfo);
-            output =  playerApiService.programInfo(channelIds, userToken, ipgId, isUserInfo, sidx, limit, req);
+            output = playerApiService.programInfo(channelIds, episodeIds, userToken, ipgId, isUserInfo, sidx, limit, req);
         } catch (Exception e){
             output = playerApiService.handleException(e);
         } catch (Throwable t) {
