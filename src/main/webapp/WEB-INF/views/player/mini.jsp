@@ -8,17 +8,16 @@
 <meta name="description" content="${fbDescription}"/>
 <meta name="viewport" content="width=device-width"/>
 <link rel="image_src" href="${fbImg}"/>
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/css/main.css">
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/css/main.css">
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="display: none">
 
-<!-- en start -->   
 <div id="en">
 
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/9x9-logo.png" alt="">
     </a>
 </div>
 <div id="member-layer">
@@ -123,7 +122,7 @@
                     Click to watch more.
                     <br />
 
-                    <span class="next-ch-title">ABC News Channel</span>
+                    <span class="next-ch-title">ABC News Program</span>
                     will autoplay in
                     <span class="countdown-number">5</span>
                     seconds.
@@ -144,7 +143,7 @@
                                 <i class="icon-store moz-reflect" id="icon-store"></i>
                             </a>
                             <div class="inner-info-layer">
-                                <span>Click to discover more channels
+                                <span>Click to discover more programs
                                     <br />or flip to other function pages</span>
                             </div>
 
@@ -265,7 +264,7 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="player-wrap"></div>
@@ -296,17 +295,17 @@
                             <span class="set-title">My Following</span>
                             <span class="ch-wording">(</span>
                             <span class="set-amount">9</span>
-                            <span class="ch-wording">Channels)</span>
+                            <span class="ch-wording">Programs)</span>
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <span>
-                                    <span class="ch-wording">Channel</span>
+                                    <span class="ch-wording">Program</span>
                                     <span class="ch-which">7</span>
                                     <span class="ch-title">Travel Stories</span>
                                 </span>
@@ -337,8 +336,7 @@
                         </ul>
                     </div>
                     <div class="help-info-wrap">
-                        <i class="icon-info"></i>
-                        <span>Click video to watch all episodes</span>
+                            <a href="" class="green-button help-lost-button"><i class="icon-help"></i> <span>Instruction</span></a>
                     </div>
 
 
@@ -347,7 +345,7 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="player-wrap"></div>
@@ -366,17 +364,17 @@
                             <span class="set-title">CTS Selection</span>
                             <span class="ch-wording">(</span>
                             <span class="set-amount">9</span>
-                            <span class="ch-wording">Channels)</span>
+                            <span class="ch-wording">Programs)</span>
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <span>
-                                    <span class="ch-wording">Channel</span>
+                                    <span class="ch-wording">Program</span>
                                     <span class="ch-which">7</span>
                                     <span class="ch-title">Travel Stories</span>
                                 </span>
@@ -409,8 +407,7 @@
                         </ul>
                     </div>
                     <div class="help-info-wrap">
-                        <i class="icon-info"></i>
-                        <span>Click video to watch all episodes</span>
+                            <a href="" class="green-button help-lost-button"><i class="icon-help"></i> <span>Instruction</span></a>
                     </div>
 
 
@@ -419,7 +416,7 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="player-wrap"></div>
@@ -436,17 +433,17 @@
                             <span class="set-title">CTS Selection</span>
                             <span class="ch-wording">(</span>
                             <span class="set-amount">9</span>
-                            <span class="ch-wording">Channels)</span>
+                            <span class="ch-wording">Programs)</span>
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <span>
-                                    <span class="ch-wording">Channel</span>
+                                    <span class="ch-wording">Program</span>
                                     <span class="ch-which">7</span>
                                     <span class="ch-title">Travel Stories</span>
                                 </span>
@@ -477,8 +474,7 @@
                         </ul>
                     </div>
                     <div class="help-info-wrap">
-                        <i class="icon-info"></i>
-                        <span>Click video to watch all episodes</span>
+                            <a href="" class="green-button help-lost-button"><i class="icon-help"></i> <span>Instruction</span></a>
                     </div>
                 </li>
 
@@ -547,15 +543,15 @@
             <div id="osd-wrap">
                 <figure class="ch-thumb">
                     <div class="ch-thumb-inner-center">
-                        <img src="thumb/mqdefault.jpg" alt="">
+                          
                     </div>
                 </figure>
                 <div class="osd-content">
                     <h1>
                         <span class="osd-info-group">
-                            <span class="ch-wording">Channel</span>
+                            <span class="ch-wording">Program</span>
                             <span class="ch-pos">3</span>
-                            <span class="ch-title">BBC Earth Channel</span>
+                            <span class="ch-title">BBC Earth Program</span>
 
                         </span>
 
@@ -565,6 +561,11 @@
                         <span class="ep-title">Search and Rescue, Part Two - Orangutan Diary - BBC</span>
                         <span class="ep-update">1</span>
                         <span class="ch-wording">day ago</span>
+                        <div class="help-info-wrap">
+                            <i class="icon-info"></i>
+                            <span><i class="icon-info-left"></i><i class="icon-info-right"></i> flip episodes,</span>
+                            <span><i class="icon-info-up"></i><i class="icon-info-down"></i> flip Programs</span>
+                        </div>
                     </h2>
                 </div>
                 <div class="quick-shareing-wrap">
@@ -584,12 +585,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="help-info-wrap">
-                    <i class="icon-info"></i>
-                    <span><i class="icon-info-left"></i><i class="icon-info-right"></i> flip episodes,</span>
-                    <span><i class="icon-info-up"></i><i class="icon-info-down"></i> flip channels</span>
-
-                </div>
+                <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>Instruction</span></a>
             </div>
 
             <div class="remote-wrap">
@@ -626,7 +622,7 @@
 
             <figure class="ch-thumb moz-reflect" id="title-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                      
                 </div>
             </figure>
         </div>
@@ -717,11 +713,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_1.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -731,11 +727,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_1.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -745,11 +741,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_3.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -759,11 +755,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_3.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -773,11 +769,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_5.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -787,11 +783,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_6.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -801,11 +797,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_7.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -815,11 +811,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_8.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -829,11 +825,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_9.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -843,11 +839,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_5.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -882,11 +878,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -894,7 +890,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
 
                         </li>
                         <li>
@@ -902,11 +898,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                        
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -914,18 +910,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -933,18 +929,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -952,18 +948,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -971,18 +967,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -990,18 +986,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1009,18 +1005,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1028,18 +1024,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1047,7 +1043,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
 
                     </ul>
@@ -1060,11 +1056,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1072,18 +1068,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                        
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1091,7 +1087,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
 
                         </li>
 
@@ -1100,11 +1096,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1112,18 +1108,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1131,18 +1127,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li class="on">
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1150,18 +1146,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1169,18 +1165,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1188,18 +1184,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1207,12 +1203,12 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
 
                             <!--empty li-->
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
 
                     </ul>
@@ -1225,11 +1221,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1237,18 +1233,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                        
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1256,18 +1252,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1275,18 +1271,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1294,18 +1290,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1313,18 +1309,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1332,18 +1328,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1351,19 +1347,19 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
 
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1371,18 +1367,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1390,184 +1386,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-
-                    </ul>
-                </li>
-                <li>
-                    <ul class="guide-ch-list">
-                        <h1 class="guide-group-title">Favorites</h1>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
 
                     </ul>
@@ -1580,11 +1399,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1592,18 +1411,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                        
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1611,18 +1430,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1630,18 +1449,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1649,18 +1468,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1668,18 +1487,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1687,18 +1506,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1706,18 +1525,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1725,18 +1544,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1744,184 +1563,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-
-                    </ul>
-                </li>
-                <li>
-                    <ul class="guide-ch-list">
-                        <h1 class="guide-group-title">Favorites</h1>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
 
                     </ul>
@@ -1934,11 +1576,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1946,18 +1588,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                        
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1965,18 +1607,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -1984,18 +1626,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2003,18 +1645,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2022,18 +1664,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2041,18 +1683,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2060,18 +1702,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2079,18 +1721,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2098,184 +1740,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-
-                    </ul>
-                </li>
-                <li>
-                    <ul class="guide-ch-list">
-                        <h1 class="guide-group-title">Favorites</h1>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
 
                     </ul>
@@ -2288,11 +1753,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2300,18 +1765,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                        
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2319,18 +1784,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2338,18 +1803,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2357,18 +1822,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2376,18 +1841,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2395,18 +1860,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2414,18 +1879,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                         
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2433,18 +1898,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -2452,7 +1917,538 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">Add Channel</span>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <ul class="guide-ch-list">
+                        <h1 class="guide-group-title">Favorites</h1>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                      
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                      
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <ul class="guide-ch-list">
+                        <h1 class="guide-group-title">Favorites</h1>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                     
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                      
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                     
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                      
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                      
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                          
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                     
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <ul class="guide-ch-list">
+                        <h1 class="guide-group-title">Favorites</h1>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                        
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                      
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                       
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                           
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                            
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                        
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">Add Program</span>
                         </li>
 
                     </ul>
@@ -2495,7 +2491,7 @@
         </div>
         <div id="guide-ch-info-wrap">
             <h1 class="ch-info">
-                <span class="ch-position">Channel 1-1</span>
+                <span class="ch-position">Program 1-1</span>
                 <span class="ch-title">Google Talks</span>
                 <span class="ep-amount">Episodes: 38</span>
 
@@ -2529,7 +2525,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                    
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -2546,12 +2542,12 @@
             <div class="ch-info">
                 <span class="ch-title">Google</span>
                 <span class="ch-desc">
-                    Please visit our Google&#39;s official YouTube channel online. http://www.youtube.com/user/Google
+                    Please visit our Google&#39;s official YouTube program online. http://www.youtube.com/user/Google
                 </span>
             </div>
             <div class="sharing-wrap">
 
-                <label class="sharing-url-text">Channel Url</label>
+                <label class="sharing-url-text">Program Url</label>
                 <input type="text" class="with-style">
             </div>
 
@@ -2567,7 +2563,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                    
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -2586,12 +2582,12 @@
             <div class="ch-info">
                 <span class="ch-title">Google</span>
                 <span class="ch-desc">
-                    Please visit our Google&#39;s official YouTube channel online. http://www.youtube.com/user/Google
+                    Please visit our Google&#39;s official YouTube program online. http://www.youtube.com/user/Google
                 </span>
             </div>
             <div class="sharing-wrap">
 
-                <label class="sharing-url-text">Channel Url</label>
+                <label class="sharing-url-text">Program Url</label>
                 <input type="text" class="with-style">
             </div>
 
@@ -2606,7 +2602,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                    
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -2625,13 +2621,13 @@
             <div class="ch-info">
                 <span class="ch-title">Google</span>
                 <span class="ch-desc">
-                    Please visit our Google&#39;s official YouTube channel online. http://www.youtube.com/user/Google
+                    Please visit our Google&#39;s official YouTube program online. http://www.youtube.com/user/Google
                 </span>
             </div>
             <div class="sharing-wrap">
 
                 <div class="button-holder button-group">
-                    <a class="black-button" href="#">Channel</a>
+                    <a class="black-button" href="#">Program</a>
                     <a class="black-button" href="#">Episode</a>
                 </div>
                 <input type="text" class="with-style">
@@ -2648,7 +2644,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                    
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -2671,12 +2667,12 @@
             <div class="ch-info">
                 <span class="ch-title">Google</span>
                 <span class="ch-desc">
-                    Please visit our Google&#39;s official YouTube channel online. http://www.youtube.com/user/Google
+                    Please visit our Google&#39;s official YouTube program online. http://www.youtube.com/user/Google
                 </span>
             </div>
             <div class="sharing-wrap">
 
-                <label class="sharing-url-text">Channel Url</label>
+                <label class="sharing-url-text">Program Url</label>
                 <input type="text" class="with-style">
             </div>
             <div class="overlay-button-wrap bottom">
@@ -2690,10 +2686,10 @@
         <div class="overlay-notice">
             <div class="notice-desc-wrap">
 
-                <span class="notice-desc" style="display:none">Followed! Channel is in Guide
+                <span class="notice-desc" style="display:none">Followed! Program is in Guide
                     <span class="guide-position">3-1</span>
                 </span>
-                <span class="notice-desc" style="display:none">Unfollow this channel?</span>
+                <span class="notice-desc" style="display:none">Unfollow this program?</span>
                 <span class="notice-desc" style="display:none">Unfollowed!</span>
                 <span class="notice-desc" style="display:none">No more episodes.</span>
 
@@ -2766,7 +2762,7 @@
                         <label class="form-label" for="prof-birthday">Word Verification</label>
                         <div class="form-elements">
                             <div class="word-contain word-verification">
-                                <img src="thumb/create_image2.jpg">
+                                
                             </div>
 
                         </div>
@@ -2812,7 +2808,7 @@
                             <a class="manual-icon flipright-button"></a>
                         </li>
                         <li>
-                            <span>Flip Channels</span>
+                            <span>Flip Programs</span>
                             <div class="manual-icon-set">
                                 <a class="manual-icon flipup-button"></a>
                                 <a class="manual-icon flipdown-button"></a>
@@ -2869,7 +2865,7 @@
                             <a class="manual-icon flipright-button"></a>
                         </li>
                         <li>
-                            <span>Flip Channels</span>
+                            <span>Flip Programs</span>
                             <div class="manual-icon-set">
                                 <a class="manual-icon flipup-button"></a>
                                 <a class="manual-icon flipdown-button"></a>
@@ -2903,6 +2899,37 @@
                 </div>
             </form>
 
+        </div>
+        <!-- <div class="video-tutoral-wrap">
+                <div class="video-layer">
+
+                    <div class="player-wrap">
+                    </div>
+                </div>
+
+                <div class="overlay-button-wrap bottom">
+                        <span> Instruction video</span>
+
+                        <a class="black-button" href="#">Close</a>
+
+                </div>
+
+        </div> -->
+
+    </div>
+
+     <div class="video-tutoral-wrap">
+        <h1>Instruction video</h1>
+        <div class="video-layer">
+            <div class="player-wrap">
+                <!--tutoral video-->
+                <div id="video-tutorial-en"></div>
+                <!-- <object type="application/x-shockwave-flash" wmode="transparent" data="http://www.youtube.com/v/b5DYFL4Wl4k&amp;version=3&amp;autoplay=0&amp;controls=0&amp;showinfo=0" width="100%" height="100%" <param name="wmode" value="transparent"></object> -->
+            </div>
+        </div>
+
+        <div class="overlay-button-wrap bottom">    
+            <a class="black-button" href="#">Close</a>
         </div>
 
     </div>
@@ -3040,14 +3067,14 @@
                                 <label class="radio-btn" for="guide_mode1">
                                     3x3
                                     <br />
-                                    <span>Displays 9 channels with larger images</span>
+                                    <span>Displays 9 programs with larger images</span>
                                 </label>
                                 <br />
                                 <input type="radio" name="guide_mode" id="guide_mode2">
                                 <label class="radio-btn" for="guide_mode2">
                                     9x9
                                     <br />
-                                    <span>Display 81 channels with smaller images</span>
+                                    <span>Display 81 programs with smaller images</span>
                                 </label>
                                 <br />
 
@@ -3578,22 +3605,22 @@
 
     </div>
     <div class="overlay-loading-wrap">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">Processing...</span>
     </div>
     <div class="special-introduction" style="display: none;">
         <div class="cts-stream-tutorial-wrap">
             <span class="video-tutorial">click video to watch all episodes</span>
-            <span class="change-channel-tutorial">Up/Down to change channels</span>
+            <span class="change-channel-tutorial">Up/Down to change programs</span>
             <div class="fake-video-element"></div>
             <form>
-                <div class="show-check-wrap">
+               <!--  <div class="show-check-wrap">
 
                     <input type="checkbox" name="show-check" id="show-check3">
                     <label class="checkbox-btn" for="show-check3"></label>
 
 
-                </div>
+                </div> -->
             </form>
 
         </div>
@@ -3601,7 +3628,7 @@
 
         <div class="cts-playback-tutorial-wrap">
             <span class="video-tutorial">You are in playback mode!</span>
-            <span class="remote-tutorial">click left or right to change episodes,click un and down to change channels</span>
+            <span class="remote-tutorial">click left or right to change episodes,click un and down to change programs</span>
             <span class="share-tutorial">share this episode</span>
             <div class="backhome-btn direct-left-btn on">Back to Home</div>
             <form>
@@ -3628,6 +3655,7 @@
 <div id="bg-layer"></div>
 
 
+
 </div>  
 
 <!-- en end -->
@@ -3652,7 +3680,7 @@
 
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/9x9-logo.png" alt="">
     </a>
 </div>
 <div id="member-layer">
@@ -3670,13 +3698,13 @@
                 <li>
                     <a href="#"> <i class="icon-store"></i>
                     </a>
-                    <span>頻道商店</span>
+                    <span>節目商店</span>
                 </li>
                 <li>
                     <a href="#">
                         <i class="icon-guide"></i>
                     </a>
-                    <span>頻道表</span>
+                    <span>節目表</span>
 
                 </li>
                 <li>
@@ -3775,7 +3803,7 @@
                                 <i class="icon-store moz-reflect" id="icon-store"></i>
                             </a>
                             <div class="inner-info-layer">
-                                <span>點擊探索更多頻道</span>
+                                <span>點擊探索更多節目</span>
                             </div>
 
                         </li>
@@ -3786,7 +3814,7 @@
                             <div class="inner-info-layer">
                                 <span>點擊至登入頁面</span>
 
-                                <span style="display:none">點擊至頻道表</span>
+                                <span style="display:none">點擊至節目表</span>
                             </div>
 
                         </li>
@@ -3826,13 +3854,13 @@
                             <a href="#">
                                 <i class="icon-store"></i>
                             </a>
-                            <span>頻道商店</span>
+                            <span>節目商店</span>
                         </li>
                         <li>
                             <a href="#">
                                 <i class="icon-guide"></i>
                             </a>
-                            <span>頻道表</span>
+                            <span>節目表</span>
 
                         </li>
                         <li>
@@ -3873,8 +3901,8 @@
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <ul>
-                                    <li class="on">頻道商店</li>
-                                    <li>頻道表</li>
+                                    <li class="on">節目商店</li>
+                                    <li>節目表</li>
                                     <li>設定</li>
                                     <li>後台管理系統</li>
                                     <li>說明</li>
@@ -3897,7 +3925,7 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="player-wrap">
@@ -3917,7 +3945,7 @@
                             點擊登錄
                         </span>
                         <span class="no-Follow-text">
-                            尚未訂閱任何頻道，點擊訂閱更多頻道
+                            尚未訂閱任何節目，點擊訂閱更多節目
                         </span>
                     </div>
 
@@ -3926,17 +3954,17 @@
                             <span class="set-title">我的最愛</span>
                             <span class="ch-wording">(</span>
                             <span class="set-amount">9</span>
-                            <span class="ch-wording">個頻道)</span>
+                            <span class="ch-wording">個節目)</span>
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <span>
-                                    <span class="ch-wording">頻道</span>
+                                    <span class="ch-wording">節目</span>
                                     <span class="ch-which">7</span>
                                     <span class="ch-title">Travel Stories</span>
                                 </span>
@@ -3968,8 +3996,7 @@
                         </ul>
                     </div>
                     <div class="help-info-wrap">
-                        <i class="icon-info"></i>
-                        <span>點擊觀看所有節目</span>
+                         <a href="" class="green-button help-lost-button"><i class="icon-help"></i> <span>操作提示</span></a>
                     </div>
 
 
@@ -3979,7 +4006,6 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
                             </div>
                         </figure>
                         <div class="player-wrap">
@@ -4001,17 +4027,17 @@
                             <span class="set-title">CTS Selection</span>
                             <span class="ch-wording">(</span>
                             <span class="set-amount">9</span>
-                            <span class="ch-wording">個頻道)</span>
+                            <span class="ch-wording">個節目)</span>
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <span>
-                                    <span class="ch-wording">頻道</span>
+                                    <span class="ch-wording">節目</span>
                                     <span class="ch-which">7</span>
                                     <span class="ch-title">Travel Stories</span>
                                 </span>
@@ -4044,8 +4070,7 @@
                         </ul>
                     </div>
                     <div class="help-info-wrap">
-                        <i class="icon-info"></i>
-                        <span>點擊觀看所有節目</span>
+                        <a href="" class="green-button help-lost-button"><i class="icon-help"></i> <span>操作提示</span></a>
                     </div>
 
 
@@ -4054,7 +4079,7 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="player-wrap">
@@ -4073,17 +4098,17 @@
                             <span class="set-title">CTS Selection</span>
                             <span class="ch-wording">(</span>
                             <span class="set-amount">9</span>
-                            <span class="ch-wording">個頻道)</span>
+                            <span class="ch-wording">個節目)</span>
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <div class="info-wrap">
                             <h1 class="ch-info">
                                 <span>
-                                    <span class="ch-wording">頻道</span>
+                                    <span class="ch-wording">節目</span>
                                     <span class="ch-which">7</span>
                                     <span class="ch-title">Travel Stories</span>
                                 </span>
@@ -4116,8 +4141,7 @@
                         </ul>
                     </div>
                     <div class="help-info-wrap">
-                        <i class="icon-info"></i>
-                        <span>點擊觀看所有節目</span>
+                        <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>操作提示</span></a>
                     </div>
                 </li>
 
@@ -4193,13 +4217,13 @@
             <div id="osd-wrap">
                 <figure class="ch-thumb">
                     <div class="ch-thumb-inner-center">
-                        <img src="thumb/mqdefault.jpg" alt="">
+                          <img />
                     </div>
                 </figure>
                 <div class="osd-content">
                     <h1>
                         <span class="osd-info-group">
-                            <span class="ch-wording">頻道</span>
+                            <span class="ch-wording">節目</span>
                             <span class="ch-pos">3</span>
                             <span class="ch-title">BBC Earth Channel</span>
 
@@ -4211,6 +4235,11 @@
                         <span class="ep-title">Search and Rescue, Part Two - Orangutan Diary - BBC</span>
                         <span class="ep-update">1</span>
                         <span class="ch-wording">天前</span>
+                         <div class="help-info-wrap">
+                            <i class="icon-info"></i>
+                            <span><i class="icon-info-left"></i><i class="icon-info-right"></i> 翻閱劇集,</span>
+                            <span><i class="icon-info-up"></i><i class="icon-info-down"></i> 翻閱節目</span>
+                        </div>
                     </h2>
                 </div>
                 <div class="quick-shareing-wrap">
@@ -4230,12 +4259,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="help-info-wrap">
-                    <i class="icon-info"></i>
-                    <span><i class="icon-info-left"></i><i class="icon-info-right"></i> 翻閱節目,</span>
-                    <span><i class="icon-info-up"></i><i class="icon-info-down"></i> 翻閱頻道</span>
-
-                </div>
+                <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>操作提示</span></a>
             </div>
 
             <div class="remote-wrap">
@@ -4273,7 +4297,7 @@
 
             <figure class="ch-thumb moz-reflect" id="title-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                      
                 </div>
             </figure>
         </div>
@@ -4364,11 +4388,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_1.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4378,11 +4402,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_1.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4392,11 +4416,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_3.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4406,11 +4430,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_3.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4420,11 +4444,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_5.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4434,11 +4458,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_6.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4448,11 +4472,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_7.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4462,11 +4486,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_8.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4476,11 +4500,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_9.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4490,11 +4514,11 @@
                     <a href="#" class="store-item">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                <img src="thumb/mqdefault.jpg" alt="">
+                                  
                             </div>
                         </figure>
                         <figure class="store-thumb">
-                            <img src="thumb/store_thumb_5.jpg">
+                              
                         </figure>
                         <span class="ch-title">Google</span>
                     </a>
@@ -4529,11 +4553,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4541,7 +4565,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
 
                         </li>
                         <li>
@@ -4549,11 +4573,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4561,18 +4585,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4580,18 +4604,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4599,18 +4623,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4618,18 +4642,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4637,18 +4661,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4656,18 +4680,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4675,18 +4699,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4694,7 +4718,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
 
                     </ul>
@@ -4707,11 +4731,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4719,18 +4743,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4738,7 +4762,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
 
                         </li>
 
@@ -4747,11 +4771,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4759,18 +4783,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4778,18 +4802,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li class="on">
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4797,18 +4821,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4816,18 +4840,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4835,18 +4859,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4854,12 +4878,12 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
 
                             <!--empty li-->
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
 
                     </ul>
@@ -4872,11 +4896,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4884,18 +4908,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4903,18 +4927,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4922,18 +4946,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4941,18 +4965,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4960,18 +4984,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4979,18 +5003,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -4998,19 +5022,19 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/ch_8.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
 
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5018,18 +5042,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5037,184 +5061,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-
-                    </ul>
-                </li>
-                <li>
-                    <ul class="guide-ch-list">
-                        <h1 class="guide-group-title">Favorites</h1>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
 
                     </ul>
@@ -5227,11 +5074,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5239,18 +5086,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5258,18 +5105,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5277,18 +5124,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5296,18 +5143,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5315,18 +5162,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5334,18 +5181,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5353,18 +5200,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5372,18 +5219,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5391,184 +5238,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-
-                    </ul>
-                </li>
-                <li>
-                    <ul class="guide-ch-list">
-                        <h1 class="guide-group-title">Favorites</h1>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
 
                     </ul>
@@ -5581,11 +5251,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5593,18 +5263,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5612,18 +5282,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5631,18 +5301,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5650,18 +5320,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5669,18 +5339,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5688,18 +5358,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5707,18 +5377,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5726,18 +5396,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5745,184 +5415,7 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-
-                    </ul>
-                </li>
-                <li>
-                    <ul class="guide-ch-list">
-                        <h1 class="guide-group-title">Favorites</h1>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
-                        </li>
-                        <li>
-                            <div class="guide-channel-item">
-                                <a href="#">
-                                    <figure class="ch-thumb">
-                                        <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
-                                        </div>
-                                    </figure>
-                                    <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
-                                    </figure>
-                                    <span class="ch-title">google</span>
-                                </a>
-                                <a href="#" class="guide-item-del">
-                                    <i class="icon-cross"></i>
-                                </a>
-                            </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
 
                     </ul>
@@ -5935,11 +5428,11 @@
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_1.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5947,18 +5440,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_2.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5966,18 +5459,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_3.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -5985,18 +5478,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_4.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -6004,18 +5497,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_5.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -6023,18 +5516,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_6.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -6042,18 +5535,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_7.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -6061,18 +5554,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_8.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -6080,18 +5573,18 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
                         <li>
                             <div class="guide-channel-item">
                                 <a href="#">
                                     <figure class="ch-thumb">
                                         <div class="ch-thumb-inner-center">
-                                            <img src="thumb/mqdefault.jpg" alt="">
+                                              
                                         </div>
                                     </figure>
                                     <figure class="guide-thumb">
-                                        <img src="thumb/store_thumb_9.jpg" alt="">
+                                          
                                     </figure>
                                     <span class="ch-title">google</span>
                                 </a>
@@ -6099,7 +5592,538 @@
                                     <i class="icon-cross"></i>
                                 </a>
                             </div>
-                            <span class="add-channel-but">新增頻道</span>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <ul class="guide-ch-list">
+                        <h1 class="guide-group-title">Favorites</h1>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <ul class="guide-ch-list">
+                        <h1 class="guide-group-title">Favorites</h1>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <ul class="guide-ch-list">
+                        <h1 class="guide-group-title">Favorites</h1>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
+                        </li>
+                        <li>
+                            <div class="guide-channel-item">
+                                <a href="#">
+                                    <figure class="ch-thumb">
+                                        <div class="ch-thumb-inner-center">
+                                              
+                                        </div>
+                                    </figure>
+                                    <figure class="guide-thumb">
+                                          
+                                    </figure>
+                                    <span class="ch-title">google</span>
+                                </a>
+                                <a href="#" class="guide-item-del">
+                                    <i class="icon-cross"></i>
+                                </a>
+                            </div>
+                            <span class="add-channel-but">新增節目</span>
                         </li>
 
                     </ul>
@@ -6142,7 +6166,7 @@
         </div>
         <div id="guide-ch-info-wrap">
             <h1 class="ch-info">
-                <span class="ch-position">頻道 1-1</span>
+                <span class="ch-position">節目 1-1</span>
                 <span class="ch-title">Google Talks</span>
                 <span class="ep-amount">節目: 38</span>
 
@@ -6180,7 +6204,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                      
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -6200,7 +6224,7 @@
             </div>
             <div class="sharing-wrap">
 
-                <label class="sharing-url-text">頻道網址</label>
+                <label class="sharing-url-text">節目網址</label>
                 <input type="text" class="with-style">
 
 
@@ -6220,7 +6244,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                      
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -6242,7 +6266,7 @@
             </div>
             <div class="sharing-wrap">
 
-                <label class="sharing-url-text">頻道網址</label>
+                <label class="sharing-url-text">節目網址</label>
                 <input type="text" class="with-style">
 
 
@@ -6263,7 +6287,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                      
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -6286,8 +6310,8 @@
             <div class="sharing-wrap">
 
                 <div class="button-holder button-group">
-                    <a class="black-button" href="#">頻道</a>
                     <a class="black-button" href="#">節目</a>
+                    <a class="black-button" href="#">劇集</a>
                 </div>
                 <input type="text" class="with-style">
 
@@ -6307,7 +6331,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
-                    <img src="thumb/mqdefault.jpg" alt="">
+                      
                 </div>
             </figure>
             <div class="overlay-button-wrap right-top">
@@ -6333,7 +6357,7 @@
             </div>
             <div class="sharing-wrap">
 
-                <label class="sharing-url-text">頻道網址</label>
+                <label class="sharing-url-text">節目網址</label>
                 <input type="text" class="with-style">
 
 
@@ -6350,12 +6374,12 @@
         <div class="overlay-notice">
             <div class="notice-desc-wrap">
 
-                <span class="notice-desc" style="display:none">已成功訂閱至頻道表
+                <span class="notice-desc" style="display:none">已成功訂閱至節目表
                     <span class="guide-position">3-1</span>
                 </span>
-                <span class="notice-desc" style="display:none">確定要退訂該頻道？</span>
+                <span class="notice-desc" style="display:none">確定要退訂該節目？</span>
                 <span class="notice-desc" style="display:none">退訂成功</span>
-                <span class="notice-desc" style="display:none">該頻道中全部節目都已播放完畢</span>
+                <span class="notice-desc" style="display:none">該節目中全部劇集都已播放完畢</span>
                 <span class="notice-desc" style="display:none">設定成功! 你將很快收到確認的 email ,
                     <br />如需任何協助，請聯絡我們</span>
 
@@ -6426,7 +6450,7 @@
                         </label>
                         <div class="form-elements">
                             <div class="word-contain word-verification">
-                                <img src="thumb/create_image2.jpg">
+                                  
                             </div>
 
                         </div>
@@ -6467,12 +6491,12 @@
 
                     <ul class="no-style">
                         <li>
-                            <span>翻閱頻道組</span>
+                            <span>翻閱頻道</span>
                             <a class="manual-icon flipleft-button"></a>
                             <a class="manual-icon flipright-button"></a>
                         </li>
                         <li>
-                            <span>翻閱頻道</span>
+                            <span>翻閱節目</span>
                             <div class="manual-icon-set">
                                 <a class="manual-icon flipup-button"></a>
                                 <a class="manual-icon flipdown-button"></a>
@@ -6524,12 +6548,12 @@
 
                     <ul class="no-style">
                         <li>
-                            <span>翻閱節目與單元</span>
+                            <span>翻閱劇集與單元</span>
                             <a class="manual-icon flipleft-button"></a>
                             <a class="manual-icon flipright-button"></a>
                         </li>
                         <li>
-                            <span>翻閱頻道</span>
+                            <span>翻閱節目</span>
                             <div class="manual-icon-set">
                                 <a class="manual-icon flipup-button"></a>
                                 <a class="manual-icon flipdown-button"></a>
@@ -6564,7 +6588,35 @@
             </form>
 
         </div>
+        <!-- <div class="video-tutoral-wrap">
+                <div class="video-layer">
 
+                    <div class="player-wrap">
+                    </div>
+                </div>
+
+                <div class="overlay-button-wrap bottom">
+                        <span>操作教學影片</span>
+
+                        <a class="black-button" href="#">關閉</a>
+                </div>
+        </div> -->
+
+    </div>
+
+    <div class="video-tutoral-wrap">
+        <h1>操作教學影片</h1>
+        <div class="video-layer">
+            <div class="player-wrap">
+                <!--tutoral video-->
+                <div id="video-tutorial-zh"></div>
+                <!-- <object type="application/x-shockwave-flash" wmode="transparent" data="http://www.youtube.com/v/b5DYFL4Wl4k&amp;version=3&amp;autoplay=0&amp;controls=0&amp;showinfo=0" width="100%" height="100%" <param name="wmode" value="transparent"></object> -->
+            </div>
+        </div>
+
+        <div class="overlay-button-wrap bottom">    
+            <a class="black-button" href="#">關閉</a>
+        </div>
 
     </div>
 
@@ -6581,7 +6633,7 @@
                     <a href="#">解析度</a>
                 </li>
                 <li>
-                    <a href="#">頻道表</a>
+                    <a href="#">節目表</a>
                 </li>
             </ul>
         </div>
@@ -6694,21 +6746,21 @@
                     <form>
                         <fieldset>
 
-                            <legend class="form-title">頻道表</legend>
-                            <div class="form-group">設置頻道表的展現方式:</div>
+                            <legend class="form-title">節目表</legend>
+                            <div class="form-group">設置節目表的展現方式:</div>
                             <div class="form-group">
                                 <input type="radio" name="guide_mode" id="guide_mode1">
                                 <label class="radio-btn" for="guide_mode1">
                                     3x3
                                     <br />
-                                    <span>一頁展示9個頻道</span>
+                                    <span>一頁展示9個節目</span>
                                 </label>
                                 <br />
                                 <input type="radio" name="guide_mode" id="guide_mode2">
                                 <label class="radio-btn" for="guide_mode2">
                                     9x9
                                     <br />
-                                    <span>一頁展示81個頻道</span>
+                                    <span>一頁展示81個節目</span>
                                 </label>
                                 <br />
 
@@ -7171,22 +7223,22 @@
 
     </div>
     <div class="overlay-loading-wrap">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">讀取中...</span>
     </div>
     <div class="special-introduction" style="display: none;">
         <div class="cts-stream-tutorial-wrap">
-            <span class="video-tutorial">點擊影片，觀看頻道內的所有節目</span>
-            <span class="change-channel-tutorial">上/下翻可換頻道</span>
+            <span class="video-tutorial">點擊影片，觀看節目內的所有節目</span>
+            <span class="change-channel-tutorial">上/下翻可換節目</span>
             <div class="fake-video-element"></div>
             <form>
-                <div class="show-check-wrap">
+                <!-- <div class="show-check-wrap">
 
                     <input type="checkbox" name="show-check" id="show-check3">
                     <label class="checkbox-btn" for="show-check3"></label>
 
 
-                </div>
+                </div> -->
             </form>
 
         </div>
@@ -7194,8 +7246,8 @@
 
         <div class="cts-playback-tutorial-wrap">
             <span class="video-tutorial">你已經進入觀賞模式</span>
-            <span class="remote-tutorial">點擊左右鍵，切換至頻道內其他節目</span>
-            <span class="share-tutorial">點此分享節目</span>
+            <span class="remote-tutorial">點擊左右鍵，切換至節目內其他劇集</span>
+            <span class="share-tutorial">點此分享劇集</span>
             <div class="backhome-btn direct-left-btn on">Back to Home</div>
             <form>
                 <div class="show-check-wrap">
@@ -7225,24 +7277,24 @@
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" charset="utf-8"></script>
 <!-- 3rd party libararies -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/3rd/plugins.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/3rd/plugins.js"></script>
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
 <script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/9x9miniV23j/javascripts/jquery.titlecard.js" charset="utf-8"></script>
 
 <!-- components -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-node.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/popup-manager.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/popup-node.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/popup.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/popup-manager.js"></script>
 
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/dev.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/Navigatable.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/Controllable.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/StreamingPortal.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/Store.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/Playback.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/nn/comp/Guide.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/js/4.0.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/dev.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Navigatable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Controllable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/StreamingPortal.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Store.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Playback.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Guide.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/4.0.js"></script>
 <script type="text/javascript" charset="UTF-8">
     initCookie();
     if(lang == "zh"){
