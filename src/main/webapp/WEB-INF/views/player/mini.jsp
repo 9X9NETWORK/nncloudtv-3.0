@@ -12,12 +12,12 @@
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="display: none">
-
+<!-- en start -->   
 <div id="en">
 
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/9x9-logo.png" alt="">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
     </a>
 </div>
 <div id="member-layer">
@@ -3605,7 +3605,7 @@
 
     </div>
     <div class="overlay-loading-wrap">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/loading-icon.gif" class="loading-icon">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">Processing...</span>
     </div>
     <div class="special-introduction" style="display: none;">
@@ -3680,7 +3680,7 @@
 
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/9x9-logo.png" alt="">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
     </a>
 </div>
 <div id="member-layer">
@@ -3942,7 +3942,7 @@
                     </div>
                     <div class="inner-info-layer">
                         <span class="sign-in-text">
-                            點擊登錄
+                            點擊登入
                         </span>
                         <span class="no-Follow-text">
                             尚未訂閱任何節目，點擊訂閱更多節目
@@ -6417,7 +6417,7 @@
                         <input class="form-elements" type="text">
                     </div>
                     <div class="overlay-button-wrap bottom">
-                        <a class="black-button auto-width" href="#">回到登錄頁面</a>
+                        <a class="black-button auto-width" href="#">回到登入頁面</a>
                         <a class="black-button" href="#">重置</a>
                     </div>
                 </fieldset>
@@ -6785,7 +6785,7 @@
         <div class="tab-selector">
             <ul>
                 <li class="on">
-                    <a href="#">登錄</a>
+                    <a href="#">登入</a>
                 </li>
                 <li>
                     <a href="#">註冊</a>
@@ -6798,9 +6798,9 @@
                 <li>
                     <form>
                         <fieldset>
-                            <legend class="form-title">登錄</legend>
+                            <legend class="form-title">登入</legend>
                             <div class="form-group">
-                                <span class="form-label">使用聯合登錄:</span>
+                                <span class="form-label">使用聯合登入:</span>
                                 <a href="#" class="form-elements facebook-button">
                                     <i class="icon-fb-btn"></i>
                                     Sign in with Facebook
@@ -6822,7 +6822,7 @@
                             <div class="overlay-button-wrap bottom">
 
                                 <a class="black-button" href="#">關閉</a>
-                                <a class="black-button" href="#">登錄</a>
+                                <a class="black-button" href="#">登入</a>
 
                             </div>
 
@@ -6835,14 +6835,14 @@
                         <fieldset>
                             <legend class="form-title">註冊</legend>
                             <div class="form-group">
-                                <label class="form-label" for="">用戶名:</label>
+                                <label class="form-label" for="">名稱:</label>
                                 <input class="form-elements" type="text" name="name">
                                 <span class="form-elements notice">
                                     6-16個字符，可以使用英文字母，數字或下劃綫
                                 </span>
                             </div>
                             <div class="form-group on">
-                                <label class="form-label" for="">Email</label>
+                                <label class="form-label" for="">電子郵件</label>
                                 <input class="form-elements" name="email" type="text">
                             </div>
                             <div class="form-group">
@@ -7223,7 +7223,7 @@
 
     </div>
     <div class="overlay-loading-wrap">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/img/loading-icon.gif" class="loading-icon">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">讀取中...</span>
     </div>
     <div class="special-introduction" style="display: none;">
