@@ -113,10 +113,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -281,10 +279,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long setId = null;
-        try {
-            setId = Long.valueOf(setIdStr);
-        } catch (NumberFormatException e) {
+        Long setId = evaluateLong(setIdStr);
+        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -328,10 +324,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long setId = null;
-        try {
-            setId = Long.valueOf(setIdStr);
-        } catch (NumberFormatException e) {
+        Long setId = evaluateLong(setIdStr);
+        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -484,10 +478,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long setId = null;
-        try {
-            setId = Long.valueOf(setIdStr);
-        } catch (NumberFormatException e) {
+        Long setId = evaluateLong(setIdStr);
+        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -529,10 +521,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long setId = null;
-        try {
-            setId = Long.valueOf(setIdStr);
-        } catch (NumberFormatException e) {
+        Long setId = evaluateLong(setIdStr);
+        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -659,10 +649,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long setId = null;
-        try {
-            setId = Long.valueOf(setIdStr);
-        } catch (NumberFormatException e) {
+        Long setId = evaluateLong(setIdStr);
+        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -726,10 +714,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long setId = null;
-        try {
-            setId = Long.valueOf(setIdStr);
-        } catch (NumberFormatException e) {
+        Long setId = evaluateLong(setIdStr);
+        if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -797,10 +783,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -869,10 +853,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -933,10 +915,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -997,10 +977,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1038,10 +1016,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1088,10 +1064,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1152,10 +1126,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1246,10 +1218,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long categoryId = null;
-        try {
-            categoryId = Long.valueOf(categoryIdStr);
-        } catch (NumberFormatException e) {
+        Long categoryId = evaluateLong(categoryIdStr);
+        if (categoryId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1313,10 +1283,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long categoryId = null;
-        try {
-            categoryId = Long.valueOf(categoryIdStr);
-        } catch (NumberFormatException e) {
+        Long categoryId = evaluateLong(categoryIdStr);
+        if (categoryId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1405,10 +1373,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long categoryId = null;
-        try {
-            categoryId = Long.valueOf(categoryIdStr);
-        } catch (NumberFormatException e) {
+        Long categoryId = evaluateLong(categoryIdStr);
+        if (categoryId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return ;
@@ -1447,10 +1413,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long categoryId = null;
-        try {
-            categoryId = Long.valueOf(categoryIdStr);
-        } catch (NumberFormatException e) {
+        Long categoryId = evaluateLong(categoryIdStr);
+        if (categoryId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1488,10 +1452,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long categoryId = null;
-        try {
-            categoryId = Long.valueOf(categoryIdStr);
-        } catch (NumberFormatException e) {
+        Long categoryId = evaluateLong(categoryIdStr);
+        if (categoryId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return ;
@@ -1585,10 +1547,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long categoryId = null;
-        try {
-            categoryId = Long.valueOf(categoryIdStr);
-        } catch (NumberFormatException e) {
+        Long categoryId = evaluateLong(categoryIdStr);
+        if (categoryId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return ;
@@ -1649,10 +1609,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1690,10 +1648,8 @@ public class ApiMso extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long msoId = null;
-        try {
-            msoId = Long.valueOf(msoIdStr);
-        } catch (NumberFormatException e) {
+        Long msoId = evaluateLong(msoIdStr);
+        if (msoId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
             return null;
@@ -1718,7 +1674,7 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        // categories, indicate which system categories that be locked 
+        // categories, indicate which system categories to be locked 
         String categoriesStr = req.getParameter("categories");
         if (categoriesStr == null) {
             badRequest(resp, MISSING_PARAMETER);
@@ -1727,19 +1683,10 @@ public class ApiMso extends ApiGeneric {
         }
         String[] categoryIdsStr = categoriesStr.split(",");
         List<String> categoryIds = new ArrayList<String>();
-        Long categoryId = null;
         for (String categoryIdStr : categoryIdsStr) {
-            
-            categoryId = null;
-            try {
-                categoryId = Long.valueOf(categoryIdStr);
-            } catch(Exception e) {
-                // special lock for lock all System Category
-                if (categoryIdStr.equals(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY)) {
-                    categoryIds.add(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY);
-                }
-            }
-            if (categoryId != null) {
+            if (categoryIdStr.equals(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY)) { // special lock for lock all System Category
+                categoryIds.add(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY);
+            } else if (evaluateLong(categoryIdStr) != null) {
                 categoryIds.add(categoryIdStr);
             }
         }

@@ -302,4 +302,21 @@ public class ApiGeneric {
 	    return req.getRequestURI() + "@" + now + "[exit-state=" + exitState + "]";
 	}
 	
+	public Long evaluateLong(String stringValue) {
+	    
+	    if (stringValue == null) {
+	        return null;
+	    }
+	    
+	    Long longValue = null;
+	    try {
+	        longValue = Long.valueOf(stringValue);
+        } catch (NumberFormatException e) {
+            log.info("String value \"" + stringValue + "\" can't evaluate to type Long.");
+            return null;
+        }
+	    
+	    return longValue;
+	}
+	
 }
