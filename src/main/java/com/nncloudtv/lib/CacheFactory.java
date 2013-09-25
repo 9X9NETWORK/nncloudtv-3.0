@@ -26,13 +26,14 @@ public class CacheFactory {
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 2000; // micro seconds
-    public static final int DELAY_CHECK_THRESHOLD = 100000; // micro seconds
+    public static final int DELAY_CHECK_THRESHOLD = 150000; // micro seconds
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
     static long lastCheck = 0;
     static List<InetSocketAddress> memcacheServers = null;
     static MemcachedClient cache = null;
+    static MemcachedClient outdated = null;
     
     static boolean checkServer(InetSocketAddress addr) {
         
@@ -92,13 +93,12 @@ public class CacheFactory {
                         checkedServers.add(addr);
                     }
                 }
-                MemcachedClient shadow = cache;
                 memcacheServers = checkedServers;
                 isRunning = (memcacheServers == null || memcacheServers.isEmpty()) ? false : true;
+                if (outdated != null)
+                    outdated.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
+                outdated = cache;
                 cache = isRunning ? new MemcachedClient(new BinaryConnectionFactory(), memcacheServers) : null;
-                if (shadow != null) {
-                    shadow.shutdown();
-                }
             } catch (NullPointerException e) {
                 log.severe("memcache is missing");
             } catch (IOException e) {
