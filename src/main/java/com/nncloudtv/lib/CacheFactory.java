@@ -25,8 +25,8 @@ public class CacheFactory {
     
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
-    public static final int ASYNC_CACHE_TIMEOUT = 2000; // micro seconds
-    public static final int HEALTH_CHECK_INTERVAL = 100000; // micro seconds
+    public static final int ASYNC_CACHE_TIMEOUT = 2000; // milliseconds
+    public static final int HEALTH_CHECK_INTERVAL = 100000; // milliseconds
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
@@ -46,7 +46,7 @@ public class CacheFactory {
             cache = new MemcachedClient(addr);
             cache.set(key, EXP_DEFAULT, addr);
             future = cache.asyncGet(key);
-            if (future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS) != null) {
+            if (future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS) != null) {
                 alive = true;
             }
         } catch (NullPointerException e) {
@@ -61,7 +61,7 @@ public class CacheFactory {
             log.warning(e.getMessage());
         } finally {
             long delta = new Date().getTime() - now;
-            log.info("it takes " + delta + " microseconds");
+            log.info("it takes " + delta + " milliseconds");
             if (cache != null)
                 cache.shutdown();
             if (future != null)
@@ -100,7 +100,7 @@ public class CacheFactory {
                 memcacheServers = checkedServers;
                 isRunning = (memcacheServers == null || memcacheServers.isEmpty()) ? false : true;
                 if (!isRunning)
-                    log.warning("no available memcache server");
+                    log.severe("no available memcache server");
             }
             return isRunning ? new MemcachedClient(new BinaryConnectionFactory(), memcacheServers) : null;
             
@@ -135,7 +135,7 @@ public class CacheFactory {
         Future<Object> future = null;
         try {
             future = cache.asyncGet(key);
-            obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS); // Asynchronously 
+            obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS); // Asynchronously 
         } catch (CheckedOperationTimeoutException e) {
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
@@ -146,12 +146,12 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
+            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS);
             if (future != null)
                 future.cancel(false);
         }
         if (reconfig)
-            log.info("memcache reconfig costs " + (new Date().getTime() - now) + " microseconds");
+            log.info("memcache reconfig costs " + (new Date().getTime() - now) + " milliseconds");
         if (obj == null)
             log.info("cache [" + key + "] --> missed");
         return obj;
@@ -169,7 +169,7 @@ public class CacheFactory {
         try {
             cache.set(key, EXP_DEFAULT, obj);
             future = cache.asyncGet(key);
-            retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
+            retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
@@ -180,11 +180,11 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
+            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS);
             if (future != null)
                 future.cancel(false);
         }
-        log.info("save operation costs " + (new Date().getTime() - now) + " microseconds");
+        log.info("save operation costs " + (new Date().getTime() - now) + " milliseconds");
         if (retObj == null)
             log.info("cache [" + key + "] --> not saved");
         else
@@ -201,7 +201,7 @@ public class CacheFactory {
         if (cache == null) return;
         
         try {
-            cache.delete(key).get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
+            cache.delete(key).get(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS);
             isDeleted = true;
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
@@ -213,9 +213,9 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
+            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MILLISECONDS);
         }
-        log.info("delete operation costs " + (new Date().getTime() - now) + " microseconds");
+        log.info("delete operation costs " + (new Date().getTime() - now) + " milliseconds");
         if (isDeleted) {
             log.info("cache [" + key + "] --> deleted");
         } else {
