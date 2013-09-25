@@ -24,7 +24,7 @@ import com.nncloudtv.model.SysTag;
 @Service
 public class MsoConfigManager {
     
-    private MsoConfigDao configDao = new MsoConfigDao();
+    static MsoConfigDao configDao = new MsoConfigDao();
     protected static final Logger log = Logger.getLogger(MsoConfigManager.class.getName());
     
     static String getProperty(String propertyFile, String propertyName) {
@@ -228,6 +228,25 @@ public class MsoConfigManager {
         
         return verifiedLocks;
     }
-
+    
+    // DB first, property file as fallback
+    public static String getMemcacheServer() {
+    
+        String result = null;
+        MsoConfig config = configDao.findByItem(MsoConfig.MEMCACHE_SERVER);
+        if (config != null) {
+            result = config.getValue();
+        }
+        if (result == null || result.isEmpty()) {
+            try {
+                Properties properties = new Properties();
+                properties.load(MsoConfigManager.class.getClassLoader().getResourceAsStream("memcache.properties"));
+                result = properties.getProperty("server");
+            } catch (IOException e) {
+                log.warning(e.getMessage());
+            }
+        }
+        return result;
+    }
 }
 

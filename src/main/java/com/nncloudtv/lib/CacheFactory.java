@@ -5,13 +5,14 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.nncloudtv.service.MsoConfigManager;
 
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
@@ -24,28 +25,28 @@ public class CacheFactory {
     
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
-    public static final int ASYNC_CACHE_TIMEOUT = 2;
+    public static final int ASYNC_CACHE_TIMEOUT = 2000; // micro seconds
     public static final int DELAY_CHECK_THRESHOLD = 100000; // micro seconds
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
-    private static long lastCheck = 0;
-    private static List<InetSocketAddress> memcacheServers = null;
+    static long lastCheck = 0;
+    static List<InetSocketAddress> memcacheServers = null;
+    static MemcachedClient cache = null;
     
     static boolean checkServer(InetSocketAddress addr) {
         
         String key = "loop_test(" + new Date().getTime() + ")";
-        boolean alive = false;
-        
         log.info("key = " + key);
+        boolean alive = false;
         
         MemcachedClient cache = null;
         Future<Object> future = null;
         try {
             cache = new MemcachedClient(addr);
-            cache.set(key, CacheFactory.EXP_DEFAULT, addr);
+            cache.set(key, EXP_DEFAULT, addr);
             future = cache.asyncGet(key);
-            if (future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS) != null) {
+            if (future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS) != null) {
                 alive = true;
             }
         } catch (NullPointerException e) {
@@ -75,16 +76,12 @@ public class CacheFactory {
     
     public static MemcachedClient getClient(boolean reconfig) {
         
-        System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
-        Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
-        MemcachedClient cache = null;
-        
-        try {
-            if (reconfig) {
-                // check & rebuild server list
-                Properties properties = new Properties();
-                properties.load(CacheFactory.class.getClassLoader().getResourceAsStream("memcache.properties"));
-                String serverStr = properties.getProperty("server");
+        if (reconfig || cache == null) {
+            // check & rebuild available server list
+            System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
+            Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
+            try {
+                String serverStr = MsoConfigManager.getMemcacheServer();
                 List<InetSocketAddress> checkedServers = new ArrayList<InetSocketAddress>();
                 log.info("memcache server = " + serverStr);
                 String[] serverList = serverStr.split(",");
@@ -95,21 +92,21 @@ public class CacheFactory {
                         checkedServers.add(addr);
                     }
                 }
+                MemcachedClient shadow = cache;
                 memcacheServers = checkedServers;
                 isRunning = (memcacheServers == null || memcacheServers.isEmpty()) ? false : true;
-                if (!isRunning) {
-                    return null;
+                cache = isRunning ? new MemcachedClient(new BinaryConnectionFactory(), memcacheServers) : null;
+                if (shadow != null) {
+                    shadow.shutdown();
                 }
+            } catch (NullPointerException e) {
+                log.severe("memcache is missing");
+            } catch (IOException e) {
+                log.severe("memcache io exception");
+            } catch (Exception e) {
+                log.severe("memcache exception");
+                e.printStackTrace();
             }
-            cache = new MemcachedClient(new BinaryConnectionFactory(), memcacheServers);
-            
-        } catch (NullPointerException e) {
-            log.severe("memcache is missing");
-        } catch (IOException e) {
-            log.severe("memcache io exception");
-        } catch (Exception e) {
-            log.severe("memcache exception");
-            e.printStackTrace();
         }
         return cache;
     }
@@ -119,7 +116,7 @@ public class CacheFactory {
         if (key == null || key.isEmpty()) return null;
         boolean reconfig = false;
         long now = new Date().getTime();
-        if (now - lastCheck > CacheFactory.DELAY_CHECK_THRESHOLD) {
+        if (now - lastCheck > DELAY_CHECK_THRESHOLD) {
             // check point
             lastCheck = now;
             reconfig = true;
@@ -127,7 +124,7 @@ public class CacheFactory {
             // cache is temporarily not running
             return null;
         }
-        MemcachedClient cache = CacheFactory.getClient(reconfig);
+        MemcachedClient cache = getClient(reconfig);
         if (cache == null) return null;
         
         Object obj = null;
@@ -145,7 +142,6 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown();
             if (future != null)
                 future.cancel(false);
         }
@@ -153,17 +149,17 @@ public class CacheFactory {
             log.info("cache [" + key + "] --> missed");
         return obj;
     }
-
+    
     public static Object set(String key, Object obj) {
         
         if (!isRunning || key == null || key.isEmpty()) return null;
-        MemcachedClient cache = CacheFactory.getClient();
+        MemcachedClient cache = getClient();
         if (cache == null) return null;
         
         Future<Object> future = null;
         Object retObj = null;
         try {
-            cache.set(key, CacheFactory.EXP_DEFAULT, obj);
+            cache.set(key, EXP_DEFAULT, obj);
             future = cache.asyncGet(key);
             retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
         } catch (CheckedOperationTimeoutException e){
@@ -176,7 +172,6 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
-            cache.shutdown();
             if (future != null)
                 future.cancel(false);
         }
@@ -186,12 +181,12 @@ public class CacheFactory {
             log.info("cache [" + key + "] --> saved");
         return retObj;
     }    
-
+    
     public static void delete(String key) {
         
         boolean isDeleted = false;
         if (!isRunning || key == null || key.isEmpty()) return;
-        MemcachedClient cache = CacheFactory.getClient();
+        MemcachedClient cache = getClient();
         if (cache == null) return;
         
         try {
@@ -206,14 +201,11 @@ public class CacheFactory {
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
-        } finally {
-            cache.shutdown();
         }
         if (isDeleted) {
             log.info("cache [" + key + "] --> deleted");
         } else {
             log.info("cache [" + key + "] --> not deleted");
         }
-    }    
-    
+    }
 }

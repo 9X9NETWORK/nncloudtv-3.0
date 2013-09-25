@@ -34,6 +34,7 @@ public class MsoConfig {
     public static String SUPPORTED_REGION = "supported-region";
     public static String API_MINIMAL = "api-minimal";
     public static String SYSTEM_CATEGORY_MASK = "system-category-mask";
+    public static String MEMCACHE_SERVER = "memcache-server";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
