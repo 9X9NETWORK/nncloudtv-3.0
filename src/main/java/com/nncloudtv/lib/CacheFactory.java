@@ -43,6 +43,7 @@ public class CacheFactory {
         
         MemcachedClient cache = null;
         Future<Object> future = null;
+        long now = new Date().getTime();
         try {
             cache = new MemcachedClient(addr);
             cache.set(key, EXP_DEFAULT, addr);
@@ -61,6 +62,8 @@ public class CacheFactory {
         } catch (IOException e) {
             log.warning(e.getMessage());
         } finally {
+            long delta = new Date().getTime() - now;
+            log.info("it takes " + delta + " microseconds");
             if (cache != null)
                 cache.shutdown();
             if (future != null)
@@ -95,6 +98,8 @@ public class CacheFactory {
                 }
                 memcacheServers = checkedServers;
                 isRunning = (memcacheServers == null || memcacheServers.isEmpty()) ? false : true;
+                if (!isRunning)
+                    log.warning("no available memcache server");
                 if (outdated != null)
                     outdated.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
                 outdated = cache;
