@@ -26,16 +26,14 @@ public class CacheFactory {
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 2000; // micro seconds
-    public static final int HEALTH_CHECK_INTERVAL = 150000; // micro seconds
+    public static final int HEALTH_CHECK_INTERVAL = 100000; // micro seconds
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
-    static long lastCheck = 0;
-    static List<InetSocketAddress> memcacheServers = null;
-    static MemcachedClient cache = null;
-    static MemcachedClient outdated = null;
+    private static long lastCheck = 0;
+    private static List<InetSocketAddress> memcacheServers = null;
     
-    static boolean checkServer(InetSocketAddress addr) {
+    private static boolean checkServer(InetSocketAddress addr) {
         
         String key = "loop_test(" + new Date().getTime() + ")";
         log.info("key = " + key);
@@ -75,16 +73,19 @@ public class CacheFactory {
     }
     
     public static MemcachedClient getClient() {
+        
         return getClient(false);
     }
     
-    public static MemcachedClient getClient(boolean reconfig) {
+    private static MemcachedClient getClient(boolean reconfig) {
         
-        if (reconfig || cache == null) {
+        System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
+        Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
+        
+        try {
             // check & rebuild available server list
-            System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SunLogger"); 
-            Logger.getLogger("net.spy.memcached").setLevel(Level.SEVERE);
-            try {
+            if (reconfig) {
+                
                 String serverStr = MsoConfigManager.getMemcacheServer();
                 List<InetSocketAddress> checkedServers = new ArrayList<InetSocketAddress>();
                 log.info("memcache server = " + serverStr);
@@ -100,20 +101,18 @@ public class CacheFactory {
                 isRunning = (memcacheServers == null || memcacheServers.isEmpty()) ? false : true;
                 if (!isRunning)
                     log.warning("no available memcache server");
-                if (outdated != null)
-                    outdated.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
-                outdated = cache;
-                cache = isRunning ? new MemcachedClient(new BinaryConnectionFactory(), memcacheServers) : null;
-            } catch (NullPointerException e) {
-                log.severe("memcache is missing");
-            } catch (IOException e) {
-                log.severe("memcache io exception");
-            } catch (Exception e) {
-                log.severe("memcache exception");
-                e.printStackTrace();
             }
+            return isRunning ? new MemcachedClient(new BinaryConnectionFactory(), memcacheServers) : null;
+            
+        } catch (NullPointerException e) {
+            log.severe("memcache is missing");
+        } catch (IOException e) {
+            log.severe("memcache io exception");
+        } catch (Exception e) {
+            log.severe("memcache exception");
+            e.printStackTrace();
         }
-        return cache;
+        return null;
     }
     
     public static Object get(String key) {
@@ -147,9 +146,12 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
+            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
             if (future != null)
                 future.cancel(false);
         }
+        if (reconfig)
+            log.info("memcache reconfig costs " + (new Date().getTime() - now) + " microseconds");
         if (obj == null)
             log.info("cache [" + key + "] --> missed");
         return obj;
@@ -158,6 +160,7 @@ public class CacheFactory {
     public static Object set(String key, Object obj) {
         
         if (!isRunning || key == null || key.isEmpty()) return null;
+        long now = new Date().getTime();
         MemcachedClient cache = getClient();
         if (cache == null) return null;
         
@@ -177,9 +180,11 @@ public class CacheFactory {
             log.severe("get Exception");
             e.printStackTrace();
         } finally {
+            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
             if (future != null)
                 future.cancel(false);
         }
+        log.info("save operation costs " + (new Date().getTime() - now) + " microseconds");
         if (retObj == null)
             log.info("cache [" + key + "] --> not saved");
         else
@@ -191,6 +196,7 @@ public class CacheFactory {
         
         boolean isDeleted = false;
         if (!isRunning || key == null || key.isEmpty()) return;
+        long now = new Date().getTime();
         MemcachedClient cache = getClient();
         if (cache == null) return;
         
@@ -206,7 +212,10 @@ public class CacheFactory {
         } catch (Exception e) {
             log.severe("get Exception");
             e.printStackTrace();
+        } finally {
+            cache.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
         }
+        log.info("delete operation costs " + (new Date().getTime() - now) + " microseconds");
         if (isDeleted) {
             log.info("cache [" + key + "] --> deleted");
         } else {
