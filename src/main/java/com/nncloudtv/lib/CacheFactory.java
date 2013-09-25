@@ -26,7 +26,7 @@ public class CacheFactory {
     public static final int EXP_DEFAULT = 2592000;
     public static final int PORT_DEFAULT = 11211;
     public static final int ASYNC_CACHE_TIMEOUT = 2000; // micro seconds
-    public static final int DELAY_CHECK_THRESHOLD = 150000; // micro seconds
+    public static final int HEALTH_CHECK_INTERVAL = 150000; // micro seconds
     public static final String ERROR = "ERROR";
     
     public static boolean isRunning = true;
@@ -101,7 +101,7 @@ public class CacheFactory {
                 if (!isRunning)
                     log.warning("no available memcache server");
                 if (outdated != null)
-                    outdated.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
+                    outdated.shutdown(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
                 outdated = cache;
                 cache = isRunning ? new MemcachedClient(new BinaryConnectionFactory(), memcacheServers) : null;
             } catch (NullPointerException e) {
@@ -121,7 +121,7 @@ public class CacheFactory {
         if (key == null || key.isEmpty()) return null;
         boolean reconfig = false;
         long now = new Date().getTime();
-        if (now - lastCheck > DELAY_CHECK_THRESHOLD) {
+        if (now - lastCheck > HEALTH_CHECK_INTERVAL) {
             // check point
             lastCheck = now;
             reconfig = true;
@@ -136,7 +136,7 @@ public class CacheFactory {
         Future<Object> future = null;
         try {
             future = cache.asyncGet(key);
-            obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS); // Asynchronously 
+            obj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS); // Asynchronously 
         } catch (CheckedOperationTimeoutException e) {
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
@@ -166,7 +166,7 @@ public class CacheFactory {
         try {
             cache.set(key, EXP_DEFAULT, obj);
             future = cache.asyncGet(key);
-            retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
+            retObj = future.get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
         } catch (OperationTimeoutException e) {
@@ -195,7 +195,7 @@ public class CacheFactory {
         if (cache == null) return;
         
         try {
-            cache.delete(key).get(ASYNC_CACHE_TIMEOUT, TimeUnit.SECONDS);
+            cache.delete(key).get(ASYNC_CACHE_TIMEOUT, TimeUnit.MICROSECONDS);
             isDeleted = true;
         } catch (CheckedOperationTimeoutException e){
             log.warning("get CheckedOperationTimeoutException");
