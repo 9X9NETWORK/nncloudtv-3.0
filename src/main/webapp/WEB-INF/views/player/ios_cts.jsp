@@ -9,6 +9,7 @@
   var url = '${reportUrl}';
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-21595932-1']);
+  _gaq.push([‘set’,’page’,’/transition’]);
   _gaq.push(['_trackPageview', url]);
   _gaq.push(['_trackPageview', '/transition']);
 
@@ -29,8 +30,8 @@
     <h2>第一屆台灣微電影節現正熱映中</h2>
   </div>
   <div id="ios-btn">
-    <a href="${storeUrl}" onclick="_gaq.push([‘set’,’page’,’/transition’]);_gaq.push(['_trackEvent','download','download']);"><div class="btn-white" id="btn-ios-download">下載 App</div></a>
-    <a href="${fliprUrl}" onclick="_gaq.push([‘set’,’page’,’/transition’]);_gaq.push(['_trackEvent','launch','launch']);"><div class="btn-white" id="btn-ios-launch">打開 App</div></a>
+    <a href="${storeUrl}" onclick="_gaq.push(['_trackEvent','download','download']);"><div class="btn-white" id="btn-ios-download">下載 App</div></a>
+    <a href="${fliprUrl}" onclick="_gaq.push(['_trackEvent','launch','launch']);"><div class="btn-white" id="btn-ios-launch">打開 App</div></a>
   </div>
 </div>
 <div id="ios-view">
