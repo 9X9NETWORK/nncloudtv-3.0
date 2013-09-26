@@ -9,7 +9,7 @@
   var url = '${reportUrl}';
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-21595932-1']);
-  _gaq.push([‘set’,’page’,’/transition’]);
+  _gaq.push(['set', 'page', '/transition']);
   _gaq.push(['_trackPageview', url]);
   _gaq.push(['_trackPageview', '/transition']);
 
