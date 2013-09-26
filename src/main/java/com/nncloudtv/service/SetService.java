@@ -1,10 +1,7 @@
 package com.nncloudtv.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +22,15 @@ public class SetService {
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
-    private NnChannelManager channelMngr;
+    private ContainerService containerService;
     
     @Autowired
     public SetService(SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr,
-                        SysTagMapManager sysTagMapMngr, NnChannelManager channelMngr) {
+                        SysTagMapManager sysTagMapMngr, ContainerService containerService) {
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
-        this.channelMngr = channelMngr;
+        this.containerService = containerService;
     }
     
     /** build Set from SysTag and SysTagDisplay */
@@ -131,9 +128,9 @@ public class SetService {
         return composeSet(set, setMeta);
     }
     
-    /** get Channels from Set ordered by Seq, the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop)
-     *  retrieve from SysTagMap
-     *  @param setId required, SysTag's ID with type = Set
+    /** Get Channels from Set ordered by Seq, the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop)
+     *    retrieve from SysTagMap.
+     *  @param setId required, Set ID
      *  @return list of Channels */
     public List<NnChannel> getChannelsOrderBySeq(Long setId) {
         
@@ -141,71 +138,29 @@ public class SetService {
             return new ArrayList<NnChannel>();
         }
         
-        List<SysTagMap> sysTagMaps = sysTagMapMngr.findBySysTagId(setId);
-        if (sysTagMaps == null || sysTagMaps.size() == 0) {
+        List<NnChannel> results = containerService.getChannelsOrderBySeq(setId);
+        if (results == null) {
             return new ArrayList<NnChannel>();
-        }
-        
-        List<Long> channelIdList = new ArrayList<Long>();
-        for (SysTagMap item : sysTagMaps) {
-            channelIdList.add(item.getChannelId());
-        }
-        List<NnChannel> channels = channelMngr.findByIds(channelIdList);
-        if (channels == null || channels.size() == 0) {
-            return new ArrayList<NnChannel>();
-        }
-        
-        Map<Long, NnChannel> channelMap = new TreeMap<Long, NnChannel>();
-        for (NnChannel channel : channels) {
-            channelMap.put(channel.getId(), channel);
-        }
-        List<NnChannel> results = new ArrayList<NnChannel>();
-        NnChannel result = null;
-        for (SysTagMap item : sysTagMaps) {
-            result = channelMap.get(item.getChannelId());
-            if (result != null) {
-                result.setTimeStart(item.getTimeStart());
-                result.setTimeEnd(item.getTimeEnd());
-                result.setSeq(item.getSeq());
-                result.setAlwaysOnTop(item.isAlwaysOnTop());
-                results.add(result);
-            } else {
-                // TODO : Channel not exist, delete SysTagMap ?
-            }
         }
         
         return results;
     }
     
-    /** get Channels from Set ordered by UpdateTime, Channel with AlwaysOnTop set to True will put in the head of results,
-     *  the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop) retrieve from SysTagMap
-     *  @param setId required, SysTag's ID with type = Set
-     *  @return list of Channels */
+    /**
+     * Get Channels from Set ordered by UpdateTime, Channel with AlwaysOnTop set to True will put in the head of results,
+     *   the Channels populate additional information (TimeStart, TimeEnd, Seq, AlwaysOnTop) retrieve from SysTagMap.
+     * @param setId required, Set ID
+     * @return list of Channels */
     public List<NnChannel> getChannelsOrderByUpdateTime(Long setId) {
         
         if (setId == null) {
             return new ArrayList<NnChannel>();
         }
-        List<NnChannel> channels = getChannelsOrderBySeq(setId);
-        if (channels == null) {
+        
+        List<NnChannel> results = containerService.getChannelsOrderByUpdateTime(setId);
+        if (results == null) {
             return new ArrayList<NnChannel>();
         }
-        if (channels.size() < 2) {
-            return channels;
-        }
-        
-        List<NnChannel> results = new ArrayList<NnChannel>();
-        List<NnChannel> orderedChannels = new ArrayList<NnChannel>();
-        for (NnChannel channel : channels) {
-            if (channel.isAlwaysOnTop() == true) {
-                results.add(channel);
-            } else {
-                orderedChannels.add(channel);
-            }
-        }
-        
-        Collections.sort(orderedChannels, channelMngr.getChannelComparator("default"));
-        results.addAll(orderedChannels);
         
         return results;
     }

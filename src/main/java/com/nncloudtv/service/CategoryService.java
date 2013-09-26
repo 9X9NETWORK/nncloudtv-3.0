@@ -28,15 +28,15 @@ public class CategoryService {
     private SysTagManager sysTagMngr;
     private SysTagDisplayManager sysTagDisplayMngr;
     private SysTagMapManager sysTagMapMngr;
-    private SetService setService;
+    private ContainerService containerService;
     
     @Autowired
     public CategoryService(SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr,
-                        SysTagMapManager sysTagMapMngr, SetService setService) {
+                        SysTagMapManager sysTagMapMngr, ContainerService containerService) {
         this.sysTagMngr = sysTagMngr;
         this.sysTagDisplayMngr = sysTagDisplayMngr;
         this.sysTagMapMngr = sysTagMapMngr;
-        this.setService = setService;
+        this.containerService = containerService;
     }
     
     /** build promotion Category (MSO owned) from SysTag and SysTagDisplay */
@@ -237,21 +237,11 @@ public class CategoryService {
      */
     public void delete(Long categoryId) {
         
-        // delete channels, SysTagMap
-        List<SysTagMap>  channels = sysTagMapMngr.findBySysTagId(categoryId);
-        if (channels != null && channels.size() > 0) {
-            sysTagMapMngr.deleteAll(channels);
+        if (categoryId == null) {
+            return ;
         }
-        // delete displays, SysTagDisplay
-        List<SysTagDisplay> displays = sysTagDisplayMngr.findAllBySysTagId(categoryId);
-        if (displays != null && displays.size() > 0) {
-            sysTagDisplayMngr.deleteAll(displays);
-        }
-        // delete category, SysTag
-        SysTag category = sysTagMngr.findById(categoryId);
-        if (category != null) {
-            sysTagMngr.delete(category);
-        }
+        
+        containerService.delete(categoryId);
     }
     
     /**
@@ -366,8 +356,7 @@ public class CategoryService {
             return new ArrayList<NnChannel>();
         }
         
-        // TODO the execution logic is completely same with SetService.getChannelsOrderByUpdateTime, it should be extract.
-        List<NnChannel> results = setService.getChannelsOrderByUpdateTime(categoryId);
+        List<NnChannel> results = containerService.getChannelsOrderByUpdateTime(categoryId);
         if (results == null) {
             return new ArrayList<NnChannel>();
         }
