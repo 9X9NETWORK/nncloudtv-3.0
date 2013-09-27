@@ -203,5 +203,22 @@ public class SetService {
         
         return true;
     }
+    
+    /**
+     * Add Channel to Set with additional setting.
+     * @param setId required, Set ID
+     * @param channelId required, Channel ID
+     * @param timeStart optional, set a period start that Channel appear in the Set
+     * @param timeEnd optional, set a period end that Channel appear in the Set
+     * @param alwaysOnTop optional, indicate the Channel is set on top in Set or not
+     */
+    public void addChannelToSet(Long setId, Long channelId, Short timeStart, Short timeEnd, Boolean alwaysOnTop) {
+        
+        if (setId == null || channelId == null) {
+            return ;
+        }
+        
+        containerService.addChannel(setId, channelId, timeStart, timeEnd, alwaysOnTop, null);
+    }
 
 }

@@ -291,23 +291,7 @@ public class CategoryService {
             return ;
         }
         
-        SysTagMap channel = sysTagMapMngr.findBySysTagIdAndChannelId(categoryId, channelId);
-        if (channel == null) {
-            channel = new SysTagMap(categoryId, channelId);
-            channel.setSeq((short) 0);
-            channel.setTimeStart((short) 0);
-            channel.setTimeEnd((short) 0);
-            channel.setAlwaysOnTop(false);
-        }
-        
-        if (seq != null) {
-            channel.setSeq(seq);
-        }
-        if (alwaysOnTop != null) {
-            channel.setAlwaysOnTop(alwaysOnTop);
-        }
-        
-        sysTagMapMngr.save(channel);
+        containerService.addChannel(categoryId, channelId, null, null, alwaysOnTop, seq);
     }
     
     /**

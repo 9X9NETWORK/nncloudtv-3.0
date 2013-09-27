@@ -202,27 +202,7 @@ public class ApiMsoService {
             return ;
         }
         
-        // create if not exist
-        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(setId, channelId);
-        if (sysTagMap == null) {
-            sysTagMap = new SysTagMap(setId, channelId);
-            sysTagMap.setSeq((short) 0);
-            sysTagMap.setTimeStart((short) 0);
-            sysTagMap.setTimeEnd((short) 0);
-            sysTagMap.setAlwaysOnTop(false);
-        }
-        
-        if (timeStart != null) {
-            sysTagMap.setTimeStart(timeStart);
-        }
-        if (timeEnd != null) {
-            sysTagMap.setTimeEnd(timeEnd);
-        }
-        if (alwaysOnTop != null) {
-            sysTagMap.setAlwaysOnTop(alwaysOnTop);
-        }
-        
-        sysTagMapMngr.save(sysTagMap);
+        setService.addChannelToSet(setId, channelId, timeStart, timeEnd, alwaysOnTop);
     }
     
     /** service for ApiMso.setChannelRemove

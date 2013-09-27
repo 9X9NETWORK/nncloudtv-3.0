@@ -143,5 +143,37 @@ public class ContainerService {
         
         return results;
     }
+    
+    public void addChannel(Long sysTagId, Long channelId, Short timeStart, Short timeEnd, Boolean alwaysOnTop, Short seq) {
+        
+        if (sysTagId == null || channelId == null) {
+            return ;
+        }
+        
+        // create if not exist
+        SysTagMap sysTagMap = sysTagMapMngr.findBySysTagIdAndChannelId(sysTagId, channelId);
+        if (sysTagMap == null) {
+            sysTagMap = new SysTagMap(sysTagId, channelId);
+            sysTagMap.setSeq((short) 0);
+            sysTagMap.setTimeStart((short) 0);
+            sysTagMap.setTimeEnd((short) 0);
+            sysTagMap.setAlwaysOnTop(false);
+        }
+        
+        if (timeStart != null) {
+            sysTagMap.setTimeStart(timeStart);
+        }
+        if (timeEnd != null) {
+            sysTagMap.setTimeEnd(timeEnd);
+        }
+        if (alwaysOnTop != null) {
+            sysTagMap.setAlwaysOnTop(alwaysOnTop);
+        }
+        if (seq != null) {
+            sysTagMap.setSeq(seq);
+        }
+        
+        sysTagMapMngr.save(sysTagMap);
+    }
 
 }
