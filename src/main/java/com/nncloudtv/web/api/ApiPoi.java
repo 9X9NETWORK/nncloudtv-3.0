@@ -68,11 +68,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long userId = evaluateLong(userIdStr);
         if (userId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -122,11 +118,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long userId = evaluateLong(userIdStr);
         if (userId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -171,10 +163,7 @@ public class ApiPoi extends ApiGeneric {
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null) {
             
-            try {
-                startDateLong = Long.valueOf(startDateStr);
-            } catch (NumberFormatException e) {
-            }
+            startDateLong = evaluateLong(startDateStr);
             if (startDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -187,10 +176,7 @@ public class ApiPoi extends ApiGeneric {
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null) {
             
-            try {
-                endDateLong = Long.valueOf(endDateStr);
-            } catch (NumberFormatException e) {
-            }
+            endDateLong = evaluateLong(endDateStr);
             if (endDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -231,11 +217,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiCampaignId = null;
-        try {
-            poiCampaignId = Long.valueOf(poiCampaignIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiCampaignId = evaluateLong(poiCampaignIdStr);
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -275,11 +257,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiCampaignId = null;
-        try {
-            poiCampaignId = Long.valueOf(poiCampaignIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiCampaignId = evaluateLong(poiCampaignIdStr);
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -316,10 +294,7 @@ public class ApiPoi extends ApiGeneric {
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null) {
             
-            try {
-                startDateLong = Long.valueOf(startDateStr);
-            } catch (NumberFormatException e) {
-            }
+            startDateLong = evaluateLong(startDateStr);
             if (startDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -332,10 +307,7 @@ public class ApiPoi extends ApiGeneric {
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null) {
             
-            try {
-                endDateLong = Long.valueOf(endDateStr);
-            } catch (NumberFormatException e) {
-            }
+            endDateLong = evaluateLong(endDateStr);
             if (endDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -376,11 +348,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiCampaignId = null;
-        try {
-            poiCampaignId = Long.valueOf(poiCampaignIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiCampaignId = evaluateLong(poiCampaignIdStr);
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -421,11 +389,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiCampaignId = null;
-        try {
-            poiCampaignId = Long.valueOf(poiCampaignIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiCampaignId = evaluateLong(poiCampaignIdStr);
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -454,10 +418,7 @@ public class ApiPoi extends ApiGeneric {
         Long poiPointId = null;
         String poiPointIdStr = req.getParameter("poiPointId");
         if (poiPointIdStr != null) {
-            try {
-                poiPointId = Long.valueOf(poiPointIdStr);
-            } catch (NumberFormatException e) {
-            }
+            poiPointId = evaluateLong(poiPointIdStr);
             if (poiPointId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -492,11 +453,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiCampaignId = null;
-        try {
-            poiCampaignId = Long.valueOf(poiCampaignIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiCampaignId = evaluateLong(poiCampaignIdStr);
         if (poiCampaignId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -525,10 +482,7 @@ public class ApiPoi extends ApiGeneric {
         Long pointId = null;
         String pointIdStr = req.getParameter("pointId");
         if (pointIdStr != null) {
-            try {
-                pointId = Long.valueOf(pointIdStr);
-            } catch (NumberFormatException e) {
-            }
+            pointId = evaluateLong(pointIdStr);
             if (pointId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -551,10 +505,7 @@ public class ApiPoi extends ApiGeneric {
         Long eventId = null;
         String eventIdStr = req.getParameter("eventId");
         if (eventIdStr != null) {
-            try {
-                eventId = Long.valueOf(eventIdStr);
-            } catch (NumberFormatException e) {
-            }
+            eventId = evaluateLong(eventIdStr);
             if (eventId == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -582,11 +533,7 @@ public class ApiPoi extends ApiGeneric {
         // startDate
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null && startDateStr.length() > 0) {
-            Long startDateLong = null;
-            try {
-                startDateLong = Long.valueOf(startDateStr);
-            } catch (NumberFormatException e) {
-            }
+            Long startDateLong = evaluateLong(startDateStr);
             if (startDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -601,11 +548,7 @@ public class ApiPoi extends ApiGeneric {
         // endDate
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null && endDateStr.length() > 0) {
-            Long endDateLong = null;
-            try {
-                endDateLong = Long.valueOf(endDateStr);
-            } catch (NumberFormatException e) {
-            }
+            Long endDateLong = evaluateLong(endDateStr);
             if (endDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -653,11 +596,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiId = null;
-        try {
-            poiId = Long.valueOf(poiIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiId = evaluateLong(poiIdStr);
         if (poiId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -700,11 +639,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiId = null;
-        try {
-            poiId = Long.valueOf(poiIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiId = evaluateLong(poiIdStr);
         if (poiId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -737,11 +672,7 @@ public class ApiPoi extends ApiGeneric {
         // startDate
         String startDateStr = req.getParameter("startDate");
         if (startDateStr != null && startDateStr.length() > 0) {
-            Long startDateLong = null;
-            try {
-                startDateLong = Long.valueOf(startDateStr);
-            } catch (NumberFormatException e) {
-            }
+            Long startDateLong = evaluateLong(startDateStr);
             if (startDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -754,11 +685,7 @@ public class ApiPoi extends ApiGeneric {
         // endDate
         String endDateStr = req.getParameter("endDate");
         if (endDateStr != null && endDateStr.length() > 0) {
-            Long endDateLong = null;
-            try {
-                endDateLong = Long.valueOf(endDateStr);
-            } catch (NumberFormatException e) {
-            }
+            Long endDateLong = evaluateLong(endDateStr);
             if (endDateLong == null) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
@@ -796,11 +723,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiId = null;
-        try {
-            poiId = Long.valueOf(poiIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiId = evaluateLong(poiIdStr);
         if (poiId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -846,11 +769,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long programId = null;
-        try {
-            programId = Long.valueOf(programIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long programId = evaluateLong(programIdStr);
         if (programId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -887,11 +806,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long programId = null;
-        try {
-            programId = Long.valueOf(programIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long programId = evaluateLong(programIdStr);
         if (programId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1001,11 +916,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiPointId = null;
-        try {
-            poiPointId = Long.valueOf(poiPointIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiPointId = evaluateLong(poiPointIdStr);
         if (poiPointId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1034,11 +945,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiPointId = null;
-        try {
-            poiPointId = Long.valueOf(poiPointIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiPointId = evaluateLong(poiPointIdStr);
         if (poiPointId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1157,11 +1064,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiPointId = null;
-        try {
-            poiPointId = Long.valueOf(poiPointIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiPointId = evaluateLong(poiPointIdStr);
         if (poiPointId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1192,7 +1095,7 @@ public class ApiPoi extends ApiGeneric {
             return null;
         }
         
-        pointMngr.delete(point); // TODO currently delete point with event and poi, will modify if logic change.
+        pointMngr.delete(point); // TODO currently delete point will delete event and poi too, will modify if logic change.
         
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
@@ -1209,11 +1112,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long userId = evaluateLong(userIdStr);
         if (userId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1312,11 +1211,7 @@ public class ApiPoi extends ApiGeneric {
             Long timestamp = null;
             for (String timestampStr : timestampList) {
                 
-                timestamp = null;
-                try {
-                    timestamp = Long.valueOf(timestampStr);
-                } catch(Exception e) {
-                }
+                timestamp = evaluateLong(timestampStr);
                 if (timestamp == null) {
                     badRequest(resp, INVALID_PARAMETER);
                     log.info(printExitState(now, req, "400"));
@@ -1347,11 +1242,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiEventId = null;
-        try {
-            poiEventId = Long.valueOf(poiEventIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiEventId = evaluateLong(poiEventIdStr);
         if (poiEventId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1395,11 +1286,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiEventId = null;
-        try {
-            poiEventId = Long.valueOf(poiEventIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiEventId = evaluateLong(poiEventIdStr);
         if (poiEventId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1431,8 +1318,8 @@ public class ApiPoi extends ApiGeneric {
             event.setName(name);
         }
         
-        Boolean shouldContainNotifyMsg = false;
-        Boolean shouldContainNotifyScheduler = false;
+        Boolean shouldContainNotifyMsg = false; // TODO rewrite flag control
+        Boolean shouldContainNotifyScheduler = false; // TODO rewrite flag control
         // type
         Short type = null;
         String typeStr = req.getParameter("type");
@@ -1503,11 +1390,7 @@ public class ApiPoi extends ApiGeneric {
                 Long timestamp = null;
                 for (String timestampStr : timestampList) {
                     
-                    timestamp = null;
-                    try {
-                        timestamp = Long.valueOf(timestampStr);
-                    } catch(Exception e) {
-                    }
+                    timestamp = evaluateLong(timestampStr);
                     if (timestamp == null) {
                         badRequest(resp, INVALID_PARAMETER);
                         log.info(printExitState(now, req, "400"));
@@ -1539,11 +1422,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long poiEventId = null;
-        try {
-            poiEventId = Long.valueOf(poiEventIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long poiEventId = evaluateLong(poiEventIdStr);
         if (poiEventId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1584,11 +1463,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long channelId = evaluateLong(channelIdStr);
         if (channelId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
@@ -1625,11 +1500,7 @@ public class ApiPoi extends ApiGeneric {
         Date now = new Date();
         log.info(printEnterState(now, req));
         
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long channelId = evaluateLong(channelIdStr);
         if (channelId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
