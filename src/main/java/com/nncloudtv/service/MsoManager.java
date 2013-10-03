@@ -80,7 +80,7 @@ public class MsoManager {
     	return false;
     }
     
-    public String[] getBrandInfoCache(Mso mso) {
+    public String[] getBrandInfoCache(Mso mso, String os) {
         if (mso == null) {return null; }
         String[] result = {""};
         String cacheKey = "brandInfo(" + mso.getName() + ")";
@@ -108,6 +108,8 @@ public class MsoManager {
         List<MsoConfig> list = configMngr.findByMso(mso);
         //config
         boolean regionSet = false;
+        boolean videoSet = false;
+        String videoMatchItem = MsoConfig.VIDEO + "-" + os;
         for (MsoConfig c : list) {
             System.out.println(c.getItem() + ";" + c.getValue());
             if (c.getItem().equals(MsoConfig.DEBUG))
@@ -127,9 +129,16 @@ public class MsoManager {
             if (c.getItem().equals(MsoConfig.UPGRADE_MSG)) {
                 result[0] += PlayerApiService.assembleKeyValue(MsoConfig.UPGRADE_MSG, c.getValue());
             }    
+            if (c.getItem().equals(videoMatchItem)) {
+                result[0] += PlayerApiService.assembleKeyValue(MsoConfig.VIDEO, c.getValue());
+                videoSet = true;
+            }            
         }
         if (regionSet == false) {
         	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en US;zh 台灣");
+        }
+        if (videoSet == false) {
+        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.VIDEO, "en 3IdG6Q35SuUl;zh 3IdG6Q35SuUl");
         }
         CacheFactory.set(cacheKey, result);
         return result;        

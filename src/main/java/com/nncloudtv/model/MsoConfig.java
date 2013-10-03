@@ -24,6 +24,7 @@ public class MsoConfig {
     @Column(jdbcType="VARCHAR", length=255)
     private String item;
     public static String CDN = "cdn";
+    public static String VIDEO = "video";
     public static String DEBUG = "debug";
     public static String FBTOKEN = "fbtoken";  //regardless of the brand, for player parsing feed data 
     public static String REALFBTOKEN = "realfbtoken";

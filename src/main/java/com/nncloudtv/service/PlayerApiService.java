@@ -499,7 +499,15 @@ public class PlayerApiService {
     }
      
     public String brandInfo(HttpServletRequest req) {
-        String[] result = msoMngr.getBrandInfoCache(mso);
+    	PlayerService service = new PlayerService();
+    	String os = "";
+    	if (service.isAndroid(req)) {
+    		os = "android";
+    	}
+    	if (service.isIos(req)) {
+    		os = "ios";
+    	}
+        String[] result = msoMngr.getBrandInfoCache(mso, os);
         boolean readOnly = MsoConfigManager.isInReadonlyMode(false);
         //locale
         String locale = this.findLocaleByHttpRequest(req);
