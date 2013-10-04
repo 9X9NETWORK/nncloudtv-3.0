@@ -8,7 +8,7 @@
 <meta name="description" content="${fbDescription}"/>
 <meta name="viewport" content="width=device-width"/>
 <link rel="image_src" href="${fbImg}"/>
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/css/main.css">
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/css/main.css">
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="display: none">
@@ -270,6 +270,7 @@
                         <div class="player-wrap"></div>
                         <span class="no-video-title">My Following</span>
                     </div>
+                    <div class="effect-glow"></div>
 
                     <div class="with-more-video">
                         <div class="more-video-rect-1"></div>
@@ -350,6 +351,8 @@
                         </figure>
                         <div class="player-wrap"></div>
                     </div>
+                    <div class="effect-glow"></div>
+
 
                     <div class="with-more-video">
                         <div class="more-video-rect-1"></div>
@@ -421,6 +424,7 @@
                         </figure>
                         <div class="player-wrap"></div>
                     </div>
+                    <div class="effect-glow"></div>
 
                     <div class="with-more-video">
                         <div class="more-video-rect-1"></div>
@@ -561,11 +565,6 @@
                         <span class="ep-title">Search and Rescue, Part Two - Orangutan Diary - BBC</span>
                         <span class="ep-update">1</span>
                         <span class="ch-wording">day ago</span>
-                        <div class="help-info-wrap">
-                            <i class="icon-info"></i>
-                            <span><i class="icon-info-left"></i><i class="icon-info-right"></i> flip episodes,</span>
-                            <span><i class="icon-info-up"></i><i class="icon-info-down"></i> flip Programs</span>
-                        </div>
                     </h2>
                 </div>
                 <div class="quick-shareing-wrap">
@@ -586,6 +585,13 @@
                     </ul>
                 </div>
                 <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>Instruction</span></a>
+
+                <div class="help-info-wrap">
+                    <i class="icon-info"></i>
+                    <span><i class="icon-info-left"></i><i class="icon-info-right"></i> flip episodes,</span>
+                    <span><i class="icon-info-up"></i><i class="icon-info-down"></i> flip Programs</span>
+
+                </div>
             </div>
 
             <div class="remote-wrap">
@@ -2525,6 +2531,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                     
                 </div>
             </figure>
@@ -2700,6 +2707,7 @@
                 <span class="notice-desc" style="dislay:none">
                     You changes will be lost if you close this popup now. Still close?
                 </span>
+                <span class="notice-desc" style="display:none">Connect error.</span>
                 <span class="notice-desc custom-message" style="display:none">
 
                 </span>
@@ -2762,7 +2770,7 @@
                         <label class="form-label" for="prof-birthday">Word Verification</label>
                         <div class="form-elements">
                             <div class="word-contain word-verification">
-                                
+                                <img src="">                                
                             </div>
 
                         </div>
@@ -2823,20 +2831,7 @@
                 </div>
 
             </div>
-            <form>
-                <div class="show-check-wrap">
 
-                    <input type="checkbox" name="show-check" id="show-check">
-                    <label class="checkbox-btn" for="show-check">Never show it again</label>
-
-                </div>
-
-                <div class="overlay-button-wrap bottom">
-
-                    <a class="black-button" href="#">Close</a>
-
-                </div>
-            </form>
 
         </div>
         <div class="playback-tutorial-wrap">
@@ -2884,55 +2879,45 @@
                 </div>
 
             </div>
-            <form>
-                <div class="show-check-wrap">
 
-                    <input type="checkbox" name="show-check" id="show-check2">
-                    <label class="checkbox-btn" for="show-check2">Never show it again</label>
-
-                </div>
-
-                <div class="overlay-button-wrap bottom">
-
-                    <a class="black-button" href="#">Close</a>
-
-                </div>
-            </form>
 
         </div>
-        <!-- <div class="video-tutoral-wrap">
-                <div class="video-layer">
 
-                    <div class="player-wrap">
-                    </div>
+    <div class="video-tutoral-wrap" style="display: none">
+            <h1>Instruction video</h1>
+            <div class="video-layer">
+                <div class="player-wrap">
+                    <!--tutoral video-->
+                    
                 </div>
+            </div>
 
-                <div class="overlay-button-wrap bottom">
-                        <span> Instruction video</span>
-
-                        <a class="black-button" href="#">Close</a>
-
-                </div>
-
-        </div> -->
+            <div class="overlay-button-wrap bottom">    
+                <a class="black-button" href="#">Close</a>
+            </div>
 
     </div>
-
-     <div class="video-tutoral-wrap">
-        <h1>Instruction video</h1>
-        <div class="video-layer">
-            <div class="player-wrap">
-                <!--tutoral video-->
-                <div id="video-tutorial-en"></div>
-                <!-- <object type="application/x-shockwave-flash" wmode="transparent" data="http://www.youtube.com/v/b5DYFL4Wl4k&amp;version=3&amp;autoplay=0&amp;controls=0&amp;showinfo=0" width="100%" height="100%" <param name="wmode" value="transparent"></object> -->
-            </div>
-        </div>
-
+    <div class="ie-alert-wrap" style="display: none">
+        <p class="error">
+            <i class="icon-warning"></i>
+            You are currently using Internet Explorer
+        </p>
+        <p>
+            To get the full 9x9.tv experience, please view in Chrome or Firefox.<br/>
+            To download Chrome or Firefox:
+        </p>
+        <p class="browser-layer">
+            <a href="#"><img alt="" src="img/ie-alert-chrome.png"></img>Google Chrome</a>
+            <a href="#"><img alt="" src="img/ie-alert-firefox.png"></img>Mozilla Firefox</a>
+        </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">Close</a>
         </div>
+    </div>
+
 
     </div>
+
 
     <div id="settings-wrap">
         <div class="tab-selector">
@@ -3608,53 +3593,33 @@
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">Processing...</span>
     </div>
-    <div class="special-introduction" style="display: none;">
-        <div class="cts-stream-tutorial-wrap">
-            <span class="video-tutorial">click video to watch all episodes</span>
-            <span class="change-channel-tutorial">Up/Down to change programs</span>
-            <div class="fake-video-element"></div>
-            <form>
-               <!--  <div class="show-check-wrap">
-
-                    <input type="checkbox" name="show-check" id="show-check3">
-                    <label class="checkbox-btn" for="show-check3"></label>
-
-
-                </div> -->
-            </form>
-
-        </div>
+            <div class="special-introduction" style="display: none;">
+            <div class="cts-stream-tutorial-wrap">
+                <span class="video-tutorial">click here to watch all episodes</span>
+                <span class="change-channels-left">change channels</span>
+                <span class="change-channels-right">change channels</span>
+                <span class="change-programs-top">change programs</span>
+                <span class="change-programs-bottom">change programs</span>
+                <span class="share-follow">share and follow</span>
+              
+                <div class="fake-video-element"></div>
+            </div>
 
 
-        <div class="cts-playback-tutorial-wrap">
-            <span class="video-tutorial">You are in playback mode!</span>
-            <span class="remote-tutorial">click left or right to change episodes,click un and down to change programs</span>
-            <span class="share-tutorial">share this episode</span>
-            <div class="backhome-btn direct-left-btn on">Back to Home</div>
-            <form>
-                <div class="show-check-wrap">
-
-                    <input type="checkbox" name="show-check" id="show-check4">
-                    <label class="checkbox-btn" for="show-check4"></label>
-
-
-                </div>
-            </form>
-
-
+            <div class="cts-playback-tutorial-wrap">
+                <span class="video-tutorial">Episode playback mode</span>
+                <span class="remote-tutorial">up or down to change programs,left or right to change episodes</span>
+                <span class="share-tutorial">Share and Follow</span>
+                <div class="backhome-btn direct-left-btn on"></div>
+            </div>
 
 
         </div>
-
-
-    </div>
     <div class="overlay-bg"></div>
 
 </div>
 
 <div id="bg-layer"></div>
-
-
 
 </div>  
 
@@ -3676,8 +3641,6 @@
 <!-- zh start -->   
 
 <div id="zh">
-
-
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
@@ -3933,6 +3896,7 @@
                         </div>
                         <span class="no-video-title">我的最愛</span>
                     </div>
+                    <div class="effect-glow"></div>
 
                     <div class="with-more-video">
                         <div class="more-video-rect-1"></div>
@@ -4006,12 +3970,14 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                  
                             </div>
                         </figure>
                         <div class="player-wrap">
 
                         </div>
                     </div>
+                    <div class="effect-glow"></div>
 
                     <div class="with-more-video">
                         <div class="more-video-rect-1"></div>
@@ -4086,6 +4052,7 @@
 
                         </div>
                     </div>
+                    <div class="effect-glow"></div>
 
                     <div class="with-more-video">
                         <div class="more-video-rect-1"></div>
@@ -4217,7 +4184,7 @@
             <div id="osd-wrap">
                 <figure class="ch-thumb">
                     <div class="ch-thumb-inner-center">
-                          <img />
+                          
                     </div>
                 </figure>
                 <div class="osd-content">
@@ -4235,11 +4202,6 @@
                         <span class="ep-title">Search and Rescue, Part Two - Orangutan Diary - BBC</span>
                         <span class="ep-update">1</span>
                         <span class="ch-wording">天前</span>
-                         <div class="help-info-wrap">
-                            <i class="icon-info"></i>
-                            <span><i class="icon-info-left"></i><i class="icon-info-right"></i> 翻閱劇集,</span>
-                            <span><i class="icon-info-up"></i><i class="icon-info-down"></i> 翻閱節目</span>
-                        </div>
                     </h2>
                 </div>
                 <div class="quick-shareing-wrap">
@@ -4260,6 +4222,12 @@
                     </ul>
                 </div>
                 <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>操作提示</span></a>
+                <div class="help-info-wrap">
+                    <i class="icon-info"></i>
+                    <span><i class="icon-info-left"></i><i class="icon-info-right"></i> 翻閱劇集,</span>
+                    <span><i class="icon-info-up"></i><i class="icon-info-down"></i> 翻閱節目</span>
+
+                </div>
             </div>
 
             <div class="remote-wrap">
@@ -6204,6 +6172,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                       
                 </div>
             </figure>
@@ -6386,6 +6355,7 @@
                 <span class="notice-desc" style="display:none">
                     如果現在退出，會丟失您做的更改，確定退出？
                 </span>
+                <span class="notice-desc" style="display:none">與主機連線失敗，請稍後再試。</span>
                 <span class="notice-desc custom-message" style="display:none">
 
                 </span>
@@ -6417,7 +6387,7 @@
                         <input class="form-elements" type="text">
                     </div>
                     <div class="overlay-button-wrap bottom">
-                        <a class="black-button auto-width" href="#">回到登入頁面</a>
+                        <a class="black-button auto-width" href="#">回到登錄頁面</a>
                         <a class="black-button" href="#">重置</a>
                     </div>
                 </fieldset>
@@ -6450,6 +6420,7 @@
                         </label>
                         <div class="form-elements">
                             <div class="word-contain word-verification">
+                                <img src="">
                                   
                             </div>
 
@@ -6511,20 +6482,7 @@
                 </div>
 
             </div>
-            <form>
-                <div class="show-check-wrap">
 
-                    <input type="checkbox" name="show-check" id="show-check">
-                    <label class="checkbox-btn" for="show-check">不用再提醒我</label>
-
-                </div>
-
-                <div class="overlay-button-wrap bottom">
-
-                    <a class="black-button" href="#">關閉</a>
-
-                </div>
-            </form>
 
         </div>
         <div class="playback-tutorial-wrap">
@@ -6572,53 +6530,45 @@
                 </div>
 
             </div>
-            <form>
-                <div class="show-check-wrap">
 
-                    <input type="checkbox" name="show-check" id="show-check2">
-                    <label class="checkbox-btn" for="show-check2">不用再提醒我</label>
-
-                </div>
-
-                <div class="overlay-button-wrap bottom">
-
-                    <a class="black-button" href="#">關閉</a>
-
-                </div>
-            </form>
 
         </div>
-        <!-- <div class="video-tutoral-wrap">
-                <div class="video-layer">
-
-                    <div class="player-wrap">
-                    </div>
+        
+    <div class="video-tutoral-wrap" style="display: none">
+            <h1>操作教學影片</h1>
+            <div class="video-layer">
+                <div class="player-wrap">
+                    <!--tutoral video-->
+                    
                 </div>
+            </div>
 
-                <div class="overlay-button-wrap bottom">
-                        <span>操作教學影片</span>
-
-                        <a class="black-button" href="#">關閉</a>
-                </div>
-        </div> -->
+            <div class="overlay-button-wrap bottom">    
+                <a class="black-button" href="#">關閉</a>
+            </div>
 
     </div>
-
-    <div class="video-tutoral-wrap">
-        <h1>操作教學影片</h1>
-        <div class="video-layer">
-            <div class="player-wrap">
-                <!--tutoral video-->
-                <div id="video-tutorial-zh"></div>
-                <!-- <object type="application/x-shockwave-flash" wmode="transparent" data="http://www.youtube.com/v/b5DYFL4Wl4k&amp;version=3&amp;autoplay=0&amp;controls=0&amp;showinfo=0" width="100%" height="100%" <param name="wmode" value="transparent"></object> -->
-            </div>
-        </div>
-
+    <div class="ie-alert-wrap" style="display: none">
+        <p class="error">
+            <i class="icon-warning"></i>
+            您目前正使用 Internet Explorer
+        </p>
+        <p>
+            為求完整體驗 9x9.tv 所有功能, 請使用  Chrome 或 Firefox瀏覽。<br/>
+            下載 Chrome 或 Firefox:
+        </p>
+        <p class="browser-layer">
+            <a href="#"><img alt="" src="img/ie-alert-chrome.png"></img>Google Chrome</a>
+            <a href="#"><img alt="" src="img/ie-alert-firefox.png"></img>Mozilla Firefox</a>
+        </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">關閉</a>
         </div>
+    </div>
+
 
     </div>
+
 
     <div id="settings-wrap">
         <div class="tab-selector">
@@ -6803,11 +6753,11 @@
                                 <span class="form-label">使用聯合登入:</span>
                                 <a href="#" class="form-elements facebook-button">
                                     <i class="icon-fb-btn"></i>
-                                    Sign in with Facebook
+                                    Facebook帳號登入
                                 </a>
                             </div>
                             <div class="form-group on">
-                                <label class="form-label" for="">Email</label>
+                                <label class="form-label" for="">電子郵件:</label>
                                 <input class="form-elements" name="email" type="text">
                             </div>
                             <div class="form-group">
@@ -7226,43 +7176,28 @@
         <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/loading-icon.gif" class="loading-icon">
         <span class="loading-words">讀取中...</span>
     </div>
-    <div class="special-introduction" style="display: none;">
-        <div class="cts-stream-tutorial-wrap">
-            <span class="video-tutorial">點擊影片，觀看節目內的所有節目</span>
-            <span class="change-channel-tutorial">上/下翻可換節目</span>
-            <div class="fake-video-element"></div>
-            <form>
-                <!-- <div class="show-check-wrap">
+            <div class="special-introduction" style="display: none;">
+            <div class="cts-stream-tutorial-wrap">
+                <span class="video-tutorial">點此觀看此節目所有集數</span>
+                <span class="change-channels-left">切換頻道</span>
+                <span class="change-channels-right">切換頻道</span>
+                <span class="change-programs-top">切換節目</span>
+                <span class="change-programs-bottom">切換節目</span>
+                <span class="share-follow">分享與訂閱</span>
+              
+                <div class="fake-video-element"></div>
+            </div>
 
-                    <input type="checkbox" name="show-check" id="show-check3">
-                    <label class="checkbox-btn" for="show-check3"></label>
 
+            <div class="cts-playback-tutorial-wrap">
+                <span class="video-tutorial">劇集播放模式</span>
+                <span class="remote-tutorial">上下切換節目,左右切換劇集</span>
+                <span class="share-tutorial">分享與訂閱</span>
+                <div class="backhome-btn direct-left-btn on"></div>
+            </div>
 
-                </div> -->
-            </form>
 
         </div>
-
-
-        <div class="cts-playback-tutorial-wrap">
-            <span class="video-tutorial">你已經進入觀賞模式</span>
-            <span class="remote-tutorial">點擊左右鍵，切換至節目內其他劇集</span>
-            <span class="share-tutorial">點此分享劇集</span>
-            <div class="backhome-btn direct-left-btn on">Back to Home</div>
-            <form>
-                <div class="show-check-wrap">
-
-                    <input type="checkbox" name="show-check" id="show-check4">
-                    <label class="checkbox-btn" for="show-check4"></label>
-
-
-                </div>
-            </form>
-
-        </div>
-
-
-    </div>
     <div class="overlay-bg"></div>
 
 </div>
@@ -7277,24 +7212,24 @@
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" charset="utf-8"></script>
 <!-- 3rd party libararies -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/3rd/plugins.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/3rd/plugins.js"></script>
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
 <script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/9x9miniV23j/javascripts/jquery.titlecard.js" charset="utf-8"></script>
 
 <!-- components -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/popup-node.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/popup.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/popup-manager.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/popup-node.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/popup.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/popup-manager.js"></script>
 
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/dev.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Navigatable.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Controllable.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/StreamingPortal.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Store.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Playback.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/nn/comp/Guide.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.2/js/4.0.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/dev.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Navigatable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Controllable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/StreamingPortal.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Store.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Playback.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Guide.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/4.0.js"></script>
 <script type="text/javascript" charset="UTF-8">
     initCookie();
     if(lang == "zh"){
