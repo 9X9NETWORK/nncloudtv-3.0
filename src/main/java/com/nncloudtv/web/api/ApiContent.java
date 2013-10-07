@@ -2318,7 +2318,7 @@ public class ApiContent extends ApiGeneric {
         // bgColor
         String bgColor = req.getParameter("bgColor");
         if (bgColor == null) {
-            titleCard.setBgColor(TitleCard.DEFAULT_BG_COLOR);
+            //titleCard.setBgColor(TitleCard.DEFAULT_BG_COLOR);
         } else {
             titleCard.setBgColor(bgColor);
         }
@@ -2342,7 +2342,7 @@ public class ApiContent extends ApiGeneric {
         // bgImg
         String bgImage = req.getParameter("bgImage");
         if ((bgImage == null) || bgImage.equals("")) {
-            titleCard.setBgImage(TitleCard.DEFAULT_BG_IMG);
+            //titleCard.setBgImage(TitleCard.DEFAULT_BG_IMG);
         } else {
             titleCard.setBgImage(bgImage);
         }
