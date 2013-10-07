@@ -2341,7 +2341,7 @@ public class ApiContent extends ApiGeneric {
         
         // bgImg
         String bgImage = req.getParameter("bgImage");
-        if ((bgImage == null) || bgImage.equals("")) {
+        if (bgImage == null) {
             //titleCard.setBgImage(TitleCard.DEFAULT_BG_IMG);
         } else {
             titleCard.setBgImage(bgImage);
