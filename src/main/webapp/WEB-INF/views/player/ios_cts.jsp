@@ -20,22 +20,25 @@
   })();
 
 </script>
-
 </head>
 <body>
 <div id="ios-holder">
     <div id="ios-content">
     <span class="logo"></span>
-    <h1>中華電視公司最精彩的節目盡在華視雲端電視網</h1>
-    <h2>第一屆台灣微電影節現正熱映中</h2>
+    <h1>臺灣微電影節    花非花霧非霧    華視精選節目</h1>
+    <h2>華視雲端網現正熱映</h2>
   </div>
   <div id="ios-btn">
-    <a href="${storeUrl}" onclick="_gaq.push(['_trackEvent','download','download']);"><div class="btn-white" id="btn-ios-download">下載 App</div></a>
-    <a href="${fliprUrl}" onclick="_gaq.push(['_trackEvent','launch','launch']);"><div class="btn-white" id="btn-ios-launch">打開 App</div></a>
+    <div class="btn-white" id="btn-ios-download">
+      <a href="${storeUrl}" onclick="_gaq.push(['_trackEvent','download','download']);">下載 App</a>
+    </div>
+    <div class="btn-white" id="btn-ios-launch">
+      <a href="${fliprUrl}" onclick="_gaq.push(['_trackEvent','launch','launch']);">打開 App</a>
+    </div>
   </div>
 </div>
 <div id="ios-view">
-  <img src="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/cts/thumbnail/ipad.png">
+  <img src="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/ipad.png">
 </div>
 </body>
 </html>
