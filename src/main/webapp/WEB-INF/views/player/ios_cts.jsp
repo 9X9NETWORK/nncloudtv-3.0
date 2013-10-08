@@ -38,7 +38,7 @@
   </div>
 </div>
 <div id="ios-view">
-  <img src="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/ipad.png">
+  <img src="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/cts/thumbnail/ipad.png">
 </div>
 </body>
 </html>
