@@ -17,7 +17,7 @@
 
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/9x9-logo.png" alt="">
     </a>
 </div>
 <div id="member-layer">
@@ -102,16 +102,16 @@
 
     <div id="display-layer">
         <div class="direction-button-wrap">
-            <a href=="#" class="flip-up">
+            <a href="#" class="flip-up">
                 <i class="icon-direction-up"></i>
             </a>
-            <a href=="#" class="flip-down">
+            <a href="#" class="flip-down">
                 <i class="icon-direction-down"></i>
             </a>
-            <a href=="#" class="flip-left">
+            <a href="#" class="flip-left">
                 <i class="icon-direction-left"></i>
             </a>
-            <a href=="#" class="flip-right">
+            <a href="#" class="flip-right">
                 <i class="icon-direction-right"></i>
             </a>
         </div>
@@ -868,10 +868,10 @@
         <div id="guide-group-wrap" class="mode3x3">
             <div class="direction-button-wrap">
 
-                <a href=="#" class="flip-left">
+                <a href="#" class="flip-left">
                     <i class="icon-direction-left"></i>
                 </a>
-                <a href=="#" class="flip-right">
+                <a href="#" class="flip-right">
                     <i class="icon-direction-right"></i>
                 </a>
             </div>
@@ -2907,14 +2907,13 @@
             To download Chrome or Firefox:
         </p>
         <p class="browser-layer">
-            <a href="#"><img alt="" src="img/ie-alert-chrome.png"></img>Google Chrome</a>
-            <a href="#"><img alt="" src="img/ie-alert-firefox.png"></img>Mozilla Firefox</a>
+            <a href="#"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-chrome.png"></img>Google Chrome</a>
+            <a href="#"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-firefox.png"></img>Mozilla Firefox</a>
         </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">Close</a>
         </div>
     </div>
-
 
     </div>
 
@@ -3727,14 +3726,14 @@
 
     <div id="display-layer">
         <div class="direction-button-wrap">
-            <a href=="#" class="flip-up"> <i class="icon-direction-up"></i>
+            <a href="#" class="flip-up"> <i class="icon-direction-up"></i>
             </a>
-            <a href=="#" class="flip-down"> <i class="icon-direction-down"></i>
+            <a href="#" class="flip-down"> <i class="icon-direction-down"></i>
             </a>
-            <a href=="#" class="flip-left">
+            <a href="#" class="flip-left">
                 <i class="icon-direction-left"></i>
             </a>
-            <a href=="#" class="flip-right">
+            <a href="#" class="flip-right">
                 <i class="icon-direction-right"></i>
             </a>
         </div>
@@ -4505,10 +4504,10 @@
         <div id="guide-group-wrap" class="mode3x3">
             <div class="direction-button-wrap">
 
-                <a href=="#" class="flip-left">
+                <a href="#" class="flip-left">
                     <i class="icon-direction-left"></i>
                 </a>
-                <a href=="#" class="flip-right">
+                <a href="#" class="flip-right">
                     <i class="icon-direction-right"></i>
                 </a>
             </div>
