@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<html>
 <head>
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/cts/stylesheets/main.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>
 <title>9x9.tv</title>
 <script type="text/javascript">
   var url = '${reportUrl}';
@@ -22,23 +25,15 @@
 </script>
 </head>
 <body>
-<div id="ios-holder">
-    <div id="ios-content">
-    <span class="logo"></span>
-    <h1>臺灣微電影節    花非花霧非霧    華視精選節目</h1>
-    <h2>華視雲端網現正熱映</h2>
-  </div>
-  <div id="ios-btn">
-    <div class="btn-white" id="btn-ios-download">
-      <a href="${storeUrl}" onclick="_gaq.push(['_trackEvent','download','download']);">下載 App</a>
-    </div>
-    <div class="btn-white" id="btn-ios-launch">
-      <a href="${fliprUrl}" onclick="_gaq.push(['_trackEvent','launch','launch']);">打開 App</a>
-    </div>
-  </div>
-</div>
-<div id="ios-view">
-  <img src="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/cts/thumbnail/ipad.png">
-</div>
+
+<c:import charEncoding="UTF-8" url="http://s3-us-west-2.amazonaws.com/9x9pm1/facebook_app1/cts/deployed.html"/>
+
+<script type="text/javascript">
+   $(document).ready(function(){
+        $("#storeUrl").attr("href", "${storeUrl}");
+        $("#fliprUrl").attr("href", "${fliprUrl}");
+   });
+</script>
+
 </body>
 </html>
