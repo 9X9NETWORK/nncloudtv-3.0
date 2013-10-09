@@ -109,7 +109,8 @@ public class MsoManager {
         //config
         boolean regionSet = false;
         boolean videoSet = false;
-        String videoMatchItem = MsoConfig.VIDEO + "-" + os;
+        //String videoMatchItem = MsoConfig.VIDEO + "-" + os;
+        String videoMatchItem = MsoConfig.VIDEO;
         for (MsoConfig c : list) {
             System.out.println(c.getItem() + ";" + c.getValue());
             if (c.getItem().equals(MsoConfig.DEBUG))
