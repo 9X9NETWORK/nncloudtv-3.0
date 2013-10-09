@@ -2907,8 +2907,8 @@
             To download Chrome or Firefox:
         </p>
         <p class="browser-layer">
-            <a href="#"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-chrome.png"></img>Google Chrome</a>
-            <a href="#"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-firefox.png"></img>Mozilla Firefox</a>
+            <a href="http://www.google.com/intl/zh-TW/chrome/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-chrome.png">Google Chrome</a>
+            <a href="http://moztw.org/firefox/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-firefox.png">Mozilla Firefox</a>
         </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">Close</a>
@@ -6557,8 +6557,8 @@
             下載 Chrome 或 Firefox:
         </p>
         <p class="browser-layer">
-            <a href="#"><img alt="" src="img/ie-alert-chrome.png"></img>Google Chrome</a>
-            <a href="#"><img alt="" src="img/ie-alert-firefox.png"></img>Mozilla Firefox</a>
+            <a href="http://www.google.com/intl/zh-TW/chrome/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-chrome.png">Google Chrome</a>
+            <a href="http://moztw.org/firefox/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-firefox.png">Mozilla Firefox</a>
         </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">關閉</a>
