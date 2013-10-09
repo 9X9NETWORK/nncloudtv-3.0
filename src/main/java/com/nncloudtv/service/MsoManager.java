@@ -138,7 +138,7 @@ public class MsoManager {
         	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.SUPPORTED_REGION, "en US;zh 台灣");
         }
         if (videoSet == false) {
-        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.VIDEO, "en 3IdG6Q35SuUl;zh 3IdG6Q35SuUl");
+        	result[0] += PlayerApiService.assembleKeyValue(MsoConfig.VIDEO, "en w-YkGyubqcA;zh w-YkGyubqcA");
         }
         CacheFactory.set(cacheKey, result);
         return result;        
