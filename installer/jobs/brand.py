@@ -64,6 +64,7 @@ if row == None:
   cursor.execute("""
      update nncloudtv_nnuser1.nnuser_profile set priv='111111' where userId=%s and msoId=%s;
         """, (userId, msoId))
+  dbcontent.commit()
   
 else: 
   print "!!! existing brand id:" + str(row[0])
