@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ import com.nncloudtv.model.NnUserProfile;
 import com.nncloudtv.model.SysTag;
 import com.nncloudtv.model.SysTagDisplay;
 import com.nncloudtv.model.TitleCard;
+import com.nncloudtv.service.ApiContentService;
 import com.nncloudtv.service.CounterFactory;
 import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
@@ -61,6 +63,13 @@ import com.nncloudtv.web.json.cms.Category;
 public class ApiContent extends ApiGeneric {
     
     protected static Logger log = Logger.getLogger(ApiContent.class.getName());
+    
+    private ApiContentService apiContentService;
+    
+    @Autowired
+    public ApiContent(ApiContentService apiContentService) {
+        this.apiContentService = apiContentService;
+    }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.DELETE)
     public @ResponseBody
@@ -899,7 +908,9 @@ public class ApiContent extends ApiGeneric {
             @RequestParam(required = false, value = "sphere") String sphereStr,
             @RequestParam(required = false, value = "channels") String channelIdListStr,
             @RequestParam(required = false, value = "keyword") String keyword,
-            @RequestParam(required = false, value = "userId") String userIdStr) {
+            @RequestParam(required = false, value = "userId") String userIdStr,
+            @RequestParam(required = false, value = "ytPlaylistId") String ytPlaylistIdStr,
+            @RequestParam(required = false, value = "ytUserId") String ytUserIdStr) {
     
         List<NnChannel> results = new ArrayList<NnChannel>();
         NnChannelManager channelMngr = new NnChannelManager();
@@ -1038,6 +1049,8 @@ public class ApiContent extends ApiGeneric {
             results = channelMngr.findByIds(channelIdList);
             
             Collections.sort(results, channelMngr.getChannelComparator("updateDate"));
+        } else if (ytPlaylistIdStr != null || ytUserIdStr != null) {
+            results = apiContentService.channelsSearch(brand.getId(), ytPlaylistIdStr, ytUserIdStr);
         }
         
         results = channelMngr.responseNormalization(results);
