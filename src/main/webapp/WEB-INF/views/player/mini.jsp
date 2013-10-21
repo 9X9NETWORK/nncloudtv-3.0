@@ -6589,8 +6589,8 @@
             下載 Chrome 或 Firefox:
         </p>
         <p class="browser-layer">
-            <a href="#"><img alt="" src="img/ie-alert-chrome.png">Google Chrome</a>
-            <a href="#"><img alt="" src="img/ie-alert-firefox.png">Mozilla Firefox</a>
+            <a href="#"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/img/ie-alert-chrome.png">Google Chrome</a>
+            <a href="#"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/img/ie-alert-firefox.png">Mozilla Firefox</a>
         </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">關閉</a>
