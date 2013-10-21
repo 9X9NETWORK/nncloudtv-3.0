@@ -139,7 +139,10 @@ public class WatchDogController {
            channel = chMngr.create(url, null, lang, req);
            if (channel == null)
         	   return NnNetUtil.textReturn("error\nurl invalid verified by youtube");  
-       }           
+       }
+       channel.setSphere(lang);
+       channel.setPublic(true);
+       chMngr.save(channel);
        return NnNetUtil.textReturn(channel.getIdStr());
     }
     
