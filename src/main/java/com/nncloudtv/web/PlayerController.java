@@ -17,7 +17,9 @@ import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnUser;
+import com.nncloudtv.service.MsoConfigManager;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.PlayerService;
@@ -145,17 +147,31 @@ public class PlayerController {
     	String reportUrl = service.getGAReportUrl(ch, ep, name);
     	log.info("reportUrl:" + reportUrl); 
     	
-        String fliprStr = service.getFliprUrl(ch, ep, name, req);    	
+        String fliprStr = service.getFliprUrl(ch, ep, name, req);
+        MsoManager msoMngr = new MsoManager();
+        
+        Mso mso = msoMngr.findByName(name);
+        MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.STORE_ANDROID);
+        if (config != null) {
+        	storeUrl = config.getValue();
+        }
+        /*
     	if (name.equals(Mso.NAME_CTS)) {
     		storeUrl = "market://details?id=tw.com.cts.player";
     	}
+    	*/
     	
         model.addAttribute("fliprUrl", fliprStr);    	
     	model.addAttribute("reportUrl", reportUrl);
     	model.addAttribute("storeUrl", storeUrl);
+    	if (config != null) {
+    		return "player/ios_" + mso.getName();
+    	}
+    	/*
         if (name.equals(Mso.NAME_CTS)) {
         	return "player/ios_cts";
         }
+        */
         return "player/ios";
 
     }
@@ -191,15 +207,26 @@ public class PlayerController {
             String iosStr = service.getFliprUrl(cid, pid, mso.getName(), req);
             String reportUrl = service.getGAReportUrl(ch, ep, mso.getName());
             String storeUrl = "https://itunes.apple.com/app/9x9.tv/id443352510?mt=8";
+            MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.STORE_IOS);
+            if (config != null) {
+            	storeUrl = config.getValue();
+            }
+            /*
             if (mso.getName().equals(Mso.NAME_CTS)) {
             	storeUrl = "https://itunes.apple.com/app/hua-shi-yun-duan-dian-shi-wang/id623085456?mt=8";
             }
+            */
             model.addAttribute("fliprUrl", iosStr);
             model.addAttribute("reportUrl", reportUrl);
             model.addAttribute("storeUrl", storeUrl);
+            if (config != null) {
+            	return "player/ios_" + mso.getName();
+            }
+            /*
             if (mso.getName().equals(Mso.NAME_CTS)) {
             	return "player/ios_cts";
             }
+            */
             return "player/ios";
             
         } else if (service.isAndroid(req)) {
