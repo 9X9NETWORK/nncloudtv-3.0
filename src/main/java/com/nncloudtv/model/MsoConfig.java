@@ -36,6 +36,8 @@ public class MsoConfig {
     public static String API_MINIMAL = "api-minimal";
     public static String SYSTEM_CATEGORY_MASK = "system-category-mask";
     public static String MEMCACHE_SERVER = "memcache-server";
+    public static String STORE_ANDROID = "store-android"; //android store url
+    public static String STORE_IOS = "store-ios"; //ios store url
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
