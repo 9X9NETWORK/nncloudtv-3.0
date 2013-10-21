@@ -8,7 +8,7 @@
 <meta name="description" content="${fbDescription}"/>
 <meta name="viewport" content="width=device-width"/>
 <link rel="image_src" href="${fbImg}"/>
-<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/css/main.css">
+<link rel="stylesheet" href="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/css/main.css">
 <link href="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="display: none">
@@ -17,7 +17,7 @@
 
 <div id="logo-layer">
     <a href="http://9x9.tv" target="_blank">
-        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/9x9-logo.png" alt="">
+        <img src="http://9x9ui.s3.amazonaws.com/tv4.0.1.prod/img/9x9-logo.png" alt="">
     </a>
 </div>
 <div id="member-layer">
@@ -91,7 +91,7 @@
             </div>
             <a class="remote-play" href="#">
                 <i class="icon-video-play"></i>
-                <i class="icon-video-pause"></i>
+               <!--  <i class="icon-video-pause"></i> -->
             </a>
         </div>
         <span class="mini">D-pad</span>
@@ -104,6 +104,7 @@
         <div class="direction-button-wrap">
             <a href="#" class="flip-up">
                 <i class="icon-direction-up"></i>
+                <span class="direction-info">CTS Drama Program</span>
             </a>
             <a href="#" class="flip-down">
                 <i class="icon-direction-down"></i>
@@ -264,10 +265,17 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
-                        <div class="player-wrap"></div>
+                        <div class="player-wrap">
+                            <div class="ch-thumb-inner-center">
+                                <img>
+                            </div>
+
+
+                        </div>
                         <span class="no-video-title">My Following</span>
                     </div>
                     <div class="effect-glow"></div>
@@ -300,6 +308,7 @@
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
@@ -346,10 +355,18 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
-                        <div class="player-wrap"></div>
+                        <div class="player-wrap">
+                            <div class="ch-thumb-inner-center">
+
+                                  <img>
+                            </div>
+
+
+                        </div>
                     </div>
                     <div class="effect-glow"></div>
 
@@ -371,6 +388,7 @@
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
@@ -419,10 +437,18 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
-                        <div class="player-wrap"></div>
+                        <div class="player-wrap">
+
+                             <div class="ch-thumb-inner-center">
+
+                                  <img>
+                             </div>
+
+                        </div>
                     </div>
                     <div class="effect-glow"></div>
 
@@ -441,6 +467,7 @@
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
@@ -547,6 +574,7 @@
             <div id="osd-wrap">
                 <figure class="ch-thumb">
                     <div class="ch-thumb-inner-center">
+                        <img>
                           
                     </div>
                 </figure>
@@ -586,38 +614,10 @@
                 </div>
                 <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>Instruction</span></a>
 
-                <div class="help-info-wrap">
-                    <i class="icon-info"></i>
-                    <span><i class="icon-info-left"></i><i class="icon-info-right"></i> flip episodes,</span>
-                    <span><i class="icon-info-up"></i><i class="icon-info-down"></i> flip Programs</span>
-
-                </div>
+               
             </div>
 
-            <div class="remote-wrap">
 
-                <div class="remote-main">
-                    <div class="remote-direct">
-                        <a class="flip-up" href="#">
-                            <i class="icon-flip-up"></i>
-                        </a>
-                        <a class="flip-down" href="#">
-                            <i class="icon-flip-down"></i>
-                        </a>
-                        <a class="flip-left" href="#">
-                            <i class="icon-flip-left"></i>
-                        </a>
-                        <a class="flip-right" href="#">
-                            <i class="icon-flip-right"></i>
-                        </a>
-                    </div>
-                    <a class="remote-play" href="#">
-                        <i class="icon-video-play"></i>
-                        <i class="icon-video-pause"></i>
-                    </a>
-                </div>
-
-            </div>
 
         </div>
 
@@ -628,6 +628,7 @@
 
             <figure class="ch-thumb moz-reflect" id="title-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                       
                 </div>
             </figure>
@@ -652,6 +653,22 @@
 
     </div>
     <div class="backhome-btn direct-left-btn">Back to Home</div>
+    <div class="direction-button-wrap">
+                <a href="#" class="flip-up"> <i class="icon-direction-up"></i>
+                    <span class="direction-info">Program</span>
+                </a>
+                <a href="#" class="flip-down"> <i class="icon-direction-down"></i>
+                    <span class="direction-info">Program</span>
+                </a>
+                <a href="#" class="flip-left">
+                    <i class="icon-direction-left"></i>
+                    <span class="direction-info">Episode</span>
+                </a>
+                <a href="#" class="flip-right">
+                    <i class="icon-direction-right"></i>
+                    <span class="direction-info">Episode</span>
+                </a>
+    </div>
 </div>
 
 <div id="store-layer">
@@ -2570,6 +2587,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                     
                 </div>
             </figure>
@@ -2609,6 +2627,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                     
                 </div>
             </figure>
@@ -2907,13 +2926,14 @@
             To download Chrome or Firefox:
         </p>
         <p class="browser-layer">
-            <a href="http://www.google.com/intl/zh-TW/chrome/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-chrome.png">Google Chrome</a>
-            <a href="http://moztw.org/firefox/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-firefox.png">Mozilla Firefox</a>
+            <a href="#"><img alt="" src="img/ie-alert-chrome.png">Google Chrome</a>
+            <a href="#"><img alt="" src="img/ie-alert-firefox.png">Mozilla Firefox</a>
         </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">Close</a>
         </div>
     </div>
+
 
     </div>
 
@@ -3620,6 +3640,8 @@
 
 <div id="bg-layer"></div>
 
+
+
 </div>  
 
 <!-- en end -->
@@ -3715,7 +3737,7 @@
             </div>
             <a class="remote-play" href="#">
                 <i class="icon-video-play"></i>
-                <i class="icon-video-pause"></i>
+                <!-- <i class="icon-video-pause"></i> -->
             </a>
         </div>
         <span class="mini">D-pad</span>
@@ -3727,6 +3749,7 @@
     <div id="display-layer">
         <div class="direction-button-wrap">
             <a href="#" class="flip-up"> <i class="icon-direction-up"></i>
+                <span class="direction-info">CTS Drama Program</span>
             </a>
             <a href="#" class="flip-down"> <i class="icon-direction-down"></i>
             </a>
@@ -3887,10 +3910,14 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
                         <div class="player-wrap">
+                            <div class="ch-thumb-inner-center">
+                                <img>
+                            </div>
 
                         </div>
                         <span class="no-video-title">我的最愛</span>
@@ -3921,6 +3948,7 @@
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
@@ -3969,10 +3997,14 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
-                                  
+                                <img>                                  
                             </div>
                         </figure>
                         <div class="player-wrap">
+                            <div class="ch-thumb-inner-center">
+
+                                  <img>
+                             </div>
 
                         </div>
                     </div>
@@ -3996,6 +4028,7 @@
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
@@ -4044,10 +4077,15 @@
                     <div class="video-layer">
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
                         <div class="player-wrap">
+                             <div class="ch-thumb-inner-center">
+
+                                  <img>
+                             </div>
 
                         </div>
                     </div>
@@ -4068,6 +4106,7 @@
                         </div>
                         <figure class="ch-thumb">
                             <div class="ch-thumb-inner-center">
+                                <img>
                                   
                             </div>
                         </figure>
@@ -4183,6 +4222,7 @@
             <div id="osd-wrap">
                 <figure class="ch-thumb">
                     <div class="ch-thumb-inner-center">
+                        <img>
                           
                     </div>
                 </figure>
@@ -4221,38 +4261,10 @@
                     </ul>
                 </div>
                 <a href="#" class="green-button help-lost-button"><i class="icon-help"></i> <span>操作提示</span></a>
-                <div class="help-info-wrap">
-                    <i class="icon-info"></i>
-                    <span><i class="icon-info-left"></i><i class="icon-info-right"></i> 翻閱劇集,</span>
-                    <span><i class="icon-info-up"></i><i class="icon-info-down"></i> 翻閱節目</span>
-
-                </div>
-            </div>
-
-            <div class="remote-wrap">
-
-                <div class="remote-main">
-                    <div class="remote-direct">
-                        <a class="flip-up" href="#">
-                            <i class="icon-flip-up"></i>
-                        </a>
-                        <a class="flip-down" href="#">
-                            <i class="icon-flip-down"></i>
-                        </a>
-                        <a class="flip-left" href="#">
-                            <i class="icon-flip-left"></i>
-                        </a>
-                        <a class="flip-right" href="#">
-                            <i class="icon-flip-right"></i>
-                        </a>
-                    </div>
-                    <a class="remote-play" href="#">
-                        <i class="icon-video-play"></i>
-                        <i class="icon-video-pause"></i>
-                    </a>
-                </div>
 
             </div>
+
+           
 
 
         </div>
@@ -4264,6 +4276,7 @@
 
             <figure class="ch-thumb moz-reflect" id="title-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                       
                 </div>
             </figure>
@@ -4288,6 +4301,22 @@
 
     </div>
     <div class="backhome-btn direct-left-btn">回首頁</div>
+    <div class="direction-button-wrap">
+                <a href="#" class="flip-up"> <i class="icon-direction-up"></i>
+                    <span class="direction-info">節目</span>
+                </a>
+                <a href="#" class="flip-down"> <i class="icon-direction-down"></i>
+                    <span class="direction-info">節目</span>
+                </a>
+                <a href="#" class="flip-left">
+                    <i class="icon-direction-left"></i>
+                    <span class="direction-info">劇集</span>
+                </a>
+                <a href="#" class="flip-right">
+                    <i class="icon-direction-right"></i>
+                    <span class="direction-info">劇集</span>
+                </a>
+        </div>
 </div>
 
 <div id="store-layer">
@@ -6212,6 +6241,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                       
                 </div>
             </figure>
@@ -6255,6 +6285,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                       
                 </div>
             </figure>
@@ -6299,6 +6330,7 @@
 
             <figure class="ch-thumb">
                 <div class="ch-thumb-inner-center">
+                    <img>
                       
                 </div>
             </figure>
@@ -6557,8 +6589,8 @@
             下載 Chrome 或 Firefox:
         </p>
         <p class="browser-layer">
-            <a href="http://www.google.com/intl/zh-TW/chrome/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-chrome.png">Google Chrome</a>
-            <a href="http://moztw.org/firefox/" target="_blank"><img alt="" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/img/ie-alert-firefox.png">Mozilla Firefox</a>
+            <a href="#"><img alt="" src="img/ie-alert-chrome.png">Google Chrome</a>
+            <a href="#"><img alt="" src="img/ie-alert-firefox.png">Mozilla Firefox</a>
         </p>
         <div class="overlay-button-wrap bottom">    
             <a class="black-button" href="#">關閉</a>
@@ -7202,7 +7234,6 @@
 </div>
 
 <div id="bg-layer"></div>
-
     
 </div>
 
@@ -7211,24 +7242,24 @@
 <script>window.jQuery || document.write('<script type="text/javascript" src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" charset="utf-8"></script>
 <!-- 3rd party libararies -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/3rd/plugins.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/3rd/plugins.js"></script>
 <!-- 9x9 plugins -->
 <script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/poi/jquery.poi.js" charset="utf-8"></script>
 <script type="text/javascript" src="https://9x9ui.s3.amazonaws.com/9x9miniV23j/javascripts/jquery.titlecard.js" charset="utf-8"></script>
 
 <!-- components -->
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/popup-node.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/popup.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/popup-manager.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/popup-node.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/popup.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/popup-manager.js"></script>
 
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/dev.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Navigatable.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Controllable.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/StreamingPortal.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Store.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Playback.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/nn/comp/Guide.js"></script>
-<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.3/js/4.0.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/dev.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/Navigatable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/Controllable.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/StreamingPortal.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/Store.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/Playback.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/nn/comp/Guide.js"></script>
+<script type="text/javascript" src="http://9x9ui.s3.amazonaws.com/tv4.0.1.4/js/4.0.js"></script>
 <script type="text/javascript" charset="UTF-8">
     initCookie();
     if(lang == "zh"){
