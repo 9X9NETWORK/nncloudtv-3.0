@@ -2612,8 +2612,9 @@ public class PlayerApiService {
         String channelStr = "";
         String programStr = "";
         if (!minimal) {
-	        //2: list of channel's channelInfo of the first set
-	        List<NnChannel> channels = new ArrayList<NnChannel>();	        
+	        //2: list of channel's channelInfo of every set
+	        List<NnChannel> channels = new ArrayList<NnChannel>();
+	        /* this is for implementation of <every> set
 	        for (SysTagDisplay d : displays) {
 	        	SysTag systag = systagMngr.findById(d.getSystagId());	        	
 	        	short sort = SysTag.SORT_DATE;
@@ -2622,7 +2623,7 @@ public class PlayerApiService {
 		            channels.addAll(systagMngr.findPlayerChannelsById(d.getSystagId(), lang, sort, 0));
 	        	}	        	
 	        }
-	        /*
+	        */
 	        if (displays.size() > 0) {
 	        	SysTag systag = systagMngr.findById(displays.get(0).getSystagId());
 	        	short sort = SysTag.SORT_DATE;
@@ -2631,7 +2632,6 @@ public class PlayerApiService {
 	        	}
 	            channels.addAll(systagMngr.findPlayerChannelsById(displays.get(0).getSystagId(), lang, sort, 0));
 	        }
-	        */
 	        channelStr = chMngr.composeChannelLineup(channels, version);        
 	        //3. list of the latest episode of each channel of the first set
 	        NnProgramManager programMngr = new NnProgramManager();
