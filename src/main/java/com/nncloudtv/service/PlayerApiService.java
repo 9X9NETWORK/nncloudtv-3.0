@@ -467,14 +467,39 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.SUCCESS, result);
         }        
         
+        MsoConfig mask = new MsoConfigManager().findByItem(MsoConfig.SYSTEM_CATEGORY_MASK);
+        boolean disableAll = false;
+        HashMap<Long, Long> map = new HashMap<Long, Long>();
+        if (mask != null && mask.getValue() != null) {
+        	String maskStr = mask.getValue();
+        	String[] str = maskStr.split(",");        	
+        	for (int i=0; i<str.length; i++) {
+                if (str[i].equals(MsoConfig.DISABLE_ALL_SYSTEM_CATEGORY)) {
+                	disableAll = true;
+                	i = str.length+1;
+                } else { 
+                	Long number = Long.parseLong(str[i].trim());
+                	map.put(number, number);
+                }
+        	}
+        }
         List<SysTagDisplay> categories = new ArrayList<SysTagDisplay>();
         Mso nnMso = mso;
-        if (!MsoManager.isNNMso(mso)) {        	
+        if (!MsoManager.isNNMso(mso)) {          	
         	categories.addAll(displayMngr.findPlayerCategories(lang, mso.getId()));
         	log.info("non 9x9 mso categories:" + mso.getId() + ";" + categories.size());
         	nnMso = msoMngr.findNNMso();
         }                
-        categories.addAll(displayMngr.findPlayerCategories(lang, nnMso.getId()));
+        if (!disableAll) {
+        	List<SysTagDisplay> systemCategories = displayMngr.findPlayerCategories(lang, nnMso.getId());
+            categories.addAll(systemCategories);
+        	for (SysTagDisplay d : systemCategories) {
+        		if (map.get(d.getSystagId()) != null) {
+        			log.info("removing category:" + d.getSystagId());
+        		    categories.remove(d);        
+        		}
+        	}
+         }
         
         for (SysTagDisplay display : categories) {
             String subItemHint = "ch"; //what's under this level
@@ -2588,7 +2613,16 @@ public class PlayerApiService {
         String programStr = "";
         if (!minimal) {
 	        //2: list of channel's channelInfo of the first set
-	        List<NnChannel> channels = new ArrayList<NnChannel>();
+	        List<NnChannel> channels = new ArrayList<NnChannel>();	        
+	        for (SysTagDisplay d : displays) {
+	        	SysTag systag = systagMngr.findById(d.getSystagId());	        	
+	        	short sort = SysTag.SORT_DATE;
+	        	if (systag.getType() == SysTag.TYPE_SET) {
+	        		sort = systag.getSorting();
+		            channels.addAll(systagMngr.findPlayerChannelsById(d.getSystagId(), lang, sort, 0));
+	        	}	        	
+	        }
+	        /*
 	        if (displays.size() > 0) {
 	        	SysTag systag = systagMngr.findById(displays.get(0).getSystagId());
 	        	short sort = SysTag.SORT_DATE;
@@ -2597,6 +2631,7 @@ public class PlayerApiService {
 	        	}
 	            channels.addAll(systagMngr.findPlayerChannelsById(displays.get(0).getSystagId(), lang, sort, 0));
 	        }
+	        */
 	        channelStr = chMngr.composeChannelLineup(channels, version);        
 	        //3. list of the latest episode of each channel of the first set
 	        NnProgramManager programMngr = new NnProgramManager();
