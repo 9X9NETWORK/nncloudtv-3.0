@@ -117,12 +117,15 @@ public class WatchDogController {
     
     @RequestMapping(value="urlSubmit")
     public ResponseEntity<String> urlSubmit(HttpServletRequest req) {
-       String url = req.getParameter("url") ;
-       String lang = req.getParameter("lang") ;
+       String url = req.getParameter("url");
+       String lang = req.getParameter("lang");
+       String sphere = req.getParameter("sphere");
        if (url == null)
           return NnNetUtil.textReturn("error\nurl empty");
        if (lang == null)
           lang = "en";
+       if (sphere == null)
+           sphere = "en";
        url = url.trim();               
        NnChannelManager chMngr = new NnChannelManager();               
        url = chMngr.verifyUrl(url); //verify url, also converge youtube url         
@@ -140,7 +143,8 @@ public class WatchDogController {
            if (channel == null)
         	   return NnNetUtil.textReturn("error\nurl invalid verified by youtube");  
        }
-       channel.setSphere(lang);
+       channel.setSphere(sphere);
+       channel.setLang(lang);
        channel.setPublic(true);
        chMngr.save(channel);
        return NnNetUtil.textReturn(channel.getIdStr());
