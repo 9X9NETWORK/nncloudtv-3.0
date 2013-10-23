@@ -164,8 +164,9 @@ public class PlayerController {
         model.addAttribute("fliprUrl", fliprStr);    	
     	model.addAttribute("reportUrl", reportUrl);
     	model.addAttribute("storeUrl", storeUrl);
+    	model.addAttribute("brandName", mso.getName());
     	if (config != null) {
-    		return "player/ios_" + mso.getName();
+    		return "player/ios_brand";
     	}
     	/*
         if (name.equals(Mso.NAME_CTS)) {
@@ -219,8 +220,9 @@ public class PlayerController {
             model.addAttribute("fliprUrl", iosStr);
             model.addAttribute("reportUrl", reportUrl);
             model.addAttribute("storeUrl", storeUrl);
+            model.addAttribute("brandName", mso.getName());
             if (config != null) {
-            	return "player/ios_" + mso.getName();
+            	return "player/ios_brand";
             }
             /*
             if (mso.getName().equals(Mso.NAME_CTS)) {
