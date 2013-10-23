@@ -470,7 +470,7 @@ public class PlayerApiService {
         MsoConfig mask = new MsoConfigManager().findByItem(MsoConfig.SYSTEM_CATEGORY_MASK);
         boolean disableAll = false;
         HashMap<Long, Long> map = new HashMap<Long, Long>();
-        if (mask != null && mask.getValue() != null) {
+        if (mask != null && mask.getValue() != null && mask.getValue().length() > 0) {
         	String maskStr = mask.getValue();
         	String[] str = maskStr.split(",");        	
         	for (int i=0; i<str.length; i++) {
