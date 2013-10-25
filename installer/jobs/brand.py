@@ -43,7 +43,17 @@ if row == None:
   cursor.execute("""
      insert into mso_config (createDate, item, msoId, updateDate, value) 
               values (now(), 'supported-region', %s, now(), %s);
-         """, (msoId, region))    
+         """, (msoId, region))
+  storeUrl = "http://www.9x9.tv/en/products.html"  
+  cursor.execute("""
+     insert into mso_config (createDate, item, msoId, updateDate, value) 
+              values (now(), 'store-ios', %s, now(), %s);
+         """, (msoId, storeUrl))
+  cursor.execute("""
+     insert into mso_config (createDate, item, msoId, updateDate, value) 
+              values (now(), 'store-android', %s, now(), %s);
+         """, (msoId, storeUrl))
+    
   dbcontent.commit() 
   # create new user
   url = "http://www.9x9.tv/playerAPI/signup?email=" + email + "&password=" + name + "9x9" + "&name=" + name + "&mso=" + name
