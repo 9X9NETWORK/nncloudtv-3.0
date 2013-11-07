@@ -467,7 +467,7 @@ public class PlayerApiService {
             return this.assembleMsgs(NnStatusCode.SUCCESS, result);
         }        
         
-        MsoConfig mask = new MsoConfigManager().findByItem(MsoConfig.SYSTEM_CATEGORY_MASK);
+        MsoConfig mask = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.SYSTEM_CATEGORY_MASK);
         boolean disableAll = false;
         HashMap<Long, Long> map = new HashMap<Long, Long>();
         if (mask != null && mask.getValue() != null && mask.getValue().length() > 0) {
