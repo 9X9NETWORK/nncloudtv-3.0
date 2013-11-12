@@ -158,8 +158,8 @@ public class NnNetUtil {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer, obj);
             log.info("url fetch-json:" + mapper.writeValueAsString(obj));            
