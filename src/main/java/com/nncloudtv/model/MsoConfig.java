@@ -38,6 +38,7 @@ public class MsoConfig {
     public static String MEMCACHE_SERVER = "memcache-server";
     public static String STORE_ANDROID = "store-android"; //android store url
     public static String STORE_IOS = "store-ios"; //ios store url
+    public static String FAVICON_URL = "favicon-url";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)

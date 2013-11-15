@@ -18,6 +18,7 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.Mso;
+import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 import com.nncloudtv.model.NnProgram;
@@ -37,6 +38,7 @@ public class PlayerService {
     public static final String META_CHANNEL_TITLE = "crawlChannelTitle";
     public static final String META_EPISODE_TITLE = "crawlEpisodeTitle";
     public static final String META_VIDEO_THUMBNAIL = "crawlVideoThumb";
+    public static final String META_FAVICON = "favicon";
     
     public Model prepareBrand(Model model, String msoName, HttpServletResponse resp) {
         
@@ -44,6 +46,16 @@ public class PlayerService {
             msoName = msoName.toLowerCase();
         } else {
             msoName = Mso.NAME_9X9;
+        }
+        
+        // bind favicon
+        MsoManager msoMngr = new MsoManager();
+        Mso mso = msoMngr.findByName(msoName);
+        MsoConfigManager msoConfigMngr = new MsoConfigManager();
+        MsoConfig item = msoConfigMngr.findByMsoAndItem(mso, MsoConfig.FAVICON_URL);
+        if (item != null && item.getValue().isEmpty() == false) {
+            model.addAttribute(META_FAVICON, "<link rel=\"icon\" href=\"" + item.getValue() + "\" type=\"image/x-icon\"/>" +
+                "<link rel=\"shortcut icon\" href=\"" + item.getValue() + "\" type=\"image/x-icon\"/>");
         }
         
         // TODO: move to mso_config
