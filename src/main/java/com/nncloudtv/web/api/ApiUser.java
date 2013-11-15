@@ -850,7 +850,7 @@ public class ApiUser extends ApiGeneric {
             return null;
         }
         
-        String[] longLivedAccessToken = FacebookLib.getLongLivedAccessToken(accessToken);
+        String[] longLivedAccessToken = FacebookLib.getLongLivedAccessToken(accessToken, brand);
         if (longLivedAccessToken[0] == null) {
             badRequest(resp, INVALID_PARAMETER);
             return null;

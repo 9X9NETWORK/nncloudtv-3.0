@@ -55,14 +55,29 @@ public class MsoConfigManager {
         
         return getProperty("sns.properties", "server_domain");
     }
-    
-    static public String getFacebookAppToken() {
         
+    static public String getFacebookAppToken() {        
         return getProperty("sns.properties", "facebook_app_token");
     }
     
-    static public String getFacebookClientId() {
-        
+    public String getFacebookInfo(String type, Mso mso) {
+    	if (mso == null || type == null) {
+    		return null;
+    	}
+    	MsoConfig config = this.findByMsoAndItem(mso, type);
+    	if (config != null) {
+    		return config.getValue(); 
+    	}
+    	if (type == MsoConfig.FACEBOOK_CLIENTID)
+    		return getProperty("sns.properties", "facebook_client_id");
+    	if (type == MsoConfig.FACEBOOK_APPTOKEN)
+    		return getProperty("aws.properties", "static_file_root_path");
+    	if (type == MsoConfig.FACEBOOK_CLIENTSECRET)
+    		return getProperty("sns.properties", "facebook_client_secret");
+    	return null;
+    }
+    
+    static public String getFacebookClientId() {        
         return getProperty("sns.properties", "facebook_client_id");
     }
     

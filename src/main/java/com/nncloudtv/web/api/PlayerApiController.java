@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.spy.memcached.MemcachedClient;
 
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ import com.nncloudtv.lib.CookieHelper;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnLogUtil;
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.NnEpisode;
+import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnEpisodeManager;
 import com.nncloudtv.service.NnStatusMsg;
 import com.nncloudtv.service.PlayerApiService;
@@ -2452,8 +2455,9 @@ public class PlayerApiController {
         log.info("rewrite uri:" + referrer);
         
         String fbLoginUri = appDomain + "/fb/login";
-        
-        String url = FacebookLib.getDialogOAuthPath(referrer, fbLoginUri);
+        String mso = req.getParameter("mso");
+        Mso brand = new MsoManager().findOneByName(mso);   
+        String url = FacebookLib.getDialogOAuthPath(referrer, fbLoginUri, brand);
         String userCookie = CookieHelper.getCookie(req, CookieHelper.USER);
         log.info("FACEBOOK: user:" + userCookie + " redirect to fbLogin:" + url);
         return "redirect:" + url;
