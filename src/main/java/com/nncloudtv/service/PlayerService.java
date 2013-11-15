@@ -53,7 +53,7 @@ public class PlayerService {
         Mso mso = msoMngr.findByName(msoName);
         MsoConfigManager msoConfigMngr = new MsoConfigManager();
         MsoConfig item = msoConfigMngr.findByMsoAndItem(mso, MsoConfig.FAVICON_URL);
-        if (item != null && item.getValue().isEmpty() == false) {
+        if (item != null && item.getValue() != null && item.getValue().isEmpty() == false) {
             model.addAttribute(META_FAVICON, "<link rel=\"icon\" href=\"" + item.getValue() + "\" type=\"image/x-icon\"/>" +
                 "<link rel=\"shortcut icon\" href=\"" + item.getValue() + "\" type=\"image/x-icon\"/>");
         }
