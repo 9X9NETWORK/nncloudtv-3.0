@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -953,28 +951,9 @@ public class PlayerApiService {
             if (user == null || user.getType() != NnUser.TYPE_YOUTUBE_CONNECT) {
             	if (sort != null && sort.equals(NnUserSubscribe.SORT_DATE)) {
             		log.info("sort by date");
-                    TreeMap<Date, NnChannel> channelMap = new TreeMap<Date, NnChannel>();
-                    for (NnChannel c : channels) {
-                        channelMap.put(c.getUpdateDate(), c);                
-                    }
-                    NavigableMap<Date, NnChannel> nmap = channelMap.descendingMap();                    
-                    Iterator<Entry<Date, NnChannel>> it = nmap.entrySet().iterator();
-                    channels.clear();      
-                    while (it.hasNext()) {
-                        Map.Entry<Date, NnChannel> pairs = (Map.Entry<Date, NnChannel>)it.next();
-                        channels.add((NnChannel)pairs.getValue());
-                    }
+            		Collections.sort(channels, chMngr.getChannelComparator("updateDate"));
             	} else {
-                    TreeMap<Short, NnChannel> channelMap = new TreeMap<Short, NnChannel>();
-                    for (NnChannel c : channels) {
-                        channelMap.put(c.getSeq(), c);                
-                    }
-                    Iterator<Entry<Short, NnChannel>> it = channelMap.entrySet().iterator();
-                    channels.clear();      
-                    while (it.hasNext()) {
-                        Map.Entry<Short, NnChannel> pairs = (Map.Entry<Short, NnChannel>)it.next();
-                        channels.add((NnChannel)pairs.getValue());
-                    }            		
+            		Collections.sort(channels, chMngr.getChannelComparator("seq"));
             	}
             }
         }
