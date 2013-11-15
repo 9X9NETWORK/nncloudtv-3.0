@@ -40,8 +40,7 @@ public class PlayerService {
     public static final String META_VIDEO_THUMBNAIL = "crawlVideoThumb";
     public static final String META_FAVICON = "favicon";
     
-    public Model prepareBrand(Model model, String msoName, HttpServletResponse resp) {
-        
+    public Model prepareBrand(Model model, String msoName, HttpServletResponse resp) {        
         if (msoName != null) {
             msoName = msoName.toLowerCase();
         } else {
@@ -77,7 +76,19 @@ public class PlayerService {
         }
         return model;        
     }
-
+    
+    public String getBrandNameByUrl(HttpServletRequest req, String mso) {
+    	if (mso != null) 
+    		return mso;
+    	String url = NnNetUtil.getUrlRoot(req);
+		String strs[] = url.split("\\.");		
+		String brand = strs[0];
+		brand = brand.replace("http://", "");
+		if (brand.equals("www"))
+			return Mso.NAME_9X9;
+    	return brand;
+    }
+    
     //!!! many places in playercontroller, playerservice needs to be changed here
     public String getBrandName(String mso) {
     	String name = Mso.NAME_9X9;

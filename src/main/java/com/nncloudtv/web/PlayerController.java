@@ -47,8 +47,31 @@ public class PlayerController {
             @RequestParam(value="jsp",required=false) String jsp,
             @RequestParam(value="js",required=false) String js) {
         try {
+        	PlayerService service = new PlayerService();
+        	String name = service.getBrandNameByUrl(req, mso);
+        	Mso brand = new MsoManager().findOneByName(name);
+        	if (brand.getType() == Mso.TYPE_FANAPP) {
+        		//below, merge with view
+	            log.info("Fan app sharing");
+	            MsoConfigManager configMngr = new MsoConfigManager();
+	            MsoConfig androidConfig = configMngr.findByMsoAndItem(brand, MsoConfig.STORE_ANDROID);
+	            MsoConfig iosConfig = configMngr.findByMsoAndItem(brand, MsoConfig.STORE_IOS);
+	        	String androidStoreUrl = "market://details?id=tv.tv9x9.player";
+	        	String iosStoreUrl = "https://itunes.apple.com/app/9x9.tv/id443352510?mt=8";        	
+	            if (androidConfig != null) {
+	            	androidStoreUrl = androidConfig.getValue();
+	            }
+	            if (iosConfig != null) {
+	            	iosStoreUrl = iosConfig.getValue();
+	            }
+	        	String reportUrl = service.getGAReportUrl(ch, ep, brand.getName());
+	        	model.addAttribute("reportUrl", reportUrl);
+	        	model.addAttribute("androidStoreUrl", androidStoreUrl);
+	        	model.addAttribute("iosStoreUrl", iosStoreUrl);
+	        	model.addAttribute("brandName", brand.getName());
+	        	return "player/fanapp";
+        	}
             ApiContext context = new ApiContext(req);
-            PlayerService service = new PlayerService();
             model = service.prepareBrand(model, context.getMso().getName(), resp);
             model = service.preparePlayer(model, js, jsp, req);
             if (jsp != null && jsp.length() > 0) {
@@ -200,9 +223,8 @@ public class PlayerController {
         }
         String cid = channel != null ? channel : ch;
         String pid = episode != null ? episode : ep;
-        
-        if (service.isIos(req)) {
-            
+                
+        if (service.isIos(req)) {            
             log.info("It is iOS");
             //pid = service.findFirstSubepisodeId(pid);
             String iosStr = service.getFliprUrl(cid, pid, mso.getName(), req);
@@ -224,22 +246,31 @@ public class PlayerController {
             if (config != null) {
             	return "player/ios_brand";
             }
-            /*
-            if (mso.getName().equals(Mso.NAME_CTS)) {
-            	return "player/ios_cts";
-            }
-            */
-            return "player/ios";
-            
-        } else if (service.isAndroid(req)) {
-            
+            return "player/ios";            
+        } else if (service.isAndroid(req)) {            
             log.info("It is Android");
             //pid = service.findFirstSubepisodeId(pid);
             String androidStr = service.getRedirectAndroidUrl(cid, pid, mso.getName(), req);                        
             return "redirect:/" + androidStr;
-            
-        } else {
-            
+        } else if (mso.getType() == Mso.TYPE_FANAPP) {            
+            log.info("Fan app sharing");
+            MsoConfig androidConfig = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.STORE_ANDROID);
+            MsoConfig iosConfig = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.STORE_IOS);
+        	String androidStoreUrl = "market://details?id=tv.tv9x9.player";
+        	String iosStoreUrl = "https://itunes.apple.com/app/9x9.tv/id443352510?mt=8";        	
+            if (androidConfig != null) {
+            	androidStoreUrl = androidConfig.getValue();
+            }
+            if (iosConfig != null) {
+            	iosStoreUrl = iosConfig.getValue();
+            }
+        	String reportUrl = service.getGAReportUrl(ch, ep, mso.getName());
+        	model.addAttribute("reportUrl", reportUrl);
+        	model.addAttribute("androidStoreUrl", androidStoreUrl);
+        	model.addAttribute("iosStoreUrl", iosStoreUrl);
+        	model.addAttribute("brandName", mso.getName());
+        	return "player/fanapp";
+        } else {            
             model = service.prepareBrand(model, mso.getName(), resp);
             model = service.prepareChannel(model, cid, mso.getName(), resp);
             model = service.prepareEpisode(model, pid, mso.getName(), resp);
