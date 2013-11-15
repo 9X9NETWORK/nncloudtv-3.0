@@ -52,6 +52,7 @@ public class Mso implements Serializable {
     public static final short TYPE_TCO = 4; // for Generic CMS
     public static final short TYPE_ENTERPRISE = 5; // brand, US only
     public static final short TYPE_DEPRECATED = 6; // the mso that no longer used
+    public static final short TYPE_FANAPP = 7;
 
     
     @Persistent
