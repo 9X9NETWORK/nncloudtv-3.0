@@ -39,6 +39,9 @@ public class MsoConfig {
     public static String STORE_ANDROID = "store-android"; //android store url
     public static String STORE_IOS = "store-ios"; //ios store url
     public static String FAVICON_URL = "favicon-url";
+    public static String FACEBOOK_APPTOKEN = "facebook-apptoken"; //ios store url
+    public static String FACEBOOK_CLIENTID = "facebook-clientid";
+    public static String FACEBOOK_CLIENTSECRET = "facebook-client-secret";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)
