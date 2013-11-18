@@ -953,6 +953,8 @@ public class ApiMso extends ApiGeneric {
         }
         
         Mso result = apiMsoService.mso(mso.getId());
+        
+        result = MsoManager.normalize(result);
         log.info(printExitState(now, req, "ok"));
         return result;
     }
@@ -1001,6 +1003,8 @@ public class ApiMso extends ApiGeneric {
         String logoUrl = req.getParameter("logoUrl");
         
         Mso result = apiMsoService.msoUpdate(mso.getId(), title, logoUrl);
+        
+        result = MsoManager.normalize(result);
         log.info(printExitState(now, req, "ok"));
         return result;
     }

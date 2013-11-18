@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -50,27 +49,6 @@ public class ApiMsoService {
         this.msoMngr = msoMngr;
         this.categoryService = categoryService;
         this.msoConfigMngr = msoConfigMngr;
-    }
-    
-    /** format supportedRegion of Mso to response format, ex : "en,zh,other" */
-    private String formatSupportedRegion(String input) {
-        
-        if (input == null) {
-            return null;
-        }
-        
-        List<String> spheres = MsoConfigManager.parseSupportedRegion(input);
-        String supportedRegion = "";
-        for (String sphere : spheres) {
-            supportedRegion = supportedRegion + "," + sphere;
-        }
-        supportedRegion = supportedRegion.replaceFirst(",", "");
-        
-        String output = supportedRegion;
-        if (output.equals("")) {
-            return null;
-        }
-        return output;
     }
     
     /** service for ApiMso.msoSets
@@ -386,16 +364,30 @@ public class ApiMsoService {
             return null;
         }
         
-        Mso result = msoMngr.findByIdWithSupportedRegion(msoId);
-        if (result == null) {
+        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        if (mso == null) {
             return null;
         }
         
-        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
-        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
-        result.setSupportedRegion(formatSupportedRegion(result.getSupportedRegion()));
+        mso.setMaxSets(Mso.MAXSETS_DEFAULT);
+        MsoConfig maxSets = msoConfigMngr.findByMsoAndItem(mso, MsoConfig.MAX_SETS);
+        if (maxSets != null && maxSets.getValue() != null && maxSets.getValue().isEmpty() == false) {
+            try {
+                mso.setMaxSets(Short.valueOf(maxSets.getValue()));
+            } catch (NumberFormatException e) {
+            }
+        }
         
-        return result;
+        mso.setMaxChPerSet(Mso.MAXCHPERSET_DEFAULT);
+        MsoConfig maxChPerSet = msoConfigMngr.findByMsoAndItem(mso, MsoConfig.MAX_CH_PER_SET);
+        if (maxChPerSet != null && maxChPerSet.getValue() != null && maxChPerSet.getValue().isEmpty() == false) {
+            try {
+                mso.setMaxChPerSet(Short.valueOf(maxChPerSet.getValue()));
+            } catch (NumberFormatException e) {
+            }
+        }
+        
+        return mso;
     }
     
     /** service for ApiMso.msoUpdate
@@ -410,7 +402,7 @@ public class ApiMsoService {
             return null;
         }
         
-        Mso mso = msoMngr.findByIdWithSupportedRegion(msoId);
+        Mso mso = msoMngr.findById(msoId);
         if (mso == null) {
             return null;
         }
@@ -422,18 +414,12 @@ public class ApiMsoService {
             mso.setLogoUrl(logoUrl);
         }
         
-        Mso result = null;
         if (title != null || logoUrl != null) {
             Mso savedMso = msoMngr.save(mso);
-            result = savedMso;
+            return savedMso;
         } else {
-            result = mso;
+            return mso;
         }
-        result.setTitle(NnStringUtil.revertHtml(result.getTitle()));
-        result.setIntro(NnStringUtil.revertHtml(result.getIntro()));
-        result.setSupportedRegion(formatSupportedRegion(mso.getSupportedRegion()));
-        
-        return result;
     }
     
     /**

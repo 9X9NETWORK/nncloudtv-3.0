@@ -42,6 +42,8 @@ public class MsoConfig {
     public static String FACEBOOK_APPTOKEN = "facebook-apptoken"; //ios store url
     public static String FACEBOOK_CLIENTID = "facebook-clientid";
     public static String FACEBOOK_CLIENTSECRET = "facebook-client-secret";
+    public static String MAX_SETS = "max-sets";
+    public static String MAX_CH_PER_SET = "max-ch-per-set";
     
     @Persistent
     @Column(jdbcType="VARCHAR", length=255)

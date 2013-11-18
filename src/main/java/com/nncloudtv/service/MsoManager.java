@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.nncloudtv.dao.MsoDao;
 import com.nncloudtv.dao.ShardedCounter;
 import com.nncloudtv.lib.CacheFactory;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
@@ -392,6 +393,36 @@ public class MsoManager {
             return true;
         }
         return false;
+    }
+    
+    public static Mso normalize(Mso mso) {
+        
+        mso.setTitle(NnStringUtil.revertHtml(mso.getTitle()));
+        mso.setIntro(NnStringUtil.revertHtml(mso.getIntro()));
+        mso.setSupportedRegion(formatSupportedRegion(mso.getSupportedRegion()));
+        
+        return mso;
+    }
+    
+    /** format supportedRegion of Mso to response format, ex : "en,zh,other" */
+    private static String formatSupportedRegion(String input) {
+        
+        if (input == null) {
+            return null;
+        }
+        
+        List<String> spheres = MsoConfigManager.parseSupportedRegion(input);
+        String supportedRegion = "";
+        for (String sphere : spheres) {
+            supportedRegion = supportedRegion + "," + sphere;
+        }
+        supportedRegion = supportedRegion.replaceFirst(",", "");
+        
+        String output = supportedRegion;
+        if (output.equals("")) {
+            return null;
+        }
+        return output;
     }
     
 }
