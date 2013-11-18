@@ -44,10 +44,17 @@ public class SetService {
         setResp.setLang(setMeta.getLang());
         setResp.setSeq(set.getSeq());
         setResp.setTag(setMeta.getPopularTag());
-        setResp.setName(NnStringUtil.revertHtml(setMeta.getName()));
+        setResp.setName(setMeta.getName());
         setResp.setSortingType(set.getSorting());
         
         return setResp;
+    }
+    
+    public static Set normalize(Set set) {
+        
+        set.setName(NnStringUtil.revertHtml(set.getName()));
+        
+        return set;
     }
     
     /** find Sets that owned by Mso with specify display language
@@ -219,6 +226,49 @@ public class SetService {
         }
         
         containerService.addChannel(setId, channelId, timeStart, timeEnd, alwaysOnTop, null);
+    }
+    
+    public Set create(Set set) {
+        
+        SysTag newSet = new SysTag();
+        newSet.setType(SysTag.TYPE_SET);
+        newSet.setMsoId(set.getMsoId());
+        newSet.setSeq(set.getSeq());
+        newSet.setSorting(set.getSortingType());
+        
+        SysTagDisplay newSetMeta = new SysTagDisplay();
+        newSetMeta.setCntChannel(0);
+        newSetMeta.setLang(set.getLang());
+        newSetMeta.setName(set.getName());
+        newSetMeta.setPopularTag(set.getTag());
+        
+        SysTag savedSet = sysTagMngr.save(newSet);
+        newSetMeta.setSystagId(savedSet.getId());
+        SysTagDisplay savedSetMeta = sysTagDisplayMngr.save(newSetMeta);
+        
+        Set result = composeSet(savedSet, savedSetMeta);
+        
+        return result;
+    }
+    
+    public void delete(Long setId) {
+        
+        if (setId == null) {
+            return ;
+        }
+        
+        SysTag set = sysTagMngr.findById(setId);
+        if (set == null || set.getType() != SysTag.TYPE_SET) {
+            return ;
+        }
+        
+        set.setType(SysTag.TYPE_DESTROYED);
+        sysTagMngr.save(set);
+        //containerService.delete(setId);
+    }
+    
+    public static boolean isValidSortingType(Short sortingType) {
+        return SysTagManager.isValidSortingType(sortingType);
     }
 
 }

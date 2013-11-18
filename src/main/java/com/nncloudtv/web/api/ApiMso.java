@@ -22,9 +22,6 @@ import com.nncloudtv.model.Mso;
 import com.nncloudtv.model.MsoConfig;
 import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnUserProfile;
-import com.nncloudtv.model.SysTag;
-import com.nncloudtv.model.SysTagDisplay;
-import com.nncloudtv.model.SysTagMap;
 import com.nncloudtv.service.ApiMsoService;
 import com.nncloudtv.service.CategoryService;
 import com.nncloudtv.service.MsoManager;
@@ -33,9 +30,6 @@ import com.nncloudtv.service.NnUserManager;
 import com.nncloudtv.service.NnUserProfileManager;
 import com.nncloudtv.service.SetService;
 import com.nncloudtv.service.StoreService;
-import com.nncloudtv.service.SysTagDisplayManager;
-import com.nncloudtv.service.SysTagManager;
-import com.nncloudtv.service.SysTagMapManager;
 import com.nncloudtv.service.TagManager;
 import com.nncloudtv.web.json.cms.Category;
 import com.nncloudtv.web.json.cms.Set;
@@ -48,28 +42,21 @@ public class ApiMso extends ApiGeneric {
     
     private MsoManager msoMngr;
     private NnChannelManager channelMngr;
-    private StoreService storeServ;
-    private SysTagManager sysTagMngr;
-    private SysTagDisplayManager sysTagDisplayMngr;
-    private SysTagMapManager sysTagMapMngr;
+    private StoreService storeService;
     private NnUserProfileManager userProfileMngr;
-    private SetService setServ;
+    private SetService setService;
     private ApiMsoService apiMsoService;
     private CategoryService categoryService;
     
     @Autowired
-    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreService storeServ,
-            SysTagManager sysTagMngr, SysTagDisplayManager sysTagDisplayMngr, SysTagMapManager sysTagMapMngr,
-            NnUserProfileManager userProfileMngr, SetService setServ, ApiMsoService apiMsoService,
+    public ApiMso(MsoManager msoMngr, NnChannelManager channelMngr, StoreService storeService,
+            NnUserProfileManager userProfileMngr, SetService setService, ApiMsoService apiMsoService,
             CategoryService categoryService) {
         this.msoMngr = msoMngr;
         this.channelMngr = channelMngr;
-        this.storeServ = storeServ;
-        this.sysTagMngr = sysTagMngr;
-        this.sysTagDisplayMngr = sysTagDisplayMngr;
-        this.sysTagMapMngr = sysTagMapMngr;
+        this.storeService = storeService;
         this.userProfileMngr = userProfileMngr;
-        this.setServ = setServ;
+        this.setService = setService;
         this.apiMsoService = apiMsoService;
         this.categoryService = categoryService;
     }
@@ -150,11 +137,16 @@ public class ApiMso extends ApiGeneric {
             log.info(printExitState(now, req, "ok"));
             return new ArrayList<Set>();
         }
+        
+        for (Set result : results) {
+            result = SetService.normalize(result);
+        }
+        
         log.info(printExitState(now, req, "ok"));
         return results;
     }
     
-    //@RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.POST)
+    @RequestMapping(value = "mso/{msoId}/sets", method = RequestMethod.POST)
     public @ResponseBody
     Set msoSetCreate(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("msoId") String msoIdStr) {
@@ -199,27 +191,17 @@ public class ApiMso extends ApiGeneric {
         }
         name = NnStringUtil.htmlSafeAndTruncated(name);
         
-        // lang, default : en
-        String lang = req.getParameter("lang");
-        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
-            // valid
-        } else {
-            lang = LangTable.LANG_EN;
-        }
-        
-        // seq, default : 1
+        // seq, default : 0
         Short seq = null;
         String seqStr = req.getParameter("seq");
         if (seqStr != null) {
             try {
                 seq = Short.valueOf(seqStr);
             } catch (NumberFormatException e) {
-                badRequest(resp, INVALID_PARAMETER);
-                log.info(printExitState(now, req, "400"));
-                return null;
+                seq = 0;
             }
         } else {
-            seq = 1;
+            seq = 0;
         }
         
         // tag TODO see NnChannelManager .processTagText .processChannelTag
@@ -236,39 +218,26 @@ public class ApiMso extends ApiGeneric {
             try {
                 sortingType = Short.valueOf(sortingTypeStr);
             } catch (NumberFormatException e) {
-                badRequest(resp, INVALID_PARAMETER);
-                log.info(printExitState(now, req, "400"));
-                return null;
+                sortingType = Set.SORT_DEFAULT;
             }
-            if (sysTagMngr.isValidSortingType(sortingType) == false) {
-                badRequest(resp, INVALID_PARAMETER);
-                log.info(printExitState(now, req, "400"));
-                return null;
+            if (SetService.isValidSortingType(sortingType) == false) {
+                sortingType = Set.SORT_DEFAULT;
             }
         } else {
-            sortingType = 1;
+            sortingType = Set.SORT_DEFAULT;
         }
         
-        SysTag newSet = new SysTag();
-        newSet.setType(SysTag.TYPE_SET);
-        newSet.setMsoId(msoId);
-        newSet.setSeq(seq);
-        newSet.setSorting(sortingType);
-        
-        SysTagDisplay newSetMeta = new SysTagDisplay();
-        newSetMeta.setCntChannel(0);
-        newSetMeta.setLang(lang);
-        newSetMeta.setName(name);
-        if (tagText != null) {
-            newSetMeta.setPopularTag(tag);
+        Set result = apiMsoService.msoSetCreate(mso.getId(), seq, tag, name, sortingType);
+        if (result == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
         }
         
-        newSet = sysTagMngr.save(newSet);
-        newSetMeta.setSystagId(newSet.getId());
-        newSetMeta = sysTagDisplayMngr.save(newSetMeta);
+        result = SetService.normalize(result);
         
         log.info(printExitState(now, req, "ok"));
-        return setResponse(newSet, newSetMeta);
+        return result;
     }
     
     @RequestMapping(value = "sets/{setId}", method = RequestMethod.GET)
@@ -286,8 +255,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
             return null;
@@ -312,6 +281,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
+        result = SetService.normalize(result);
+        
         log.info(printExitState(now, req, "ok"));
         return result;
     }
@@ -331,15 +302,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
-            notFound(resp, "Set Not Found");
-            log.info(printExitState(now, req, "404"));
-            return null;
-        }
-        
-        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
-        if (setMeta == null) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
             return null;
@@ -394,7 +358,7 @@ public class ApiMso extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            if (sysTagMngr.isValidSortingType(sortingType) == false) {
+            if (SetService.isValidSortingType(sortingType) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
                 return null;
@@ -408,13 +372,16 @@ public class ApiMso extends ApiGeneric {
             nullResponse(resp);
             return null;
         }
+        
+        result = SetService.normalize(result);
+        
         log.info(printExitState(now, req, "ok"));
         return result;
     }
     
-    //@RequestMapping(value = "sets/{setId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "sets/{setId}", method = RequestMethod.DELETE)
     public @ResponseBody
-    String setDelete(HttpServletRequest req,
+    void setDelete(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
         Date now = new Date();
@@ -426,48 +393,32 @@ public class ApiMso extends ApiGeneric {
         } catch (NumberFormatException e) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
-            return null;
+            return ;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
-            return null;
-        }
-        
-        SysTagDisplay setMeta = sysTagDisplayMngr.findBySysTagId(set.getId());
-        if (setMeta == null) {
-            notFound(resp, "Set Not Found");
-            log.info(printExitState(now, req, "404"));
-            return null;
+            return ;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
             log.info(printExitState(now, req, "401"));
-            return null;
+            return ;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "101") == false) {
             forbidden(resp);
             log.info(printExitState(now, req, "403"));
-            return null;
+            return ;
         }
         
-        // delete channels in set, SysTagMap
-        List<SysTagMap>  sysTagMaps = sysTagMapMngr.findBySysTagId(set.getId());
-        if (sysTagMaps != null && sysTagMaps.size() > 0) {
-            sysTagMapMngr.deleteAll(sysTagMaps);
-        }
-        // delete setMeta, SysTagDisplay
-        sysTagDisplayMngr.delete(setMeta);
-        // delete set, SysTag
-        sysTagMngr.delete(set);
-        
+        apiMsoService.setDelete(set.getId());
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
-        return null;
+        return ;
     }
     
     @RequestMapping(value = "sets/{setId}/channels", method = RequestMethod.GET)
@@ -485,8 +436,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
             return null;
@@ -528,8 +479,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
             return null;
@@ -656,8 +607,8 @@ public class ApiMso extends ApiGeneric {
             return null;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
             return null;
@@ -708,7 +659,7 @@ public class ApiMso extends ApiGeneric {
     
     @RequestMapping(value = "sets/{setId}/channels/sorting", method = RequestMethod.PUT)
     public @ResponseBody
-    String setChannelsSorting(HttpServletRequest req,
+    void setChannelsSorting(HttpServletRequest req,
             HttpServletResponse resp, @PathVariable("setId") String setIdStr) {
         
         Date now = new Date();
@@ -718,61 +669,59 @@ public class ApiMso extends ApiGeneric {
         if (setId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
             log.info(printExitState(now, req, "404"));
-            return null;
+            return ;
         }
         
-        SysTag set = sysTagMngr.findById(setId);
-        if (set == null || set.getType() != SysTag.TYPE_SET) {
+        Set set = setService.findById(setId);
+        if (set == null) {
             notFound(resp, "Set Not Found");
             log.info(printExitState(now, req, "404"));
-            return null;
+            return ;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
             log.info(printExitState(now, req, "401"));
-            return null;
+            return ;
         }
         else if (hasRightAccessPCS(verifiedUserId, set.getMsoId(), "110") == false) {
             forbidden(resp);
             log.info(printExitState(now, req, "403"));
-            return null;
+            return ;
         }
         
         String channelIdsStr = req.getParameter("channels");
-        if (channelIdsStr == null || channelIdsStr.equals("")) {
-            sysTagMapMngr.reorderSysTagMaps(set.getId());
-            okResponse(resp);
-            log.info(printExitState(now, req, "ok"));
-            return null;
-        }
-        String[] channelIdStrList = channelIdsStr.split(",");
-        
         List<Long> channelIdList = new ArrayList<Long>();
-        for (String channelIdStr : channelIdStrList) {
+        if (channelIdsStr == null || channelIdsStr.isEmpty()) {
+            channelIdList = null;
+        } else {
             
-            Long channelId = null;
-            try {
-                channelId = Long.valueOf(channelIdStr);
-            } catch(Exception e) {
+            String[] channelIdStrList = channelIdsStr.split(",");
+            for (String channelIdStr : channelIdStrList) {
+            
+                Long channelId = null;
+                try {
+                    channelId = Long.valueOf(channelIdStr);
+                } catch(Exception e) {
+                    badRequest(resp, INVALID_PARAMETER);
+                    log.info(printExitState(now, req, "400"));
+                    return ;
+                }
+                channelIdList.add(channelId);
+            }
+        
+            if (setService.isContainAllChannels(set.getId(), channelIdList) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
-                return null;
+                return ;
             }
-            channelIdList.add(channelId);
-        }
-        
-        if (setServ.isContainAllChannels(set.getId(), channelIdList) == false) {
-            badRequest(resp, INVALID_PARAMETER);
-            log.info(printExitState(now, req, "400"));
-            return null;
         }
         
         apiMsoService.setChannelsSorting(set.getId(), channelIdList);
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));
-        return null;
+        return ;
     }
     
     @RequestMapping(value = "mso/{msoId}/store", method = RequestMethod.GET)
@@ -808,7 +757,7 @@ public class ApiMso extends ApiGeneric {
                 log.info(printExitState(now, req, "400"));
                 return null;
             }
-            if (storeServ.isNnCategory(categoryId) == false) {
+            if (storeService.isNnCategory(categoryId) == false) {
                 badRequest(resp, INVALID_PARAMETER);
                 log.info(printExitState(now, req, "400"));
                 return null;

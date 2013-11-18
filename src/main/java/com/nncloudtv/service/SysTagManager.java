@@ -107,7 +107,7 @@ public class SysTagManager {
     }
     
     /** indicate input value is in model SysTag's sorting table or not */
-    public boolean isValidSortingType(Short sortingType) {
+    public static boolean isValidSortingType(Short sortingType) {
         
         if (sortingType == null) {
             return false;

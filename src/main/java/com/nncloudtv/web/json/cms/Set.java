@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import com.nncloudtv.model.SysTag;
+
 public class Set implements Serializable {
     
     /**
@@ -28,6 +30,7 @@ public class Set implements Serializable {
     private String name;
     
     private short sortingType;
+    public static final short SORT_DEFAULT = SysTag.SORT_SEQ;
     
     public String toString() {
         return new ToStringBuilder(this).
