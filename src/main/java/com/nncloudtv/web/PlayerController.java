@@ -48,6 +48,9 @@ public class PlayerController {
             @RequestParam(value="js",required=false) String js) {
         try {
         	PlayerService service = new PlayerService();
+        	if (service.isAndroid(req) || service.isIos(req)) {
+        	    return "redirect:/mobile/";
+        	}
         	String name = service.getBrandNameByUrl(req, mso);
         	Mso brand = new MsoManager().findOneByName(name);
         	if (brand.getType() == Mso.TYPE_FANAPP) {
@@ -141,21 +144,7 @@ public class PlayerController {
         return "player/zooatomics";
     }
         
-    @RequestMapping("mobile") 
-	public String mobile(Model model, String mso, HttpServletRequest req) {
-        PlayerService service = new PlayerService();
-        String url = NnNetUtil.getUrlRoot(req);
-        if (url != null && url.contains(Mso.NAME_CTS)) {
-        	mso = "cts";
-        }
-        String brandName = service.getBrandName(mso);
-        Model transitModel = service.getTransitionModel(model, brandName, req);
-        if (transitModel != null) {
-        	return service.getTransitionPageFile(brandName);
-        }    	
-        return "redirect:/" + "en";
-	}
-    
+    // TODO: may not be used anymore
     @RequestMapping("/redirect/{name}/view")
     public String brandView(
     		        Model model,
@@ -216,6 +205,7 @@ public class PlayerController {
         //additional params
         PlayerService service = new PlayerService();
         MsoManager msoMngr = new MsoManager();
+        ApiContext context = new ApiContext(req);
         
         Mso mso = msoMngr.getByNameFromCache(msoName);
         if (mso == null) {
@@ -224,34 +214,12 @@ public class PlayerController {
         String cid = channel != null ? channel : ch;
         String pid = episode != null ? episode : ep;
                 
-        if (service.isIos(req)) {            
-            log.info("It is iOS");
-            //pid = service.findFirstSubepisodeId(pid);
-            String iosStr = service.getFliprUrl(cid, pid, mso.getName(), req);
-            String reportUrl = service.getGAReportUrl(ch, ep, mso.getName());
-            String storeUrl = "https://itunes.apple.com/app/9x9.tv/id443352510?mt=8";
-            MsoConfig config = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.STORE_IOS);
-            if (config != null) {
-            	storeUrl = config.getValue();
-            }
-            /*
-            if (mso.getName().equals(Mso.NAME_CTS)) {
-            	storeUrl = "https://itunes.apple.com/app/hua-shi-yun-duan-dian-shi-wang/id623085456?mt=8";
-            }
-            */
-            model.addAttribute("fliprUrl", iosStr);
-            model.addAttribute("reportUrl", reportUrl);
-            model.addAttribute("storeUrl", storeUrl);
-            model.addAttribute("brandName", mso.getName());
-            if (config != null) {
-            	return "player/ios_brand";
-            }
-            return "player/ios";            
-        } else if (service.isAndroid(req)) {            
-            log.info("It is Android");
-            //pid = service.findFirstSubepisodeId(pid);
-            String androidStr = service.getRedirectAndroidUrl(cid, pid, mso.getName(), req);                        
-            return "redirect:/" + androidStr;
+        if (service.isAndroid(req) || service.isIos(req)) {
+            String mobilePromotionUrl = "http://" + context.getAppDomain()
+                                      + "/mobile/#/playback/" + cid
+                                      + (pid == null ? "" : "/" + pid);
+            log.info("mobile promotion url = " + mobilePromotionUrl);
+            return "redirect:" + mobilePromotionUrl;
         } else if (mso.getType() == Mso.TYPE_FANAPP) {            
             log.info("Fan app sharing");
             MsoConfig androidConfig = new MsoConfigManager().findByMsoAndItem(mso, MsoConfig.STORE_ANDROID);
@@ -274,8 +242,6 @@ public class PlayerController {
             model = service.prepareBrand(model, mso.getName(), resp);
             model = service.prepareChannel(model, cid, mso.getName(), resp);
             model = service.prepareEpisode(model, pid, mso.getName(), resp);
-            
-            ApiContext context = new ApiContext(req);
             
             String playerPromotionUrl = "http://" + context.getAppDomain()
                                       + "/tv#/promotion/" + cid
