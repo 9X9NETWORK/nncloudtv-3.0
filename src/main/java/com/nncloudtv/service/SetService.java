@@ -235,6 +235,7 @@ public class SetService {
         newSet.setMsoId(set.getMsoId());
         newSet.setSeq(set.getSeq());
         newSet.setSorting(set.getSortingType());
+        newSet.setFeatured(true);
         
         SysTagDisplay newSetMeta = new SysTagDisplay();
         newSetMeta.setCntChannel(0);
