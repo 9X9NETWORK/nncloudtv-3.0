@@ -652,15 +652,20 @@ public class NnChannelManager {
         return channels;
     }
     
-    public static short getDefaultSorting(NnChannel c) {
+    public static short getPlayerDefaultSorting(NnChannel c) {
         short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY || 
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED)
             sorting = NnChannel.SORT_DESIGNATED;
+        if (c.getSorting() == 0) {
+	        if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL)
+	        	sorting = NnChannel.SORT_NEWEST_TO_OLDEST;
+	        if (c.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST)
+	        	sorting = NnChannel.SORT_POSITION_FORWARD;	        
+        }
         return sorting;
-    }
-
+    }           
     
     public void resetCache(List<NnChannel> channels) {
         for (NnChannel c : channels) {
@@ -787,7 +792,7 @@ public class NnChannelManager {
                 }
             } else {
                 NnEpisodeManager eMngr = new NnEpisodeManager();
-                List<NnEpisode> episodes = eMngr.findPlayerEpisodes(c.getId());
+                List<NnEpisode> episodes = eMngr.findPlayerEpisodes(c.getId(), c.getSorting());
                 log.info("episodes = " + episodes.size());
                 Collections.sort(episodes, eMngr.getEpisodePublicSeqComparator());
                 for (int i=0; i<3; i++) {
@@ -895,7 +900,7 @@ public class NnChannelManager {
         ori.add(String.valueOf(c.getContentType()));
         ori.add(c.getPlayerPrefSource());
         ori.add(convertEpochToTime(c.getTranscodingUpdateDate(), c.getUpdateDate()));
-        ori.add(String.valueOf(getDefaultSorting(c))); //use default sorting for all
+        ori.add(String.valueOf(getPlayerDefaultSorting(c))); //use default sorting for all
         ori.add(c.getPiwik());
         ori.add(""); //recently watched program
         ori.add(c.getOriName());
@@ -982,7 +987,7 @@ public class NnChannelManager {
             if (user != null && sortMap.containsKey(c.getId()))
                 c.setSorting(sortMap.get(c.getId()));
             else 
-                c.setSorting(NnChannelManager.getDefaultSorting(c));
+                c.setSorting(NnChannelManager.getPlayerDefaultSorting(c));
             if (user != null && watchedMap.containsKey(c.getId())) {
                 c.setRecentlyWatchedProgram(watchedMap.get(c.getId()));
             }
