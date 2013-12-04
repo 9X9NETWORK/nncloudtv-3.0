@@ -8,6 +8,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.nncloudtv.lib.PMF;
+import com.nncloudtv.model.NnChannel;
 import com.nncloudtv.model.NnEpisode;
 
 public class NnEpisodeDao extends GenericDao<NnEpisode> {
@@ -58,7 +59,7 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
         return detached;
     }
 
-    public List<NnEpisode> findPlayerEpisode(long channelId) {
+    public List<NnEpisode> findPlayerEpisode(long channelId, short sort) {
         List<NnEpisode> detached = new ArrayList<NnEpisode>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();
         long[] weifilmCh = { 28180, 28179, 28178, 28177, 28176, 28175, 28174, 28087 }; // TODO: remove (weifilm)
@@ -66,7 +67,10 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
             Query query = pm.newQuery(NnEpisode.class);
             query.setFilter("channelId == channelIdParam && isPublic == isPublicParam");
             query.declareParameters("long channelIdParam, boolean isPublicParam");
-            query.setOrdering("seq");
+            if (sort == NnChannel.SORT_POSITION_REVERSE)
+            	query.setOrdering("seq desc");
+            else 
+                query.setOrdering("seq asc");
             if (!((List<Long>)java.util.Arrays.asList(org.apache.commons.lang.ArrayUtils.toObject(weifilmCh))).contains(channelId)) {
                 query.setRange(0, 50); // TODO: remove (weifilm)
             }
@@ -81,7 +85,7 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
         return detached;
     }    
 
-    public List<NnEpisode> findPlayerLatestEpisode(long channelId) {
+    public List<NnEpisode> findPlayerLatestEpisode(long channelId, short sort) {
         List<NnEpisode> detached = new ArrayList<NnEpisode>();
         PersistenceManager pm = PMF.getContent().getPersistenceManager();        
         try {
@@ -89,7 +93,10 @@ public class NnEpisodeDao extends GenericDao<NnEpisode> {
             query.setFilter("channelId == channelIdParam && isPublic == isPublicParam");
             query.declareParameters("long channelIdParam, boolean isPublicParam");
             query.setRange(0, 1);
-            query.setOrdering("seq asc");
+            if (sort == NnChannel.SORT_POSITION_REVERSE)
+            	query.setOrdering("seq desc");
+            else 
+                query.setOrdering("seq asc");
             @SuppressWarnings("unchecked")
             List<NnEpisode> episodes = (List<NnEpisode>)query.execute(channelId, true);
             if (episodes.size() > 0) {
