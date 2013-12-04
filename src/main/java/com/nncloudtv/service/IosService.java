@@ -98,7 +98,7 @@ public class IosService {
             }
             List<NnChannel> channels = tagMngr.findPlayerChannelsById(tagId, lang, SysTag.SORT_SEQ, 0);
             for (NnChannel c : channels) {
-                c.setSorting(NnChannelManager.getDefaultSorting(c));
+                c.setSorting(NnChannelManager.getPlayerDefaultSorting(c));
             }
             result[2] = this.composeChannelLineup(channels);
             return api.assembleMsgs(NnStatusCode.SUCCESS, result);
@@ -167,7 +167,7 @@ public class IosService {
         //channel info
         for (NnChannel c : channels) {
             if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic())
-                c.setSorting(NnChannelManager.getDefaultSorting(c));
+                c.setSorting(NnChannelManager.getPlayerDefaultSorting(c));
         }   
         result[2] = this.composeChannelLineup(channels);
         return api.assembleMsgs(NnStatusCode.SUCCESS, result);        
