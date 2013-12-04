@@ -137,6 +137,9 @@ public class NnChannel implements Serializable {
     public static final short SORT_NEWEST_TO_OLDEST = 1; //default
     public static final short SORT_OLDEST_TO_NEWEST = 2;
     public static final short SORT_DESIGNATED = 3;
+    public static final short SORT_POSITION_FORWARD = 4;
+    public static final short SORT_POSITION_REVERSE = 5;    
+    
     @Persistent
     private short sorting;
 
