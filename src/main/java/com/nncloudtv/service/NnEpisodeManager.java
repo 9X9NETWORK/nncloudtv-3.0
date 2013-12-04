@@ -181,12 +181,12 @@ public class NnEpisodeManager {
         return dao.list(page, rows, sidx, sord, filter);
     }
 
-    public List<NnEpisode> findPlayerEpisodes(long channelId) {
-        return dao.findPlayerEpisode(channelId);
+    public List<NnEpisode> findPlayerEpisodes(long channelId, short sort) {
+        return dao.findPlayerEpisode(channelId, sort);
     }
 
-    public List<NnEpisode> findPlayerLatestEpisodes(long channelId) {
-        return dao.findPlayerLatestEpisode(channelId);
+    public List<NnEpisode> findPlayerLatestEpisodes(long channelId, short sort) {
+        return dao.findPlayerLatestEpisode(channelId, sort);
     }
     
     public int calculateEpisodeDuration(NnEpisode episode) {
