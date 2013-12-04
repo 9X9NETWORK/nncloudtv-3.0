@@ -3025,7 +3025,7 @@ public class PlayerApiService {
         //channel info
         for (NnChannel c : channels) {
             if (c.getStatus() == NnChannel.STATUS_SUCCESS && c.isPublic())
-                c.setSorting(NnChannelManager.getDefaultSorting(c));
+                c.setSorting(NnChannelManager.getPlayerDefaultSorting(c));
         }
         result[2] = chMngr.composeChannelLineup(channels, version);
         //program info
