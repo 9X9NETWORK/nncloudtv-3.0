@@ -230,7 +230,7 @@ public class NnProgramManager {
                 }
             }
             if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED) {
-                List<NnEpisode> episodes = new NnEpisodeManager().findPlayerLatestEpisodes(c.getId());                
+                List<NnEpisode> episodes = new NnEpisodeManager().findPlayerLatestEpisodes(c.getId(), c.getSorting());                
                 if (episodes.size() > 0) {
                     log.info("find latest episode id:" + episodes.get(0).getId());
                     List<NnProgram> programs = this.findByEpisodeId(episodes.get(0).getId());
@@ -617,7 +617,7 @@ public class NnProgramManager {
     public String assembleProgramInfo(NnChannel c) {
         String output = "";        
         if (c.getContentType() == NnChannel.CONTENTTYPE_MIXED){
-            List<NnEpisode> episodes = new NnEpisodeManager().findPlayerEpisodes(c.getId());
+            List<NnEpisode> episodes = new NnEpisodeManager().findPlayerEpisodes(c.getId(), c.getSorting());
             List<NnProgram> programs = this.findPlayerNnProgramsByChannel(c.getId());
             output = this.composeNnProgramInfo(c, episodes, programs);
         } else {
