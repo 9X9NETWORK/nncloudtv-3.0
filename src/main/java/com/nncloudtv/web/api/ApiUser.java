@@ -2,6 +2,7 @@ package com.nncloudtv.web.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,7 @@ import com.nncloudtv.model.NnProgram;
 import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.NnUserLibrary;
 import com.nncloudtv.model.NnUserPref;
+import com.nncloudtv.service.ApiUserService;
 import com.nncloudtv.service.MsoManager;
 import com.nncloudtv.service.NnChannelManager;
 import com.nncloudtv.service.NnChannelPrefManager;
@@ -49,6 +52,22 @@ import com.nncloudtv.web.json.facebook.FacebookResponse;
 public class ApiUser extends ApiGeneric {
 
     protected static Logger log = Logger.getLogger(ApiUser.class.getName());    
+    
+    private NnChannelManager channelMngr;
+    private MsoManager msoMngr;
+    private NnUserManager userMngr;
+    private StoreService storeService;
+    private ApiUserService apiUserService;
+    
+    @Autowired
+    public ApiUser(NnChannelManager channelMngr, MsoManager msoMngr, NnUserManager userMngr, StoreService storeService,
+            ApiUserService apiUserService) {
+        this.channelMngr = channelMngr;
+        this.msoMngr = msoMngr;
+        this.userMngr = userMngr;
+        this.storeService = storeService;
+        this.apiUserService = apiUserService;
+    }
     
     /** 
      * this port is closed for security issue
@@ -618,129 +637,104 @@ public class ApiUser extends ApiGeneric {
             @RequestParam(required = false) String mso,
             @PathVariable("userId") String userIdStr) {
         
-        NnChannelManager channelMngr = new NnChannelManager();
-        MsoManager msoMngr = new MsoManager();
+        Date now = new Date();
+        log.info(printEnterState(now, req));
         
-        Long userId = null;
-        try {
-            userId = Long.valueOf(userIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long userId = evaluateLong(userIdStr);
         if (userId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
-        NnUserManager userMngr = new NnUserManager();
         Mso brand = msoMngr.findOneByName(mso);
         NnUser user = userMngr.findById(userId, brand.getId());
         if (user == null) {
             notFound(resp, "User Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         } else if (verifiedUserId != user.getId()) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
         // name
         String name = req.getParameter("name");
         if (name == null || name.isEmpty()) {
-            
             badRequest(resp, MISSING_PARAMETER);
+            log.info(printExitState(now, req, "400"));
             return null;
         }
         name = NnStringUtil.htmlSafeAndTruncated(name);
         
         // intro
         String intro = req.getParameter("intro");
-        if (intro != null && intro.length() > 0) {
+        if (intro != null && intro.isEmpty() == false) {
             intro = NnStringUtil.htmlSafeAndTruncated(intro);
         }
         
         // imageUrl
         String imageUrl = req.getParameter("imageUrl");
         if (imageUrl == null) {
-            imageUrl = NnChannel.IMAGE_WATERMARK_URL;
+            imageUrl = NnChannel.IMAGE_WATERMARK_URL; // default : watermark
         }
-        
-        NnChannel channel = new NnChannel(name, intro, imageUrl);
-        channel.setContentType(NnChannel.CONTENTTYPE_MIXED);
-        channel.setPublic(false);
-        channel.setStatus(NnChannel.STATUS_WAIT_FOR_APPROVAL);
-        channel.setPoolType(NnChannel.POOL_BASE);
-        channel.setUserIdStr(user.getShard(), user.getId());
         
         // lang
         String lang = req.getParameter("lang");
-        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
-            channel.setLang(lang);
-        } else {
-            channel.setLang(LangTable.LANG_EN);
+        if (lang == null || NnStringUtil.validateLangCode(lang) == null) {
+            lang = LangTable.LANG_EN; // default : en
         }
         
         // isPublic
+        Boolean isPublic = true; // default : true
         String isPublicStr = req.getParameter("isPublic");
         if (isPublicStr != null) {
-            Boolean isPublic = Boolean.valueOf(isPublicStr);
-            channel.setPublic(isPublic);
+            isPublic = evaluateBoolean(isPublicStr);
+            if (isPublic == null) {
+                isPublic = true;
+            }
         }
         
         // tag
         String tag = req.getParameter("tag");
-        if (tag != null) {
-            channel.setTag(tag);
-        }
         
         // sphere
         String sphere = req.getParameter("sphere");
-        if (sphere != null && NnStringUtil.validateLangCode(sphere) != null) {
-            channel.setSphere(sphere);
-            
-        } else {
-            channel.setSphere(LangTable.LANG_EN);
+        if (sphere == null || NnStringUtil.validateLangCode(sphere) == null) {
+            sphere = LangTable.LANG_EN; // default : en
         }
         
-        // seq
-        channel.setSeq((short)0);
-        
-        channel = channelMngr.save(channel);
-        
-        channelMngr.reorderUserChannels(user);
-        
+        // categoryId
+        Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
             
-            Long categoryId = null;
-            try {
-                categoryId = Long.valueOf(categoryIdStr);
-            } catch (NumberFormatException e) {
+            categoryId = evaluateLong(categoryIdStr);
+            if (storeService.isNnCategory(categoryId) == false) {
+                categoryId = null;
             }
-            if (categoryId == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            
-            StoreService storeServ = new StoreService();
-            if (storeServ.isNnCategory(categoryId) == false) {
-                badRequest(resp, "Category Not Found");
-                return null;
-            }
-            
-            // category mapping
-            storeServ.setupChannelCategory(categoryId, channel.getId());
-            
-            channel.setCategoryId(categoryId);
         }
         
-        channelMngr.normalize(channel);
+        NnChannel savedChannel = apiUserService.userChannelCreate(user, name, intro, imageUrl, lang, isPublic, sphere, tag, categoryId);
+        if (savedChannel == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
+        }
         
-        return channel;
+        channelMngr.populateCategoryId(savedChannel);
+        channelMngr.normalize(savedChannel);
+        
+        log.info(printExitState(now, req, "ok"));
+        return savedChannel;
     }
     
     @RequestMapping(value = "users/{userId}/channels/{channelId}", method = RequestMethod.DELETE)
