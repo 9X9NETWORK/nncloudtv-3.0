@@ -200,6 +200,14 @@ public class NnChannel implements Serializable {
     // used in set, mark as true means the results sorting that this channel will put in the first
     @NotPersistent
     private boolean alwaysOnTop;
+    
+    // used in YouTube Sync Channel, true means back-end is sync with YouTube and Channel can't modify at this moment 
+    @Persistent
+    private boolean readonly;
+    
+    // used in YouTube Sync Channel, true means back-end will auto sync with YouTube in a fixed time 
+    @NotPersistent
+    private boolean autoSync;
 
     protected static final Logger log = Logger.getLogger(NnChannel.class.getName());    
 
@@ -634,5 +642,21 @@ public class NnChannel implements Serializable {
 
     public void setAlwaysOnTop(boolean alwaysOnTop) {
         this.alwaysOnTop = alwaysOnTop;
-    }    
+    }
+
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
+    }
+
+    public boolean isAutoSync() {
+        return autoSync;
+    }
+
+    public void setAutoSync(boolean autoSync) {
+        this.autoSync = autoSync;
+    }
 }

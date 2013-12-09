@@ -178,4 +178,44 @@ public class NnChannelPrefManager {
         
         return pref;
     }
+    
+    public boolean getAutoSync(Long channelId) {
+        
+        if (channelId == null) {
+            return false;
+        }
+        
+        List<NnChannelPref> channelPrefs = findByChannelIdAndItem(channelId, NnChannelPref.AUTO_SYNC);
+        if (channelPrefs == null || channelPrefs.isEmpty()) {
+            return false;
+        }
+        
+        if (NnChannelPref.TRUE.equals(channelPrefs.get(0).getValue())) {
+            return true;
+        }
+        return false;
+    }
+    
+    public void setAutoSync(Long channelId, boolean autoSync) {
+        
+        if (channelId == null) {
+            return ;
+        }
+        
+        NnChannelPref channelAutoSync;
+        List<NnChannelPref> channelPrefs = findByChannelIdAndItem(channelId, NnChannelPref.AUTO_SYNC);
+        if (channelPrefs == null || channelPrefs.isEmpty()) {
+            channelAutoSync = new NnChannelPref(channelId, NnChannelPref.AUTO_SYNC, NnChannelPref.FALSE);
+        } else {
+            channelAutoSync = channelPrefs.get(0);
+        }
+        
+        if (autoSync == true) {
+            channelAutoSync.setValue(NnChannelPref.TRUE);
+        } else {
+            channelAutoSync.setValue(NnChannelPref.FALSE);
+        }
+        
+        save(channelAutoSync);
+    }
 }
