@@ -19,12 +19,15 @@ public class ApiContentService {
     private NnChannelManager channelMngr;
     private MsoManager msoMngr;
     private StoreService storeService;
+    private NnChannelPrefManager channelPrefMngr;
     
     @Autowired
-    public ApiContentService(NnChannelManager channelMngr, MsoManager msoMngr, StoreService storeService) {
+    public ApiContentService(NnChannelManager channelMngr, MsoManager msoMngr, StoreService storeService,
+                NnChannelPrefManager channelPrefMngr) {
         this.channelMngr = channelMngr;
         this.msoMngr = msoMngr;
         this.storeService = storeService;
+        this.channelPrefMngr = channelPrefMngr;
     }
     
     public List<NnChannel> channelsSearch(Long msoId, String ytPlaylistId, String ytUserId) {
@@ -68,7 +71,7 @@ public class ApiContentService {
     }
     
     public NnChannel channelUpdate(Long channelId, String name, String intro, String lang, String sphere, Boolean isPublic,
-            String tag, String imageUrl, Long categoryId, Date updateDate) {
+            String tag, String imageUrl, Long categoryId, Date updateDate, Boolean autoSync) {
         
         if (channelId == null) {
             return null;
@@ -107,6 +110,10 @@ public class ApiContentService {
         
         if (categoryId != null) {
             storeService.setupChannelCategory(categoryId, channel.getId());
+        }
+        
+        if (autoSync != null) {
+            channelPrefMngr.setAutoSync(savedChannel.getId(), autoSync);
         }
         
         return savedChannel;

@@ -190,7 +190,7 @@ public class NnChannelPrefManager {
             return false;
         }
         
-        if (NnChannelPref.TRUE.equals(channelPrefs.get(0).getValue())) {
+        if (NnChannelPref.ON.equals(channelPrefs.get(0).getValue())) {
             return true;
         }
         return false;
@@ -205,15 +205,15 @@ public class NnChannelPrefManager {
         NnChannelPref channelAutoSync;
         List<NnChannelPref> channelPrefs = findByChannelIdAndItem(channelId, NnChannelPref.AUTO_SYNC);
         if (channelPrefs == null || channelPrefs.isEmpty()) {
-            channelAutoSync = new NnChannelPref(channelId, NnChannelPref.AUTO_SYNC, NnChannelPref.FALSE);
+            channelAutoSync = new NnChannelPref(channelId, NnChannelPref.AUTO_SYNC, NnChannelPref.OFF);
         } else {
             channelAutoSync = channelPrefs.get(0);
         }
         
         if (autoSync == true) {
-            channelAutoSync.setValue(NnChannelPref.TRUE);
+            channelAutoSync.setValue(NnChannelPref.ON);
         } else {
-            channelAutoSync.setValue(NnChannelPref.FALSE);
+            channelAutoSync.setValue(NnChannelPref.OFF);
         }
         
         save(channelAutoSync);

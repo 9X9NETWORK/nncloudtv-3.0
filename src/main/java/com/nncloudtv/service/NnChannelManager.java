@@ -1159,4 +1159,17 @@ public class NnChannelManager {
             channel.setCategoryId(categoryIds.get(0));
         }
     }
+    
+    public static boolean isValidChannelSourceUrl(String urlStr) {
+        
+        if (urlStr == null) {
+            return false;
+        }
+        
+        if (urlStr.contains(YouTubeLib.youtubeChannelPrefix) || urlStr.contains(YouTubeLib.youtubePlaylistPrefix)) {
+            return true;
+        }
+        return false;
+    }
+    
 }

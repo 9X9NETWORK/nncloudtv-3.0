@@ -36,8 +36,8 @@ public class NnChannelPref implements Serializable {
     @Column(jdbcType="VARCHAR", length=255)
     private String value;
     
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    public static final String ON = "on";
+    public static final String OFF = "off";
     
     public NnChannelPref(Long channelId, String item, String value) {
         this.channelId = channelId;

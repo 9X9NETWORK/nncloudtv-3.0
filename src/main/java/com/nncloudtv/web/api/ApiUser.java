@@ -58,15 +58,17 @@ public class ApiUser extends ApiGeneric {
     private NnUserManager userMngr;
     private StoreService storeService;
     private ApiUserService apiUserService;
+    private NnChannelPrefManager channelPrefMngr;
     
     @Autowired
     public ApiUser(NnChannelManager channelMngr, MsoManager msoMngr, NnUserManager userMngr, StoreService storeService,
-            ApiUserService apiUserService) {
+            ApiUserService apiUserService, NnChannelPrefManager channelPrefMngr) {
         this.channelMngr = channelMngr;
         this.msoMngr = msoMngr;
         this.userMngr = userMngr;
         this.storeService = storeService;
         this.apiUserService = apiUserService;
+        this.channelPrefMngr = channelPrefMngr;
     }
     
     /** 
@@ -723,7 +725,25 @@ public class ApiUser extends ApiGeneric {
             }
         }
         
-        NnChannel savedChannel = apiUserService.userChannelCreate(user, name, intro, imageUrl, lang, isPublic, sphere, tag, categoryId);
+        // autoSync
+        Boolean autoSync = null;
+        String autoSyncStr = req.getParameter("autoSync");
+        if (autoSyncStr != null) {
+            autoSync = evaluateBoolean(autoSyncStr);
+        }
+        
+        // sourceUrl
+        String sourceUrl = req.getParameter("sourceUrl");
+        if (sourceUrl != null) {
+            if (NnChannelManager.isValidChannelSourceUrl(sourceUrl) == false) {
+                badRequest(resp, INVALID_YOUTUBE_URL);
+                log.info(printExitState(now, req, "400"));
+                return null;
+            }
+        }
+        
+        NnChannel savedChannel = apiUserService.userChannelCreate(user, name, intro, imageUrl, lang, isPublic, sphere, tag,
+                categoryId, autoSync, sourceUrl);
         if (savedChannel == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));
@@ -731,6 +751,7 @@ public class ApiUser extends ApiGeneric {
         }
         
         channelMngr.populateCategoryId(savedChannel);
+        savedChannel.setAutoSync(channelPrefMngr.getAutoSync(savedChannel.getId()));
         channelMngr.normalize(savedChannel);
         
         log.info(printExitState(now, req, "ok"));

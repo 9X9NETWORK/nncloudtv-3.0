@@ -31,6 +31,8 @@ public class YouTubeLib {
     
     public static final String regexNormalizedVideoUrl = "^http:\\/\\/www\\.youtube\\.com\\/watch\\?v=[^&]+$";
     public static final String regexVideoIdStr = "v=([^&]+)";
+    public static final String youtubeChannelPrefix = "http://www.youtube.com/user/";
+    public static final String youtubePlaylistPrefix = "http://www.youtube.com/view_play_list?p=";
         
     /** 
      * 1. remove those invalid keywords we already know.

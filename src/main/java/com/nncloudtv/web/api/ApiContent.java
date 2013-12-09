@@ -67,12 +67,15 @@ public class ApiContent extends ApiGeneric {
     private ApiContentService apiContentService;
     private NnChannelManager channelMngr;
     private StoreService storeService;
+    private NnChannelPrefManager channelPrefMngr;
     
     @Autowired
-    public ApiContent(ApiContentService apiContentService, NnChannelManager channelMngr, StoreService storeService) {
+    public ApiContent(ApiContentService apiContentService, NnChannelManager channelMngr, StoreService storeService,
+                NnChannelPrefManager channelPrefMngr) {
         this.apiContentService = apiContentService;
         this.channelMngr = channelMngr;
         this.storeService = storeService;
+        this.channelPrefMngr = channelPrefMngr;
     }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.DELETE)
@@ -1084,6 +1087,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         channelMngr.populateCategoryId(channel);
+        channel.setAutoSync(channelPrefMngr.getAutoSync(channel.getId()));
         channelMngr.normalize(channel);
         
         return channel;
@@ -1177,7 +1181,15 @@ public class ApiContent extends ApiGeneric {
             updateDate = new Date();
         }
         
-        NnChannel savedChannel = apiContentService.channelUpdate(channel.getId(), name, intro, lang, sphere, isPublic, tag, imageUrl, categoryId, updateDate);
+        // autoSync
+        Boolean autoSync = null;
+        String autoSyncStr = req.getParameter("autoSync");
+        if (autoSyncStr != null) {
+            autoSync = evaluateBoolean(autoSyncStr);
+        }
+        
+        NnChannel savedChannel = apiContentService.channelUpdate(channel.getId(), name, intro, lang, sphere, isPublic, tag,
+                                    imageUrl, categoryId, updateDate, autoSync);
         if (savedChannel == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));
@@ -1185,6 +1197,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         channelMngr.populateCategoryId(savedChannel);
+        savedChannel.setAutoSync(channelPrefMngr.getAutoSync(savedChannel.getId()));
         channelMngr.normalize(savedChannel);
         
         log.info(printExitState(now, req, "ok"));

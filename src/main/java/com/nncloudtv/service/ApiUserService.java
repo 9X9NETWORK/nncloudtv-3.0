@@ -16,15 +16,17 @@ public class ApiUserService {
     
     private NnChannelManager channelMngr;
     private StoreService storeService;
+    private NnChannelPrefManager channelPrefMngr;
     
     @Autowired
-    public ApiUserService(NnChannelManager channelMngr, StoreService storeService) {
+    public ApiUserService(NnChannelManager channelMngr, StoreService storeService, NnChannelPrefManager channelPrefMngr) {
         this.channelMngr = channelMngr;
         this.storeService = storeService;
+        this.channelPrefMngr = channelPrefMngr;
     }
     
     public NnChannel userChannelCreate(NnUser user, String name, String intro, String imageUrl, String lang, Boolean isPublic,
-                String sphere, String tag, Long categoryId) {
+                String sphere, String tag, Long categoryId, Boolean autoSync, String sourceUrl) {
         
         if (user == null || name == null) {
             return null;
@@ -58,6 +60,9 @@ public class ApiUserService {
         if (tag != null) {
             newChannel.setTag(tag);
         }
+        if (sourceUrl != null) {
+            newChannel.setSourceUrl(sourceUrl);
+        }
         
         NnChannel savedChannel = channelMngr.save(newChannel);
         
@@ -65,6 +70,10 @@ public class ApiUserService {
         
         if (categoryId != null) {
             storeService.setupChannelCategory(categoryId, savedChannel.getId());
+        }
+        
+        if (autoSync != null) {
+            channelPrefMngr.setAutoSync(savedChannel.getId(), autoSync);
         }
         
         return savedChannel;
