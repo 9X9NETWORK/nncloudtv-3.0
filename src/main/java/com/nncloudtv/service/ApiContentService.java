@@ -3,12 +3,15 @@ package com.nncloudtv.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.model.NnChannel;
 
 @Service
@@ -117,6 +120,30 @@ public class ApiContentService {
         }
         
         return savedChannel;
+    }
+    
+    public void channelYoutubeDataSync(Long channelId) {
+        
+        if (channelId == null) {
+            return ;
+        }
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            return ;
+        }
+        
+        channel.setReadonly(true);
+        channelMngr.save(channel);
+        
+        Map<String, String> obj = new HashMap<String, String>();
+        obj.put("id", channel.getIdStr());
+        obj.put("sourceUrl", channel.getSourceUrl());
+        obj.put("contentType", String.valueOf(channel.getContentType()));
+        obj.put("isRealtime", "true");
+        
+        //NnNetUtil.urlPostWithJson("http://localhost:9999/poi/hello.php", obj); // TODO fixed service point will later known
+        
+        // TODO fail post should set readonly to false
     }
 
 }

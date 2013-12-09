@@ -1204,6 +1204,52 @@ public class ApiContent extends ApiGeneric {
         return savedChannel;
     }
     
+    @RequestMapping(value = "channels/{channelId}/youtubeSyncData", method = RequestMethod.PUT)
+    public @ResponseBody
+    void channelYoutubeDataSync(HttpServletRequest req, HttpServletResponse resp,
+            @PathVariable("channelId") String channelIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long channelId = evaluateLong(channelIdStr);
+        if (channelId == null) {
+            notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            notFound(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        if (NnChannelManager.isValidChannelSourceUrl(channel.getSourceUrl()) == false) {
+            notFound(resp, INVALID_YOUTUBE_URL);
+            log.info(printExitState(now, req, "404"));
+            return ;
+        }
+        
+        
+        Long verifiedUserId = userIdentify(req);
+        if (verifiedUserId == null) {
+            unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
+            return ;
+        } else if (verifiedUserId != channel.getUserId()) {
+            forbidden(resp);
+            log.info(printExitState(now, req, "403"));
+            return ;
+        }
+        
+        apiContentService.channelYoutubeDataSync(channel.getId());
+        
+        okResponse(resp);
+        log.info(printExitState(now, req, "ok"));
+        return ;
+    }
+    
     @RequestMapping(value = "tags", method = RequestMethod.GET)
     public @ResponseBody String[] tags(HttpServletRequest req, HttpServletResponse resp) {
         
