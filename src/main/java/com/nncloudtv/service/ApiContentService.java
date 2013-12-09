@@ -2,6 +2,7 @@ package com.nncloudtv.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,11 +18,13 @@ public class ApiContentService {
     
     private NnChannelManager channelMngr;
     private MsoManager msoMngr;
+    private StoreService storeService;
     
     @Autowired
-    public ApiContentService(NnChannelManager channelMngr, MsoManager msoMngr) {
+    public ApiContentService(NnChannelManager channelMngr, MsoManager msoMngr, StoreService storeService) {
         this.channelMngr = channelMngr;
         this.msoMngr = msoMngr;
+        this.storeService = storeService;
     }
     
     public List<NnChannel> channelsSearch(Long msoId, String ytPlaylistId, String ytUserId) {
@@ -62,6 +65,51 @@ public class ApiContentService {
         }
         
         return results;
+    }
+    
+    public NnChannel channelUpdate(Long channelId, String name, String intro, String lang, String sphere, Boolean isPublic,
+            String tag, String imageUrl, Long categoryId, Date updateDate) {
+        
+        if (channelId == null) {
+            return null;
+        }
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            return null;
+        }
+        
+        if (name != null) {
+            channel.setName(name);
+        }
+        if (intro != null) {
+            channel.setIntro(intro);
+        }
+        if (lang != null) {
+            channel.setLang(lang);
+        }
+        if (sphere != null) {
+            channel.setSphere(sphere);
+        }
+        if (isPublic != null) {
+            channel.setPublic(isPublic);
+        }
+        if (tag != null) {
+            channel.setTag(tag);
+        }
+        if (imageUrl != null) {
+            channel.setImageUrl(imageUrl);
+        }
+        if (updateDate != null) {
+            channel.setUpdateDate(updateDate);
+        }
+        
+        NnChannel savedChannel = channelMngr.save(channel);
+        
+        if (categoryId != null) {
+            storeService.setupChannelCategory(categoryId, channel.getId());
+        }
+        
+        return savedChannel;
     }
 
 }

@@ -1107,7 +1107,7 @@ public class NnChannelManager {
     /** adapt NnChannel to format that CMS API required */
     public void normalize(NnChannel channel) {
         
-        // imageUrl
+        // imageUrl TODO YouTube-sync-channel may need such process, check later when database ready
         if ((channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_CHANNEL ||
                 channel.getContentType() == NnChannel.CONTENTTYPE_YOUTUBE_PLAYLIST) &&
              channel.getImageUrl() != null) {

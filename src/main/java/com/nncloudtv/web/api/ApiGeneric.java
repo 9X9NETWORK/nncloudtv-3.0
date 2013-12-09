@@ -319,4 +319,16 @@ public class ApiGeneric {
 	    return longValue;
 	}
 	
+	public Boolean evaluateBoolean(String stringValue) {
+	    
+	    if ("true".equals(stringValue) == true) {
+	        return true;
+	    }
+	    if ("false".equals(stringValue) == true) {
+	        return false;
+	    }
+	    
+	    return null;
+	}
+	
 }

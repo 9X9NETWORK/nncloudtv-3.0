@@ -65,10 +65,14 @@ public class ApiContent extends ApiGeneric {
     protected static Logger log = Logger.getLogger(ApiContent.class.getName());
     
     private ApiContentService apiContentService;
+    private NnChannelManager channelMngr;
+    private StoreService storeService;
     
     @Autowired
-    public ApiContent(ApiContentService apiContentService) {
+    public ApiContent(ApiContentService apiContentService, NnChannelManager channelMngr, StoreService storeService) {
         this.apiContentService = apiContentService;
+        this.channelMngr = channelMngr;
+        this.storeService = storeService;
     }
     
     @RequestMapping(value = "channels/{channelId}/autosharing/facebook", method = RequestMethod.DELETE)
@@ -1090,116 +1094,100 @@ public class ApiContent extends ApiGeneric {
     NnChannel channelUpdate(HttpServletRequest req, HttpServletResponse resp,
             @PathVariable("channelId") String channelIdStr) {
         
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Date now = new Date();
+        log.info(printEnterState(now, req));
+        
+        Long channelId = evaluateLong(channelIdStr);
         if (channelId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
-        NnChannelManager channelMngr = new NnChannelManager();
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         } else if (verifiedUserId != channel.getUserId()) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
         // name
         String name = req.getParameter("name");
         if (name != null) {
-            channel.setName(NnStringUtil.htmlSafeAndTruncated(name));
+            name = NnStringUtil.htmlSafeAndTruncated(name);
         }
         
         // intro
         String intro = req.getParameter("intro");
         if (intro != null) {
-            channel.setIntro(NnStringUtil.htmlSafeAndTruncated(intro));
+            intro = NnStringUtil.htmlSafeAndTruncated(intro);
         }
         
         // lang
         String lang = req.getParameter("lang");
-        if (lang != null && NnStringUtil.validateLangCode(lang) != null) {
-            
-            channel.setLang(lang);
+        if (lang != null) {
+            lang = NnStringUtil.validateLangCode(lang);
         }
         
         // sphere
         String sphere = req.getParameter("sphere");
-        if (sphere != null && NnStringUtil.validateLangCode(sphere) != null) {
-            
-            channel.setSphere(sphere);
+        if (sphere != null) {
+            sphere = NnStringUtil.validateLangCode(sphere);
         }
         
         // isPublic
+        Boolean isPublic = null;
         String isPublicStr = req.getParameter("isPublic");
         if (isPublicStr != null) {
-            Boolean isPublic = Boolean.valueOf(isPublicStr);
-            channel.setPublic(isPublic);
+            isPublic = evaluateBoolean(isPublicStr);
         }
         
         // tag
         String tag = req.getParameter("tag");
-        if (tag != null) {
-            channel.setTag(tag);
-        }
         
         // imageUrl
         String imageUrl = req.getParameter("imageUrl");
-        if (imageUrl != null) {
-            channel.setImageUrl(imageUrl);
-        }
         
         // categoryId
-        StoreService storeServ = new StoreService();
         Long categoryId = null;
         String categoryIdStr = req.getParameter("categoryId");
         if (categoryIdStr != null) {
             
-            try {
-                categoryId = Long.valueOf(categoryIdStr);
-            } catch (NumberFormatException e) {
-            }
-            if (categoryId == null) {
-                badRequest(resp, INVALID_PARAMETER);
-                return null;
-            }
-            
-            if (storeServ.isNnCategory(categoryId) == false) {
-                badRequest(resp, "Category Not Found");
-                return null;
+            categoryId = evaluateLong(categoryIdStr);
+            if (storeService.isNnCategory(categoryId) == false) {
+                categoryId = null;
             }
         }
         
         // updateDate
+        Date updateDate = null;
         String updateDateStr = req.getParameter("updateDate");
         if (updateDateStr != null) {
-            Date now = new Date();
-            channel.setUpdateDate(now);
+            updateDate = new Date();
         }
         
-        NnChannel savedChannel = channelMngr.save(channel);
-        
-        channelMngr.populateCategoryId(channel);
-        if (categoryIdStr != null && categoryId != channel.getCategoryId()) {
-            storeServ.setupChannelCategory(categoryId, channel.getId());
-            channel.setCategoryId(categoryId);
+        NnChannel savedChannel = apiContentService.channelUpdate(channel.getId(), name, intro, lang, sphere, isPublic, tag, imageUrl, categoryId, updateDate);
+        if (savedChannel == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
         }
-        savedChannel.setCategoryId(channel.getCategoryId());
         
+        channelMngr.populateCategoryId(savedChannel);
         channelMngr.normalize(savedChannel);
         
+        log.info(printExitState(now, req, "ok"));
         return savedChannel;
     }
     
