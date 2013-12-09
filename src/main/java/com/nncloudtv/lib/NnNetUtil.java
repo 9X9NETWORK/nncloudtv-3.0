@@ -150,9 +150,12 @@ public class NnNetUtil {
         }        
     }
     
-    public static void urlPostWithJson(String urlStr, Object obj) {
+    public static int urlPostWithJson(String urlStr, Object obj) {
+        
         log.info("post to " + urlStr);
+        int httpStatusCode = HttpURLConnection.HTTP_OK;
         URL url;
+        
         try {
             url = new URL(urlStr);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -165,11 +168,15 @@ public class NnNetUtil {
             log.info("url fetch-json:" + mapper.writeValueAsString(obj));            
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {                
                 log.info("response not ok!" + connection.getResponseCode());
+                httpStatusCode = connection.getResponseCode();
             }
             writer.close();            
         } catch (Exception e) {
             e.printStackTrace();
+            httpStatusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
         }
+        
+        return httpStatusCode;
     }
     
 }

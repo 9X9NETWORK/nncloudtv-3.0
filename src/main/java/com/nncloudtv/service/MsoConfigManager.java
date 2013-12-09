@@ -60,6 +60,10 @@ public class MsoConfigManager {
         return getProperty("sns.properties", "facebook_app_token");
     }
     
+    static public String getCrawlerDomain() {
+        return getProperty("crawler.properties", "server");
+    }
+    
     public String getFacebookInfo(String type, Mso mso) {
     	if (mso == null || type == null) {
     		return null;

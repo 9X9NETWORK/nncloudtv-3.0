@@ -1,5 +1,6 @@
 package com.nncloudtv.service;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -133,7 +134,7 @@ public class ApiContentService {
         }
         
         channel.setReadonly(true);
-        channelMngr.save(channel);
+        channel = channelMngr.save(channel);
         
         Map<String, String> obj = new HashMap<String, String>();
         obj.put("id", channel.getIdStr());
@@ -141,9 +142,13 @@ public class ApiContentService {
         obj.put("contentType", String.valueOf(channel.getContentType()));
         obj.put("isRealtime", "true");
         
-        //NnNetUtil.urlPostWithJson("http://localhost:9999/poi/hello.php", obj); // TODO fixed service point will later known
+        int httpStatusCode = NnNetUtil.urlPostWithJson("http://" + MsoConfigManager.getCrawlerDomain() + "/ytcrawler/crawlerAPI.php", obj);
         
-        // TODO fail post should set readonly to false
+        // roll back
+        if (httpStatusCode != HttpURLConnection.HTTP_OK) {
+            channel.setReadonly(false);
+            channelMngr.save(channel);
+        }
     }
 
 }
