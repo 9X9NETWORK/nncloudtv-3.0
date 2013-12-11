@@ -653,7 +653,8 @@ public class NnChannelManager {
     }
     
     public static short getPlayerDefaultSorting(NnChannel c) {
-        short sorting = NnChannel.SORT_NEWEST_TO_OLDEST; 
+        //short sorting = NnChannel.SORT_NEWEST_TO_OLDEST;
+    	short sorting = c.getSorting(); 
         if (c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_SOAP || 
             c.getContentType() == NnChannel.CONTENTTYPE_MAPLE_VARIETY || 
             c.getContentType() == NnChannel.CONTENTTYPE_MIXED)
