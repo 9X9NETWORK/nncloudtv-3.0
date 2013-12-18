@@ -20,6 +20,7 @@ import com.nncloudtv.lib.CacheFactory;
 import com.nncloudtv.lib.FacebookLib;
 import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
+import com.nncloudtv.lib.SearchLib;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.LangTable;
 import com.nncloudtv.model.Mso;
@@ -386,7 +387,13 @@ public class NnChannelManager {
     public static List<NnChannel> search(String keyword, String content, String extra, boolean all, int start, int limit) {
         return NnChannelDao.search(keyword, content, extra, all, start, limit);
     }
-    
+   
+    public static List<NnChannel> searchSolr(String keyword, String content, String extra, boolean all, int start, int limit) {
+        List<Long> ids = SearchLib.search(keyword, content, extra, all, start, limit);
+		List<NnChannel> channels = new NnChannelDao().findByIds(ids);
+		return channels;
+    }
+ 
     public static long searchSize(String queryStr, boolean all) {
         return NnChannelDao.searchSize(queryStr, all);
     }
