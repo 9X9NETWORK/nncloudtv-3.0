@@ -40,6 +40,10 @@ public class MsoConfigManager {
         }
         return result;
     }
+
+    static public String getSearchServer() {
+    	return getProperty("services.properties", "search");
+    }
     
     static public String getS3UploadBucket() {
         
