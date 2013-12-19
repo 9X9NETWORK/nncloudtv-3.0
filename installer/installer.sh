@@ -3,6 +3,7 @@
 # installer.sh - developement installer script
 #
 
+jetty="jetty"
 script_path=`readlink -f "$0"`
 script_dir=`dirname "$script_path"`
 cd "$script_dir"
@@ -13,6 +14,6 @@ mvn -DskipTests \
     compile \
     datanucleus:enhance \
     install war:war \
-&& sudo cp target/root.war /usr/share/jetty/webapps/root.war \
-&& (sudo service jetty restart; sudo service memcached restart)
+&& sudo cp target/root.war /usr/share/$jetty/webapps/root.war \
+&& (sudo service $jetty restart; sudo service memcached restart)
 
