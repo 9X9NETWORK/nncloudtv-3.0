@@ -44,5 +44,5 @@ Deploy
 Verify
 ------
 
-go to **http://{{domain-name}}/version/current**
+go to ***http://{{domain-name}}/version/current***
 
