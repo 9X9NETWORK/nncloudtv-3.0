@@ -1,12 +1,26 @@
 #!/bin/sh
 #
-# installer.sh - developement installer script
+# installer.sh - build & deploy for develpement/test site
 #
 
 jetty="jetty"
 script_path=`readlink -f "$0"`
 script_dir=`dirname "$script_path"`
 cd "$script_dir"
+
+echo
+echo "*************************"
+echo "*                       *"
+echo "*  9x9 DevOp Installer  *"
+echo "*                       *"
+echo "*************************"
+echo
+echo -n "Checking your sudo permission ... "
+sudo id
+if test $? -eq 1; then
+    echo "failed."
+    exit
+fi
 
 cd ..
 mvn -DskipTests \
