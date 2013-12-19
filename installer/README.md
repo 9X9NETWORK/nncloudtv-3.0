@@ -10,13 +10,8 @@ go to build.9x9.tv
 [ubuntu@build]$ cd /home/ubuntu/files/nncloudtv
 [ubuntu@build]$ svn update
 [ubuntu@build]$ cd installer
-[ubuntu@build]$ python build.py  
-````
-
-[build war file, the script will prompt options]
-
-````bash
-[ubuntu@build]$ python upload.py 
+[ubuntu@build]$ python build.py # build war file, the script will prompt options 
+[ubuntu@build]$ python upload.py
 ````
 
 [upload to desired machine, the script will prompt options] 
