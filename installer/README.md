@@ -14,7 +14,7 @@ go to build.9x9.tv
 [ubuntu@build]$ python upload.py
 ````
 
-[upload to desired machine, the script will prompt options] 
+[upload to desired machine, the script will prompt options]  
 [ps. on production deployment machine(moveout-log.9x9.tv), files are placed under /var/www/updates]
 
 Deploy
