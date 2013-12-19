@@ -43,34 +43,19 @@ src = "../target/root.war"
 dst = "root.war"
 shutil.copyfile(src, dst)                                                                                       
 
-src = "../../nncms/target/cms.war"
-dst = "cms.war"
-shutil.copyfile(src, dst)                                                                                       
-
 #---- generate md5 ----            
 md5 = os.popen("md5sum root.war").read()
 match = re.match("(.*)( .*)", md5)       
 if match:                          
   md5 = match.group(1)
 
-cmsMd5 = os.popen("md5sum cms.war").read()
-cmsmatch = re.match("(.*)( .*)", cmsMd5)
-if cmsmatch:   
-  cmsMd5 = cmsmatch.group(1)
-
 print "--- generate md5 = " + md5
-print "--- generate cms md5 = " + cmsMd5
 
 dest = open("root.md5", "w")      
 line = md5 + " " + "root.war\x00\x0a"
 dest.write(line)
 dest.close()             
 
-dest = open("cms.md5", "w")      
-line = cmsMd5 + " " + "cms.war\x00\x0a"
-dest.write(line)
-dest.close()                           
-                   
 #---- generate  version file ----              
 print "--- generate version file ---"
 dest = open("version", "w")
@@ -84,21 +69,15 @@ server = raw_input('Server (1.stage 2.prod 3.exit) : ')
 if server == "1":      
   print "--- uploading to stage server ---"                                                 
   os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@stage.9x9.tv:/home/ubuntu/files/root.war")
-  os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@stage.9x9.tv:/home/ubuntu/files/cms.war")
 if server == "2":     
   print "--- uploading to pdr server ---"                                                 
   os.system("scp -i ~/keys/prod-west2.pem root.war ubuntu@v32d.9x9.tv:/home/ubuntu/files/root.war")
-  os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@v32d.9x9.tv:/home/ubuntu/files/cms.war")
   
   print "--- uploading to deploy server ---"                             
   ssh = getSSH("prod")  
   stdin, stdout, stderr = ssh.exec_command('mkdir /var/www/updates/root/' + version)
-  stdin, stdout, stderr = ssh.exec_command('mkdir /var/www/updates/cms/' + version)  
   print "[moveout-log] ls /var/www/updates/root"
   stdin, stdout, stderr = ssh.exec_command('ls /var/www/updates/root/')
-  print stdout.readlines()
-  print "[moveout-log] ls /var/www/updates/cms"
-  stdin, stdout, stderr = ssh.exec_command('ls /var/www/updates/cms/')
   print stdout.readlines()
   ssh.close()                                  
                                   
@@ -107,11 +86,6 @@ if server == "2":
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/root/version")
   os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/root/" + version + "/version")
                                   
-  os.system("scp -i ~/keys/prod-west2.pem cms.war ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/cms.war")
-  os.system("scp -i ~/keys/prod-west2.pem cms.md5 ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/cms.md5")     
-  os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/version")
-  os.system("scp -i ~/keys/prod-west2.pem version ubuntu@moveout-log.9x9.tv:/var/www/updates/cms/" + version + "/version")
-                                                                                   
 #---- deploy ----
 print "\n"                                                       
 server = raw_input('Deploy? (1.stage 2.prod 3.exit) : ')

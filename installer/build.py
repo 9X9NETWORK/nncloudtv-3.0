@@ -57,10 +57,6 @@ os.system("mvn clean compile")
 os.system("mvn datanucleus:enhance")
 os.system("mvn war:war")
 
-os.chdir("..//nncms")
-os.system("mvn clean compile")
-os.system("mvn war:war")
-
 #---- summary ----
 print "\n--- summary ---\n"
 print "Package environment:" + server
