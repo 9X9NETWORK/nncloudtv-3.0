@@ -4,7 +4,7 @@ Build and upload procedures
 Build and upload
 ----------------
 
-go to build.9x9.tv
+go to **build.9x9.tv**
 
 ````bash
 [ubuntu@build]$ cd /home/ubuntu/files/nncloudtv
