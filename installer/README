@@ -23,9 +23,6 @@ Deploy
 [alpha, alpha_log.9x9.tv]
 - ubuntu@alpha-log$ cd /home/ubuntu/bin
 - ubuntu@alpha-log$ deploy_war.sh
-- Belowe use build machine
-- ubuntu@build$ cd /home/ubuntu/files/nncloudtv/installer
-- ubuntu@build$ python s3cmd.py
 
 [stage, stage.9x9.tv]
 - ubuntu@stage$ cd /home/ubuntu/files
@@ -33,12 +30,10 @@ Deploy
 
 [production deploy machine, moveout-log.9x9.tv]
 - ubuntu@moveout-log$ cd /home/ubuntu/bin
-- ubuntu@ moveout-log$ deploy_war.sh
-- Below use build machine
- - ubuntu@build$ cd /home/ubuntu/files/nncloudtv/installer 
- - ubuntu@build$ python s3cmd.py
+- ubuntu@moveout-log$ deploy_all_wars.sh
 
 ------------------------------------------------------------------------
 Verify
 ------------------------------------------------------------------------
-go to http://domain-name/version/current
+go to http://{domain-name}/version/current
+

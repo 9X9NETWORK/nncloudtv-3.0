@@ -1,3 +1,5 @@
+### this script (s3cmd.py) may not be used ###
+
 import os
 
 choice = raw_input('Environment (1.alpha 2.prod ) : ')
