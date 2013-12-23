@@ -3,11 +3,14 @@ package com.nncloudtv.lib;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 public class NnNetUtil {
     
     protected final static Logger log = Logger.getLogger(NnNetUtil.class.getName());
+    public static String STATUS = "status"; // respose http status code
+    public static String TEXT = "text"; // response content
 
     public static void logUrl(HttpServletRequest req) {
         String url = req.getRequestURL().toString();        
@@ -150,10 +155,10 @@ public class NnNetUtil {
         }        
     }
     
-    public static int urlPostWithJson(String urlStr, Object obj) {
+    public static Map<String, String> urlPostWithJson(String urlStr, Object obj) {
         
         log.info("post to " + urlStr);
-        int httpStatusCode = HttpURLConnection.HTTP_OK;
+        Map<String, String> response = new HashMap<String, String>();
         URL url;
         
         try {
@@ -165,18 +170,29 @@ public class NnNetUtil {
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer, obj);
-            log.info("url fetch-json:" + mapper.writeValueAsString(obj));            
+            log.info("url fetch-json:" + mapper.writeValueAsString(obj));
+            
+            InputStream input = connection.getInputStream();
+            byte[] data = new byte[1024];
+            int index = input.read(data);
+            String str = new String(data, 0, index);
+            
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {                
                 log.info("response not ok!" + connection.getResponseCode());
-                httpStatusCode = connection.getResponseCode();
+                log.info("text = " + str);
             }
+            
+            response.put(STATUS, String.valueOf(connection.getResponseCode()));
+            response.put(TEXT, str);
+            
             writer.close();            
         } catch (Exception e) {
             e.printStackTrace();
-            httpStatusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+            response.put(STATUS, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR));
+            response.put(TEXT, e.getMessage());
         }
         
-        return httpStatusCode;
+        return response;
     }
     
 }

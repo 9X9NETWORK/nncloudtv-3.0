@@ -169,6 +169,17 @@ public class ApiGeneric {
 
     }
     
+    public void msgResponse(HttpServletResponse resp, String msg) {
+    
+        try {
+            resp.setContentType(APPLICATION_JSON_UTF8);
+            resp.getWriter().print("\"" + msg + "\"");
+            resp.flushBuffer();
+        } catch (IOException e) {
+            internalError(resp, e);
+        }
+    }
+    
 	public void nullResponse(HttpServletResponse resp) {
         
         try {

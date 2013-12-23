@@ -1,5 +1,6 @@
 package com.nncloudtv.web.api;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.YouTubeLib;
 import com.nncloudtv.model.LangTable;
@@ -1243,7 +1245,13 @@ public class ApiContent extends ApiGeneric {
             return ;
         }
         
-        apiContentService.channelYoutubeDataSync(channel.getId());
+        Map<String, String> response = apiContentService.channelYoutubeDataSync(channel.getId());
+        if (response == null || String.valueOf(HttpURLConnection.HTTP_OK).equals(response.get(NnNetUtil.STATUS)) == false ||
+                "Ack\n".equals(response.get(NnNetUtil.TEXT)) == false) {
+            msgResponse(resp, "NOT OK");
+            log.info(printExitState(now, req, "not ok"));
+            return ;
+        }
         
         okResponse(resp);
         log.info(printExitState(now, req, "ok"));

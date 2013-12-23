@@ -123,14 +123,14 @@ public class ApiContentService {
         return savedChannel;
     }
     
-    public void channelYoutubeDataSync(Long channelId) {
+    public Map<String, String> channelYoutubeDataSync(Long channelId) {
         
         if (channelId == null) {
-            return ;
+            return null;
         }
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
-            return ;
+            return null;
         }
         
         channel.setReadonly(true);
@@ -142,13 +142,20 @@ public class ApiContentService {
         obj.put("contentType", String.valueOf(channel.getContentType()));
         obj.put("isRealtime", "true");
         
-        int httpStatusCode = NnNetUtil.urlPostWithJson("http://" + MsoConfigManager.getCrawlerDomain() + "/ytcrawler/crawlerAPI.php", obj);
+        Map<String, String> response = NnNetUtil.urlPostWithJson("http://" + MsoConfigManager.getCrawlerDomain() + "/ytcrawler/crawlerAPI.php", obj);
         
         // roll back
-        if (httpStatusCode != HttpURLConnection.HTTP_OK) {
+        if (String.valueOf(HttpURLConnection.HTTP_OK).equals(response.get(NnNetUtil.STATUS)) == false ||
+                "Ack\n".equals(response.get(NnNetUtil.TEXT)) == false) {
+            
             channel.setReadonly(false);
             channelMngr.save(channel);
+            
+            log.info("response status = " + response.get(NnNetUtil.STATUS));
+            log.info("response content = " + response.get(NnNetUtil.TEXT));
         }
+        
+        return response;
     }
 
 }
