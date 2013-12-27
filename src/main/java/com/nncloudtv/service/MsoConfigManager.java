@@ -79,7 +79,7 @@ public class MsoConfigManager {
     	if (type == MsoConfig.FACEBOOK_CLIENTID)
     		return getProperty("sns.properties", "facebook_client_id");
     	if (type == MsoConfig.FACEBOOK_APPTOKEN)
-    		return getProperty("aws.properties", "static_file_root_path");
+    		return getProperty("sns.properties", "facebook_app_token");
     	if (type == MsoConfig.FACEBOOK_CLIENTSECRET)
     		return getProperty("sns.properties", "facebook_client_secret");
     	return null;
