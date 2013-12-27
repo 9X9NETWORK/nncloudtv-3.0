@@ -1089,6 +1089,7 @@ public class ApiContent extends ApiGeneric {
         }
         
         channelMngr.populateCategoryId(channel);
+        channelMngr.populateMoreImageUrl(channel);
         channel.setAutoSync(channelPrefMngr.getAutoSync(channel.getId()));
         channelMngr.normalize(channel);
         
