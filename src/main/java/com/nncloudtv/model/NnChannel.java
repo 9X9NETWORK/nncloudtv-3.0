@@ -402,6 +402,23 @@ public class NnChannel implements Serializable {
     public String getTranscodingUpdateDate() {
         return transcodingUpdateDate;
     }
+    
+    public Date getSyncDate() {
+        
+        if (transcodingUpdateDate == null) {
+            return null;
+        }
+        
+        Long syncDate = null;
+        try {
+            syncDate = Long.valueOf(transcodingUpdateDate);
+        } catch (NumberFormatException e) {
+            log.info("String value \"" + transcodingUpdateDate + "\" can't evaluate to type Long.");
+            return null;
+        }
+        
+        return new Date (syncDate*1000);
+    }
 
     public String getOriName() {
         return oriName;
