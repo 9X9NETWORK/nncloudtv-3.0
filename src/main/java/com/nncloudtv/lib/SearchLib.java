@@ -38,7 +38,7 @@ public class SearchLib {
 		query.setQuery(queryStr);		
 		query.setFields("id, name");
 		query.addSort("updateDate", SolrQuery.ORDER.desc);
-		query.set("qf", "nameString^10.0 name^10.0 intro ^5.0");
+                query.set("qf", "name^5 intro");
 		if (!all) {
 			query.setFilterQueries("isPublic:true");
 			query.setFilterQueries("status:(" + NnChannel.STATUS_SUCCESS + " OR " + NnChannel.STATUS_WAIT_FOR_APPROVAL + ")");
