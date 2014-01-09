@@ -1193,8 +1193,15 @@ public class ApiContent extends ApiGeneric {
             autoSync = evaluateBoolean(autoSyncStr);
         }
         
+        // sorting
+        Short sorting = null;
+        String sortingStr = req.getParameter("sorting");
+        if (sortingStr != null) {
+            sorting = evaluateShort(sortingStr);
+        }
+        
         NnChannel savedChannel = apiContentService.channelUpdate(channel.getId(), name, intro, lang, sphere, isPublic, tag,
-                                    imageUrl, categoryId, updateDate, autoSync);
+                                    imageUrl, categoryId, updateDate, autoSync, sorting);
         if (savedChannel == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));

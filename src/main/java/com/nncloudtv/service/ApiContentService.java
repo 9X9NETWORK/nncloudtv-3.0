@@ -75,7 +75,7 @@ public class ApiContentService {
     }
     
     public NnChannel channelUpdate(Long channelId, String name, String intro, String lang, String sphere, Boolean isPublic,
-            String tag, String imageUrl, Long categoryId, Date updateDate, Boolean autoSync) {
+            String tag, String imageUrl, Long categoryId, Date updateDate, Boolean autoSync, Short sorting) {
         
         if (channelId == null) {
             return null;
@@ -108,6 +108,9 @@ public class ApiContentService {
         }
         if (updateDate != null) {
             channel.setUpdateDate(updateDate);
+        }
+        if (sorting != null) {
+            channel.setSorting(sorting);
         }
         
         NnChannel savedChannel = channelMngr.save(channel);

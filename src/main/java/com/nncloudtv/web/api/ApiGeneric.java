@@ -330,6 +330,23 @@ public class ApiGeneric {
 	    return longValue;
 	}
 	
+	public Short evaluateShort(String stringValue) {
+        
+        if (stringValue == null) {
+            return null;
+        }
+        
+        Short shortValue = null;
+        try {
+            shortValue = Short.valueOf(stringValue);
+        } catch (NumberFormatException e) {
+            log.info("String value \"" + stringValue + "\" can't evaluate to type Short.");
+            return null;
+        }
+        
+        return shortValue;
+    }
+	
 	public Boolean evaluateBoolean(String stringValue) {
 	    
 	    if ("true".equals(stringValue) == true) {

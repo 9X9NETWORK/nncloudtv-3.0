@@ -742,8 +742,15 @@ public class ApiUser extends ApiGeneric {
             }
         }
         
+        // sorting
+        Short sorting = null;
+        String sortingStr = req.getParameter("sorting");
+        if (sortingStr != null) {
+            sorting = evaluateShort(sortingStr);
+        }
+        
         NnChannel savedChannel = apiUserService.userChannelCreate(user, name, intro, imageUrl, lang, isPublic, sphere, tag,
-                categoryId, autoSync, sourceUrl);
+                categoryId, autoSync, sourceUrl, sorting);
         if (savedChannel == null) {
             internalError(resp);
             log.warning(printExitState(now, req, "500"));
