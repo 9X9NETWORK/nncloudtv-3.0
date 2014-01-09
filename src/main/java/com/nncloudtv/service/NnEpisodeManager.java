@@ -233,6 +233,8 @@ public class NnEpisodeManager {
         List<NnChannelPref> prefList = prefMngr.findByChannelIdAndItem(episode.getChannelId(), NnChannelPref.FB_AUTOSHARE);
         String facebookId, accessToken;
         String[] parsedObj;
+	
+	fbPost.setCaption(" ");
         
         for (NnChannelPref pref : prefList) {
             parsedObj = prefMngr.parseFacebookAutoshare(pref.getValue());
