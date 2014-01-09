@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
 import com.nncloudtv.dao.NnEpisodeDao;
 import com.nncloudtv.lib.NnStringUtil;
@@ -22,6 +23,7 @@ import com.nncloudtv.model.NnUser;
 import com.nncloudtv.model.TitleCard;
 import com.nncloudtv.web.json.facebook.FBPost;
 
+@Service
 public class NnEpisodeManager {
     
     protected static final Logger log = Logger.getLogger(NnEpisodeManager.class.getName());
@@ -148,6 +150,20 @@ public class NnEpisodeManager {
         return new NnEpisodeSeqComparator();
     }
     
+    public Comparator<NnEpisode> getEpisodeReverseSeqComparator() {
+        
+        class NnEpisodeSeqComparator implements Comparator<NnEpisode> {
+            
+            public int compare(NnEpisode episode1, NnEpisode episode2) {
+                
+                return (episode2.getSeq() - episode1.getSeq());
+                
+            }
+        }
+        
+        return new NnEpisodeSeqComparator();
+    }
+    
     public void reorderChannelEpisodes(long channelId) {
         
         List<NnEpisode> episodes = findByChannelId(channelId);
@@ -251,6 +267,23 @@ public class NnEpisodeManager {
         log.info("episode.getName():"+episode.getName());
         log.info("fbPost.getName():"+fbPost.getName());
         log.info(fbPost.toString());
+    }
+    
+    /** adapt NnEpisode to format that CMS API required */
+    public void normalize(NnEpisode episode) {
+        if (episode != null) {
+            episode.setName(NnStringUtil.revertHtml(episode.getName()));
+            episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
+        }
+    }
+    
+    /** adapt NnEpisode to format that CMS API required */
+    public void normalize(List<NnEpisode> episodes) {
+        if (episodes != null) {
+            for (NnEpisode episode : episodes) {
+                normalize(episode);
+            }
+        }
     }
     
 }

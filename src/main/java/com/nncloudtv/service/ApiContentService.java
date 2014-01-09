@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nncloudtv.lib.NnNetUtil;
+import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.model.NnChannel;
+import com.nncloudtv.model.NnEpisode;
 
 @Service
 public class ApiContentService {
@@ -24,14 +26,16 @@ public class ApiContentService {
     private MsoManager msoMngr;
     private StoreService storeService;
     private NnChannelPrefManager channelPrefMngr;
+    private NnEpisodeManager episodeMngr;
     
     @Autowired
     public ApiContentService(NnChannelManager channelMngr, MsoManager msoMngr, StoreService storeService,
-                NnChannelPrefManager channelPrefMngr) {
+                NnChannelPrefManager channelPrefMngr, NnEpisodeManager episodeMngr) {
         this.channelMngr = channelMngr;
         this.msoMngr = msoMngr;
         this.storeService = storeService;
         this.channelPrefMngr = channelPrefMngr;
+        this.episodeMngr = episodeMngr;
     }
     
     public List<NnChannel> channelsSearch(Long msoId, String ytPlaylistId, String ytUserId) {
@@ -159,6 +163,48 @@ public class ApiContentService {
         }
         
         return response;
+    }
+    
+    public List<NnEpisode> channelEpisodes(Long channelId, Long page, Long rows) {
+        
+        if (channelId == null) {
+            return null;
+        }
+        NnChannel channel = channelMngr.findById(channelId);
+        if (channel == null) {
+            return null;
+        }
+        
+        if (page == null) {
+            page = (long) 0;
+        }
+        if (rows == null) {
+            rows = (long) 0;
+        }
+        
+        List<NnEpisode> results = null;
+        if (page > 0 && rows > 0) {
+            
+            if (channel.getSorting() == NnChannel.SORT_POSITION_REVERSE) {
+                results = episodeMngr.list(page, rows, "seq", "desc", "channelId == " + channelId);
+            } else {
+                results = episodeMngr.list(page, rows, "seq", "asc", "channelId == " + channelId);
+            }
+        } else {
+            results = episodeMngr.findByChannelId(channelId);
+            if (channel.getSorting() == NnChannel.SORT_POSITION_REVERSE) {
+                Collections.sort(results, episodeMngr.getEpisodeReverseSeqComparator());
+            } else {
+                Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
+            }
+        }
+        
+        episodeMngr.normalize(results);
+        for (NnEpisode episode : results) {
+            episode.setPlaybackUrl(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null));
+        }
+        
+        return results;
     }
 
 }

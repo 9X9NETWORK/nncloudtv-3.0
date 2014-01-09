@@ -1384,68 +1384,51 @@ public class ApiContent extends ApiGeneric {
     List<NnEpisode> channelEpisodes(HttpServletResponse resp,
             HttpServletRequest req,
             @PathVariable("channelId") String channelIdStr) {
+        
+        Date now = new Date();
+        log.info(printEnterState(now, req));
     
-        Long channelId = null;
-        try {
-            channelId = Long.valueOf(channelIdStr);
-        } catch (NumberFormatException e) {
-        }
+        Long channelId = evaluateLong(channelIdStr);
         if (channelId == null) {
             notFound(resp, INVALID_PATH_PARAMETER);
+            log.info(printExitState(now, req, "404"));
             return null;
         }
-        
-        NnChannelManager channelMngr = new NnChannelManager();
         
         NnChannel channel = channelMngr.findById(channelId);
         if (channel == null) {
             notFound(resp, "Channel Not Found");
+            log.info(printExitState(now, req, "404"));
             return null;
         }
         
         Long verifiedUserId = userIdentify(req);
         if (verifiedUserId == null) {
             unauthorized(resp);
+            log.info(printExitState(now, req, "401"));
             return null;
         } else if (verifiedUserId != channel.getUserId()) {
             forbidden(resp);
+            log.info(printExitState(now, req, "403"));
             return null;
         }
         
-        NnEpisodeManager episodeMngr = new NnEpisodeManager();
-        List<NnEpisode> results = new ArrayList<NnEpisode>();
+        // page
+        String pageStr = req.getParameter("page");
+        Long page = evaluateLong(pageStr);
         
-        // paging
-        long page = 0, rows = 0;
-        try {
-            String pageStr = req.getParameter("page");
-            String rowsStr = req.getParameter("rows");
-            if (pageStr != null && rowsStr != null) {
-                page = Long.valueOf(pageStr);
-                rows = Long.valueOf(rowsStr);
-            }
-        } catch (NumberFormatException e) {
+        // rows
+        String rowsStr = req.getParameter("rows");
+        Long rows = evaluateLong(rowsStr);
+        
+        List<NnEpisode> results = apiContentService.channelEpisodes(channel.getId(), page, rows);
+        if (results == null) {
+            internalError(resp);
+            log.warning(printExitState(now, req, "500"));
+            return null;
         }
         
-        if (page > 0 && rows > 0) {
-            
-            results = episodeMngr.list(page, rows, "seq", "asc", "channelId == " + channelId);
-            
-        } else {
-            
-            results = episodeMngr.findByChannelId(channelId);
-            
-        }
-        
-        Collections.sort(results, episodeMngr.getEpisodeSeqComparator());
-        
-        for (NnEpisode episode : results) {
-            
-            episode.setName(NnStringUtil.revertHtml(episode.getName()));
-            episode.setIntro(NnStringUtil.revertHtml(episode.getIntro()));
-            episode.setPlaybackUrl(NnStringUtil.getSharingUrl(episode.getChannelId(), episode.getId(), null));
-        }
-        
+        log.info(printExitState(now, req, "ok"));
         return results;
     }
     
