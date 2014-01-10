@@ -2,6 +2,7 @@ package com.nncloudtv.web.json.facebook;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class FacebookPage implements Serializable {
     private static final long serialVersionUID = 5360642433865767444L;
@@ -9,6 +10,7 @@ public class FacebookPage implements Serializable {
     private String name;
     private String access_token;
     private String category;
+    private List<Map<String, String>> category_list;
     private String id;
     private List<String> perms;
     public String getName() {
@@ -40,5 +42,11 @@ public class FacebookPage implements Serializable {
     }
     public void setPerms(List<String> perms) {
         this.perms = perms;
+    }
+    public List<Map<String, String>> getCategory_list() {
+        return category_list;
+    }
+    public void setCategory_list(List<Map<String, String>> category_list) {
+        this.category_list = category_list;
     }
 }
