@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.CommunicationsException;
+import com.nncloudtv.dao.AppDao;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.dao.YtProgramDao;
@@ -36,6 +37,7 @@ import com.nncloudtv.lib.NnNetUtil;
 import com.nncloudtv.lib.NnStringUtil;
 import com.nncloudtv.lib.QueueFactory;
 import com.nncloudtv.lib.YouTubeLib;
+import com.nncloudtv.model.App;
 import com.nncloudtv.model.Captcha;
 import com.nncloudtv.model.EndPoint;
 import com.nncloudtv.model.LangTable;
@@ -247,7 +249,51 @@ public class PlayerApiService {
     public void setUserCookie(HttpServletResponse resp, String cookieName, String userId) {        
         CookieHelper.setCookie(resp, cookieName, userId);
     }    
-    
+   
+    public String relatedApps(String mso, String os, String stack, String sphere, HttpServletRequest req) {     
+       sphere = this.checkLang(sphere);    
+       PlayerService service = new PlayerService();
+       short type = App.TYPE_IOS;
+       if (os == null) {      
+          if (service.isAndroid(req)) {
+             type = App.TYPE_ANDROID;
+          }
+       } else {
+    	   if (os.equals("android"))
+    		   type = App.TYPE_ANDROID;
+       }
+       AppDao dao = new AppDao();
+       List<App> featuredApps = dao.findFeaturedByOsAndSphere(type, sphere);
+       System.out.println("feature size:" + featuredApps.size());
+       List<App> apps = dao.findAllByOsAndSphere(type, sphere);
+       System.out.println("app size:" + apps.size());
+       /*
+     	if (stack != null && stack.equals("featured")) {
+      	   apps.addAll(dao.findFeaturedByOsAndSphere(type, sphere));
+     	} else {
+           apps.addAll(dao.findAllByOsAndSphere(type, sphere));
+     	}
+      */
+       String[] result = {"", ""};
+       List<App> myapps = featuredApps;
+       for (int i=0; i<2; i++) {
+          if (i==1) {
+              myapps.clear();
+              myapps.addAll(apps);
+          }
+          for (App a : myapps) {
+             String[] obj = {
+                a.getName(),
+                a.getIntro(),
+                a.getImageUrl(),
+                a.getStoreUrl()
+             };
+             result[i] += NnStringUtil.getDelimitedStr(obj) + "\n";
+          }         
+       }
+       return this.assembleMsgs(NnStatusCode.SUCCESS, result);
+    }
+ 
     public String listRecommended(String lang) {
         lang = this.checkLang(lang);    
         if (lang == null)
