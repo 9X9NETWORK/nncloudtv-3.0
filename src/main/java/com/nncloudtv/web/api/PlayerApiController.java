@@ -176,6 +176,38 @@ public class PlayerApiController {
     } 
 
     /**
+     * Get related apps
+     *  
+     * @param stack "featured" or keep it empty
+     * @param sphere "en" or "zh"
+     * @param os "android" or "ios" or keep it empty
+     * @return
+     */
+    @RequestMapping(value="relatedApps", produces = "text/plain; charset=utf-8")
+    public @ResponseBody String relatedApps(
+            @RequestParam(value="mso", required = false) String mso,
+            @RequestParam(value="stack", required = false) String stack,
+            @RequestParam(value="sphere", required = false) String sphere,
+            @RequestParam(value="os", required = false) String os,
+            HttpServletRequest req, 
+            HttpServletResponse resp) {
+        String output = NnStatusMsg.getPlayerMsg(NnStatusCode.ERROR, locale);
+        PlayerApiService playerApiService = new PlayerApiService();
+        try {
+            int status = playerApiService.prepService(req, true);
+            if (status != NnStatusCode.SUCCESS) {            	
+                return playerApiService.assembleMsgs(status, null);
+            }            
+            output = playerApiService.relatedApps(mso, os, stack, sphere, req);
+        } catch (Exception e) {
+            output = playerApiService.handleException(e);
+        } catch (Throwable t) {
+            NnLogUtil.logThrowable(t);
+        }
+        return output;
+    } 
+
+    /**
      *  User signup.
      *  
      *  <p>only POST operation is supported.</p>
