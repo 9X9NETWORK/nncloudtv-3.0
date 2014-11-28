@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
-import com.mysql.jdbc.CommunicationsException;
 import com.nncloudtv.dao.NnChannelDao;
 import com.nncloudtv.dao.UserInviteDao;
 import com.nncloudtv.lib.AuthLib;
@@ -303,7 +302,8 @@ public class PlayerApiService {
 			for (Category c : categories) {				
 				if (c.getName().equals("All") || c.getName().equals("頻道總覽")) { //shortcut
 					List<NnSet> list = catMngr.findPlayerSetsByCategory(c.getId());
-					int setCnt = 0;
+					@SuppressWarnings("unused")
+                    int setCnt = 0;
 					String s = "";
 					for (NnSet cs : list) {
 						String name =  cs.getName();
@@ -1691,10 +1691,10 @@ public class PlayerApiService {
 				}
 			}
 		}
-		Set set = umap.entrySet(); 
-		Iterator i = set.iterator(); 
+		Set<Entry<String, NnUser>> set = umap.entrySet(); 
+		Iterator<Entry<String, NnUser>> i = set.iterator(); 
 		while(i.hasNext()) { 
-			Map.Entry me = (Map.Entry)i.next();
+		    Entry<String, NnUser> me = (Entry<String, NnUser>)i.next();
 			NnUser u = (NnUser) me.getValue();
 			String ch = (String) cmap.get(u.getEmail());
 			String subject = UserInvite.getNotifySubject(ch);
